@@ -19,6 +19,7 @@ coverage/
 *.cover
 cover.out
 
+
 ## Go module overrides
 vendor/
 go.work
@@ -107,3 +108,20 @@ Desktop.ini
 *.dump
 data/**/*.sql
 
+## Protect pkgs directory (never exclude any pkgs)
+!pkgs/
+!pkgs/**
+!pkgs/cache/
+!pkgs/cache/**
+!atlas/
+!atlas/**
+!enums/
+!enums/**
+!inputs/
+!inputs/**
+!modules/
+!modules/**
+!protos/
+!protos/**
+!events/
+!events/**
