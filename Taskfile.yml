@@ -1,0 +1,281 @@
+# https://taskfile.dev
+
+version: "3"
+
+dotenv:
+  - ".env"
+
+vars:
+  PROTO_SRC_DIR: protos
+  PROTO_OUT_DIR: protos/gen
+  GO_VERSION: "1.24.3"
+  MODULE: "auth"
+  POSTGRES_HOST: "host.docker.internal"
+  POSTGRES_PORT: "10105"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "Lucas127."
+  POSTGRES_DB_DEV: "lyuauth_dev"
+  POSTGRES_DB_PROD: "lyuauth"
+  POSTGRES_DB_SHADOW: "lyuauth_diff"
+  ATLAS_ENV_FLAGS: >-
+    -e POSTGRES_USER={{.POSTGRES_USER}}
+    -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}}
+    -e POSTGRES_HOST={{.POSTGRES_HOST}}:{{.POSTGRES_PORT}}
+    -e POSTGRES_DB_DEV={{.POSTGRES_DB_DEV}}
+    -e POSTGRES_DB_PROD={{.POSTGRES_DB_PROD}}
+    -e POSTGRES_DB_SHADOW={{.POSTGRES_DB_SHADOW}}
+  ATLAS_ENV: "{{default \"dev\" .ATLAS_ENV}}"
+  ATLAS_CONFIG_PATH: "file://atlas/atlas.hcl"
+  ATLAS_MIGRATIONS_DIR_DEV: "file://atlas/migrations/development"
+  ATLAS_MIGRATIONS_DIR_PROD: "file://atlas/migrations/production"
+  ATLAS_MIGRATIONS_DIR: "{{if eq .ATLAS_ENV \"prod\"}}{{.ATLAS_MIGRATIONS_DIR_PROD}}{{else}}{{.ATLAS_MIGRATIONS_DIR_DEV}}{{end}}"
+  # Resources docker-compose.yml path (relative to nebulaid directory)
+  RESOURCES_DOCKER_COMPOSE: "../docker-compose.yml"
+
+tasks:
+  install:
+    desc: "Install required Go dev tools"
+    cmds:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - go install github.com/air-verse/air@latest
+      - go install golang.org/x/tools/cmd/goimports@latest
+      - go install github.com/segmentio/golines@latest
+      - go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+      - go install github.com/bufbuild/buf/cmd/buf@v1.49.0
+    silent: false
+
+  proto:mod:update:
+    desc: "Download buf dependencies"
+    dir: "{{.PROTO_SRC_DIR}}"
+    cmds:
+      - ./.buf/bin/buf dep update
+
+  proto:mod:update:ps:
+    desc: "Download buf dependencies (PowerShell)"
+    dir: "{{.PROTO_SRC_DIR}}"
+    cmds:
+      - powershell -Command "& (Join-Path (Get-Location) '.bufps\\buf.exe') dep update"
+
+  gen-proto:
+    desc: "Generate gRPC & Protobuf code using buf"
+    deps: [proto:mod:update]
+    dir: "{{.PROTO_SRC_DIR}}"
+    cmds:
+      - ./.buf/bin/buf generate
+    sources:
+      - "{{.PROTO_SRC_DIR}}/**/*.proto"
+    generates:
+      - "{{.PROTO_OUT_DIR}}/**/*.pb.go"
+
+  gen-proto:ps:
+    desc: "Generate gRPC & Protobuf code using buf (PowerShell)"
+    deps: [proto:mod:update:ps]
+    dir: "{{.PROTO_SRC_DIR}}"
+    cmds:
+      - powershell -Command "& (Join-Path (Get-Location) '.bufps\\buf.exe') generate"
+    sources:
+      - "{{.PROTO_SRC_DIR}}/**/*.proto"
+    generates:
+      - "{{.PROTO_OUT_DIR}}/**/*.pb.go"
+
+  lint:
+    desc: "Run golangci-lint"
+    cmds:
+      - golangci-lint run --timeout=5m
+
+  fmt:
+    desc: "Format Go code"
+    cmds:
+      - golines -m 120 -w .
+    silent: true
+
+  ci:
+    desc: "Run all CI tasks (format, lint)"
+    cmds:
+      - task: fmt
+      - task: lint
+
+  atlas:inspect:
+    desc: "Export current database state from remote"
+    cmds:
+      - >
+        docker compose -f docker-compose.yml run --rm -w /app
+        {{.ATLAS_ENV_FLAGS}}
+        atlas schema inspect --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
+    silent: false
+
+  atlas:apply-dev:
+    desc: "Dev (Declarative) - Apply schema to database"
+    cmds:
+      - >
+        docker compose -f docker-compose.yml run --rm -w /app
+        {{.ATLAS_ENV_FLAGS}}
+        atlas schema apply --env dev --config {{.ATLAS_CONFIG_PATH}} --auto-approve
+    silent: false
+
+  atlas:gen-models:
+    desc: "Generate Go models from the database schema"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}" \
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
+        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
+        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
+        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
+        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        bash atlas/scripts/gen_models.sh
+    silent: false
+
+  atlas:gen-views:
+    desc: "Generate Go views from the database schema"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}" \
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
+        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
+        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
+        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
+        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        bash atlas/scripts/gen_views.sh
+    silent: false
+
+  atlas:gen-enums:
+    desc: "Generate Go enums from the database schema"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}" \
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
+        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
+        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
+        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
+        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        bash atlas/scripts/gen_enums.sh
+    silent: false
+
+  atlas:gen:
+    desc: "Generate Go models, enums and views from the database schema"
+    cmds:
+      - task: atlas:gen-enums
+      - task: atlas:gen-models
+      - task: atlas:gen-views
+    silent: false
+
+  atlas:down:
+    desc: "Rollback one step (use with caution)"
+    cmds:
+      - >
+        docker compose -f docker-compose.yml run --rm -w /app
+        {{.ATLAS_ENV_FLAGS}}
+        atlas migrate down --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}} --steps 1
+      - >
+        docker compose -f docker-compose.yml run --rm -w /app
+        {{.ATLAS_ENV_FLAGS}}
+        atlas migrate status --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
+    silent: false
+
+  atlas:set:
+    desc: "Set the database version pointer to a specific version (without executing SQL)"
+    vars:
+      V: '{{.V | default ""}}'
+    cmds:
+      - |
+        powershell -Command "if ([string]::IsNullOrWhiteSpace('{{.V}}')) {
+          Write-Host 'Usage: task atlas:set V=2025xxxxxxxxxx'
+          exit 1
+        }"
+      - >
+        docker compose -f docker-compose.yml run --rm -w /app
+        {{.ATLAS_ENV_FLAGS}}
+        atlas migrate set --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}} {{.V}}
+      - >
+        docker compose -f docker-compose.yml run --rm -w /app
+        {{.ATLAS_ENV_FLAGS}}
+        atlas migrate status --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
+    silent: false
+
+  atlas:pipeline:run:ps:dev:
+    desc: "Run Atlas pipeline using PowerShell (dev)"
+    dir: .
+    env:
+      POSTGRES_USER: "{{.POSTGRES_USER}}"
+      POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
+      POSTGRES_HOST: "{{.POSTGRES_HOST}}"
+      POSTGRES_PORT: "{{.POSTGRES_PORT}}"
+      POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
+      POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
+      POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
+      RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
+      ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File run_atlas_pipeline.ps1 dev
+
+  atlas:pipeline:run:ps:prod:
+    desc: "Run Atlas pipeline using PowerShell (prod)"
+    dir: .
+    env:
+      POSTGRES_USER: "{{.POSTGRES_USER}}"
+      POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
+      POSTGRES_HOST: "{{.POSTGRES_HOST}}"
+      POSTGRES_PORT: "{{.POSTGRES_PORT}}"
+      POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
+      POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
+      POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
+      RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
+      ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File run_atlas_pipeline.ps1 prod
+
+  atlas:pipeline:run:sh:dev:
+    desc: "Run Atlas pipeline using bash (dev)"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}"
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}"
+        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}"
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}"
+        ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
+        bash run_atlas_pipeline.sh dev
+
+  atlas:pipeline:run:sh:prod:
+    desc: "Run Atlas pipeline using bash (prod)"
+    cmds:
+      - |
+        POSTGRES_USER="{{.POSTGRES_USER}}"
+        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
+        POSTGRES_HOST="{{.POSTGRES_HOST}}"
+        POSTGRES_PORT="{{.POSTGRES_PORT}}"
+        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}"
+        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}"
+        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
+        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}"
+        ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
+        bash run_atlas_pipeline.sh prod
+
+
+  build:
+    desc: "Build all services"
+    cmds:
+      - go build -o bin/auth-api inputs/auth/api/main.go
+      - go build -o bin/auth-worker inputs/auth/worker/main.go
+
+  test:
+    desc: "Run tests"
+    cmds:
+      - go test ./...
+
+  clean:
+    desc: "Clean build artifacts"
+    cmds:
+      - rm -rf bin/
+

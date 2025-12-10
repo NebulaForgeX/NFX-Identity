@@ -1,0 +1,289 @@
+services:
+  #! Auth API Service (Dev)
+  auth-api:
+    image: NebulaID-auth-api:dev
+    container_name: NebulaID-Auth-API-Dev
+    build:
+      context: .
+      dockerfile: inputs/auth/api/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/auth/api/.air.toml" ]
+    develop:
+      watch:
+        - action: sync
+          path: inputs/auth/api
+          target: /app/inputs/auth/api
+        - action: sync
+          path: inputs/auth/config
+          target: /app/inputs/auth/config
+        - action: sync
+          path: modules/auth
+          target: /app/modules/auth
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/auth/api/Dockerfile
+    networks:
+      - nebulaid
+
+  #! Auth Pipeline Service (Dev)
+  auth-pipeline:
+    image: NebulaID-auth-pipeline:dev
+    container_name: NebulaID-Auth-Pipeline-Dev
+    build:
+      context: .
+      dockerfile: inputs/auth/pipeline/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    command: [ "air", "-c", "inputs/auth/pipeline/.air.toml" ]
+    develop:
+      watch:
+        - action: sync
+          path: inputs/auth/pipeline
+          target: /app/inputs/auth/pipeline
+        - action: sync
+          path: inputs/auth/config
+          target: /app/inputs/auth/config
+        - action: sync
+          path: modules/auth
+          target: /app/modules/auth
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/auth/pipeline/Dockerfile
+
+  #! Auth Connection Service (Dev)
+  auth-connection:
+    image: NebulaID-auth-connection:dev
+    container_name: NebulaID-Auth-Connection-Dev
+    build:
+      context: .
+      dockerfile: inputs/auth/connection/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/auth/connection/.air.toml" ]
+    develop:
+      watch:
+        - action: sync
+          path: inputs/auth/connection
+          target: /app/inputs/auth/connection
+        - action: sync
+          path: inputs/auth/config
+          target: /app/inputs/auth/config
+        - action: sync
+          path: modules/auth
+          target: /app/modules/auth
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/auth/connection/Dockerfile
+
+  #! Image API Service (Dev)
+  image-api:
+    image: NebulaID-image-api:dev
+    container_name: NebulaID-Image-API-Dev
+    build:
+      context: .
+      dockerfile: inputs/image/api/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/image/api/.air.toml" ]
+    develop:
+      watch:
+        - action: sync
+          path: inputs/image/api
+          target: /app/inputs/image/api
+        - action: sync
+          path: inputs/image/config
+          target: /app/inputs/image/config
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/image/api/Dockerfile
+
+  #! Image Pipeline Service (Dev)
+  image-pipeline:
+    image: NebulaID-image-pipeline:dev
+    container_name: NebulaID-Image-Pipeline-Dev
+    build:
+      context: .
+      dockerfile: inputs/image/pipeline/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    command: [ "air", "-c", "inputs/image/pipeline/.air.toml" ]
+    develop:
+      watch:
+        - action: sync
+          path: inputs/image/pipeline
+          target: /app/inputs/image/pipeline
+        - action: sync
+          path: inputs/image/config
+          target: /app/inputs/image/config
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/image/pipeline/Dockerfile
+
+  #! Image Connection Service (Dev)
+  image-connection:
+    image: NebulaID-image-connection:dev
+    container_name: NebulaID-Image-Connection-Dev
+    build:
+      context: .
+      dockerfile: inputs/image/connection/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/image/connection/.air.toml" ]
+    develop:
+      watch:
+        - action: sync
+          path: inputs/image/connection
+          target: /app/inputs/image/connection
+        - action: sync
+          path: inputs/image/config
+          target: /app/inputs/image/config
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/image/connection/Dockerfile

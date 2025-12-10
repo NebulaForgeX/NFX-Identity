@@ -1,0 +1,13 @@
+-- atlas:import schema.sql
+-- atlas:import tables/roles.sql
+-- atlas:import tables/users.sql
+-- atlas:import tables/profiles.sql
+-- atlas:import tables/badges.sql
+-- atlas:import tables/profile_badges.sql
+-- atlas:import tables/educations.sql
+-- atlas:import tables/occupations.sql
+-- atlas:import views/profile_simple_view.sql
+-- atlas:import views/user_with_role_view.sql
+-- atlas:import views/user_badges_view.sql
+-- atlas:import views/profile_complete_view.sql
+

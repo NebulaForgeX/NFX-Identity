@@ -1,0 +1,234 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+# 格式化输出消息（统一长度）
+write_header() {
+    local message="$1"
+    local padded_length=55  # 中间内容的标准长度（基于最长消息）
+    local padded=$(printf "%-${padded_length}s" "$message")
+    echo "=============== ${padded} ==============="
+}
+
+# 第一个参数是环境（dev 或 prod），默认为 dev
+ENV="${1:-dev}"
+
+if [[ "${ENV}" == "prod" ]]; then
+  write_header "Running Atlas pipeline for PRODUCTION"
+  export ATLAS_ENV=prod
+else
+  write_header "Running Atlas pipeline for DEVELOPMENT"
+  export ATLAS_ENV=dev
+fi
+
+# 从环境变量读取配置（由 Taskfile 传递，必须存在，否则报错退出）
+if [[ -z "${RESOURCES_DOCKER_COMPOSE}" ]]; then echo "Error: RESOURCES_DOCKER_COMPOSE environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_USER}" ]]; then echo "Error: POSTGRES_USER environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_PASSWORD}" ]]; then echo "Error: POSTGRES_PASSWORD environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_HOST}" ]]; then echo "Error: POSTGRES_HOST environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_PORT}" ]]; then echo "Error: POSTGRES_PORT environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_DB_DEV}" ]]; then echo "Error: POSTGRES_DB_DEV environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_DB_PROD}" ]]; then echo "Error: POSTGRES_DB_PROD environment variable is required"; exit 1; fi
+if [[ -z "${POSTGRES_DB_SHADOW}" ]]; then echo "Error: POSTGRES_DB_SHADOW environment variable is required"; exit 1; fi
+if [[ -z "${ATLAS_CONFIG_PATH}" ]]; then echo "Error: ATLAS_CONFIG_PATH environment variable is required"; exit 1; fi
+
+RESOURCES_DOCKER_COMPOSE="${RESOURCES_DOCKER_COMPOSE}"
+POSTGRES_USER="${POSTGRES_USER}"
+POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+POSTGRES_HOST="${POSTGRES_HOST}"
+POSTGRES_PORT="${POSTGRES_PORT}"
+POSTGRES_DB_DEV="${POSTGRES_DB_DEV}"
+POSTGRES_DB_PROD="${POSTGRES_DB_PROD}"
+POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW}"
+ATLAS_CONFIG_PATH="${ATLAS_CONFIG_PATH}"
+
+# 确定目标数据库
+if [[ "${ENV}" == "prod" ]]; then
+  TARGET_DB="${POSTGRES_DB_PROD}"
+else
+  TARGET_DB="${POSTGRES_DB_DEV}"
+fi
+
+# 函数：确保 PostgreSQL 服务正在运行
+ensure_postgresql_running() {
+  write_header "Checking PostgreSQL service"
+  
+  output=$(sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" ps postgresql 2>&1)
+  if ! echo "${output}" | grep -q "Up"; then
+    echo "PostgreSQL should be running in ${RESOURCES_DOCKER_COMPOSE}"
+    echo "Please start PostgreSQL service first"
+    exit 1
+  fi
+  echo "PostgreSQL service is running ✓"
+}
+
+# 函数：清理 Shadow 数据库连接
+clean_shadow_connections() {
+  write_header "Cleaning shadow database connections"
+  
+  # 强制断开所有连接到 shadow 数据库的会话
+  sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${POSTGRES_DB_SHADOW}';" 2>/dev/null || true
+  
+  sleep 2
+  
+  # 再次检查并断开任何残留连接
+  sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${POSTGRES_DB_SHADOW}';" 2>/dev/null || true
+}
+
+# 函数：清理并重建 Shadow 数据库（用于 diff）
+clean_diff_database() {
+  write_header "Cleaning and recreating shadow database for diff"
+  
+  # 断开所有连接到 shadow 数据库的会话
+  clean_shadow_connections
+  
+  # 检查数据库是否存在，如果存在则 DROP
+  result=$(sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${POSTGRES_DB_SHADOW}'" 2>/dev/null || echo "")
+  if echo "${result}" | grep -qE '\s1\s'; then
+    echo "Dropping existing shadow database..."
+    sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -c "DROP DATABASE ${POSTGRES_DB_SHADOW};" 2>/dev/null || true
+  fi
+  
+  # 创建 shadow 数据库
+  echo "Creating shadow database..."
+  sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" 2>/dev/null || true
+  
+  # 确保目标数据库存在
+  target_result=$(sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${TARGET_DB}'" 2>/dev/null || echo "")
+  if ! echo "${target_result}" | grep -qE '\s1\s'; then
+    echo "Creating target database: ${TARGET_DB}"
+    sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${TARGET_DB};" 2>/dev/null || true
+  fi
+}
+
+# 函数：清理数据库连接（生成后使用）
+clean_gen_connections() {
+  write_header "Cleaning database connections after generation"
+  clean_shadow_connections
+}
+
+# 执行管道任务
+write_header "Starting Atlas pipeline"
+
+# 0. Ensure PostgreSQL is running
+ensure_postgresql_running
+
+# 1. Clean diff database before diff
+write_header "Step 1: Preparing diff database"
+clean_diff_database
+
+# 2. Generate migrations
+write_header "Step 2: Generating migrations (atlas:diff)"
+echo "Using POSTGRES_HOST=${POSTGRES_HOST} POSTGRES_PORT=${POSTGRES_PORT}"
+# 设置环境变量供 atlas.hcl 使用
+export POSTGRES_USER="${POSTGRES_USER}"
+export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+export POSTGRES_HOST="${POSTGRES_HOST}"
+export POSTGRES_PORT="${POSTGRES_PORT}"
+export POSTGRES_DB_DEV="${POSTGRES_DB_DEV}"
+export POSTGRES_DB_PROD="${POSTGRES_DB_PROD}"
+export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW}"
+# 切换到 atlas 目录运行，这样 Atlas 可以正确解析相对路径
+cd atlas || exit 1
+# atlas migrate diff 会自动比较 env 配置中的 url（当前数据库）和 src（目标状态），生成迁移
+# 不使用 --config，让 Atlas 自动查找 atlas.hcl
+atlas migrate diff --env ${ATLAS_ENV}
+if [[ $? -ne 0 ]]; then
+  echo "Atlas migrate diff failed with exit code $?"
+  cd .. || true
+  exit $?
+fi
+cd .. || true
+
+# 3. Lint migrations (optional, may require Atlas Pro)
+write_header "Step 3: Linting migrations (optional)"
+cd atlas || exit 1
+atlas migrate lint --env ${ATLAS_ENV} --latest 1 -w || {
+  echo "Warning: Lint check failed or skipped (may require Atlas Pro account)"
+  echo "Continuing with migration apply..."
+}
+cd .. || true
+
+# 4. Apply migrations
+write_header "Step 4: Applying migrations (atlas:apply)"
+cd atlas || exit 1
+atlas migrate apply --env ${ATLAS_ENV}
+if [[ $? -ne 0 ]]; then
+  echo "Atlas migrate apply failed with exit code $?"
+  cd .. || true
+  exit $?
+fi
+cd .. || true
+
+# 5. Check status
+write_header "Step 5: Checking migration status"
+cd atlas || exit 1
+atlas migrate status --env ${ATLAS_ENV}
+if [[ $? -ne 0 ]]; then
+  echo "Atlas migrate status failed with exit code $?"
+  cd .. || true
+  exit $?
+fi
+cd .. || true
+
+# 5.5. Wait for user to manually add views to migration files
+write_header "Step 5.5: Waiting for manual view migration"
+echo ""
+echo "IMPORTANT: Atlas migrate diff does not include views (Atlas Pro feature)."
+echo "Please manually add CREATE VIEW statements to the migration files in:"
+echo "  - atlas/migrations/${ATLAS_ENV}/"
+echo ""
+echo "After adding views, please:"
+echo "  1. Apply the updated migrations manually, OR"
+echo "  2. Continue and we will apply them in the next step"
+echo ""
+while true; do
+  read -p "Have you finished adding views to migration files? (y/n): " response
+  case $response in
+    [yY] )
+      echo "Continuing with the pipeline..."
+      break
+      ;;
+    [nN] )
+      echo "Waiting... Please add views to migration files and try again."
+      ;;
+    * )
+      echo "Please enter 'y' for yes or 'n' for no."
+      ;;
+  esac
+done
+
+# 5.6. Re-apply migrations (in case views were added)
+write_header "Step 5.6: Re-applying migrations (includes manual views)"
+cd atlas || exit 1
+atlas migrate apply --env ${ATLAS_ENV}
+if [[ $? -ne 0 ]]; then
+  echo "Warning: Atlas migrate apply failed with exit code $?"
+  echo "This might be expected if views were already applied manually."
+fi
+cd .. || true
+
+# 6. Generate Go code
+write_header "Step 6: Generating Go code (atlas:gen)"
+ATLAS_ENV="${ATLAS_ENV}" task atlas:gen
+if [[ $? -ne 0 ]]; then
+  echo "Task atlas:gen failed with exit code $?"
+  exit $?
+fi
+
+# 7. Clean connections after generation
+clean_gen_connections
+
+# 8. Final status check
+write_header "Step 7: Final status check"
+cd atlas || exit 1
+atlas migrate status --env ${ATLAS_ENV}
+if [[ $? -ne 0 ]]; then
+  echo "Atlas migrate status failed with exit code $?"
+  cd .. || true
+  exit $?
+fi
+cd .. || true
+
+write_header "All Atlas tasks completed successfully (${ENV})"

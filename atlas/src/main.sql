@@ -1,0 +1,3 @@
+-- atlas:import extensions/pgcrypto.sql
+-- atlas:import schemas/auth/main.sql
+-- atlas:import schemas/image/main.sql

@@ -1,0 +1,101 @@
+syntax = "proto3";
+package profile;
+
+option go_package = "nebulaid/protos/gen/auth/profile;profilepb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "auth/badge.proto";
+
+// 位置信息
+message Location {
+  optional string country = 1;  // 国家
+  optional string province = 2; // 省份
+  optional string city = 3;     // 城市
+  optional string timezone = 4;  // 时区
+}
+
+// 社交链接（不包含 github/website，它们单独存在）
+message Social {
+  optional string twitter = 1;   // Twitter
+  optional string linkedin = 2; // LinkedIn
+  optional string instagram = 3; // Instagram
+  optional string youtube = 4;  // YouTube
+}
+
+// 用户资料信息
+message Profile {
+  string id = 1; // 资料ID (UUID)
+  string user_id = 2; // 用户ID (UUID)
+  optional string first_name = 3; // 名
+  optional string last_name = 4; // 姓
+  optional string nickname = 5; // 昵称（唯一）
+  optional string display_name = 6; // 显示名称（不唯一）
+  optional string avatar_id = 7; // 头像图片ID (UUID)
+  optional string background_id = 8; // 背景图片ID (UUID)
+  repeated string background_ids = 9; // 背景图片ID数组（UUID数组）
+  optional string bio = 10; // 个人简介
+  optional string phone = 11; // 电话
+  optional string birthday = 12; // 生日 (DATE)
+  optional int32 age = 13; // 年龄
+  optional string gender = 14; // 性别
+  optional string location = 15; // 位置信息（字符串，从结构化数据拼接：country, province, city, timezone）
+  optional Location location_struct = 16; // 位置信息（结构化，便于使用）
+  optional string website = 17; // 网站
+  optional string github = 18; // GitHub 用户名或 URL
+  optional Social social = 19; // 社交链接（结构化，不包含 github/website）
+  map<string, string> preferences = 20; // 偏好设置（JSONB 对象）
+  map<string, int32> skills = 21; // 技能：{"golang": 10, "python": 8, ...}
+  map<string, string> privacy_settings = 22; // 隐私设置（JSONB 对象）
+  repeated string badge_ids = 23; // 徽章ID数组（通过 profile_badges 关联）
+  // Note: educations 和 occupation 是独立的表，需要通过单独的查询获取
+  google.protobuf.Timestamp created_at = 24; // 创建时间
+  google.protobuf.Timestamp updated_at = 25; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 26; // 软删除时间
+  
+  // 嵌套的徽章信息（通过 profile_badges 关联）
+  repeated badge.ProfileBadge badges = 30;
+}
+
+// Profile 服务 - 供其他服务通过 gRPC 管理用户资料
+service ProfileService {
+  // 根据ID获取资料
+  rpc GetProfileByID (GetProfileByIDRequest) returns (GetProfileByIDResponse);
+  
+  // 根据用户ID获取资料
+  rpc GetProfileByUserID (GetProfileByUserIDRequest) returns (GetProfileByUserIDResponse);
+  
+  // 批量获取资料
+  rpc BatchGetProfiles (BatchGetProfilesRequest) returns (BatchGetProfilesResponse);
+}
+
+// Profile Service Messages
+message GetProfileByIDRequest {
+  string profile_id = 1 [(buf.validate.field).string.uuid = true];
+  optional bool include_badges = 2; // 是否包含徽章信息
+}
+
+message GetProfileByIDResponse {
+  Profile profile = 1;
+}
+
+message GetProfileByUserIDRequest {
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+  optional bool include_badges = 2; // 是否包含徽章信息
+}
+
+message GetProfileByUserIDResponse {
+  Profile profile = 1;
+}
+
+message BatchGetProfilesRequest {
+  repeated string profile_ids = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 100}];
+  repeated string user_ids = 2 [(buf.validate.field).repeated = {min_items: 1, max_items: 100}];
+  optional bool include_badges = 3; // 是否包含徽章信息
+}
+
+message BatchGetProfilesResponse {
+  repeated Profile profiles = 1;
+  map<string, string> error_by_id = 2; // profile_id or user_id -> error_message
+}
+

@@ -1,0 +1,114 @@
+syntax = "proto3";
+package badge;
+
+option go_package = "nebulaid/protos/gen/auth/badge;badgepb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// 徽章信息
+message Badge {
+  string id = 1; // 徽章ID (UUID)
+  string name = 2; // 徽章名称
+  optional string description = 3; // 徽章描述
+  optional string icon_url = 4; // 图标URL
+  optional string color = 5; // 颜色
+  optional string category = 6; // 分类：achievement, skill, community, special
+  bool is_system = 7; // 是否为系统徽章
+  google.protobuf.Timestamp created_at = 8; // 创建时间
+  google.protobuf.Timestamp updated_at = 9; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 10; // 软删除时间
+}
+
+// 用户获得的徽章信息（包含关联信息）
+message ProfileBadge {
+  string id = 1; // 关联ID (UUID)
+  string profile_id = 2; // 资料ID (UUID)
+  string badge_id = 3; // 徽章ID (UUID)
+  optional string description = 4; // 自定义描述
+  optional int32 level = 5; // 等级
+  google.protobuf.Timestamp earned_at = 6; // 获得时间
+  google.protobuf.Timestamp created_at = 7; // 创建时间
+  google.protobuf.Timestamp updated_at = 8; // 更新时间
+  Badge badge = 9; // 嵌套的徽章信息
+}
+
+// Badge 服务
+service BadgeService {
+  // 根据ID获取徽章
+  rpc GetBadgeByID (GetBadgeByIDRequest) returns (GetBadgeByIDResponse);
+  
+  // 根据名称获取徽章
+  rpc GetBadgeByName (GetBadgeByNameRequest) returns (GetBadgeByNameResponse);
+  
+  // 获取所有徽章列表
+  rpc GetAllBadges (GetAllBadgesRequest) returns (GetAllBadgesResponse);
+}
+
+// ProfileBadge 服务
+service ProfileBadgeService {
+  // 根据ID获取用户徽章关联
+  rpc GetProfileBadgeByID (GetProfileBadgeByIDRequest) returns (GetProfileBadgeByIDResponse);
+  
+  // 根据ProfileID获取用户徽章列表
+  rpc GetProfileBadgesByProfileID (GetProfileBadgesByProfileIDRequest) returns (GetProfileBadgesByProfileIDResponse);
+  
+  // 根据BadgeID获取用户徽章列表
+  rpc GetProfileBadgesByBadgeID (GetProfileBadgesByBadgeIDRequest) returns (GetProfileBadgesByBadgeIDResponse);
+}
+
+// Badge Service Messages
+message GetBadgeByIDRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetBadgeByIDResponse {
+  Badge badge = 1;
+}
+
+message GetBadgeByNameRequest {
+  string name = 1 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 100];
+}
+
+message GetBadgeByNameResponse {
+  Badge badge = 1;
+}
+
+message GetAllBadgesRequest {
+  int32 page = 1 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional string search = 3; // 搜索徽章名称或描述
+  optional string category = 4; // 按分类过滤：achievement, skill, community, special
+  optional bool is_system = 5; // 过滤系统徽章
+}
+
+message GetAllBadgesResponse {
+  repeated Badge badges = 1;
+  int32 total = 2;
+}
+
+// ProfileBadge Service Messages
+message GetProfileBadgeByIDRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetProfileBadgeByIDResponse {
+  ProfileBadge profile_badge = 1;
+}
+
+message GetProfileBadgesByProfileIDRequest {
+  string profile_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetProfileBadgesByProfileIDResponse {
+  repeated ProfileBadge profile_badges = 1;
+}
+
+message GetProfileBadgesByBadgeIDRequest {
+  string badge_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetProfileBadgesByBadgeIDResponse {
+  repeated ProfileBadge profile_badges = 1;
+}
+

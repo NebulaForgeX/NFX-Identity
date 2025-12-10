@@ -1,0 +1,75 @@
+syntax = "proto3";
+package image_type;
+
+option go_package = "nebulaid/protos/gen/image/image_type;imagetypepb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// 图片类型信息
+// 定义图片使用类别和规格（头像、背景、产品封面等）
+message ImageType {
+  string id = 1; // 类型ID (UUID)
+  string key = 2; // 类型标识符：avatar, background, product_cover, product_gallery, post_image, banner, badge_icon 等
+  optional string description = 3; // 人类可读的描述
+  optional int32 max_width = 4; // 最大允许宽度（像素），NULL 表示无限制
+  optional int32 max_height = 5; // 最大允许高度（像素），NULL 表示无限制
+  optional string aspect_ratio = 6; // 宽高比提示：1:1, 16:9, 4:3 等，用于前端自动裁剪
+  optional bool is_system = 7; // 是否为系统类型（TRUE = 系统内置，不可删除，FALSE = 自定义类型）
+  google.protobuf.Timestamp created_at = 8; // 创建时间
+  google.protobuf.Timestamp updated_at = 9; // 更新时间
+}
+
+// ImageType 服务 - 供其他服务通过 gRPC 管理图片类型
+service ImageTypeService {
+  // 根据ID获取图片类型
+  rpc GetImageTypeByID (GetImageTypeByIDRequest) returns (GetImageTypeByIDResponse);
+  
+  // 根据Key获取图片类型
+  rpc GetImageTypeByKey (GetImageTypeByKeyRequest) returns (GetImageTypeByKeyResponse);
+  
+  // 批量获取图片类型
+  rpc BatchGetImageTypes (BatchGetImageTypesRequest) returns (BatchGetImageTypesResponse);
+  
+  // 获取所有图片类型列表
+  rpc GetAllImageTypes (GetAllImageTypesRequest) returns (GetAllImageTypesResponse);
+}
+
+// ImageType Service Messages
+message GetImageTypeByIDRequest {
+  string type_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetImageTypeByIDResponse {
+  ImageType image_type = 1;
+}
+
+message GetImageTypeByKeyRequest {
+  string key = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message GetImageTypeByKeyResponse {
+  ImageType image_type = 1;
+}
+
+message BatchGetImageTypesRequest {
+  repeated string type_ids = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 100}];
+}
+
+message BatchGetImageTypesResponse {
+  repeated ImageType image_types = 1;
+  map<string, string> error_by_id = 2; // type_id -> error_message
+}
+
+message GetAllImageTypesRequest {
+  int32 page = 1 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional string search = 3; // 搜索 key 或 description
+  optional bool is_system = 4; // 过滤系统类型
+}
+
+message GetAllImageTypesResponse {
+  repeated ImageType image_types = 1;
+  int32 total = 2;
+}
+

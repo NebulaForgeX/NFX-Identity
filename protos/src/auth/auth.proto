@@ -1,0 +1,147 @@
+syntax = "proto3";
+package auth;
+
+option go_package = "nebulaid/protos/gen/auth/auth;authpb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "auth/user.proto";
+import "auth/role.proto";
+import "auth/profile.proto";
+
+// 认证状态
+enum AuthStatus {
+  AUTH_STATUS_UNSPECIFIED = 0; // 未指定状态
+  AUTH_STATUS_PENDING = 1; // 待激活
+  AUTH_STATUS_ACTIVE = 2; // 正常
+  AUTH_STATUS_DEACTIVE = 3; // 停用
+}
+
+// Auth 服务 - 供其他服务通过 gRPC 读取认证信息
+service AuthService {
+  // 根据用户ID获取认证信息（包含用户、角色和资料信息）
+  rpc GetAuthByUserID (GetAuthByUserIDRequest) returns (GetAuthByUserIDResponse);
+  
+  // 根据用户名获取认证信息
+  rpc GetAuthByUsername (GetAuthByUsernameRequest) returns (GetAuthByUsernameResponse);
+  
+  // 根据邮箱获取认证信息
+  rpc GetAuthByEmail (GetAuthByEmailRequest) returns (GetAuthByEmailResponse);
+  
+  // 根据手机号获取认证信息
+  rpc GetAuthByPhone (GetAuthByPhoneRequest) returns (GetAuthByPhoneResponse);
+  
+  // 批量获取认证信息（包含用户、角色和资料信息）
+  rpc BatchGetAuth (BatchGetAuthRequest) returns (BatchGetAuthResponse);
+  
+  // 验证密码
+  rpc VerifyPassword (VerifyPasswordRequest) returns (VerifyPasswordResponse);
+  
+  // 验证用户是否存在
+  rpc VerifyUserExists (VerifyUserExistsRequest) returns (VerifyUserExistsResponse);
+}
+
+// 根据用户ID获取认证信息
+message GetAuthByUserIDRequest {
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+  optional bool include_role = 2; // 是否包含角色信息
+  optional bool include_profile = 3; // 是否包含资料信息
+}
+
+message GetAuthByUserIDResponse {
+  Auth auth = 1;
+}
+
+// 根据用户名获取认证信息
+message GetAuthByUsernameRequest {
+  string username = 1 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 50];
+  optional bool include_role = 2;
+  optional bool include_profile = 3;
+}
+
+message GetAuthByUsernameResponse {
+  Auth auth = 1;
+}
+
+// 根据邮箱获取认证信息
+message GetAuthByEmailRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+  optional bool include_role = 2;
+  optional bool include_profile = 3;
+}
+
+message GetAuthByEmailResponse {
+  Auth auth = 1;
+}
+
+// 根据手机号获取认证信息
+message GetAuthByPhoneRequest {
+  string phone = 1 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 20];
+  optional bool include_role = 2;
+  optional bool include_profile = 3;
+}
+
+message GetAuthByPhoneResponse {
+  Auth auth = 1;
+}
+
+// 批量获取认证信息
+message BatchGetAuthRequest {
+  repeated string user_ids = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 100}];
+  optional bool include_role = 2;
+  optional bool include_profile = 3;
+}
+
+message BatchGetAuthResponse {
+  repeated Auth auths = 1;
+  map<string, string> error_by_id = 2; // user_id -> error_message
+}
+
+// 验证密码
+message VerifyPasswordRequest {
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+  string password = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message VerifyPasswordResponse {
+  bool valid = 1;
+  optional string error_message = 2;
+}
+
+// 验证用户是否存在
+message VerifyUserExistsRequest {
+  optional string username = 1;
+  optional string email = 2;
+  optional string phone = 3;
+}
+
+message VerifyUserExistsResponse {
+  bool exists = 1;
+  string field = 2; // "username", "email", "phone" 或空字符串
+}
+
+// 认证信息（嵌套用户、角色和资料信息）
+message Auth {
+  string id = 1; // 用户ID (UUID)
+  string username = 2; // 用户名
+  string email = 3; // 邮箱
+  string phone = 4; // 手机号
+  optional string role_id = 5; // 角色ID (UUID)，可为 NULL
+  bool password_set = 6; // 是否已设置密码（不返回实际密码）
+  AuthStatus status = 7; // 当前状态
+  bool is_verified = 8; // 是否已验证
+  optional google.protobuf.Timestamp last_login_at = 9; // 最后登录时间
+  google.protobuf.Timestamp created_at = 10; // 创建时间
+  google.protobuf.Timestamp updated_at = 11; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 12; // 软删除时间
+  
+  // 嵌套的用户信息
+  user.User user = 20;
+  
+  // 嵌套的角色信息（通过 role_id preload）
+  role.Role role = 21;
+  
+  // 嵌套的资料信息（通过 user_id preload）
+  profile.Profile profile = 22;
+}
+

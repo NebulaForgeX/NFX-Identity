@@ -1,0 +1,27 @@
+# Buf 代码生成配置文件版本
+version: v2
+
+# 插件配置：定义用于生成代码的插件
+plugins:
+  # Protobuf Go 插件：生成 Go 语言的 protobuf 消息代码
+  - remote: buf.build/protocolbuffers/go  # 使用 buf 官方提供的 protobuf Go 插件
+    out: ../
+    opt:
+      # paths=import：使用"导入路径"模式，根据 proto 文件中的 go_package 选项决定文件生成位置
+      #   - 例如：go_package = "nebulaid/protos/gen/auth;authpb"
+      #   - 会生成到：protos/gen/auth/auth.pb.go
+      #   - 导入路径为：nebulaid/protos/gen/auth
+      # module=nebulaid：指定 Go 模块名，用于解析相对导入路径（必须与 go.mod 中的 module 名称一致）
+      - paths=import,module=nebulaid
+
+  # gRPC Go 插件：生成 Go 语言的 gRPC 服务代码
+  - remote: buf.build/grpc/go  # 使用 buf 官方提供的 gRPC Go 插件
+    out: ../
+    opt:
+      # paths=import：使用"导入路径"模式，根据 proto 文件中的 go_package 选项决定文件生成位置
+      #   - 例如：go_package = "nebulaid/auth;authpb"
+      #   - 会生成到：gen/auth/auth.pb.go（相对于 protos/ 目录）
+      #   - 导入路径为：nebulaid/gen/auth（需要手动添加 gen 前缀）
+      # module=nebulaid：指定 Go 模块名，用于解析相对导入路径（必须与 go.mod 中的 module 名称一致）
+      - paths=import,module=nebulaid
+

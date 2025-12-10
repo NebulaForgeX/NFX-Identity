@@ -1,0 +1,153 @@
+syntax = "proto3";
+package image;
+
+option go_package = "nebulaid/protos/gen/image/image;imagepb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "image/image_type.proto";
+import "image/image_variant.proto";
+import "image/image_tag.proto";
+
+// 图片信息
+message Image {
+  string id = 1; // 图片ID (UUID)
+  optional string type_id = 2; // 图片类型ID (UUID)
+  optional string user_id = 3; // 用户ID (UUID)
+  optional string source_domain = 4; // 来源域/服务标识：auth, product, post, cms 等
+  string filename = 5; // 当前文件名（处理后）
+  string original_filename = 6; // 原始文件名（上传时）
+  string mime_type = 7; // MIME 类型：image/jpeg, image/png, image/webp 等
+  int64 size = 8; // 文件大小（字节）
+  optional int32 width = 9; // 宽度（像素）
+  optional int32 height = 10; // 高度（像素）
+  string storage_path = 11; // 存储路径（文件系统路径或 S3 object key）
+  optional string url = 12; // 公共访问URL（CDN URL 或直接存储 URL）
+  bool is_public = 13; // 是否公开：TRUE = 公开访问, FALSE = 需要认证
+  map<string, string> metadata = 14; // 扩展元数据（JSONB）：EXIF、颜色配置、AI 标签等
+  google.protobuf.Timestamp created_at = 15; // 创建时间
+  google.protobuf.Timestamp updated_at = 16; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 17; // 软删除时间
+  
+  // 嵌套的图片类型信息
+  image_type.ImageType type = 20;
+  
+  // 嵌套的图片变体列表
+  repeated image_variant.ImageVariant variants = 21;
+  
+  // 嵌套的图片标签列表
+  repeated image_tag.ImageTag tags = 22;
+}
+
+// Image 服务 - 供其他服务通过 gRPC 管理图片
+service ImageService {
+  // 根据ID获取图片
+  rpc GetImageByID (GetImageByIDRequest) returns (GetImageByIDResponse);
+  
+  // 批量获取图片
+  rpc BatchGetImages (BatchGetImagesRequest) returns (BatchGetImagesResponse);
+  
+  // 根据用户ID获取图片列表
+  rpc GetImagesByUserID (GetImagesByUserIDRequest) returns (GetImagesByUserIDResponse);
+  
+  // 根据类型ID获取图片列表
+  rpc GetImagesByTypeID (GetImagesByTypeIDRequest) returns (GetImagesByTypeIDResponse);
+  
+  // 根据来源域获取图片列表
+  rpc GetImagesBySourceDomain (GetImagesBySourceDomainRequest) returns (GetImagesBySourceDomainResponse);
+  
+  // 获取所有图片列表
+  rpc GetAllImages (GetAllImagesRequest) returns (GetAllImagesResponse);
+  
+  // 根据标签搜索图片
+  rpc SearchImagesByTags (SearchImagesByTagsRequest) returns (SearchImagesByTagsResponse);
+}
+
+// Image Service Messages
+message GetImageByIDRequest {
+  string image_id = 1 [(buf.validate.field).string.uuid = true];
+  optional bool include_variants = 2; // 是否包含变体列表
+  optional bool include_tags = 3; // 是否包含标签列表
+  optional bool include_type = 4; // 是否包含类型信息
+}
+
+message GetImageByIDResponse {
+  Image image = 1;
+}
+
+message BatchGetImagesRequest {
+  repeated string image_ids = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 100}];
+  optional bool include_variants = 2;
+  optional bool include_tags = 3;
+  optional bool include_type = 4;
+}
+
+message BatchGetImagesResponse {
+  repeated Image images = 1;
+  map<string, string> error_by_id = 2; // image_id -> error_message
+}
+
+message GetImagesByUserIDRequest {
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+  int32 page = 2 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 3 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional bool is_public = 4;
+  optional string type_id = 5 [(buf.validate.field).string.uuid = true];
+}
+
+message GetImagesByUserIDResponse {
+  repeated Image images = 1;
+  int32 total = 2;
+}
+
+message GetImagesByTypeIDRequest {
+  string type_id = 1 [(buf.validate.field).string.uuid = true];
+  int32 page = 2 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 3 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional bool is_public = 4;
+}
+
+message GetImagesByTypeIDResponse {
+  repeated Image images = 1;
+  int32 total = 2;
+}
+
+message GetImagesBySourceDomainRequest {
+  string source_domain = 1 [(buf.validate.field).string.min_len = 1];
+  int32 page = 2 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 3 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional bool is_public = 4;
+}
+
+message GetImagesBySourceDomainResponse {
+  repeated Image images = 1;
+  int32 total = 2;
+}
+
+message GetAllImagesRequest {
+  int32 page = 1 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional string user_id = 3 [(buf.validate.field).string.uuid = true];
+  optional string type_id = 4 [(buf.validate.field).string.uuid = true];
+  optional string source_domain = 5;
+  optional bool is_public = 6;
+  optional string search = 7; // 搜索文件名或原始文件名
+}
+
+message GetAllImagesResponse {
+  repeated Image images = 1;
+  int32 total = 2;
+}
+
+message SearchImagesByTagsRequest {
+  repeated string tags = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 20}];
+  int32 page = 2 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 3 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional float min_confidence = 4; // 最小置信度（仅用于 AI 标签）
+  optional bool is_public = 5;
+}
+
+message SearchImagesByTagsResponse {
+  repeated Image images = 1;
+  int32 total = 2;
+}

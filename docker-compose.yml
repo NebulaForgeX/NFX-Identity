@@ -1,0 +1,193 @@
+services:
+  #! Traefik Reverse Proxy
+  reverse-proxy:
+    image: traefik:v3.4
+    container_name: NebulaID-Reverse-Proxy-Prod
+    restart: always
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+      # HTTP 和 HTTPS 入口
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      # HTTP → HTTPS 重定向（外网）
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      # Let's Encrypt 自动证书
+      - --certificatesresolvers.letsencrypt.acme.email=lyuchongkai@gmail.com
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+    ports:
+      - "10187:80"   # 内网 HTTP 入口
+      - "10188:443"  # 外网 HTTPS 入口
+      - "10189:8080" # Traefik Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./certs:/letsencrypt
+    networks:
+      - nebulaid
+
+  #! Auth API Service
+  auth-api:
+    image: NebulaID-auth-api:prod
+    container_name: NebulaID-Auth-API-Prod
+    build:
+      context: .
+      dockerfile: inputs/auth/api/Dockerfile
+    restart: always
+    expose:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      # 外网 HTTPS 路由
+      - "traefik.http.routers.auth-api-secure.rule=Host(`auth.lucaslyu.com`)"
+      - "traefik.http.routers.auth-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.auth-api-secure.tls=true"
+      - "traefik.http.routers.auth-api-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.services.auth-api.loadbalancer.server.port=8080"
+      # 内网 HTTP 路由（通过端口访问，允许任何 Host）
+      - "traefik.http.routers.auth-api-insecure.rule=HostRegexp(`.*`)"
+      - "traefik.http.routers.auth-api-insecure.entrypoints=web"
+      - "traefik.http.routers.auth-api-insecure.service=auth-api"
+      - "traefik.http.routers.auth-api-insecure.priority=1"
+    environment:
+      - ENV=prod
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    depends_on:
+      - reverse-proxy
+    networks:
+      - nebulaid
+
+  #! Auth Pipeline Service（kafka）
+  auth-pipeline:
+    image: NebulaID-auth-pipeline:prod
+    container_name: NebulaID-Auth-Pipeline-Prod 
+    build:
+      context: .
+      dockerfile: inputs/auth/pipeline/Dockerfile
+    restart: always
+    environment:
+      - ENV=prod
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    networks:
+      - nebulaid
+    depends_on:
+      - auth-api
+
+  #! Auth Connection Service (gRPC)
+  auth-connection:
+    image: NebulaID-auth-connection:prod
+    container_name: NebulaID-Auth-Connection-Prod
+    build:
+      context: .
+      dockerfile: inputs/auth/connection/Dockerfile
+    restart: always
+    expose:
+      - "10012"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+    # ports:
+    #   - "10012:10012"  # 可选：如果需要从宿主机访问，取消注释
+    environment:
+      - ENV=prod
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    networks:
+      - nebulaid
+    depends_on:
+      - auth-api
+
+  #! Image API Service
+  image-api:
+    image: NebulaID-image-api:prod
+    container_name: NebulaID-Image-API-Prod
+    build:
+      context: .
+      dockerfile: inputs/image/api/Dockerfile
+    restart: always
+    expose:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      # 外网 HTTPS 路由
+      - "traefik.http.routers.image-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/image`)"
+      - "traefik.http.routers.image-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.image-api-secure.tls=true"
+      - "traefik.http.routers.image-api-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.services.image-api.loadbalancer.server.port=8080"
+      # 内网 HTTP 路由
+      - "traefik.http.routers.image-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/image`)"
+      - "traefik.http.routers.image-api-insecure.entrypoints=web"
+      - "traefik.http.routers.image-api-insecure.service=image-api"
+      - "traefik.http.routers.image-api-insecure.priority=1"
+    environment:
+      - ENV=prod
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    depends_on:
+      - reverse-proxy
+    networks:
+      - nebulaid
+
+  #! Image Pipeline Service
+  image-pipeline:
+    image: NebulaID-image-pipeline:prod
+    container_name: NebulaID-Image-Pipeline-Prod
+    build:
+      context: .
+      dockerfile: inputs/image/pipeline/Dockerfile
+    restart: always
+    environment:
+      - ENV=prod
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    networks:
+      - nebulaid
+    depends_on:
+      - image-api
+
+  #! Image Connection Service (gRPC)
+  image-connection:
+    image: NebulaID-image-connection:prod
+    container_name: NebulaID-Image-Connection-Prod
+    build:
+      context: .
+      dockerfile: inputs/image/connection/Dockerfile
+    restart: always
+    expose:
+      - "10013"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+    # ports:
+    #   - "10013:10013"  # 可选：如果需要从宿主机访问，取消注释
+    environment:
+      - ENV=prod
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    networks:
+      - nebulaid
+    depends_on:
+      - image-api
+
+
+networks:
+  nebulaid:
+    name: nebulaid
+    driver: bridge
+
+

@@ -1,0 +1,107 @@
+syntax = "proto3";
+package image_tag;
+
+option go_package = "nebulaid/protos/gen/image/image_tag;imagetagpb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// 图片标签信息
+// 存储图片的标签（AI 生成的标签和用户定义的标签）
+// 用于基于内容搜索和发现（例如，查找所有标记为 'cat', 'shoes', 'selfie' 的图片）
+message ImageTag {
+  string id = 1; // 标签ID (UUID)
+  string image_id = 2; // 图片ID (UUID)
+  string tag = 3; // 标签文本（标准化，如小写）。示例：cat, shoes, selfie, nature
+  optional float confidence = 4; // AI 生成标签的置信度分数（0.0-1.0），用户标签为 NULL（假设 100% 准确）
+  google.protobuf.Timestamp created_at = 5; // 创建时间
+}
+
+// ImageTag 服务 - 供其他服务通过 gRPC 管理图片标签
+service ImageTagService {
+  // 根据ID获取图片标签
+  rpc GetImageTagByID (GetImageTagByIDRequest) returns (GetImageTagByIDResponse);
+  
+  // 根据图片ID获取所有标签列表
+  rpc GetImageTagsByImageID (GetImageTagsByImageIDRequest) returns (GetImageTagsByImageIDResponse);
+  
+  // 根据标签文本获取图片列表
+  rpc GetImagesByTag (GetImagesByTagRequest) returns (GetImagesByTagResponse);
+  
+  // 根据多个标签文本获取图片列表（AND 或 OR 逻辑）
+  rpc GetImagesByTags (GetImagesByTagsRequest) returns (GetImagesByTagsResponse);
+  
+  // 批量获取图片标签
+  rpc BatchGetImageTags (BatchGetImageTagsRequest) returns (BatchGetImageTagsResponse);
+  
+  // 获取热门标签列表
+  rpc GetPopularTags (GetPopularTagsRequest) returns (GetPopularTagsResponse);
+}
+
+// ImageTag Service Messages
+message GetImageTagByIDRequest {
+  string tag_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetImageTagByIDResponse {
+  ImageTag image_tag = 1;
+}
+
+message GetImageTagsByImageIDRequest {
+  string image_id = 1 [(buf.validate.field).string.uuid = true];
+  optional float min_confidence = 2; // 最小置信度（仅用于 AI 标签）
+}
+
+message GetImageTagsByImageIDResponse {
+  repeated ImageTag image_tags = 1;
+}
+
+message GetImagesByTagRequest {
+  string tag = 1 [(buf.validate.field).string.min_len = 1];
+  int32 page = 2 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 3 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional float min_confidence = 4; // 最小置信度（仅用于 AI 标签）
+  optional bool is_public = 5;
+}
+
+message GetImagesByTagResponse {
+  repeated string image_ids = 1; // 图片ID列表
+  int32 total = 2;
+}
+
+message GetImagesByTagsRequest {
+  repeated string tags = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 20}];
+  bool match_all = 2; // TRUE = AND 逻辑（所有标签都必须匹配），FALSE = OR 逻辑（任一标签匹配）
+  int32 page = 3 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 4 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional float min_confidence = 5; // 最小置信度（仅用于 AI 标签）
+  optional bool is_public = 6;
+}
+
+message GetImagesByTagsResponse {
+  repeated string image_ids = 1; // 图片ID列表
+  int32 total = 2;
+}
+
+message BatchGetImageTagsRequest {
+  repeated string tag_ids = 1 [(buf.validate.field).repeated = {min_items: 1, max_items: 100}];
+}
+
+message BatchGetImageTagsResponse {
+  repeated ImageTag image_tags = 1;
+  map<string, string> error_by_id = 2; // tag_id -> error_message
+}
+
+message GetPopularTagsRequest {
+  int32 limit = 1 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional float min_confidence = 2; // 最小置信度（仅用于 AI 标签）
+}
+
+message GetPopularTagsResponse {
+  message TagCount {
+    string tag = 1;
+    int32 count = 2;
+  }
+  repeated TagCount tags = 1;
+}
+

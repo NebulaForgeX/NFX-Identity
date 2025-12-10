@@ -1,0 +1,21 @@
+# Buf 配置文件版本
+version: v2
+
+# 模块配置：定义 proto 文件的路径
+modules:
+  - path: src  # src 目录作为模块根路径
+
+# 依赖配置：声明需要的外部 proto 依赖
+deps:
+  - buf.build/bufbuild/protovalidate  # protovalidate：用于 proto 字段验证的依赖库
+
+# Lint 配置：代码检查规则
+lint:
+  use:
+    - DEFAULT  # 使用默认的 lint 规则集（检查语法、命名规范等）
+
+# Breaking 配置：破坏性变更检测规则
+breaking:
+  use:
+    - FILE  # 基于文件的破坏性变更检测（检测字段删除、类型变更等）
+
