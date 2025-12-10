@@ -125,3 +125,16 @@ data/**/*.sql
 !protos/**
 !events/
 !events/**
+!certs/
+!certs/**
+!ssl/
+!ssl/**
+!docker-compose.yml
+!docker-compose.dev.yml
+!go.mod
+!go.sum
+!Taskfile.yml
+!README.md
+!STRUCTURE.md
+!LICENSE
+!CONTRIBUTING.md
