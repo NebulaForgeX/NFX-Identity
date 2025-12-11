@@ -121,3 +121,73 @@ func RunPipeline(ctx context.Context, cfg *config.Config) error {
 
 	return g.Wait()
 }
+
+// RunServer starts all three services (HTTP, gRPC, Pipeline) concurrently
+// This is useful for development or when you want to run all services in a single process
+func RunServer(ctx context.Context, cfg *config.Config) error {
+	// === Dependencies ===
+	deps, err := NewDependencies(ctx, cfg)
+	if err != nil {
+		return err
+	}
+	defer deps.Cleanup()
+
+	logx.S().Info("✅ All-in-One Server: All dependencies initialized successfully (PostgreSQL, MongoDB, Redis, Kafka Publisher)")
+
+	// === Initialize Servers ===
+	httpSrv := httpInterfaces.NewHTTPServer(deps)
+	grpcSrv := grpcInterfaces.NewServer(deps)
+	eventbusSrv, err := eventbusInterfaces.NewServer(deps)
+	if err != nil {
+		return err
+	}
+
+	httpAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.HTTPPort))
+	grpcAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.GRPCPort))
+
+	grpcLis, err := net.Listen("tcp", grpcAddr)
+	if err != nil {
+		return err
+	}
+	defer grpcLis.Close()
+
+	eventbusSrv.RegisterRoutes()
+
+	g, gctx := errgroup.WithContext(ctx)
+
+	// HTTP Server
+	g.Go(func() error {
+		logx.S().Infof("✅ HTTP server listening on %s", httpAddr)
+		if err := httpSrv.Listen(httpAddr); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return err
+		}
+		return nil
+	})
+
+	// gRPC Server
+	g.Go(func() error {
+		logx.S().Infof("✅ gRPC server listening on %s", grpcAddr)
+		if err := grpcSrv.Serve(grpcLis); err != nil && !errors.Is(err, grpc.ErrServerStopped) {
+			return err
+		}
+		return nil
+	})
+
+	// Pipeline (Kafka Eventbus) Server
+	g.Go(func() error {
+		logx.S().Infof("✅ Eventbus (Kafka) server listening on %v", cfg.KafkaConfig.Brokers)
+		return eventbusSrv.Run(ctx)
+	})
+
+	// Graceful shutdown handler
+	g.Go(func() error {
+		<-gctx.Done()
+		logx.S().Info("🛑 Shutting down all services...")
+		_ = httpSrv.Shutdown()
+		grpcSrv.GracefulStop()
+		_ = eventbusSrv.Close()
+		return gctx.Err()
+	})
+
+	return g.Wait()
+}
