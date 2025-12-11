@@ -3,9 +3,9 @@ package ssh
 import (
 	"context"
 	"fmt"
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/retry"
 	"net"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/retry"
 	"os"
 	"os/exec"
 	"time"

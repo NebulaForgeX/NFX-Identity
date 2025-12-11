@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	imageTypeDomain "nebulaid/modules/image/domain/image_type"
-	"nebulaid/modules/image/infrastructure/rdb/models"
+	imageTypeDomain "nfxid/modules/image/domain/image_type"
+	"nfxid/modules/image/infrastructure/rdb/models"
 )
 
 func ImageTypeDomainToModel(it *imageTypeDomain.ImageType) *models.ImageType {

@@ -3,11 +3,11 @@ package reqdto
 import (
 	"time"
 
-	educationAppCommands "nebulaid/modules/auth/application/education/commands"
-	educationAppQueries "nebulaid/modules/auth/application/education/queries"
-	educationDomain "nebulaid/modules/auth/domain/education"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	educationAppCommands "nfxid/modules/auth/application/education/commands"
+	educationAppQueries "nfxid/modules/auth/application/education/queries"
+	educationDomain "nfxid/modules/auth/domain/education"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 )

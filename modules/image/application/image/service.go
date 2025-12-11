@@ -1,9 +1,9 @@
 package image
 
 import (
-	imageQueries "nebulaid/modules/image/application/image/queries"
-	imageDomain "nebulaid/modules/image/domain/image"
-	"nebulaid/pkgs/eventbus"
+	imageQueries "nfxid/modules/image/application/image/queries"
+	imageDomain "nfxid/modules/image/domain/image"
+	"nfxid/pkgs/eventbus"
 )
 
 type Service struct {

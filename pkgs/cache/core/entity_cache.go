@@ -5,9 +5,9 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"maps"
-	"nebulaid/pkgs/cache/config"
-	"nebulaid/pkgs/utils/id"
-	"nebulaid/pkgs/utils/slice"
+	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/utils/id"
+	"nfxid/pkgs/utils/slice"
 	"sort"
 	"strings"
 

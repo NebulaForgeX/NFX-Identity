@@ -1,6 +1,6 @@
 package occupation
 
-import occupationErrors "nebulaid/modules/auth/domain/occupation/errors"
+import occupationErrors "nfxid/modules/auth/domain/occupation/errors"
 
 func (e *OccupationEditable) Validate() error {
 	if e.Company == "" {

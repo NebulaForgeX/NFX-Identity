@@ -1,16 +1,16 @@
 package http
 
 import (
-	badgeApp "nebulaid/modules/auth/application/badge"
-	educationApp "nebulaid/modules/auth/application/education"
-	occupationApp "nebulaid/modules/auth/application/occupation"
-	profileApp "nebulaid/modules/auth/application/profile"
-	profileBadgeApp "nebulaid/modules/auth/application/profile_badge"
-	roleApp "nebulaid/modules/auth/application/role"
-	userApp "nebulaid/modules/auth/application/user"
-	"nebulaid/modules/auth/interfaces/http/handler"
-	"nebulaid/pkgs/recover"
-	"nebulaid/pkgs/tokenx"
+	badgeApp "nfxid/modules/auth/application/badge"
+	educationApp "nfxid/modules/auth/application/education"
+	occupationApp "nfxid/modules/auth/application/occupation"
+	profileApp "nfxid/modules/auth/application/profile"
+	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
+	roleApp "nfxid/modules/auth/application/role"
+	userApp "nfxid/modules/auth/application/user"
+	"nfxid/modules/auth/interfaces/http/handler"
+	"nfxid/pkgs/recover"
+	"nfxid/pkgs/tokenx"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

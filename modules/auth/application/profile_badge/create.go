@@ -2,9 +2,9 @@ package profile_badge
 
 import (
 	"context"
-	profileBadgeCommands "nebulaid/modules/auth/application/profile_badge/commands"
-	profileBadgeDomain "nebulaid/modules/auth/domain/profile_badge"
-	profileBadgeDomainErrors "nebulaid/modules/auth/domain/profile_badge/errors"
+	profileBadgeCommands "nfxid/modules/auth/application/profile_badge/commands"
+	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
+	profileBadgeDomainErrors "nfxid/modules/auth/domain/profile_badge/errors"
 )
 
 func (s *Service) CreateProfileBadge(ctx context.Context, cmd profileBadgeCommands.CreateProfileBadgeCmd) (*profileBadgeDomain.ProfileBadge, error) {

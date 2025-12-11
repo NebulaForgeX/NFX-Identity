@@ -2,9 +2,9 @@ package handler
 
 import (
 	"context"
-	"nebulaid/events"
-	imageApp "nebulaid/modules/image/application/image"
-	"nebulaid/pkgs/logx"
+	"nfxid/events"
+	imageApp "nfxid/modules/image/application/image"
+	"nfxid/pkgs/logx"
 
 	"github.com/ThreeDotsLabs/watermill/message"
 )

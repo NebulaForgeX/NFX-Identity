@@ -2,11 +2,11 @@ package education
 
 import (
 	"context"
-	"nebulaid/events"
-	educationCommands "nebulaid/modules/auth/application/education/commands"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/safeexec"
+	"nfxid/events"
+	educationCommands "nfxid/modules/auth/application/education/commands"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/safeexec"
 )
 
 func (s *Service) UpdateEducation(ctx context.Context, cmd educationCommands.UpdateEducationCmd) error {

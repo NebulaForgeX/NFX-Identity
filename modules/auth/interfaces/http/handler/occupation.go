@@ -1,10 +1,10 @@
 package handler
 
 import (
-	occupationApp "nebulaid/modules/auth/application/occupation"
-	"nebulaid/modules/auth/interfaces/http/dto/reqdto"
-	"nebulaid/modules/auth/interfaces/http/dto/respdto"
-	"nebulaid/pkgs/netx/httpresp"
+	occupationApp "nfxid/modules/auth/application/occupation"
+	"nfxid/modules/auth/interfaces/http/dto/reqdto"
+	"nfxid/modules/auth/interfaces/http/dto/respdto"
+	"nfxid/pkgs/netx/httpresp"
 
 	"github.com/gofiber/fiber/v2"
 )

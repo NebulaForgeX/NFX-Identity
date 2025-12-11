@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	userAppQueries "nebulaid/modules/auth/application/user/queries"
-	userDomainViews "nebulaid/modules/auth/domain/user/views"
-	"nebulaid/modules/auth/infrastructure/rdb/views"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	userAppQueries "nfxid/modules/auth/application/user/queries"
+	userDomainViews "nfxid/modules/auth/domain/user/views"
+	"nfxid/modules/auth/infrastructure/rdb/views"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 )
 
 func UserViewToDomain(v *views.UserWithRoleView) userDomainViews.UserView {

@@ -1,11 +1,11 @@
 package user
 
 import (
-	"nebulaid/modules/auth/application/user/queries"
-	profileDomain "nebulaid/modules/auth/domain/profile"
-	userDomain "nebulaid/modules/auth/domain/user"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/tokenx"
+	"nfxid/modules/auth/application/user/queries"
+	profileDomain "nfxid/modules/auth/domain/profile"
+	userDomain "nfxid/modules/auth/domain/user"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/tokenx"
 )
 
 type Service struct {

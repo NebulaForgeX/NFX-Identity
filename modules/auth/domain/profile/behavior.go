@@ -3,7 +3,7 @@ package profile
 import (
 	"time"
 
-	profileErrors "nebulaid/modules/auth/domain/profile/errors"
+	profileErrors "nfxid/modules/auth/domain/profile/errors"
 )
 
 func (p *Profile) EnsureEditable(e ProfileEditable) error {

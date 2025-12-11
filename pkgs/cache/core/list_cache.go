@@ -3,8 +3,8 @@ package core
 import (
 	"context"
 	"fmt"
-	"nebulaid/pkgs/cache/config"
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/utils/id"
 
 	"golang.org/x/sync/singleflight"
 )

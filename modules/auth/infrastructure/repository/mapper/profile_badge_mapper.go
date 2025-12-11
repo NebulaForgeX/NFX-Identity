@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nebulaid/modules/auth/domain/profile_badge"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
+	"nfxid/modules/auth/domain/profile_badge"
+	"nfxid/modules/auth/infrastructure/rdb/models"
 )
 
 func ProfileBadgeDomainToModel(pb *profile_badge.ProfileBadge) *models.ProfileBadge {

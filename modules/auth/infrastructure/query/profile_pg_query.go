@@ -3,12 +3,12 @@ package query
 import (
 	"context"
 	"errors"
-	profileAppQueries "nebulaid/modules/auth/application/profile/queries"
-	profileDomainErrors "nebulaid/modules/auth/domain/profile/errors"
-	profileDomainViews "nebulaid/modules/auth/domain/profile/views"
-	"nebulaid/modules/auth/infrastructure/query/mapper"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/modules/auth/infrastructure/rdb/views"
+	profileAppQueries "nfxid/modules/auth/application/profile/queries"
+	profileDomainErrors "nfxid/modules/auth/domain/profile/errors"
+	profileDomainViews "nfxid/modules/auth/domain/profile/views"
+	"nfxid/modules/auth/infrastructure/query/mapper"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/modules/auth/infrastructure/rdb/views"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

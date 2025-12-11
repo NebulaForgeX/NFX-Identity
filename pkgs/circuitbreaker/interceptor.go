@@ -2,7 +2,7 @@ package circuitbreaker
 
 import (
 	"context"
-	"nebulaid/pkgs/retry"
+	"nfxid/pkgs/retry"
 
 	"github.com/sony/gobreaker"
 	"google.golang.org/grpc"

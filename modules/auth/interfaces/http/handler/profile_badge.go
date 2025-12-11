@@ -1,10 +1,10 @@
 package handler
 
 import (
-	profileBadgeApp "nebulaid/modules/auth/application/profile_badge"
-	"nebulaid/modules/auth/interfaces/http/dto/reqdto"
-	"nebulaid/modules/auth/interfaces/http/dto/respdto"
-	"nebulaid/pkgs/netx/httpresp"
+	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
+	"nfxid/modules/auth/interfaces/http/dto/reqdto"
+	"nfxid/modules/auth/interfaces/http/dto/respdto"
+	"nfxid/pkgs/netx/httpresp"
 
 	"github.com/gofiber/fiber/v2"
 )

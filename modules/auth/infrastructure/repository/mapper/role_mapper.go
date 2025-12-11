@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nebulaid/modules/auth/domain/role"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	"nfxid/modules/auth/domain/role"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 
 	"gorm.io/datatypes"
 )

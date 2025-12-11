@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	educationAppViews "nebulaid/modules/auth/application/education/views"
-	educationpb "nebulaid/protos/gen/auth/education"
+	educationAppViews "nfxid/modules/auth/application/education/views"
+	educationpb "nfxid/protos/gen/auth/education"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

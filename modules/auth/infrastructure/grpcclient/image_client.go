@@ -1,9 +1,9 @@
 package grpcclient
 
 import (
-	"nebulaid/pkgs/grpcx"
-	"nebulaid/pkgs/security/token/servertoken"
-	imagepb "nebulaid/protos/gen/image/image"
+	"nfxid/pkgs/grpcx"
+	"nfxid/pkgs/security/token/servertoken"
+	imagepb "nfxid/protos/gen/image/image"
 
 	"google.golang.org/grpc"
 )

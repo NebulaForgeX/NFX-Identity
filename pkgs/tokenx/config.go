@@ -17,7 +17,7 @@ func DefaultConfig() Config {
 		SecretKey:       "change-me-in-production",
 		AccessTokenTTL:  15 * time.Minute,   // 15 分钟
 		RefreshTokenTTL: 7 * 24 * time.Hour, // 7 天
-		Issuer:          "nebulaid",
+		Issuer:          "nfxid",
 		Algorithm:       "HS256",
 	}
 }

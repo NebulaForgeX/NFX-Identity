@@ -2,12 +2,12 @@ package education
 
 import (
 	"context"
-	"nebulaid/events"
-	educationCommands "nebulaid/modules/auth/application/education/commands"
-	educationDomain "nebulaid/modules/auth/domain/education"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/safeexec"
+	"nfxid/events"
+	educationCommands "nfxid/modules/auth/application/education/commands"
+	educationDomain "nfxid/modules/auth/domain/education"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/safeexec"
 )
 
 func (s *Service) CreateEducation(ctx context.Context, cmd educationCommands.CreateEducationCmd) (*educationDomain.Education, error) {

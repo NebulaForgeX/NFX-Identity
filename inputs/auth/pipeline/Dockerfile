@@ -2,14 +2,9 @@
 FROM golang:alpine AS base-builder
 WORKDIR /src
 RUN apk update && apk upgrade && apk add --no-cache git ca-certificates tzdata
-# ENV GOPROXY=https://goproxy.io,https://mirrors.aliyun.com/goproxy/,direct
-# ENV GOSUMDB=sum.golang.org
-# # Configure Git for better network reliability and GitHub mirror
-# RUN git config --global http.postBuffer 524288000 && \
-#     git config --global http.lowSpeedLimit 0 && \
-#     git config --global http.lowSpeedTime 0 && \
-#     git config --global http.version HTTP/1.1 && \
-#     git config --global url."https://ghproxy.com/https://github.com/".insteadOf "https://github.com/"
+# Configure Go proxy for better network access in China
+ENV GOPROXY=https://goproxy.cn,direct
+ENV GOSUMDB=sum.golang.google.cn
 COPY go.mod go.sum ./
 RUN go mod download
 

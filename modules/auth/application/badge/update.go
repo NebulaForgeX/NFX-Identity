@@ -2,7 +2,7 @@ package badge
 
 import (
 	"context"
-	badgeCommands "nebulaid/modules/auth/application/badge/commands"
+	badgeCommands "nfxid/modules/auth/application/badge/commands"
 )
 
 func (s *Service) UpdateBadge(ctx context.Context, cmd badgeCommands.UpdateBadgeCmd) error {

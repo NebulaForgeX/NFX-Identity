@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	userApp "nebulaid/modules/auth/application/user"
-	userDomain "nebulaid/modules/auth/domain/user"
-	"nebulaid/modules/auth/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	userpb "nebulaid/protos/gen/auth/user"
+	userApp "nfxid/modules/auth/application/user"
+	userDomain "nfxid/modules/auth/domain/user"
+	"nfxid/modules/auth/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	userpb "nfxid/protos/gen/auth/user"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

@@ -1,8 +1,8 @@
 package image_type
 
 import (
-	imageTypeQueries "nebulaid/modules/image/application/image_type/queries"
-	imageTypeDomain "nebulaid/modules/image/domain/image_type"
+	imageTypeQueries "nfxid/modules/image/application/image_type/queries"
+	imageTypeDomain "nfxid/modules/image/domain/image_type"
 )
 
 type Service struct {

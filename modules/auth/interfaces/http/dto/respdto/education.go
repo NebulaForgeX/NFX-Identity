@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	educationAppViews "nebulaid/modules/auth/application/education/views"
+	educationAppViews "nfxid/modules/auth/application/education/views"
 
 	"github.com/google/uuid"
 )

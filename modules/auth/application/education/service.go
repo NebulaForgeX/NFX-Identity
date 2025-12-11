@@ -2,11 +2,11 @@ package education
 
 import (
 	"context"
-	educationQueries "nebulaid/modules/auth/application/education/queries"
-	educationViews "nebulaid/modules/auth/application/education/views"
-	educationDomain "nebulaid/modules/auth/domain/education"
-	"nebulaid/pkgs/cache"
-	"nebulaid/pkgs/eventbus"
+	educationQueries "nfxid/modules/auth/application/education/queries"
+	educationViews "nfxid/modules/auth/application/education/views"
+	educationDomain "nfxid/modules/auth/domain/education"
+	"nfxid/pkgs/cache"
+	"nfxid/pkgs/eventbus"
 
 	"github.com/google/uuid"
 )

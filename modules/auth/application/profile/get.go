@@ -2,10 +2,10 @@ package profile
 
 import (
 	"context"
-	profileQueries "nebulaid/modules/auth/application/profile/queries"
-	profileViews "nebulaid/modules/auth/application/profile/views"
-	"nebulaid/pkgs/logx"
-	imagepb "nebulaid/protos/gen/image/image"
+	profileQueries "nfxid/modules/auth/application/profile/queries"
+	profileViews "nfxid/modules/auth/application/profile/views"
+	"nfxid/pkgs/logx"
+	imagepb "nfxid/protos/gen/image/image"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

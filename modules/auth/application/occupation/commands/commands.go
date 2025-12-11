@@ -1,7 +1,7 @@
 package commands
 
 import (
-	occupationDomain "nebulaid/modules/auth/domain/occupation"
+	occupationDomain "nfxid/modules/auth/domain/occupation"
 
 	"github.com/google/uuid"
 )

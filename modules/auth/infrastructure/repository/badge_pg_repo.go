@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"errors"
-	"nebulaid/modules/auth/domain/badge"
-	badgeDomainErrors "nebulaid/modules/auth/domain/badge/errors"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/modules/auth/infrastructure/repository/mapper"
+	"nfxid/modules/auth/domain/badge"
+	badgeDomainErrors "nfxid/modules/auth/domain/badge/errors"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/modules/auth/infrastructure/repository/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

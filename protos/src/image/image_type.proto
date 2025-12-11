@@ -1,7 +1,7 @@
 syntax = "proto3";
 package image_type;
 
-option go_package = "nebulaid/protos/gen/image/image_type;imagetypepb";
+option go_package = "nfxid/protos/gen/image/image_type;imagetypepb";
 
 import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";

@@ -29,7 +29,7 @@ vars:
   ATLAS_MIGRATIONS_DIR_DEV: "file://atlas/migrations/development"
   ATLAS_MIGRATIONS_DIR_PROD: "file://atlas/migrations/production"
   ATLAS_MIGRATIONS_DIR: "{{if eq .ATLAS_ENV \"prod\"}}{{.ATLAS_MIGRATIONS_DIR_PROD}}{{else}}{{.ATLAS_MIGRATIONS_DIR_DEV}}{{end}}"
-  # Resources docker-compose.yml path (relative to nebulaid directory)
+  # Resources docker-compose.yml path (relative to nfxid directory)
   RESOURCES_DOCKER_COMPOSE: "../docker-compose.yml"
 
 tasks:

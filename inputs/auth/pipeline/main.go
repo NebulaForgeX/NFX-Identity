@@ -8,10 +8,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"nebulaid/modules/auth/config"
-	"nebulaid/modules/auth/server"
-	"nebulaid/pkgs/env"
-	"nebulaid/pkgs/logx"
+	"nfxid/modules/auth/config"
+	"nfxid/modules/auth/server"
+	"nfxid/pkgs/env"
+	"nfxid/pkgs/logx"
 
 	"go.uber.org/zap"
 )

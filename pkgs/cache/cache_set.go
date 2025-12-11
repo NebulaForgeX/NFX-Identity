@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/utils/id"
 	"sync"
 	"time"
 )

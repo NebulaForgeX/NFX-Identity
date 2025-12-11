@@ -5,8 +5,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	occupationDomainViews "nebulaid/modules/auth/domain/occupation/views"
-	"nebulaid/pkgs/query"
+	occupationDomainViews "nfxid/modules/auth/domain/occupation/views"
+	"nfxid/pkgs/query"
 
 	"github.com/google/uuid"
 )

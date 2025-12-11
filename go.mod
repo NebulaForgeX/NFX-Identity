@@ -1,4 +1,4 @@
-module nebulaid
+module nfxid
 
 go 1.24.4
 

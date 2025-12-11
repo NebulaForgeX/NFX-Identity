@@ -2,8 +2,8 @@ package badge
 
 import (
 	"context"
-	badgeCommands "nebulaid/modules/auth/application/badge/commands"
-	"nebulaid/modules/auth/domain/badge"
+	badgeCommands "nfxid/modules/auth/application/badge/commands"
+	"nfxid/modules/auth/domain/badge"
 )
 
 func (s *Service) CreateBadge(ctx context.Context, cmd badgeCommands.CreateBadgeCmd) (*badge.Badge, error) {

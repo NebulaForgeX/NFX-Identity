@@ -1,6 +1,6 @@
 package profile
 
-import profileErrors "nebulaid/modules/auth/domain/profile/errors"
+import profileErrors "nfxid/modules/auth/domain/profile/errors"
 
 func (e *ProfileEditable) Validate() error {
 	// Profile 的验证规则相对宽松，因为大部分字段都是可选的

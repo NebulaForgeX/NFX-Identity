@@ -1,8 +1,8 @@
 package usertoken
 
 import (
-	"nebulaid/pkgs/netx/httpresp"
-	"nebulaid/pkgs/security/token"
+	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/security/token"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"

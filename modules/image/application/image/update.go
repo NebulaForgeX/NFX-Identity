@@ -2,7 +2,7 @@ package image
 
 import (
 	"context"
-	imageDomain "nebulaid/modules/image/domain/image"
+	imageDomain "nfxid/modules/image/domain/image"
 
 	"github.com/google/uuid"
 )

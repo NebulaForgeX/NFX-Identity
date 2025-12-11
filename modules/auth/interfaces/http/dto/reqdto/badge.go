@@ -1,11 +1,11 @@
 package reqdto
 
 import (
-	badgeAppCommands "nebulaid/modules/auth/application/badge/commands"
-	badgeAppQueries "nebulaid/modules/auth/application/badge/queries"
-	badgeDomain "nebulaid/modules/auth/domain/badge"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	badgeAppCommands "nfxid/modules/auth/application/badge/commands"
+	badgeAppQueries "nfxid/modules/auth/application/badge/queries"
+	badgeDomain "nfxid/modules/auth/domain/badge"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 )

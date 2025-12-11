@@ -28,11 +28,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./certs:/letsencrypt
     networks:
-      - nebulaid
+      - nfxid
 
   #! Auth API Service
   auth-api:
-    image: NebulaID-auth-api:prod
+    image: nfxid-auth-api:prod
     container_name: NebulaID-Auth-API-Prod
     build:
       context: .
@@ -62,11 +62,11 @@ services:
     depends_on:
       - reverse-proxy
     networks:
-      - nebulaid
+      - nfxid
 
   #! Auth Pipeline Service（kafka）
   auth-pipeline:
-    image: NebulaID-auth-pipeline:prod
+    image: nfxid-auth-pipeline:prod
     container_name: NebulaID-Auth-Pipeline-Prod 
     build:
       context: .
@@ -80,13 +80,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nebulaid
+      - nfxid
     depends_on:
       - auth-api
 
   #! Auth Connection Service (gRPC)
   auth-connection:
-    image: NebulaID-auth-connection:prod
+    image: nfxid-auth-connection:prod
     container_name: NebulaID-Auth-Connection-Prod
     build:
       context: .
@@ -103,13 +103,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nebulaid
+      - nfxid
     depends_on:
       - auth-api
 
   #! Image API Service
   image-api:
-    image: NebulaID-image-api:prod
+    image: nfxid-image-api:prod
     container_name: NebulaID-Image-API-Prod
     build:
       context: .
@@ -139,11 +139,11 @@ services:
     depends_on:
       - reverse-proxy
     networks:
-      - nebulaid
+      - nfxid
 
   #! Image Pipeline Service
   image-pipeline:
-    image: NebulaID-image-pipeline:prod
+    image: nfxid-image-pipeline:prod
     container_name: NebulaID-Image-Pipeline-Prod
     build:
       context: .
@@ -157,13 +157,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nebulaid
+      - nfxid
     depends_on:
       - image-api
 
   #! Image Connection Service (gRPC)
   image-connection:
-    image: NebulaID-image-connection:prod
+    image: nfxid-image-connection:prod
     container_name: NebulaID-Image-Connection-Prod
     build:
       context: .
@@ -180,14 +180,14 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nebulaid
+      - nfxid
     depends_on:
       - image-api
 
 
 networks:
-  nebulaid:
-    name: nebulaid
+  nfxid:
+    name: nfxid
     driver: bridge
 
 

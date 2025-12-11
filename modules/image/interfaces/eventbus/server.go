@@ -2,11 +2,11 @@ package eventbus
 
 import (
 	"context"
-	imageApp "nebulaid/modules/image/application/image"
-	"nebulaid/modules/image/interfaces/eventbus/handler"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/kafkax"
-	"nebulaid/pkgs/logx"
+	imageApp "nfxid/modules/image/application/image"
+	"nfxid/modules/image/interfaces/eventbus/handler"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/kafkax"
+	"nfxid/pkgs/logx"
 	"time"
 
 	wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"

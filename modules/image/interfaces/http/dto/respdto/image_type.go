@@ -1,7 +1,7 @@
 package respdto
 
 import (
-	imageTypeAppViews "nebulaid/modules/image/application/image_type/views"
+	imageTypeAppViews "nfxid/modules/image/application/image_type/views"
 )
 
 func ImageTypeViewToDTO(v *imageTypeAppViews.ImageTypeView) map[string]interface{} {

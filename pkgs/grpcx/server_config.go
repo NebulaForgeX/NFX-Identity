@@ -6,10 +6,10 @@ import (
 	"runtime/debug"
 	"time"
 
-	"nebulaid/pkgs/logx"
-	logmw "nebulaid/pkgs/logx/middleware"
-	"nebulaid/pkgs/security/token"
-	"nebulaid/pkgs/security/token/servertoken"
+	"nfxid/pkgs/logx"
+	logmw "nfxid/pkgs/logx/middleware"
+	"nfxid/pkgs/security/token"
+	"nfxid/pkgs/security/token/servertoken"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"

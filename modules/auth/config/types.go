@@ -1,13 +1,13 @@
 package config
 
 import (
-	"nebulaid/pkgs/cache"
-	"nebulaid/pkgs/env"
-	"nebulaid/pkgs/kafkax"
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/mongodbx"
-	"nebulaid/pkgs/postgresqlx"
-	"nebulaid/pkgs/tokenx"
+	"nfxid/pkgs/cache"
+	"nfxid/pkgs/env"
+	"nfxid/pkgs/kafkax"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/mongodbx"
+	"nfxid/pkgs/postgresqlx"
+	"nfxid/pkgs/tokenx"
 	"time"
 )
 

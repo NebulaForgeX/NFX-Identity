@@ -5,8 +5,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	badgeDomainViews "nebulaid/modules/auth/domain/badge/views"
-	"nebulaid/pkgs/query"
+	badgeDomainViews "nfxid/modules/auth/domain/badge/views"
+	"nfxid/pkgs/query"
 
 	"github.com/google/uuid"
 )

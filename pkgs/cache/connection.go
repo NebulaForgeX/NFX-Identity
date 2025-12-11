@@ -2,7 +2,7 @@ package cache
 
 import (
 	"context"
-	"nebulaid/pkgs/cache/connection"
+	"nfxid/pkgs/cache/connection"
 )
 
 type ConnConfig = connection.Config

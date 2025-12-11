@@ -1,6 +1,6 @@
 package user
 
-import "nebulaid/modules/auth/application/user/views"
+import "nfxid/modules/auth/application/user/views"
 
 // LoginCmd 登录命令
 type LoginCmd struct {

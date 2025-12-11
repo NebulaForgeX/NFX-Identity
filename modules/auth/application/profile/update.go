@@ -2,7 +2,7 @@ package profile
 
 import (
 	"context"
-	profileCommands "nebulaid/modules/auth/application/profile/commands"
+	profileCommands "nfxid/modules/auth/application/profile/commands"
 )
 
 func (s *Service) UpdateProfile(ctx context.Context, cmd profileCommands.UpdateProfileCmd) error {

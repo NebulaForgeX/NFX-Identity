@@ -2,8 +2,8 @@ package core
 
 import (
 	"context"
-	"nebulaid/pkgs/cache/config"
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/utils/id"
 	"time"
 
 	"github.com/redis/go-redis/v9"

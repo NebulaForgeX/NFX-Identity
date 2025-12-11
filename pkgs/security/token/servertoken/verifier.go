@@ -2,7 +2,7 @@ package servertoken
 
 import (
 	"context"
-	"nebulaid/pkgs/security/token"
+	"nfxid/pkgs/security/token"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

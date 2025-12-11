@@ -1,7 +1,7 @@
 syntax = "proto3";
 package profile;
 
-option go_package = "nebulaid/protos/gen/auth/profile;profilepb";
+option go_package = "nfxid/protos/gen/auth/profile;profilepb";
 
 import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";

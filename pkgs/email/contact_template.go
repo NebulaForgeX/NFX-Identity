@@ -68,7 +68,7 @@ func BuildContactUsAdminEmailHTML(data ContactUsEmailData) string {
 					<tr>
 						<td style="padding:20px 32px 32px;border-top:1px solid #e5e7eb;text-align:center;color:#9ca3af;font-size:12px;">
 							<p style="margin:0;">这是一封来自官网联系表单的自动通知邮件，请及时跟进。</p>
-							<p style="margin:8px 0 0;">© 2025 nebulaid</p>
+							<p style="margin:8px 0 0;">© 2025 nfxid</p>
 						</td>
 					</tr>
 				</table>
@@ -135,7 +135,7 @@ func BuildContactUsConfirmationEmailHTML(data ContactUsConfirmationData) string 
 					<tr>
 						<td style="padding:20px 32px 32px;border-top:1px solid #e5e7eb;text-align:center;color:#9ca3af;font-size:12px;">
 							<p style="margin:0;">这是一封自动通知邮件，请勿直接回复。</p>
-							<p style="margin:8px 0 0;">© 2025 nebulaid</p>
+							<p style="margin:8px 0 0;">© 2025 nfxid</p>
 						</td>
 					</tr>
 				</table>

@@ -1,7 +1,7 @@
 syntax = "proto3";
 package education;
 
-option go_package = "nebulaid/protos/gen/auth/education;educationpb";
+option go_package = "nfxid/protos/gen/auth/education;educationpb";
 
 import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";

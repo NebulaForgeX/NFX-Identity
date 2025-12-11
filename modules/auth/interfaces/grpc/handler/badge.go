@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	badgeApp "nebulaid/modules/auth/application/badge"
-	badgeAppQueries "nebulaid/modules/auth/application/badge/queries"
-	"nebulaid/modules/auth/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	badgepb "nebulaid/protos/gen/auth/badge"
+	badgeApp "nfxid/modules/auth/application/badge"
+	badgeAppQueries "nfxid/modules/auth/application/badge/queries"
+	"nfxid/modules/auth/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	badgepb "nfxid/protos/gen/auth/badge"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

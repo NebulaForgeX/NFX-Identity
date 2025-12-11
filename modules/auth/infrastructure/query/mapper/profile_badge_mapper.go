@@ -1,10 +1,10 @@
 package mapper
 
 import (
-	profileBadgeAppQueries "nebulaid/modules/auth/application/profile_badge/queries"
-	profileBadgeDomainViews "nebulaid/modules/auth/domain/profile_badge/views"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/query"
+	profileBadgeAppQueries "nfxid/modules/auth/application/profile_badge/queries"
+	profileBadgeDomainViews "nfxid/modules/auth/domain/profile_badge/views"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/query"
 )
 
 func ProfileBadgeModelToDomain(m *models.ProfileBadge) profileBadgeDomainViews.ProfileBadgeView {

@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nebulaid/modules/auth/domain/occupation"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	"nfxid/modules/auth/domain/occupation"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 	"strings"
 )
 

@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	profileBadgeAppCommands "nebulaid/modules/auth/application/profile_badge/commands"
-	profileBadgeDomain "nebulaid/modules/auth/domain/profile_badge"
+	profileBadgeAppCommands "nfxid/modules/auth/application/profile_badge/commands"
+	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
 
 	"github.com/google/uuid"
 )

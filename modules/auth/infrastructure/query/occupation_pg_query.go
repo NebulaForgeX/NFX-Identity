@@ -3,12 +3,12 @@ package query
 import (
 	"context"
 	"errors"
-	occupationAppQueries "nebulaid/modules/auth/application/occupation/queries"
-	occupationDomainErrors "nebulaid/modules/auth/domain/occupation/errors"
-	occupationDomainViews "nebulaid/modules/auth/domain/occupation/views"
-	"nebulaid/modules/auth/infrastructure/query/mapper"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/slice"
+	occupationAppQueries "nfxid/modules/auth/application/occupation/queries"
+	occupationDomainErrors "nfxid/modules/auth/domain/occupation/errors"
+	occupationDomainViews "nfxid/modules/auth/domain/occupation/views"
+	"nfxid/modules/auth/infrastructure/query/mapper"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/slice"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

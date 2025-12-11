@@ -1,9 +1,9 @@
 package cache
 
 import (
-	"nebulaid/pkgs/cache/config"
-	"nebulaid/pkgs/cache/core"
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/cache/core"
+	"nfxid/pkgs/utils/id"
 	"time"
 
 	"github.com/redis/go-redis/v9"

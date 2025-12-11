@@ -2,8 +2,8 @@ package role
 
 import (
 	"context"
-	roleCommands "nebulaid/modules/auth/application/role/commands"
-	roleDomainErrors "nebulaid/modules/auth/domain/role/errors"
+	roleCommands "nfxid/modules/auth/application/role/commands"
+	roleDomainErrors "nfxid/modules/auth/domain/role/errors"
 )
 
 func (s *Service) UpdateRole(ctx context.Context, cmd roleCommands.UpdateRoleCmd) error {

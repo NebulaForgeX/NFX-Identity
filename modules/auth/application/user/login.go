@@ -4,13 +4,13 @@ import (
 	"context"
 	"strings"
 
-	"nebulaid/events"
-	userCommands "nebulaid/modules/auth/application/user/commands"
-	"nebulaid/modules/auth/application/user/views"
-	userDomain "nebulaid/modules/auth/domain/user"
-	userDomainErrors "nebulaid/modules/auth/domain/user/errors"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/safeexec"
+	"nfxid/events"
+	userCommands "nfxid/modules/auth/application/user/commands"
+	"nfxid/modules/auth/application/user/views"
+	userDomain "nfxid/modules/auth/domain/user"
+	userDomainErrors "nfxid/modules/auth/domain/user/errors"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/safeexec"
 
 	"golang.org/x/crypto/bcrypt"
 )

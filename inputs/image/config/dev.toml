@@ -5,7 +5,7 @@
     grpc_port = 10013
 
 [postgresql]
-    host = "127.0.0.1"
+    host = "host.docker.internal"
     port = 10105
     user = "postgres"
     password = "Lucas127."
@@ -25,7 +25,7 @@
         conn_max_lifetime = "1h"
 
 [mongodb]
-    host = "127.0.0.1"
+    host = "host.docker.internal"
     port = 10103
     user = "admin"
     password = "Lucas127."
@@ -40,7 +40,7 @@
         initial_backoff = "1s"
 
 [cache]
-    host = "127.0.0.1"
+    host = "host.docker.internal"
     port = 10181
     password = "Lucas127."
 
@@ -66,8 +66,8 @@
     compress = false
 
 [token]
-    secret_key = "nebulaid-secret-key-2025"
-    issuer = "nebulaid"
+    secret_key = "nfxid-secret-key-2025"
+    issuer = "nfxid"
     access_token_ttl = "24h"
     refresh_token_ttl = "168h"
     algorithm = "HS256"
@@ -76,8 +76,8 @@
     base_path = "./data"
 
 [kafka]
-    brokers = ["127.0.0.1:10183"]
-    client_id = "nebulaid-image"
+    brokers = ["host.docker.internal:10183"]
+    client_id = "nfxid-image"
 
     [kafka.network]
         max_open_requests = 1
@@ -121,4 +121,4 @@
         tls_insecure_skip_verify = false
 
 [grpc_client]
-    auth_addr = "localhost:10012"  # Auth 服务的 gRPC 地址（Auth 服务 gRPC 端口是 10012）
+    auth_addr = "host.docker.internal:10012"  # Auth 服务的 gRPC 地址（Auth 服务 gRPC 端口是 10012）

@@ -2,7 +2,7 @@
 package models
 
 import (
-	"nebulaid/enums"
+	"nfxid/enums"
 	"time"
 
 	"github.com/google/uuid"

@@ -3,11 +3,11 @@ package reqdto
 import (
 	"time"
 
-	occupationAppCommands "nebulaid/modules/auth/application/occupation/commands"
-	occupationAppQueries "nebulaid/modules/auth/application/occupation/queries"
-	occupationDomain "nebulaid/modules/auth/domain/occupation"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	occupationAppCommands "nfxid/modules/auth/application/occupation/commands"
+	occupationAppQueries "nfxid/modules/auth/application/occupation/queries"
+	occupationDomain "nfxid/modules/auth/domain/occupation"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 )

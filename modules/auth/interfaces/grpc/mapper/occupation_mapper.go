@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	occupationAppViews "nebulaid/modules/auth/application/occupation/views"
-	occupationpb "nebulaid/protos/gen/auth/occupation"
+	occupationAppViews "nfxid/modules/auth/application/occupation/views"
+	occupationpb "nfxid/protos/gen/auth/occupation"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

@@ -1,10 +1,10 @@
 package http
 
 import (
-	imageApp "nebulaid/modules/image/application/image"
-	imageTypeApp "nebulaid/modules/image/application/image_type"
-	"nebulaid/modules/image/interfaces/http/handler"
-	"nebulaid/pkgs/recover"
+	imageApp "nfxid/modules/image/application/image"
+	imageTypeApp "nfxid/modules/image/application/image_type"
+	"nfxid/modules/image/interfaces/http/handler"
+	"nfxid/pkgs/recover"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

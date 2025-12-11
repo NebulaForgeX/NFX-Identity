@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"nebulaid/pkgs/netx/httpresp"
-	"nebulaid/pkgs/tokenx"
+	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/tokenx"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"

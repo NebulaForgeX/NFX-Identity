@@ -2,8 +2,8 @@ package occupation
 
 import (
 	"context"
-	occupationQueries "nebulaid/modules/auth/application/occupation/queries"
-	occupationViews "nebulaid/modules/auth/application/occupation/views"
+	occupationQueries "nfxid/modules/auth/application/occupation/queries"
+	occupationViews "nfxid/modules/auth/application/occupation/views"
 
 	"github.com/google/uuid"
 )

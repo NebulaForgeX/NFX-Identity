@@ -2,10 +2,10 @@ package education
 
 import (
 	"context"
-	"nebulaid/events"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/safeexec"
+	"nfxid/events"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/safeexec"
 
 	"github.com/google/uuid"
 )

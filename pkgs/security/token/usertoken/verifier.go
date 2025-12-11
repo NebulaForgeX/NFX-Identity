@@ -3,8 +3,8 @@ package usertoken
 import (
 	"context"
 	"errors"
-	"nebulaid/pkgs/security/token"
-	"nebulaid/pkgs/utils/mapx"
+	"nfxid/pkgs/security/token"
+	"nfxid/pkgs/utils/mapx"
 	"time"
 
 	"github.com/MicahParks/keyfunc/v3"

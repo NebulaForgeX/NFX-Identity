@@ -1,7 +1,7 @@
 package http
 
 import (
-	"nebulaid/modules/auth/interfaces/http/handler"
+	"nfxid/modules/auth/interfaces/http/handler"
 )
 
 type Registry struct {

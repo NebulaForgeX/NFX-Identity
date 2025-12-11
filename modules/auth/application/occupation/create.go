@@ -2,8 +2,8 @@ package occupation
 
 import (
 	"context"
-	occupationCommands "nebulaid/modules/auth/application/occupation/commands"
-	occupationDomain "nebulaid/modules/auth/domain/occupation"
+	occupationCommands "nfxid/modules/auth/application/occupation/commands"
+	occupationDomain "nfxid/modules/auth/domain/occupation"
 )
 
 func (s *Service) CreateOccupation(ctx context.Context, cmd occupationCommands.CreateOccupationCmd) (*occupationDomain.Occupation, error) {

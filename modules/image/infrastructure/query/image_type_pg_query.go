@@ -3,10 +3,10 @@ package query
 import (
 	"context"
 	"errors"
-	imageTypeAppQueries "nebulaid/modules/image/application/image_type/queries"
-	imageTypeDomainErrors "nebulaid/modules/image/domain/image_type/errors"
-	imageTypeDomainViews "nebulaid/modules/image/domain/image_type/views"
-	"nebulaid/modules/image/infrastructure/rdb/models"
+	imageTypeAppQueries "nfxid/modules/image/application/image_type/queries"
+	imageTypeDomainErrors "nfxid/modules/image/domain/image_type/errors"
+	imageTypeDomainViews "nfxid/modules/image/domain/image_type/views"
+	"nfxid/modules/image/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

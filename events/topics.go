@@ -1,6 +1,6 @@
 package events
 
-import "nebulaid/pkgs/eventbus"
+import "nfxid/pkgs/eventbus"
 
 type TopicKey = eventbus.TopicKey
 

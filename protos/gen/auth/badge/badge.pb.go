@@ -7,13 +7,14 @@
 package badgepb
 
 import (
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -900,7 +901,7 @@ const file_auth_badge_proto_rawDesc = "" +
 	"\x13ProfileBadgeService\x12\\\n" +
 	"\x13GetProfileBadgeByID\x12!.badge.GetProfileBadgeByIDRequest\x1a\".badge.GetProfileBadgeByIDResponse\x12t\n" +
 	"\x1bGetProfileBadgesByProfileID\x12).badge.GetProfileBadgesByProfileIDRequest\x1a*.badge.GetProfileBadgesByProfileIDResponse\x12n\n" +
-	"\x19GetProfileBadgesByBadgeID\x12'.badge.GetProfileBadgesByBadgeIDRequest\x1a(.badge.GetProfileBadgesByBadgeIDResponseB(Z&nebulaid/protos/gen/auth/badge;badgepbb\x06proto3"
+	"\x19GetProfileBadgesByBadgeID\x12'.badge.GetProfileBadgesByBadgeIDRequest\x1a(.badge.GetProfileBadgesByBadgeIDResponseB(Z&nfxid/protos/gen/auth/badge;badgepbb\x06proto3"
 
 var (
 	file_auth_badge_proto_rawDescOnce sync.Once

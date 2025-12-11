@@ -2,8 +2,8 @@ package role
 
 import (
 	"context"
-	roleQueries "nebulaid/modules/auth/application/role/queries"
-	roleViews "nebulaid/modules/auth/application/role/views"
+	roleQueries "nfxid/modules/auth/application/role/queries"
+	roleViews "nfxid/modules/auth/application/role/views"
 
 	"github.com/google/uuid"
 )

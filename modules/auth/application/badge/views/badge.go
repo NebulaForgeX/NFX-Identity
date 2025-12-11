@@ -3,7 +3,7 @@ package views
 import (
 	"time"
 
-	badgeDomainViews "nebulaid/modules/auth/domain/badge/views"
+	badgeDomainViews "nfxid/modules/auth/domain/badge/views"
 
 	"github.com/google/uuid"
 )

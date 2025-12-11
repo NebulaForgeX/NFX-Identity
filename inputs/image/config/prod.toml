@@ -66,8 +66,8 @@
     compress = true
 
 [token]
-    secret_key = "nebulaid-secret-key-production-2025"
-    issuer = "nebulaid"
+    secret_key = "nfxid-secret-key-production-2025"
+    issuer = "nfxid"
     access_token_ttl = "2h"
     refresh_token_ttl = "168h"
     algorithm = "HS256"
@@ -77,7 +77,7 @@
 
 [kafka]
     brokers = ["127.0.0.1:10183"]
-    client_id = "nebulaid-image"
+    client_id = "nfxid-image"
 
     [kafka.network]
         max_open_requests = 1

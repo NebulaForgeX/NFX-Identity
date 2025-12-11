@@ -1,8 +1,8 @@
 package role
 
 import (
-	roleQueries "nebulaid/modules/auth/application/role/queries"
-	roleDomain "nebulaid/modules/auth/domain/role"
+	roleQueries "nfxid/modules/auth/application/role/queries"
+	roleDomain "nfxid/modules/auth/domain/role"
 )
 
 type Service struct {

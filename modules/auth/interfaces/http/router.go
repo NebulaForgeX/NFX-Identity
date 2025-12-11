@@ -1,8 +1,8 @@
 package http
 
 import (
-	"nebulaid/modules/auth/interfaces/http/middleware"
-	"nebulaid/pkgs/tokenx"
+	"nfxid/modules/auth/interfaces/http/middleware"
+	"nfxid/pkgs/tokenx"
 
 	"github.com/gofiber/fiber/v2"
 )

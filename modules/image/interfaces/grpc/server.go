@@ -1,13 +1,13 @@
 package grpc
 
 import (
-	imageApp "nebulaid/modules/image/application/image"
-	imageTypeApp "nebulaid/modules/image/application/image_type"
-	grpcHandler "nebulaid/modules/image/interfaces/grpc/handler"
-	"nebulaid/pkgs/grpcx"
-	"nebulaid/pkgs/security/token"
-	imagepb "nebulaid/protos/gen/image/image"
-	imagetypepb "nebulaid/protos/gen/image/image_type"
+	imageApp "nfxid/modules/image/application/image"
+	imageTypeApp "nfxid/modules/image/application/image_type"
+	grpcHandler "nfxid/modules/image/interfaces/grpc/handler"
+	"nfxid/pkgs/grpcx"
+	"nfxid/pkgs/security/token"
+	imagepb "nfxid/protos/gen/image/image"
+	imagetypepb "nfxid/protos/gen/image/image_type"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/sdk/trace"

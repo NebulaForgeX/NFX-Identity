@@ -3,8 +3,8 @@ package postgresqlx
 import (
 	"context"
 	"fmt"
-	"nebulaid/pkgs/health"
-	"nebulaid/pkgs/logx"
+	"nfxid/pkgs/health"
+	"nfxid/pkgs/logx"
 	"time"
 
 	"gorm.io/gorm"

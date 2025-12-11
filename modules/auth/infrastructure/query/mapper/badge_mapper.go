@@ -1,12 +1,12 @@
 package mapper
 
 import (
-	badgeAppQueries "nebulaid/modules/auth/application/badge/queries"
-	badgeDomainViews "nebulaid/modules/auth/domain/badge/views"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
-	"nebulaid/pkgs/utils/slice"
+	badgeAppQueries "nfxid/modules/auth/application/badge/queries"
+	badgeDomainViews "nfxid/modules/auth/domain/badge/views"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
+	"nfxid/pkgs/utils/slice"
 )
 
 func BadgeQueryToCommonQuery(q badgeAppQueries.BadgeListQuery) *query.ListQueryParams {

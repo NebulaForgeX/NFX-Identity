@@ -2,9 +2,9 @@ package role
 
 import (
 	"context"
-	roleCommands "nebulaid/modules/auth/application/role/commands"
-	roleDomain "nebulaid/modules/auth/domain/role"
-	roleDomainErrors "nebulaid/modules/auth/domain/role/errors"
+	roleCommands "nfxid/modules/auth/application/role/commands"
+	roleDomain "nfxid/modules/auth/domain/role"
+	roleDomainErrors "nfxid/modules/auth/domain/role/errors"
 )
 
 func (s *Service) CreateRole(ctx context.Context, cmd roleCommands.CreateRoleCmd) (*roleDomain.Role, error) {

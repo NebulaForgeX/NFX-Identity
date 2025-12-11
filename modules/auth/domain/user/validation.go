@@ -1,7 +1,7 @@
 package user
 
 import (
-	"nebulaid/modules/auth/domain/user/errors"
+	"nfxid/modules/auth/domain/user/errors"
 	"regexp"
 	"strings"
 )

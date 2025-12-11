@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	profileAppViews "nebulaid/modules/auth/application/profile/views"
-	profilepb "nebulaid/protos/gen/auth/profile"
+	profileAppViews "nfxid/modules/auth/application/profile/views"
+	profilepb "nfxid/protos/gen/auth/profile"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

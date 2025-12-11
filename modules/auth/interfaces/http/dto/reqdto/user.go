@@ -1,12 +1,12 @@
 package reqdto
 
 import (
-	userApp "nebulaid/modules/auth/application/user"
-	userAppCommands "nebulaid/modules/auth/application/user/commands"
-	userAppQueries "nebulaid/modules/auth/application/user/queries"
-	userDomain "nebulaid/modules/auth/domain/user"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	userApp "nfxid/modules/auth/application/user"
+	userAppCommands "nfxid/modules/auth/application/user/commands"
+	userAppQueries "nfxid/modules/auth/application/user/queries"
+	userDomain "nfxid/modules/auth/domain/user"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 )

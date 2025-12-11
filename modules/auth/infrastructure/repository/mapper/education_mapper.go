@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nebulaid/modules/auth/domain/education"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	"nfxid/modules/auth/domain/education"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 )
 
 func EducationDomainToModel(e *education.Education) *models.Education {

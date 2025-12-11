@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	badgeAppViews "nebulaid/modules/auth/application/badge/views"
-	badgepb "nebulaid/protos/gen/auth/badge"
+	badgeAppViews "nfxid/modules/auth/application/badge/views"
+	badgepb "nfxid/protos/gen/auth/badge"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

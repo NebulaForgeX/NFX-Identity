@@ -3,7 +3,7 @@ package connection
 import (
 	"context"
 	"fmt"
-	"nebulaid/pkgs/health"
+	"nfxid/pkgs/health"
 	"time"
 )
 

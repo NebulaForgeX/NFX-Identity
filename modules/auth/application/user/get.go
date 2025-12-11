@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"nebulaid/modules/auth/application/user/queries"
-	"nebulaid/modules/auth/application/user/views"
+	"nfxid/modules/auth/application/user/queries"
+	"nfxid/modules/auth/application/user/views"
 
 	"github.com/google/uuid"
 )

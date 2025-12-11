@@ -3,7 +3,7 @@
 $ErrorActionPreference = "Stop"
 
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
-# Script runs from nebulaid/atlas directory, so atlas root is parent of scripts
+# Script runs from nfxid/atlas directory, so atlas root is parent of scripts
 $ATLAS_DIR = (Get-Item $SCRIPT_DIR).Parent.FullName
 $REPO_ROOT = (Get-Item $ATLAS_DIR).Parent.FullName
 $GEN_DIR = Join-Path $ATLAS_DIR "gen\views"

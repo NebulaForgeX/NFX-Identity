@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nebulaid/modules/auth/domain/badge"
+	"nfxid/modules/auth/domain/badge"
 
 	"github.com/google/uuid"
 )

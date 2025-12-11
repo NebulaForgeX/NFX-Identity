@@ -7,16 +7,17 @@
 package imagepb
 
 import (
+	image_tag "nfxid/protos/gen/image/image_tag"
+	image_type "nfxid/protos/gen/image/image_type"
+	image_variant "nfxid/protos/gen/image/image_variant"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	image_tag "nebulaid/protos/gen/image/image_tag"
-	image_type "nebulaid/protos/gen/image/image_type"
-	image_variant "nebulaid/protos/gen/image/image_variant"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -1238,7 +1239,7 @@ const file_image_image_proto_rawDesc = "" +
 	"\x11GetImagesByTypeID\x12\x1f.image.GetImagesByTypeIDRequest\x1a .image.GetImagesByTypeIDResponse\x12h\n" +
 	"\x17GetImagesBySourceDomain\x12%.image.GetImagesBySourceDomainRequest\x1a&.image.GetImagesBySourceDomainResponse\x12G\n" +
 	"\fGetAllImages\x12\x1a.image.GetAllImagesRequest\x1a\x1b.image.GetAllImagesResponse\x12Y\n" +
-	"\x12SearchImagesByTags\x12 .image.SearchImagesByTagsRequest\x1a!.image.SearchImagesByTagsResponseB)Z'nebulaid/protos/gen/image/image;imagepbb\x06proto3"
+	"\x12SearchImagesByTags\x12 .image.SearchImagesByTagsRequest\x1a!.image.SearchImagesByTagsResponseB)Z'nfxid/protos/gen/image/image;imagepbb\x06proto3"
 
 var (
 	file_image_image_proto_rawDescOnce sync.Once

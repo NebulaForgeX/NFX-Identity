@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	roleAppQueries "nebulaid/modules/auth/application/role/queries"
-	roleDomainViews "nebulaid/modules/auth/domain/role/views"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	roleAppQueries "nfxid/modules/auth/application/role/queries"
+	roleDomainViews "nfxid/modules/auth/domain/role/views"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 	"time"
 )
 

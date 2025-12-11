@@ -3,8 +3,8 @@ package respdto
 import (
 	"time"
 
-	badgeAppViews "nebulaid/modules/auth/application/badge/views"
-	profileBadgeAppViews "nebulaid/modules/auth/application/profile_badge/views"
+	badgeAppViews "nfxid/modules/auth/application/badge/views"
+	profileBadgeAppViews "nfxid/modules/auth/application/profile_badge/views"
 
 	"github.com/google/uuid"
 )

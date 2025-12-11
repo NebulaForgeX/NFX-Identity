@@ -2,7 +2,7 @@ package queries
 
 import (
 	"context"
-	imageTypeDomainViews "nebulaid/modules/image/domain/image_type/views"
+	imageTypeDomainViews "nfxid/modules/image/domain/image_type/views"
 
 	"github.com/google/uuid"
 )

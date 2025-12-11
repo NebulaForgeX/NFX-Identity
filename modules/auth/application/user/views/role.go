@@ -1,7 +1,7 @@
 package views
 
 import (
-	userDomainViews "nebulaid/modules/auth/domain/user/views"
+	userDomainViews "nfxid/modules/auth/domain/user/views"
 
 	"github.com/google/uuid"
 	"gorm.io/datatypes"

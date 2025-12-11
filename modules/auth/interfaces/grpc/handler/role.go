@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	roleApp "nebulaid/modules/auth/application/role"
-	roleAppQueries "nebulaid/modules/auth/application/role/queries"
-	"nebulaid/modules/auth/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	rolepb "nebulaid/protos/gen/auth/role"
+	roleApp "nfxid/modules/auth/application/role"
+	roleAppQueries "nfxid/modules/auth/application/role/queries"
+	"nfxid/modules/auth/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	rolepb "nfxid/protos/gen/auth/role"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

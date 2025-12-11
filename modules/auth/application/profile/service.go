@@ -1,9 +1,9 @@
 package profile
 
 import (
-	profileQueries "nebulaid/modules/auth/application/profile/queries"
-	profileDomain "nebulaid/modules/auth/domain/profile"
-	"nebulaid/modules/auth/infrastructure/grpcclient"
+	profileQueries "nfxid/modules/auth/application/profile/queries"
+	profileDomain "nfxid/modules/auth/domain/profile"
+	"nfxid/modules/auth/infrastructure/grpcclient"
 )
 
 type Service struct {

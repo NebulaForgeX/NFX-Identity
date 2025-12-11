@@ -1,6 +1,6 @@
 package education
 
-import educationErrors "nebulaid/modules/auth/domain/education/errors"
+import educationErrors "nfxid/modules/auth/domain/education/errors"
 
 func (e *EducationEditable) Validate() error {
 	if e.School == "" {

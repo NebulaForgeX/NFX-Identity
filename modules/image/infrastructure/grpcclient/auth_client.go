@@ -1,10 +1,10 @@
 package grpcclient
 
 import (
-	"nebulaid/pkgs/grpcx"
-	"nebulaid/pkgs/security/token/servertoken"
-	profilepb "nebulaid/protos/gen/auth/profile"
-	userpb "nebulaid/protos/gen/auth/user"
+	"nfxid/pkgs/grpcx"
+	"nfxid/pkgs/security/token/servertoken"
+	profilepb "nfxid/protos/gen/auth/profile"
+	userpb "nfxid/protos/gen/auth/user"
 
 	"google.golang.org/grpc"
 )

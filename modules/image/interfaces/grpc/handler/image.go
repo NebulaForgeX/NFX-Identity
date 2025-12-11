@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	imageApp "nebulaid/modules/image/application/image"
-	imageAppQueries "nebulaid/modules/image/application/image/queries"
-	"nebulaid/modules/image/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	imagepb "nebulaid/protos/gen/image/image"
+	imageApp "nfxid/modules/image/application/image"
+	imageAppQueries "nfxid/modules/image/application/image/queries"
+	"nfxid/modules/image/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	imagepb "nfxid/protos/gen/image/image"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

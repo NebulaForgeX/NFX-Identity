@@ -3,7 +3,7 @@ package views
 import (
 	"time"
 
-	occupationDomainViews "nebulaid/modules/auth/domain/occupation/views"
+	occupationDomainViews "nfxid/modules/auth/domain/occupation/views"
 
 	"github.com/google/uuid"
 )

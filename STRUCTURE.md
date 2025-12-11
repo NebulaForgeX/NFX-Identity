@@ -1,6 +1,8 @@
 # Project Structure Documentation
 
-This document provides a comprehensive overview of the NebulaID project structure, architecture layers, and module organization.
+**NFX ID = NebulaForgeX Identity Platform**
+
+This document provides a comprehensive overview of the NFX ID project structure, architecture layers, and module organization.
 
 ---
 
@@ -32,7 +34,7 @@ Identity-Backend/
 
 ## 🏛️ Architecture Layers
 
-NebulaID follows **Clean Architecture** with clear separation of concerns:
+NFX ID follows **Clean Architecture** with clear separation of concerns:
 
 ### Layer Hierarchy
 

@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	educationAppQueries "nebulaid/modules/auth/application/education/queries"
-	educationDomainViews "nebulaid/modules/auth/domain/education/views"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	educationAppQueries "nfxid/modules/auth/application/education/queries"
+	educationDomainViews "nfxid/modules/auth/domain/education/views"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 	"time"
 )
 

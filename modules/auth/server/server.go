@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"nebulaid/modules/auth/config"
-	eventbusInterfaces "nebulaid/modules/auth/interfaces/eventbus"
-	grpcInterfaces "nebulaid/modules/auth/interfaces/grpc"
-	httpInterfaces "nebulaid/modules/auth/interfaces/http"
-	"nebulaid/pkgs/logx"
+	"nfxid/modules/auth/config"
+	eventbusInterfaces "nfxid/modules/auth/interfaces/eventbus"
+	grpcInterfaces "nfxid/modules/auth/interfaces/grpc"
+	httpInterfaces "nfxid/modules/auth/interfaces/http"
+	"nfxid/pkgs/logx"
 
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"

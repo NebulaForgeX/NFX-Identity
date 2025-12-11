@@ -1,7 +1,7 @@
 syntax = "proto3";
 package image_tag;
 
-option go_package = "nebulaid/protos/gen/image/image_tag;imagetagpb";
+option go_package = "nfxid/protos/gen/image/image_tag;imagetagpb";
 
 import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";

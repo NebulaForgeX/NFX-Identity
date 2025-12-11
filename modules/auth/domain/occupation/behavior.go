@@ -3,7 +3,7 @@ package occupation
 import (
 	"time"
 
-	occupationErrors "nebulaid/modules/auth/domain/occupation/errors"
+	occupationErrors "nfxid/modules/auth/domain/occupation/errors"
 )
 
 func (o *Occupation) EnsureEditable(ed OccupationEditable) error {

@@ -3,7 +3,7 @@ package profile_badge
 import (
 	"time"
 
-	profileBadgeErrors "nebulaid/modules/auth/domain/profile_badge/errors"
+	profileBadgeErrors "nfxid/modules/auth/domain/profile_badge/errors"
 
 	"github.com/google/uuid"
 )

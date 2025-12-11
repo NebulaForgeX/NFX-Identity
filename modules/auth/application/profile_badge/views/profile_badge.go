@@ -3,8 +3,8 @@ package views
 import (
 	"time"
 
-	profileBadgeDomainViews "nebulaid/modules/auth/domain/profile_badge/views"
-	userDomainViews "nebulaid/modules/auth/domain/user/views"
+	profileBadgeDomainViews "nfxid/modules/auth/domain/profile_badge/views"
+	userDomainViews "nfxid/modules/auth/domain/user/views"
 
 	"github.com/google/uuid"
 	"gorm.io/datatypes"

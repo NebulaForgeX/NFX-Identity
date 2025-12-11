@@ -3,12 +3,12 @@ package query
 import (
 	"context"
 	"errors"
-	userAppQueries "nebulaid/modules/auth/application/user/queries"
-	userDomainErrors "nebulaid/modules/auth/domain/user/errors"
-	userDomainViews "nebulaid/modules/auth/domain/user/views"
-	"nebulaid/modules/auth/infrastructure/query/mapper"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/modules/auth/infrastructure/rdb/views"
+	userAppQueries "nfxid/modules/auth/application/user/queries"
+	userDomainErrors "nfxid/modules/auth/domain/user/errors"
+	userDomainViews "nfxid/modules/auth/domain/user/views"
+	"nfxid/modules/auth/infrastructure/query/mapper"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/modules/auth/infrastructure/rdb/views"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

@@ -2,8 +2,8 @@ package image_type
 
 import (
 	"context"
-	"nebulaid/modules/image/application/image_type/queries"
-	"nebulaid/modules/image/application/image_type/views"
+	"nfxid/modules/image/application/image_type/queries"
+	"nfxid/modules/image/application/image_type/views"
 
 	"github.com/google/uuid"
 )

@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	occupationApp "nebulaid/modules/auth/application/occupation"
-	occupationAppQueries "nebulaid/modules/auth/application/occupation/queries"
-	"nebulaid/modules/auth/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	occupationpb "nebulaid/protos/gen/auth/occupation"
+	occupationApp "nfxid/modules/auth/application/occupation"
+	occupationAppQueries "nfxid/modules/auth/application/occupation/queries"
+	"nfxid/modules/auth/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	occupationpb "nfxid/protos/gen/auth/occupation"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

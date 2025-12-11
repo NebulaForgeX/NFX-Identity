@@ -1,11 +1,11 @@
 package reqdto
 
 import (
-	roleAppCommands "nebulaid/modules/auth/application/role/commands"
-	roleAppQueries "nebulaid/modules/auth/application/role/queries"
-	roleDomain "nebulaid/modules/auth/domain/role"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	roleAppCommands "nfxid/modules/auth/application/role/commands"
+	roleAppQueries "nfxid/modules/auth/application/role/queries"
+	roleDomain "nfxid/modules/auth/domain/role"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 )

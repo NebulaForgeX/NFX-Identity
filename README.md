@@ -1,14 +1,16 @@
-# NebulaID — Unified Authentication & Identity Service
+# NFX ID — Unified Authentication & Identity Service
+
+**NFX ID = NebulaForgeX Identity Platform**
 
 <div align="center">
-  <img src="image.png" alt="NebulaStack Logo" width="200">
+  <img src="image.png" alt="NFX ID Logo" width="200">
 </div>
 
-**NebulaID** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
+**NFX ID** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
 
 It provides authentication, authorization, user management, and enriched profile capabilities for all internal applications and microservices.
 
-Built with **Go**, designed with **clean architecture** and **domain-driven principles**, NebulaID is engineered for scalability, API-first integration, and cross-service interoperability.
+Built with **Go**, designed with **clean architecture** and **domain-driven principles**, NFX ID is engineered for scalability, API-first integration, and cross-service interoperability.
 
 ---
 
@@ -45,7 +47,7 @@ Perfect for **Netup、ReX、TrendRadar** 等产品共享的用户体系。
 
 ### 4. Service-to-Service Integration (Microservices Ready)
 
-NebulaID 提供：
+NFX ID 提供：
 
 - **Standardized JWT** for service authentication
 - **Internal service tokens** (machine-to-machine)
@@ -60,7 +62,7 @@ NebulaID 提供：
 
 ## 🏗️ Architecture
 
-NebulaID follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles:
+NFX ID follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -233,7 +235,7 @@ See [STRUCTURE.md](./STRUCTURE.md) for detailed project structure documentation.
 
 ## 🔄 Event-Driven Architecture
 
-NebulaID uses Kafka for asynchronous event processing:
+NFX ID uses Kafka for asynchronous event processing:
 
 ### Event Topics
 
@@ -343,7 +345,7 @@ Configuration is loaded via environment variable `ENV=dev|prod`.
 
 ### For Other Services
 
-1. **JWT Authentication**: Use tokens issued by NebulaID
+1. **JWT Authentication**: Use tokens issued by NFX ID
 2. **gRPC Client**: Connect to Connection services
 3. **Event Subscription**: Subscribe to Kafka topics
 4. **HTTP Client**: Call REST APIs

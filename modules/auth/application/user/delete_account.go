@@ -3,9 +3,9 @@ package user
 import (
 	"context"
 
-	"nebulaid/events"
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/safeexec"
+	"nfxid/events"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/safeexec"
 
 	"github.com/google/uuid"
 )

@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	userCommands "nebulaid/modules/auth/application/user/commands"
-	userDomainErrors "nebulaid/modules/auth/domain/user/errors"
+	userCommands "nfxid/modules/auth/application/user/commands"
+	userDomainErrors "nfxid/modules/auth/domain/user/errors"
 
 	"github.com/google/uuid"
 )

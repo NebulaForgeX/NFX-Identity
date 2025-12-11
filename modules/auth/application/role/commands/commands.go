@@ -1,7 +1,7 @@
 package commands
 
 import (
-	roleDomain "nebulaid/modules/auth/domain/role"
+	roleDomain "nfxid/modules/auth/domain/role"
 
 	"github.com/google/uuid"
 )

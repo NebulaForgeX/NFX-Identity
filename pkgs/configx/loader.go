@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"nebulaid/pkgs/utils/file"
+	"nfxid/pkgs/utils/file"
 
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/confmap"

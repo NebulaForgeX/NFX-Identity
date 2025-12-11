@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	educationApp "nebulaid/modules/auth/application/education"
-	educationAppQueries "nebulaid/modules/auth/application/education/queries"
-	"nebulaid/modules/auth/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	educationpb "nebulaid/protos/gen/auth/education"
+	educationApp "nfxid/modules/auth/application/education"
+	educationAppQueries "nfxid/modules/auth/application/education/queries"
+	"nfxid/modules/auth/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	educationpb "nfxid/protos/gen/auth/education"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"

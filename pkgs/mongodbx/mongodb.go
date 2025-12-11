@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/retry"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/retry"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

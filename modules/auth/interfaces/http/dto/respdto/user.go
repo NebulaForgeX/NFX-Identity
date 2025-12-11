@@ -3,8 +3,8 @@ package respdto
 import (
 	"time"
 
-	userAppCommands "nebulaid/modules/auth/application/user/commands"
-	userAppViews "nebulaid/modules/auth/application/user/views"
+	userAppCommands "nfxid/modules/auth/application/user/commands"
+	userAppViews "nfxid/modules/auth/application/user/views"
 
 	"github.com/google/uuid"
 )

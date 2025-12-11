@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	roleAppViews "nebulaid/modules/auth/application/role/views"
+	roleAppViews "nfxid/modules/auth/application/role/views"
 
 	"github.com/google/uuid"
 )

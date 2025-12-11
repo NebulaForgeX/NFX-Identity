@@ -2,9 +2,9 @@ package profile
 
 import (
 	"context"
-	profileCommands "nebulaid/modules/auth/application/profile/commands"
-	profileDomain "nebulaid/modules/auth/domain/profile"
-	profileDomainErrors "nebulaid/modules/auth/domain/profile/errors"
+	profileCommands "nfxid/modules/auth/application/profile/commands"
+	profileDomain "nfxid/modules/auth/domain/profile"
+	profileDomainErrors "nfxid/modules/auth/domain/profile/errors"
 )
 
 func (s *Service) CreateProfile(ctx context.Context, cmd profileCommands.CreateProfileCmd) (*profileDomain.Profile, error) {

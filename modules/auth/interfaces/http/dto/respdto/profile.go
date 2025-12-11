@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	profileAppViews "nebulaid/modules/auth/application/profile/views"
+	profileAppViews "nfxid/modules/auth/application/profile/views"
 
 	"github.com/google/uuid"
 )

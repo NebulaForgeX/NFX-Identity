@@ -1,7 +1,7 @@
 package views
 
 import (
-	imageDomainViews "nebulaid/modules/image/domain/image/views"
+	imageDomainViews "nfxid/modules/image/domain/image/views"
 	"time"
 )
 

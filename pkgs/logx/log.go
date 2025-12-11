@@ -2,7 +2,7 @@ package logx
 
 import (
 	"fmt"
-	"nebulaid/pkgs/env"
+	"nfxid/pkgs/env"
 	"os"
 	"sync"
 	"time"

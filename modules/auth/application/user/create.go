@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	userDomain "nebulaid/modules/auth/domain/user"
-	userDomainErrors "nebulaid/modules/auth/domain/user/errors"
+	userDomain "nfxid/modules/auth/domain/user"
+	userDomainErrors "nfxid/modules/auth/domain/user/errors"
 
 	"golang.org/x/crypto/bcrypt"
 )

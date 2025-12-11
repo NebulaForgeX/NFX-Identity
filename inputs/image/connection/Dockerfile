@@ -2,6 +2,9 @@
 FROM golang:alpine AS base-builder
 WORKDIR /src
 RUN apk update && apk upgrade && apk add --no-cache git ca-certificates tzdata
+# Configure Go proxy for better network access in China
+ENV GOPROXY=https://goproxy.cn,direct
+ENV GOSUMDB=sum.golang.google.cn
 COPY go.mod go.sum ./
 RUN go mod download
 

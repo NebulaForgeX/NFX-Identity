@@ -1,8 +1,8 @@
 package profile_badge
 
 import (
-	profileBadgeQueries "nebulaid/modules/auth/application/profile_badge/queries"
-	profileBadgeDomain "nebulaid/modules/auth/domain/profile_badge"
+	profileBadgeQueries "nfxid/modules/auth/application/profile_badge/queries"
+	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
 )
 
 type Service struct {

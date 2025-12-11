@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"nebulaid/pkgs/cache/core"
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/cache/core"
+	"nfxid/pkgs/utils/id"
 )
 
 // exported interfaces

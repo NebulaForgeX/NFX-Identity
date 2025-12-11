@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/utils/id"
 
 	"github.com/redis/go-redis/v9"
 )

@@ -2,8 +2,8 @@ package image
 
 import (
 	"context"
-	"nebulaid/modules/image/application/image/queries"
-	"nebulaid/modules/image/application/image/views"
+	"nfxid/modules/image/application/image/queries"
+	"nfxid/modules/image/application/image/views"
 
 	"github.com/google/uuid"
 )

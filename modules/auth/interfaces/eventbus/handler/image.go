@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 
-	"nebulaid/events"
-	"nebulaid/pkgs/logx"
+	"nfxid/events"
+	"nfxid/pkgs/logx"
 
 	"github.com/ThreeDotsLabs/watermill/message"
 )

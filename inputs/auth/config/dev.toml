@@ -66,8 +66,8 @@
     compress = false
 
 [token]
-    secret_key = "nebulaid-secret-key-2025"
-    issuer = "nebulaid"
+    secret_key = "nfxid-secret-key-2025"
+    issuer = "nfxid"
     access_token_ttl = "24h"
     refresh_token_ttl = "168h"
     algorithm = "HS256"
@@ -77,7 +77,7 @@
 
 [kafka]
     brokers = ["host.docker.internal:10183"]
-    client_id = "nebulaid-auth"
+    client_id = "nfxid-auth"
 
     [kafka.network]
         max_open_requests = 1

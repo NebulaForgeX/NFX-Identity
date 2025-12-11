@@ -7,15 +7,16 @@
 package userpb
 
 import (
+	profile "nfxid/protos/gen/auth/profile"
+	role "nfxid/protos/gen/auth/role"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	profile "nebulaid/protos/gen/auth/profile"
-	role "nebulaid/protos/gen/auth/role"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -963,7 +964,7 @@ const file_auth_user_proto_rawDesc = "" +
 	"\x0eGetUserByEmail\x12\x1b.user.GetUserByEmailRequest\x1a\x1c.user.GetUserByEmailResponse\x12K\n" +
 	"\x0eGetUserByPhone\x12\x1b.user.GetUserByPhoneRequest\x1a\x1c.user.GetUserByPhoneResponse\x12H\n" +
 	"\rBatchGetUsers\x12\x1a.user.BatchGetUsersRequest\x1a\x1b.user.BatchGetUsersResponse\x12N\n" +
-	"\x0fCheckUserExists\x12\x1c.user.CheckUserExistsRequest\x1a\x1d.user.CheckUserExistsResponseB&Z$nebulaid/protos/gen/auth/user;userpbb\x06proto3"
+	"\x0fCheckUserExists\x12\x1c.user.CheckUserExistsRequest\x1a\x1d.user.CheckUserExistsResponseB&Z$nfxid/protos/gen/auth/user;userpbb\x06proto3"
 
 var (
 	file_auth_user_proto_rawDescOnce sync.Once

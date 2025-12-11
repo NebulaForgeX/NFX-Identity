@@ -2,8 +2,8 @@ package recover
 
 import (
 	"fmt"
-	"nebulaid/pkgs/logx"
-	"nebulaid/pkgs/netx/httpresp"
+	"nfxid/pkgs/logx"
+	"nfxid/pkgs/netx/httpresp"
 	"os"
 	"runtime/debug"
 

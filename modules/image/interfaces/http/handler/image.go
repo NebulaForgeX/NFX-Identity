@@ -1,10 +1,10 @@
 package handler
 
 import (
-	imageApp "nebulaid/modules/image/application/image"
-	"nebulaid/modules/image/interfaces/http/dto/reqdto"
-	"nebulaid/modules/image/interfaces/http/dto/respdto"
-	"nebulaid/pkgs/netx/httpresp"
+	imageApp "nfxid/modules/image/application/image"
+	"nfxid/modules/image/interfaces/http/dto/reqdto"
+	"nfxid/modules/image/interfaces/http/dto/respdto"
+	"nfxid/pkgs/netx/httpresp"
 
 	"github.com/gofiber/fiber/v2"
 )

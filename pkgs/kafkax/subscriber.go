@@ -1,8 +1,8 @@
 package kafkax
 
 import (
-	"nebulaid/pkgs/eventbus"
-	"nebulaid/pkgs/logx"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/logx"
 
 	"github.com/IBM/sarama"
 	wmKafka "github.com/ThreeDotsLabs/watermill-kafka/v3/pkg/kafka"

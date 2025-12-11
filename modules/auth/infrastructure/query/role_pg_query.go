@@ -3,11 +3,11 @@ package query
 import (
 	"context"
 	"errors"
-	roleAppQueries "nebulaid/modules/auth/application/role/queries"
-	roleDomainErrors "nebulaid/modules/auth/domain/role/errors"
-	roleDomainViews "nebulaid/modules/auth/domain/role/views"
-	"nebulaid/modules/auth/infrastructure/query/mapper"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
+	roleAppQueries "nfxid/modules/auth/application/role/queries"
+	roleDomainErrors "nfxid/modules/auth/domain/role/errors"
+	roleDomainViews "nfxid/modules/auth/domain/role/views"
+	"nfxid/modules/auth/infrastructure/query/mapper"
+	"nfxid/modules/auth/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

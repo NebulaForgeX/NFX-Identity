@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nebulaid/modules/auth/domain/badge"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	"nfxid/modules/auth/domain/badge"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 )
 
 func BadgeDomainToModel(b *badge.Badge) *models.Badge {

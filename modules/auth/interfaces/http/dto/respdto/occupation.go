@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	occupationAppViews "nebulaid/modules/auth/application/occupation/views"
+	occupationAppViews "nfxid/modules/auth/application/occupation/views"
 
 	"github.com/google/uuid"
 )

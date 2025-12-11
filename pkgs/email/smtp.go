@@ -97,11 +97,11 @@ func (s *EmailService) Send(msg EmailMessage) error {
 	var message bytes.Buffer
 
 	// Headers
-	message.WriteString(fmt.Sprintf("From: nebulaid <%s>\r\n", s.config.From))
+	message.WriteString(fmt.Sprintf("From: nfxid <%s>\r\n", s.config.From))
 	message.WriteString(fmt.Sprintf("To: %s\r\n", strings.Join(msg.To, ", ")))
 	message.WriteString(fmt.Sprintf("Subject: %s\r\n", msg.Subject))
 	message.WriteString(fmt.Sprintf("Date: %s\r\n", time.Now().Format(time.RFC1123Z)))
-	message.WriteString(fmt.Sprintf("Message-ID: <%d.%s@nebulaid.com>\r\n", time.Now().UnixNano(), msg.To[0]))
+	message.WriteString(fmt.Sprintf("Message-ID: <%d.%s@nfxid.com>\r\n", time.Now().UnixNano(), msg.To[0]))
 	message.WriteString("MIME-Version: 1.0\r\n")
 
 	// Handle attachments

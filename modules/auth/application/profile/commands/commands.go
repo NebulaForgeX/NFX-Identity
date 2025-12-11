@@ -1,7 +1,7 @@
 package commands
 
 import (
-	profileDomain "nebulaid/modules/auth/domain/profile"
+	profileDomain "nfxid/modules/auth/domain/profile"
 
 	"github.com/google/uuid"
 )

@@ -3,7 +3,7 @@ package views
 import (
 	"time"
 
-	educationDomainViews "nebulaid/modules/auth/domain/education/views"
+	educationDomainViews "nfxid/modules/auth/domain/education/views"
 
 	"github.com/google/uuid"
 )

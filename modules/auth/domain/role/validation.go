@@ -1,6 +1,6 @@
 package role
 
-import roleErrors "nebulaid/modules/auth/domain/role/errors"
+import roleErrors "nfxid/modules/auth/domain/role/errors"
 
 func (e *RoleEditable) Validate() error {
 	if e.Name == "" {

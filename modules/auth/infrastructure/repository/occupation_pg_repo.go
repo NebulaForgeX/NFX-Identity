@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"errors"
-	"nebulaid/modules/auth/domain/occupation"
-	occupationDomainErrors "nebulaid/modules/auth/domain/occupation/errors"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/modules/auth/infrastructure/repository/mapper"
+	"nfxid/modules/auth/domain/occupation"
+	occupationDomainErrors "nfxid/modules/auth/domain/occupation/errors"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/modules/auth/infrastructure/repository/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

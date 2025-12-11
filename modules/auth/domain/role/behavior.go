@@ -3,7 +3,7 @@ package role
 import (
 	"time"
 
-	roleErrors "nebulaid/modules/auth/domain/role/errors"
+	roleErrors "nfxid/modules/auth/domain/role/errors"
 )
 
 func (r *Role) EnsureEditable(e RoleEditable) error {

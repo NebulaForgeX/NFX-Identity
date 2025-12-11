@@ -1,8 +1,8 @@
 package occupation
 
 import (
-	occupationQueries "nebulaid/modules/auth/application/occupation/queries"
-	occupationDomain "nebulaid/modules/auth/domain/occupation"
+	occupationQueries "nfxid/modules/auth/application/occupation/queries"
+	occupationDomain "nfxid/modules/auth/domain/occupation"
 )
 
 type Service struct {

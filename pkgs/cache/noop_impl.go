@@ -2,8 +2,8 @@ package cache
 
 import (
 	"context"
-	"nebulaid/pkgs/cache/config"
-	"nebulaid/pkgs/utils/id"
+	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/utils/id"
 )
 
 type NoopEntityCache[T any, ID id.IDtype] struct {

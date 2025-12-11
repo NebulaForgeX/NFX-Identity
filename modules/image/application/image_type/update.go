@@ -2,7 +2,7 @@ package image_type
 
 import (
 	"context"
-	imageTypeDomain "nebulaid/modules/image/domain/image_type"
+	imageTypeDomain "nfxid/modules/image/domain/image_type"
 
 	"github.com/google/uuid"
 )

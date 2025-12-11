@@ -1,7 +1,7 @@
 package eventbus
 
 import (
-	"nebulaid/modules/auth/interfaces/eventbus/handler"
+	"nfxid/modules/auth/interfaces/eventbus/handler"
 )
 
 type Registry struct {

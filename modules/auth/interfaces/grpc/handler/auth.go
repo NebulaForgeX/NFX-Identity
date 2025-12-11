@@ -3,13 +3,13 @@ package handler
 import (
 	"context"
 
-	profileApp "nebulaid/modules/auth/application/profile"
-	roleApp "nebulaid/modules/auth/application/role"
-	userApp "nebulaid/modules/auth/application/user"
-	userDomain "nebulaid/modules/auth/domain/user"
-	"nebulaid/modules/auth/interfaces/grpc/mapper"
-	"nebulaid/pkgs/logx"
-	authpb "nebulaid/protos/gen/auth/auth"
+	profileApp "nfxid/modules/auth/application/profile"
+	roleApp "nfxid/modules/auth/application/role"
+	userApp "nfxid/modules/auth/application/user"
+	userDomain "nfxid/modules/auth/domain/user"
+	"nfxid/modules/auth/interfaces/grpc/mapper"
+	"nfxid/pkgs/logx"
+	authpb "nfxid/protos/gen/auth/auth"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

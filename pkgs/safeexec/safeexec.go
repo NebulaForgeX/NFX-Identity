@@ -3,7 +3,7 @@ package safeexec
 import (
 	"errors"
 	"fmt"
-	"nebulaid/pkgs/logx"
+	"nfxid/pkgs/logx"
 	"runtime/debug"
 
 	"go.uber.org/zap"

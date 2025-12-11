@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"errors"
-	imageDomain "nebulaid/modules/image/domain/image"
-	imageDomainErrors "nebulaid/modules/image/domain/image/errors"
-	"nebulaid/modules/image/infrastructure/rdb/models"
-	"nebulaid/modules/image/infrastructure/repository/mapper"
+	imageDomain "nfxid/modules/image/domain/image"
+	imageDomainErrors "nfxid/modules/image/domain/image/errors"
+	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxid/modules/image/infrastructure/repository/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

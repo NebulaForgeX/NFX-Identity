@@ -1,7 +1,7 @@
 package commands
 
 import (
-	educationDomain "nebulaid/modules/auth/domain/education"
+	educationDomain "nfxid/modules/auth/domain/education"
 
 	"github.com/google/uuid"
 )

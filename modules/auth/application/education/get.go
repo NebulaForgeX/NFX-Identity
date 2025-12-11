@@ -2,8 +2,8 @@ package education
 
 import (
 	"context"
-	educationQueries "nebulaid/modules/auth/application/education/queries"
-	educationViews "nebulaid/modules/auth/application/education/views"
+	educationQueries "nfxid/modules/auth/application/education/queries"
+	educationViews "nfxid/modules/auth/application/education/views"
 
 	"github.com/google/uuid"
 )

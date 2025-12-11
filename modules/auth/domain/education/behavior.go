@@ -3,7 +3,7 @@ package education
 import (
 	"time"
 
-	educationErrors "nebulaid/modules/auth/domain/education/errors"
+	educationErrors "nfxid/modules/auth/domain/education/errors"
 )
 
 func (e *Education) EnsureEditable(ed EducationEditable) error {

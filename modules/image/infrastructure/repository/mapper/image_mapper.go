@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	imageDomain "nebulaid/modules/image/domain/image"
-	"nebulaid/modules/image/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	imageDomain "nfxid/modules/image/domain/image"
+	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 
 	"gorm.io/datatypes"
 )

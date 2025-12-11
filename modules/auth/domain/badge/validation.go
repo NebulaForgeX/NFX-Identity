@@ -1,6 +1,6 @@
 package badge
 
-import badgeErrors "nebulaid/modules/auth/domain/badge/errors"
+import badgeErrors "nfxid/modules/auth/domain/badge/errors"
 
 func (e *BadgeEditable) Validate() error {
 	if e.Name == "" {

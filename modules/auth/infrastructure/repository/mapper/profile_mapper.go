@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nebulaid/modules/auth/domain/profile"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	"nfxid/modules/auth/domain/profile"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 	"strings"
 
 	"github.com/google/uuid"

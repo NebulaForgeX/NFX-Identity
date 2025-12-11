@@ -4,11 +4,11 @@ import (
 	"strings"
 	"time"
 
-	profileAppCommands "nebulaid/modules/auth/application/profile/commands"
-	profileAppQueries "nebulaid/modules/auth/application/profile/queries"
-	profileDomain "nebulaid/modules/auth/domain/profile"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	profileAppCommands "nfxid/modules/auth/application/profile/commands"
+	profileAppQueries "nfxid/modules/auth/application/profile/queries"
+	profileDomain "nfxid/modules/auth/domain/profile"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 )

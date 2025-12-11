@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"nebulaid/pkgs/configx"
-	"nebulaid/pkgs/env"
+	"nfxid/pkgs/configx"
+	"nfxid/pkgs/env"
 )
 
 const ServiceName = "auth"

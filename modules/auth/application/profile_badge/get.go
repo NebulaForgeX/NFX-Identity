@@ -2,8 +2,8 @@ package profile_badge
 
 import (
 	"context"
-	profileBadgeQueries "nebulaid/modules/auth/application/profile_badge/queries"
-	profileBadgeViews "nebulaid/modules/auth/application/profile_badge/views"
+	profileBadgeQueries "nfxid/modules/auth/application/profile_badge/queries"
+	profileBadgeViews "nfxid/modules/auth/application/profile_badge/views"
 
 	"github.com/google/uuid"
 )

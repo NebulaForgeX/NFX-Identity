@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"nebulaid/pkgs/health"
+	"nfxid/pkgs/health"
 )
 
 var _ health.Resource = (*Client)(nil)

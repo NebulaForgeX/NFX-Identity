@@ -2,10 +2,10 @@ package badge
 
 import (
 	"context"
-	badgeQueries "nebulaid/modules/auth/application/badge/queries"
-	badgeViews "nebulaid/modules/auth/application/badge/views"
-	"nebulaid/modules/auth/domain/badge"
-	"nebulaid/pkgs/cache"
+	badgeQueries "nfxid/modules/auth/application/badge/queries"
+	badgeViews "nfxid/modules/auth/application/badge/views"
+	"nfxid/modules/auth/domain/badge"
+	"nfxid/pkgs/cache"
 
 	"github.com/google/uuid"
 )

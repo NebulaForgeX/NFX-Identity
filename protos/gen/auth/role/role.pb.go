@@ -7,13 +7,14 @@
 package rolepb
 
 import (
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -572,7 +573,7 @@ const file_auth_role_proto_rawDesc = "" +
 	"\vGetRoleByID\x12\x18.role.GetRoleByIDRequest\x1a\x19.role.GetRoleByIDResponse\x12H\n" +
 	"\rGetRoleByName\x12\x1a.role.GetRoleByNameRequest\x1a\x1b.role.GetRoleByNameResponse\x12H\n" +
 	"\rBatchGetRoles\x12\x1a.role.BatchGetRolesRequest\x1a\x1b.role.BatchGetRolesResponse\x12B\n" +
-	"\vGetAllRoles\x12\x18.role.GetAllRolesRequest\x1a\x19.role.GetAllRolesResponseB&Z$nebulaid/protos/gen/auth/role;rolepbb\x06proto3"
+	"\vGetAllRoles\x12\x18.role.GetAllRolesRequest\x1a\x19.role.GetAllRolesResponseB&Z$nfxid/protos/gen/auth/role;rolepbb\x06proto3"
 
 var (
 	file_auth_role_proto_rawDescOnce sync.Once

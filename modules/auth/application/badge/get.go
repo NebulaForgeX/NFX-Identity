@@ -2,8 +2,8 @@ package badge
 
 import (
 	"context"
-	badgeQueries "nebulaid/modules/auth/application/badge/queries"
-	badgeViews "nebulaid/modules/auth/application/badge/views"
+	badgeQueries "nfxid/modules/auth/application/badge/queries"
+	badgeViews "nfxid/modules/auth/application/badge/views"
 
 	"github.com/google/uuid"
 )

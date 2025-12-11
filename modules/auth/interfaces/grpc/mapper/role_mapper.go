@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	roleAppViews "nebulaid/modules/auth/application/role/views"
-	rolepb "nebulaid/protos/gen/auth/role"
+	roleAppViews "nfxid/modules/auth/application/role/views"
+	rolepb "nfxid/protos/gen/auth/role"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

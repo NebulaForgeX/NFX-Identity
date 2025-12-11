@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"errors"
-	"nebulaid/modules/auth/domain/role"
-	roleDomainErrors "nebulaid/modules/auth/domain/role/errors"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/modules/auth/infrastructure/repository/mapper"
+	"nfxid/modules/auth/domain/role"
+	roleDomainErrors "nfxid/modules/auth/domain/role/errors"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/modules/auth/infrastructure/repository/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

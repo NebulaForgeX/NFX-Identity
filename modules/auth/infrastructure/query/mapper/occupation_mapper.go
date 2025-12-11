@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	occupationAppQueries "nebulaid/modules/auth/application/occupation/queries"
-	occupationDomainViews "nebulaid/modules/auth/domain/occupation/views"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	occupationAppQueries "nfxid/modules/auth/application/occupation/queries"
+	occupationDomainViews "nfxid/modules/auth/domain/occupation/views"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 	"time"
 )
 

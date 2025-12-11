@@ -1,10 +1,10 @@
 package mapper
 
 import (
-	"nebulaid/enums"
-	"nebulaid/modules/auth/domain/user"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/timex"
+	"nfxid/enums"
+	"nfxid/modules/auth/domain/user"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/timex"
 )
 
 func UserDomainToModel(u *user.User) *models.User {

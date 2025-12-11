@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	profileAppQueries "nebulaid/modules/auth/application/profile/queries"
-	profileDomainViews "nebulaid/modules/auth/domain/profile/views"
-	"nebulaid/modules/auth/infrastructure/rdb/views"
-	"nebulaid/pkgs/query"
-	"nebulaid/pkgs/utils/ptr"
+	profileAppQueries "nfxid/modules/auth/application/profile/queries"
+	profileDomainViews "nfxid/modules/auth/domain/profile/views"
+	"nfxid/modules/auth/infrastructure/rdb/views"
+	"nfxid/pkgs/query"
+	"nfxid/pkgs/utils/ptr"
 	"strings"
 
 	"github.com/google/uuid"

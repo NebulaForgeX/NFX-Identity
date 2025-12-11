@@ -1,4 +1,4 @@
-// Atlas configuration for nebulaid service using PostgreSQL.
+// Atlas configuration for nfxid service using PostgreSQL.
 // Using Docker Atlas toolchain.
 
 // === Public variables ===

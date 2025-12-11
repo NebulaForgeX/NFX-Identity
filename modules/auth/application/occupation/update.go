@@ -2,7 +2,7 @@ package occupation
 
 import (
 	"context"
-	occupationCommands "nebulaid/modules/auth/application/occupation/commands"
+	occupationCommands "nfxid/modules/auth/application/occupation/commands"
 )
 
 func (s *Service) UpdateOccupation(ctx context.Context, cmd occupationCommands.UpdateOccupationCmd) error {

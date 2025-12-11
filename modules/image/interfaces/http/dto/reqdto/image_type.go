@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	imageTypeApp "nebulaid/modules/image/application/image_type"
-	imageTypeAppQueries "nebulaid/modules/image/application/image_type/queries"
+	imageTypeApp "nfxid/modules/image/application/image_type"
+	imageTypeAppQueries "nfxid/modules/image/application/image_type/queries"
 
 	"github.com/google/uuid"
 )

@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	imageTypeAppViews "nebulaid/modules/image/application/image_type/views"
-	imageTypeDomainViews "nebulaid/modules/image/domain/image_type/views"
-	imagetypepb "nebulaid/protos/gen/image/image_type"
+	imageTypeAppViews "nfxid/modules/image/application/image_type/views"
+	imageTypeDomainViews "nfxid/modules/image/domain/image_type/views"
+	imagetypepb "nfxid/protos/gen/image/image_type"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

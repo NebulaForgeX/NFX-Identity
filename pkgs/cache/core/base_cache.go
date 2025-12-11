@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"nebulaid/pkgs/cache/config"
-	"nebulaid/pkgs/utils/typeutil"
+	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/utils/typeutil"
 
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/sync/errgroup"

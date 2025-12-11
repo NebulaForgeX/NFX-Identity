@@ -1,8 +1,8 @@
 package query
 
 import (
-	"nebulaid/pkgs/utils/filter"
-	"nebulaid/pkgs/utils/slice"
+	"nfxid/pkgs/utils/filter"
+	"nfxid/pkgs/utils/slice"
 	"strings"
 )
 

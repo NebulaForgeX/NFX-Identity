@@ -3,12 +3,12 @@ package query
 import (
 	"context"
 	"errors"
-	educationAppQueries "nebulaid/modules/auth/application/education/queries"
-	educationDomainErrors "nebulaid/modules/auth/domain/education/errors"
-	educationDomainViews "nebulaid/modules/auth/domain/education/views"
-	"nebulaid/modules/auth/infrastructure/query/mapper"
-	"nebulaid/modules/auth/infrastructure/rdb/models"
-	"nebulaid/pkgs/utils/slice"
+	educationAppQueries "nfxid/modules/auth/application/education/queries"
+	educationDomainErrors "nfxid/modules/auth/domain/education/errors"
+	educationDomainViews "nfxid/modules/auth/domain/education/views"
+	"nfxid/modules/auth/infrastructure/query/mapper"
+	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxid/pkgs/utils/slice"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
