@@ -108,6 +108,9 @@ Desktop.ini
 *.dump
 data/**/*.sql
 
+.task/*
+
+
 ## Protect pkgs directory (never exclude any pkgs)
 !pkgs/
 !pkgs/**

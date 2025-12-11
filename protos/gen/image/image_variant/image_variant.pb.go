@@ -574,7 +574,7 @@ const file_image_image_variant_proto_rawDesc = "" +
 	"\x13GetImageVariantByID\x12).image_variant.GetImageVariantByIDRequest\x1a*.image_variant.GetImageVariantByIDResponse\x12\x8d\x01\n" +
 	"\x1eGetImageVariantByImageIDAndKey\x124.image_variant.GetImageVariantByImageIDAndKeyRequest\x1a5.image_variant.GetImageVariantByImageIDAndKeyResponse\x12~\n" +
 	"\x19GetImageVariantsByImageID\x12/.image_variant.GetImageVariantsByImageIDRequest\x1a0.image_variant.GetImageVariantsByImageIDResponse\x12r\n" +
-	"\x15BatchGetImageVariants\x12+.image_variant.BatchGetImageVariantsRequest\x1a,.image_variant.BatchGetImageVariantsResponseB8Z6identity/protos/gen/image/image_variant;imagevariantpbb\x06proto3"
+	"\x15BatchGetImageVariants\x12+.image_variant.BatchGetImageVariantsRequest\x1a,.image_variant.BatchGetImageVariantsResponseB5Z3nfxid/protos/gen/image/image_variant;imagevariantpbb\x06proto3"
 
 var (
 	file_image_image_variant_proto_rawDescOnce sync.Once

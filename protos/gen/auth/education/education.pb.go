@@ -7,14 +7,13 @@
 package educationpb
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -575,7 +574,7 @@ const file_auth_education_proto_rawDesc = "" +
 	"\x10EducationService\x12[\n" +
 	"\x10GetEducationByID\x12\".education.GetEducationByIDRequest\x1a#.education.GetEducationByIDResponse\x12s\n" +
 	"\x18GetEducationsByProfileID\x12*.education.GetEducationsByProfileIDRequest\x1a+.education.GetEducationsByProfileIDResponse\x12[\n" +
-	"\x10GetAllEducations\x12\".education.GetAllEducationsRequest\x1a#.education.GetAllEducationsResponseB0Z.nfxid/protos/gen/auth/education;educationpbb\x06proto3"
+	"\x10GetAllEducations\x12\".education.GetAllEducationsRequest\x1a#.education.GetAllEducationsResponseB-Z+nfxid/protos/gen/auth/education;educationpbb\x06proto3"
 
 var (
 	file_auth_education_proto_rawDescOnce sync.Once

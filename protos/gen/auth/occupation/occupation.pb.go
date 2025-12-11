@@ -603,7 +603,7 @@ const file_auth_occupation_proto_rawDesc = "" +
 	"\x11OccupationService\x12`\n" +
 	"\x11GetOccupationByID\x12$.occupation.GetOccupationByIDRequest\x1a%.occupation.GetOccupationByIDResponse\x12x\n" +
 	"\x19GetOccupationsByProfileID\x12,.occupation.GetOccupationsByProfileIDRequest\x1a-.occupation.GetOccupationsByProfileIDResponse\x12`\n" +
-	"\x11GetAllOccupations\x12$.occupation.GetAllOccupationsRequest\x1a%.occupation.GetAllOccupationsResponseB2Z0identity/protos/gen/auth/occupation;occupationpbb\x06proto3"
+	"\x11GetAllOccupations\x12$.occupation.GetAllOccupationsRequest\x1a%.occupation.GetAllOccupationsResponseB/Z-nfxid/protos/gen/auth/occupation;occupationpbb\x06proto3"
 
 var (
 	file_auth_occupation_proto_rawDescOnce sync.Once

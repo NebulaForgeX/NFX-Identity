@@ -588,7 +588,7 @@ const file_image_image_type_proto_rawDesc = "" +
 	"\x10GetImageTypeByID\x12#.image_type.GetImageTypeByIDRequest\x1a$.image_type.GetImageTypeByIDResponse\x12`\n" +
 	"\x11GetImageTypeByKey\x12$.image_type.GetImageTypeByKeyRequest\x1a%.image_type.GetImageTypeByKeyResponse\x12c\n" +
 	"\x12BatchGetImageTypes\x12%.image_type.BatchGetImageTypesRequest\x1a&.image_type.BatchGetImageTypesResponse\x12]\n" +
-	"\x10GetAllImageTypes\x12#.image_type.GetAllImageTypesRequest\x1a$.image_type.GetAllImageTypesResponseB2Z0identity/protos/gen/image/image_type;imagetypepbb\x06proto3"
+	"\x10GetAllImageTypes\x12#.image_type.GetAllImageTypesRequest\x1a$.image_type.GetAllImageTypesResponseB/Z-nfxid/protos/gen/image/image_type;imagetypepbb\x06proto3"
 
 var (
 	file_image_image_type_proto_rawDescOnce sync.Once

@@ -1,3 +1,5 @@
+name: nfx-id
+
 services:
   #! Traefik Reverse Proxy
   reverse-proxy:

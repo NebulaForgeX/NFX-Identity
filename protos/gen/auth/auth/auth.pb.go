@@ -7,17 +7,16 @@
 package authpb
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	profile "nfxid/protos/gen/auth/profile"
 	role "nfxid/protos/gen/auth/role"
 	user "nfxid/protos/gen/auth/user"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -1103,7 +1102,7 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x0eGetAuthByPhone\x12\x1b.auth.GetAuthByPhoneRequest\x1a\x1c.auth.GetAuthByPhoneResponse\x12E\n" +
 	"\fBatchGetAuth\x12\x19.auth.BatchGetAuthRequest\x1a\x1a.auth.BatchGetAuthResponse\x12K\n" +
 	"\x0eVerifyPassword\x12\x1b.auth.VerifyPasswordRequest\x1a\x1c.auth.VerifyPasswordResponse\x12Q\n" +
-	"\x10VerifyUserExists\x12\x1d.auth.VerifyUserExistsRequest\x1a\x1e.auth.VerifyUserExistsResponseB&Z$nfxid/protos/gen/auth/auth;authpbb\x06proto3"
+	"\x10VerifyUserExists\x12\x1d.auth.VerifyUserExistsRequest\x1a\x1e.auth.VerifyUserExistsResponseB#Z!nfxid/protos/gen/auth/auth;authpbb\x06proto3"
 
 var (
 	file_auth_auth_proto_rawDescOnce sync.Once

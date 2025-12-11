@@ -7,15 +7,14 @@
 package profilepb
 
 import (
-	badge "nfxid/protos/gen/auth/badge"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	badge "nfxid/protos/gen/auth/badge"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -843,7 +842,7 @@ const file_auth_profile_proto_rawDesc = "" +
 	"\x0eProfileService\x12Q\n" +
 	"\x0eGetProfileByID\x12\x1e.profile.GetProfileByIDRequest\x1a\x1f.profile.GetProfileByIDResponse\x12]\n" +
 	"\x12GetProfileByUserID\x12\".profile.GetProfileByUserIDRequest\x1a#.profile.GetProfileByUserIDResponse\x12W\n" +
-	"\x10BatchGetProfiles\x12 .profile.BatchGetProfilesRequest\x1a!.profile.BatchGetProfilesResponseB,Z*nfxid/protos/gen/auth/profile;profilepbb\x06proto3"
+	"\x10BatchGetProfiles\x12 .profile.BatchGetProfilesRequest\x1a!.profile.BatchGetProfilesResponseB)Z'nfxid/protos/gen/auth/profile;profilepbb\x06proto3"
 
 var (
 	file_auth_profile_proto_rawDescOnce sync.Once
