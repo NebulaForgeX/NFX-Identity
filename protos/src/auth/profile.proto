@@ -48,7 +48,7 @@ message Profile {
   map<string, int32> skills = 21; // 技能：{"golang": 10, "python": 8, ...}
   map<string, string> privacy_settings = 22; // 隐私设置（JSONB 对象）
   repeated string badge_ids = 23; // 徽章ID数组（通过 profile_badges 关联）
-  // Note: educations 和 occupation 是独立的表，需要通过单独的查询获取
+  // Note: profile_educations 和 profile_occupations 是独立的表，需要通过单独的查询获取
   google.protobuf.Timestamp created_at = 24; // 创建时间
   google.protobuf.Timestamp updated_at = 25; // 更新时间
   optional google.protobuf.Timestamp deleted_at = 26; // 软删除时间

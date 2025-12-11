@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	educationApp "nfxid/modules/auth/application/education"
-	educationAppQueries "nfxid/modules/auth/application/education/queries"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	educationAppQueries "nfxid/modules/auth/application/profile_education/queries"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
-	educationpb "nfxid/protos/gen/auth/education"
+	profileeducationpb "nfxid/protos/gen/auth/profile_education"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -15,7 +15,7 @@ import (
 )
 
 type EducationHandler struct {
-	educationpb.UnimplementedEducationServiceServer
+	profileeducationpb.UnimplementedProfileEducationServiceServer
 	educationAppSvc *educationApp.Service
 }
 
@@ -24,7 +24,7 @@ func NewEducationHandler(educationAppSvc *educationApp.Service) *EducationHandle
 }
 
 // GetEducationByID 根据ID获取教育经历
-func (h *EducationHandler) GetEducationByID(ctx context.Context, req *educationpb.GetEducationByIDRequest) (*educationpb.GetEducationByIDResponse, error) {
+func (h *EducationHandler) GetProfileEducationByID(ctx context.Context, req *profileeducationpb.GetProfileEducationByIDRequest) (*profileeducationpb.GetProfileEducationByIDResponse, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid education_id: %v", err)
@@ -37,11 +37,11 @@ func (h *EducationHandler) GetEducationByID(ctx context.Context, req *educationp
 	}
 
 	education := mapper.EducationViewToProto(&educationView)
-	return &educationpb.GetEducationByIDResponse{Education: education}, nil
+	return &profileeducationpb.GetProfileEducationByIDResponse{ProfileEducation: education}, nil
 }
 
 // GetEducationsByProfileID 根据ProfileID获取教育经历列表
-func (h *EducationHandler) GetEducationsByProfileID(ctx context.Context, req *educationpb.GetEducationsByProfileIDRequest) (*educationpb.GetEducationsByProfileIDResponse, error) {
+func (h *EducationHandler) GetProfileEducationsByProfileID(ctx context.Context, req *profileeducationpb.GetProfileEducationsByProfileIDRequest) (*profileeducationpb.GetProfileEducationsByProfileIDResponse, error) {
 	profileID, err := uuid.Parse(req.ProfileId)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid profile_id: %v", err)
@@ -53,16 +53,16 @@ func (h *EducationHandler) GetEducationsByProfileID(ctx context.Context, req *ed
 		return nil, status.Errorf(codes.Internal, "failed to get educations: %v", err)
 	}
 
-	educations := make([]*educationpb.Education, len(educationViews))
+	educations := make([]*profileeducationpb.ProfileEducation, len(educationViews))
 	for i, educationView := range educationViews {
 		educations[i] = mapper.EducationViewToProto(&educationView)
 	}
 
-	return &educationpb.GetEducationsByProfileIDResponse{Educations: educations}, nil
+	return &profileeducationpb.GetProfileEducationsByProfileIDResponse{ProfileEducations: educations}, nil
 }
 
 // GetAllEducations 获取所有教育经历列表
-func (h *EducationHandler) GetAllEducations(ctx context.Context, req *educationpb.GetAllEducationsRequest) (*educationpb.GetAllEducationsResponse, error) {
+func (h *EducationHandler) GetAllProfileEducations(ctx context.Context, req *profileeducationpb.GetAllProfileEducationsRequest) (*profileeducationpb.GetAllProfileEducationsResponse, error) {
 	listQuery := educationAppQueries.EducationListQuery{}
 
 	// Set pagination (convert Page/PageSize to Offset/Limit)
@@ -88,13 +88,13 @@ func (h *EducationHandler) GetAllEducations(ctx context.Context, req *educationp
 		return nil, status.Errorf(codes.Internal, "failed to get educations: %v", err)
 	}
 
-	educations := make([]*educationpb.Education, len(result.Items))
+	educations := make([]*profileeducationpb.ProfileEducation, len(result.Items))
 	for i, educationView := range result.Items {
 		educations[i] = mapper.EducationViewToProto(&educationView)
 	}
 
-	return &educationpb.GetAllEducationsResponse{
-		Educations: educations,
-		Total:      int32(result.Total),
+	return &profileeducationpb.GetAllProfileEducationsResponse{
+		ProfileEducations: educations,
+		Total:             int32(result.Total),
 	}, nil
 }

@@ -20,7 +20,6 @@ type ProfileSimpleView struct {
 	UserStatus    string     `gorm:"column:user_status;->"`
 	IsVerified    bool       `gorm:"column:is_verified;->"`
 	LastLoginAt   *time.Time `gorm:"column:last_login_at;->"`
-	RoleID        *uuid.UUID `gorm:"column:role_id;->"`
 	UserCreatedAt time.Time  `gorm:"column:user_created_at;->"`
 	UserUpdatedAt time.Time  `gorm:"column:user_updated_at;->"`
 
@@ -54,7 +53,7 @@ func (ProfileSimpleView) TableName() string {
 }
 
 var ProfileSimpleViewCols = struct {
-	UserID, Username, Email, UserPhone, UserStatus, IsVerified, LastLoginAt, RoleID,
+	UserID, Username, Email, UserPhone, UserStatus, IsVerified, LastLoginAt,
 	UserCreatedAt, UserUpdatedAt, ProfileID, FirstName, LastName, Nickname, DisplayName,
 	AvatarID, BackgroundID, BackgroundIds, Bio, ProfilePhone, Birthday, Age, Gender,
 	Location, Website, Github, SocialLinks, Preferences, Skills, PrivacySettings,
@@ -67,7 +66,6 @@ var ProfileSimpleViewCols = struct {
 	UserStatus:       "user_status",
 	IsVerified:       "is_verified",
 	LastLoginAt:      "last_login_at",
-	RoleID:           "role_id",
 	UserCreatedAt:    "user_created_at",
 	UserUpdatedAt:    "user_updated_at",
 	ProfileID:        "profile_id",

@@ -26,10 +26,6 @@ func UserViewToProtoAuth(v *userAppViews.UserView) *authpb.Auth {
 		UpdatedAt:  timestamppb.New(v.UpdatedAt),
 	}
 
-	if v.RoleID != nil {
-		roleIDStr := v.RoleID.String()
-		auth.RoleId = &roleIDStr
-	}
 	if v.LastLoginAt != nil {
 		auth.LastLoginAt = timestamppb.New(*v.LastLoginAt)
 	}
@@ -40,9 +36,12 @@ func UserViewToProtoAuth(v *userAppViews.UserView) *authpb.Auth {
 	// 嵌套用户信息
 	auth.User = UserViewToProtoUser(v)
 
-	// 嵌套角色信息
-	if v.Role != nil {
-		auth.Role = RoleViewToProtoRole(v.Role)
+	// 嵌套角色信息（多个角色）
+	if len(v.Roles) > 0 {
+		auth.Roles = make([]*rolepb.Role, 0, len(v.Roles))
+		for _, role := range v.Roles {
+			auth.Roles = append(auth.Roles, RoleViewToProtoRole(&role))
+		}
 	}
 
 	return auth
@@ -65,17 +64,16 @@ func UserViewToProtoUser(v *userAppViews.UserView) *userpb.User {
 		UpdatedAt:  timestamppb.New(v.UpdatedAt),
 	}
 
-	if v.RoleID != nil {
-		roleIDStr := v.RoleID.String()
-		user.RoleId = &roleIDStr
-	}
 	if v.LastLoginAt != nil {
 		user.LastLoginAt = timestamppb.New(*v.LastLoginAt)
 	}
 
-	// 嵌套角色信息
-	if v.Role != nil {
-		user.Role = RoleViewToProtoRole(v.Role)
+	// 嵌套角色信息（多个角色）
+	if len(v.Roles) > 0 {
+		user.Roles = make([]*rolepb.Role, 0, len(v.Roles))
+		for _, role := range v.Roles {
+			user.Roles = append(user.Roles, RoleViewToProtoRole(&role))
+		}
 	}
 
 	return user

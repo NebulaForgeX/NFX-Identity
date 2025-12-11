@@ -188,7 +188,7 @@ type Profile struct {
 	Skills          map[string]int32       `protobuf:"bytes,21,rep,name=skills,proto3" json:"skills,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                                         // 技能：{"golang": 10, "python": 8, ...}
 	PrivacySettings map[string]string      `protobuf:"bytes,22,rep,name=privacy_settings,json=privacySettings,proto3" json:"privacy_settings,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 隐私设置（JSONB 对象）
 	BadgeIds        []string               `protobuf:"bytes,23,rep,name=badge_ids,json=badgeIds,proto3" json:"badge_ids,omitempty"`                                                                                                // 徽章ID数组（通过 profile_badges 关联）
-	// Note: educations 和 occupation 是独立的表，需要通过单独的查询获取
+	// Note: profile_educations 和 profile_occupations 是独立的表，需要通过单独的查询获取
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,24,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`       // 创建时间
 	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,25,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`       // 更新时间
 	DeletedAt *timestamppb.Timestamp `protobuf:"bytes,26,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"` // 软删除时间

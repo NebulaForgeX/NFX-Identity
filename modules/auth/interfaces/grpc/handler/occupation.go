@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	occupationApp "nfxid/modules/auth/application/occupation"
-	occupationAppQueries "nfxid/modules/auth/application/occupation/queries"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
+	occupationAppQueries "nfxid/modules/auth/application/profile_occupation/queries"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
-	occupationpb "nfxid/protos/gen/auth/occupation"
+	profileoccupationpb "nfxid/protos/gen/auth/profile_occupation"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -15,7 +15,7 @@ import (
 )
 
 type OccupationHandler struct {
-	occupationpb.UnimplementedOccupationServiceServer
+	profileoccupationpb.UnimplementedProfileOccupationServiceServer
 	occupationAppSvc *occupationApp.Service
 }
 
@@ -24,7 +24,7 @@ func NewOccupationHandler(occupationAppSvc *occupationApp.Service) *OccupationHa
 }
 
 // GetOccupationByID 根据ID获取职业信息
-func (h *OccupationHandler) GetOccupationByID(ctx context.Context, req *occupationpb.GetOccupationByIDRequest) (*occupationpb.GetOccupationByIDResponse, error) {
+func (h *OccupationHandler) GetProfileOccupationByID(ctx context.Context, req *profileoccupationpb.GetProfileOccupationByIDRequest) (*profileoccupationpb.GetProfileOccupationByIDResponse, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid occupation_id: %v", err)
@@ -37,11 +37,11 @@ func (h *OccupationHandler) GetOccupationByID(ctx context.Context, req *occupati
 	}
 
 	occupation := mapper.OccupationViewToProto(&occupationView)
-	return &occupationpb.GetOccupationByIDResponse{Occupation: occupation}, nil
+	return &profileoccupationpb.GetProfileOccupationByIDResponse{ProfileOccupation: occupation}, nil
 }
 
 // GetOccupationsByProfileID 根据ProfileID获取职业信息列表
-func (h *OccupationHandler) GetOccupationsByProfileID(ctx context.Context, req *occupationpb.GetOccupationsByProfileIDRequest) (*occupationpb.GetOccupationsByProfileIDResponse, error) {
+func (h *OccupationHandler) GetProfileOccupationsByProfileID(ctx context.Context, req *profileoccupationpb.GetProfileOccupationsByProfileIDRequest) (*profileoccupationpb.GetProfileOccupationsByProfileIDResponse, error) {
 	profileID, err := uuid.Parse(req.ProfileId)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid profile_id: %v", err)
@@ -53,16 +53,16 @@ func (h *OccupationHandler) GetOccupationsByProfileID(ctx context.Context, req *
 		return nil, status.Errorf(codes.Internal, "failed to get occupations: %v", err)
 	}
 
-	occupations := make([]*occupationpb.Occupation, len(occupationViews))
+	occupations := make([]*profileoccupationpb.ProfileOccupation, len(occupationViews))
 	for i, occupationView := range occupationViews {
 		occupations[i] = mapper.OccupationViewToProto(&occupationView)
 	}
 
-	return &occupationpb.GetOccupationsByProfileIDResponse{Occupations: occupations}, nil
+	return &profileoccupationpb.GetProfileOccupationsByProfileIDResponse{ProfileOccupations: occupations}, nil
 }
 
 // GetAllOccupations 获取所有职业信息列表
-func (h *OccupationHandler) GetAllOccupations(ctx context.Context, req *occupationpb.GetAllOccupationsRequest) (*occupationpb.GetAllOccupationsResponse, error) {
+func (h *OccupationHandler) GetAllProfileOccupations(ctx context.Context, req *profileoccupationpb.GetAllProfileOccupationsRequest) (*profileoccupationpb.GetAllProfileOccupationsResponse, error) {
 	listQuery := occupationAppQueries.OccupationListQuery{}
 
 	// Set pagination (convert Page/PageSize to Offset/Limit)
@@ -88,13 +88,13 @@ func (h *OccupationHandler) GetAllOccupations(ctx context.Context, req *occupati
 		return nil, status.Errorf(codes.Internal, "failed to get occupations: %v", err)
 	}
 
-	occupations := make([]*occupationpb.Occupation, len(result.Items))
+	occupations := make([]*profileoccupationpb.ProfileOccupation, len(result.Items))
 	for i, occupationView := range result.Items {
 		occupations[i] = mapper.OccupationViewToProto(&occupationView)
 	}
 
-	return &occupationpb.GetAllOccupationsResponse{
-		Occupations: occupations,
-		Total:       int32(result.Total),
+	return &profileoccupationpb.GetAllProfileOccupationsResponse{
+		ProfileOccupations: occupations,
+		Total:              int32(result.Total),
 	}, nil
 }

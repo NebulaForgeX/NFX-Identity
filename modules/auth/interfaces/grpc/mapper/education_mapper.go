@@ -1,19 +1,19 @@
 package mapper
 
 import (
-	educationAppViews "nfxid/modules/auth/application/education/views"
-	educationpb "nfxid/protos/gen/auth/education"
+	educationAppViews "nfxid/modules/auth/application/profile_education/views"
+	profileeducationpb "nfxid/protos/gen/auth/profile_education"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// EducationViewToProto 将 EducationView 转换为 proto Education 消息
-func EducationViewToProto(v *educationAppViews.EducationView) *educationpb.Education {
+// EducationViewToProto 将 EducationView 转换为 proto ProfileEducation 消息
+func EducationViewToProto(v *educationAppViews.EducationView) *profileeducationpb.ProfileEducation {
 	if v == nil {
 		return nil
 	}
 
-	education := &educationpb.Education{
+	education := &profileeducationpb.ProfileEducation{
 		Id:        v.ID.String(),
 		ProfileId: v.ProfileID.String(),
 		School:    v.School,

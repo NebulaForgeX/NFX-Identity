@@ -9,6 +9,10 @@ import (
 )
 
 func UserViewToDomain(v *views.UserWithRoleView) userDomainViews.UserView {
+	rolesJSON := []byte("[]")
+	if v.Roles != nil {
+		rolesJSON = *v.Roles
+	}
 	return userDomainViews.UserView{
 		ID:          v.UserID,
 		Username:    v.Username,
@@ -17,7 +21,7 @@ func UserViewToDomain(v *views.UserWithRoleView) userDomainViews.UserView {
 		Status:      v.Status,
 		IsVerified:  v.IsVerified,
 		LastLoginAt: v.LastLoginAt,
-		RoleID:      v.RoleID,
+		Roles:       rolesJSON,
 		CreatedAt:   v.UserCreatedAt,
 		UpdatedAt:   v.UserUpdatedAt,
 	}

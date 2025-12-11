@@ -46,4 +46,3 @@ var ImageTypeStatsCols = struct {
 	FirstCreatedAt: "first_created_at",
 	LastCreatedAt:  "last_created_at",
 }
-

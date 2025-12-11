@@ -2,8 +2,8 @@ package grpc
 
 import (
 	badgeApp "nfxid/modules/auth/application/badge"
-	educationApp "nfxid/modules/auth/application/education"
-	occupationApp "nfxid/modules/auth/application/occupation"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
 	roleApp "nfxid/modules/auth/application/role"
@@ -14,8 +14,8 @@ import (
 	"nfxid/pkgs/security/token"
 	authpb "nfxid/protos/gen/auth/auth"
 	badgepb "nfxid/protos/gen/auth/badge"
-	educationpb "nfxid/protos/gen/auth/education"
-	occupationpb "nfxid/protos/gen/auth/occupation"
+	profileeducationpb "nfxid/protos/gen/auth/profile_education"
+	profileoccupationpb "nfxid/protos/gen/auth/profile_occupation"
 	profilepb "nfxid/protos/gen/auth/profile"
 	rolepb "nfxid/protos/gen/auth/role"
 	userpb "nfxid/protos/gen/auth/user"
@@ -57,11 +57,11 @@ func NewServer(d Deps) *grpc.Server {
 		d.BadgeAppSvc(),
 	))
 
-	educationpb.RegisterEducationServiceServer(s, grpcHandler.NewEducationHandler(
+	profileeducationpb.RegisterProfileEducationServiceServer(s, grpcHandler.NewEducationHandler(
 		d.EducationAppSvc(),
 	))
 
-	occupationpb.RegisterOccupationServiceServer(s, grpcHandler.NewOccupationHandler(
+	profileoccupationpb.RegisterProfileOccupationServiceServer(s, grpcHandler.NewOccupationHandler(
 		d.OccupationAppSvc(),
 	))
 

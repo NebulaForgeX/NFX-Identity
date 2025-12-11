@@ -67,4 +67,3 @@ var ImageListItemCols = struct {
 	CreatedAt:        "created_at",
 	UpdatedAt:        "updated_at",
 }
-

@@ -13,32 +13,32 @@ import (
 // Use Case: Image detail pages, admin views, API endpoints showing full image information
 // Note: This view returns multiple rows per image (one per variant)
 type ImageDetailView struct {
-	ImageID            uuid.UUID       `gorm:"column:image_id;->"`
-	TypeID             *uuid.UUID      `gorm:"column:type_id;->"`
-	TypeKey            *string         `gorm:"column:type_key;->"`
-	TypeDescription    *string         `gorm:"column:type_description;->"`
-	UserID             *uuid.UUID      `gorm:"column:user_id;->"`
-	SourceDomain       *string         `gorm:"column:source_domain;->"`
-	Filename           string          `gorm:"column:filename;->"`
-	OriginalFilename   string          `gorm:"column:original_filename;->"`
-	OriginalMimeType   string          `gorm:"column:original_mime_type;->"`
-	OriginalSize       int64           `gorm:"column:original_size;->"`
-	OriginalWidth      *int            `gorm:"column:original_width;->"`
-	OriginalHeight     *int            `gorm:"column:original_height;->"`
-	OriginalStoragePath string         `gorm:"column:original_storage_path;->"`
-	OriginalURL        *string         `gorm:"column:original_url;->"`
-	IsPublic           bool            `gorm:"column:is_public;->"`
-	ImageMetadata      *datatypes.JSON `gorm:"column:image_metadata;->"`
-	VariantID          *uuid.UUID      `gorm:"column:variant_id;->"`
-	VariantKey         *string         `gorm:"column:variant_key;->"`
-	VariantWidth       *int            `gorm:"column:variant_width;->"`
-	VariantHeight      *int            `gorm:"column:variant_height;->"`
-	VariantSize        *int64          `gorm:"column:variant_size;->"`
-	VariantMimeType    *string         `gorm:"column:variant_mime_type;->"`
-	VariantStoragePath *string         `gorm:"column:variant_storage_path;->"`
-	VariantURL         *string         `gorm:"column:variant_url;->"`
-	ImageCreatedAt     time.Time       `gorm:"column:image_created_at;->"`
-	ImageUpdatedAt     time.Time       `gorm:"column:image_updated_at;->"`
+	ImageID             uuid.UUID       `gorm:"column:image_id;->"`
+	TypeID              *uuid.UUID      `gorm:"column:type_id;->"`
+	TypeKey             *string         `gorm:"column:type_key;->"`
+	TypeDescription     *string         `gorm:"column:type_description;->"`
+	UserID              *uuid.UUID      `gorm:"column:user_id;->"`
+	SourceDomain        *string         `gorm:"column:source_domain;->"`
+	Filename            string          `gorm:"column:filename;->"`
+	OriginalFilename    string          `gorm:"column:original_filename;->"`
+	OriginalMimeType    string          `gorm:"column:original_mime_type;->"`
+	OriginalSize        int64           `gorm:"column:original_size;->"`
+	OriginalWidth       *int            `gorm:"column:original_width;->"`
+	OriginalHeight      *int            `gorm:"column:original_height;->"`
+	OriginalStoragePath string          `gorm:"column:original_storage_path;->"`
+	OriginalURL         *string         `gorm:"column:original_url;->"`
+	IsPublic            bool            `gorm:"column:is_public;->"`
+	ImageMetadata       *datatypes.JSON `gorm:"column:image_metadata;->"`
+	VariantID           *uuid.UUID      `gorm:"column:variant_id;->"`
+	VariantKey          *string         `gorm:"column:variant_key;->"`
+	VariantWidth        *int            `gorm:"column:variant_width;->"`
+	VariantHeight       *int            `gorm:"column:variant_height;->"`
+	VariantSize         *int64          `gorm:"column:variant_size;->"`
+	VariantMimeType     *string         `gorm:"column:variant_mime_type;->"`
+	VariantStoragePath  *string         `gorm:"column:variant_storage_path;->"`
+	VariantURL          *string         `gorm:"column:variant_url;->"`
+	ImageCreatedAt      time.Time       `gorm:"column:image_created_at;->"`
+	ImageUpdatedAt      time.Time       `gorm:"column:image_updated_at;->"`
 }
 
 func (ImageDetailView) TableName() string {
@@ -52,31 +52,30 @@ var ImageDetailViewCols = struct {
 	VariantWidth, VariantHeight, VariantSize, VariantMimeType, VariantStoragePath,
 	VariantURL, ImageCreatedAt, ImageUpdatedAt string
 }{
-	ImageID:            "image_id",
-	TypeID:             "type_id",
-	TypeKey:            "type_key",
-	TypeDescription:    "type_description",
-	UserID:             "user_id",
-	SourceDomain:       "source_domain",
-	Filename:           "filename",
-	OriginalFilename:   "original_filename",
-	OriginalMimeType:   "original_mime_type",
-	OriginalSize:       "original_size",
-	OriginalWidth:      "original_width",
-	OriginalHeight:     "original_height",
+	ImageID:             "image_id",
+	TypeID:              "type_id",
+	TypeKey:             "type_key",
+	TypeDescription:     "type_description",
+	UserID:              "user_id",
+	SourceDomain:        "source_domain",
+	Filename:            "filename",
+	OriginalFilename:    "original_filename",
+	OriginalMimeType:    "original_mime_type",
+	OriginalSize:        "original_size",
+	OriginalWidth:       "original_width",
+	OriginalHeight:      "original_height",
 	OriginalStoragePath: "original_storage_path",
-	OriginalURL:        "original_url",
-	IsPublic:           "is_public",
-	ImageMetadata:      "image_metadata",
-	VariantID:          "variant_id",
-	VariantKey:         "variant_key",
-	VariantWidth:       "variant_width",
-	VariantHeight:      "variant_height",
-	VariantSize:        "variant_size",
-	VariantMimeType:    "variant_mime_type",
-	VariantStoragePath: "variant_storage_path",
-	VariantURL:         "variant_url",
-	ImageCreatedAt:     "image_created_at",
-	ImageUpdatedAt:     "image_updated_at",
+	OriginalURL:         "original_url",
+	IsPublic:            "is_public",
+	ImageMetadata:       "image_metadata",
+	VariantID:           "variant_id",
+	VariantKey:          "variant_key",
+	VariantWidth:        "variant_width",
+	VariantHeight:       "variant_height",
+	VariantSize:         "variant_size",
+	VariantMimeType:     "variant_mime_type",
+	VariantStoragePath:  "variant_storage_path",
+	VariantURL:          "variant_url",
+	ImageCreatedAt:      "image_created_at",
+	ImageUpdatedAt:      "image_updated_at",
 }
-

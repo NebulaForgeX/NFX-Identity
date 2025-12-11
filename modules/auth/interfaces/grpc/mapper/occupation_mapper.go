@@ -1,19 +1,19 @@
 package mapper
 
 import (
-	occupationAppViews "nfxid/modules/auth/application/occupation/views"
-	occupationpb "nfxid/protos/gen/auth/occupation"
+	occupationAppViews "nfxid/modules/auth/application/profile_occupation/views"
+	profileoccupationpb "nfxid/protos/gen/auth/profile_occupation"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// OccupationViewToProto 将 OccupationView 转换为 proto Occupation 消息
-func OccupationViewToProto(v *occupationAppViews.OccupationView) *occupationpb.Occupation {
+// OccupationViewToProto 将 OccupationView 转换为 proto ProfileOccupation 消息
+func OccupationViewToProto(v *occupationAppViews.OccupationView) *profileoccupationpb.ProfileOccupation {
 	if v == nil {
 		return nil
 	}
 
-	occupation := &occupationpb.Occupation{
+	occupation := &profileoccupationpb.ProfileOccupation{
 		Id:        v.ID.String(),
 		ProfileId: v.ProfileID.String(),
 		Company:   v.Company,

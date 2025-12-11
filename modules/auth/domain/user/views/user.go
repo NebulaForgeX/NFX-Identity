@@ -14,7 +14,7 @@ type UserView struct {
 	Status      string
 	IsVerified  bool
 	LastLoginAt *time.Time
-	RoleID      *uuid.UUID
+	Roles       []byte // JSON array of roles from user_with_role_view
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

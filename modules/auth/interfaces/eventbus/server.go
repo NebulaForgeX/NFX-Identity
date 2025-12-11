@@ -3,8 +3,8 @@ package eventbus
 import (
 	"context"
 	badgeApp "nfxid/modules/auth/application/badge"
-	educationApp "nfxid/modules/auth/application/education"
-	occupationApp "nfxid/modules/auth/application/occupation"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
 	roleApp "nfxid/modules/auth/application/role"

@@ -9,22 +9,19 @@ import (
 )
 
 // UserWithRoleView represents the auth.user_with_role_view database view
-// Purpose: Provides user information with role details in a single query
+// Purpose: Provides user information with role details (multiple roles supported)
 // Use Case: API endpoints, admin dashboards, authorization checks
 type UserWithRoleView struct {
-	UserID          uuid.UUID       `gorm:"column:user_id;->"`
-	Username        string          `gorm:"column:username;->"`
-	Email           string          `gorm:"column:email;->"`
-	Phone           string          `gorm:"column:phone;->"`
-	Status          string          `gorm:"column:status;->"`
-	IsVerified      bool            `gorm:"column:is_verified;->"`
-	LastLoginAt     *time.Time      `gorm:"column:last_login_at;->"`
-	RoleID          *uuid.UUID      `gorm:"column:role_id;->"`
-	RoleName        *string         `gorm:"column:role_name;->"`
-	RoleDescription *string         `gorm:"column:role_description;->"`
-	RolePermissions *datatypes.JSON `gorm:"column:role_permissions;->"`
-	UserCreatedAt   time.Time       `gorm:"column:user_created_at;->"`
-	UserUpdatedAt   time.Time       `gorm:"column:user_updated_at;->"`
+	UserID        uuid.UUID       `gorm:"column:user_id;->"`
+	Username      string          `gorm:"column:username;->"`
+	Email         string          `gorm:"column:email;->"`
+	Phone         string          `gorm:"column:phone;->"`
+	Status        string          `gorm:"column:status;->"`
+	IsVerified    bool            `gorm:"column:is_verified;->"`
+	LastLoginAt   *time.Time      `gorm:"column:last_login_at;->"`
+	Roles         *datatypes.JSON `gorm:"column:roles;->"` // Array of role objects (JSONB)
+	UserCreatedAt time.Time       `gorm:"column:user_created_at;->"`
+	UserUpdatedAt time.Time       `gorm:"column:user_updated_at;->"`
 }
 
 func (UserWithRoleView) TableName() string {
@@ -32,20 +29,17 @@ func (UserWithRoleView) TableName() string {
 }
 
 var UserWithRoleViewCols = struct {
-	UserID, Username, Email, Phone, Status, IsVerified, LastLoginAt, RoleID,
-	RoleName, RoleDescription, RolePermissions, UserCreatedAt, UserUpdatedAt string
+	UserID, Username, Email, Phone, Status, IsVerified, LastLoginAt,
+	Roles, UserCreatedAt, UserUpdatedAt string
 }{
-	UserID:          "user_id",
-	Username:        "username",
-	Email:           "email",
-	Phone:           "phone",
-	Status:          "status",
-	IsVerified:      "is_verified",
-	LastLoginAt:     "last_login_at",
-	RoleID:          "role_id",
-	RoleName:        "role_name",
-	RoleDescription: "role_description",
-	RolePermissions: "role_permissions",
-	UserCreatedAt:   "user_created_at",
-	UserUpdatedAt:   "user_updated_at",
+	UserID:        "user_id",
+	Username:      "username",
+	Email:         "email",
+	Phone:         "phone",
+	Status:        "status",
+	IsVerified:    "is_verified",
+	LastLoginAt:   "last_login_at",
+	Roles:         "roles",
+	UserCreatedAt: "user_created_at",
+	UserUpdatedAt: "user_updated_at",
 }

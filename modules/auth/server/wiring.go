@@ -7,9 +7,9 @@ import (
 
 	badgeApp "nfxid/modules/auth/application/badge"
 	badgeAppViews "nfxid/modules/auth/application/badge/views"
-	educationApp "nfxid/modules/auth/application/education"
-	educationAppViews "nfxid/modules/auth/application/education/views"
-	occupationApp "nfxid/modules/auth/application/occupation"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	educationAppViews "nfxid/modules/auth/application/profile_education/views"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
 	roleApp "nfxid/modules/auth/application/role"

@@ -1,0 +1,70 @@
+syntax = "proto3";
+package profile_education;
+
+option go_package = "nfxid/protos/gen/auth/profile_education;profileeducationpb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+// 教育经历信息
+message ProfileEducation {
+  string id = 1; // 教育经历ID (UUID)
+  string profile_id = 2; // 资料ID (UUID)
+  string school = 3; // 学校名称
+  optional string degree = 4; // 学位
+  optional string major = 5; // 专业
+  optional string field_of_study = 6; // 研究领域
+  optional string start_date = 7; // 开始日期 (DATE)
+  optional string end_date = 8; // 结束日期 (DATE)
+  bool is_current = 9; // 是否在读
+  optional string description = 10; // 描述
+  optional string grade = 11; // 成绩/等级
+  optional string activities = 12; // 活动
+  optional string achievements = 13; // 成就
+  google.protobuf.Timestamp created_at = 14; // 创建时间
+  google.protobuf.Timestamp updated_at = 15; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 16; // 软删除时间
+}
+
+// ProfileEducation 服务
+service ProfileEducationService {
+  // 根据ID获取教育经历
+  rpc GetProfileEducationByID (GetProfileEducationByIDRequest) returns (GetProfileEducationByIDResponse);
+  
+  // 根据ProfileID获取教育经历列表
+  rpc GetProfileEducationsByProfileID (GetProfileEducationsByProfileIDRequest) returns (GetProfileEducationsByProfileIDResponse);
+  
+  // 获取所有教育经历列表
+  rpc GetAllProfileEducations (GetAllProfileEducationsRequest) returns (GetAllProfileEducationsResponse);
+}
+
+// ProfileEducation Service Messages
+message GetProfileEducationByIDRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetProfileEducationByIDResponse {
+  ProfileEducation profile_education = 1;
+}
+
+message GetProfileEducationsByProfileIDRequest {
+  string profile_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetProfileEducationsByProfileIDResponse {
+  repeated ProfileEducation profile_educations = 1;
+}
+
+message GetAllProfileEducationsRequest {
+  int32 page = 1 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional string profile_id = 3 [(buf.validate.field).string.uuid = true];
+  optional string search = 4; // 搜索学校名称、专业等
+  optional bool is_current = 5;
+  optional string degree = 6; // 按学位过滤
+}
+
+message GetAllProfileEducationsResponse {
+  repeated ProfileEducation profile_educations = 1;
+  int32 total = 2;
+}

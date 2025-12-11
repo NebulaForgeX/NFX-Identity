@@ -1,0 +1,78 @@
+syntax = "proto3";
+package user_role;
+
+option go_package = "nfxid/protos/gen/auth/user_role;userrolepb";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "auth/user.proto";
+import "auth/role.proto";
+
+// 用户角色关联信息
+message UserRole {
+  string id = 1; // 关联ID (UUID)
+  string user_id = 2; // 用户ID (UUID)
+  string role_id = 3; // 角色ID (UUID)
+  google.protobuf.Timestamp created_at = 4; // 创建时间
+  user.User user = 5; // 嵌套的用户信息
+  role.Role role = 6; // 嵌套的角色信息
+}
+
+// UserRole 服务
+service UserRoleService {
+  // 根据ID获取用户角色关联
+  rpc GetUserRoleByID (GetUserRoleByIDRequest) returns (GetUserRoleByIDResponse);
+  
+  // 根据UserID获取用户角色列表
+  rpc GetUserRolesByUserID (GetUserRolesByUserIDRequest) returns (GetUserRolesByUserIDResponse);
+  
+  // 根据RoleID获取用户角色列表
+  rpc GetUserRolesByRoleID (GetUserRolesByRoleIDRequest) returns (GetUserRolesByRoleIDResponse);
+  
+  // 获取所有用户角色关联列表（支持分页和过滤）
+  rpc GetAllUserRoles (GetAllUserRolesRequest) returns (GetAllUserRolesResponse);
+}
+
+// UserRole Service Messages
+message GetUserRoleByIDRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetUserRoleByIDResponse {
+  UserRole user_role = 1;
+}
+
+message GetUserRolesByUserIDRequest {
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+  optional bool include_user = 2; // 是否包含用户详细信息
+  optional bool include_role = 3; // 是否包含角色详细信息
+}
+
+message GetUserRolesByUserIDResponse {
+  repeated UserRole user_roles = 1;
+}
+
+message GetUserRolesByRoleIDRequest {
+  string role_id = 1 [(buf.validate.field).string.uuid = true];
+  optional bool include_user = 2; // 是否包含用户详细信息
+  optional bool include_role = 3; // 是否包含角色详细信息
+}
+
+message GetUserRolesByRoleIDResponse {
+  repeated UserRole user_roles = 1;
+}
+
+message GetAllUserRolesRequest {
+  int32 page = 1 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  optional string user_id = 3 [(buf.validate.field).string.uuid = true]; // 按用户ID过滤
+  optional string role_id = 4 [(buf.validate.field).string.uuid = true]; // 按角色ID过滤
+  optional bool include_user = 5; // 是否包含用户详细信息
+  optional bool include_role = 6; // 是否包含角色详细信息
+}
+
+message GetAllUserRolesResponse {
+  repeated UserRole user_roles = 1;
+  int32 total = 2;
+}
+

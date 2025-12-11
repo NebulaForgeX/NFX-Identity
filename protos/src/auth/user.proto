@@ -22,16 +22,15 @@ message User {
   string username = 2; // 用户名
   string email = 3; // 邮箱
   string phone = 4; // 手机号
-  optional string role_id = 5; // 角色ID (UUID)，可为 NULL
-  UserStatus status = 6; // 用户状态：pending, active, deactive
-  bool is_verified = 7; // 是否已验证
-  optional google.protobuf.Timestamp last_login_at = 8; // 最后登录时间
-  google.protobuf.Timestamp created_at = 9; // 创建时间
-  google.protobuf.Timestamp updated_at = 10; // 更新时间
-  optional google.protobuf.Timestamp deleted_at = 11; // 软删除时间
+  UserStatus status = 5; // 用户状态：pending, active, deactive
+  bool is_verified = 6; // 是否已验证
+  optional google.protobuf.Timestamp last_login_at = 7; // 最后登录时间
+  google.protobuf.Timestamp created_at = 8; // 创建时间
+  google.protobuf.Timestamp updated_at = 9; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 10; // 软删除时间
   
-  // 嵌套的角色信息
-  role.Role role = 20;
+  // 嵌套的角色信息（多对多关系，通过 user_roles 表关联）
+  repeated role.Role roles = 20;
   
   // 嵌套的资料信息
   profile.Profile profile = 21;

@@ -10,16 +10,16 @@ import (
 
 type Occupation struct {
 	ID               uuid.UUID      `gorm:"type:uuid;primaryKey"`
-	ProfileID        uuid.UUID      `gorm:"type:uuid;index:idx_occupations_profile_id"`
-	Company          string         `gorm:"type:varchar(255);index:idx_occupations_company"`
-	Position         string         `gorm:"type:varchar(255);index:idx_occupations_position"`
+	ProfileID        uuid.UUID      `gorm:"type:uuid;index:idx_profile_occupations_profile_id"`
+	Company          string         `gorm:"type:varchar(255);index:idx_profile_occupations_company"`
+	Position         string         `gorm:"type:varchar(255);index:idx_profile_occupations_position"`
 	Department       *string        `gorm:"type:varchar(255)"`
-	Industry         *string        `gorm:"type:varchar(100);index:idx_occupations_industry"`
+	Industry         *string        `gorm:"type:varchar(100);index:idx_profile_occupations_industry"`
 	Location         *string        `gorm:"type:varchar(255)"`
 	EmploymentType   *string        `gorm:"type:varchar(50)"`
 	StartDate        *time.Time     `gorm:"type:date"`
 	EndDate          *time.Time     `gorm:"type:date"`
-	IsCurrent        bool           `gorm:"type:boolean;index:idx_occupations_is_current"`
+	IsCurrent        bool           `gorm:"type:boolean;index:idx_profile_occupations_is_current"`
 	Description      *string        `gorm:"type:text"`
 	Responsibilities *string        `gorm:"type:text"`
 	Achievements     *string        `gorm:"type:text"`
@@ -29,7 +29,7 @@ type Occupation struct {
 	DeletedAt        gorm.DeletedAt `gorm:"index"`
 }
 
-func (Occupation) TableName() string { return "auth.occupations" }
+func (Occupation) TableName() string { return "auth.profile_occupations" }
 
 func (m *Occupation) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
@@ -64,6 +64,6 @@ var OccupationCols = struct {
 }
 
 const (
-	OccupationPk              = "occupations_pkey"
-	OccupationFkProfileIdFkey = "occupations_profile_id_fkey"
+	OccupationPk              = "profile_occupations_pkey"
+	OccupationFkProfileIdFkey = "profile_occupations_profile_id_fkey"
 )

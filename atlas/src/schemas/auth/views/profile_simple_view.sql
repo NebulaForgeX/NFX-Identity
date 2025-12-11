@@ -12,7 +12,6 @@ SELECT
   u."status" AS "user_status",
   u."is_verified",
   u."last_login_at",
-  u."role_id",
   u."created_at" AS "user_created_at",
   u."updated_at" AS "user_updated_at",
   -- profile fields

@@ -1,3 +1,4 @@
+-- Active: 1765190245476@@127.0.0.1@10105@lyuauth_dev@auth
 -- Profile Complete View
 -- Purpose: Provides complete profile information with occupations and educations
 -- Use Case: User profile pages, resume displays, comprehensive user information
@@ -66,8 +67,8 @@ SELECT
 FROM
   "auth"."users" u
   LEFT JOIN "auth"."profiles" p ON p."user_id" = u."id"
-  LEFT JOIN "auth"."occupations" o ON o."profile_id" = p."id" AND o."deleted_at" IS NULL
-  LEFT JOIN "auth"."educations" e ON e."profile_id" = p."id" AND e."deleted_at" IS NULL
+  LEFT JOIN "auth"."profile_occupations" o ON o."profile_id" = p."id" AND o."deleted_at" IS NULL
+  LEFT JOIN "auth"."profile_educations" e ON e."profile_id" = p."id" AND e."deleted_at" IS NULL
 WHERE
   u."deleted_at" IS NULL
 GROUP BY

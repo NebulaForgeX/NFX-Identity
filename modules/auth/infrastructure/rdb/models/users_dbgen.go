@@ -15,7 +15,6 @@ type User struct {
 	Email        string           `gorm:"type:varchar(255);index:idx_users_email;uniqueIndex:users_email_key"`
 	Phone        string           `gorm:"type:varchar(20);index:idx_users_phone;uniqueIndex:users_phone_key"`
 	PasswordHash string           `gorm:"type:varchar(255)"`
-	RoleID       *uuid.UUID       `gorm:"type:uuid;index:idx_users_role_id"`
 	Status       enums.UserStatus `gorm:"type:user_status;index:idx_users_status"`
 	IsVerified   bool             `gorm:"type:boolean"`
 	LastLoginAt  *time.Time       `gorm:"type:timestamp"`
@@ -34,15 +33,14 @@ func (m *User) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var UserCols = struct {
-	ID, Username, Email, Phone, PasswordHash, RoleID, Status,
-	IsVerified, LastLoginAt, CreatedAt, UpdatedAt, DeletedAt string
+	ID, Username, Email, Phone, PasswordHash, Status, IsVerified,
+	LastLoginAt, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:           "id",
 	Username:     "username",
 	Email:        "email",
 	Phone:        "phone",
 	PasswordHash: "password_hash",
-	RoleID:       "role_id",
 	Status:       "status",
 	IsVerified:   "is_verified",
 	LastLoginAt:  "last_login_at",
@@ -56,5 +54,4 @@ const (
 	UserUkEmailKey    = "users_email_key"
 	UserUkPhoneKey    = "users_phone_key"
 	UserUkUsernameKey = "users_username_key"
-	UserFkRoleIdFkey  = "users_role_id_fkey"
 )

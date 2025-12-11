@@ -19,7 +19,6 @@ func UserDomainToModel(u *user.User) *models.User {
 		Email:        editable.Email,
 		Phone:        editable.Phone,
 		PasswordHash: editable.Password,
-		RoleID:       editable.RoleID,
 		Status:       enums.UserStatus(u.Status()),
 		IsVerified:   u.IsVerified(),
 		LastLoginAt:  u.LastLoginAt(),
@@ -39,7 +38,6 @@ func UserModelToDomain(m *models.User) *user.User {
 		Email:    m.Email,
 		Phone:    m.Phone,
 		Password: m.PasswordHash,
-		RoleID:   m.RoleID,
 	}
 
 	state := user.UserState{
@@ -61,7 +59,6 @@ func UserModelsToUpdates(m *models.User) map[string]any {
 		models.UserCols.Username:    m.Username,
 		models.UserCols.Email:       m.Email,
 		models.UserCols.Phone:       m.Phone,
-		models.UserCols.RoleID:      m.RoleID,
 		models.UserCols.Status:      m.Status,
 		models.UserCols.IsVerified:  m.IsVerified,
 		models.UserCols.LastLoginAt: m.LastLoginAt,

@@ -12,18 +12,18 @@ import (
 // Purpose: Provides images with aggregated tags array for tag-based search functionality
 // Use Case: Content discovery, AI-powered search, tag filtering, "find similar images"
 type ImageSearchView struct {
-	ID          uuid.UUID       `gorm:"column:id;->"`
-	TypeID      *uuid.UUID      `gorm:"column:type_id;->"`
-	TypeKey     *string         `gorm:"column:type_key;->"`
-	UserID      *uuid.UUID      `gorm:"column:user_id;->"`
+	ID           uuid.UUID       `gorm:"column:id;->"`
+	TypeID       *uuid.UUID      `gorm:"column:type_id;->"`
+	TypeKey      *string         `gorm:"column:type_key;->"`
+	UserID       *uuid.UUID      `gorm:"column:user_id;->"`
 	SourceDomain *string         `gorm:"column:source_domain;->"`
-	Filename    string          `gorm:"column:filename;->"`
-	OriginalURL *string         `gorm:"column:original_url;->"`
-	IsPublic    bool            `gorm:"column:is_public;->"`
-	Metadata    *datatypes.JSON `gorm:"column:metadata;->"`
-	Tags        *string         `gorm:"column:tags;->"` // PostgreSQL TEXT[] array as string
-	CreatedAt   time.Time       `gorm:"column:created_at;->"`
-	UpdatedAt   time.Time       `gorm:"column:updated_at;->"`
+	Filename     string          `gorm:"column:filename;->"`
+	OriginalURL  *string         `gorm:"column:original_url;->"`
+	IsPublic     bool            `gorm:"column:is_public;->"`
+	Metadata     *datatypes.JSON `gorm:"column:metadata;->"`
+	Tags         *string         `gorm:"column:tags;->"` // PostgreSQL TEXT[] array as string
+	CreatedAt    time.Time       `gorm:"column:created_at;->"`
+	UpdatedAt    time.Time       `gorm:"column:updated_at;->"`
 }
 
 func (ImageSearchView) TableName() string {
@@ -34,17 +34,16 @@ var ImageSearchViewCols = struct {
 	ID, TypeID, TypeKey, UserID, SourceDomain, Filename, OriginalURL,
 	IsPublic, Metadata, Tags, CreatedAt, UpdatedAt string
 }{
-	ID:          "id",
-	TypeID:      "type_id",
-	TypeKey:     "type_key",
-	UserID:      "user_id",
+	ID:           "id",
+	TypeID:       "type_id",
+	TypeKey:      "type_key",
+	UserID:       "user_id",
 	SourceDomain: "source_domain",
-	Filename:    "filename",
-	OriginalURL: "original_url",
-	IsPublic:    "is_public",
-	Metadata:    "metadata",
-	Tags:        "tags",
-	CreatedAt:   "created_at",
-	UpdatedAt:   "updated_at",
+	Filename:     "filename",
+	OriginalURL:  "original_url",
+	IsPublic:     "is_public",
+	Metadata:     "metadata",
+	Tags:         "tags",
+	CreatedAt:    "created_at",
+	UpdatedAt:    "updated_at",
 }
-

@@ -56,17 +56,14 @@ func (s *Service) Login(ctx context.Context, cmd userCommands.LoginCmd) (*userCo
 	}
 
 	// 生成 Token 对
-	roleID := ""
-	if entity.Editable().RoleID != nil {
-		roleID = entity.Editable().RoleID.String()
-	}
-
+	// Note: roleID is deprecated, passing empty string since we now support multiple roles
+	// Future: tokenx should support roles array
 	accessToken, refreshToken, err := s.tokenx.GenerateTokenPair(
 		entity.ID().String(),
 		entity.Editable().Username,
 		entity.Editable().Email,
 		entity.Editable().Phone,
-		roleID,
+		"", // roleID is deprecated, using empty string
 	)
 	if err != nil {
 		return nil, err

@@ -14,13 +14,12 @@ type UserDTO struct {
 	Username    string      `json:"username"`
 	Email       string      `json:"email"`
 	Phone       string      `json:"phone"`
-	RoleID      *uuid.UUID  `json:"role_id,omitempty"`
 	Status      string      `json:"status"`
 	IsVerified  bool        `json:"is_verified"`
 	LastLoginAt *time.Time  `json:"last_login_at,omitempty"`
 	CreatedAt   time.Time   `json:"created_at"`
 	UpdatedAt   time.Time   `json:"updated_at"`
-	Role        *RoleDTO    `json:"role,omitempty"`
+	Roles       []RoleDTO   `json:"roles,omitempty"` // Array of roles
 	Profile     *ProfileDTO `json:"profile,omitempty"`
 }
 
@@ -46,7 +45,6 @@ func UserViewToDTO(v *userAppViews.UserView) *UserDTO {
 		Username:    v.Username,
 		Email:       v.Email,
 		Phone:       v.Phone,
-		RoleID:      v.RoleID,
 		Status:      v.Status,
 		IsVerified:  v.IsVerified,
 		LastLoginAt: v.LastLoginAt,
@@ -54,17 +52,19 @@ func UserViewToDTO(v *userAppViews.UserView) *UserDTO {
 		UpdatedAt:   v.UpdatedAt,
 	}
 
-	if v.Role != nil {
-		// Note: userAppViews.RoleView doesn't have CreatedAt, UpdatedAt, DeletedAt
-		// So we need to create a minimal RoleDTO
-		roleDTO := &RoleDTO{
-			ID:          v.Role.ID,
-			Name:        v.Role.Name,
-			Description: v.Role.Description,
-			Permissions: []string{}, // Note: Permissions is *datatypes.JSON, need to unmarshal
-			IsSystem:    v.Role.IsSystem,
+	// Convert roles array
+	if len(v.Roles) > 0 {
+		dto.Roles = make([]RoleDTO, 0, len(v.Roles))
+		for _, role := range v.Roles {
+			roleDTO := RoleDTO{
+				ID:          role.ID,
+				Name:        role.Name,
+				Description: role.Description,
+				Permissions: []string{}, // Note: Permissions is *datatypes.JSON, need to unmarshal
+				IsSystem:    role.IsSystem,
+			}
+			dto.Roles = append(dto.Roles, roleDTO)
 		}
-		dto.Role = roleDTO
 	}
 
 	return dto

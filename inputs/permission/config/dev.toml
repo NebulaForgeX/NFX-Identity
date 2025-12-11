@@ -1,0 +1,118 @@
+[server]
+    name = "Permission Service"
+    host = "0.0.0.0"
+    http_port = 8081
+    grpc_port = 10014
+
+[postgresql]
+    host = "host.docker.internal"
+    port = 10105
+    user = "postgres"
+    password = "Lucas127."
+    dbname = "lyuauth_dev"
+    sslmode = "disable"
+    timezone = "UTC"
+    logger_level = "warn"
+    auto_migrate = false
+
+    [postgresql.connection]
+        timeout = "5s"
+        max_retries = 5
+        retry_interval = "2s"
+        max_idle_connections = 10
+        max_open_connections = 100
+        conn_max_idle_time = "15m"
+        conn_max_lifetime = "1h"
+
+[mongodb]
+    host = "host.docker.internal"
+    port = 10103
+    user = "admin"
+    password = "Lucas127."
+    auth_source = "admin"
+    database = "lyupermission_dev"
+    min_pool_size = 1
+    max_pool_size = 10
+    connect_timeout = "5s"
+    ping_timeout = "2s"
+    [mongodb.retry]
+        max_retries = 5
+        initial_backoff = "1s"
+
+[cache]
+    host = "host.docker.internal"
+    port = 10181
+    password = "Lucas127."
+
+    [cache.connection]
+        dial_timeout = "3s"
+        write_timeout = "3s"
+        read_timeout = "3s"
+        max_retries = 5
+        retry_interval = "2s"
+
+    [cache.tls]
+        enabled = false
+        server_name = ""
+
+[logger]
+    level = "debug"
+    format = "console"
+    output = "stdout"
+    file_path = "logs/permission.log"
+    max_size_mb = 100
+    max_backups = 10
+    max_age_day = 30
+    compress = false
+
+[token]
+    secret_key = "nfxid-secret-key-2025"
+    issuer = "nfxid"
+    access_token_ttl = "24h"
+    refresh_token_ttl = "168h"
+    algorithm = "HS256"
+
+[kafka]
+    brokers = ["host.docker.internal:10183"]
+    client_id = "nfxid-permission"
+
+    [kafka.network]
+        max_open_requests = 1
+
+    [kafka.producer]
+        acks = "all"
+        compression = "snappy"
+        retries = 3
+        batch_bytes = 1048576
+        linger_ms = 5
+        idempotent = true
+
+    [kafka.consumer]
+        group_id = "permission-service-group"
+        initial_offset = "latest"
+        session_timeout_ms = 10000
+        heartbeat_interval_ms = 3000
+        fetch_min_bytes = 1
+        fetch_max_bytes = 5242880
+        return_errors = true
+
+    # Permission 服务发布的事件 (Producer Topics)
+    [kafka.producer_topics]
+        permission = "permission"
+        permission_poison = "permission_poison"
+
+    # Permission 服务监听的事件 (Consumer Topics)
+    [kafka.consumer_topics]
+        permission = "permission"
+        permission_poison = "permission_poison"
+
+    [kafka.security]
+        enabled = false
+        mechanism = "PLAIN"
+        username = ""
+        password = ""
+        tls_insecure_skip_verify = false
+
+[grpc_client]
+    auth_addr = "localhost:10012"  # Auth 服务的 gRPC 地址（Auth 服务 gRPC 端口是 10012）
+

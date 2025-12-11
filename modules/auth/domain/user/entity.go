@@ -27,7 +27,6 @@ type UserEditable struct {
 	Email    string
 	Phone    string
 	Password string
-	RoleID   *uuid.UUID
 }
 
 func (u *User) ID() uuid.UUID              { return u.state.ID }

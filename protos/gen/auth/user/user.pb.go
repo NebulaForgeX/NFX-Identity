@@ -85,15 +85,14 @@ type User struct {
 	Username    string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`                                  // 用户名
 	Email       string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`                                        // 邮箱
 	Phone       string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`                                        // 手机号
-	RoleId      *string                `protobuf:"bytes,5,opt,name=role_id,json=roleId,proto3,oneof" json:"role_id,omitempty"`                  // 角色ID (UUID)，可为 NULL
-	Status      UserStatus             `protobuf:"varint,6,opt,name=status,proto3,enum=user.UserStatus" json:"status,omitempty"`                // 用户状态：pending, active, deactive
-	IsVerified  bool                   `protobuf:"varint,7,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`           // 是否已验证
-	LastLoginAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=last_login_at,json=lastLoginAt,proto3,oneof" json:"last_login_at,omitempty"` // 最后登录时间
-	CreatedAt   *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`               // 创建时间
-	UpdatedAt   *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`              // 更新时间
-	DeletedAt   *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`        // 软删除时间
-	// 嵌套的角色信息
-	Role *role.Role `protobuf:"bytes,20,opt,name=role,proto3" json:"role,omitempty"`
+	Status      UserStatus             `protobuf:"varint,5,opt,name=status,proto3,enum=user.UserStatus" json:"status,omitempty"`                // 用户状态：pending, active, deactive
+	IsVerified  bool                   `protobuf:"varint,6,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`           // 是否已验证
+	LastLoginAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=last_login_at,json=lastLoginAt,proto3,oneof" json:"last_login_at,omitempty"` // 最后登录时间
+	CreatedAt   *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`               // 创建时间
+	UpdatedAt   *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`               // 更新时间
+	DeletedAt   *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`        // 软删除时间
+	// 嵌套的角色信息（多对多关系，通过 user_roles 表关联）
+	Roles []*role.Role `protobuf:"bytes,20,rep,name=roles,proto3" json:"roles,omitempty"`
 	// 嵌套的资料信息
 	Profile       *profile.Profile `protobuf:"bytes,21,opt,name=profile,proto3" json:"profile,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -158,13 +157,6 @@ func (x *User) GetPhone() string {
 	return ""
 }
 
-func (x *User) GetRoleId() string {
-	if x != nil && x.RoleId != nil {
-		return *x.RoleId
-	}
-	return ""
-}
-
 func (x *User) GetStatus() UserStatus {
 	if x != nil {
 		return x.Status
@@ -207,9 +199,9 @@ func (x *User) GetDeletedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *User) GetRole() *role.Role {
+func (x *User) GetRoles() []*role.Role {
 	if x != nil {
-		return x.Role
+		return x.Roles
 	}
 	return nil
 }
@@ -866,29 +858,26 @@ var File_auth_user_proto protoreflect.FileDescriptor
 
 const file_auth_user_proto_rawDesc = "" +
 	"\n" +
-	"\x0fauth/user.proto\x12\x04user\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0fauth/role.proto\x1a\x12auth/profile.proto\"\xbb\x04\n" +
+	"\x0fauth/user.proto\x12\x04user\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0fauth/role.proto\x1a\x12auth/profile.proto\"\x93\x04\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
-	"\x05phone\x18\x04 \x01(\tR\x05phone\x12\x1c\n" +
-	"\arole_id\x18\x05 \x01(\tH\x00R\x06roleId\x88\x01\x01\x12(\n" +
-	"\x06status\x18\x06 \x01(\x0e2\x10.user.UserStatusR\x06status\x12\x1f\n" +
-	"\vis_verified\x18\a \x01(\bR\n" +
+	"\x05phone\x18\x04 \x01(\tR\x05phone\x12(\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x10.user.UserStatusR\x06status\x12\x1f\n" +
+	"\vis_verified\x18\x06 \x01(\bR\n" +
 	"isVerified\x12C\n" +
-	"\rlast_login_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x01R\vlastLoginAt\x88\x01\x01\x129\n" +
+	"\rlast_login_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vlastLoginAt\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\x02R\tdeletedAt\x88\x01\x01\x12\x1e\n" +
-	"\x04role\x18\x14 \x01(\v2\n" +
-	".role.RoleR\x04role\x12*\n" +
-	"\aprofile\x18\x15 \x01(\v2\x10.profile.ProfileR\aprofileB\n" +
-	"\n" +
-	"\b_role_idB\x10\n" +
+	"deleted_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\x01R\tdeletedAt\x88\x01\x01\x12 \n" +
+	"\x05roles\x18\x14 \x03(\v2\n" +
+	".role.RoleR\x05roles\x12*\n" +
+	"\aprofile\x18\x15 \x01(\v2\x10.profile.ProfileR\aprofileB\x10\n" +
 	"\x0e_last_login_atB\r\n" +
 	"\v_deleted_at\"\xb2\x01\n" +
 	"\x12GetUserByIDRequest\x12!\n" +
@@ -1005,7 +994,7 @@ var file_auth_user_proto_depIdxs = []int32{
 	15, // 2: user.User.created_at:type_name -> google.protobuf.Timestamp
 	15, // 3: user.User.updated_at:type_name -> google.protobuf.Timestamp
 	15, // 4: user.User.deleted_at:type_name -> google.protobuf.Timestamp
-	16, // 5: user.User.role:type_name -> role.Role
+	16, // 5: user.User.roles:type_name -> role.Role
 	17, // 6: user.User.profile:type_name -> profile.Profile
 	1,  // 7: user.GetUserByIDResponse.user:type_name -> user.User
 	1,  // 8: user.GetUserByUsernameResponse.user:type_name -> user.User

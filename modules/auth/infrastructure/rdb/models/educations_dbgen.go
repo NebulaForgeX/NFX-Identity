@@ -10,9 +10,9 @@ import (
 
 type Education struct {
 	ID           uuid.UUID      `gorm:"type:uuid;primaryKey"`
-	ProfileID    uuid.UUID      `gorm:"type:uuid;index:idx_educations_profile_id"`
-	School       string         `gorm:"type:varchar(255);index:idx_educations_school"`
-	Degree       *string        `gorm:"type:varchar(100);index:idx_educations_degree"`
+	ProfileID    uuid.UUID      `gorm:"type:uuid;index:idx_profile_educations_profile_id"`
+	School       string         `gorm:"type:varchar(255);index:idx_profile_educations_school"`
+	Degree       *string        `gorm:"type:varchar(100);index:idx_profile_educations_degree"`
 	Major        *string        `gorm:"type:varchar(255)"`
 	FieldOfStudy *string        `gorm:"type:varchar(255)"`
 	StartDate    *time.Time     `gorm:"type:date"`
@@ -27,7 +27,7 @@ type Education struct {
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 }
 
-func (Education) TableName() string { return "auth.educations" }
+func (Education) TableName() string { return "auth.profile_educations" }
 
 func (m *Education) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
@@ -60,6 +60,6 @@ var EducationCols = struct {
 }
 
 const (
-	EducationPk              = "educations_pkey"
-	EducationFkProfileIdFkey = "educations_profile_id_fkey"
+	EducationPk              = "profile_educations_pkey"
+	EducationFkProfileIdFkey = "profile_educations_profile_id_fkey"
 )

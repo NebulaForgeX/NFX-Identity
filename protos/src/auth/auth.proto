@@ -44,7 +44,7 @@ service AuthService {
 // 根据用户ID获取认证信息
 message GetAuthByUserIDRequest {
   string user_id = 1 [(buf.validate.field).string.uuid = true];
-  optional bool include_role = 2; // 是否包含角色信息
+  optional bool include_roles = 2; // 是否包含角色信息（多对多关系）
   optional bool include_profile = 3; // 是否包含资料信息
 }
 
@@ -126,20 +126,19 @@ message Auth {
   string username = 2; // 用户名
   string email = 3; // 邮箱
   string phone = 4; // 手机号
-  optional string role_id = 5; // 角色ID (UUID)，可为 NULL
-  bool password_set = 6; // 是否已设置密码（不返回实际密码）
-  AuthStatus status = 7; // 当前状态
-  bool is_verified = 8; // 是否已验证
-  optional google.protobuf.Timestamp last_login_at = 9; // 最后登录时间
-  google.protobuf.Timestamp created_at = 10; // 创建时间
-  google.protobuf.Timestamp updated_at = 11; // 更新时间
-  optional google.protobuf.Timestamp deleted_at = 12; // 软删除时间
+  bool password_set = 5; // 是否已设置密码（不返回实际密码）
+  AuthStatus status = 6; // 当前状态
+  bool is_verified = 7; // 是否已验证
+  optional google.protobuf.Timestamp last_login_at = 8; // 最后登录时间
+  google.protobuf.Timestamp created_at = 9; // 创建时间
+  google.protobuf.Timestamp updated_at = 10; // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 11; // 软删除时间
   
   // 嵌套的用户信息
   user.User user = 20;
   
-  // 嵌套的角色信息（通过 role_id preload）
-  role.Role role = 21;
+  // 嵌套的角色信息（多对多关系，通过 user_roles 表关联）
+  repeated role.Role roles = 21;
   
   // 嵌套的资料信息（通过 user_id preload）
   profile.Profile profile = 22;

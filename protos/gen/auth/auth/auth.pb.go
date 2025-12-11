@@ -83,7 +83,7 @@ func (AuthStatus) EnumDescriptor() ([]byte, []int) {
 type GetAuthByUserIDRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	IncludeRole    *bool                  `protobuf:"varint,2,opt,name=include_role,json=includeRole,proto3,oneof" json:"include_role,omitempty"`          // 是否包含角色信息
+	IncludeRoles   *bool                  `protobuf:"varint,2,opt,name=include_roles,json=includeRoles,proto3,oneof" json:"include_roles,omitempty"`       // 是否包含角色信息（多对多关系）
 	IncludeProfile *bool                  `protobuf:"varint,3,opt,name=include_profile,json=includeProfile,proto3,oneof" json:"include_profile,omitempty"` // 是否包含资料信息
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -126,9 +126,9 @@ func (x *GetAuthByUserIDRequest) GetUserId() string {
 	return ""
 }
 
-func (x *GetAuthByUserIDRequest) GetIncludeRole() bool {
-	if x != nil && x.IncludeRole != nil {
-		return *x.IncludeRole
+func (x *GetAuthByUserIDRequest) GetIncludeRoles() bool {
+	if x != nil && x.IncludeRoles != nil {
+		return *x.IncludeRoles
 	}
 	return false
 }
@@ -837,18 +837,17 @@ type Auth struct {
 	Username    string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`                                  // 用户名
 	Email       string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`                                        // 邮箱
 	Phone       string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`                                        // 手机号
-	RoleId      *string                `protobuf:"bytes,5,opt,name=role_id,json=roleId,proto3,oneof" json:"role_id,omitempty"`                  // 角色ID (UUID)，可为 NULL
-	PasswordSet bool                   `protobuf:"varint,6,opt,name=password_set,json=passwordSet,proto3" json:"password_set,omitempty"`        // 是否已设置密码（不返回实际密码）
-	Status      AuthStatus             `protobuf:"varint,7,opt,name=status,proto3,enum=auth.AuthStatus" json:"status,omitempty"`                // 当前状态
-	IsVerified  bool                   `protobuf:"varint,8,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`           // 是否已验证
-	LastLoginAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_login_at,json=lastLoginAt,proto3,oneof" json:"last_login_at,omitempty"` // 最后登录时间
-	CreatedAt   *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`              // 创建时间
-	UpdatedAt   *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`              // 更新时间
-	DeletedAt   *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`        // 软删除时间
+	PasswordSet bool                   `protobuf:"varint,5,opt,name=password_set,json=passwordSet,proto3" json:"password_set,omitempty"`        // 是否已设置密码（不返回实际密码）
+	Status      AuthStatus             `protobuf:"varint,6,opt,name=status,proto3,enum=auth.AuthStatus" json:"status,omitempty"`                // 当前状态
+	IsVerified  bool                   `protobuf:"varint,7,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`           // 是否已验证
+	LastLoginAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=last_login_at,json=lastLoginAt,proto3,oneof" json:"last_login_at,omitempty"` // 最后登录时间
+	CreatedAt   *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`               // 创建时间
+	UpdatedAt   *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`              // 更新时间
+	DeletedAt   *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`        // 软删除时间
 	// 嵌套的用户信息
 	User *user.User `protobuf:"bytes,20,opt,name=user,proto3" json:"user,omitempty"`
-	// 嵌套的角色信息（通过 role_id preload）
-	Role *role.Role `protobuf:"bytes,21,opt,name=role,proto3" json:"role,omitempty"`
+	// 嵌套的角色信息（多对多关系，通过 user_roles 表关联）
+	Roles []*role.Role `protobuf:"bytes,21,rep,name=roles,proto3" json:"roles,omitempty"`
 	// 嵌套的资料信息（通过 user_id preload）
 	Profile       *profile.Profile `protobuf:"bytes,22,opt,name=profile,proto3" json:"profile,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -913,13 +912,6 @@ func (x *Auth) GetPhone() string {
 	return ""
 }
 
-func (x *Auth) GetRoleId() string {
-	if x != nil && x.RoleId != nil {
-		return *x.RoleId
-	}
-	return ""
-}
-
 func (x *Auth) GetPasswordSet() bool {
 	if x != nil {
 		return x.PasswordSet
@@ -976,9 +968,9 @@ func (x *Auth) GetUser() *user.User {
 	return nil
 }
 
-func (x *Auth) GetRole() *role.Role {
+func (x *Auth) GetRoles() []*role.Role {
 	if x != nil {
-		return x.Role
+		return x.Roles
 	}
 	return nil
 }
@@ -994,12 +986,12 @@ var File_auth_auth_proto protoreflect.FileDescriptor
 
 const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x0fauth/auth.proto\x12\x04auth\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0fauth/user.proto\x1a\x0fauth/role.proto\x1a\x12auth/profile.proto\"\xb6\x01\n" +
+	"\x0fauth/auth.proto\x12\x04auth\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0fauth/user.proto\x1a\x0fauth/role.proto\x1a\x12auth/profile.proto\"\xb9\x01\n" +
 	"\x16GetAuthByUserIDRequest\x12!\n" +
-	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12&\n" +
-	"\finclude_role\x18\x02 \x01(\bH\x00R\vincludeRole\x88\x01\x01\x12,\n" +
-	"\x0finclude_profile\x18\x03 \x01(\bH\x01R\x0eincludeProfile\x88\x01\x01B\x0f\n" +
-	"\r_include_roleB\x12\n" +
+	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12(\n" +
+	"\rinclude_roles\x18\x02 \x01(\bH\x00R\fincludeRoles\x88\x01\x01\x12,\n" +
+	"\x0finclude_profile\x18\x03 \x01(\bH\x01R\x0eincludeProfile\x88\x01\x01B\x10\n" +
+	"\x0e_include_rolesB\x12\n" +
 	"\x10_include_profile\"9\n" +
 	"\x17GetAuthByUserIDResponse\x12\x1e\n" +
 	"\x04auth\x18\x01 \x01(\v2\n" +
@@ -1061,32 +1053,29 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x06_phone\"H\n" +
 	"\x18VerifyUserExistsResponse\x12\x16\n" +
 	"\x06exists\x18\x01 \x01(\bR\x06exists\x12\x14\n" +
-	"\x05field\x18\x02 \x01(\tR\x05field\"\xfe\x04\n" +
+	"\x05field\x18\x02 \x01(\tR\x05field\"\xd6\x04\n" +
 	"\x04Auth\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
-	"\x05phone\x18\x04 \x01(\tR\x05phone\x12\x1c\n" +
-	"\arole_id\x18\x05 \x01(\tH\x00R\x06roleId\x88\x01\x01\x12!\n" +
-	"\fpassword_set\x18\x06 \x01(\bR\vpasswordSet\x12(\n" +
-	"\x06status\x18\a \x01(\x0e2\x10.auth.AuthStatusR\x06status\x12\x1f\n" +
-	"\vis_verified\x18\b \x01(\bR\n" +
+	"\x05phone\x18\x04 \x01(\tR\x05phone\x12!\n" +
+	"\fpassword_set\x18\x05 \x01(\bR\vpasswordSet\x12(\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x10.auth.AuthStatusR\x06status\x12\x1f\n" +
+	"\vis_verified\x18\a \x01(\bR\n" +
 	"isVerified\x12C\n" +
-	"\rlast_login_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\x01R\vlastLoginAt\x88\x01\x01\x129\n" +
+	"\rlast_login_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vlastLoginAt\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\x02R\tdeletedAt\x88\x01\x01\x12\x1e\n" +
+	"deleted_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\x01R\tdeletedAt\x88\x01\x01\x12\x1e\n" +
 	"\x04user\x18\x14 \x01(\v2\n" +
-	".user.UserR\x04user\x12\x1e\n" +
-	"\x04role\x18\x15 \x01(\v2\n" +
-	".role.RoleR\x04role\x12*\n" +
-	"\aprofile\x18\x16 \x01(\v2\x10.profile.ProfileR\aprofileB\n" +
-	"\n" +
-	"\b_role_idB\x10\n" +
+	".user.UserR\x04user\x12 \n" +
+	"\x05roles\x18\x15 \x03(\v2\n" +
+	".role.RoleR\x05roles\x12*\n" +
+	"\aprofile\x18\x16 \x01(\v2\x10.profile.ProfileR\aprofileB\x10\n" +
 	"\x0e_last_login_atB\r\n" +
 	"\v_deleted_at*t\n" +
 	"\n" +
@@ -1154,7 +1143,7 @@ var file_auth_auth_proto_depIdxs = []int32{
 	17, // 9: auth.Auth.updated_at:type_name -> google.protobuf.Timestamp
 	17, // 10: auth.Auth.deleted_at:type_name -> google.protobuf.Timestamp
 	18, // 11: auth.Auth.user:type_name -> user.User
-	19, // 12: auth.Auth.role:type_name -> role.Role
+	19, // 12: auth.Auth.roles:type_name -> role.Role
 	20, // 13: auth.Auth.profile:type_name -> profile.Profile
 	1,  // 14: auth.AuthService.GetAuthByUserID:input_type -> auth.GetAuthByUserIDRequest
 	3,  // 15: auth.AuthService.GetAuthByUsername:input_type -> auth.GetAuthByUsernameRequest

@@ -12,21 +12,19 @@ import (
 )
 
 type UserCreateRequestDTO struct {
-	Username string     `json:"username" validate:"required"`
-	Email    string     `json:"email" validate:"required,email"`
-	Phone    string     `json:"phone" validate:"required"`
-	Password string     `json:"password" validate:"required,min=6"`
-	RoleID   *uuid.UUID `json:"role_id,omitempty"`
-	Status   string     `json:"status,omitempty"`
+	Username string   `json:"username" validate:"required"`
+	Email    string   `json:"email" validate:"required,email"`
+	Phone    string   `json:"phone" validate:"required"`
+	Password string   `json:"password" validate:"required,min=6"`
+	Status   string   `json:"status,omitempty"`
 }
 
 type UserUpdateRequestDTO struct {
-	ID       uuid.UUID  `params:"id" validate:"required,uuid"`
-	Username *string    `json:"username,omitempty"`
-	Email    *string    `json:"email,omitempty"`
-	Phone    *string    `json:"phone,omitempty"`
-	RoleID   *uuid.UUID `json:"role_id,omitempty"`
-	Status   *string    `json:"status,omitempty"`
+	ID       uuid.UUID `params:"id" validate:"required,uuid"`
+	Username *string   `json:"username,omitempty"`
+	Email    *string   `json:"email,omitempty"`
+	Phone    *string   `json:"phone,omitempty"`
+	Status   *string   `json:"status,omitempty"`
 }
 
 type UserLoginRequestDTO struct {
@@ -43,12 +41,12 @@ type UserByIDRequestDTO struct {
 }
 
 type UserQueryParamsDTO struct {
-	Offset *int       `query:"offset"`
-	Limit  *int       `query:"limit"`
-	Search *string    `query:"search"`
-	Status *string    `query:"status"`
-	RoleID *uuid.UUID `query:"role_id"`
-	Sort   []string   `query:"sort"`
+	Offset  *int     `query:"offset"`
+	Limit   *int     `query:"limit"`
+	Search  *string  `query:"search"`
+	Status  *string  `query:"status"`
+	RoleIDs []string `query:"role_ids"` // Changed to support multiple roles
+	Sort    []string `query:"sort"`
 }
 
 func (r *UserCreateRequestDTO) ToCreateCmd() userApp.CreateUserCmd {
@@ -57,7 +55,6 @@ func (r *UserCreateRequestDTO) ToCreateCmd() userApp.CreateUserCmd {
 		Email:    r.Email,
 		Phone:    r.Phone,
 		Password: r.Password,
-		RoleID:   r.RoleID,
 	}
 
 	status := r.Status
@@ -81,9 +78,6 @@ func (r *UserUpdateRequestDTO) ToUpdateCmd() userApp.UpdateUserCmd {
 	}
 	if r.Phone != nil {
 		editable.Phone = *r.Phone
-	}
-	if r.RoleID != nil {
-		editable.RoleID = r.RoleID
 	}
 
 	return userApp.UpdateUserCmd{
@@ -112,8 +106,13 @@ func (r *UserQueryParamsDTO) ToListQuery() userAppQueries.UserListQuery {
 	}
 
 	var roleIDs []uuid.UUID
-	if r.RoleID != nil {
-		roleIDs = []uuid.UUID{*r.RoleID}
+	if len(r.RoleIDs) > 0 {
+		roleIDs = make([]uuid.UUID, 0, len(r.RoleIDs))
+		for _, idStr := range r.RoleIDs {
+			if id, err := uuid.Parse(idStr); err == nil {
+				roleIDs = append(roleIDs, id)
+			}
+		}
 	}
 
 	return userAppQueries.UserListQuery{
