@@ -10,16 +10,17 @@ import (
 )
 
 type UserView struct {
-	ID          uuid.UUID  `json:"id"`
-	Username    string     `json:"username"`
-	Email       string     `json:"email"`
-	Phone       string     `json:"phone"`
-	Status      string     `json:"status"`
-	IsVerified  bool       `json:"is_verified"`
-	LastLoginAt *time.Time `json:"last_login_at"`
-	Roles       []RoleView `json:"roles,omitempty"` // Array of roles (from user_with_role_view)
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
+	ID           uuid.UUID  `json:"id"`
+	Username     string     `json:"username"`
+	Email        string     `json:"email"`
+	Phone        string     `json:"phone"`
+	PasswordHash string     `json:"password_hash"`
+	Status       string     `json:"status"`
+	IsVerified   bool       `json:"is_verified"`
+	LastLoginAt  *time.Time `json:"last_login_at"`
+	Roles        []RoleView `json:"roles,omitempty"` // Array of roles (from user_with_role_view)
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
 }
 
 // UserViewMapper 将 Domain UserView 转换为 Application UserView
@@ -48,17 +49,18 @@ func UserViewMapper(v userDomainViews.UserView) UserView {
 			}
 		}
 	}
-	
+
 	return UserView{
-		ID:          v.ID,
-		Username:    v.Username,
-		Email:       v.Email,
-		Phone:       v.Phone,
-		Status:      v.Status,
-		IsVerified:  v.IsVerified,
-		LastLoginAt: v.LastLoginAt,
-		Roles:       roles,
-		CreatedAt:   v.CreatedAt,
-		UpdatedAt:   v.UpdatedAt,
+		ID:           v.ID,
+		Username:     v.Username,
+		Email:        v.Email,
+		Phone:        v.Phone,
+		PasswordHash: v.PasswordHash,
+		Status:       v.Status,
+		IsVerified:   v.IsVerified,
+		LastLoginAt:  v.LastLoginAt,
+		Roles:        roles,
+		CreatedAt:    v.CreatedAt,
+		UpdatedAt:    v.UpdatedAt,
 	}
 }

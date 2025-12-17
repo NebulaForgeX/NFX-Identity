@@ -30,7 +30,11 @@ func (q *userPGQuery) GetByID(ctx context.Context, id uuid.UUID) (userDomainView
 		}
 		return userDomainViews.UserView{}, err
 	}
-	return mapper.UserViewToDomain(&v), nil
+	var u models.User
+	if err := q.db.WithContext(ctx).Where("id = ?", id).First(&u).Error; err != nil {
+		return userDomainViews.UserView{}, err
+	}
+	return mapper.UserViewToDomain(&v, &u), nil
 }
 
 func (q *userPGQuery) GetByUsername(ctx context.Context, username string) (userDomainViews.UserView, error) {
@@ -41,7 +45,11 @@ func (q *userPGQuery) GetByUsername(ctx context.Context, username string) (userD
 		}
 		return userDomainViews.UserView{}, err
 	}
-	return mapper.UserViewToDomain(&v), nil
+	var u models.User
+	if err := q.db.WithContext(ctx).Where("username = ?", username).First(&u).Error; err != nil {
+		return userDomainViews.UserView{}, err
+	}
+	return mapper.UserViewToDomain(&v, &u), nil
 }
 
 func (q *userPGQuery) GetByEmail(ctx context.Context, email string) (userDomainViews.UserView, error) {
@@ -52,7 +60,11 @@ func (q *userPGQuery) GetByEmail(ctx context.Context, email string) (userDomainV
 		}
 		return userDomainViews.UserView{}, err
 	}
-	return mapper.UserViewToDomain(&v), nil
+	var u models.User
+	if err := q.db.WithContext(ctx).Where("email = ?", email).First(&u).Error; err != nil {
+		return userDomainViews.UserView{}, err
+	}
+	return mapper.UserViewToDomain(&v, &u), nil
 }
 
 func (q *userPGQuery) GetList(ctx context.Context, listQuery userAppQueries.UserListQuery) ([]userDomainViews.UserView, int64, error) {
@@ -105,8 +117,24 @@ func (q *userPGQuery) GetList(ctx context.Context, listQuery userAppQueries.User
 
 	// Convert to domain views
 	result := make([]userDomainViews.UserView, len(items))
+	userIDs := make([]uuid.UUID, len(items))
 	for i, item := range items {
-		result[i] = mapper.UserViewToDomain(&item)
+		userIDs[i] = item.UserID
+	}
+
+	// Fetch all users in batch
+	var users []models.User
+	if err := q.db.WithContext(ctx).Where("id IN ?", userIDs).Find(&users).Error; err != nil {
+		return nil, 0, err
+	}
+	userMap := make(map[uuid.UUID]*models.User)
+	for i := range users {
+		userMap[users[i].ID] = &users[i]
+	}
+
+	for i, item := range items {
+		u := userMap[item.UserID]
+		result[i] = mapper.UserViewToDomain(&item, u)
 	}
 
 	return result, total, nil

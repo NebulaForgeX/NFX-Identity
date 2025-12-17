@@ -9,15 +9,16 @@ import (
 )
 
 type BadgeView struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description *string   `json:"description"`
-	IconURL     *string   `json:"icon_url"`
-	Color       *string   `json:"color"`
-	Category    *string   `json:"category"`
-	IsSystem    bool      `json:"is_system"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID  `json:"id"`
+	Name        string     `json:"name"`
+	Description *string    `json:"description"`
+	IconURL     *string    `json:"icon_url"`
+	Color       *string    `json:"color"`
+	Category    *string    `json:"category"`
+	IsSystem    bool       `json:"is_system"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
 // BadgeViewMapper 将 Domain BadgeView 转换为 Application BadgeView
@@ -32,5 +33,6 @@ func BadgeViewMapper(v badgeDomainViews.BadgeView) BadgeView {
 		IsSystem:    v.IsSystem,
 		CreatedAt:   v.CreatedAt,
 		UpdatedAt:   v.UpdatedAt,
+		DeletedAt:   v.DeletedAt,
 	}
 }

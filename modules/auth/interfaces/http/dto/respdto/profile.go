@@ -1,6 +1,7 @@
 package respdto
 
 import (
+	"encoding/json"
 	"strings"
 	"time"
 
@@ -93,17 +94,59 @@ func ProfileViewToDTO(v *profileAppViews.ProfileView) *ProfileDTO {
 	// 转换 SocialLinks datatypes.JSON 为 SocialDTO
 	var socialDTO *SocialDTO
 	if v.SocialLinks != nil {
-		// Note: Need to unmarshal datatypes.JSON to map[string]interface{}
-		// For now, leave it empty or implement JSON unmarshaling if needed
-		socialDTO = &SocialDTO{}
+		socialMap := make(map[string]interface{})
+		if err := json.Unmarshal(*v.SocialLinks, &socialMap); err == nil {
+			socialDTO = &SocialDTO{}
+			if twitter, ok := socialMap["twitter"].(string); ok && twitter != "" {
+				socialDTO.Twitter = &twitter
+			}
+			if linkedin, ok := socialMap["linkedin"].(string); ok && linkedin != "" {
+				socialDTO.Linkedin = &linkedin
+			}
+			if instagram, ok := socialMap["instagram"].(string); ok && instagram != "" {
+				socialDTO.Instagram = &instagram
+			}
+			if youtube, ok := socialMap["youtube"].(string); ok && youtube != "" {
+				socialDTO.Youtube = &youtube
+			}
+		}
 	}
 
-	// 转换 Preferences, Skills, PrivacySettings from datatypes.JSON
+	// 转换 Preferences from datatypes.JSON
 	var preferences map[string]interface{}
+	if v.Preferences != nil {
+		prefsMap := make(map[string]interface{})
+		if err := json.Unmarshal(*v.Preferences, &prefsMap); err == nil {
+			preferences = prefsMap
+		}
+	}
+
+	// 转换 Skills from datatypes.JSON to map[string]int
 	var skills map[string]int
+	if v.Skills != nil {
+		skillsMap := make(map[string]interface{})
+		if err := json.Unmarshal(*v.Skills, &skillsMap); err == nil {
+			skills = make(map[string]int)
+			for k, val := range skillsMap {
+				if num, ok := val.(float64); ok {
+					skills[k] = int(num)
+				} else if num, ok := val.(int); ok {
+					skills[k] = num
+				} else if num, ok := val.(int64); ok {
+					skills[k] = int(num)
+				}
+			}
+		}
+	}
+
+	// 转换 PrivacySettings from datatypes.JSON
 	var privacySettings map[string]interface{}
-	// Note: Need to unmarshal datatypes.JSON to map[string]interface{}
-	// For now, leave them empty or implement JSON unmarshaling if needed
+	if v.PrivacySettings != nil {
+		privacyMap := make(map[string]interface{})
+		if err := json.Unmarshal(*v.PrivacySettings, &privacyMap); err == nil {
+			privacySettings = privacyMap
+		}
+	}
 
 	return &ProfileDTO{
 		ID:              v.ID,

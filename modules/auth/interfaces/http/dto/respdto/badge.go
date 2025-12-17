@@ -9,15 +9,16 @@ import (
 )
 
 type BadgeDTO struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Description *string   `json:"description,omitempty"`
-	IconURL     *string   `json:"icon_url,omitempty"`
-	Color       *string   `json:"color,omitempty"`
-	Category    *string   `json:"category,omitempty"`
-	IsSystem    bool      `json:"is_system"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID  `json:"id"`
+	Name        string     `json:"name"`
+	Description *string    `json:"description,omitempty"`
+	IconURL     *string    `json:"icon_url,omitempty"`
+	Color       *string    `json:"color,omitempty"`
+	Category    *string    `json:"category,omitempty"`
+	IsSystem    bool       `json:"is_system"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
 // BadgeViewToDTO converts application BadgeView to response DTO
@@ -36,6 +37,7 @@ func BadgeViewToDTO(v *badgeAppViews.BadgeView) *BadgeDTO {
 		IsSystem:    v.IsSystem,
 		CreatedAt:   v.CreatedAt,
 		UpdatedAt:   v.UpdatedAt,
+		DeletedAt:   v.DeletedAt,
 	}
 }
 

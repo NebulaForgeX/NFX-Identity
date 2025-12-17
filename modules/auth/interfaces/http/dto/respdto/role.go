@@ -1,6 +1,7 @@
 package respdto
 
 import (
+	"encoding/json"
 	"time"
 
 	roleAppViews "nfxid/modules/auth/application/role/views"
@@ -27,8 +28,21 @@ func RoleViewToDTO(v *roleAppViews.RoleView) *RoleDTO {
 
 	permissions := []string{}
 	if v.Permissions != nil {
-		// Note: Permissions is *datatypes.JSON, need to unmarshal to []string
-		// For now, leave it empty or implement JSON unmarshaling if needed
+		var perms []interface{}
+		if err := json.Unmarshal(*v.Permissions, &perms); err == nil {
+			permissions = make([]string, 0, len(perms))
+			for _, p := range perms {
+				if perm, ok := p.(string); ok {
+					permissions = append(permissions, perm)
+				}
+			}
+		} else {
+			// 如果 unmarshal 失败，尝试作为字符串数组直接解析
+			var permsStr []string
+			if err2 := json.Unmarshal(*v.Permissions, &permsStr); err2 == nil {
+				permissions = permsStr
+			}
+		}
 	}
 
 	return &RoleDTO{

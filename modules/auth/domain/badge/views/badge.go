@@ -16,5 +16,5 @@ type BadgeView struct {
 	IsSystem    bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	DeletedAt   *time.Time
 }
-

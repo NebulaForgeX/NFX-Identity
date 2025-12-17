@@ -7,6 +7,7 @@ import (
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
 	"nfxid/pkgs/utils/slice"
+	"time"
 )
 
 func BadgeQueryToCommonQuery(q badgeAppQueries.BadgeListQuery) *query.ListQueryParams {
@@ -26,6 +27,10 @@ func BadgeQueryToCommonQuery(q badgeAppQueries.BadgeListQuery) *query.ListQueryP
 }
 
 func BadgeDBToDomain(m *models.Badge) badgeDomainViews.BadgeView {
+	var deletedAt *time.Time
+	if m.DeletedAt.Valid {
+		deletedAt = &m.DeletedAt.Time
+	}
 	return badgeDomainViews.BadgeView{
 		ID:          m.ID,
 		Name:        m.Name,
@@ -36,5 +41,6 @@ func BadgeDBToDomain(m *models.Badge) badgeDomainViews.BadgeView {
 		IsSystem:    m.IsSystem,
 		CreatedAt:   m.CreatedAt,
 		UpdatedAt:   m.UpdatedAt,
+		DeletedAt:   deletedAt,
 	}
 }

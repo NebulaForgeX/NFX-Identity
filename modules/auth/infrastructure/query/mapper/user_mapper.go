@@ -3,27 +3,33 @@ package mapper
 import (
 	userAppQueries "nfxid/modules/auth/application/user/queries"
 	userDomainViews "nfxid/modules/auth/domain/user/views"
+	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/rdb/views"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
 )
 
-func UserViewToDomain(v *views.UserWithRoleView) userDomainViews.UserView {
+func UserViewToDomain(v *views.UserWithRoleView, u *models.User) userDomainViews.UserView {
 	rolesJSON := []byte("[]")
 	if v.Roles != nil {
 		rolesJSON = *v.Roles
 	}
+	passwordHash := ""
+	if u != nil {
+		passwordHash = u.PasswordHash
+	}
 	return userDomainViews.UserView{
-		ID:          v.UserID,
-		Username:    v.Username,
-		Email:       v.Email,
-		Phone:       v.Phone,
-		Status:      v.Status,
-		IsVerified:  v.IsVerified,
-		LastLoginAt: v.LastLoginAt,
-		Roles:       rolesJSON,
-		CreatedAt:   v.UserCreatedAt,
-		UpdatedAt:   v.UserUpdatedAt,
+		ID:           v.UserID,
+		Username:     v.Username,
+		Email:        v.Email,
+		Phone:        v.Phone,
+		PasswordHash: passwordHash,
+		Status:       v.Status,
+		IsVerified:   v.IsVerified,
+		LastLoginAt:  v.LastLoginAt,
+		Roles:        rolesJSON,
+		CreatedAt:    v.UserCreatedAt,
+		UpdatedAt:    v.UserUpdatedAt,
 	}
 }
 
