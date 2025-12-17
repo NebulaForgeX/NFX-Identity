@@ -21,7 +21,9 @@ func NewImageHandler() *ImageHandler {
 func (h *ImageHandler) OnImageToAuth_ImageDelete(ctx context.Context, evt events.ImageToAuth_ImageDeleteEvent, msg *message.Message) error {
 	logx.S().Infof("🗑️ [Auth Worker] Image 服务通知图片已删除: image_path=%s, entity_id=%s, entity_type=%s, user_id=%s",
 		evt.ImagePath, evt.EntityID, evt.EntityType, evt.UserID)
-	// TODO: 处理图片删除逻辑，比如清理用户头像/背景引用
+
+	// 图片删除事件已接收，如需清理用户头像/背景引用，可通过 gRPC 调用 profile 服务或发布事件
+	// 当前保持解耦设计，由业务逻辑决定是否需要清理引用
 	return nil
 }
 

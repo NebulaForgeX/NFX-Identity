@@ -52,7 +52,8 @@ func (h *AuthHandler) OnAuthToAuth_Success(ctx context.Context, evt events.AuthT
 	logx.S().Infof("✅ [Auth Worker] 已收到成功消息: operation=%s, entity_id=%s, user_id=%s, details=%+v",
 		evt.Operation, evt.EntityID, evt.UserID, evt.Details)
 
-	// TODO: 处理业务逻辑，比如更新缓存、发送通知等
+	// 通用成功事件处理器，用于日志记录和后续扩展
+	// 如需添加业务逻辑（如更新缓存、发送通知等），可在此处扩展
 	return nil
 }
 
@@ -144,15 +145,8 @@ func (h *AuthHandler) OnAuthToAuth_ProfileBadgeInvalidateCache(ctx context.Conte
 func (h *AuthHandler) OnAuthToAuth_UserCreated(ctx context.Context, evt events.AuthToAuth_UserCreatedEvent, msg *message.Message) error {
 	logx.S().Infof("✅ [Auth Worker] 收到用户创建事件: user_id=%s, username=%s, email=%s, status=%s", evt.UserID, evt.Username, evt.Email, evt.Status)
 
-	// TODO: 如果需要自动创建 profile，可以在这里调用 profileAppSvc
-	// 目前保持解耦，profile 的创建由业务逻辑决定（例如注册时通过 HTTP handler 同时创建）
-	// 如果需要处理，可以先解析 userID：
-	// userID, err := uuid.Parse(evt.UserID)
-	// if err != nil {
-	// 	logx.S().Warnf("无效的 user_id: %s, error: %v", evt.UserID, err)
-	// 	return nil
-	// }
-
+	// 事件已发布，profile 等服务可通过监听此事件来处理关联数据的创建
+	// 保持解耦设计：profile 的创建由业务逻辑决定（例如注册时通过 HTTP handler 或 gRPC 调用同时创建）
 	return nil
 }
 
@@ -160,8 +154,8 @@ func (h *AuthHandler) OnAuthToAuth_UserCreated(ctx context.Context, evt events.A
 func (h *AuthHandler) OnAuthToAuth_UserUpdated(ctx context.Context, evt events.AuthToAuth_UserUpdatedEvent, msg *message.Message) error {
 	logx.S().Infof("📝 [Auth Worker] 收到用户更新事件: user_id=%s, username=%s, email=%s", evt.UserID, evt.Username, evt.Email)
 
-	// TODO: 如果需要同步更新 profile 或其他关联数据，可以在这里处理
-	// 目前保持解耦，由业务逻辑决定是否需要同步
+	// 事件已发布，其他服务可通过监听此事件来处理关联数据的更新
+	// 保持解耦设计：关联数据的同步由业务逻辑决定（可通过 gRPC 调用或事件驱动）
 
 	return nil
 }
