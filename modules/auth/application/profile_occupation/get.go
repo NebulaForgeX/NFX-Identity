@@ -2,14 +2,14 @@ package profile_occupation
 
 import (
 	"context"
-	occupationQueries "nfxid/modules/auth/application/profile_occupation/queries"
 	occupationViews "nfxid/modules/auth/application/profile_occupation/views"
+	occupationDomain "nfxid/modules/auth/domain/profile_occupation"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetOccupation(ctx context.Context, occupationID uuid.UUID) (occupationViews.OccupationView, error) {
-	domainView, err := s.occupationQuery.GetByID(ctx, occupationID)
+	domainView, err := s.occupationQuery.ByID(ctx, occupationID)
 	if err != nil {
 		return occupationViews.OccupationView{}, err
 	}
@@ -17,7 +17,7 @@ func (s *Service) GetOccupation(ctx context.Context, occupationID uuid.UUID) (oc
 }
 
 func (s *Service) GetOccupationsByProfileID(ctx context.Context, profileID uuid.UUID) ([]occupationViews.OccupationView, error) {
-	domainViews, err := s.occupationQuery.GetByProfileID(ctx, profileID)
+	domainViews, err := s.occupationQuery.ByProfileID(ctx, profileID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,9 +33,9 @@ type GetOccupationListResult struct {
 	Total int64
 }
 
-func (s *Service) GetOccupationList(ctx context.Context, q occupationQueries.OccupationListQuery) (GetOccupationListResult, error) {
+func (s *Service) GetOccupationList(ctx context.Context, q occupationDomain.ListQuery) (GetOccupationListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.occupationQuery.GetList(ctx, q)
+	domainViews, total, err := s.occupationQuery.List(ctx, q)
 	if err != nil {
 		return GetOccupationListResult{}, err
 	}

@@ -1,18 +1,17 @@
 package role
 
 import (
-	roleQueries "nfxid/modules/auth/application/role/queries"
 	roleDomain "nfxid/modules/auth/domain/role"
 )
 
 type Service struct {
 	roleRepo  *roleDomain.Repo
-	roleQuery roleQueries.RoleQuery
+	roleQuery roleDomain.Query
 }
 
 func NewService(
 	roleRepo *roleDomain.Repo,
-	roleQuery roleQueries.RoleQuery,
+	roleQuery roleDomain.Query,
 ) *Service {
 	return &Service{
 		roleRepo:  roleRepo,

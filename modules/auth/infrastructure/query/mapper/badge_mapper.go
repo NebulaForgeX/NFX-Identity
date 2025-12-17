@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	badgeAppQueries "nfxid/modules/auth/application/badge/queries"
+	badgeDomain "nfxid/modules/auth/domain/badge"
 	badgeDomainViews "nfxid/modules/auth/domain/badge/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/pkgs/query"
@@ -10,12 +10,12 @@ import (
 	"time"
 )
 
-func BadgeQueryToCommonQuery(q badgeAppQueries.BadgeListQuery) *query.ListQueryParams {
+func BadgeQueryToCommonQuery(q badgeDomain.ListQuery) *query.ListQueryParams {
 	return &query.ListQueryParams{
 		All: q.All,
-		Sorts: query.DomainSortToSort(q.DomainSorts, map[badgeAppQueries.SortField]string{
-			badgeAppQueries.SortByCreatedTime: "created_at",
-			badgeAppQueries.SortByName:        "name",
+		Sorts: query.DomainSortToSort(q.DomainSorts, map[badgeDomain.SortField]string{
+			badgeDomain.SortByCreatedTime: "created_at",
+			badgeDomain.SortByName:        "name",
 		}),
 		Search: ptr.Deref(q.Search),
 		Filters: map[string][]any{

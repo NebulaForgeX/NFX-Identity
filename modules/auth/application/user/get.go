@@ -2,15 +2,14 @@ package user
 
 import (
 	"context"
-
-	"nfxid/modules/auth/application/user/queries"
 	"nfxid/modules/auth/application/user/views"
+	userDomain "nfxid/modules/auth/domain/user"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetUser(ctx context.Context, userID uuid.UUID) (views.UserView, error) {
-	domainView, err := s.userQuery.GetByID(ctx, userID)
+	domainView, err := s.userQuery.ByID(ctx, userID)
 	if err != nil {
 		return views.UserView{}, err
 	}
@@ -22,9 +21,9 @@ type GetUserListResult struct {
 	Total int64
 }
 
-func (s *Service) GetUserList(ctx context.Context, q queries.UserListQuery) (GetUserListResult, error) {
+func (s *Service) GetUserList(ctx context.Context, q userDomain.ListQuery) (GetUserListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.userQuery.GetList(ctx, q)
+	domainViews, total, err := s.userQuery.List(ctx, q)
 	if err != nil {
 		return GetUserListResult{}, err
 	}

@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	occupationAppQueries "nfxid/modules/auth/application/profile_occupation/queries"
+	occupationDomain "nfxid/modules/auth/domain/profile_occupation"
 	occupationDomainViews "nfxid/modules/auth/domain/profile_occupation/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/pkgs/query"
@@ -37,7 +37,7 @@ func OccupationModelToDomain(m *models.Occupation) occupationDomainViews.Occupat
 	}
 }
 
-func OccupationListQueryToCommonQuery(q occupationAppQueries.OccupationListQuery) query.ListQueryParams {
+func OccupationListQueryToCommonQuery(q occupationDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -46,10 +46,10 @@ func OccupationListQueryToCommonQuery(q occupationAppQueries.OccupationListQuery
 	}
 
 	// Convert sorts
-	sortMapper := map[occupationAppQueries.SortField]string{
-		occupationAppQueries.SortByCreatedTime: "created_at",
-		occupationAppQueries.SortByStartDate:   "start_date",
-		occupationAppQueries.SortByCompany:     "company",
+	sortMapper := map[occupationDomain.SortField]string{
+		occupationDomain.SortByCreatedTime: "created_at",
+		occupationDomain.SortByStartDate:   "start_date",
+		occupationDomain.SortByCompany:     "company",
 	}
 
 	for _, sort := range q.DomainSorts {

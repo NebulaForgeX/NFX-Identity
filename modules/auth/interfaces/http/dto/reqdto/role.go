@@ -2,7 +2,6 @@ package reqdto
 
 import (
 	roleAppCommands "nfxid/modules/auth/application/role/commands"
-	roleAppQueries "nfxid/modules/auth/application/role/queries"
 	roleDomain "nfxid/modules/auth/domain/role"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
@@ -70,15 +69,15 @@ func (r *RoleUpdateRequestDTO) ToUpdateCmd() roleAppCommands.UpdateRoleCmd {
 	}
 }
 
-func (r *RoleQueryParamsDTO) ToListQuery() roleAppQueries.RoleListQuery {
-	return roleAppQueries.RoleListQuery{
+func (r *RoleQueryParamsDTO) ToListQuery() roleDomain.ListQuery {
+	return roleDomain.ListQuery{
 		DomainPagination: query.DomainPagination{
 			Offset: ptr.Deref(r.Offset),
 			Limit:  ptr.Deref(r.Limit),
 		},
-		DomainSorts: query.ParseSortParams(r.Sort, map[string]roleAppQueries.SortField{
-			"created_time": roleAppQueries.SortByCreatedTime,
-			"name":         roleAppQueries.SortByName,
+		DomainSorts: query.ParseSortParams(r.Sort, map[string]roleDomain.SortField{
+			"created_time": roleDomain.SortByCreatedTime,
+			"name":         roleDomain.SortByName,
 		}),
 		Search:   r.Search,
 		IsSystem: r.IsSystem,

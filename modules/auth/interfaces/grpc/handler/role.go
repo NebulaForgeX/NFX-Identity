@@ -4,7 +4,7 @@ import (
 	"context"
 
 	roleApp "nfxid/modules/auth/application/role"
-	roleAppQueries "nfxid/modules/auth/application/role/queries"
+	roleDomain "nfxid/modules/auth/domain/role"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	rolepb "nfxid/protos/gen/auth/role"
@@ -86,7 +86,7 @@ func (h *RoleHandler) BatchGetRoles(ctx context.Context, req *rolepb.BatchGetRol
 
 // GetAllRoles 获取所有角色列表
 func (h *RoleHandler) GetAllRoles(ctx context.Context, req *rolepb.GetAllRolesRequest) (*rolepb.GetAllRolesResponse, error) {
-	listQuery := roleAppQueries.RoleListQuery{}
+	listQuery := roleDomain.ListQuery{}
 
 	// Set pagination (convert Page/PageSize to Offset/Limit)
 	if req.Page > 0 && req.PageSize > 0 {

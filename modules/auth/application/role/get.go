@@ -2,14 +2,14 @@ package role
 
 import (
 	"context"
-	roleQueries "nfxid/modules/auth/application/role/queries"
 	roleViews "nfxid/modules/auth/application/role/views"
+	roleDomain "nfxid/modules/auth/domain/role"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetRole(ctx context.Context, roleID uuid.UUID) (roleViews.RoleView, error) {
-	domainView, err := s.roleQuery.GetByID(ctx, roleID)
+	domainView, err := s.roleQuery.ByID(ctx, roleID)
 	if err != nil {
 		return roleViews.RoleView{}, err
 	}
@@ -17,7 +17,7 @@ func (s *Service) GetRole(ctx context.Context, roleID uuid.UUID) (roleViews.Role
 }
 
 func (s *Service) GetRoleByName(ctx context.Context, name string) (roleViews.RoleView, error) {
-	domainView, err := s.roleQuery.GetByName(ctx, name)
+	domainView, err := s.roleQuery.ByName(ctx, name)
 	if err != nil {
 		return roleViews.RoleView{}, err
 	}
@@ -29,9 +29,9 @@ type GetRoleListResult struct {
 	Total int64
 }
 
-func (s *Service) GetRoleList(ctx context.Context, q roleQueries.RoleListQuery) (GetRoleListResult, error) {
+func (s *Service) GetRoleList(ctx context.Context, q roleDomain.ListQuery) (GetRoleListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.roleQuery.GetList(ctx, q)
+	domainViews, total, err := s.roleQuery.List(ctx, q)
 	if err != nil {
 		return GetRoleListResult{}, err
 	}

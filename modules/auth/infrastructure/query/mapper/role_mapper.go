@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	roleAppQueries "nfxid/modules/auth/application/role/queries"
+	roleDomain "nfxid/modules/auth/domain/role"
 	roleDomainViews "nfxid/modules/auth/domain/role/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/pkgs/query"
@@ -32,7 +32,7 @@ func RoleModelToDomain(m *models.Role) roleDomainViews.RoleView {
 	}
 }
 
-func RoleListQueryToCommonQuery(q roleAppQueries.RoleListQuery) query.ListQueryParams {
+func RoleListQueryToCommonQuery(q roleDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -41,9 +41,9 @@ func RoleListQueryToCommonQuery(q roleAppQueries.RoleListQuery) query.ListQueryP
 	}
 
 	// Convert sorts
-	sortMapper := map[roleAppQueries.SortField]string{
-		roleAppQueries.SortByCreatedTime: "created_at",
-		roleAppQueries.SortByName:        "name",
+	sortMapper := map[roleDomain.SortField]string{
+		roleDomain.SortByCreatedTime: "created_at",
+		roleDomain.SortByName:        "name",
 	}
 
 	for _, sort := range q.DomainSorts {

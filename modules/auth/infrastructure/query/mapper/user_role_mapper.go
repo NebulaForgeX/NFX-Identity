@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	userRoleAppQueries "nfxid/modules/auth/application/user_role/queries"
+	userRoleDomain "nfxid/modules/auth/domain/user_role"
 	userRoleDomainViews "nfxid/modules/auth/domain/user_role/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/pkgs/query"
@@ -16,7 +16,7 @@ func UserRoleModelToDomain(m *models.UserRole) userRoleDomainViews.UserRoleView 
 	}
 }
 
-func UserRoleListQueryToCommonQuery(q userRoleAppQueries.UserRoleListQuery) query.ListQueryParams {
+func UserRoleListQueryToCommonQuery(q userRoleDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -24,8 +24,8 @@ func UserRoleListQueryToCommonQuery(q userRoleAppQueries.UserRoleListQuery) quer
 	}
 
 	// Convert sorts
-	sortMapper := map[userRoleAppQueries.SortField]string{
-		userRoleAppQueries.SortByCreatedTime: "created_at",
+	sortMapper := map[userRoleDomain.SortField]string{
+		userRoleDomain.SortByCreatedTime: "created_at",
 	}
 
 	for _, sort := range q.DomainSorts {
@@ -39,4 +39,3 @@ func UserRoleListQueryToCommonQuery(q userRoleAppQueries.UserRoleListQuery) quer
 
 	return commonQuery
 }
-

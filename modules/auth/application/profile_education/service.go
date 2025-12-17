@@ -2,7 +2,6 @@ package profile_education
 
 import (
 	"context"
-	educationQueries "nfxid/modules/auth/application/profile_education/queries"
 	educationViews "nfxid/modules/auth/application/profile_education/views"
 	educationDomain "nfxid/modules/auth/domain/profile_education"
 	"nfxid/pkgs/cache"
@@ -13,14 +12,14 @@ import (
 
 type Service struct {
 	educationRepo  *educationDomain.Repo
-	educationQuery educationQueries.EducationQuery
+	educationQuery educationDomain.Query
 	busPublisher   *eventbus.BusPublisher
 	cacheSet       cache.CacheSet[educationViews.EducationView, uuid.UUID]
 }
 
 func NewService(
 	educationRepo *educationDomain.Repo,
-	educationQuery educationQueries.EducationQuery,
+	educationQuery educationDomain.Query,
 	busPublisher *eventbus.BusPublisher,
 	cacheSet cache.CacheSet[educationViews.EducationView, uuid.UUID],
 ) *Service {

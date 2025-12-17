@@ -4,7 +4,6 @@ import (
 	"time"
 
 	occupationAppCommands "nfxid/modules/auth/application/profile_occupation/commands"
-	occupationAppQueries "nfxid/modules/auth/application/profile_occupation/queries"
 	occupationDomain "nfxid/modules/auth/domain/profile_occupation"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
@@ -133,21 +132,21 @@ func (r *OccupationUpdateRequestDTO) ToUpdateCmd() occupationAppCommands.UpdateO
 	}
 }
 
-func (r *OccupationQueryParamsDTO) ToListQuery() occupationAppQueries.OccupationListQuery {
+func (r *OccupationQueryParamsDTO) ToListQuery() occupationDomain.ListQuery {
 	var profileIDs []uuid.UUID
 	if r.ProfileID != nil {
 		profileIDs = []uuid.UUID{*r.ProfileID}
 	}
 
-	return occupationAppQueries.OccupationListQuery{
+	return occupationDomain.ListQuery{
 		DomainPagination: query.DomainPagination{
 			Offset: ptr.Deref(r.Offset),
 			Limit:  ptr.Deref(r.Limit),
 		},
-		DomainSorts: query.ParseSortParams(r.Sort, map[string]occupationAppQueries.SortField{
-			"created_time": occupationAppQueries.SortByCreatedTime,
-			"start_date":   occupationAppQueries.SortByStartDate,
-			"company":      occupationAppQueries.SortByCompany,
+		DomainSorts: query.ParseSortParams(r.Sort, map[string]occupationDomain.SortField{
+			"created_time": occupationDomain.SortByCreatedTime,
+			"start_date":   occupationDomain.SortByStartDate,
+			"company":      occupationDomain.SortByCompany,
 		}),
 		Search:     r.Search,
 		ProfileIDs: profileIDs,

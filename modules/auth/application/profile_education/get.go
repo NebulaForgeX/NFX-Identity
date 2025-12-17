@@ -2,14 +2,14 @@ package profile_education
 
 import (
 	"context"
-	educationQueries "nfxid/modules/auth/application/profile_education/queries"
 	educationViews "nfxid/modules/auth/application/profile_education/views"
+	educationDomain "nfxid/modules/auth/domain/profile_education"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetEducation(ctx context.Context, educationID uuid.UUID) (educationViews.EducationView, error) {
-	domainView, err := s.educationQuery.GetByID(ctx, educationID)
+	domainView, err := s.educationQuery.ByID(ctx, educationID)
 	if err != nil {
 		return educationViews.EducationView{}, err
 	}
@@ -17,7 +17,7 @@ func (s *Service) GetEducation(ctx context.Context, educationID uuid.UUID) (educ
 }
 
 func (s *Service) GetEducationsByProfileID(ctx context.Context, profileID uuid.UUID) ([]educationViews.EducationView, error) {
-	domainViews, err := s.educationQuery.GetByProfileID(ctx, profileID)
+	domainViews, err := s.educationQuery.ByProfileID(ctx, profileID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,9 +33,9 @@ type GetEducationListResult struct {
 	Total int64
 }
 
-func (s *Service) GetEducationList(ctx context.Context, q educationQueries.EducationListQuery) (GetEducationListResult, error) {
+func (s *Service) GetEducationList(ctx context.Context, q educationDomain.ListQuery) (GetEducationListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.educationQuery.GetList(ctx, q)
+	domainViews, total, err := s.educationQuery.List(ctx, q)
 	if err != nil {
 		return GetEducationListResult{}, err
 	}

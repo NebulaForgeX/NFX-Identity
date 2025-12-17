@@ -1,18 +1,17 @@
 package profile_badge
 
 import (
-	profileBadgeQueries "nfxid/modules/auth/application/profile_badge/queries"
 	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
 )
 
 type Service struct {
 	profileBadgeRepo  *profileBadgeDomain.Repo
-	profileBadgeQuery profileBadgeQueries.ProfileBadgeQuery
+	profileBadgeQuery profileBadgeDomain.Query
 }
 
 func NewService(
 	profileBadgeRepo *profileBadgeDomain.Repo,
-	profileBadgeQuery profileBadgeQueries.ProfileBadgeQuery,
+	profileBadgeQuery profileBadgeDomain.Query,
 ) *Service {
 	return &Service{
 		profileBadgeRepo:  profileBadgeRepo,

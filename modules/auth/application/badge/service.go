@@ -2,23 +2,22 @@ package badge
 
 import (
 	"context"
-	badgeQueries "nfxid/modules/auth/application/badge/queries"
 	badgeViews "nfxid/modules/auth/application/badge/views"
-	"nfxid/modules/auth/domain/badge"
+	badgeDomain "nfxid/modules/auth/domain/badge"
 	"nfxid/pkgs/cache"
 
 	"github.com/google/uuid"
 )
 
 type Service struct {
-	badgeRepo  *badge.Repo
-	badgeQuery badgeQueries.BadgeQuery
+	badgeRepo  *badgeDomain.Repo
+	badgeQuery badgeDomain.Query
 	cacheSet   cache.CacheSet[badgeViews.BadgeView, uuid.UUID]
 }
 
 func NewService(
-	badgeRepo *badge.Repo,
-	badgeQuery badgeQueries.BadgeQuery,
+	badgeRepo *badgeDomain.Repo,
+	badgeQuery badgeDomain.Query,
 	cacheSet cache.CacheSet[badgeViews.BadgeView, uuid.UUID],
 ) *Service {
 	return &Service{

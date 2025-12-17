@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	educationAppQueries "nfxid/modules/auth/application/profile_education/queries"
+	educationDomain "nfxid/modules/auth/domain/profile_education"
 	educationDomainViews "nfxid/modules/auth/domain/profile_education/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/pkgs/query"
@@ -35,7 +35,7 @@ func EducationModelToDomain(m *models.Education) educationDomainViews.EducationV
 	}
 }
 
-func EducationListQueryToCommonQuery(q educationAppQueries.EducationListQuery) query.ListQueryParams {
+func EducationListQueryToCommonQuery(q educationDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -44,10 +44,10 @@ func EducationListQueryToCommonQuery(q educationAppQueries.EducationListQuery) q
 	}
 
 	// Convert sorts
-	sortMapper := map[educationAppQueries.SortField]string{
-		educationAppQueries.SortByCreatedTime: "created_at",
-		educationAppQueries.SortByStartDate:   "start_date",
-		educationAppQueries.SortBySchool:      "school",
+	sortMapper := map[educationDomain.SortField]string{
+		educationDomain.SortByCreatedTime: "created_at",
+		educationDomain.SortByStartDate:   "start_date",
+		educationDomain.SortBySchool:      "school",
 	}
 
 	for _, sort := range q.DomainSorts {

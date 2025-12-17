@@ -4,7 +4,7 @@ import (
 	"context"
 
 	badgeApp "nfxid/modules/auth/application/badge"
-	badgeAppQueries "nfxid/modules/auth/application/badge/queries"
+	badgeDomain "nfxid/modules/auth/domain/badge"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	badgepb "nfxid/protos/gen/auth/badge"
@@ -54,7 +54,7 @@ func (h *BadgeHandler) GetBadgeByName(ctx context.Context, req *badgepb.GetBadge
 
 // GetAllBadges 获取所有徽章列表
 func (h *BadgeHandler) GetAllBadges(ctx context.Context, req *badgepb.GetAllBadgesRequest) (*badgepb.GetAllBadgesResponse, error) {
-	listQuery := badgeAppQueries.BadgeListQuery{}
+	listQuery := badgeDomain.ListQuery{}
 
 	// Set pagination (convert Page/PageSize to Offset/Limit)
 	if req.Page > 0 && req.PageSize > 0 {

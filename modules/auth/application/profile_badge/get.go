@@ -2,14 +2,14 @@ package profile_badge
 
 import (
 	"context"
-	profileBadgeQueries "nfxid/modules/auth/application/profile_badge/queries"
 	profileBadgeViews "nfxid/modules/auth/application/profile_badge/views"
+	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetProfileBadge(ctx context.Context, profileBadgeID uuid.UUID) (profileBadgeViews.ProfileBadgeView, error) {
-	domainView, err := s.profileBadgeQuery.GetByID(ctx, profileBadgeID)
+	domainView, err := s.profileBadgeQuery.ByID(ctx, profileBadgeID)
 	if err != nil {
 		return profileBadgeViews.ProfileBadgeView{}, err
 	}
@@ -17,7 +17,7 @@ func (s *Service) GetProfileBadge(ctx context.Context, profileBadgeID uuid.UUID)
 }
 
 func (s *Service) GetProfileBadgesByProfileID(ctx context.Context, profileID uuid.UUID) ([]profileBadgeViews.ProfileBadgeView, error) {
-	domainViews, err := s.profileBadgeQuery.GetByProfileID(ctx, profileID)
+	domainViews, err := s.profileBadgeQuery.ByProfileID(ctx, profileID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (s *Service) GetProfileBadgesByProfileID(ctx context.Context, profileID uui
 }
 
 func (s *Service) GetProfileBadgesByBadgeID(ctx context.Context, badgeID uuid.UUID) ([]profileBadgeViews.ProfileBadgeView, error) {
-	domainViews, err := s.profileBadgeQuery.GetByBadgeID(ctx, badgeID)
+	domainViews, err := s.profileBadgeQuery.ByBadgeID(ctx, badgeID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (s *Service) GetProfileBadgesByBadgeID(ctx context.Context, badgeID uuid.UU
 }
 
 func (s *Service) GetUserBadges(ctx context.Context, userID uuid.UUID) ([]profileBadgeViews.UserBadgeView, error) {
-	domainViews, err := s.profileBadgeQuery.GetUserBadges(ctx, userID)
+	domainViews, err := s.profileBadgeQuery.UserBadges(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -57,9 +57,9 @@ type GetProfileBadgeListResult struct {
 	Total int64
 }
 
-func (s *Service) GetProfileBadgeList(ctx context.Context, q profileBadgeQueries.ProfileBadgeListQuery) (GetProfileBadgeListResult, error) {
+func (s *Service) GetProfileBadgeList(ctx context.Context, q profileBadgeDomain.ListQuery) (GetProfileBadgeListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.profileBadgeQuery.GetList(ctx, q)
+	domainViews, total, err := s.profileBadgeQuery.List(ctx, q)
 	if err != nil {
 		return GetProfileBadgeListResult{}, err
 	}

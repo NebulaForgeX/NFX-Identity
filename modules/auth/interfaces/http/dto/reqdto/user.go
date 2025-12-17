@@ -3,7 +3,6 @@ package reqdto
 import (
 	userApp "nfxid/modules/auth/application/user"
 	userAppCommands "nfxid/modules/auth/application/user/commands"
-	userAppQueries "nfxid/modules/auth/application/user/queries"
 	userDomain "nfxid/modules/auth/domain/user"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
@@ -12,11 +11,11 @@ import (
 )
 
 type UserCreateRequestDTO struct {
-	Username string   `json:"username" validate:"required"`
-	Email    string   `json:"email" validate:"required,email"`
-	Phone    string   `json:"phone" validate:"required"`
-	Password string   `json:"password" validate:"required,min=6"`
-	Status   string   `json:"status,omitempty"`
+	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Phone    string `json:"phone" validate:"required"`
+	Password string `json:"password" validate:"required,min=6"`
+	Status   string `json:"status,omitempty"`
 }
 
 type UserUpdateRequestDTO struct {
@@ -99,7 +98,7 @@ func (r *UserRefreshTokenRequestDTO) ToRefreshCmd() userAppCommands.RefreshCmd {
 	}
 }
 
-func (r *UserQueryParamsDTO) ToListQuery() userAppQueries.UserListQuery {
+func (r *UserQueryParamsDTO) ToListQuery() userDomain.ListQuery {
 	var status []string
 	if r.Status != nil && *r.Status != "" {
 		status = []string{*r.Status}
@@ -115,15 +114,15 @@ func (r *UserQueryParamsDTO) ToListQuery() userAppQueries.UserListQuery {
 		}
 	}
 
-	return userAppQueries.UserListQuery{
+	return userDomain.ListQuery{
 		DomainPagination: query.DomainPagination{
 			Offset: ptr.Deref(r.Offset),
 			Limit:  ptr.Deref(r.Limit),
 		},
-		DomainSorts: query.ParseSortParams(r.Sort, map[string]userAppQueries.SortField{
-			"created_time": userAppQueries.SortByCreatedTime,
-			"username":     userAppQueries.SortByUsername,
-			"email":        userAppQueries.SortByEmail,
+		DomainSorts: query.ParseSortParams(r.Sort, map[string]userDomain.SortField{
+			"created_time": userDomain.SortByCreatedTime,
+			"username":     userDomain.SortByUsername,
+			"email":        userDomain.SortByEmail,
 		}),
 		Search:  r.Search,
 		Status:  status,

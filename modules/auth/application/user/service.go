@@ -1,7 +1,6 @@
 package user
 
 import (
-	"nfxid/modules/auth/application/user/queries"
 	userDomain "nfxid/modules/auth/domain/user"
 	"nfxid/pkgs/eventbus"
 	"nfxid/pkgs/tokenx"
@@ -9,14 +8,14 @@ import (
 
 type Service struct {
 	userRepo     *userDomain.Repo
-	userQuery    queries.UserQuery
+	userQuery    userDomain.Query
 	busPublisher *eventbus.BusPublisher
 	tokenx       *tokenx.Tokenx
 }
 
 func NewService(
 	userRepo *userDomain.Repo,
-	userQuery queries.UserQuery,
+	userQuery userDomain.Query,
 	busPublisher *eventbus.BusPublisher,
 	tokenx *tokenx.Tokenx,
 ) *Service {

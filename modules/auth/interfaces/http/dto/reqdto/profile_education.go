@@ -4,7 +4,6 @@ import (
 	"time"
 
 	educationAppCommands "nfxid/modules/auth/application/profile_education/commands"
-	educationAppQueries "nfxid/modules/auth/application/profile_education/queries"
 	educationDomain "nfxid/modules/auth/domain/profile_education"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
@@ -120,21 +119,21 @@ func (r *EducationUpdateRequestDTO) ToUpdateCmd() educationAppCommands.UpdateEdu
 	}
 }
 
-func (r *EducationQueryParamsDTO) ToListQuery() educationAppQueries.EducationListQuery {
+func (r *EducationQueryParamsDTO) ToListQuery() educationDomain.ListQuery {
 	var profileIDs []uuid.UUID
 	if r.ProfileID != nil {
 		profileIDs = []uuid.UUID{*r.ProfileID}
 	}
 
-	return educationAppQueries.EducationListQuery{
+	return educationDomain.ListQuery{
 		DomainPagination: query.DomainPagination{
 			Offset: ptr.Deref(r.Offset),
 			Limit:  ptr.Deref(r.Limit),
 		},
-		DomainSorts: query.ParseSortParams(r.Sort, map[string]educationAppQueries.SortField{
-			"created_time": educationAppQueries.SortByCreatedTime,
-			"start_date":   educationAppQueries.SortByStartDate,
-			"school":       educationAppQueries.SortBySchool,
+		DomainSorts: query.ParseSortParams(r.Sort, map[string]educationDomain.SortField{
+			"created_time": educationDomain.SortByCreatedTime,
+			"start_date":   educationDomain.SortByStartDate,
+			"school":       educationDomain.SortBySchool,
 		}),
 		Search:     r.Search,
 		ProfileIDs: profileIDs,

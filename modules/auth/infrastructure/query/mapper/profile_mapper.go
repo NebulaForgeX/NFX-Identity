@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	profileAppQueries "nfxid/modules/auth/application/profile/queries"
+	profileDomain "nfxid/modules/auth/domain/profile"
 	profileDomainViews "nfxid/modules/auth/domain/profile/views"
 	"nfxid/modules/auth/infrastructure/rdb/views"
 	"nfxid/pkgs/query"
@@ -70,7 +70,7 @@ func ProfileViewToDomain(v *views.ProfileCompleteView) profileDomainViews.Profil
 	return view
 }
 
-func ProfileListQueryToCommonQuery(q profileAppQueries.ProfileListQuery) query.ListQueryParams {
+func ProfileListQueryToCommonQuery(q profileDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -79,10 +79,10 @@ func ProfileListQueryToCommonQuery(q profileAppQueries.ProfileListQuery) query.L
 	}
 
 	// Convert sorts
-	sortMapper := map[profileAppQueries.SortField]string{
-		profileAppQueries.SortByCreatedTime: "profile_created_at",
-		profileAppQueries.SortByDisplayName: "display_name",
-		profileAppQueries.SortByNickname:    "nickname",
+	sortMapper := map[profileDomain.SortField]string{
+		profileDomain.SortByCreatedTime: "profile_created_at",
+		profileDomain.SortByDisplayName: "display_name",
+		profileDomain.SortByNickname:    "nickname",
 	}
 
 	for _, sort := range q.DomainSorts {

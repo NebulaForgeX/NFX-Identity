@@ -2,8 +2,8 @@ package profile
 
 import (
 	"context"
-	profileQueries "nfxid/modules/auth/application/profile/queries"
 	profileViews "nfxid/modules/auth/application/profile/views"
+	profileDomain "nfxid/modules/auth/domain/profile"
 	"nfxid/pkgs/logx"
 	imagepb "nfxid/protos/gen/image/image"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func (s *Service) GetProfile(ctx context.Context, profileID uuid.UUID) (profileViews.ProfileView, error) {
-	domainView, err := s.profileQuery.GetByID(ctx, profileID)
+	domainView, err := s.profileQuery.ByID(ctx, profileID)
 	if err != nil {
 		return profileViews.ProfileView{}, err
 	}
@@ -29,7 +29,7 @@ func (s *Service) GetProfile(ctx context.Context, profileID uuid.UUID) (profileV
 }
 
 func (s *Service) GetProfileByUserID(ctx context.Context, userID uuid.UUID) (profileViews.ProfileView, error) {
-	domainView, err := s.profileQuery.GetByUserID(ctx, userID)
+	domainView, err := s.profileQuery.ByUserID(ctx, userID)
 	if err != nil {
 		return profileViews.ProfileView{}, err
 	}
@@ -65,7 +65,7 @@ func (s *Service) enrichWithImages(ctx context.Context, view *profileViews.Profi
 	}
 
 	// 将图片列表添加到 view 中
-	if resp.Images != nil && len(resp.Images) > 0 {	
+	if resp.Images != nil && len(resp.Images) > 0 {
 		images := make([]profileViews.ImageInfo, 0, len(resp.Images))
 		for _, img := range resp.Images {
 			imageInfo := profileViews.ImageInfo{
@@ -96,9 +96,9 @@ type GetProfileListResult struct {
 	Total int64
 }
 
-func (s *Service) GetProfileList(ctx context.Context, q profileQueries.ProfileListQuery) (GetProfileListResult, error) {
+func (s *Service) GetProfileList(ctx context.Context, q profileDomain.ListQuery) (GetProfileListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.profileQuery.GetList(ctx, q)
+	domainViews, total, err := s.profileQuery.List(ctx, q)
 	if err != nil {
 		return GetProfileListResult{}, err
 	}

@@ -2,14 +2,14 @@ package user_role
 
 import (
 	"context"
-	userRoleQueries "nfxid/modules/auth/application/user_role/queries"
 	userRoleViews "nfxid/modules/auth/application/user_role/views"
+	userRoleDomain "nfxid/modules/auth/domain/user_role"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetUserRole(ctx context.Context, userRoleID uuid.UUID) (userRoleViews.UserRoleView, error) {
-	domainView, err := s.userRoleQuery.GetByID(ctx, userRoleID)
+	domainView, err := s.userRoleQuery.ByID(ctx, userRoleID)
 	if err != nil {
 		return userRoleViews.UserRoleView{}, err
 	}
@@ -17,7 +17,7 @@ func (s *Service) GetUserRole(ctx context.Context, userRoleID uuid.UUID) (userRo
 }
 
 func (s *Service) GetUserRolesByUserID(ctx context.Context, userID uuid.UUID) ([]userRoleViews.UserRoleView, error) {
-	domainViews, err := s.userRoleQuery.GetByUserID(ctx, userID)
+	domainViews, err := s.userRoleQuery.ByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (s *Service) GetUserRolesByUserID(ctx context.Context, userID uuid.UUID) ([
 }
 
 func (s *Service) GetUserRolesByRoleID(ctx context.Context, roleID uuid.UUID) ([]userRoleViews.UserRoleView, error) {
-	domainViews, err := s.userRoleQuery.GetByRoleID(ctx, roleID)
+	domainViews, err := s.userRoleQuery.ByRoleID(ctx, roleID)
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +45,9 @@ type GetUserRoleListResult struct {
 	Total int64
 }
 
-func (s *Service) GetUserRoleList(ctx context.Context, q userRoleQueries.UserRoleListQuery) (GetUserRoleListResult, error) {
+func (s *Service) GetUserRoleList(ctx context.Context, q userRoleDomain.ListQuery) (GetUserRoleListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.userRoleQuery.GetList(ctx, q)
+	domainViews, total, err := s.userRoleQuery.List(ctx, q)
 	if err != nil {
 		return GetUserRoleListResult{}, err
 	}
@@ -60,4 +60,3 @@ func (s *Service) GetUserRoleList(ctx context.Context, q userRoleQueries.UserRol
 		Total: total,
 	}, nil
 }
-

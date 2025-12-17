@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	profileBadgeAppQueries "nfxid/modules/auth/application/profile_badge/queries"
+	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
 	profileBadgeDomainViews "nfxid/modules/auth/domain/profile_badge/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/pkgs/query"
@@ -20,7 +20,7 @@ func ProfileBadgeModelToDomain(m *models.ProfileBadge) profileBadgeDomainViews.P
 	}
 }
 
-func ProfileBadgeListQueryToCommonQuery(q profileBadgeAppQueries.ProfileBadgeListQuery) query.ListQueryParams {
+func ProfileBadgeListQueryToCommonQuery(q profileBadgeDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -28,9 +28,9 @@ func ProfileBadgeListQueryToCommonQuery(q profileBadgeAppQueries.ProfileBadgeLis
 	}
 
 	// Convert sorts
-	sortMapper := map[profileBadgeAppQueries.SortField]string{
-		profileBadgeAppQueries.SortByCreatedTime: "created_at",
-		profileBadgeAppQueries.SortByEarnedAt:    "earned_at",
+	sortMapper := map[profileBadgeDomain.SortField]string{
+		profileBadgeDomain.SortByCreatedTime: "created_at",
+		profileBadgeDomain.SortByEarnedAt:    "earned_at",
 	}
 
 	for _, sort := range q.DomainSorts {

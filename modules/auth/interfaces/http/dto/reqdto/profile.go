@@ -5,7 +5,6 @@ import (
 	"time"
 
 	profileAppCommands "nfxid/modules/auth/application/profile/commands"
-	profileAppQueries "nfxid/modules/auth/application/profile/queries"
 	profileDomain "nfxid/modules/auth/domain/profile"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
@@ -91,21 +90,21 @@ type ProfileQueryParamsDTO struct {
 	Sort   []string   `query:"sort"`
 }
 
-func (r *ProfileQueryParamsDTO) ToListQuery() profileAppQueries.ProfileListQuery {
+func (r *ProfileQueryParamsDTO) ToListQuery() profileDomain.ListQuery {
 	var userIDs []uuid.UUID
 	if r.UserID != nil {
 		userIDs = []uuid.UUID{*r.UserID}
 	}
 
-	return profileAppQueries.ProfileListQuery{
+	return profileDomain.ListQuery{
 		DomainPagination: query.DomainPagination{
 			Offset: ptr.Deref(r.Offset),
 			Limit:  ptr.Deref(r.Limit),
 		},
-		DomainSorts: query.ParseSortParams(r.Sort, map[string]profileAppQueries.SortField{
-			"created_time": profileAppQueries.SortByCreatedTime,
-			"display_name": profileAppQueries.SortByDisplayName,
-			"nickname":     profileAppQueries.SortByNickname,
+		DomainSorts: query.ParseSortParams(r.Sort, map[string]profileDomain.SortField{
+			"created_time": profileDomain.SortByCreatedTime,
+			"display_name": profileDomain.SortByDisplayName,
+			"nickname":     profileDomain.SortByNickname,
 		}),
 		Search:  r.Search,
 		UserIDs: userIDs,

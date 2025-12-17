@@ -4,7 +4,7 @@ import (
 	"context"
 
 	educationApp "nfxid/modules/auth/application/profile_education"
-	educationAppQueries "nfxid/modules/auth/application/profile_education/queries"
+	educationDomain "nfxid/modules/auth/domain/profile_education"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	profileeducationpb "nfxid/protos/gen/auth/profile_education"
@@ -63,7 +63,7 @@ func (h *EducationHandler) GetProfileEducationsByProfileID(ctx context.Context, 
 
 // GetAllEducations 获取所有教育经历列表
 func (h *EducationHandler) GetAllProfileEducations(ctx context.Context, req *profileeducationpb.GetAllProfileEducationsRequest) (*profileeducationpb.GetAllProfileEducationsResponse, error) {
-	listQuery := educationAppQueries.EducationListQuery{}
+	listQuery := educationDomain.ListQuery{}
 
 	// Set pagination (convert Page/PageSize to Offset/Limit)
 	if req.Page > 0 && req.PageSize > 0 {

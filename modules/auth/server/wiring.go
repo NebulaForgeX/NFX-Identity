@@ -17,7 +17,13 @@ import (
 	"nfxid/modules/auth/config"
 	userDomain "nfxid/modules/auth/domain/user"
 	"nfxid/modules/auth/infrastructure/grpcclient"
-	"nfxid/modules/auth/infrastructure/query"
+	badgeQueryPkg "nfxid/modules/auth/infrastructure/query/badge"
+	profileQueryPkg "nfxid/modules/auth/infrastructure/query/profile"
+	profileBadgeQueryPkg "nfxid/modules/auth/infrastructure/query/profile_badge"
+	educationQueryPkg "nfxid/modules/auth/infrastructure/query/profile_education"
+	occupationQueryPkg "nfxid/modules/auth/infrastructure/query/profile_occupation"
+	roleQueryPkg "nfxid/modules/auth/infrastructure/query/role"
+	userQueryPkg "nfxid/modules/auth/infrastructure/query/user"
 	badgeRepoPkg "nfxid/modules/auth/infrastructure/repository/badge"
 	profileRepoPkg "nfxid/modules/auth/infrastructure/repository/profile"
 	profileBadgeRepoPkg "nfxid/modules/auth/infrastructure/repository/profile_badge"
@@ -120,13 +126,13 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 	_ = userRoleRepoPkg.NewRepo(postgres.DB()) // userRoleRepo is not used in wiring yet
 
 	// === Query ===
-	userQuery := query.NewUserPGQuery(postgres.DB())
-	profileQuery := query.NewProfilePGQuery(postgres.DB())
-	roleQuery := query.NewRolePGQuery(postgres.DB())
-	badgeQuery := query.NewBadgePGQuery(postgres.DB())
-	educationQuery := query.NewEducationPGQuery(postgres.DB())
-	occupationQuery := query.NewOccupationPGQuery(postgres.DB())
-	profileBadgeQuery := query.NewProfileBadgePGQuery(postgres.DB())
+	userQuery := userQueryPkg.NewHandler(postgres.DB())
+	profileQuery := profileQueryPkg.NewHandler(postgres.DB())
+	roleQuery := roleQueryPkg.NewHandler(postgres.DB())
+	badgeQuery := badgeQueryPkg.NewHandler(postgres.DB())
+	educationQuery := educationQueryPkg.NewHandler(postgres.DB())
+	occupationQuery := occupationQueryPkg.NewHandler(postgres.DB())
+	profileBadgeQuery := profileBadgeQueryPkg.NewHandler(postgres.DB())
 
 	// === Cache ===
 	cacheNS := cfg.Env.String()

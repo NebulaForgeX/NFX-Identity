@@ -2,7 +2,6 @@ package reqdto
 
 import (
 	badgeAppCommands "nfxid/modules/auth/application/badge/commands"
-	badgeAppQueries "nfxid/modules/auth/application/badge/queries"
 	badgeDomain "nfxid/modules/auth/domain/badge"
 	"nfxid/pkgs/query"
 	"nfxid/pkgs/utils/ptr"
@@ -86,15 +85,15 @@ func (r *BadgeUpdateRequestDTO) ToUpdateCmd() badgeAppCommands.UpdateBadgeCmd {
 	}
 }
 
-func (r *BadgeQueryParamsDTO) ToListQuery() badgeAppQueries.BadgeListQuery {
-	return badgeAppQueries.BadgeListQuery{
+func (r *BadgeQueryParamsDTO) ToListQuery() badgeDomain.ListQuery {
+	return badgeDomain.ListQuery{
 		DomainPagination: query.DomainPagination{
 			Offset: ptr.Deref(r.Offset),
 			Limit:  ptr.Deref(r.Limit),
 		},
-		DomainSorts: query.ParseSortParams(r.Sort, map[string]badgeAppQueries.SortField{
-			"created_time": badgeAppQueries.SortByCreatedTime,
-			"name":         badgeAppQueries.SortByName,
+		DomainSorts: query.ParseSortParams(r.Sort, map[string]badgeDomain.SortField{
+			"created_time": badgeDomain.SortByCreatedTime,
+			"name":         badgeDomain.SortByName,
 		}),
 		Search:   r.Search,
 		Category: r.Category,

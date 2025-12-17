@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	userAppQueries "nfxid/modules/auth/application/user/queries"
+	userDomain "nfxid/modules/auth/domain/user"
 	userDomainViews "nfxid/modules/auth/domain/user/views"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/rdb/views"
@@ -44,7 +44,7 @@ func UserBadgesViewToDomain(v *views.UserBadgesView) userDomainViews.UserBadgesV
 	}
 }
 
-func UserListQueryToCommonQuery(q userAppQueries.UserListQuery) query.ListQueryParams {
+func UserListQueryToCommonQuery(q userDomain.ListQuery) query.ListQueryParams {
 	commonQuery := query.ListQueryParams{
 		Offset: q.Offset,
 		Limit:  q.Limit,
@@ -53,10 +53,10 @@ func UserListQueryToCommonQuery(q userAppQueries.UserListQuery) query.ListQueryP
 	}
 
 	// Convert sorts
-	sortMapper := map[userAppQueries.SortField]string{
-		userAppQueries.SortByCreatedTime: "user_created_at",
-		userAppQueries.SortByUsername:    "username",
-		userAppQueries.SortByEmail:       "email",
+	sortMapper := map[userDomain.SortField]string{
+		userDomain.SortByCreatedTime: "user_created_at",
+		userDomain.SortByUsername:    "username",
+		userDomain.SortByEmail:       "email",
 	}
 
 	for _, sort := range q.DomainSorts {

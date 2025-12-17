@@ -70,7 +70,7 @@ func (s *Service) Login(ctx context.Context, cmd userCommands.LoginCmd) (*userCo
 	}
 
 	// 获取用户视图（Domain View）
-	domainView, err := s.userQuery.GetByID(ctx, entity.ID())
+	domainView, err := s.userQuery.ByID(ctx, entity.ID())
 	if err != nil {
 		return nil, err
 	}

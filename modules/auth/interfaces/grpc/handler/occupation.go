@@ -4,7 +4,7 @@ import (
 	"context"
 
 	occupationApp "nfxid/modules/auth/application/profile_occupation"
-	occupationAppQueries "nfxid/modules/auth/application/profile_occupation/queries"
+	occupationDomain "nfxid/modules/auth/domain/profile_occupation"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	profileoccupationpb "nfxid/protos/gen/auth/profile_occupation"
@@ -63,7 +63,7 @@ func (h *OccupationHandler) GetProfileOccupationsByProfileID(ctx context.Context
 
 // GetAllOccupations 获取所有职业信息列表
 func (h *OccupationHandler) GetAllProfileOccupations(ctx context.Context, req *profileoccupationpb.GetAllProfileOccupationsRequest) (*profileoccupationpb.GetAllProfileOccupationsResponse, error) {
-	listQuery := occupationAppQueries.OccupationListQuery{}
+	listQuery := occupationDomain.ListQuery{}
 
 	// Set pagination (convert Page/PageSize to Offset/Limit)
 	if req.Page > 0 && req.PageSize > 0 {
