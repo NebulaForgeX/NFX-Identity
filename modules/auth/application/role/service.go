@@ -6,12 +6,12 @@ import (
 )
 
 type Service struct {
-	roleRepo  roleDomain.Repo
+	roleRepo  *roleDomain.Repo
 	roleQuery roleQueries.RoleQuery
 }
 
 func NewService(
-	roleRepo roleDomain.Repo,
+	roleRepo *roleDomain.Repo,
 	roleQuery roleQueries.RoleQuery,
 ) *Service {
 	return &Service{

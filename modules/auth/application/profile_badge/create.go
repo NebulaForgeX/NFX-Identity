@@ -9,7 +9,7 @@ import (
 
 func (s *Service) CreateProfileBadge(ctx context.Context, cmd profileBadgeCommands.CreateProfileBadgeCmd) (*profileBadgeDomain.ProfileBadge, error) {
 	// 检查关联是否已存在
-	if exists, _ := s.profileBadgeRepo.Exists(ctx, cmd.ProfileID, cmd.BadgeID); exists {
+	if exists, _ := s.profileBadgeRepo.Check.ByProfileAndBadge(ctx, cmd.ProfileID, cmd.BadgeID); exists {
 		return nil, profileBadgeDomainErrors.ErrProfileBadgeAlreadyExists
 	}
 
@@ -23,7 +23,7 @@ func (s *Service) CreateProfileBadge(ctx context.Context, cmd profileBadgeComman
 		return nil, err
 	}
 
-	if err := s.profileBadgeRepo.Create(ctx, pb); err != nil {
+	if err := s.profileBadgeRepo.Create.New(ctx, pb); err != nil {
 		return nil, err
 	}
 

@@ -15,7 +15,7 @@ type DeleteEducationCmd struct {
 }
 
 func (s *Service) DeleteEducation(ctx context.Context, cmd DeleteEducationCmd) error {
-	e, err := s.educationRepo.GetByID(ctx, cmd.EducationID)
+	e, err := s.educationRepo.Get.ByID(ctx, cmd.EducationID)
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func (s *Service) DeleteEducation(ctx context.Context, cmd DeleteEducationCmd) e
 		return err
 	}
 
-	if err := s.educationRepo.Update(ctx, e); err != nil {
+	if err := s.educationRepo.Update.Generic(ctx, e); err != nil {
 		return err
 	}
 

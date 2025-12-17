@@ -3,10 +3,10 @@ package eventbus
 import (
 	"context"
 	badgeApp "nfxid/modules/auth/application/badge"
-	educationApp "nfxid/modules/auth/application/profile_education"
-	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	roleApp "nfxid/modules/auth/application/role"
 	userApp "nfxid/modules/auth/application/user"
 	"nfxid/modules/auth/interfaces/eventbus/handler"
@@ -87,6 +87,9 @@ func (r *Router) RegisterRoutes() {
 	// 注册 Auth 内部事件处理器（Auth -> Auth）
 	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_Success)
 	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_Test)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_UserCreated)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_UserUpdated)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_UserDeleted)
 	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_UserInvalidateCache)
 	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_ProfileInvalidateCache)
 	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthToAuth_RoleInvalidateCache)

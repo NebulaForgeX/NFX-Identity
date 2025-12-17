@@ -65,7 +65,7 @@ func (s *Service) enrichWithImages(ctx context.Context, view *profileViews.Profi
 	}
 
 	// 将图片列表添加到 view 中
-	if resp.Images != nil && len(resp.Images) > 0 {
+	if resp.Images != nil && len(resp.Images) > 0 {	
 		images := make([]profileViews.ImageInfo, 0, len(resp.Images))
 		for _, img := range resp.Images {
 			imageInfo := profileViews.ImageInfo{

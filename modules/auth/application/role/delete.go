@@ -11,7 +11,7 @@ type DeleteRoleCmd struct {
 }
 
 func (s *Service) DeleteRole(ctx context.Context, cmd DeleteRoleCmd) error {
-	r, err := s.roleRepo.GetByID(ctx, cmd.RoleID)
+	r, err := s.roleRepo.Get.ByID(ctx, cmd.RoleID)
 	if err != nil {
 		return err
 	}
@@ -20,10 +20,9 @@ func (s *Service) DeleteRole(ctx context.Context, cmd DeleteRoleCmd) error {
 		return err
 	}
 
-	if err := s.roleRepo.Update(ctx, r); err != nil {
+	if err := s.roleRepo.Update.Generic(ctx, r); err != nil {
 		return err
 	}
 
 	return nil
 }
-

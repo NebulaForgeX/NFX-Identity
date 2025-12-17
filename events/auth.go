@@ -22,6 +22,48 @@ type AuthToAuth_TestEvent struct {
 func (AuthToAuth_TestEvent) EventType() EventType { return ETAuthToAuth_Test }
 func (AuthToAuth_TestEvent) TopicKey() TopicKey   { return TKAuth }
 
+// AuthToAuth_UserCreatedEvent 用户创建事件（Auth 内部，用于通知其他服务）
+type AuthToAuth_UserCreatedEvent struct {
+	UserID   string                 `json:"user_id"`
+	Username string                 `json:"username"`
+	Email    string                 `json:"email"`
+	Phone    string                 `json:"phone"`
+	Status   string                 `json:"status"`
+	Details  map[string]interface{} `json:"details,omitempty"`
+}
+
+func (AuthToAuth_UserCreatedEvent) EventType() EventType {
+	return ETAuthToAuth_UserCreated
+}
+func (AuthToAuth_UserCreatedEvent) TopicKey() TopicKey { return TKAuth }
+
+// AuthToAuth_UserDeletedEvent 用户删除事件（Auth 内部，用于通知其他服务）
+type AuthToAuth_UserDeletedEvent struct {
+	UserID   string                 `json:"user_id"`
+	Username string                 `json:"username"`
+	Email    string                 `json:"email"`
+	Details  map[string]interface{} `json:"details,omitempty"`
+}
+
+func (AuthToAuth_UserDeletedEvent) EventType() EventType {
+	return ETAuthToAuth_UserDeleted
+}
+func (AuthToAuth_UserDeletedEvent) TopicKey() TopicKey { return TKAuth }
+
+// AuthToAuth_UserUpdatedEvent 用户更新事件（Auth 内部，用于通知其他服务）
+type AuthToAuth_UserUpdatedEvent struct {
+	UserID   string                 `json:"user_id"`
+	Username string                 `json:"username"`
+	Email    string                 `json:"email"`
+	Phone    string                 `json:"phone"`
+	Details  map[string]interface{} `json:"details,omitempty"`
+}
+
+func (AuthToAuth_UserUpdatedEvent) EventType() EventType {
+	return ETAuthToAuth_UserUpdated
+}
+func (AuthToAuth_UserUpdatedEvent) TopicKey() TopicKey { return TKAuth }
+
 // AuthToAuth_UserInvalidateCacheEvent 用户缓存清除事件（Auth 内部）
 type AuthToAuth_UserInvalidateCacheEvent struct {
 	UserID    string `json:"user_id"`   // 要清除的用户ID
@@ -82,7 +124,7 @@ func (AuthToAuth_EducationInvalidateCacheEvent) TopicKey() TopicKey { return TKA
 // AuthToAuth_OccupationInvalidateCacheEvent 职业信息缓存清除事件（Auth 内部）
 type AuthToAuth_OccupationInvalidateCacheEvent struct {
 	OccupationID string `json:"occupation_id"` // 要清除的职业信息ID
-	ProfileID    string `json:"profile_id"`   // 关联的资料ID
+	ProfileID    string `json:"profile_id"`    // 关联的资料ID
 	Operation    string `json:"operation"`     // 操作类型：created, updated, deleted
 }
 

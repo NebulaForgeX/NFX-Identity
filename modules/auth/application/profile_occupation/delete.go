@@ -11,7 +11,7 @@ type DeleteOccupationCmd struct {
 }
 
 func (s *Service) DeleteOccupation(ctx context.Context, cmd DeleteOccupationCmd) error {
-	o, err := s.occupationRepo.GetByID(ctx, cmd.OccupationID)
+	o, err := s.occupationRepo.Get.ByID(ctx, cmd.OccupationID)
 	if err != nil {
 		return err
 	}
@@ -20,10 +20,9 @@ func (s *Service) DeleteOccupation(ctx context.Context, cmd DeleteOccupationCmd)
 		return err
 	}
 
-	if err := s.occupationRepo.Update(ctx, o); err != nil {
+	if err := s.occupationRepo.Update.Generic(ctx, o); err != nil {
 		return err
 	}
 
 	return nil
 }
-

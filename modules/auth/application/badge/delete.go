@@ -11,7 +11,7 @@ type DeleteBadgeCmd struct {
 }
 
 func (s *Service) DeleteBadge(ctx context.Context, cmd DeleteBadgeCmd) error {
-	b, err := s.badgeRepo.GetByID(ctx, cmd.BadgeID)
+	b, err := s.badgeRepo.Get.ByID(ctx, cmd.BadgeID)
 	if err != nil {
 		return err
 	}
@@ -20,10 +20,9 @@ func (s *Service) DeleteBadge(ctx context.Context, cmd DeleteBadgeCmd) error {
 		return err
 	}
 
-	if err := s.badgeRepo.Update(ctx, b); err != nil {
+	if err := s.badgeRepo.Update.Generic(ctx, b); err != nil {
 		return err
 	}
 
 	return nil
 }
-

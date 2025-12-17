@@ -2,8 +2,11 @@ package user
 
 import (
 	"context"
+	"nfxid/events"
 	userDomain "nfxid/modules/auth/domain/user"
 	userDomainErrors "nfxid/modules/auth/domain/user/errors"
+	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/safeexec"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,13 +18,13 @@ type CreateUserCmd struct {
 
 func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) (*userDomain.User, error) {
 	// 检查用户名、邮箱、手机号是否已存在
-	if exists, _ := s.userRepo.ExistsByUsername(ctx, cmd.Editable.Username); exists {
+	if exists, _ := s.userRepo.Check.ByUsername(ctx, cmd.Editable.Username); exists {
 		return nil, userDomainErrors.ErrUsernameAlreadyExists
 	}
-	if exists, _ := s.userRepo.ExistsByEmail(ctx, cmd.Editable.Email); exists {
+	if exists, _ := s.userRepo.Check.ByEmail(ctx, cmd.Editable.Email); exists {
 		return nil, userDomainErrors.ErrEmailAlreadyExists
 	}
-	if exists, _ := s.userRepo.ExistsByPhone(ctx, cmd.Editable.Phone); exists {
+	if exists, _ := s.userRepo.Check.ByPhone(ctx, cmd.Editable.Phone); exists {
 		return nil, userDomainErrors.ErrPhoneAlreadyExists
 	}
 
@@ -49,9 +52,24 @@ func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) (*userDomai
 		return nil, err
 	}
 
-	if err := s.userRepo.Create(ctx, u); err != nil {
+	if err := s.userRepo.Create.New(ctx, u); err != nil {
 		return nil, err
 	}
+
+	// 发布用户创建事件（Auth -> Auth 内部事件，用于通知 profile 等服务创建关联数据）
+	safeexec.SafeGo(func() error {
+		event := events.AuthToAuth_UserCreatedEvent{
+			UserID:   u.ID().String(),
+			Username: u.Editable().Username,
+			Email:    u.Editable().Email,
+			Phone:    u.Editable().Phone,
+			Status:   u.Status(),
+			Details: map[string]interface{}{
+				"is_verified": u.IsVerified(),
+			},
+		}
+		return eventbus.PublishEvent(context.Background(), s.busPublisher, event)
+	})
 
 	return u, nil
 }

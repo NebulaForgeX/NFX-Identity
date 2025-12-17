@@ -16,7 +16,7 @@ func (s *Service) CreateOccupation(ctx context.Context, cmd occupationCommands.C
 		return nil, err
 	}
 
-	if err := s.occupationRepo.Create(ctx, o); err != nil {
+	if err := s.occupationRepo.Create.New(ctx, o); err != nil {
 		return nil, err
 	}
 

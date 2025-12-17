@@ -27,7 +27,7 @@ func (s *Service) RefreshToken(ctx context.Context, cmd userCommands.RefreshCmd)
 		return nil, userDomainErrors.ErrInvalidCredentials
 	}
 
-	entity, err := s.userRepo.GetByID(ctx, userID)
+	entity, err := s.userRepo.Get.ByID(ctx, userID)
 	if err != nil || entity == nil {
 		return nil, userDomainErrors.ErrUserNotFound
 	}

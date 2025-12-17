@@ -11,7 +11,7 @@ type DeleteProfileBadgeCmd struct {
 }
 
 func (s *Service) DeleteProfileBadge(ctx context.Context, cmd DeleteProfileBadgeCmd) error {
-	return s.profileBadgeRepo.Delete(ctx, cmd.ProfileBadgeID)
+	return s.profileBadgeRepo.Delete.ByID(ctx, cmd.ProfileBadgeID)
 }
 
 type DeleteProfileBadgeByProfileAndBadgeCmd struct {
@@ -20,6 +20,5 @@ type DeleteProfileBadgeByProfileAndBadgeCmd struct {
 }
 
 func (s *Service) DeleteProfileBadgeByProfileAndBadge(ctx context.Context, cmd DeleteProfileBadgeByProfileAndBadgeCmd) error {
-	return s.profileBadgeRepo.DeleteByProfileAndBadge(ctx, cmd.ProfileID, cmd.BadgeID)
+	return s.profileBadgeRepo.Delete.ByProfileAndBadge(ctx, cmd.ProfileID, cmd.BadgeID)
 }
-

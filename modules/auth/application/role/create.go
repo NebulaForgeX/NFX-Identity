@@ -9,7 +9,7 @@ import (
 
 func (s *Service) CreateRole(ctx context.Context, cmd roleCommands.CreateRoleCmd) (*roleDomain.Role, error) {
 	// 检查角色名是否已存在
-	if exists, _ := s.roleRepo.ExistsByName(ctx, cmd.Editable.Name); exists {
+	if exists, _ := s.roleRepo.Check.ByName(ctx, cmd.Editable.Name); exists {
 		return nil, roleDomainErrors.ErrRoleNameExists
 	}
 
@@ -22,7 +22,7 @@ func (s *Service) CreateRole(ctx context.Context, cmd roleCommands.CreateRoleCmd
 		return nil, err
 	}
 
-	if err := s.roleRepo.Create(ctx, r); err != nil {
+	if err := s.roleRepo.Create.New(ctx, r); err != nil {
 		return nil, err
 	}
 

@@ -9,7 +9,7 @@ import (
 
 func (s *Service) CreateUserRole(ctx context.Context, cmd userRoleCommands.CreateUserRoleCmd) (*userRoleDomain.UserRole, error) {
 	// 检查关联是否已存在
-	if exists, _ := s.userRoleRepo.Exists(ctx, cmd.UserID, cmd.RoleID); exists {
+	if exists, _ := s.userRoleRepo.Check.ByUserAndRole(ctx, cmd.UserID, cmd.RoleID); exists {
 		return nil, userRoleDomainErrors.ErrUserRoleAlreadyExists
 	}
 
@@ -22,10 +22,9 @@ func (s *Service) CreateUserRole(ctx context.Context, cmd userRoleCommands.Creat
 		return nil, err
 	}
 
-	if err := s.userRoleRepo.Create(ctx, ur); err != nil {
+	if err := s.userRoleRepo.Create.New(ctx, ur); err != nil {
 		return nil, err
 	}
 
 	return ur, nil
 }
-

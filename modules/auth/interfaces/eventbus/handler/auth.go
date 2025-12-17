@@ -5,10 +5,10 @@ import (
 
 	"nfxid/events"
 	badgeApp "nfxid/modules/auth/application/badge"
-	educationApp "nfxid/modules/auth/application/profile_education"
-	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	roleApp "nfxid/modules/auth/application/role"
 	userApp "nfxid/modules/auth/application/user"
 	"nfxid/pkgs/logx"
@@ -137,5 +137,50 @@ func (h *AuthHandler) OnAuthToAuth_ProfileBadgeInvalidateCache(ctx context.Conte
 	logx.S().Infof("🗑️ [Auth Worker] 清除用户徽章关联缓存: profile_badge_id=%s, profile_id=%s, badge_id=%s, operation=%s", evt.ProfileBadgeID, evt.ProfileID, evt.BadgeID, evt.Operation)
 	// 注意：ProfileBadge service 当前没有缓存，正常查询都没有缓存
 	// 如果需要添加缓存，可以在这里调用缓存清理逻辑
+	return nil
+}
+
+// OnAuthToAuth_UserCreated 监听用户创建事件（Auth 内部，用于通知其他服务创建关联数据）
+func (h *AuthHandler) OnAuthToAuth_UserCreated(ctx context.Context, evt events.AuthToAuth_UserCreatedEvent, msg *message.Message) error {
+	logx.S().Infof("✅ [Auth Worker] 收到用户创建事件: user_id=%s, username=%s, email=%s, status=%s", evt.UserID, evt.Username, evt.Email, evt.Status)
+
+	// TODO: 如果需要自动创建 profile，可以在这里调用 profileAppSvc
+	// 目前保持解耦，profile 的创建由业务逻辑决定（例如注册时通过 HTTP handler 同时创建）
+	// 如果需要处理，可以先解析 userID：
+	// userID, err := uuid.Parse(evt.UserID)
+	// if err != nil {
+	// 	logx.S().Warnf("无效的 user_id: %s, error: %v", evt.UserID, err)
+	// 	return nil
+	// }
+
+	return nil
+}
+
+// OnAuthToAuth_UserUpdated 监听用户更新事件（Auth 内部，用于通知其他服务）
+func (h *AuthHandler) OnAuthToAuth_UserUpdated(ctx context.Context, evt events.AuthToAuth_UserUpdatedEvent, msg *message.Message) error {
+	logx.S().Infof("📝 [Auth Worker] 收到用户更新事件: user_id=%s, username=%s, email=%s", evt.UserID, evt.Username, evt.Email)
+
+	// TODO: 如果需要同步更新 profile 或其他关联数据，可以在这里处理
+	// 目前保持解耦，由业务逻辑决定是否需要同步
+
+	return nil
+}
+
+// OnAuthToAuth_UserDeleted 监听用户删除事件（Auth 内部，用于通知其他服务删除关联数据）
+func (h *AuthHandler) OnAuthToAuth_UserDeleted(ctx context.Context, evt events.AuthToAuth_UserDeletedEvent, msg *message.Message) error {
+	logx.S().Infof("🗑️ [Auth Worker] 收到用户删除事件: user_id=%s, username=%s, email=%s", evt.UserID, evt.Username, evt.Email)
+
+	userID, err := uuid.Parse(evt.UserID)
+	if err != nil {
+		logx.S().Warnf("无效的 user_id: %s, error: %v", evt.UserID, err)
+		return nil
+	}
+
+	// 删除关联的 profile（如果存在）
+	if err := h.profileAppSvc.DeleteByUserID(ctx, userID); err != nil {
+		logx.S().Errorf("删除用户资料失败: user_id=%s, error: %v", evt.UserID, err)
+		// 不返回错误，避免影响其他服务的处理
+	}
+
 	return nil
 }

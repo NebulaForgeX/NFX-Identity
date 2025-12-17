@@ -11,7 +11,7 @@ type DeleteUserCmd struct {
 }
 
 func (s *Service) DeleteUser(ctx context.Context, cmd DeleteUserCmd) error {
-	u, err := s.userRepo.GetByID(ctx, cmd.UserID)
+	u, err := s.userRepo.Get.ByID(ctx, cmd.UserID)
 	if err != nil {
 		return err
 	}
@@ -20,10 +20,9 @@ func (s *Service) DeleteUser(ctx context.Context, cmd DeleteUserCmd) error {
 		return err
 	}
 
-	if err := s.userRepo.Update(ctx, u); err != nil {
+	if err := s.userRepo.Update.Generic(ctx, u); err != nil {
 		return err
 	}
 
 	return nil
 }
-

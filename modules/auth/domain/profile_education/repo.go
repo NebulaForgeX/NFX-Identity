@@ -6,12 +6,37 @@ import (
 	"github.com/google/uuid"
 )
 
-type Repo interface {
-	Create(ctx context.Context, e *Education) error
-	Update(ctx context.Context, e *Education) error
-	GetByID(ctx context.Context, id uuid.UUID) (*Education, error)
-	GetByProfileID(ctx context.Context, profileID uuid.UUID) ([]*Education, error)
-	Exists(ctx context.Context, id uuid.UUID) (bool, error)
-	Delete(ctx context.Context, id uuid.UUID) error
+// Repo 是 Education 的仓库结构体，包含增删改查四个子接口
+type Repo struct {
+	Create Create
+	Get    Get
+	Check  Check
+	Update Update
+	Delete Delete
 }
 
+// Create 定义创建相关的方法
+type Create interface {
+	New(ctx context.Context, e *Education) error
+}
+
+// Get 定义获取数据相关的方法
+type Get interface {
+	ByID(ctx context.Context, id uuid.UUID) (*Education, error)
+	ByProfileID(ctx context.Context, profileID uuid.UUID) ([]*Education, error)
+}
+
+// Check 定义检查相关的方法
+type Check interface {
+	ByID(ctx context.Context, id uuid.UUID) (bool, error)
+}
+
+// Update 定义更新相关的方法
+type Update interface {
+	Generic(ctx context.Context, e *Education) error
+}
+
+// Delete 定义删除相关的方法
+type Delete interface {
+	ByID(ctx context.Context, id uuid.UUID) error
+}

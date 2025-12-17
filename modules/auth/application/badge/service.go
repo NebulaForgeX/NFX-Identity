@@ -11,13 +11,13 @@ import (
 )
 
 type Service struct {
-	badgeRepo  badge.Repo
+	badgeRepo  *badge.Repo
 	badgeQuery badgeQueries.BadgeQuery
 	cacheSet   cache.CacheSet[badgeViews.BadgeView, uuid.UUID]
 }
 
 func NewService(
-	badgeRepo badge.Repo,
+	badgeRepo *badge.Repo,
 	badgeQuery badgeQueries.BadgeQuery,
 	cacheSet cache.CacheSet[badgeViews.BadgeView, uuid.UUID],
 ) *Service {

@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Service) UpdateProfileBadge(ctx context.Context, cmd profileBadgeCommands.UpdateProfileBadgeCmd) error {
-	pb, err := s.profileBadgeRepo.GetByID(ctx, cmd.ProfileBadgeID)
+	pb, err := s.profileBadgeRepo.Get.ByID(ctx, cmd.ProfileBadgeID)
 	if err != nil {
 		return err
 	}
@@ -19,7 +19,7 @@ func (s *Service) UpdateProfileBadge(ctx context.Context, cmd profileBadgeComman
 		return err
 	}
 
-	if err := s.profileBadgeRepo.Update(ctx, pb); err != nil {
+	if err := s.profileBadgeRepo.Update.Generic(ctx, pb); err != nil {
 		return err
 	}
 

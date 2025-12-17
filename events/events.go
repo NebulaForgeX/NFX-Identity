@@ -18,6 +18,9 @@ const (
 	// =============== Auth -> Auth Events (Internal) ===============
 	ETAuthToAuth_Success                     EventType = "auth_to_auth.success"
 	ETAuthToAuth_Test                        EventType = "auth_to_auth.test"
+	ETAuthToAuth_UserCreated                 EventType = "auth_to_auth.user.created"
+	ETAuthToAuth_UserUpdated                 EventType = "auth_to_auth.user.updated"
+	ETAuthToAuth_UserDeleted                 EventType = "auth_to_auth.user.deleted"
 	ETAuthToAuth_UserInvalidateCache         EventType = "auth_to_auth.user.invalidate_cache"
 	ETAuthToAuth_ProfileInvalidateCache      EventType = "auth_to_auth.profile.invalidate_cache"
 	ETAuthToAuth_ProfileBadgeInvalidateCache EventType = "auth_to_auth.profile_badge.invalidate_cache"

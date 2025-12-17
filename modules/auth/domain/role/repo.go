@@ -6,13 +6,38 @@ import (
 	"github.com/google/uuid"
 )
 
-type Repo interface {
-	Create(ctx context.Context, r *Role) error
-	Update(ctx context.Context, r *Role) error
-	GetByID(ctx context.Context, id uuid.UUID) (*Role, error)
-	GetByName(ctx context.Context, name string) (*Role, error)
-	Exists(ctx context.Context, id uuid.UUID) (bool, error)
-	ExistsByName(ctx context.Context, name string) (bool, error)
-	Delete(ctx context.Context, id uuid.UUID) error
+// Repo 是 Role 的仓库结构体，包含增删改查四个子接口
+type Repo struct {
+	Create Create
+	Get    Get
+	Check  Check
+	Update Update
+	Delete Delete
 }
 
+// Create 定义创建相关的方法
+type Create interface {
+	New(ctx context.Context, r *Role) error
+}
+
+// Get 定义获取数据相关的方法
+type Get interface {
+	ByID(ctx context.Context, id uuid.UUID) (*Role, error)
+	ByName(ctx context.Context, name string) (*Role, error)
+}
+
+// Check 定义检查相关的方法
+type Check interface {
+	ByID(ctx context.Context, id uuid.UUID) (bool, error)
+	ByName(ctx context.Context, name string) (bool, error)
+}
+
+// Update 定义更新相关的方法
+type Update interface {
+	Generic(ctx context.Context, r *Role) error
+}
+
+// Delete 定义删除相关的方法
+type Delete interface {
+	ByID(ctx context.Context, id uuid.UUID) error
+}

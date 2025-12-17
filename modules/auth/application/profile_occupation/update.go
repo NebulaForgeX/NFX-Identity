@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Service) UpdateOccupation(ctx context.Context, cmd occupationCommands.UpdateOccupationCmd) error {
-	o, err := s.occupationRepo.GetByID(ctx, cmd.OccupationID)
+	o, err := s.occupationRepo.Get.ByID(ctx, cmd.OccupationID)
 	if err != nil {
 		return err
 	}
@@ -19,7 +19,7 @@ func (s *Service) UpdateOccupation(ctx context.Context, cmd occupationCommands.U
 		return err
 	}
 
-	if err := s.occupationRepo.Update(ctx, o); err != nil {
+	if err := s.occupationRepo.Update.Generic(ctx, o); err != nil {
 		return err
 	}
 

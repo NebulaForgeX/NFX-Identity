@@ -12,7 +12,7 @@ func (s *Service) CreateBadge(ctx context.Context, cmd badgeCommands.CreateBadge
 		return nil, err
 	}
 
-	if err := s.badgeRepo.Create(ctx, b); err != nil {
+	if err := s.badgeRepo.Create.New(ctx, b); err != nil {
 		return nil, err
 	}
 

@@ -7,13 +7,13 @@ import (
 )
 
 type Service struct {
-	profileRepo     profileDomain.Repo
+	profileRepo     *profileDomain.Repo
 	profileQuery    profileQueries.ProfileQuery
 	imageGRPCClient *grpcclient.ImageGRPCClient
 }
 
 func NewService(
-	profileRepo profileDomain.Repo,
+	profileRepo *profileDomain.Repo,
 	profileQuery profileQueries.ProfileQuery,
 	imageGRPCClient *grpcclient.ImageGRPCClient,
 ) *Service {

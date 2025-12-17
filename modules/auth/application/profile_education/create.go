@@ -20,7 +20,7 @@ func (s *Service) CreateEducation(ctx context.Context, cmd educationCommands.Cre
 		return nil, err
 	}
 
-	if err := s.educationRepo.Create(ctx, e); err != nil {
+	if err := s.educationRepo.Create.New(ctx, e); err != nil {
 		return nil, err
 	}
 

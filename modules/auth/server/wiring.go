@@ -7,18 +7,25 @@ import (
 
 	badgeApp "nfxid/modules/auth/application/badge"
 	badgeAppViews "nfxid/modules/auth/application/badge/views"
+	profileApp "nfxid/modules/auth/application/profile"
+	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
 	educationApp "nfxid/modules/auth/application/profile_education"
 	educationAppViews "nfxid/modules/auth/application/profile_education/views"
 	occupationApp "nfxid/modules/auth/application/profile_occupation"
-	profileApp "nfxid/modules/auth/application/profile"
-	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
 	roleApp "nfxid/modules/auth/application/role"
 	userApp "nfxid/modules/auth/application/user"
 	"nfxid/modules/auth/config"
 	userDomain "nfxid/modules/auth/domain/user"
 	"nfxid/modules/auth/infrastructure/grpcclient"
 	"nfxid/modules/auth/infrastructure/query"
-	"nfxid/modules/auth/infrastructure/repository"
+	badgeRepoPkg "nfxid/modules/auth/infrastructure/repository/badge"
+	profileRepoPkg "nfxid/modules/auth/infrastructure/repository/profile"
+	profileBadgeRepoPkg "nfxid/modules/auth/infrastructure/repository/profile_badge"
+	educationRepoPkg "nfxid/modules/auth/infrastructure/repository/profile_education"
+	occupationRepoPkg "nfxid/modules/auth/infrastructure/repository/profile_occupation"
+	roleRepoPkg "nfxid/modules/auth/infrastructure/repository/role"
+	userRepoPkg "nfxid/modules/auth/infrastructure/repository/user"
+	userRoleRepoPkg "nfxid/modules/auth/infrastructure/repository/user_role"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/cleanup"
 	"nfxid/pkgs/eventbus"
@@ -42,7 +49,7 @@ type Dependencies struct {
 	kafkaConfig        *kafkax.Config
 	busPublisher       *eventbus.BusPublisher
 	serverVerifier     token.Verifier
-	userRepo           userDomain.Repo
+	userRepo           *userDomain.Repo
 	userAppSvc         *userApp.Service
 	profileAppSvc      *profileApp.Service
 	roleAppSvc         *roleApp.Service
@@ -103,13 +110,14 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 	}
 
 	// === Repository ===
-	userRepo := repository.NewUserPGRepo(postgres.DB())
-	profileRepo := repository.NewProfilePGRepo(postgres.DB())
-	roleRepo := repository.NewRolePGRepo(postgres.DB())
-	badgeRepo := repository.NewBadgePGRepo(postgres.DB())
-	educationRepo := repository.NewEducationPGRepo(postgres.DB())
-	occupationRepo := repository.NewOccupationPGRepo(postgres.DB())
-	profileBadgeRepo := repository.NewProfileBadgePGRepo(postgres.DB())
+	userRepo := userRepoPkg.NewRepo(postgres.DB())
+	profileRepo := profileRepoPkg.NewRepo(postgres.DB())
+	roleRepo := roleRepoPkg.NewRepo(postgres.DB())
+	badgeRepo := badgeRepoPkg.NewRepo(postgres.DB())
+	educationRepo := educationRepoPkg.NewRepo(postgres.DB())
+	occupationRepo := occupationRepoPkg.NewRepo(postgres.DB())
+	profileBadgeRepo := profileBadgeRepoPkg.NewRepo(postgres.DB())
+	_ = userRoleRepoPkg.NewRepo(postgres.DB()) // userRoleRepo is not used in wiring yet
 
 	// === Query ===
 	userQuery := query.NewUserPGQuery(postgres.DB())
@@ -159,7 +167,6 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 	// === Application Services ===
 	userAppSvc := userApp.NewService(
 		userRepo,
-		profileRepo,
 		userQuery,
 		busPublisher,
 		tokenxInstance,
@@ -241,5 +248,5 @@ func (d *Dependencies) ProfileBadgeAppSvc() *profileBadgeApp.Service { return d.
 func (d *Dependencies) Tokenx() *tokenx.Tokenx                       { return d.tokenx }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                  { return d.kafkaConfig }
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher         { return d.busPublisher }
-func (d *Dependencies) UserRepo() userDomain.Repo                    { return d.userRepo }
+func (d *Dependencies) UserRepo() *userDomain.Repo                   { return d.userRepo }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier          { return d.serverVerifier }

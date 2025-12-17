@@ -6,12 +6,12 @@ import (
 )
 
 type Service struct {
-	userRoleRepo  userRoleDomain.Repo
+	userRoleRepo  *userRoleDomain.Repo
 	userRoleQuery userRoleQueries.UserRoleQuery
 }
 
 func NewService(
-	userRoleRepo userRoleDomain.Repo,
+	userRoleRepo *userRoleDomain.Repo,
 	userRoleQuery userRoleQueries.UserRoleQuery,
 ) *Service {
 	return &Service{
@@ -19,4 +19,3 @@ func NewService(
 		userRoleQuery: userRoleQuery,
 	}
 }
-

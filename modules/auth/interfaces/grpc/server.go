@@ -2,10 +2,10 @@ package grpc
 
 import (
 	badgeApp "nfxid/modules/auth/application/badge"
-	educationApp "nfxid/modules/auth/application/profile_education"
-	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	roleApp "nfxid/modules/auth/application/role"
 	userApp "nfxid/modules/auth/application/user"
 	userDomain "nfxid/modules/auth/domain/user"
@@ -14,9 +14,9 @@ import (
 	"nfxid/pkgs/security/token"
 	authpb "nfxid/protos/gen/auth/auth"
 	badgepb "nfxid/protos/gen/auth/badge"
+	profilepb "nfxid/protos/gen/auth/profile"
 	profileeducationpb "nfxid/protos/gen/auth/profile_education"
 	profileoccupationpb "nfxid/protos/gen/auth/profile_occupation"
-	profilepb "nfxid/protos/gen/auth/profile"
 	rolepb "nfxid/protos/gen/auth/role"
 	userpb "nfxid/protos/gen/auth/user"
 
@@ -34,7 +34,7 @@ type Deps interface {
 	EducationAppSvc() *educationApp.Service
 	OccupationAppSvc() *occupationApp.Service
 	ProfileBadgeAppSvc() *profileBadgeApp.Service
-	UserRepo() userDomain.Repo
+	UserRepo() *userDomain.Repo
 }
 
 func NewServer(d Deps) *grpc.Server {

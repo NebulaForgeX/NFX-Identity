@@ -22,14 +22,14 @@ type AuthHandler struct {
 	userAppSvc    *userApp.Service
 	profileAppSvc *profileApp.Service
 	roleAppSvc    *roleApp.Service
-	userRepo      userDomain.Repo
+	userRepo      *userDomain.Repo
 }
 
 func NewAuthHandler(
 	userAppSvc *userApp.Service,
 	profileAppSvc *profileApp.Service,
 	roleAppSvc *roleApp.Service,
-	userRepo userDomain.Repo,
+	userRepo *userDomain.Repo,
 ) *AuthHandler {
 	return &AuthHandler{
 		userAppSvc:    userAppSvc,
@@ -58,7 +58,7 @@ func (h *AuthHandler) GetAuthByUserID(ctx context.Context, req *authpb.GetAuthBy
 
 // GetAuthByUsername 根据用户名获取认证信息
 func (h *AuthHandler) GetAuthByUsername(ctx context.Context, req *authpb.GetAuthByUsernameRequest) (*authpb.GetAuthByUsernameResponse, error) {
-	entity, err := h.userRepo.GetByUsername(ctx, req.Username)
+	entity, err := h.userRepo.Get.ByUsername(ctx, req.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -72,7 +72,7 @@ func (h *AuthHandler) GetAuthByUsername(ctx context.Context, req *authpb.GetAuth
 
 // GetAuthByEmail 根据邮箱获取认证信息
 func (h *AuthHandler) GetAuthByEmail(ctx context.Context, req *authpb.GetAuthByEmailRequest) (*authpb.GetAuthByEmailResponse, error) {
-	entity, err := h.userRepo.GetByEmail(ctx, req.Email)
+	entity, err := h.userRepo.Get.ByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -86,7 +86,7 @@ func (h *AuthHandler) GetAuthByEmail(ctx context.Context, req *authpb.GetAuthByE
 
 // GetAuthByPhone 根据手机号获取认证信息
 func (h *AuthHandler) GetAuthByPhone(ctx context.Context, req *authpb.GetAuthByPhoneRequest) (*authpb.GetAuthByPhoneResponse, error) {
-	entity, err := h.userRepo.GetByPhone(ctx, req.Phone)
+	entity, err := h.userRepo.Get.ByPhone(ctx, req.Phone)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -135,7 +135,7 @@ func (h *AuthHandler) VerifyPassword(ctx context.Context, req *authpb.VerifyPass
 		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
 	}
 
-	entity, err := h.userRepo.GetByID(ctx, userID)
+	entity, err := h.userRepo.Get.ByID(ctx, userID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -150,7 +150,7 @@ func (h *AuthHandler) VerifyPassword(ctx context.Context, req *authpb.VerifyPass
 // VerifyUserExists 验证用户是否存在
 func (h *AuthHandler) VerifyUserExists(ctx context.Context, req *authpb.VerifyUserExistsRequest) (*authpb.VerifyUserExistsResponse, error) {
 	if req.Username != nil && *req.Username != "" {
-		exists, err := h.userRepo.ExistsByUsername(ctx, *req.Username)
+		exists, err := h.userRepo.Check.ByUsername(ctx, *req.Username)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to verify: %v", err)
 		}
@@ -160,7 +160,7 @@ func (h *AuthHandler) VerifyUserExists(ctx context.Context, req *authpb.VerifyUs
 	}
 
 	if req.Email != nil && *req.Email != "" {
-		exists, err := h.userRepo.ExistsByEmail(ctx, *req.Email)
+		exists, err := h.userRepo.Check.ByEmail(ctx, *req.Email)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to verify: %v", err)
 		}
@@ -170,7 +170,7 @@ func (h *AuthHandler) VerifyUserExists(ctx context.Context, req *authpb.VerifyUs
 	}
 
 	if req.Phone != nil && *req.Phone != "" {
-		exists, err := h.userRepo.ExistsByPhone(ctx, *req.Phone)
+		exists, err := h.userRepo.Check.ByPhone(ctx, *req.Phone)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to verify: %v", err)
 		}

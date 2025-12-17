@@ -11,7 +11,7 @@ type DeleteUserRoleCmd struct {
 }
 
 func (s *Service) DeleteUserRole(ctx context.Context, cmd DeleteUserRoleCmd) error {
-	return s.userRoleRepo.Delete(ctx, cmd.UserRoleID)
+	return s.userRoleRepo.Delete.ByID(ctx, cmd.UserRoleID)
 }
 
 type DeleteUserRoleByUserAndRoleCmd struct {
@@ -20,6 +20,5 @@ type DeleteUserRoleByUserAndRoleCmd struct {
 }
 
 func (s *Service) DeleteUserRoleByUserAndRole(ctx context.Context, cmd DeleteUserRoleByUserAndRoleCmd) error {
-	return s.userRoleRepo.DeleteByUserAndRole(ctx, cmd.UserID, cmd.RoleID)
+	return s.userRoleRepo.Delete.ByUserAndRole(ctx, cmd.UserID, cmd.RoleID)
 }
-

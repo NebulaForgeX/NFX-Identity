@@ -31,14 +31,14 @@ func (s *Service) Login(ctx context.Context, cmd userCommands.LoginCmd) (*userCo
 	identifier := strings.TrimSpace(cmd.Identifier)
 
 	// 尝试按用户名查找
-	if entity, err = s.userRepo.GetByUsername(ctx, identifier); err == nil && entity != nil {
+	if entity, err = s.userRepo.Get.ByUsername(ctx, identifier); err == nil && entity != nil {
 		// 找到用户，继续验证密码
 	} else if strings.Contains(identifier, "@") {
 		// 包含 @，按邮箱查找
-		entity, err = s.userRepo.GetByEmail(ctx, identifier)
+		entity, err = s.userRepo.Get.ByEmail(ctx, identifier)
 	} else {
 		// 按手机号查找
-		entity, err = s.userRepo.GetByPhone(ctx, identifier)
+		entity, err = s.userRepo.Get.ByPhone(ctx, identifier)
 	}
 
 	if err != nil || entity == nil {
@@ -80,7 +80,7 @@ func (s *Service) Login(ctx context.Context, cmd userCommands.LoginCmd) (*userCo
 
 	// 更新最后登录时间
 	entity.UpdateLastLogin()
-	if err := s.userRepo.Update(ctx, entity); err != nil {
+	if err := s.userRepo.Update.Generic(ctx, entity); err != nil {
 		// 记录错误但不阻止登录
 	}
 

@@ -6,12 +6,12 @@ import (
 )
 
 type Service struct {
-	profileBadgeRepo  profileBadgeDomain.Repo
+	profileBadgeRepo  *profileBadgeDomain.Repo
 	profileBadgeQuery profileBadgeQueries.ProfileBadgeQuery
 }
 
 func NewService(
-	profileBadgeRepo profileBadgeDomain.Repo,
+	profileBadgeRepo *profileBadgeDomain.Repo,
 	profileBadgeQuery profileBadgeQueries.ProfileBadgeQuery,
 ) *Service {
 	return &Service{

@@ -17,10 +17,10 @@ import (
 type UserHandler struct {
 	userpb.UnimplementedUserServiceServer
 	userAppSvc *userApp.Service
-	userRepo   userDomain.Repo
+	userRepo   *userDomain.Repo
 }
 
-func NewUserHandler(userAppSvc *userApp.Service, userRepo userDomain.Repo) *UserHandler {
+func NewUserHandler(userAppSvc *userApp.Service, userRepo *userDomain.Repo) *UserHandler {
 	return &UserHandler{
 		userAppSvc: userAppSvc,
 		userRepo:   userRepo,
@@ -46,7 +46,7 @@ func (h *UserHandler) GetUserByID(ctx context.Context, req *userpb.GetUserByIDRe
 
 // GetUserByUsername 根据用户名获取用户
 func (h *UserHandler) GetUserByUsername(ctx context.Context, req *userpb.GetUserByUsernameRequest) (*userpb.GetUserByUsernameResponse, error) {
-	entity, err := h.userRepo.GetByUsername(ctx, req.Username)
+	entity, err := h.userRepo.Get.ByUsername(ctx, req.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -62,7 +62,7 @@ func (h *UserHandler) GetUserByUsername(ctx context.Context, req *userpb.GetUser
 
 // GetUserByEmail 根据邮箱获取用户
 func (h *UserHandler) GetUserByEmail(ctx context.Context, req *userpb.GetUserByEmailRequest) (*userpb.GetUserByEmailResponse, error) {
-	entity, err := h.userRepo.GetByEmail(ctx, req.Email)
+	entity, err := h.userRepo.Get.ByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -78,7 +78,7 @@ func (h *UserHandler) GetUserByEmail(ctx context.Context, req *userpb.GetUserByE
 
 // GetUserByPhone 根据手机号获取用户
 func (h *UserHandler) GetUserByPhone(ctx context.Context, req *userpb.GetUserByPhoneRequest) (*userpb.GetUserByPhoneResponse, error) {
-	entity, err := h.userRepo.GetByPhone(ctx, req.Phone)
+	entity, err := h.userRepo.Get.ByPhone(ctx, req.Phone)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found: %v", err)
 	}
@@ -125,7 +125,7 @@ func (h *UserHandler) BatchGetUsers(ctx context.Context, req *userpb.BatchGetUse
 // CheckUserExists 检查用户是否存在
 func (h *UserHandler) CheckUserExists(ctx context.Context, req *userpb.CheckUserExistsRequest) (*userpb.CheckUserExistsResponse, error) {
 	if req.Username != nil && *req.Username != "" {
-		exists, err := h.userRepo.ExistsByUsername(ctx, *req.Username)
+		exists, err := h.userRepo.Check.ByUsername(ctx, *req.Username)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to check: %v", err)
 		}
@@ -135,7 +135,7 @@ func (h *UserHandler) CheckUserExists(ctx context.Context, req *userpb.CheckUser
 	}
 
 	if req.Email != nil && *req.Email != "" {
-		exists, err := h.userRepo.ExistsByEmail(ctx, *req.Email)
+		exists, err := h.userRepo.Check.ByEmail(ctx, *req.Email)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to check: %v", err)
 		}
@@ -145,7 +145,7 @@ func (h *UserHandler) CheckUserExists(ctx context.Context, req *userpb.CheckUser
 	}
 
 	if req.Phone != nil && *req.Phone != "" {
-		exists, err := h.userRepo.ExistsByPhone(ctx, *req.Phone)
+		exists, err := h.userRepo.Check.ByPhone(ctx, *req.Phone)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to check: %v", err)
 		}

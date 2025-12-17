@@ -12,14 +12,14 @@ import (
 )
 
 type Service struct {
-	educationRepo  educationDomain.Repo
+	educationRepo  *educationDomain.Repo
 	educationQuery educationQueries.EducationQuery
 	busPublisher   *eventbus.BusPublisher
 	cacheSet       cache.CacheSet[educationViews.EducationView, uuid.UUID]
 }
 
 func NewService(
-	educationRepo educationDomain.Repo,
+	educationRepo *educationDomain.Repo,
 	educationQuery educationQueries.EducationQuery,
 	busPublisher *eventbus.BusPublisher,
 	cacheSet cache.CacheSet[educationViews.EducationView, uuid.UUID],

@@ -10,7 +10,7 @@ import (
 )
 
 func (s *Service) UpdateEducation(ctx context.Context, cmd educationCommands.UpdateEducationCmd) error {
-	e, err := s.educationRepo.GetByID(ctx, cmd.EducationID)
+	e, err := s.educationRepo.Get.ByID(ctx, cmd.EducationID)
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func (s *Service) UpdateEducation(ctx context.Context, cmd educationCommands.Upd
 		return err
 	}
 
-	if err := s.educationRepo.Update(ctx, e); err != nil {
+	if err := s.educationRepo.Update.Generic(ctx, e); err != nil {
 		return err
 	}
 

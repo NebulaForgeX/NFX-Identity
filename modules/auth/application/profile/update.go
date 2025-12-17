@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Service) UpdateProfile(ctx context.Context, cmd profileCommands.UpdateProfileCmd) error {
-	p, err := s.profileRepo.GetByID(ctx, cmd.ProfileID)
+	p, err := s.profileRepo.Get.ByID(ctx, cmd.ProfileID)
 	if err != nil {
 		return err
 	}
@@ -19,7 +19,7 @@ func (s *Service) UpdateProfile(ctx context.Context, cmd profileCommands.UpdateP
 		return err
 	}
 
-	if err := s.profileRepo.Update(ctx, p); err != nil {
+	if err := s.profileRepo.Update.Generic(ctx, p); err != nil {
 		return err
 	}
 

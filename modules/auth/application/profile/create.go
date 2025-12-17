@@ -9,7 +9,7 @@ import (
 
 func (s *Service) CreateProfile(ctx context.Context, cmd profileCommands.CreateProfileCmd) (*profileDomain.Profile, error) {
 	// 检查用户是否已有资料
-	if exists, _ := s.profileRepo.ExistsByUserID(ctx, cmd.UserID); exists {
+	if exists, _ := s.profileRepo.Check.ByUserID(ctx, cmd.UserID); exists {
 		return nil, profileDomainErrors.ErrProfileAlreadyExists
 	}
 
@@ -22,7 +22,7 @@ func (s *Service) CreateProfile(ctx context.Context, cmd profileCommands.CreateP
 		return nil, err
 	}
 
-	if err := s.profileRepo.Create(ctx, p); err != nil {
+	if err := s.profileRepo.Create.New(ctx, p); err != nil {
 		return nil, err
 	}
 
