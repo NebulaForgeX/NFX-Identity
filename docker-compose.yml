@@ -186,6 +186,83 @@ services:
     depends_on:
       - image-api
 
+  #! Permission API Service
+  permission-api:
+    image: nfxid-permission-api:prod
+    container_name: NebulaID-Permission-API-Prod
+    build:
+      context: .
+      dockerfile: inputs/permission/api/Dockerfile
+    restart: always
+    expose:
+      - "8081"
+    labels:
+      - "traefik.enable=true"
+      # 外网 HTTPS 路由
+      - "traefik.http.routers.permission-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/permission`)"
+      - "traefik.http.routers.permission-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.permission-api-secure.tls=true"
+      - "traefik.http.routers.permission-api-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.services.permission-api.loadbalancer.server.port=8081"
+      # 内网 HTTP 路由
+      - "traefik.http.routers.permission-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/permission`)"
+      - "traefik.http.routers.permission-api-insecure.entrypoints=web"
+      - "traefik.http.routers.permission-api-insecure.service=permission-api"
+      - "traefik.http.routers.permission-api-insecure.priority=1"
+    environment:
+      - ENV=prod
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    depends_on:
+      - reverse-proxy
+    networks:
+      - nfxid
+
+  #! Permission Pipeline Service
+  permission-pipeline:
+    image: nfxid-permission-pipeline:prod
+    container_name: NebulaID-Permission-Pipeline-Prod
+    build:
+      context: .
+      dockerfile: inputs/permission/pipeline/Dockerfile
+    restart: always
+    environment:
+      - ENV=prod
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    networks:
+      - nfxid
+    depends_on:
+      - permission-api
+
+  #! Permission Connection Service (gRPC)
+  permission-connection:
+    image: nfxid-permission-connection:prod
+    container_name: NebulaID-Permission-Connection-Prod
+    build:
+      context: .
+      dockerfile: inputs/permission/connection/Dockerfile
+    restart: always
+    expose:
+      - "10014"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+    # ports:
+    #   - "10014:10014"  # 可选：如果需要从宿主机访问，取消注释
+    environment:
+      - ENV=prod
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    networks:
+      - nfxid
+    depends_on:
+      - permission-api
+
 
 networks:
   nfxid:

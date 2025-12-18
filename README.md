@@ -8,9 +8,9 @@
 
 **NFX ID** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
 
-It provides authentication, authorization, user management, and enriched profile capabilities for all internal applications and microservices.
+It provides authentication, authorization, user management, permission management, and enriched profile capabilities for all internal applications and microservices.
 
-Built with **Go**, designed with **clean architecture** and **domain-driven principles**, NFX ID is engineered for scalability, API-first integration, and cross-service interoperability.
+Built with **Go**, designed with **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles, NFX ID is engineered for scalability, API-first integration, and cross-service interoperability.
 
 ---
 
@@ -33,7 +33,16 @@ Acts as the **single source of truth** for:
 - Roles & permissions
 - Account status (active, suspended, deleted)
 
-### 3. Advanced Profile System
+### 3. Permission Management
+
+Comprehensive permission system with:
+
+- **Permission definitions** - Tag-based permission system
+- **User permissions** - User-permission associations
+- **Permission categories** - Organized permission grouping
+- **Permission checking** - Fast permission validation
+
+### 4. Advanced Profile System
 
 Fully customizable profile domain with:
 
@@ -45,24 +54,35 @@ Fully customizable profile domain with:
 
 Perfect for **Netup、ReX、TrendRadar** 等产品共享的用户体系。
 
-### 4. Service-to-Service Integration (Microservices Ready)
+### 5. Image Management
+
+Centralized image storage and management:
+
+- **Image metadata** - Image information and references
+- **Image types** - Categorized image types (avatar, background, etc.)
+- **Image variants** - Multiple sizes and formats
+- **Image tags** - Flexible tagging system
+
+### 6. Service-to-Service Integration (Microservices Ready)
 
 NFX ID 提供：
 
 - **Standardized JWT** for service authentication
 - **Internal service tokens** (machine-to-machine)
-- **REST + GraphQL** ready
+- **REST + gRPC** APIs
 - **Event-driven hooks** (via Kafka):
   - `user.created`
   - `profile.updated`
   - `user.verified`
+  - `permission.assigned`
+  - `image.uploaded`
   - And more...
 
 ---
 
 ## 🏗️ Architecture
 
-NFX ID follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles:
+NFX ID follows **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -77,18 +97,36 @@ NFX ID follows **Clean Architecture** and **Domain-Driven Design (DDD)** princip
                           ↓
 ┌─────────────────────────────────────────────────────────┐
 │                   Domain Layer                           │
-│  (Entities, Value Objects, Domain Logic, Repositories)   │
+│  (Entities, Value Objects, Domain Logic,                │
+│   Query Interfaces, Repository Interfaces)              │
 └─────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────┐
 │              Infrastructure Layer                        │
-│  (Database, Cache, Event Bus, External Services)         │
+│  (Database, Cache, Event Bus, External Services)        │
 └─────────────────────────────────────────────────────────┘
 ```
 
+### CQRS Pattern
+
+The project implements **CQRS (Command Query Responsibility Segregation)**:
+
+- **Query Layer** (`domain/{entity}/query.go`):
+  - `Single` interface - Returns single objects (`*View`)
+  - `List` interface - Returns arrays (`[]*View`)
+  - `ListQuery` - Pagination, sorting, and filtering support
+
+- **Repository Layer** (`domain/{entity}/repo.go`):
+  - Structured as `Repo` struct with sub-interfaces:
+    - `Create` - Creation operations
+    - `Get` - Retrieval operations
+    - `Check` - Existence checking
+    - `Update` - Update operations
+    - `Delete` - Deletion operations
+
 ### Service Architecture
 
-Each module (Auth, Image) is split into three services:
+Each module (Auth, Image, Permission) is split into three services:
 
 1. **API Service** - HTTP REST API (Fiber)
 2. **Connection Service** - gRPC service for inter-service communication
@@ -129,7 +167,7 @@ Each module (Auth, Image) is split into three services:
 
 ### Prerequisites
 
-- **Go 1.24.4+** (see [Memory Note](#-important-notes))
+- **Go 1.24.4+** (see [Important Notes](#-important-notes))
 - **Docker & Docker Compose**
 - **PostgreSQL** (or use Docker Compose from Resources)
 - **Redis** (or use Docker Compose from Resources)
@@ -166,6 +204,7 @@ task install
 # Copy example config (if exists)
 cp inputs/auth/config/dev.toml.example inputs/auth/config/dev.toml
 cp inputs/image/config/dev.toml.example inputs/image/config/dev.toml
+cp inputs/permission/config/dev.toml.example inputs/permission/config/dev.toml
 
 # Edit config files with your database credentials
 ```
@@ -224,7 +263,7 @@ See [STRUCTURE.md](./STRUCTURE.md) for detailed project structure documentation.
 
 ### Key Directories
 
-- `modules/` - Business modules (auth, image)
+- `modules/` - Business modules (auth, image, permission)
 - `pkgs/` - Shared packages and utilities
 - `protos/` - Protocol Buffer definitions
 - `atlas/` - Database schema and migrations
@@ -241,7 +280,8 @@ NFX ID uses Kafka for asynchronous event processing:
 
 - `auth` - Auth module events
 - `image` - Image module events
-- `auth_poison` / `image_poison` - Dead letter queues
+- `permission` - Permission module events
+- `auth_poison` / `image_poison` / `permission_poison` - Dead letter queues
 
 ### Key Events
 
@@ -254,6 +294,10 @@ NFX ID uses Kafka for asynchronous event processing:
 **Image Events:**
 - `image_to_auth.image_success`
 - `image_to_auth.image_delete`
+
+**Permission Events:**
+- `permission_to_auth.permission.assigned`
+- `permission_to_auth.permission.revoked`
 
 See `events/` directory for complete event definitions.
 
@@ -329,6 +373,7 @@ Configuration is loaded via environment variable `ENV=dev|prod`.
 - **Rate limiting** on authentication endpoints
 - **CORS** configuration
 - **Input validation** via protobuf validate
+- **Permission-based access control**
 
 ---
 
@@ -353,10 +398,21 @@ Configuration is loaded via environment variable `ENV=dev|prod`.
 ### Example: Validating JWT
 
 ```go
-import "identity/pkgs/security/token/usertoken"
+import "nfxid/pkgs/security/token/usertoken"
 
 verifier := usertoken.NewVerifier(cfg)
 claims, err := verifier.Verify(token)
+```
+
+### Example: Checking Permissions
+
+```go
+// Via gRPC
+client := permissionGRPCClient
+hasPermission, err := client.CheckPermission(ctx, &pb.CheckPermissionRequest{
+    UserID: userID,
+    Tag:    "admin.access",
+})
 ```
 
 ---
@@ -383,22 +439,6 @@ The system default Go 1.21.6 does not meet dependency requirements.
 - [ ] Advanced role-based access control (RBAC)
 - [ ] Audit logging
 - [ ] Webhook support
+- [ ] Permission caching optimization
 
----
-
-## 📄 License
-
-[Your License Here]
-
----
-
-## 👥 Contributing
-
-[Contributing Guidelines]
-
----
-
-## 📧 Contact
-
-For questions or support, please contact: [Your Contact Info]
 

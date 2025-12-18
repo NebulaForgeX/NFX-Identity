@@ -17,7 +17,7 @@ Identity-Backend/
 ├── enums/               # Generated database enum types
 ├── events/              # Event definitions for event-driven architecture
 ├── inputs/              # Service entry points (API, Connection, Pipeline)
-├── modules/             # Business modules (Auth, Image)
+├── modules/             # Business modules (Auth, Image, Permission)
 ├── pkgs/                # Shared packages and utilities
 ├── protos/              # Protocol Buffer definitions
 ├── static/              # Static files served by HTTP
@@ -34,7 +34,7 @@ Identity-Backend/
 
 ## 🏛️ Architecture Layers
 
-NFX ID follows **Clean Architecture** with clear separation of concerns:
+NFX ID follows **Clean Architecture** with clear separation of concerns and **CQRS** pattern:
 
 ### Layer Hierarchy
 
@@ -49,10 +49,10 @@ NFX ID follows **Clean Architecture** with clear separation of concerns:
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  Application Layer (Use Cases)                              │
-│  - Commands (CQRS)                                          │
-│  - Queries (CQRS)                                           │
+│  - Commands (CQRS Write Side)                              │
+│  - Queries (CQRS Read Side)                                 │
 │  - Application services                                     │
-│  - View models                                              │
+│  - View models (Application Views)                          │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -61,18 +61,20 @@ NFX ID follows **Clean Architecture** with clear separation of concerns:
 │  - Value Objects                                            │
 │  - Domain behaviors                                         │
 │  - Domain events                                            │
-│  - Repository interfaces                                    │
+│  - Query interfaces (CQRS Read Side)                        │
+│  - Repository interfaces (CQRS Write Side)                  │
 │  - Domain errors                                            │
+│  - Domain views                                             │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  Infrastructure Layer (Technical Details)                   │
-│  - Database repositories (PostgreSQL)                       │
+│  - Query implementations (single/list packages)              │
+│  - Repository implementations (create/get/check/update/delete)│
+│  - Database models (GORM)                                   │
 │  - Cache implementations (Redis)                            │
 │  - Event bus (Kafka)                                        │
 │  - External service clients (gRPC)                          │
-│  - Query builders                                           │
-│  - Database models (GORM)                                   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -80,7 +82,7 @@ NFX ID follows **Clean Architecture** with clear separation of concerns:
 
 ## 📦 Module Structure
 
-Each business module (e.g., `auth`, `image`) follows the same layered structure:
+Each business module (e.g., `auth`, `image`, `permission`) follows the same layered structure with **CQRS** pattern:
 
 ### Module Directory Layout
 
@@ -88,9 +90,9 @@ Each business module (e.g., `auth`, `image`) follows the same layered structure:
 modules/{module}/
 ├── application/          # Application layer (use cases)
 │   ├── {entity}/         # Per-entity application logic
-│   │   ├── commands/     # Command definitions (CQRS)
-│   │   ├── queries/      # Query definitions (CQRS)
-│   │   ├── views/        # View models
+│   │   ├── commands/     # Command definitions (CQRS Write)
+│   │   ├── queries/      # Query definitions (CQRS Read)
+│   │   ├── views/        # Application view models
 │   │   ├── create.go     # Create use case
 │   │   ├── update.go     # Update use case
 │   │   ├── delete.go     # Delete use case
@@ -102,18 +104,54 @@ modules/{module}/
 │   │   ├── entity.go     # Domain entity
 │   │   ├── behavior.go   # Domain behaviors
 │   │   ├── factory.go    # Entity factory
-│   │   ├── repo.go       # Repository interface
+│   │   ├── query.go       # Query interface (CQRS Read Side)
+│   │   │                  #   - Single interface (returns *View)
+│   │   │                  #   - List interface (returns []*View)
+│   │   │                  #   - ListQuery struct (pagination/sorting)
+│   │   ├── repo.go        # Repository interface (CQRS Write Side)
+│   │   │                  #   - Repo struct with sub-interfaces:
+│   │   │                  #     * Create
+│   │   │                  #     * Get
+│   │   │                  #     * Check
+│   │   │                  #     * Update
+│   │   │                  #     * Delete
 │   │   ├── validation.go # Domain validation
-│   │   ├── errors/       # Domain errors
-│   │   └── views/        # Domain view models
+│   │   ├── errors/        # Domain errors
+│   │   └── views/         # Domain view models
 │   └── ...
 ├── infrastructure/       # Infrastructure layer
-│   ├── repository/       # Repository implementations
-│   │   ├── {entity}_pg_repo.go
-│   │   └── mapper/      # Entity mappers
-│   ├── query/            # Query implementations (CQRS)
-│   │   ├── {entity}_pg_query.go
-│   │   └── mapper/      # Query mappers
+│   ├── query/            # Query implementations (CQRS Read Side)
+│   │   ├── {entity}/     # Per-entity query implementations
+│   │   │   ├── query.go  # Query factory (creates *domain.Query)
+│   │   │   ├── single/   # Single query handlers
+│   │   │   │   ├── query.go
+│   │   │   │   ├── by_id.go
+│   │   │   │   └── ...
+│   │   │   └── list/      # List query handlers
+│   │   │       ├── query.go
+│   │   │       ├── generic.go
+│   │   │       └── ...
+│   │   └── mapper/       # Query mappers
+│   ├── repository/       # Repository implementations (CQRS Write Side)
+│   │   ├── {entity}/     # Per-entity repository implementations
+│   │   │   ├── repo.go   # Repository factory (creates *domain.Repo)
+│   │   │   ├── create/   # Create handlers
+│   │   │   │   ├── repo.go
+│   │   │   │   └── new.go
+│   │   │   ├── get/      # Get handlers
+│   │   │   │   ├── repo.go
+│   │   │   │   ├── by_id.go
+│   │   │   │   └── ...
+│   │   │   ├── check/    # Check handlers
+│   │   │   │   ├── repo.go
+│   │   │   │   └── ...
+│   │   │   ├── update/   # Update handlers
+│   │   │   │   ├── repo.go
+│   │   │   │   └── generic.go
+│   │   │   └── delete/   # Delete handlers
+│   │   │       ├── repo.go
+│   │   │       └── by_id.go
+│   │   └── mapper/       # Entity mappers
 │   ├── rdb/              # Database models & views
 │   │   ├── models/       # GORM models
 │   │   └── views/        # Database views
@@ -143,6 +181,83 @@ modules/{module}/
 
 ---
 
+## 🎯 CQRS Pattern Implementation
+
+### Query Layer (Read Side)
+
+**Domain Interface** (`domain/{entity}/query.go`):
+
+```go
+type Query struct {
+    Single Single
+    List   List
+}
+
+type Single interface {
+    ByID(ctx context.Context, id uuid.UUID) (*views.EntityView, error)
+    // Other single-return methods
+}
+
+type List interface {
+    Generic(ctx context.Context, q ListQuery) ([]*views.EntityView, int64, error)
+    // Other list-return methods
+}
+```
+
+**Infrastructure Implementation** (`infrastructure/query/{entity}/`):
+
+- `single/` - Handlers for `Single` interface (return `*View`)
+- `list/` - Handlers for `List` interface (return `[]*View`)
+- `query.go` - Factory that creates `*domain.Query`
+
+### Repository Layer (Write Side)
+
+**Domain Interface** (`domain/{entity}/repo.go`):
+
+```go
+type Repo struct {
+    Create Create
+    Get    Get
+    Check  Check
+    Update Update
+    Delete Delete
+}
+
+type Create interface {
+    New(ctx context.Context, e *Entity) error
+}
+
+type Get interface {
+    ByID(ctx context.Context, id uuid.UUID) (*Entity, error)
+    // Other get methods
+}
+
+type Check interface {
+    ByID(ctx context.Context, id uuid.UUID) (bool, error)
+    // Other check methods
+}
+
+type Update interface {
+    Generic(ctx context.Context, e *Entity) error
+}
+
+type Delete interface {
+    ByID(ctx context.Context, id uuid.UUID) error
+    // Other delete methods
+}
+```
+
+**Infrastructure Implementation** (`infrastructure/repository/{entity}/`):
+
+- `create/` - Handlers for `Create` interface
+- `get/` - Handlers for `Get` interface
+- `check/` - Handlers for `Check` interface
+- `update/` - Handlers for `Update` interface
+- `delete/` - Handlers for `Delete` interface
+- `repo.go` - Factory that creates `*domain.Repo`
+
+---
+
 ## 🔧 Modules Overview
 
 ### 1. Auth Module (`modules/auth/`)
@@ -152,7 +267,7 @@ modules/{module}/
 **Domain Entities**:
 - `user` - User accounts, authentication
 - `profile` - User profiles with rich metadata
-- `role` - User roles and permissions
+- `role` - User roles
 - `badge` - Achievement badges
 - `profile_badge` - User badge associations
 - `education` - Education history
@@ -189,6 +304,25 @@ modules/{module}/
 - Image type categorization
 - Image deletion and cleanup
 
+### 3. Permission Module (`modules/permission/`)
+
+**Purpose**: Permission management and user-permission associations.
+
+**Domain Entities**:
+- `permission` - Permission definitions
+- `user_permission` - User-permission associations
+
+**Services**:
+- **API Service** (`inputs/permission/api/`) - HTTP REST API
+- **Connection Service** (`inputs/permission/connection/`) - gRPC service
+- **Pipeline Service** (`inputs/permission/pipeline/`) - Kafka event consumers
+
+**Key Features**:
+- Permission CRUD operations
+- User permission assignment/revocation
+- Permission checking
+- Permission categorization
+
 ---
 
 ## 📚 Shared Packages (`pkgs/`)
@@ -209,6 +343,9 @@ Reusable packages used across all modules:
 - **`mysqlx/`** - MySQL connection (legacy/optional)
 - **`mongodbx/`** - MongoDB connection (optional)
 - **`query/`** - Query builder utilities (GORM helpers)
+  - `DomainPagination` - Pagination support
+  - `DomainSorts` - Sorting support
+  - `ExecuteQuery` - Query execution helper
 
 ### Communication
 
@@ -278,7 +415,7 @@ Each module has three service entry points:
 
 - **Purpose**: gRPC service for inter-service communication
 - **Framework**: Google gRPC
-- **Port**: 10012 (auth), 10013 (image)
+- **Port**: 10012 (auth), 10013 (image), 10014 (permission)
 - **Features**:
   - gRPC service definitions
   - Server-to-server authentication
@@ -310,25 +447,18 @@ Atlas is used for database schema management and migrations.
 
 ```
 atlas/
-├── atlas.hcl              # Atlas configuration
 ├── src/                   # Source SQL schemas
 │   ├── main.sql           # Main schema entry
 │   ├── schemas/           # Schema definitions
 │   │   ├── auth/          # Auth module schemas
-│   │   └── image/         # Image module schemas
+│   │   ├── image/         # Image module schemas
+│   │   └── permission/    # Permission module schemas
 │   └── extensions/        # PostgreSQL extensions
 ├── migrations/            # Generated migrations
 │   ├── development/       # Dev migrations
 │   └── production/        # Prod migrations
-├── gen/                   # Generated code
-│   ├── models/            # GORM models
-│   ├── enums/             # Enum types
-│   └── views/             # Database views
-├── scripts/               # Generation scripts
-│   ├── gen_models.sh      # Generate models
-│   ├── gen_enums.sh       # Generate enums
-│   └── gen_views.sh       # Generate views
-└── templates/             # Code generation templates
+├── templates/              # Code generation templates
+└── scripts/                # Generation scripts
 ```
 
 ### Schema Organization
@@ -341,6 +471,9 @@ atlas/
 - **`schemas/image/`** - Image module database schemas
   - Image metadata tables
   - Image type tables
+- **`schemas/permission/`** - Permission module database schemas
+  - Permission tables
+  - User permission tables
 
 ---
 
@@ -357,10 +490,12 @@ protos/
 ├── buf.lock               # Dependency lock file
 ├── src/                   # Source .proto files
 │   ├── auth/              # Auth service definitions
-│   └── image/             # Image service definitions
+│   ├── image/             # Image service definitions
+│   └── permission/        # Permission service definitions
 └── gen/                   # Generated Go code
     ├── auth/              # Generated auth code
-    └── image/             # Generated image code
+    ├── image/              # Generated image code
+    └── permission/         # Generated permission code
 ```
 
 ---
@@ -379,13 +514,18 @@ Event-driven architecture definitions.
 ### Event Types
 
 **Auth Events**:
-- `auth_to_auth.success` - Internal success events
+- `auth_to_auth.user.created` - User creation
+- `auth_to_auth.profile.updated` - Profile update
 - `auth_to_auth.user.invalidate_cache` - Cache invalidation
 - `auth_to_image.image_delete` - Image deletion requests
 
 **Image Events**:
 - `image_to_auth.image_success` - Image operation success
 - `image_to_auth.image_delete` - Image deletion notifications
+
+**Permission Events**:
+- `permission_to_auth.permission.assigned` - Permission assigned
+- `permission_to_auth.permission.revoked` - Permission revoked
 
 ---
 
@@ -405,21 +545,42 @@ Event-driven architecture definitions.
 5. **image-api** - Image HTTP API service
 6. **image-connection** - Image gRPC service
 7. **image-pipeline** - Image Kafka consumer
+8. **permission-api** - Permission HTTP API service
+9. **permission-connection** - Permission gRPC service
+10. **permission-pipeline** - Permission Kafka consumer
 
 ---
 
 ## 🔄 Data Flow Examples
 
-### User Registration Flow
+### User Registration Flow (CQRS Write)
 
 ```
-HTTP Request → API Service → Application Layer → Domain Layer
-                                                      ↓
-                                              Repository (PostgreSQL)
-                                                      ↓
-                                              Event Publisher (Kafka)
-                                                      ↓
-                                              Pipeline Service (Consumer)
+HTTP Request → API Service → Application Layer (Command)
+                                          ↓
+                                    Domain Layer
+                                          ↓
+                                    Repository (Create)
+                                          ↓
+                                    PostgreSQL
+                                          ↓
+                                    Event Publisher (Kafka)
+                                          ↓
+                                    Pipeline Service (Consumer)
+```
+
+### User Query Flow (CQRS Read)
+
+```
+HTTP Request → API Service → Application Layer (Query)
+                                          ↓
+                                    Domain Layer (Query Interface)
+                                          ↓
+                                    Query Handler (Single/List)
+                                          ↓
+                                    PostgreSQL (Read)
+                                          ↓
+                                    Cache (Redis) - Optional
 ```
 
 ### Inter-Service Communication
@@ -429,7 +590,7 @@ Service A → gRPC Client → Connection Service → Application Layer
                                                       ↓
                                               Domain Layer
                                                       ↓
-                                              Repository
+                                              Repository/Query
 ```
 
 ### Event-Driven Flow
@@ -464,25 +625,33 @@ Generated code is placed in:
 
 ### CQRS (Command Query Responsibility Segregation)
 
-- **Commands**: Write operations (create, update, delete)
-- **Queries**: Read operations (get, list, search)
+- **Commands (Write Side)**: Repository interfaces and implementations
+  - `Create`, `Update`, `Delete` operations
+  - Return domain entities or errors
+- **Queries (Read Side)**: Query interfaces and implementations
+  - `Single` interface - Returns single objects (`*View`)
+  - `List` interface - Returns arrays (`[]*View`)
+  - `ListQuery` - Pagination, sorting, and filtering support
 - Separate handlers and models for commands and queries
 
 ### Repository Pattern
 
-- Domain layer defines repository interfaces
-- Infrastructure layer implements repositories
+- Domain layer defines repository interfaces as structured `Repo` with sub-interfaces
+- Infrastructure layer implements repositories in separate packages
 - Abstraction over data access
+- Clear separation of concerns (Create, Get, Check, Update, Delete)
 
 ### Factory Pattern
 
 - Domain entities use factories for creation
 - Ensures valid entity construction
+- Query and Repository factories in infrastructure layer
 
 ### Event Sourcing (Partial)
 
 - Domain events for important state changes
 - Event-driven communication between services
+- Kafka-based event bus
 
 ---
 
@@ -504,6 +673,16 @@ Generated code is placed in:
 - `modules/{module}/server/server.go` - Server initialization
 - `modules/{module}/server/wiring.go` - Dependency injection
 
+### Domain Layer
+
+- `modules/{module}/domain/{entity}/query.go` - Query interface (CQRS Read)
+- `modules/{module}/domain/{entity}/repo.go` - Repository interface (CQRS Write)
+
+### Infrastructure Layer
+
+- `modules/{module}/infrastructure/query/{entity}/query.go` - Query factory
+- `modules/{module}/infrastructure/repository/{entity}/repo.go` - Repository factory
+
 ### Task Runner
 
 - `Taskfile.yml` - Task definitions for common operations
@@ -521,5 +700,4 @@ Generated code is placed in:
 
 ---
 
-This structure ensures maintainability, testability, and scalability while following industry best practices for microservice architecture.
-
+This structure ensures maintainability, testability, and scalability while following industry best practices for microservice architecture with CQRS pattern.
