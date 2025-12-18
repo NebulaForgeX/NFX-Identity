@@ -2,6 +2,7 @@ package http
 
 import (
 	authApp "nfxid/modules/permission/application/auth"
+	authorizationCodeApp "nfxid/modules/permission/application/authorization_code"
 	permissionApp "nfxid/modules/permission/application/permission"
 	userPermissionApp "nfxid/modules/permission/application/user_permission"
 	"nfxid/modules/permission/interfaces/http/handler"
@@ -17,6 +18,7 @@ type httpDeps interface {
 	AuthAppSvc() *authApp.Service
 	PermissionAppSvc() *permissionApp.Service
 	UserPermissionAppSvc() *userPermissionApp.Service
+	AuthorizationCodeAppSvc() *authorizationCodeApp.Service
 	Tokenx() *tokenx.Tokenx
 }
 
@@ -36,9 +38,10 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 
 	// 创建 handlers
 	reg := &Registry{
-		Auth:           handler.NewAuthHandler(d.AuthAppSvc()),
-		Permission:     handler.NewPermissionHandler(d.PermissionAppSvc()),
-		UserPermission: handler.NewUserPermissionHandler(d.UserPermissionAppSvc()),
+		Auth:              handler.NewAuthHandler(d.AuthAppSvc()),
+		Permission:        handler.NewPermissionHandler(d.PermissionAppSvc()),
+		UserPermission:    handler.NewUserPermissionHandler(d.UserPermissionAppSvc()),
+		AuthorizationCode: handler.NewAuthorizationCodeHandler(d.AuthorizationCodeAppSvc()),
 	}
 
 	// 注册路由
@@ -47,4 +50,3 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 
 	return app
 }
-

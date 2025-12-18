@@ -48,6 +48,14 @@ func (r *Router) RegisterRoutes() {
 		auth.Get("/users/:user_id/permissions", r.handlers.UserPermission.GetByUserID)
 		auth.Get("/users/:user_id/permission-tags", r.handlers.UserPermission.GetTagsByUserID)
 		auth.Post("/user-permissions/check", r.handlers.UserPermission.Check)
+
+		// 授权码管理
+		auth.Post("/authorization-codes", r.handlers.AuthorizationCode.Create)
+		auth.Get("/authorization-codes/:id", r.handlers.AuthorizationCode.GetByID)
+		auth.Get("/authorization-codes/code/:code", r.handlers.AuthorizationCode.GetByCode)
+		auth.Post("/authorization-codes/use", r.handlers.AuthorizationCode.Use)
+		auth.Delete("/authorization-codes/:id", r.handlers.AuthorizationCode.Delete)
+		auth.Post("/authorization-codes/:id/activate", r.handlers.AuthorizationCode.Activate)
+		auth.Post("/authorization-codes/:id/deactivate", r.handlers.AuthorizationCode.Deactivate)
 	}
 }
-

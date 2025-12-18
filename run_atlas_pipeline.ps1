@@ -12,8 +12,31 @@ function Write-Header {
     Write-Host "=============== $padded ==============="
 }
 
-# 第一个参数是环境（dev 或 prod），默认为 dev
-$ENV = if ($args.Count -gt 0) { $args[0] } else { "dev" }
+# 如果第一个参数未提供，显示交互式选择菜单
+if ($args.Count -eq 0) {
+    Write-Host ""
+    Write-Host "Select environment:" -ForegroundColor Cyan
+    Write-Host "[D]ev" -ForegroundColor Green
+    Write-Host "[P]rod" -ForegroundColor Magenta
+    Write-Host "[E]sc" -ForegroundColor Red
+    Write-Host ""
+    $choice = Read-Host "Enter your choice"
+    switch ($choice) {
+        {$_ -match "^[Dd]$"} { $ENV = "dev" }
+        {$_ -match "^[Pp]$"} { $ENV = "prod" }
+        {$_ -match "^[Ee]$" -or $_ -eq "Esc" -or $_ -eq "ESC"} { 
+            Write-Host "Cancelled" -ForegroundColor Red
+            exit 0
+        }
+        default { 
+            Write-Host "Invalid choice" -ForegroundColor Red
+            exit 1
+        }
+    }
+} else {
+    # 第一个参数是环境（dev 或 prod），默认为 dev
+    $ENV = $args[0]
+}
 
 if ($ENV -eq "prod") {
     Write-Header "Running Atlas pipeline for PRODUCTION"

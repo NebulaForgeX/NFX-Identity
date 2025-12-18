@@ -6,14 +6,17 @@ import (
 	"time"
 
 	authApp "nfxid/modules/permission/application/auth"
+	authorizationCodeApp "nfxid/modules/permission/application/authorization_code"
 	permissionApp "nfxid/modules/permission/application/permission"
 	userPermissionApp "nfxid/modules/permission/application/user_permission"
 	"nfxid/modules/permission/config"
+	authorizationCodeDomain "nfxid/modules/permission/domain/authorization_code"
 	permissionDomain "nfxid/modules/permission/domain/permission"
 	userPermissionDomain "nfxid/modules/permission/domain/user_permission"
 	"nfxid/modules/permission/infrastructure/grpcclient"
 	permissionQuery "nfxid/modules/permission/infrastructure/query/permission"
 	userPermissionQuery "nfxid/modules/permission/infrastructure/query/user_permission"
+	authorizationCodeRepo "nfxid/modules/permission/infrastructure/repository/authorization_code"
 	permissionRepo "nfxid/modules/permission/infrastructure/repository/permission"
 	userPermissionRepo "nfxid/modules/permission/infrastructure/repository/user_permission"
 	"nfxid/pkgs/cache"
@@ -30,20 +33,22 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr            *health.Manager
-	cache                *cache.Connection
-	postgres             *postgresqlx.Connection
-	mongo                *mongodbx.Client
-	kafkaConfig          *kafkax.Config
-	busPublisher         *eventbus.BusPublisher
-	serverVerifier       token.Verifier
-	permissionRepo       *permissionDomain.Repo
-	userPermissionRepo   *userPermissionDomain.Repo
-	authAppSvc           *authApp.Service
-	permissionAppSvc     *permissionApp.Service
-	userPermissionAppSvc *userPermissionApp.Service
-	tokenx               *tokenx.Tokenx
-	authGRPCClient       *grpcclient.AuthGRPCClient
+	healthMgr               *health.Manager
+	cache                   *cache.Connection
+	postgres                *postgresqlx.Connection
+	mongo                   *mongodbx.Client
+	kafkaConfig             *kafkax.Config
+	busPublisher            *eventbus.BusPublisher
+	serverVerifier          token.Verifier
+	permissionRepo          *permissionDomain.Repo
+	userPermissionRepo      *userPermissionDomain.Repo
+	authorizationCodeRepo   *authorizationCodeDomain.Repo
+	authAppSvc              *authApp.Service
+	permissionAppSvc        *permissionApp.Service
+	userPermissionAppSvc    *userPermissionApp.Service
+	authorizationCodeAppSvc *authorizationCodeApp.Service
+	tokenx                  *tokenx.Tokenx
+	authGRPCClient          *grpcclient.AuthGRPCClient
 }
 
 func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -97,6 +102,7 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 	// === Repository ===
 	permissionRepoHandler := permissionRepo.NewRepo(postgres.DB())
 	userPermissionRepoHandler := userPermissionRepo.NewRepo(postgres.DB())
+	authorizationCodeRepoHandler := authorizationCodeRepo.NewRepo(postgres.DB())
 
 	// === Query ===
 	permissionQueryHandler := permissionQuery.NewHandler(postgres.DB())
@@ -139,21 +145,27 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 		tokenxInstance,
 	)
 
+	authorizationCodeAppSvc := authorizationCodeApp.NewService(
+		authorizationCodeRepoHandler,
+	)
+
 	return &Dependencies{
-		healthMgr:            healthMgr,
-		postgres:             postgres,
-		mongo:                mongoClient,
-		cache:                cacheConn,
-		kafkaConfig:          &kafkaConfig,
-		busPublisher:         busPublisher,
-		serverVerifier:       serverVerifier,
-		permissionRepo:       permissionRepoHandler,
-		userPermissionRepo:   userPermissionRepoHandler,
-		authAppSvc:           authAppSvc,
-		permissionAppSvc:     permissionAppSvc,
-		userPermissionAppSvc: userPermissionAppSvc,
-		tokenx:               tokenxInstance,
-		authGRPCClient:       authGRPCClient,
+		healthMgr:               healthMgr,
+		postgres:                postgres,
+		mongo:                   mongoClient,
+		cache:                   cacheConn,
+		kafkaConfig:             &kafkaConfig,
+		busPublisher:            busPublisher,
+		serverVerifier:          serverVerifier,
+		permissionRepo:          permissionRepoHandler,
+		userPermissionRepo:      userPermissionRepoHandler,
+		authorizationCodeRepo:   authorizationCodeRepoHandler,
+		authAppSvc:              authAppSvc,
+		permissionAppSvc:        permissionAppSvc,
+		userPermissionAppSvc:    userPermissionAppSvc,
+		authorizationCodeAppSvc: authorizationCodeAppSvc,
+		tokenx:                  tokenxInstance,
+		authGRPCClient:          authGRPCClient,
 	}, nil
 }
 
@@ -173,9 +185,15 @@ func (d *Dependencies) PermissionAppSvc() *permissionApp.Service { return d.perm
 func (d *Dependencies) UserPermissionAppSvc() *userPermissionApp.Service {
 	return d.userPermissionAppSvc
 }
+func (d *Dependencies) AuthorizationCodeAppSvc() *authorizationCodeApp.Service {
+	return d.authorizationCodeAppSvc
+}
 func (d *Dependencies) Tokenx() *tokenx.Tokenx                         { return d.tokenx }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                    { return d.kafkaConfig }
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher           { return d.busPublisher }
 func (d *Dependencies) PermissionRepo() *permissionDomain.Repo         { return d.permissionRepo }
 func (d *Dependencies) UserPermissionRepo() *userPermissionDomain.Repo { return d.userPermissionRepo }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverVerifier }
+func (d *Dependencies) AuthorizationCodeRepo() *authorizationCodeDomain.Repo {
+	return d.authorizationCodeRepo
+}
+func (d *Dependencies) ServerTokenVerifier() token.Verifier { return d.serverVerifier }

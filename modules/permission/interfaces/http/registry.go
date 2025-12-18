@@ -5,8 +5,8 @@ import (
 )
 
 type Registry struct {
-	Auth           *handler.AuthHandler
-	Permission     *handler.PermissionHandler
-	UserPermission *handler.UserPermissionHandler
+	Auth              *handler.AuthHandler
+	Permission        *handler.PermissionHandler
+	UserPermission    *handler.UserPermissionHandler
+	AuthorizationCode *handler.AuthorizationCodeHandler
 }
-

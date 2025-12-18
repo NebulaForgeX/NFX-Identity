@@ -10,7 +10,7 @@ vars:
   PROTO_OUT_DIR: protos/gen
   GO_VERSION: "1.24.3"
   MODULE: "auth"
-  POSTGRES_HOST: "host.docker.internal"
+  POSTGRES_HOST: "localhost"
   POSTGRES_PORT: "10105"
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: "Lucas127."
@@ -200,8 +200,8 @@ tasks:
         atlas migrate status --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
     silent: false
 
-  atlas:pipeline:run:ps:dev:
-    desc: "Run Atlas pipeline using PowerShell (dev)"
+  atlas:pipeline:run:ps:
+    desc: "Run Atlas pipeline using PowerShell (interactive environment selection)"
     dir: .
     env:
       POSTGRES_USER: "{{.POSTGRES_USER}}"
@@ -214,11 +214,10 @@ tasks:
       RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
       ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
     cmds:
-      - powershell -ExecutionPolicy Bypass -File run_atlas_pipeline.ps1 dev
+      - powershell -ExecutionPolicy Bypass -File run_atlas_pipeline.ps1
 
-  atlas:pipeline:run:ps:prod:
-    desc: "Run Atlas pipeline using PowerShell (prod)"
-    dir: .
+  atlas:pipeline:run:sh:
+    desc: "Run Atlas pipeline using bash (interactive environment selection)"
     env:
       POSTGRES_USER: "{{.POSTGRES_USER}}"
       POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
@@ -230,37 +229,7 @@ tasks:
       RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
       ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
     cmds:
-      - powershell -ExecutionPolicy Bypass -File run_atlas_pipeline.ps1 prod
-
-  atlas:pipeline:run:sh:dev:
-    desc: "Run Atlas pipeline using bash (dev)"
-    cmds:
-      - |
-        POSTGRES_USER="{{.POSTGRES_USER}}"
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
-        POSTGRES_HOST="{{.POSTGRES_HOST}}"
-        POSTGRES_PORT="{{.POSTGRES_PORT}}"
-        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}"
-        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}"
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
-        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}"
-        ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
-        bash run_atlas_pipeline.sh dev
-
-  atlas:pipeline:run:sh:prod:
-    desc: "Run Atlas pipeline using bash (prod)"
-    cmds:
-      - |
-        POSTGRES_USER="{{.POSTGRES_USER}}"
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}"
-        POSTGRES_HOST="{{.POSTGRES_HOST}}"
-        POSTGRES_PORT="{{.POSTGRES_PORT}}"
-        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}"
-        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}"
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}"
-        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}"
-        ATLAS_CONFIG_PATH="{{.ATLAS_CONFIG_PATH}}"
-        bash run_atlas_pipeline.sh prod
+      - bash run_atlas_pipeline.sh
 
 
   build:

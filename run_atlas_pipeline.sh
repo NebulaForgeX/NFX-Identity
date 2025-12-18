@@ -11,8 +11,26 @@ write_header() {
     echo "=============== ${padded} ==============="
 }
 
-# 第一个参数是环境（dev 或 prod），默认为 dev
-ENV="${1:-dev}"
+# 如果第一个参数未提供，显示交互式选择菜单
+if [[ $# -eq 0 ]]; then
+  echo ""
+  echo "Select environment:"
+  echo -e "\033[32m[D]ev\033[0m"      # 绿色
+  echo -e "\033[35m[P]rod\033[0m"     # 紫色
+  echo -e "\033[31m[E]sc\033[0m"      # 红色
+  echo ""
+  read -n 1 -r choice
+  echo
+  case $choice in
+    [Dd]) ENV="dev" ;;
+    [Pp]) ENV="prod" ;;
+    [Ee]) echo "Cancelled"; exit 0 ;;
+    *) echo "Invalid choice"; exit 1 ;;
+  esac
+else
+  # 第一个参数是环境（dev 或 prod），默认为 dev
+  ENV="${1:-dev}"
+fi
 
 if [[ "${ENV}" == "prod" ]]; then
   write_header "Running Atlas pipeline for PRODUCTION"
