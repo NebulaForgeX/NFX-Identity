@@ -29,11 +29,13 @@ func (e *UserEditable) Validate() error {
 		return errors.ErrUserEmailRequired
 	}
 
-	if strings.TrimSpace(e.Phone) == "" {
-		return errors.ErrUserPhoneRequired
-	}
-	if !phoneRegex.MatchString(e.Phone) {
-		return errors.ErrUserPhoneRequired
+	if e.Phone != nil {
+		if strings.TrimSpace(*e.Phone) == "" {
+			return errors.ErrUserPhoneRequired
+		}
+		if !phoneRegex.MatchString(*e.Phone) {
+			return errors.ErrUserPhoneRequired
+		}
 	}
 
 	if e.Password == "" {

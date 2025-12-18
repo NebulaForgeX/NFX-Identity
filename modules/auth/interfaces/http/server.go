@@ -2,10 +2,10 @@ package http
 
 import (
 	badgeApp "nfxid/modules/auth/application/badge"
-	educationApp "nfxid/modules/auth/application/profile_education"
-	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	profileApp "nfxid/modules/auth/application/profile"
 	profileBadgeApp "nfxid/modules/auth/application/profile_badge"
+	educationApp "nfxid/modules/auth/application/profile_education"
+	occupationApp "nfxid/modules/auth/application/profile_occupation"
 	roleApp "nfxid/modules/auth/application/role"
 	userApp "nfxid/modules/auth/application/user"
 	"nfxid/modules/auth/interfaces/http/handler"

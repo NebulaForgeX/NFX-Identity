@@ -30,6 +30,7 @@ type Get interface {
 type Check interface {
 	ByID(ctx context.Context, id uuid.UUID) (bool, error)
 	ByCode(ctx context.Context, code string) (bool, error)
+	ByCodeAndIncrement(ctx context.Context, code string) (*AuthorizationCode, error) // 检查有效则 used_count +1
 }
 
 // Update 定义更新相关的方法

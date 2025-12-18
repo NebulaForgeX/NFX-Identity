@@ -30,6 +30,7 @@ func (r *Router) RegisterRoutes() {
 		// 用户相关
 		public.Post("/login", r.handlers.User.Login)
 		public.Post("/refresh", r.handlers.User.RefreshToken)
+		public.Post("/verification-code", r.handlers.User.SendVerificationCode) // 发送验证码
 	}
 
 	// ========== 需要认证的路由（需要 token） ==========

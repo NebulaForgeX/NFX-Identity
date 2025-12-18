@@ -33,8 +33,15 @@ func (s *Service) UpdateUser(ctx context.Context, cmd UpdateUserCmd) error {
 			return userDomainErrors.ErrEmailAlreadyExists
 		}
 	}
-	if cmd.Editable.Phone != u.Editable().Phone {
-		if exists, _ := s.userRepo.Check.ByPhone(ctx, cmd.Editable.Phone); exists {
+	// 比较 phone 字段（考虑 nil 值）
+	oldPhone := u.Editable().Phone
+	newPhone := cmd.Editable.Phone
+	phoneChanged := (oldPhone == nil && newPhone != nil) ||
+		(oldPhone != nil && newPhone == nil) ||
+		(oldPhone != nil && newPhone != nil && *oldPhone != *newPhone)
+
+	if phoneChanged && newPhone != nil {
+		if exists, _ := s.userRepo.Check.ByPhone(ctx, *newPhone); exists {
 			return userDomainErrors.ErrPhoneAlreadyExists
 		}
 	}
@@ -53,11 +60,15 @@ func (s *Service) UpdateUser(ctx context.Context, cmd UpdateUserCmd) error {
 
 	// 发布用户更新事件（Auth -> Auth 内部事件，用于通知其他服务）
 	safeexec.SafeGo(func() error {
+		phone := ""
+		if u.Editable().Phone != nil {
+			phone = *u.Editable().Phone
+		}
 		event := events.AuthToAuth_UserUpdatedEvent{
 			UserID:   u.ID().String(),
 			Username: u.Editable().Username,
 			Email:    u.Editable().Email,
-			Phone:    u.Editable().Phone,
+			Phone:    phone,
 			Details: map[string]interface{}{
 				"status":      u.Status(),
 				"is_verified": u.IsVerified(),

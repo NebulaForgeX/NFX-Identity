@@ -34,6 +34,7 @@ import (
 	userRoleRepoPkg "nfxid/modules/auth/infrastructure/repository/user_role"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/cleanup"
+	"nfxid/pkgs/email"
 	"nfxid/pkgs/eventbus"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -170,12 +171,23 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 		}
 	}
 
+	// === Email Service ===
+	emailService := email.NewEmailService(email.SMTPConfig{
+		Host:     cfg.Email.SMTPHost,
+		Port:     cfg.Email.SMTPPort,
+		Username: cfg.Email.SMTPUser,
+		Password: cfg.Email.SMTPPassword,
+		From:     cfg.Email.SMTPFrom,
+	})
+
 	// === Application Services ===
 	userAppSvc := userApp.NewService(
 		userRepo,
 		userQuery,
 		busPublisher,
 		tokenxInstance,
+		cacheConn,
+		emailService,
 	)
 
 	profileAppSvc := profileApp.NewService(

@@ -2,6 +2,7 @@ package grpcclient
 
 import (
 	"context"
+	"fmt"
 	"nfxid/pkgs/grpcx"
 	"nfxid/pkgs/security/token/servertoken"
 	authpb "nfxid/protos/gen/auth/auth"
@@ -116,5 +117,47 @@ func (c *AuthGRPCClient) VerifyUserExists(ctx context.Context, username, email, 
 		return false, "", err
 	}
 	return resp.Exists, resp.Field, nil
+}
+
+// SendVerificationCode 发送验证码（发送邮件，存储到 Redis）
+func (c *AuthGRPCClient) SendVerificationCode(ctx context.Context, email string) error {
+	_, err := c.AuthStub.SendVerificationCode(ctx, &authpb.SendVerificationCodeRequest{
+		Email: email,
+	})
+	return err
+}
+
+// CheckUserAndVerificationCode 检查用户是否存在并验证验证码
+func (c *AuthGRPCClient) CheckUserAndVerificationCode(ctx context.Context, email, code string) (userExists bool, codeValid bool, errorMessage string, err error) {
+	resp, err := c.AuthStub.CheckUserAndVerificationCode(ctx, &authpb.CheckUserAndVerificationCodeRequest{
+		Email:           email,
+		VerificationCode: code,
+	})
+	if err != nil {
+		return false, false, "", err
+	}
+	errorMsg := ""
+	if resp.ErrorMessage != nil {
+		errorMsg = *resp.ErrorMessage
+	}
+	return resp.UserExists, resp.CodeValid, errorMsg, nil
+}
+
+// CreateUserWithProfile 创建用户和 Profile
+func (c *AuthGRPCClient) CreateUserWithProfile(ctx context.Context, email, password, username string, phone *string) (userID, usernameResp, emailResp string, err error) {
+	req := &authpb.CreateUserWithProfileRequest{
+		Email:    email,
+		Password: password,
+		Username: username,
+		Phone:    phone,
+	}
+	resp, err := c.AuthStub.CreateUserWithProfile(ctx, req)
+	if err != nil {
+		return "", "", "", err
+	}
+	if resp.ErrorMessage != nil && *resp.ErrorMessage != "" {
+		return "", "", "", fmt.Errorf(*resp.ErrorMessage)
+	}
+	return resp.UserId, resp.Username, resp.Email, nil
 }
 

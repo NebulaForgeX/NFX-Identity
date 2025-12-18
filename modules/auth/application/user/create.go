@@ -24,8 +24,10 @@ func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) (*userDomai
 	if exists, _ := s.userRepo.Check.ByEmail(ctx, cmd.Editable.Email); exists {
 		return nil, userDomainErrors.ErrEmailAlreadyExists
 	}
-	if exists, _ := s.userRepo.Check.ByPhone(ctx, cmd.Editable.Phone); exists {
-		return nil, userDomainErrors.ErrPhoneAlreadyExists
+	if cmd.Editable.Phone != nil {
+		if exists, _ := s.userRepo.Check.ByPhone(ctx, *cmd.Editable.Phone); exists {
+			return nil, userDomainErrors.ErrPhoneAlreadyExists
+		}
 	}
 
 	// 哈希密码
@@ -58,11 +60,15 @@ func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) (*userDomai
 
 	// 发布用户创建事件（Auth -> Auth 内部事件，用于通知 profile 等服务创建关联数据）
 	safeexec.SafeGo(func() error {
+		phone := ""
+		if u.Editable().Phone != nil {
+			phone = *u.Editable().Phone
+		}
 		event := events.AuthToAuth_UserCreatedEvent{
 			UserID:   u.ID().String(),
 			Username: u.Editable().Username,
 			Email:    u.Editable().Email,
-			Phone:    u.Editable().Phone,
+			Phone:    phone,
 			Status:   u.Status(),
 			Details: map[string]interface{}{
 				"is_verified": u.IsVerified(),

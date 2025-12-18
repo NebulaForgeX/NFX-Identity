@@ -39,6 +39,15 @@ service AuthService {
   
   // 验证用户是否存在
   rpc VerifyUserExists (VerifyUserExistsRequest) returns (VerifyUserExistsResponse);
+  
+  // 发送验证码（发送邮件，存储到 Redis）
+  rpc SendVerificationCode (SendVerificationCodeRequest) returns (SendVerificationCodeResponse);
+  
+  // 检查用户是否存在并验证验证码（用于注册流程）
+  rpc CheckUserAndVerificationCode (CheckUserAndVerificationCodeRequest) returns (CheckUserAndVerificationCodeResponse);
+  
+  // 创建用户和 Profile（用于注册流程）
+  rpc CreateUserWithProfile (CreateUserWithProfileRequest) returns (CreateUserWithProfileResponse);
 }
 
 // 根据用户ID获取认证信息
@@ -118,6 +127,43 @@ message VerifyUserExistsRequest {
 message VerifyUserExistsResponse {
   bool exists = 1;
   string field = 2; // "username", "email", "phone" 或空字符串
+}
+
+// 发送验证码
+message SendVerificationCodeRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+}
+
+message SendVerificationCodeResponse {
+  bool success = 1;
+  optional string error_message = 2;
+}
+
+// 检查用户是否存在并验证验证码
+message CheckUserAndVerificationCodeRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+  string verification_code = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message CheckUserAndVerificationCodeResponse {
+  bool user_exists = 1; // 用户是否已存在
+  bool code_valid = 2; // 验证码是否正确
+  optional string error_message = 3; // 错误消息："user_already_exists" 或 "invalid_verification_code"
+}
+
+// 创建用户和 Profile
+message CreateUserWithProfileRequest {
+  string email = 1 [(buf.validate.field).string.email = true];
+  string password = 2 [(buf.validate.field).string.min_len = 6];
+  string username = 3 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 50];
+  optional string phone = 4;
+}
+
+message CreateUserWithProfileResponse {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+  optional string error_message = 4;
 }
 
 // 认证信息（嵌套用户、角色和资料信息）

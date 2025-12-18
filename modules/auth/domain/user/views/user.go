@@ -10,7 +10,7 @@ type UserView struct {
 	ID           uuid.UUID
 	Username     string
 	Email        string
-	Phone        string
+	Phone        *string
 	PasswordHash string
 	Status       string
 	IsVerified   bool

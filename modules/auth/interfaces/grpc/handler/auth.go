@@ -4,8 +4,10 @@ import (
 	"context"
 
 	profileApp "nfxid/modules/auth/application/profile"
+	profileAppCommands "nfxid/modules/auth/application/profile/commands"
 	roleApp "nfxid/modules/auth/application/role"
 	userApp "nfxid/modules/auth/application/user"
+	profileDomain "nfxid/modules/auth/domain/profile"
 	userDomain "nfxid/modules/auth/domain/user"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
@@ -180,4 +182,105 @@ func (h *AuthHandler) VerifyUserExists(ctx context.Context, req *authpb.VerifyUs
 	}
 
 	return &authpb.VerifyUserExistsResponse{Exists: false, Field: ""}, nil
+}
+
+// SendVerificationCode 发送验证码（发送邮件，存储到 Redis）
+func (h *AuthHandler) SendVerificationCode(ctx context.Context, req *authpb.SendVerificationCodeRequest) (*authpb.SendVerificationCodeResponse, error) {
+	err := h.userAppSvc.SendVerificationCode(ctx, userApp.SendVerificationCodeCmd{
+		Email:   req.Email,
+		Purpose: "register", // 固定为注册用途
+	})
+	if err != nil {
+		logx.S().Errorf("failed to send verification code: %v", err)
+		return &authpb.SendVerificationCodeResponse{
+			Success:      false,
+			ErrorMessage: &[]string{err.Error()}[0],
+		}, nil
+	}
+
+	return &authpb.SendVerificationCodeResponse{Success: true}, nil
+}
+
+// CheckUserAndVerificationCode 检查用户是否存在并验证验证码（用于注册流程）
+func (h *AuthHandler) CheckUserAndVerificationCode(ctx context.Context, req *authpb.CheckUserAndVerificationCodeRequest) (*authpb.CheckUserAndVerificationCodeResponse, error) {
+	// 检查用户是否已存在
+	exists, err := h.userRepo.Check.ByEmail(ctx, req.Email)
+	if err != nil {
+		logx.S().Errorf("failed to check user exists: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to check user: %v", err)
+	}
+	if exists {
+		return &authpb.CheckUserAndVerificationCodeResponse{
+			UserExists:   true,
+			CodeValid:    false,
+			ErrorMessage: &[]string{"user_already_exists"}[0],
+		}, nil
+	}
+
+	// 验证验证码
+	err = h.userAppSvc.VerifyCode(ctx, userApp.VerifyCodeCmd{
+		Email:   req.Email,
+		Code:    req.VerificationCode,
+		Purpose: "register",
+	})
+	if err != nil {
+		return &authpb.CheckUserAndVerificationCodeResponse{
+			UserExists:   false,
+			CodeValid:    false,
+			ErrorMessage: &[]string{"invalid_verification_code"}[0],
+		}, nil
+	}
+
+	return &authpb.CheckUserAndVerificationCodeResponse{
+		UserExists: false,
+		CodeValid:  true,
+	}, nil
+}
+
+// CreateUserWithProfile 创建用户和 Profile（用于注册流程）
+func (h *AuthHandler) CreateUserWithProfile(ctx context.Context, req *authpb.CreateUserWithProfileRequest) (*authpb.CreateUserWithProfileResponse, error) {
+	// 创建用户
+	var phonePtr *string
+	if req.Phone != nil && *req.Phone != "" {
+		phonePtr = req.Phone
+	}
+
+	user, err := h.userAppSvc.CreateUser(ctx, userApp.CreateUserCmd{
+		Editable: userDomain.UserEditable{
+			Username: req.Username,
+			Email:    req.Email,
+			Phone:    phonePtr,
+			Password: req.Password,
+		},
+		Status: "active", // 注册时用户状态为 active
+	})
+	if err != nil {
+		logx.S().Errorf("failed to create user: %v", err)
+		errorMsg := err.Error()
+		return &authpb.CreateUserWithProfileResponse{
+			ErrorMessage: &errorMsg,
+		}, nil
+	}
+
+	// 创建 Profile（空 profile，只有 user_id）
+	_, err = h.profileAppSvc.CreateProfile(ctx, profileAppCommands.CreateProfileCmd{
+		UserID:   user.ID(),
+		Editable: profileDomain.ProfileEditable{}, // 空 profile
+	})
+	if err != nil {
+		logx.S().Errorf("failed to create profile: %v", err)
+		// 即使 profile 创建失败，用户已创建，返回用户信息
+		return &authpb.CreateUserWithProfileResponse{
+			UserId:       user.ID().String(),
+			Username:     user.Editable().Username,
+			Email:        user.Editable().Email,
+			ErrorMessage: &[]string{"user created but profile creation failed: " + err.Error()}[0],
+		}, nil
+	}
+
+	return &authpb.CreateUserWithProfileResponse{
+		UserId:   user.ID().String(),
+		Username: user.Editable().Username,
+		Email:    user.Editable().Email,
+	}, nil
 }

@@ -13,7 +13,7 @@ type UserView struct {
 	ID           uuid.UUID  `json:"id"`
 	Username     string     `json:"username"`
 	Email        string     `json:"email"`
-	Phone        string     `json:"phone"`
+	Phone        *string    `json:"phone,omitempty"`
 	PasswordHash string     `json:"password_hash"`
 	Status       string     `json:"status"`
 	IsVerified   bool       `json:"is_verified"`

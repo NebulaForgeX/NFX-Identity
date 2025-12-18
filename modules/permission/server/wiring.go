@@ -139,14 +139,15 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 		userPermissionQueryHandler,
 	)
 
+	authorizationCodeAppSvc := authorizationCodeApp.NewService(
+		authorizationCodeRepoHandler,
+	)
+
 	authAppSvc := authApp.NewService(
 		authGRPCClient,
 		userPermissionAppSvc,
+		authorizationCodeAppSvc,
 		tokenxInstance,
-	)
-
-	authorizationCodeAppSvc := authorizationCodeApp.NewService(
-		authorizationCodeRepoHandler,
 	)
 
 	return &Dependencies{

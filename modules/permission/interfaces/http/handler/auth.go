@@ -41,3 +41,24 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	return httpresp.Success(c, fiber.StatusOK, "Login successful", httpresp.SuccessOptions{Data: respdto.LoginResponseToDTO(result)})
 }
 
+// Register 注册（用于 Identity-Admin 平台）
+func (h *AuthHandler) Register(c *fiber.Ctx) error {
+	var req reqdto.AuthRegisterRequestDTO
+	if err := c.BodyParser(&req); err != nil {
+		logx.S().Errorf("❌ Failed to parse register request: %v", err)
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	}
+
+	logx.S().Infof("📝 Register attempt for email: %s", req.Email)
+
+	cmd := req.ToRegisterCmd()
+	result, err := h.appSvc.Register(c.Context(), cmd)
+	if err != nil {
+		logx.S().Errorf("❌ Register failed for email %s: %v", req.Email, err)
+		return httpresp.Error(c, fiber.StatusBadRequest, "Registration failed: "+err.Error())
+	}
+
+	logx.S().Infof("✅ Register successful for email: %s", req.Email)
+	return httpresp.Success(c, fiber.StatusCreated, "Registration successful", httpresp.SuccessOptions{Data: respdto.LoginResponseToDTO(result)})
+}
+

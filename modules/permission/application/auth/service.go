@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	authCommands "nfxid/modules/permission/application/auth/commands"
+	authorizationCodeApp "nfxid/modules/permission/application/authorization_code"
 	userPermissionApp "nfxid/modules/permission/application/user_permission"
 	userPermissionAppCommands "nfxid/modules/permission/application/user_permission/commands"
 	userPermissionViews "nfxid/modules/permission/application/user_permission/views"
@@ -15,20 +16,23 @@ import (
 )
 
 type Service struct {
-	authGRPCClient     *grpcclient.AuthGRPCClient
-	userPermissionSvc  *userPermissionApp.Service
-	tokenx              *tokenx.Tokenx
+	authGRPCClient        *grpcclient.AuthGRPCClient
+	userPermissionSvc     *userPermissionApp.Service
+	authorizationCodeSvc  *authorizationCodeApp.Service
+	tokenx                *tokenx.Tokenx
 }
 
 func NewService(
 	authGRPCClient *grpcclient.AuthGRPCClient,
 	userPermissionSvc *userPermissionApp.Service,
+	authorizationCodeSvc *authorizationCodeApp.Service,
 	tokenx *tokenx.Tokenx,
 ) *Service {
 	return &Service{
-		authGRPCClient:    authGRPCClient,
-		userPermissionSvc: userPermissionSvc,
-		tokenx:             tokenx,
+		authGRPCClient:       authGRPCClient,
+		userPermissionSvc:    userPermissionSvc,
+		authorizationCodeSvc: authorizationCodeSvc,
+		tokenx:               tokenx,
 	}
 }
 

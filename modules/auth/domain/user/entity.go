@@ -25,20 +25,19 @@ type UserState struct {
 type UserEditable struct {
 	Username string
 	Email    string
-	Phone    string
+	Phone    *string
 	Password string
 }
 
-func (u *User) ID() uuid.UUID              { return u.state.ID }
-func (u *User) Editable() UserEditable     { return u.state.Editable }
-func (u *User) Status() string             { return u.state.Status }
-func (u *User) IsVerified() bool            { return u.state.IsVerified }
-func (u *User) LastLoginAt() *time.Time    { return u.state.LastLoginAt }
-func (u *User) CreatedAt() time.Time       { return u.state.CreatedAt }
-func (u *User) UpdatedAt() time.Time       { return u.state.UpdatedAt }
-func (u *User) DeletedAt() *time.Time      { return u.state.DeletedAt }
+func (u *User) ID() uuid.UUID           { return u.state.ID }
+func (u *User) Editable() UserEditable  { return u.state.Editable }
+func (u *User) Status() string          { return u.state.Status }
+func (u *User) IsVerified() bool        { return u.state.IsVerified }
+func (u *User) LastLoginAt() *time.Time { return u.state.LastLoginAt }
+func (u *User) CreatedAt() time.Time    { return u.state.CreatedAt }
+func (u *User) UpdatedAt() time.Time    { return u.state.UpdatedAt }
+func (u *User) DeletedAt() *time.Time   { return u.state.DeletedAt }
 
 func (u *User) IsActive() bool {
 	return u.Status() == "active" && u.DeletedAt() == nil
 }
-

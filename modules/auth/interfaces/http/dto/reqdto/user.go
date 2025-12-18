@@ -11,11 +11,11 @@ import (
 )
 
 type UserCreateRequestDTO struct {
-	Username string `json:"username" validate:"required"`
-	Email    string `json:"email" validate:"required,email"`
-	Phone    string `json:"phone" validate:"required"`
-	Password string `json:"password" validate:"required,min=6"`
-	Status   string `json:"status,omitempty"`
+	Username string  `json:"username" validate:"required"`
+	Email    string  `json:"email" validate:"required,email"`
+	Phone    *string `json:"phone,omitempty"`
+	Password string  `json:"password" validate:"required,min=6"`
+	Status   string  `json:"status,omitempty"`
 }
 
 type UserUpdateRequestDTO struct {
@@ -76,7 +76,7 @@ func (r *UserUpdateRequestDTO) ToUpdateCmd() userApp.UpdateUserCmd {
 		editable.Email = *r.Email
 	}
 	if r.Phone != nil {
-		editable.Phone = *r.Phone
+		editable.Phone = r.Phone
 	}
 
 	return userApp.UpdateUserCmd{

@@ -19,13 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_GetAuthByUserID_FullMethodName   = "/auth.AuthService/GetAuthByUserID"
-	AuthService_GetAuthByUsername_FullMethodName = "/auth.AuthService/GetAuthByUsername"
-	AuthService_GetAuthByEmail_FullMethodName    = "/auth.AuthService/GetAuthByEmail"
-	AuthService_GetAuthByPhone_FullMethodName    = "/auth.AuthService/GetAuthByPhone"
-	AuthService_BatchGetAuth_FullMethodName      = "/auth.AuthService/BatchGetAuth"
-	AuthService_VerifyPassword_FullMethodName    = "/auth.AuthService/VerifyPassword"
-	AuthService_VerifyUserExists_FullMethodName  = "/auth.AuthService/VerifyUserExists"
+	AuthService_GetAuthByUserID_FullMethodName              = "/auth.AuthService/GetAuthByUserID"
+	AuthService_GetAuthByUsername_FullMethodName            = "/auth.AuthService/GetAuthByUsername"
+	AuthService_GetAuthByEmail_FullMethodName               = "/auth.AuthService/GetAuthByEmail"
+	AuthService_GetAuthByPhone_FullMethodName               = "/auth.AuthService/GetAuthByPhone"
+	AuthService_BatchGetAuth_FullMethodName                 = "/auth.AuthService/BatchGetAuth"
+	AuthService_VerifyPassword_FullMethodName               = "/auth.AuthService/VerifyPassword"
+	AuthService_VerifyUserExists_FullMethodName             = "/auth.AuthService/VerifyUserExists"
+	AuthService_SendVerificationCode_FullMethodName         = "/auth.AuthService/SendVerificationCode"
+	AuthService_CheckUserAndVerificationCode_FullMethodName = "/auth.AuthService/CheckUserAndVerificationCode"
+	AuthService_CreateUserWithProfile_FullMethodName        = "/auth.AuthService/CreateUserWithProfile"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -48,6 +51,12 @@ type AuthServiceClient interface {
 	VerifyPassword(ctx context.Context, in *VerifyPasswordRequest, opts ...grpc.CallOption) (*VerifyPasswordResponse, error)
 	// 验证用户是否存在
 	VerifyUserExists(ctx context.Context, in *VerifyUserExistsRequest, opts ...grpc.CallOption) (*VerifyUserExistsResponse, error)
+	// 发送验证码（发送邮件，存储到 Redis）
+	SendVerificationCode(ctx context.Context, in *SendVerificationCodeRequest, opts ...grpc.CallOption) (*SendVerificationCodeResponse, error)
+	// 检查用户是否存在并验证验证码（用于注册流程）
+	CheckUserAndVerificationCode(ctx context.Context, in *CheckUserAndVerificationCodeRequest, opts ...grpc.CallOption) (*CheckUserAndVerificationCodeResponse, error)
+	// 创建用户和 Profile（用于注册流程）
+	CreateUserWithProfile(ctx context.Context, in *CreateUserWithProfileRequest, opts ...grpc.CallOption) (*CreateUserWithProfileResponse, error)
 }
 
 type authServiceClient struct {
@@ -128,6 +137,36 @@ func (c *authServiceClient) VerifyUserExists(ctx context.Context, in *VerifyUser
 	return out, nil
 }
 
+func (c *authServiceClient) SendVerificationCode(ctx context.Context, in *SendVerificationCodeRequest, opts ...grpc.CallOption) (*SendVerificationCodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendVerificationCodeResponse)
+	err := c.cc.Invoke(ctx, AuthService_SendVerificationCode_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) CheckUserAndVerificationCode(ctx context.Context, in *CheckUserAndVerificationCodeRequest, opts ...grpc.CallOption) (*CheckUserAndVerificationCodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckUserAndVerificationCodeResponse)
+	err := c.cc.Invoke(ctx, AuthService_CheckUserAndVerificationCode_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) CreateUserWithProfile(ctx context.Context, in *CreateUserWithProfileRequest, opts ...grpc.CallOption) (*CreateUserWithProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserWithProfileResponse)
+	err := c.cc.Invoke(ctx, AuthService_CreateUserWithProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -148,6 +187,12 @@ type AuthServiceServer interface {
 	VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error)
 	// 验证用户是否存在
 	VerifyUserExists(context.Context, *VerifyUserExistsRequest) (*VerifyUserExistsResponse, error)
+	// 发送验证码（发送邮件，存储到 Redis）
+	SendVerificationCode(context.Context, *SendVerificationCodeRequest) (*SendVerificationCodeResponse, error)
+	// 检查用户是否存在并验证验证码（用于注册流程）
+	CheckUserAndVerificationCode(context.Context, *CheckUserAndVerificationCodeRequest) (*CheckUserAndVerificationCodeResponse, error)
+	// 创建用户和 Profile（用于注册流程）
+	CreateUserWithProfile(context.Context, *CreateUserWithProfileRequest) (*CreateUserWithProfileResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -178,6 +223,15 @@ func (UnimplementedAuthServiceServer) VerifyPassword(context.Context, *VerifyPas
 }
 func (UnimplementedAuthServiceServer) VerifyUserExists(context.Context, *VerifyUserExistsRequest) (*VerifyUserExistsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyUserExists not implemented")
+}
+func (UnimplementedAuthServiceServer) SendVerificationCode(context.Context, *SendVerificationCodeRequest) (*SendVerificationCodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SendVerificationCode not implemented")
+}
+func (UnimplementedAuthServiceServer) CheckUserAndVerificationCode(context.Context, *CheckUserAndVerificationCodeRequest) (*CheckUserAndVerificationCodeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CheckUserAndVerificationCode not implemented")
+}
+func (UnimplementedAuthServiceServer) CreateUserWithProfile(context.Context, *CreateUserWithProfileRequest) (*CreateUserWithProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUserWithProfile not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -326,6 +380,60 @@ func _AuthService_VerifyUserExists_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_SendVerificationCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendVerificationCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).SendVerificationCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_SendVerificationCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).SendVerificationCode(ctx, req.(*SendVerificationCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_CheckUserAndVerificationCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckUserAndVerificationCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CheckUserAndVerificationCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_CheckUserAndVerificationCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CheckUserAndVerificationCode(ctx, req.(*CheckUserAndVerificationCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_CreateUserWithProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserWithProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CreateUserWithProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_CreateUserWithProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CreateUserWithProfile(ctx, req.(*CreateUserWithProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -360,6 +468,18 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyUserExists",
 			Handler:    _AuthService_VerifyUserExists_Handler,
+		},
+		{
+			MethodName: "SendVerificationCode",
+			Handler:    _AuthService_SendVerificationCode_Handler,
+		},
+		{
+			MethodName: "CheckUserAndVerificationCode",
+			Handler:    _AuthService_CheckUserAndVerificationCode_Handler,
+		},
+		{
+			MethodName: "CreateUserWithProfile",
+			Handler:    _AuthService_CreateUserWithProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

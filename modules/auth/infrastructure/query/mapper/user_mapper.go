@@ -18,11 +18,15 @@ func UserViewToDomain(v *views.UserWithRoleView, u *models.User) userDomainViews
 	if u != nil {
 		passwordHash = u.PasswordHash
 	}
+	var phone *string
+	if v.Phone != "" {
+		phone = &v.Phone
+	}
 	return userDomainViews.UserView{
 		ID:           v.UserID,
 		Username:     v.Username,
 		Email:        v.Email,
-		Phone:        v.Phone,
+		Phone:        phone,
 		PasswordHash: passwordHash,
 		Status:       v.Status,
 		IsVerified:   v.IsVerified,

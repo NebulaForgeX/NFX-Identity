@@ -15,11 +15,15 @@ func UserViewToProtoAuth(v *userAppViews.UserView) *authpb.Auth {
 		return nil
 	}
 
+	phone := ""
+	if v.Phone != nil {
+		phone = *v.Phone
+	}
 	auth := &authpb.Auth{
 		Id:         v.ID.String(),
 		Username:   v.Username,
 		Email:      v.Email,
-		Phone:      v.Phone,
+		Phone:      phone,
 		Status:     statusToProto(v.Status),
 		IsVerified: v.IsVerified,
 		CreatedAt:  timestamppb.New(v.CreatedAt),
@@ -53,11 +57,15 @@ func UserViewToProtoUser(v *userAppViews.UserView) *userpb.User {
 		return nil
 	}
 
+	phone := ""
+	if v.Phone != nil {
+		phone = *v.Phone
+	}
 	user := &userpb.User{
 		Id:         v.ID.String(),
 		Username:   v.Username,
 		Email:      v.Email,
-		Phone:      v.Phone,
+		Phone:      phone,
 		Status:     userStatusToProto(v.Status),
 		IsVerified: v.IsVerified,
 		CreatedAt:  timestamppb.New(v.CreatedAt),

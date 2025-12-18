@@ -79,6 +79,25 @@ func (h *UserHandler) RefreshToken(c *fiber.Ctx) error {
 	return httpresp.Success(c, fiber.StatusOK, "Token refreshed successfully", httpresp.SuccessOptions{Data: respdto.RefreshResponseToDTO(result)})
 }
 
+// SendVerificationCode 发送验证码（发送邮件，存储到 Redis）
+func (h *UserHandler) SendVerificationCode(c *fiber.Ctx) error {
+	var req reqdto.SendVerificationCodeRequestDTO
+	if err := c.BodyParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	}
+
+	err := h.appSvc.SendVerificationCode(c.Context(), userApp.SendVerificationCodeCmd{
+		Email:   req.Email,
+		Purpose: "register",
+	})
+	if err != nil {
+		logx.S().Errorf("failed to send verification code: %v", err)
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to send verification code: "+err.Error())
+	}
+
+	return httpresp.Success(c, fiber.StatusOK, "Verification code sent successfully", httpresp.SuccessOptions{})
+}
+
 // GetByID 根据 ID 获取用户
 func (h *UserHandler) GetByID(c *fiber.Ctx) error {
 	var req reqdto.UserByIDRequestDTO

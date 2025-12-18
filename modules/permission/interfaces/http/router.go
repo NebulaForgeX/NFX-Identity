@@ -29,6 +29,7 @@ func (r *Router) RegisterRoutes() {
 	{
 		// 认证相关
 		public.Post("/login", r.handlers.Auth.Login)
+		public.Post("/register", r.handlers.Auth.Register) // 注册
 	}
 
 	// ========== 需要认证的路由（需要 token） ==========

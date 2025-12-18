@@ -13,7 +13,7 @@ type User struct {
 	ID           uuid.UUID        `gorm:"type:uuid;primaryKey"`
 	Username     string           `gorm:"type:varchar(50);index:idx_users_username;uniqueIndex:users_username_key"`
 	Email        string           `gorm:"type:varchar(255);index:idx_users_email;uniqueIndex:users_email_key"`
-	Phone        string           `gorm:"type:varchar(20);index:idx_users_phone;uniqueIndex:users_phone_key"`
+	Phone        *string          `gorm:"type:varchar(20);index:idx_users_phone;uniqueIndex:users_phone_key"`
 	PasswordHash string           `gorm:"type:varchar(255)"`
 	Status       enums.UserStatus `gorm:"type:user_status;index:idx_users_status"`
 	IsVerified   bool             `gorm:"type:boolean"`

@@ -39,11 +39,15 @@ func (s *Service) RefreshToken(ctx context.Context, cmd userCommands.RefreshCmd)
 	// 生成新的 Token 对
 	// Note: roleID is deprecated, passing empty string since we now support multiple roles
 	// Future: tokenx should support roles array
+	phone := ""
+	if entity.Editable().Phone != nil {
+		phone = *entity.Editable().Phone
+	}
 	newAccessToken, newRefreshToken, err := s.tokenx.GenerateTokenPair(
 		entity.ID().String(),
 		entity.Editable().Username,
 		entity.Editable().Email,
-		entity.Editable().Phone,
+		phone,
 		"", // roleID is deprecated, using empty string
 	)
 	if err != nil {
