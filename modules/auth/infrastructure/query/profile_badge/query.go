@@ -2,16 +2,18 @@ package profile_badge
 
 import (
 	profileBadgeDomain "nfxid/modules/auth/domain/profile_badge"
+	"nfxid/modules/auth/infrastructure/query/profile_badge/count"
+	"nfxid/modules/auth/infrastructure/query/profile_badge/list"
+	"nfxid/modules/auth/infrastructure/query/profile_badge/single"
 
 	"gorm.io/gorm"
 )
 
-// Handler 处理查询操作，实现 profile_badge.Query 接口
-type Handler struct {
-	db *gorm.DB
-}
-
 // NewHandler 创建新的 ProfileBadge Query Handler
-func NewHandler(db *gorm.DB) profileBadgeDomain.Query {
-	return &Handler{db: db}
+func NewHandler(db *gorm.DB) *profileBadgeDomain.Query {
+	return &profileBadgeDomain.Query{
+		Single: single.NewHandler(db),
+		List:   list.NewHandler(db),
+		Count:  count.NewHandler(db),
+	}
 }

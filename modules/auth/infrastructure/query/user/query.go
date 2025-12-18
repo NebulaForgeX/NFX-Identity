@@ -1,17 +1,19 @@
 package user
 
 import (
-	userDomain "nfxid/modules/auth/domain/user"
+	"nfxid/modules/auth/domain/user"
+	"nfxid/modules/auth/infrastructure/query/user/count"
+	"nfxid/modules/auth/infrastructure/query/user/list"
+	"nfxid/modules/auth/infrastructure/query/user/single"
 
 	"gorm.io/gorm"
 )
 
-// Handler 处理查询操作，实现 user.Query 接口
-type Handler struct {
-	db *gorm.DB
-}
-
 // NewHandler 创建新的 User Query Handler
-func NewHandler(db *gorm.DB) userDomain.Query {
-	return &Handler{db: db}
+func NewHandler(db *gorm.DB) *user.Query {
+	return &user.Query{
+		Single: single.NewHandler(db),
+		List:   list.NewHandler(db),
+		Count:  count.NewHandler(db),
+	}
 }

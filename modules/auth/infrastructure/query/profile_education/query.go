@@ -2,16 +2,18 @@ package profile_education
 
 import (
 	educationDomain "nfxid/modules/auth/domain/profile_education"
+	"nfxid/modules/auth/infrastructure/query/profile_education/count"
+	"nfxid/modules/auth/infrastructure/query/profile_education/list"
+	"nfxid/modules/auth/infrastructure/query/profile_education/single"
 
 	"gorm.io/gorm"
 )
 
-// Handler 处理查询操作，实现 education.Query 接口
-type Handler struct {
-	db *gorm.DB
-}
-
 // NewHandler 创建新的 Education Query Handler
-func NewHandler(db *gorm.DB) educationDomain.Query {
-	return &Handler{db: db}
+func NewHandler(db *gorm.DB) *educationDomain.Query {
+	return &educationDomain.Query{
+		Single: single.NewHandler(db),
+		List:   list.NewHandler(db),
+		Count:  count.NewHandler(db),
+	}
 }

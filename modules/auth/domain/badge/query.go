@@ -11,11 +11,21 @@ import (
 	"github.com/google/uuid"
 )
 
-// Query 定义查询领域视图的接口（CQRS Read Side）
-type Query interface {
-	ByID(ctx context.Context, badgeID uuid.UUID) (views.BadgeView, error)
-	ByName(ctx context.Context, name string) (views.BadgeView, error)
-	List(ctx context.Context, q ListQuery) ([]views.BadgeView, int64, error)
+// Query 定义查询领域视图的结构体（CQRS Read Side）
+type Query struct {
+	Single Single
+	List   List
+}
+
+// Single 定义单个查询相关的方法
+type Single interface {
+	ByID(ctx context.Context, badgeID uuid.UUID) (*views.BadgeView, error)
+	ByName(ctx context.Context, name string) (*views.BadgeView, error)
+}
+
+// List 定义列表查询相关的方法
+type List interface {
+	Generic(ctx context.Context, q ListQuery) ([]*views.BadgeView, int64, error)
 }
 
 type SortField int

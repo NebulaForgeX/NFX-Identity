@@ -70,13 +70,13 @@ func (s *Service) Login(ctx context.Context, cmd userCommands.LoginCmd) (*userCo
 	}
 
 	// 获取用户视图（Domain View）
-	domainView, err := s.userQuery.ByID(ctx, entity.ID())
+	domainView, err := s.userQuery.Single.ByID(ctx, entity.ID())
 	if err != nil {
 		return nil, err
 	}
 
 	// 转换为 Application View
-	userView := views.UserViewMapper(domainView)
+	userView := views.UserViewMapper(*domainView)
 
 	// 更新最后登录时间
 	entity.UpdateLastLogin()

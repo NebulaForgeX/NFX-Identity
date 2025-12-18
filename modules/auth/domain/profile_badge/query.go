@@ -12,14 +12,29 @@ import (
 	"github.com/google/uuid"
 )
 
-// Query 定义查询领域视图的接口（CQRS Read Side）
-type Query interface {
-	ByID(ctx context.Context, profileBadgeID uuid.UUID) (views.ProfileBadgeView, error)
-	ByProfileID(ctx context.Context, profileID uuid.UUID) ([]views.ProfileBadgeView, error)
-	ByBadgeID(ctx context.Context, badgeID uuid.UUID) ([]views.ProfileBadgeView, error)
-	UserBadges(ctx context.Context, userID uuid.UUID) ([]userDomainViews.UserBadgesView, error)
-	List(ctx context.Context, q ListQuery) ([]views.ProfileBadgeView, int64, error)
-	Count(ctx context.Context) (int64, error)
+// Query 定义查询领域视图的结构体（CQRS Read Side）
+type Query struct {
+	Single Single
+	List   List
+	Count  Count
+}
+
+// Single 定义单个查询相关的方法
+type Single interface {
+	ByID(ctx context.Context, profileBadgeID uuid.UUID) (*views.ProfileBadgeView, error)
+	ByProfileID(ctx context.Context, profileID uuid.UUID) ([]*views.ProfileBadgeView, error)
+	ByBadgeID(ctx context.Context, badgeID uuid.UUID) ([]*views.ProfileBadgeView, error)
+	UserBadges(ctx context.Context, userID uuid.UUID) ([]*userDomainViews.UserBadgesView, error)
+}
+
+// List 定义列表查询相关的方法
+type List interface {
+	Generic(ctx context.Context, q ListQuery) ([]*views.ProfileBadgeView, int64, error)
+}
+
+// Count 定义计数相关的方法
+type Count interface {
+	All(ctx context.Context) (int64, error)
 }
 
 type SortField int

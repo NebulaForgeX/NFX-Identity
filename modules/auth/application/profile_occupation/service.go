@@ -6,12 +6,12 @@ import (
 
 type Service struct {
 	occupationRepo  *occupationDomain.Repo
-	occupationQuery occupationDomain.Query
+	occupationQuery *occupationDomain.Query
 }
 
 func NewService(
 	occupationRepo *occupationDomain.Repo,
-	occupationQuery occupationDomain.Query,
+	occupationQuery *occupationDomain.Query,
 ) *Service {
 	return &Service{
 		occupationRepo:  occupationRepo,

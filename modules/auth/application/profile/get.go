@@ -13,11 +13,11 @@ import (
 )
 
 func (s *Service) GetProfile(ctx context.Context, profileID uuid.UUID) (profileViews.ProfileView, error) {
-	domainView, err := s.profileQuery.ByID(ctx, profileID)
+	domainView, err := s.profileQuery.Single.ByID(ctx, profileID)
 	if err != nil {
 		return profileViews.ProfileView{}, err
 	}
-	view := profileViews.ProfileViewMapper(domainView)
+	view := profileViews.ProfileViewMapper(*domainView)
 
 	// 通过 gRPC 调用 image 服务获取用户的所有图片
 	if err := s.enrichWithImages(ctx, &view); err != nil {
@@ -29,11 +29,11 @@ func (s *Service) GetProfile(ctx context.Context, profileID uuid.UUID) (profileV
 }
 
 func (s *Service) GetProfileByUserID(ctx context.Context, userID uuid.UUID) (profileViews.ProfileView, error) {
-	domainView, err := s.profileQuery.ByUserID(ctx, userID)
+	domainView, err := s.profileQuery.Single.ByUserID(ctx, userID)
 	if err != nil {
 		return profileViews.ProfileView{}, err
 	}
-	view := profileViews.ProfileViewMapper(domainView)
+	view := profileViews.ProfileViewMapper(*domainView)
 
 	// 通过 gRPC 调用 image 服务获取用户的所有图片
 	if err := s.enrichWithImages(ctx, &view); err != nil {
@@ -98,13 +98,13 @@ type GetProfileListResult struct {
 
 func (s *Service) GetProfileList(ctx context.Context, q profileDomain.ListQuery) (GetProfileListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.profileQuery.List(ctx, q)
+	domainViews, total, err := s.profileQuery.List.Generic(ctx, q)
 	if err != nil {
 		return GetProfileListResult{}, err
 	}
 	items := make([]profileViews.ProfileView, len(domainViews))
 	for i, v := range domainViews {
-		items[i] = profileViews.ProfileViewMapper(v)
+		items[i] = profileViews.ProfileViewMapper(*v)
 	}
 	return GetProfileListResult{
 		Items: items,

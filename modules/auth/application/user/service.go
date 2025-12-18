@@ -8,14 +8,14 @@ import (
 
 type Service struct {
 	userRepo     *userDomain.Repo
-	userQuery    userDomain.Query
+	userQuery    *userDomain.Query
 	busPublisher *eventbus.BusPublisher
 	tokenx       *tokenx.Tokenx
 }
 
 func NewService(
 	userRepo *userDomain.Repo,
-	userQuery userDomain.Query,
+	userQuery *userDomain.Query,
 	busPublisher *eventbus.BusPublisher,
 	tokenx *tokenx.Tokenx,
 ) *Service {

@@ -2,16 +2,18 @@ package profile
 
 import (
 	profileDomain "nfxid/modules/auth/domain/profile"
+	"nfxid/modules/auth/infrastructure/query/profile/count"
+	"nfxid/modules/auth/infrastructure/query/profile/list"
+	"nfxid/modules/auth/infrastructure/query/profile/single"
 
 	"gorm.io/gorm"
 )
 
-// Handler 处理查询操作，实现 profile.Query 接口
-type Handler struct {
-	db *gorm.DB
-}
-
 // NewHandler 创建新的 Profile Query Handler
-func NewHandler(db *gorm.DB) profileDomain.Query {
-	return &Handler{db: db}
+func NewHandler(db *gorm.DB) *profileDomain.Query {
+	return &profileDomain.Query{
+		Single: single.NewHandler(db),
+		List:   list.NewHandler(db),
+		Count:  count.NewHandler(db),
+	}
 }

@@ -9,33 +9,33 @@ import (
 )
 
 func (s *Service) GetUserRole(ctx context.Context, userRoleID uuid.UUID) (userRoleViews.UserRoleView, error) {
-	domainView, err := s.userRoleQuery.ByID(ctx, userRoleID)
+	domainView, err := s.userRoleQuery.Single.ByID(ctx, userRoleID)
 	if err != nil {
 		return userRoleViews.UserRoleView{}, err
 	}
-	return userRoleViews.UserRoleViewMapper(domainView), nil
+	return userRoleViews.UserRoleViewMapper(*domainView), nil
 }
 
 func (s *Service) GetUserRolesByUserID(ctx context.Context, userID uuid.UUID) ([]userRoleViews.UserRoleView, error) {
-	domainViews, err := s.userRoleQuery.ByUserID(ctx, userID)
+	domainViews, err := s.userRoleQuery.Single.ByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 	result := make([]userRoleViews.UserRoleView, len(domainViews))
 	for i, v := range domainViews {
-		result[i] = userRoleViews.UserRoleViewMapper(v)
+		result[i] = userRoleViews.UserRoleViewMapper(*v)
 	}
 	return result, nil
 }
 
 func (s *Service) GetUserRolesByRoleID(ctx context.Context, roleID uuid.UUID) ([]userRoleViews.UserRoleView, error) {
-	domainViews, err := s.userRoleQuery.ByRoleID(ctx, roleID)
+	domainViews, err := s.userRoleQuery.Single.ByRoleID(ctx, roleID)
 	if err != nil {
 		return nil, err
 	}
 	result := make([]userRoleViews.UserRoleView, len(domainViews))
 	for i, v := range domainViews {
-		result[i] = userRoleViews.UserRoleViewMapper(v)
+		result[i] = userRoleViews.UserRoleViewMapper(*v)
 	}
 	return result, nil
 }
@@ -47,13 +47,13 @@ type GetUserRoleListResult struct {
 
 func (s *Service) GetUserRoleList(ctx context.Context, q userRoleDomain.ListQuery) (GetUserRoleListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.userRoleQuery.List(ctx, q)
+	domainViews, total, err := s.userRoleQuery.List.Generic(ctx, q)
 	if err != nil {
 		return GetUserRoleListResult{}, err
 	}
 	items := make([]userRoleViews.UserRoleView, len(domainViews))
 	for i, v := range domainViews {
-		items[i] = userRoleViews.UserRoleViewMapper(v)
+		items[i] = userRoleViews.UserRoleViewMapper(*v)
 	}
 	return GetUserRoleListResult{
 		Items: items,
