@@ -1,11 +1,13 @@
 -- Permission table for internal admin panel permissions
 -- These permissions are used by the Identity-Admin frontend panel
+-- Permission category ENUM type
+CREATE TYPE "permission"."permission_category" AS ENUM ('system', 'user');
 CREATE TABLE IF NOT EXISTS "permission"."permissions" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "tag" VARCHAR(100) NOT NULL UNIQUE, -- e.g., "addUser", "deleteUser", "viewUsers"
+  "tag" VARCHAR(100) NOT NULL UNIQUE, -- e.g., "SuperAdmin"
   "name" VARCHAR(255) NOT NULL, -- Human-readable name, e.g., "Add User"
   "description" TEXT,
-  "category" VARCHAR(50), -- e.g., "user", "role", "permission", "system"
+  "category" "permission"."permission_category" NOT NULL, -- "system" or "user"
   "is_system" BOOLEAN NOT NULL DEFAULT false, -- System permissions cannot be deleted
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -14,69 +14,93 @@ Built with **Go**, designed with **Clean Architecture**, **Domain-Driven Design 
 
 ---
 
-## 🎯 Core Responsibilities
+## 🎯 Service Overview
 
-### 1. Authentication & Security
+NFX ID consists of three main services, each serving different purposes:
 
-- **Email / password login** - Traditional authentication flow
-- **OAuth support** (future: Google, GitHub) - Social login integration
-- **JWT issuing & validation** - Secure token-based authentication
-- **Refresh token lifecycle** - Long-lived session management
-- **Session management** - Active session tracking and control
+### 1. **Auth Service** - External User API Service
 
-### 2. Unified User Identity
+**Purpose**: Provides authentication and user management APIs for **external backend services**.
 
-Acts as the **single source of truth** for:
+**Target Users**: 
+- Other backend services that need to integrate with NFX ID
+- Third-party applications requiring user authentication
+- Client applications (mobile apps, web apps) that need user management
 
-- User accounts
-- Verification state
-- Roles & permissions
-- Account status (active, suspended, deleted)
+**Key Features**:
+- **User Registration & Login** - Standard authentication flow for external users
+- **JWT Token Management** - Issue and validate JWT tokens for external services
+- **User Profile Management** - Full CRUD operations for user profiles
+- **Role Management** - User roles and role assignment
+- **Badge & Achievement System** - User badges and achievements
+- **Image Management** - Avatar and profile image handling
 
-### 3. Permission Management
+**API Endpoints**: `/api/v1/auth/*`
 
-Comprehensive permission system with:
+**Login Flow**: 
+- Standard user authentication (username/email/phone + password)
+- Returns JWT tokens for client applications
+- **Designed for external backend services** to authenticate their users
 
-- **Permission definitions** - Tag-based permission system
-- **User permissions** - User-permission associations
-- **Permission categories** - Organized permission grouping
-- **Permission checking** - Fast permission validation
+### 2. **Permission Service** - Internal Admin Console Service
 
-### 4. Advanced Profile System
+**Purpose**: Provides permission management and admin authentication for **NFX Console (Identity-Admin)** control panel.
 
-Fully customizable profile domain with:
+**Target Users**: 
+- Internal administrators managing the platform
+- Company employees using authorization codes to register and access the admin panel
+- Backend developers who need to manage permissions
 
-- **Basic Info**: Nickname, display name
-- **Media**: Avatar & background image references
-- **Personalization**: Skills, preferences, social links
-- **Professional**: Educations / occupations
-- **Achievements**: Badges & achievements
+**Key Features**:
+- **Admin Login** - Special login flow that includes permission information
+- **Permission Management** - Create, update, delete permissions
+- **User Permission Assignment** - Assign/revoke permissions to users
+- **Authorization Code System** - Generate codes for employee registration
+- **Permission Checking** - Verify user permissions
 
-Perfect for **Netup、ReX、TrendRadar** 等产品共享的用户体系。
+**API Endpoints**: `/api/v1/permission/*`
 
-### 5. Image Management
+**Login Flow**:
+- Admin authentication (username/email/phone + password)
+- Returns JWT tokens **plus user permissions and permission tags**
+- **Designed specifically for NFX Console (Identity-Admin)** frontend panel
+- Includes authorization code support for employee self-registration
 
-Centralized image storage and management:
+**Important Note**: The login in Permission service is **different from Auth service login** - it's specifically designed for the admin control panel and includes permission information in the response.
 
-- **Image metadata** - Image information and references
-- **Image types** - Categorized image types (avatar, background, etc.)
-- **Image variants** - Multiple sizes and formats
-- **Image tags** - Flexible tagging system
+### 3. **Image Service** - Image Storage Service
 
-### 6. Service-to-Service Integration (Microservices Ready)
+**Purpose**: Centralized image storage and management for the entire platform.
 
-NFX ID 提供：
+**Target Users**:
+- All services that need image storage (Auth, Permission, etc.)
+- User profiles requiring avatars and background images
 
-- **Standardized JWT** for service authentication
-- **Internal service tokens** (machine-to-machine)
-- **REST + gRPC** APIs
-- **Event-driven hooks** (via Kafka):
-  - `user.created`
-  - `profile.updated`
-  - `user.verified`
-  - `permission.assigned`
-  - `image.uploaded`
-  - And more...
+**Key Features**:
+- **Image Upload & Storage** - Store and manage images
+- **Image Metadata** - Track image information and references
+- **Image Types** - Categorize images (avatar, background, etc.)
+- **Image Variants** - Multiple sizes and formats
+- **Image Tags** - Flexible tagging system
+
+**API Endpoints**: `/api/v1/image/*`
+
+---
+
+## 🔑 Key Differences: Auth vs Permission Login
+
+### Auth Service Login (`/api/v1/auth/login`)
+- **Target**: External backend services and client applications
+- **Returns**: JWT tokens (access token + refresh token), basic user info
+- **Use Case**: Standard user authentication for external services
+- **No Permission Info**: Does not include permission details in response
+
+### Permission Service Login (`/api/v1/permission/login`)
+- **Target**: NFX Console (Identity-Admin) control panel
+- **Returns**: JWT tokens **plus full permission list and permission tags**
+- **Use Case**: Admin panel authentication with permission-aware access control
+- **Permission-Aware**: Includes all user permissions in the login response
+- **Authorization Code Support**: Supports registration via authorization codes for company employees
 
 ---
 
@@ -212,22 +236,19 @@ cp inputs/permission/config/dev.toml.example inputs/permission/config/dev.toml
 5. **Run database migrations**
 
 ```bash
-# Generate migrations from Atlas schemas
-task atlas:gen:migrations
-
-# Apply migrations
-task atlas:apply:dev
+# Run Atlas pipeline (interactive - choose dev or prod)
+task atlas:pipeline:run:sh
+# Or PowerShell:
+task atlas:pipeline:run:ps
 ```
 
 6. **Generate code**
 
 ```bash
 # Generate protobuf code
-task proto:gen
+task gen-proto
 
-# Generate database models/enums
-task atlas:gen:models
-task atlas:gen:enums
+# Database models are generated automatically during migration pipeline
 ```
 
 7. **Start services**
@@ -315,25 +336,27 @@ go test ./...
 
 ```bash
 # Generate protobuf
-task proto:gen
+task gen-proto
 
-# Generate database code
-task atlas:gen:models
-task atlas:gen:enums
-task atlas:gen:views
+# Generate database code (via Atlas pipeline)
+task atlas:pipeline:run:sh
 ```
 
 ### Database Migrations
 
+Use the Atlas pipeline for database migrations:
+
 ```bash
-# Create new migration
-task atlas:migrate:create -- <migration_name>
+# Interactive migration pipeline (recommended)
+task atlas:pipeline:run:sh
+# Or PowerShell:
+task atlas:pipeline:run:ps
 
-# Apply migrations (dev)
-task atlas:apply:dev
-
-# Apply migrations (prod)
-task atlas:apply:prod
+# The pipeline will:
+# 1. Generate migrations from schema changes
+# 2. Lint migrations
+# 3. Apply migrations
+# 4. Generate Go models/views/enums
 ```
 
 ### Linting
@@ -388,12 +411,59 @@ Configuration is loaded via environment variable `ENV=dev|prod`.
 
 ## 🤝 Integration Guide
 
-### For Other Services
+### For External Backend Services
 
-1. **JWT Authentication**: Use tokens issued by NFX ID
-2. **gRPC Client**: Connect to Connection services
-3. **Event Subscription**: Subscribe to Kafka topics
-4. **HTTP Client**: Call REST APIs
+Use the **Auth Service** APIs:
+
+1. **User Authentication**: Use `/api/v1/auth/login` for standard user login
+2. **User Management**: Use `/api/v1/auth/*` endpoints for user operations
+3. **JWT Validation**: Validate tokens issued by Auth service
+4. **gRPC Client**: Connect to Connection services for inter-service communication
+
+### For NFX Console (Identity-Admin)
+
+Use the **Permission Service** APIs:
+
+1. **Admin Login**: Use `/api/v1/permission/login` for admin authentication (returns permissions)
+2. **Permission Management**: Use `/api/v1/permission/permissions/*` for permission CRUD
+3. **User Permissions**: Use `/api/v1/permission/user-permissions/*` for permission assignment
+4. **Authorization Codes**: Use `/api/v1/permission/authorization-codes/*` for code management
+
+### Example: External Service Login (Auth Service)
+
+```go
+// POST /api/v1/auth/login
+{
+  "identifier": "user@example.com",  // or username, or phone
+  "password": "password123"
+}
+
+// Response:
+{
+  "access_token": "...",
+  "refresh_token": "...",
+  "user": { ... }
+}
+```
+
+### Example: Admin Panel Login (Permission Service)
+
+```go
+// POST /api/v1/permission/login
+{
+  "identifier": "admin@company.com",
+  "password": "password123"
+}
+
+// Response:
+{
+  "access_token": "...",
+  "refresh_token": "...",
+  "user_id": "...",
+  "permissions": [ ... ],  // Full permission list
+  "permission_tags": [ "admin.access", "user.manage", ... ]  // Permission tags
+}
+```
 
 ### Example: Validating JWT
 
@@ -404,7 +474,7 @@ verifier := usertoken.NewVerifier(cfg)
 claims, err := verifier.Verify(token)
 ```
 
-### Example: Checking Permissions
+### Example: Checking Permissions (gRPC)
 
 ```go
 // Via gRPC
@@ -441,4 +511,20 @@ The system default Go 1.21.6 does not meet dependency requirements.
 - [ ] Webhook support
 - [ ] Permission caching optimization
 
+---
+
+## 📖 Service Summary Table
+
+| Service | Purpose | Target Users | Login Endpoint | Login Response Includes |
+|---------|---------|--------------|----------------|------------------------|
+| **Auth** | External user API | External backends, client apps | `/api/v1/auth/login` | JWT tokens, basic user info |
+| **Permission** | Admin console API | NFX Console (Identity-Admin) | `/api/v1/permission/login` | JWT tokens, user info, **permissions**, **permission tags** |
+| **Image** | Image storage | All services | N/A (no login) | N/A |
+
+---
+
+## 🔗 Related Projects
+
+- **Identity-Admin** (NFX Console) - Admin control panel frontend that uses Permission service
+- **Resources** - Shared Docker Compose services (PostgreSQL, Redis, Kafka, etc.)
 

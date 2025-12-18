@@ -1,3 +1,4 @@
+-- Active: 1765190245476@@127.0.0.1@10105@lyuauth_dev@permission
 -- Authorization code table for admin panel registration
 -- Used by companies to allow their employees to register and login to Identity-Admin platform
 -- Senior administrators can create authorization entries, and employees can register using these codes
@@ -25,3 +26,4 @@ CREATE INDEX IF NOT EXISTS "idx_authorization_codes_deleted_at" ON "permission".
 -- ALTER TABLE "permission"."authorization_codes" 
 --   ADD CONSTRAINT "fk_authorization_codes_created_by" 
 --   FOREIGN KEY ("created_by") REFERENCES "auth"."users"("id") ON DELETE SET NULL;
+

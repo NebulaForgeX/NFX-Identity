@@ -2,6 +2,7 @@
 package models
 
 import (
+	"nfxid/enums"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,15 +10,15 @@ import (
 )
 
 type Permission struct {
-	ID          uuid.UUID      `gorm:"type:uuid;primaryKey"`
-	Tag         string         `gorm:"type:varchar(100);index:idx_permissions_tag;uniqueIndex:permissions_tag_key"`
-	Name        string         `gorm:"type:varchar(255)"`
-	Description *string        `gorm:"type:text"`
-	Category    *string        `gorm:"type:varchar(50);index:idx_permissions_category"`
-	IsSystem    bool           `gorm:"type:boolean"`
-	CreatedAt   time.Time      `gorm:"autoCreateTime"`
-	UpdatedAt   time.Time      `gorm:"autoUpdateTime"`
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
+	ID          uuid.UUID                `gorm:"type:uuid;primaryKey"`
+	Tag         string                   `gorm:"type:varchar(100);index:idx_permissions_tag;uniqueIndex:permissions_tag_key"`
+	Name        string                   `gorm:"type:varchar(255)"`
+	Description *string                  `gorm:"type:text"`
+	Category    enums.PermissionCategory `gorm:"type:permission_category;index:idx_permissions_category"`
+	IsSystem    bool                     `gorm:"type:boolean"`
+	CreatedAt   time.Time                `gorm:"autoCreateTime"`
+	UpdatedAt   time.Time                `gorm:"autoUpdateTime"`
+	DeletedAt   gorm.DeletedAt           `gorm:"index"`
 }
 
 func (Permission) TableName() string { return "permission.permissions" }
