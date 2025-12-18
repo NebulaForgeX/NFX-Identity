@@ -2,26 +2,26 @@ package image_type
 
 import (
 	"context"
-	"nfxid/modules/image/application/image_type/queries"
 	"nfxid/modules/image/application/image_type/views"
+	imageTypeDomain "nfxid/modules/image/domain/image_type"
 
 	"github.com/google/uuid"
 )
 
 func (s *Service) GetImageType(ctx context.Context, imageTypeID uuid.UUID) (views.ImageTypeView, error) {
-	domainView, err := s.imageTypeQuery.GetByID(ctx, imageTypeID)
+	domainView, err := s.imageTypeQuery.Single.ByID(ctx, imageTypeID)
 	if err != nil {
 		return views.ImageTypeView{}, err
 	}
-	return views.ImageTypeViewMapper(domainView), nil
+	return views.ImageTypeViewMapper(*domainView), nil
 }
 
 func (s *Service) GetImageTypeByKey(ctx context.Context, key string) (views.ImageTypeView, error) {
-	domainView, err := s.imageTypeQuery.GetByKey(ctx, key)
+	domainView, err := s.imageTypeQuery.Single.ByKey(ctx, key)
 	if err != nil {
 		return views.ImageTypeView{}, err
 	}
-	return views.ImageTypeViewMapper(domainView), nil
+	return views.ImageTypeViewMapper(*domainView), nil
 }
 
 type GetImageTypeListResult struct {
@@ -29,15 +29,15 @@ type GetImageTypeListResult struct {
 	Total int64
 }
 
-func (s *Service) GetImageTypeList(ctx context.Context, q queries.ImageTypeListQuery) (GetImageTypeListResult, error) {
+func (s *Service) GetImageTypeList(ctx context.Context, q imageTypeDomain.ListQuery) (GetImageTypeListResult, error) {
 	q.Normalize()
-	domainViews, total, err := s.imageTypeQuery.GetList(ctx, q)
+	domainViews, total, err := s.imageTypeQuery.List.Generic(ctx, q)
 	if err != nil {
 		return GetImageTypeListResult{}, err
 	}
 	items := make([]views.ImageTypeView, len(domainViews))
 	for i, v := range domainViews {
-		items[i] = views.ImageTypeViewMapper(v)
+		items[i] = views.ImageTypeViewMapper(*v)
 	}
 	return GetImageTypeListResult{
 		Items: items,

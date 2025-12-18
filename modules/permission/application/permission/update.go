@@ -8,7 +8,7 @@ import (
 )
 
 func (s *Service) UpdatePermission(ctx context.Context, cmd permissionCommands.UpdatePermissionCmd) error {
-	p, err := s.permissionRepo.GetByID(ctx, cmd.ID)
+	p, err := s.permissionRepo.Get.ByID(ctx, cmd.ID)
 	if err != nil {
 		return err
 	}
@@ -25,6 +25,5 @@ func (s *Service) UpdatePermission(ctx context.Context, cmd permissionCommands.U
 		return err
 	}
 
-	return s.permissionRepo.Update(ctx, p)
+	return s.permissionRepo.Update.Generic(ctx, p)
 }
-

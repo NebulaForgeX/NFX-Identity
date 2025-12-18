@@ -1,20 +1,19 @@
 package image
 
 import (
-	imageQueries "nfxid/modules/image/application/image/queries"
 	imageDomain "nfxid/modules/image/domain/image"
 	"nfxid/pkgs/eventbus"
 )
 
 type Service struct {
-	imageRepo    imageDomain.Repo
-	imageQuery   imageQueries.ImageQuery
+	imageRepo    *imageDomain.Repo
+	imageQuery   *imageDomain.Query
 	busPublisher *eventbus.BusPublisher
 }
 
 func NewService(
-	imageRepo imageDomain.Repo,
-	imageQuery imageQueries.ImageQuery,
+	imageRepo *imageDomain.Repo,
+	imageQuery *imageDomain.Query,
 	busPublisher *eventbus.BusPublisher,
 ) *Service {
 	return &Service{

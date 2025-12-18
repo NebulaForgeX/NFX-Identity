@@ -12,8 +12,10 @@ import (
 	permissionDomain "nfxid/modules/permission/domain/permission"
 	userPermissionDomain "nfxid/modules/permission/domain/user_permission"
 	"nfxid/modules/permission/infrastructure/grpcclient"
-	"nfxid/modules/permission/infrastructure/query"
-	"nfxid/modules/permission/infrastructure/repository"
+	permissionQuery "nfxid/modules/permission/infrastructure/query/permission"
+	userPermissionQuery "nfxid/modules/permission/infrastructure/query/user_permission"
+	permissionRepo "nfxid/modules/permission/infrastructure/repository/permission"
+	userPermissionRepo "nfxid/modules/permission/infrastructure/repository/user_permission"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/cleanup"
 	"nfxid/pkgs/eventbus"
@@ -35,8 +37,8 @@ type Dependencies struct {
 	kafkaConfig          *kafkax.Config
 	busPublisher         *eventbus.BusPublisher
 	serverVerifier       token.Verifier
-	permissionRepo       permissionDomain.Repo
-	userPermissionRepo   userPermissionDomain.Repo
+	permissionRepo       *permissionDomain.Repo
+	userPermissionRepo   *userPermissionDomain.Repo
 	authAppSvc           *authApp.Service
 	permissionAppSvc     *permissionApp.Service
 	userPermissionAppSvc *userPermissionApp.Service
@@ -93,12 +95,12 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 	}
 
 	// === Repository ===
-	permissionRepo := repository.NewPermissionPGRepo(postgres.DB())
-	userPermissionRepo := repository.NewUserPermissionPGRepo(postgres.DB())
+	permissionRepoHandler := permissionRepo.NewRepo(postgres.DB())
+	userPermissionRepoHandler := userPermissionRepo.NewRepo(postgres.DB())
 
 	// === Query ===
-	permissionQuery := query.NewPermissionPGQuery(postgres.DB())
-	userPermissionQuery := query.NewUserPermissionPGQuery(postgres.DB())
+	permissionQueryHandler := permissionQuery.NewHandler(postgres.DB())
+	userPermissionQueryHandler := userPermissionQuery.NewHandler(postgres.DB())
 
 	// === gRPC Client ===
 	var authGRPCClient *grpcclient.AuthGRPCClient
@@ -122,13 +124,13 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 
 	// === Application Services ===
 	permissionAppSvc := permissionApp.NewService(
-		permissionRepo,
-		permissionQuery,
+		permissionRepoHandler,
+		permissionQueryHandler,
 	)
 
 	userPermissionAppSvc := userPermissionApp.NewService(
-		userPermissionRepo,
-		userPermissionQuery,
+		userPermissionRepoHandler,
+		userPermissionQueryHandler,
 	)
 
 	authAppSvc := authApp.NewService(
@@ -145,8 +147,8 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 		kafkaConfig:          &kafkaConfig,
 		busPublisher:         busPublisher,
 		serverVerifier:       serverVerifier,
-		permissionRepo:       permissionRepo,
-		userPermissionRepo:   userPermissionRepo,
+		permissionRepo:       permissionRepoHandler,
+		userPermissionRepo:   userPermissionRepoHandler,
 		authAppSvc:           authAppSvc,
 		permissionAppSvc:     permissionAppSvc,
 		userPermissionAppSvc: userPermissionAppSvc,
@@ -166,13 +168,14 @@ func (d *Dependencies) Cleanup() {
 	}
 }
 
-func (d *Dependencies) AuthAppSvc() *authApp.Service                 { return d.authAppSvc }
-func (d *Dependencies) PermissionAppSvc() *permissionApp.Service   { return d.permissionAppSvc }
-func (d *Dependencies) UserPermissionAppSvc() *userPermissionApp.Service { return d.userPermissionAppSvc }
-func (d *Dependencies) Tokenx() *tokenx.Tokenx                      { return d.tokenx }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
-func (d *Dependencies) PermissionRepo() permissionDomain.Repo       { return d.permissionRepo }
-func (d *Dependencies) UserPermissionRepo() userPermissionDomain.Repo { return d.userPermissionRepo }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier         { return d.serverVerifier }
-
+func (d *Dependencies) AuthAppSvc() *authApp.Service             { return d.authAppSvc }
+func (d *Dependencies) PermissionAppSvc() *permissionApp.Service { return d.permissionAppSvc }
+func (d *Dependencies) UserPermissionAppSvc() *userPermissionApp.Service {
+	return d.userPermissionAppSvc
+}
+func (d *Dependencies) Tokenx() *tokenx.Tokenx                         { return d.tokenx }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                    { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher           { return d.busPublisher }
+func (d *Dependencies) PermissionRepo() *permissionDomain.Repo         { return d.permissionRepo }
+func (d *Dependencies) UserPermissionRepo() *userPermissionDomain.Repo { return d.userPermissionRepo }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverVerifier }

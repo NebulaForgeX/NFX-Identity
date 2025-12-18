@@ -96,7 +96,8 @@ func (h *ImageHandler) GetImagesByUserID(ctx context.Context, req *imagepb.GetIm
 		}
 	}
 
-	result, err := h.imageAppSvc.GetImageList(ctx, listQuery)
+	domainQuery := listQuery.ToDomainListQuery()
+	result, err := h.imageAppSvc.GetImageList(ctx, domainQuery)
 	if err != nil {
 		logx.S().Errorf("failed to get images by user_id: %v", err)
 		return nil, status.Errorf(codes.Internal, "failed to get images: %v", err)
@@ -131,7 +132,8 @@ func (h *ImageHandler) GetImagesByTypeID(ctx context.Context, req *imagepb.GetIm
 		listQuery.IsPublic = &isPublic
 	}
 
-	result, err := h.imageAppSvc.GetImageList(ctx, listQuery)
+	domainQuery := listQuery.ToDomainListQuery()
+	result, err := h.imageAppSvc.GetImageList(ctx, domainQuery)
 	if err != nil {
 		logx.S().Errorf("failed to get images by type_id: %v", err)
 		return nil, status.Errorf(codes.Internal, "failed to get images: %v", err)
@@ -162,7 +164,8 @@ func (h *ImageHandler) GetImagesBySourceDomain(ctx context.Context, req *imagepb
 		listQuery.IsPublic = &isPublic
 	}
 
-	result, err := h.imageAppSvc.GetImageList(ctx, listQuery)
+	domainQuery := listQuery.ToDomainListQuery()
+	result, err := h.imageAppSvc.GetImageList(ctx, domainQuery)
 	if err != nil {
 		logx.S().Errorf("failed to get images by source_domain: %v", err)
 		return nil, status.Errorf(codes.Internal, "failed to get images: %v", err)
@@ -209,7 +212,8 @@ func (h *ImageHandler) GetAllImages(ctx context.Context, req *imagepb.GetAllImag
 		listQuery.Search = *req.Search
 	}
 
-	result, err := h.imageAppSvc.GetImageList(ctx, listQuery)
+	domainQuery := listQuery.ToDomainListQuery()
+	result, err := h.imageAppSvc.GetImageList(ctx, domainQuery)
 	if err != nil {
 		logx.S().Errorf("failed to get all images: %v", err)
 		return nil, status.Errorf(codes.Internal, "failed to get images: %v", err)

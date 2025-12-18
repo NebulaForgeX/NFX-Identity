@@ -11,6 +11,5 @@ type DeleteImageTypeCmd struct {
 }
 
 func (s *Service) DeleteImageType(ctx context.Context, cmd DeleteImageTypeCmd) error {
-	return s.imageTypeRepo.Delete(ctx, cmd.ID)
+	return s.imageTypeRepo.Delete.ByID(ctx, cmd.ID)
 }
-

@@ -9,7 +9,7 @@ import (
 
 func (s *Service) AssignPermission(ctx context.Context, cmd userPermissionCommands.AssignPermissionCmd) error {
 	// Check if already exists
-	exists, err := s.userPermissionRepo.Exists(ctx, cmd.UserID, cmd.PermissionID)
+	exists, err := s.userPermissionRepo.Check.ByUserIDAndPermissionID(ctx, cmd.UserID, cmd.PermissionID)
 	if err != nil {
 		return err
 	}
@@ -25,6 +25,5 @@ func (s *Service) AssignPermission(ctx context.Context, cmd userPermissionComman
 		return err
 	}
 
-	return s.userPermissionRepo.Create(ctx, up)
+	return s.userPermissionRepo.Create.New(ctx, up)
 }
-

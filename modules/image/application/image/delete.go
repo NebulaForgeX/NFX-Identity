@@ -11,13 +11,13 @@ type DeleteImageCmd struct {
 }
 
 func (s *Service) DeleteImage(ctx context.Context, cmd DeleteImageCmd) error {
-	img, err := s.imageRepo.GetByID(ctx, cmd.ID)
+	img, err := s.imageRepo.Get.ByID(ctx, cmd.ID)
 	if err != nil {
 		return err
 	}
 
 	img.Delete()
-	return s.imageRepo.Update(ctx, img)
+	return s.imageRepo.Update.Generic(ctx, img)
 }
 
 type DeleteImageByStoragePathCmd struct {
@@ -25,6 +25,5 @@ type DeleteImageByStoragePathCmd struct {
 }
 
 func (s *Service) DeleteImageByStoragePath(ctx context.Context, cmd DeleteImageByStoragePathCmd) error {
-	return s.imageRepo.DeleteByStoragePath(ctx, cmd.StoragePath)
+	return s.imageRepo.Delete.ByStoragePath(ctx, cmd.StoragePath)
 }
-

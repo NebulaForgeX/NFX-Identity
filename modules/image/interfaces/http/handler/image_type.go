@@ -78,8 +78,9 @@ func (h *ImageTypeHandler) GetAll(c *fiber.Ctx) error {
 		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid query parameters: "+err.Error())
 	}
 
-	listQuery := query.ToListQuery()
-	result, err := h.appSvc.GetImageTypeList(c.Context(), listQuery)
+	appQuery := query.ToListQuery()
+	domainQuery := appQuery.ToDomainListQuery()
+	result, err := h.appSvc.GetImageTypeList(c.Context(), domainQuery)
 	if err != nil {
 		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get image types: "+err.Error())
 	}

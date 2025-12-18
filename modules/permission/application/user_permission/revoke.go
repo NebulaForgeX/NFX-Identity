@@ -6,6 +6,5 @@ import (
 )
 
 func (s *Service) RevokePermission(ctx context.Context, cmd userPermissionCommands.RevokePermissionCmd) error {
-	return s.userPermissionRepo.DeleteByUserIDAndPermissionID(ctx, cmd.UserID, cmd.PermissionID)
+	return s.userPermissionRepo.Delete.ByUserIDAndPermissionID(ctx, cmd.UserID, cmd.PermissionID)
 }
-

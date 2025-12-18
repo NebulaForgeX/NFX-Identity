@@ -20,10 +20,9 @@ func (s *Service) CreatePermission(ctx context.Context, cmd permissionCommands.C
 		return nil, err
 	}
 
-	if err := s.permissionRepo.Create(ctx, p); err != nil {
+	if err := s.permissionRepo.Create.New(ctx, p); err != nil {
 		return nil, err
 	}
 
 	return p, nil
 }
-

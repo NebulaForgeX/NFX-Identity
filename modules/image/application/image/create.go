@@ -45,7 +45,7 @@ func (s *Service) CreateImage(ctx context.Context, cmd CreateImageCmd) (*imageDo
 		return nil, err
 	}
 
-	if err := s.imageRepo.Create(ctx, img); err != nil {
+	if err := s.imageRepo.Create.New(ctx, img); err != nil {
 		return nil, err
 	}
 

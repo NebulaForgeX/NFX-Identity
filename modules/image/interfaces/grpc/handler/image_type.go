@@ -99,7 +99,8 @@ func (h *ImageTypeHandler) GetAllImageTypes(ctx context.Context, req *imagetypep
 		listQuery.IsSystem = &isSystem
 	}
 
-	result, err := h.imageTypeAppSvc.GetImageTypeList(ctx, listQuery)
+	domainQuery := listQuery.ToDomainListQuery()
+	result, err := h.imageTypeAppSvc.GetImageTypeList(ctx, domainQuery)
 	if err != nil {
 		logx.S().Errorf("failed to get all image types: %v", err)
 		return nil, status.Errorf(codes.Internal, "failed to get image types: %v", err)

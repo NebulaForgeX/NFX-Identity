@@ -166,3 +166,7 @@ func (q *ImageQueryParamsDTO) ToListQuery() imageAppQueries.ImageListQuery {
 
 	return query
 }
+
+func (q *ImageQueryParamsDTO) ToDomainListQuery() imageAppQueries.ImageListQuery {
+	return q.ToListQuery()
+}

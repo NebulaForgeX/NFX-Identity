@@ -1,18 +1,17 @@
 package image_type
 
 import (
-	imageTypeQueries "nfxid/modules/image/application/image_type/queries"
 	imageTypeDomain "nfxid/modules/image/domain/image_type"
 )
 
 type Service struct {
-	imageTypeRepo  imageTypeDomain.Repo
-	imageTypeQuery imageTypeQueries.ImageTypeQuery
+	imageTypeRepo  *imageTypeDomain.Repo
+	imageTypeQuery *imageTypeDomain.Query
 }
 
 func NewService(
-	imageTypeRepo imageTypeDomain.Repo,
-	imageTypeQuery imageTypeQueries.ImageTypeQuery,
+	imageTypeRepo *imageTypeDomain.Repo,
+	imageTypeQuery *imageTypeDomain.Query,
 ) *Service {
 	return &Service{
 		imageTypeRepo:  imageTypeRepo,

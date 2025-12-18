@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Service) DeletePermission(ctx context.Context, cmd permissionCommands.DeletePermissionCmd) error {
-	p, err := s.permissionRepo.GetByID(ctx, cmd.ID)
+	p, err := s.permissionRepo.Get.ByID(ctx, cmd.ID)
 	if err != nil {
 		return err
 	}
@@ -19,6 +19,5 @@ func (s *Service) DeletePermission(ctx context.Context, cmd permissionCommands.D
 		return err
 	}
 
-	return s.permissionRepo.Update(ctx, p)
+	return s.permissionRepo.Update.Generic(ctx, p)
 }
-

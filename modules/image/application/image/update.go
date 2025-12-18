@@ -25,7 +25,7 @@ type UpdateImageCmd struct {
 }
 
 func (s *Service) UpdateImage(ctx context.Context, cmd UpdateImageCmd) error {
-	img, err := s.imageRepo.GetByID(ctx, cmd.ID)
+	img, err := s.imageRepo.Get.ByID(ctx, cmd.ID)
 	if err != nil {
 		return err
 	}
@@ -51,5 +51,5 @@ func (s *Service) UpdateImage(ctx context.Context, cmd UpdateImageCmd) error {
 		return err
 	}
 
-	return s.imageRepo.Update(ctx, img)
+	return s.imageRepo.Update.Generic(ctx, img)
 }

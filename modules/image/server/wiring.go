@@ -11,8 +11,10 @@ import (
 	imageDomain "nfxid/modules/image/domain/image"
 	imageTypeDomain "nfxid/modules/image/domain/image_type"
 	"nfxid/modules/image/infrastructure/grpcclient"
-	"nfxid/modules/image/infrastructure/query"
-	"nfxid/modules/image/infrastructure/repository"
+	imageQuery "nfxid/modules/image/infrastructure/query/image"
+	imageTypeQuery "nfxid/modules/image/infrastructure/query/image_type"
+	imageRepo "nfxid/modules/image/infrastructure/repository/image"
+	imageTypeRepo "nfxid/modules/image/infrastructure/repository/image_type"
 	"nfxid/pkgs/cleanup"
 	"nfxid/pkgs/eventbus"
 	"nfxid/pkgs/health"
@@ -32,8 +34,8 @@ type Dependencies struct {
 	busPublisher    *eventbus.BusPublisher
 	serverVerifier  token.Verifier
 	authGRPCClient  *grpcclient.AuthGRPCClient
-	imageRepo       imageDomain.Repo
-	imageTypeRepo   imageTypeDomain.Repo
+	imageRepo       *imageDomain.Repo
+	imageTypeRepo   *imageTypeDomain.Repo
 	imageAppSvc     *imageApp.Service
 	imageTypeAppSvc *imageTypeApp.Service
 }
@@ -92,23 +94,23 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 	}
 
 	// === Repository ===
-	imageRepo := repository.NewImagePGRepo(postgres.DB())
-	imageTypeRepo := repository.NewImageTypePGRepo(postgres.DB())
+	imageRepoHandler := imageRepo.NewRepo(postgres.DB())
+	imageTypeRepoHandler := imageTypeRepo.NewRepo(postgres.DB())
 
 	// === Query ===
-	imageQuery := query.NewImagePGQuery(postgres.DB())
-	imageTypeQuery := query.NewImageTypePGQuery(postgres.DB())
+	imageQueryHandler := imageQuery.NewHandler(postgres.DB())
+	imageTypeQueryHandler := imageTypeQuery.NewHandler(postgres.DB())
 
 	// === Application Services ===
 	imageAppSvc := imageApp.NewService(
-		imageRepo,
-		imageQuery,
+		imageRepoHandler,
+		imageQueryHandler,
 		busPublisher,
 	)
 
 	imageTypeAppSvc := imageTypeApp.NewService(
-		imageTypeRepo,
-		imageTypeQuery,
+		imageTypeRepoHandler,
+		imageTypeQueryHandler,
 	)
 
 	return &Dependencies{
@@ -119,8 +121,8 @@ func NewDependencies(ctx context.Context, cfg *config.Config) (*Dependencies, er
 		busPublisher:    busPublisher,
 		serverVerifier:  serverVerifier,
 		authGRPCClient:  authGRPCClient,
-		imageRepo:       imageRepo,
-		imageTypeRepo:   imageTypeRepo,
+		imageRepo:       imageRepoHandler,
+		imageTypeRepo:   imageTypeRepoHandler,
 		imageAppSvc:     imageAppSvc,
 		imageTypeAppSvc: imageTypeAppSvc,
 	}, nil

@@ -29,7 +29,7 @@ func (s *Service) CreateImageType(ctx context.Context, cmd CreateImageTypeCmd) (
 		return nil, err
 	}
 
-	if err := s.imageTypeRepo.Create(ctx, it); err != nil {
+	if err := s.imageTypeRepo.Create.New(ctx, it); err != nil {
 		return nil, err
 	}
 

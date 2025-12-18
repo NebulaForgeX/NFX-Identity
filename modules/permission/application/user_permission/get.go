@@ -7,15 +7,24 @@ import (
 )
 
 func (s *Service) GetUserPermissions(ctx context.Context, cmd userPermissionCommands.GetUserPermissionsCmd) ([]*userPermissionViews.UserPermissionView, error) {
-	return s.userPermissionQuery.GetByUserID(ctx, cmd.UserID)
+	domainViews, err := s.userPermissionQuery.List.ByUserID(ctx, cmd.UserID)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]*userPermissionViews.UserPermissionView, len(domainViews))
+	for i, v := range domainViews {
+		view := userPermissionViews.UserPermissionViewMapper(*v)
+		result[i] = &view
+	}
+	return result, nil
 }
 
 func (s *Service) GetUserPermissionTags(ctx context.Context, cmd userPermissionCommands.GetUserPermissionsCmd) ([]string, error) {
-	return s.userPermissionQuery.GetPermissionTagsByUserID(ctx, cmd.UserID)
+	return s.userPermissionQuery.List.PermissionTagsByUserID(ctx, cmd.UserID)
 }
 
 func (s *Service) CheckPermission(ctx context.Context, cmd userPermissionCommands.CheckPermissionCmd) (bool, error) {
-	tags, err := s.userPermissionQuery.GetPermissionTagsByUserID(ctx, cmd.UserID)
+	tags, err := s.userPermissionQuery.List.PermissionTagsByUserID(ctx, cmd.UserID)
 	if err != nil {
 		return false, err
 	}
@@ -27,4 +36,3 @@ func (s *Service) CheckPermission(ctx context.Context, cmd userPermissionCommand
 	}
 	return false, nil
 }
-
