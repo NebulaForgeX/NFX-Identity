@@ -2,6 +2,7 @@ package permission
 
 import (
 	"context"
+	"nfxid/enums"
 
 	"github.com/google/uuid"
 )
@@ -25,7 +26,7 @@ type Get interface {
 	ByID(ctx context.Context, id uuid.UUID) (*Permission, error)
 	ByTag(ctx context.Context, tag string) (*Permission, error)
 	ByTags(ctx context.Context, tags []string) ([]*Permission, error)
-	ByCategory(ctx context.Context, category string) ([]*Permission, error)
+	ByCategory(ctx context.Context, category enums.PermissionCategory) ([]*Permission, error)
 }
 
 // Check 定义检查相关的方法

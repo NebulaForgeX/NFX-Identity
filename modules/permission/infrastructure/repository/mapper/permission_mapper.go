@@ -16,17 +16,17 @@ func PermissionDomainToModel(p *permission.Permission) *models.Permission {
 	if description == "" {
 		description = ""
 	}
-	category := editable.Category
-	if category == "" {
-		category = ""
+	var descriptionPtr *string
+	if description != "" {
+		descriptionPtr = &description
 	}
 
 	return &models.Permission{
 		ID:          p.ID(),
 		Tag:         editable.Tag,
 		Name:        editable.Name,
-		Description: &description,
-		Category:    &category,
+		Description: descriptionPtr,
+		Category:    editable.Category,
 		IsSystem:    p.IsSystem(),
 		CreatedAt:   p.CreatedAt(),
 		UpdatedAt:   p.UpdatedAt(),
@@ -43,16 +43,12 @@ func PermissionModelToDomain(m *models.Permission) *permission.Permission {
 	if m.Description != nil {
 		description = *m.Description
 	}
-	category := ""
-	if m.Category != nil {
-		category = *m.Category
-	}
 
 	editable := permission.PermissionEditable{
 		Tag:         m.Tag,
 		Name:        m.Name,
 		Description: description,
-		Category:    category,
+		Category:    m.Category,
 	}
 
 	state := permission.PermissionState{
@@ -77,4 +73,3 @@ func PermissionModelsToUpdates(m *models.Permission) map[string]any {
 		models.PermissionCols.DeletedAt:   m.DeletedAt,
 	}
 }
-

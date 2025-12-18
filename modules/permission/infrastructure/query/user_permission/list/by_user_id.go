@@ -2,6 +2,7 @@ package list
 
 import (
 	"context"
+	"nfxid/enums"
 	userPermissionDomainViews "nfxid/modules/permission/domain/user_permission/views"
 	"nfxid/modules/permission/infrastructure/rdb/models"
 
@@ -45,7 +46,7 @@ func userPermissionModelToDomainView(item *userPermissionWithPermission) userPer
 		PermissionID: item.PermissionID,
 		Tag:          item.PermissionTag,
 		Name:         item.PermissionName,
-		Category:     item.PermissionCategory,
+		Category:     enums.PermissionCategory(item.PermissionCategory), // Convert string to enum
 		CreatedAt:    item.CreatedAt,
 	}
 }

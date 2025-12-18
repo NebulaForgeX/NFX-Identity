@@ -1,7 +1,9 @@
 package reqdto
 
 import (
+	"nfxid/enums"
 	permissionCommands "nfxid/modules/permission/application/permission/commands"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +20,7 @@ func (dto *PermissionCreateRequestDTO) ToCreateCmd() permissionCommands.CreatePe
 		Tag:         dto.Tag,
 		Name:        dto.Name,
 		Description: dto.Description,
-		Category:    dto.Category,
+		Category:    enums.PermissionCategory(dto.Category), // Convert string to enum
 		IsSystem:    dto.IsSystem,
 	}
 }
@@ -37,7 +39,7 @@ func (dto *PermissionUpdateRequestDTO) ToUpdateCmd() permissionCommands.UpdatePe
 		Tag:         dto.Tag,
 		Name:        dto.Name,
 		Description: dto.Description,
-		Category:    dto.Category,
+		Category:    enums.PermissionCategory(dto.Category), // Convert string to enum
 	}
 }
 
@@ -52,4 +54,3 @@ type PermissionByTagRequestDTO struct {
 type PermissionQueryParamsDTO struct {
 	Category *string `query:"category"`
 }
-

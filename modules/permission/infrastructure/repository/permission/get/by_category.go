@@ -2,13 +2,14 @@ package get
 
 import (
 	"context"
+	"nfxid/enums"
 	permissionDomain "nfxid/modules/permission/domain/permission"
 	"nfxid/modules/permission/infrastructure/rdb/models"
 	"nfxid/modules/permission/infrastructure/repository/mapper"
 )
 
 // ByCategory 根据 Category 获取 Permission 列表，实现 permissionDomain.Get 接口
-func (h *Handler) ByCategory(ctx context.Context, category string) ([]*permissionDomain.Permission, error) {
+func (h *Handler) ByCategory(ctx context.Context, category enums.PermissionCategory) ([]*permissionDomain.Permission, error) {
 	var models []models.Permission
 	if err := h.db.WithContext(ctx).
 		Where("category = ?", category).

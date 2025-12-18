@@ -1,6 +1,7 @@
 package views
 
 import (
+	"nfxid/enums"
 	"time"
 
 	userPermissionDomainViews "nfxid/modules/permission/domain/user_permission/views"
@@ -9,13 +10,13 @@ import (
 )
 
 type UserPermissionView struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	PermissionID uuid.UUID `json:"permission_id"`
-	Tag          string    `json:"tag"`  // Permission tag for convenience
-	Name         string    `json:"name"` // Permission name for convenience
-	Category     string    `json:"category"`
-	CreatedAt    time.Time `json:"created_at"`
+	ID           uuid.UUID                `json:"id"`
+	UserID       uuid.UUID                `json:"user_id"`
+	PermissionID uuid.UUID                `json:"permission_id"`
+	Tag          string                   `json:"tag"`  // Permission tag for convenience
+	Name         string                   `json:"name"` // Permission name for convenience
+	Category     enums.PermissionCategory `json:"category"`
+	CreatedAt    time.Time                `json:"created_at"`
 }
 
 // UserPermissionViewMapper 将 Domain UserPermissionView 转换为 Application UserPermissionView

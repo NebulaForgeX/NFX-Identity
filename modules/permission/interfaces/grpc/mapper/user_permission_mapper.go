@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"nfxid/enums"
 	userPermissionAppViews "nfxid/modules/permission/application/user_permission/views"
 	permissionpb "nfxid/protos/gen/permission/permission"
 	userpermissionpb "nfxid/protos/gen/permission/user_permission"
@@ -23,17 +24,17 @@ func UserPermissionViewToProto(v *userPermissionAppViews.UserPermissionView, inc
 
 	if includePermission && v.Tag != "" {
 		// 如果包含权限信息，创建嵌套的 Permission 消息
-		category := v.Category
 		up.Permission = &permissionpb.Permission{
-			Id:    v.PermissionID.String(),
-			Tag:   v.Tag,
-			Name:  v.Name,
+			Id:   v.PermissionID.String(),
+			Tag:  v.Tag,
+			Name: v.Name,
 		}
-		if category != "" {
-			up.Permission.Category = &category
+		var zeroCategory enums.PermissionCategory
+		if v.Category != zeroCategory {
+			categoryStr := string(v.Category)
+			up.Permission.Category = &categoryStr
 		}
 	}
 
 	return up
 }
-

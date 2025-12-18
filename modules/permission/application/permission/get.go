@@ -2,6 +2,7 @@ package permission
 
 import (
 	"context"
+	"nfxid/enums"
 	permissionCommands "nfxid/modules/permission/application/permission/commands"
 	permissionViews "nfxid/modules/permission/application/permission/views"
 	permissionDomain "nfxid/modules/permission/domain/permission"
@@ -26,7 +27,8 @@ func (s *Service) GetPermissionByTag(ctx context.Context, cmd permissionCommands
 }
 
 func (s *Service) ListPermissions(ctx context.Context, cmd permissionCommands.ListPermissionsCmd) ([]*permissionViews.PermissionView, error) {
-	if cmd.Category != "" {
+	var zeroCategory enums.PermissionCategory
+	if cmd.Category != zeroCategory {
 		domainViews, err := s.permissionQuery.List.ByCategory(ctx, cmd.Category)
 		if err != nil {
 			return nil, err

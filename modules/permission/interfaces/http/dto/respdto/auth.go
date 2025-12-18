@@ -6,14 +6,14 @@ import (
 )
 
 type LoginResponseDTO struct {
-	AccessToken    string                      `json:"access_token"`
-	RefreshToken   string                      `json:"refresh_token"`
-	UserID         string                      `json:"user_id"`
-	Username       string                      `json:"username"`
-	Email          string                      `json:"email"`
-	Phone          string                      `json:"phone"`
-	Permissions    []UserPermissionViewDTO     `json:"permissions"`
-	PermissionTags []string                   `json:"permission_tags"`
+	AccessToken    string                  `json:"access_token"`
+	RefreshToken   string                  `json:"refresh_token"`
+	UserID         string                  `json:"user_id"`
+	Username       string                  `json:"username"`
+	Email          string                  `json:"email"`
+	Phone          string                  `json:"phone"`
+	Permissions    []UserPermissionViewDTO `json:"permissions"`
+	PermissionTags []string                `json:"permission_tags"`
 }
 
 type UserPermissionViewDTO struct {
@@ -59,8 +59,7 @@ func UserPermissionViewToAuthDTO(v *userPermissionViews.UserPermissionView) User
 		PermissionID: v.PermissionID.String(),
 		Tag:          v.Tag,
 		Name:         v.Name,
-		Category:     v.Category,
+		Category:     string(v.Category), // Convert enum to string for JSON
 		CreatedAt:    v.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 	}
 }
-

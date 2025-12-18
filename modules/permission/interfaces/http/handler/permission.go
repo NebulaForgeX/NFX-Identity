@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"nfxid/enums"
 	permissionApp "nfxid/modules/permission/application/permission"
 	permissionAppCommands "nfxid/modules/permission/application/permission/commands"
 	"nfxid/modules/permission/interfaces/http/dto/reqdto"
@@ -131,7 +132,7 @@ func (h *PermissionHandler) List(c *fiber.Ctx) error {
 
 	cmd := permissionAppCommands.ListPermissionsCmd{}
 	if query.Category != nil {
-		cmd.Category = *query.Category
+		cmd.Category = enums.PermissionCategory(*query.Category) // Convert string to enum
 	}
 
 	permissions, err := h.appSvc.ListPermissions(c.Context(), cmd)
@@ -146,4 +147,3 @@ func (h *PermissionHandler) List(c *fiber.Ctx) error {
 
 	return httpresp.Success(c, fiber.StatusOK, "Permissions retrieved successfully", httpresp.SuccessOptions{Data: dtos})
 }
-

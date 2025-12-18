@@ -1,6 +1,8 @@
 package permission
 
 import (
+	"nfxid/enums"
+
 	"github.com/google/uuid"
 )
 
@@ -8,7 +10,7 @@ type CreatePermissionCmd struct {
 	Tag         string
 	Name        string
 	Description string
-	Category    string
+	Category    enums.PermissionCategory
 	IsSystem    bool
 }
 
@@ -17,7 +19,7 @@ type UpdatePermissionCmd struct {
 	Tag         string
 	Name        string
 	Description string
-	Category    string
+	Category    enums.PermissionCategory
 }
 
 type DeletePermissionCmd struct {
@@ -33,6 +35,5 @@ type GetPermissionByTagCmd struct {
 }
 
 type ListPermissionsCmd struct {
-	Category string
+	Category enums.PermissionCategory
 }
-

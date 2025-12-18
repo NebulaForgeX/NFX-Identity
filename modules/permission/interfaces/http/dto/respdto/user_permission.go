@@ -1,8 +1,9 @@
 package respdto
 
 import (
-	"time"
 	userPermissionViews "nfxid/modules/permission/application/user_permission/views"
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -27,8 +28,7 @@ func UserPermissionViewToDTO(v *userPermissionViews.UserPermissionView) *UserPer
 		PermissionID: v.PermissionID,
 		Tag:          v.Tag,
 		Name:         v.Name,
-		Category:     v.Category,
+		Category:     string(v.Category), // Convert enum to string for JSON
 		CreatedAt:    v.CreatedAt,
 	}
 }
-

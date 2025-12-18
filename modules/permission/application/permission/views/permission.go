@@ -1,6 +1,7 @@
 package views
 
 import (
+	"nfxid/enums"
 	"time"
 
 	permissionDomainViews "nfxid/modules/permission/domain/permission/views"
@@ -9,14 +10,14 @@ import (
 )
 
 type PermissionView struct {
-	ID          uuid.UUID `json:"id"`
-	Tag         string    `json:"tag"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Category    string    `json:"category"`
-	IsSystem    bool      `json:"is_system"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          uuid.UUID                `json:"id"`
+	Tag         string                   `json:"tag"`
+	Name        string                   `json:"name"`
+	Description string                   `json:"description"`
+	Category    enums.PermissionCategory `json:"category"`
+	IsSystem    bool                     `json:"is_system"`
+	CreatedAt   time.Time                `json:"created_at"`
+	UpdatedAt   time.Time                `json:"updated_at"`
 }
 
 // PermissionViewMapper 将 Domain PermissionView 转换为 Application PermissionView

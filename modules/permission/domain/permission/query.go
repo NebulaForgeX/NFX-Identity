@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"nfxid/enums"
 	"nfxid/modules/permission/domain/permission/views"
 	"nfxid/pkgs/query"
 
@@ -27,7 +28,7 @@ type Single interface {
 type List interface {
 	Generic(ctx context.Context, q ListQuery) ([]*views.PermissionView, int64, error)
 	ByTags(ctx context.Context, tags []string) ([]*views.PermissionView, error)
-	ByCategory(ctx context.Context, category string) ([]*views.PermissionView, error)
+	ByCategory(ctx context.Context, category enums.PermissionCategory) ([]*views.PermissionView, error)
 }
 
 type SortField int
@@ -52,10 +53,10 @@ type ListQuery struct {
 	query.DomainPagination
 	query.DomainSorts[SortField]
 
-	PermissionIDs []uuid.UUID `json:"permission_ids,omitempty"`
-	Category      *string     `json:"category,omitempty"`
-	IsSystem      *bool       `json:"is_system,omitempty"`
-	Search        *string     `json:"search,omitempty"`
+	PermissionIDs []uuid.UUID               `json:"permission_ids,omitempty"`
+	Category      *enums.PermissionCategory `json:"category,omitempty"`
+	IsSystem      *bool                     `json:"is_system,omitempty"`
+	Search        *string                   `json:"search,omitempty"`
 }
 
 func (q *ListQuery) Normalize() {

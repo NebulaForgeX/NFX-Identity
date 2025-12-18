@@ -1,20 +1,21 @@
 package respdto
 
 import (
-	"time"
 	permissionViews "nfxid/modules/permission/application/permission/views"
+	"time"
+
 	"github.com/google/uuid"
 )
 
 type PermissionDTO struct {
-	ID          uuid.UUID  `json:"id"`
-	Tag         string     `json:"tag"`
-	Name        string     `json:"name"`
-	Description string     `json:"description,omitempty"`
-	Category    string     `json:"category,omitempty"`
-	IsSystem    bool       `json:"is_system"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
+	ID          uuid.UUID `json:"id"`
+	Tag         string    `json:"tag"`
+	Name        string    `json:"name"`
+	Description string    `json:"description,omitempty"`
+	Category    string    `json:"category,omitempty"`
+	IsSystem    bool      `json:"is_system"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func PermissionViewToDTO(v *permissionViews.PermissionView) *PermissionDTO {
@@ -27,10 +28,9 @@ func PermissionViewToDTO(v *permissionViews.PermissionView) *PermissionDTO {
 		Tag:         v.Tag,
 		Name:        v.Name,
 		Description: v.Description,
-		Category:    v.Category,
+		Category:    string(v.Category), // Convert enum to string for JSON
 		IsSystem:    v.IsSystem,
 		CreatedAt:   v.CreatedAt,
 		UpdatedAt:   v.UpdatedAt,
 	}
 }
-

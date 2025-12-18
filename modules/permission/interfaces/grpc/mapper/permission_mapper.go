@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"nfxid/enums"
 	permissionAppViews "nfxid/modules/permission/application/permission/views"
 	permissionpb "nfxid/protos/gen/permission/permission"
 
@@ -25,8 +26,10 @@ func PermissionViewToProto(v *permissionAppViews.PermissionView) *permissionpb.P
 	if v.Description != "" {
 		permission.Description = &v.Description
 	}
-	if v.Category != "" {
-		permission.Category = &v.Category
+	var zeroCategory enums.PermissionCategory
+	if v.Category != zeroCategory {
+		categoryStr := string(v.Category)
+		permission.Category = &categoryStr
 	}
 	if v.UpdatedAt.IsZero() {
 		permission.UpdatedAt = timestamppb.New(v.CreatedAt)

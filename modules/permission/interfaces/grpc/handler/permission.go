@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"nfxid/enums"
 
 	permissionApp "nfxid/modules/permission/application/permission"
 	permissionAppCommands "nfxid/modules/permission/application/permission/commands"
@@ -85,7 +86,7 @@ func (h *PermissionHandler) GetPermissionsByTags(ctx context.Context, req *permi
 // GetPermissionsByCategory 根据Category获取权限列表
 func (h *PermissionHandler) GetPermissionsByCategory(ctx context.Context, req *permissionpb.GetPermissionsByCategoryRequest) (*permissionpb.GetPermissionsByCategoryResponse, error) {
 	permissions, err := h.permissionAppSvc.ListPermissions(ctx, permissionAppCommands.ListPermissionsCmd{
-		Category: req.Category,
+		Category: enums.PermissionCategory(req.Category), // Convert string to enum
 	})
 	if err != nil {
 		logx.S().Errorf("failed to get permissions by category: %v", err)
@@ -104,7 +105,7 @@ func (h *PermissionHandler) GetPermissionsByCategory(ctx context.Context, req *p
 func (h *PermissionHandler) GetAllPermissions(ctx context.Context, req *permissionpb.GetAllPermissionsRequest) (*permissionpb.GetAllPermissionsResponse, error) {
 	cmd := permissionAppCommands.ListPermissionsCmd{}
 	if req.Category != nil {
-		cmd.Category = *req.Category
+		cmd.Category = enums.PermissionCategory(*req.Category) // Convert string to enum
 	}
 
 	permissions, err := h.permissionAppSvc.ListPermissions(ctx, cmd)
@@ -136,4 +137,3 @@ func (h *PermissionHandler) GetAllPermissions(ctx context.Context, req *permissi
 		Total:       total,
 	}, nil
 }
-

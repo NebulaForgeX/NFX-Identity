@@ -10,20 +10,15 @@ func PermissionModelToAppView(m *models.Permission) permissionAppViews.Permissio
 	if m.Description != nil {
 		description = *m.Description
 	}
-	category := ""
-	if m.Category != nil {
-		category = *m.Category
-	}
 
 	return permissionAppViews.PermissionView{
 		ID:          m.ID,
 		Tag:         m.Tag,
 		Name:        m.Name,
 		Description: description,
-		Category:    category,
+		Category:    m.Category,
 		IsSystem:    m.IsSystem,
 		CreatedAt:   m.CreatedAt,
 		UpdatedAt:   m.UpdatedAt,
 	}
 }
-
