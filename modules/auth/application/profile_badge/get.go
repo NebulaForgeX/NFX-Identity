@@ -17,7 +17,7 @@ func (s *Service) GetProfileBadge(ctx context.Context, profileBadgeID uuid.UUID)
 }
 
 func (s *Service) GetProfileBadgesByProfileID(ctx context.Context, profileID uuid.UUID) ([]profileBadgeViews.ProfileBadgeView, error) {
-	domainViews, err := s.profileBadgeQuery.Single.ByProfileID(ctx, profileID)
+	domainViews, err := s.profileBadgeQuery.List.ByProfileID(ctx, profileID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (s *Service) GetProfileBadgesByProfileID(ctx context.Context, profileID uui
 }
 
 func (s *Service) GetProfileBadgesByBadgeID(ctx context.Context, badgeID uuid.UUID) ([]profileBadgeViews.ProfileBadgeView, error) {
-	domainViews, err := s.profileBadgeQuery.Single.ByBadgeID(ctx, badgeID)
+	domainViews, err := s.profileBadgeQuery.List.ByBadgeID(ctx, badgeID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (s *Service) GetProfileBadgesByBadgeID(ctx context.Context, badgeID uuid.UU
 }
 
 func (s *Service) GetUserBadges(ctx context.Context, userID uuid.UUID) ([]profileBadgeViews.UserBadgeView, error) {
-	domainViews, err := s.profileBadgeQuery.Single.UserBadges(ctx, userID)
+	domainViews, err := s.profileBadgeQuery.List.UserBadges(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

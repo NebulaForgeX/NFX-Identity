@@ -1,4 +1,4 @@
-package single
+package list
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// ByUserID 根据 UserID 获取 UserRole 列表，实现 userRoleDomain.Single 接口
+// ByUserID 根据 UserID 获取 UserRole 列表，实现 userRoleDomain.List 接口
 func (h *Handler) ByUserID(ctx context.Context, userID uuid.UUID) ([]*userRoleDomainViews.UserRoleView, error) {
 	var items []models.UserRole
 	if err := h.db.WithContext(ctx).

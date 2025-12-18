@@ -17,7 +17,7 @@ func (s *Service) GetOccupation(ctx context.Context, occupationID uuid.UUID) (oc
 }
 
 func (s *Service) GetOccupationsByProfileID(ctx context.Context, profileID uuid.UUID) ([]occupationViews.OccupationView, error) {
-	domainViews, err := s.occupationQuery.Single.ByProfileID(ctx, profileID)
+	domainViews, err := s.occupationQuery.List.ByProfileID(ctx, profileID)
 	if err != nil {
 		return nil, err
 	}

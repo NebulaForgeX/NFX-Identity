@@ -21,13 +21,13 @@ type Query struct {
 // Single 定义单个查询相关的方法
 type Single interface {
 	ByID(ctx context.Context, userRoleID uuid.UUID) (*views.UserRoleView, error)
-	ByUserID(ctx context.Context, userID uuid.UUID) ([]*views.UserRoleView, error)
-	ByRoleID(ctx context.Context, roleID uuid.UUID) ([]*views.UserRoleView, error)
 }
 
 // List 定义列表查询相关的方法
 type List interface {
 	Generic(ctx context.Context, q ListQuery) ([]*views.UserRoleView, int64, error)
+	ByUserID(ctx context.Context, userID uuid.UUID) ([]*views.UserRoleView, error)
+	ByRoleID(ctx context.Context, roleID uuid.UUID) ([]*views.UserRoleView, error)
 }
 
 // Count 定义计数相关的方法

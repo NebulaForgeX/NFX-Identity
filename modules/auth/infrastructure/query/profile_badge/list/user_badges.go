@@ -1,4 +1,4 @@
-package single
+package list
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// UserBadges 根据 UserID 获取用户徽章，实现 profileBadgeDomain.Single 接口
+// UserBadges 根据 UserID 获取用户徽章，实现 profileBadgeDomain.List 接口
 func (h *Handler) UserBadges(ctx context.Context, userID uuid.UUID) ([]*userDomainViews.UserBadgesView, error) {
 	var items []views.UserBadgesView
 	if err := h.db.WithContext(ctx).

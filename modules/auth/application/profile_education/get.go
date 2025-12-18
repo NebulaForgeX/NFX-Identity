@@ -17,7 +17,7 @@ func (s *Service) GetEducation(ctx context.Context, educationID uuid.UUID) (educ
 }
 
 func (s *Service) GetEducationsByProfileID(ctx context.Context, profileID uuid.UUID) ([]educationViews.EducationView, error) {
-	domainViews, err := s.educationQuery.Single.ByProfileID(ctx, profileID)
+	domainViews, err := s.educationQuery.List.ByProfileID(ctx, profileID)
 	if err != nil {
 		return nil, err
 	}

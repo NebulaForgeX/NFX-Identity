@@ -17,7 +17,7 @@ func (s *Service) GetUserRole(ctx context.Context, userRoleID uuid.UUID) (userRo
 }
 
 func (s *Service) GetUserRolesByUserID(ctx context.Context, userID uuid.UUID) ([]userRoleViews.UserRoleView, error) {
-	domainViews, err := s.userRoleQuery.Single.ByUserID(ctx, userID)
+	domainViews, err := s.userRoleQuery.List.ByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (s *Service) GetUserRolesByUserID(ctx context.Context, userID uuid.UUID) ([
 }
 
 func (s *Service) GetUserRolesByRoleID(ctx context.Context, roleID uuid.UUID) ([]userRoleViews.UserRoleView, error) {
-	domainViews, err := s.userRoleQuery.Single.ByRoleID(ctx, roleID)
+	domainViews, err := s.userRoleQuery.List.ByRoleID(ctx, roleID)
 	if err != nil {
 		return nil, err
 	}

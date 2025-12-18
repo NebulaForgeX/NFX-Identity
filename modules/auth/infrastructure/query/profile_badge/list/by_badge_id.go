@@ -1,4 +1,4 @@
-package single
+package list
 
 import (
 	"context"
@@ -10,11 +10,11 @@ import (
 	"github.com/google/uuid"
 )
 
-// ByProfileID 根据 ProfileID 获取 ProfileBadge 列表，实现 profileBadgeDomain.Single 接口
-func (h *Handler) ByProfileID(ctx context.Context, profileID uuid.UUID) ([]*profileBadgeDomainViews.ProfileBadgeView, error) {
+// ByBadgeID 根据 BadgeID 获取 ProfileBadge 列表，实现 profileBadgeDomain.List 接口
+func (h *Handler) ByBadgeID(ctx context.Context, badgeID uuid.UUID) ([]*profileBadgeDomainViews.ProfileBadgeView, error) {
 	var items []models.ProfileBadge
 	if err := h.db.WithContext(ctx).
-		Where("profile_id = ?", profileID).
+		Where("badge_id = ?", badgeID).
 		Order("earned_at DESC").
 		Find(&items).Error; err != nil {
 		return nil, err

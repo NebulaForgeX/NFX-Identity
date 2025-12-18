@@ -21,12 +21,12 @@ type Query struct {
 // Single 定义单个查询相关的方法
 type Single interface {
 	ByID(ctx context.Context, educationID uuid.UUID) (*views.EducationView, error)
-	ByProfileID(ctx context.Context, profileID uuid.UUID) ([]*views.EducationView, error)
 }
 
 // List 定义列表查询相关的方法
 type List interface {
 	Generic(ctx context.Context, q ListQuery) ([]*views.EducationView, int64, error)
+	ByProfileID(ctx context.Context, profileID uuid.UUID) ([]*views.EducationView, error)
 }
 
 // Count 定义计数相关的方法

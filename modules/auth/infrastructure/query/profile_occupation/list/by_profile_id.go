@@ -1,4 +1,4 @@
-package single
+package list
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// ByProfileID 根据 ProfileID 获取 Occupation 列表，实现 occupationDomain.Single 接口
+// ByProfileID 根据 ProfileID 获取 Occupation 列表，实现 occupationDomain.List 接口
 func (h *Handler) ByProfileID(ctx context.Context, profileID uuid.UUID) ([]*occupationDomainViews.OccupationView, error) {
 	var items []models.Occupation
 	if err := h.db.WithContext(ctx).
