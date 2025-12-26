@@ -22,10 +22,8 @@ func NewRouter(app fiber.Router, tokenx *tokenx.Tokenx, handlers *Registry) *Rou
 }
 
 func (r *Router) RegisterRoutes() {
-	api := r.app.Group("/api/v1")
-
 	// ========== 公开路由（不需要 token） ==========
-	public := api.Group("/auth")
+	public := r.app.Group("/auth")
 	{
 		// 用户相关
 		public.Post("/login", r.handlers.User.Login)
@@ -34,7 +32,7 @@ func (r *Router) RegisterRoutes() {
 	}
 
 	// ========== 需要认证的路由（需要 token） ==========
-	auth := api.Group("/auth", middleware.AccessTokenMiddleware(r.tokenx))
+	auth := r.app.Group("/auth", middleware.AccessTokenMiddleware(r.tokenx))
 	{
 		// 用户相关
 		auth.Post("/users", r.handlers.User.Create)

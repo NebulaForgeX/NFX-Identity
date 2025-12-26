@@ -17,10 +17,10 @@ func NewRouter(app fiber.Router, handlers *Registry) *Router {
 }
 
 func (r *Router) RegisterRoutes() {
-	api := r.app.Group("/api/v1")
+	image := r.app.Group("/image")
 
 	// ========== 图片相关路由 ==========
-	images := api.Group("/images")
+	images := image.Group("/images")
 	{
 		images.Post("", r.handlers.Image.Create)
 		images.Get("", r.handlers.Image.GetAll)
@@ -30,7 +30,7 @@ func (r *Router) RegisterRoutes() {
 	}
 
 	// ========== 图片类型相关路由 ==========
-	imageTypes := api.Group("/image-types")
+	imageTypes := image.Group("/image-types")
 	{
 		imageTypes.Post("", r.handlers.ImageType.Create)
 		imageTypes.Get("", r.handlers.ImageType.GetAll)

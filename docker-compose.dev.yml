@@ -1,7 +1,26 @@
 name: nfx-id-dev
 
 services:
-  #! Auth API Service (Dev)
+  #! Traefik Reverse Proxy
+  reverse-proxy:
+    image: traefik:latest
+    container_name: NebulaID-Reverse-Proxy-Dev
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.traefik.address=:8080
+    ports:
+      - "10187:80"   # web entry
+      - "10189:8080" # Traefik Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - nfxid
+    restart: unless-stopped
+
+  #! Auth API Service
   auth-api:
     image: nfxid-auth-api:dev
     container_name: NebulaID-Auth-API-Dev
@@ -12,6 +31,17 @@ services:
     environment:
       - ENV=dev
     command: [ "air", "-c", "inputs/auth/api/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.auth-api.entrypoints: web
+      traefik.http.routers.auth-api.rule: PathPrefix(`/auth`)
+      traefik.http.services.auth-api.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
     develop:
       watch:
         - action: sync
@@ -49,109 +79,13 @@ services:
           target: /app/go.sum
         - action: rebuild
           path: inputs/auth/api/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
     networks:
       - nfxid
 
-  #! Auth Pipeline Service (Dev)
-  auth-pipeline:
-    image: nfxid-auth-pipeline:dev
-    container_name: NebulaID-Auth-Pipeline-Dev
-    build:
-      context: .
-      dockerfile: inputs/auth/pipeline/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    command: [ "air", "-c", "inputs/auth/pipeline/.air.toml" ]
-    develop:
-      watch:
-        - action: sync
-          path: inputs/auth/pipeline
-          target: /app/inputs/auth/pipeline
-        - action: sync
-          path: inputs/auth/config
-          target: /app/inputs/auth/config
-        - action: sync
-          path: modules/auth
-          target: /app/modules/auth
-        - action: sync
-          path: modules/image
-          target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/auth/pipeline/Dockerfile
-
-  #! Auth Connection Service (Dev)
-  auth-connection:
-    image: nfxid-auth-connection:dev
-    container_name: NebulaID-Auth-Connection-Dev
-    build:
-      context: .
-      dockerfile: inputs/auth/connection/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-    command: [ "air", "-c", "inputs/auth/connection/.air.toml" ]
-    develop:
-      watch:
-        - action: sync
-          path: inputs/auth/connection
-          target: /app/inputs/auth/connection
-        - action: sync
-          path: inputs/auth/config
-          target: /app/inputs/auth/config
-        - action: sync
-          path: modules/auth
-          target: /app/modules/auth
-        - action: sync
-          path: modules/image
-          target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/auth/connection/Dockerfile
-
-  #! Image API Service (Dev)
+  #! Image API Service
   image-api:
     image: nfxid-image-api:dev
     container_name: NebulaID-Image-API-Dev
@@ -162,6 +96,17 @@ services:
     environment:
       - ENV=dev
     command: [ "air", "-c", "inputs/image/api/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.image-api.entrypoints: web
+      traefik.http.routers.image-api.rule: PathPrefix(`/image`)
+      traefik.http.services.image-api.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
     develop:
       watch:
         - action: sync
@@ -196,101 +141,13 @@ services:
           target: /app/go.sum
         - action: rebuild
           path: inputs/image/api/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfxid
 
-  #! Image Pipeline Service (Dev)
-  image-pipeline:
-    image: nfxid-image-pipeline:dev
-    container_name: NebulaID-Image-Pipeline-Dev
-    build:
-      context: .
-      dockerfile: inputs/image/pipeline/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    command: [ "air", "-c", "inputs/image/pipeline/.air.toml" ]
-    develop:
-      watch:
-        - action: sync
-          path: inputs/image/pipeline
-          target: /app/inputs/image/pipeline
-        - action: sync
-          path: inputs/image/config
-          target: /app/inputs/image/config
-        - action: sync
-          path: modules/image
-          target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/image/pipeline/Dockerfile
-
-  #! Image Connection Service (Dev)
-  image-connection:
-    image: nfxid-image-connection:dev
-    container_name: NebulaID-Image-Connection-Dev
-    build:
-      context: .
-      dockerfile: inputs/image/connection/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-    command: [ "air", "-c", "inputs/image/connection/.air.toml" ]
-    develop:
-      watch:
-        - action: sync
-          path: inputs/image/connection
-          target: /app/inputs/image/connection
-        - action: sync
-          path: inputs/image/config
-          target: /app/inputs/image/config
-        - action: sync
-          path: modules/image
-          target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/image/connection/Dockerfile
-
-  #! Permission API Service (Dev)
+  #! Permission API Service
   permission-api:
     image: nfxid-permission-api:dev
     container_name: NebulaID-Permission-API-Dev
@@ -301,6 +158,17 @@ services:
     environment:
       - ENV=dev
     command: [ "air", "-c", "inputs/permission/api/.air.toml" ]
+    expose:
+      - "8081"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.permission-api.entrypoints: web
+      traefik.http.routers.permission-api.rule: PathPrefix(`/permission`)
+      traefik.http.services.permission-api.loadbalancer.server.port: "8081"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
     develop:
       watch:
         - action: sync
@@ -338,108 +206,13 @@ services:
           target: /app/go.sum
         - action: rebuild
           path: inputs/permission/api/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
     networks:
       - nfxid
 
-  #! Permission Pipeline Service (Dev)
-  permission-pipeline:
-    image: nfxid-permission-pipeline:dev
-    container_name: NebulaID-Permission-Pipeline-Dev
-    build:
-      context: .
-      dockerfile: inputs/permission/pipeline/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    command: [ "air", "-c", "inputs/permission/pipeline/.air.toml" ]
-    develop:
-      watch:
-        - action: sync
-          path: inputs/permission/pipeline
-          target: /app/inputs/permission/pipeline
-        - action: sync
-          path: inputs/permission/config
-          target: /app/inputs/permission/config
-        - action: sync
-          path: modules/permission
-          target: /app/modules/permission
-        - action: sync
-          path: modules/auth
-          target: /app/modules/auth
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/permission/pipeline/Dockerfile
-    networks:
-      - nfxid
-
-  #! Permission Connection Service (Dev)
-  permission-connection:
-    image: nfxid-permission-connection:dev
-    container_name: NebulaID-Permission-Connection-Dev
-    build:
-      context: .
-      dockerfile: inputs/permission/connection/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-    command: [ "air", "-c", "inputs/permission/connection/.air.toml" ]
-    develop:
-      watch:
-        - action: sync
-          path: inputs/permission/connection
-          target: /app/inputs/permission/connection
-        - action: sync
-          path: inputs/permission/config
-          target: /app/inputs/permission/config
-        - action: sync
-          path: modules/permission
-          target: /app/modules/permission
-        - action: sync
-          path: modules/auth
-          target: /app/modules/auth
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/permission/connection/Dockerfile
-    networks:
-      - nfxid
+networks:
+  nfxid:
+    name: nfxid
+    driver: bridge

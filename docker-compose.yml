@@ -44,17 +44,18 @@ services:
       - "8080"
     labels:
       - "traefik.enable=true"
+      # 服务定义
+      - "traefik.http.services.auth-api.loadbalancer.server.port=8080"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.auth-api-secure.rule=Host(`auth.lucaslyu.com`)"
+      - "traefik.http.routers.auth-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/auth`)"
       - "traefik.http.routers.auth-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.auth-api-secure.service=auth-api"
       - "traefik.http.routers.auth-api-secure.tls=true"
       - "traefik.http.routers.auth-api-secure.tls.certresolver=letsencrypt"
-      - "traefik.http.services.auth-api.loadbalancer.server.port=8080"
       # 内网 HTTP 路由（通过端口访问，允许任何 Host）
-      - "traefik.http.routers.auth-api-insecure.rule=HostRegexp(`.*`)"
+      - "traefik.http.routers.auth-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/auth`)"
       - "traefik.http.routers.auth-api-insecure.entrypoints=web"
       - "traefik.http.routers.auth-api-insecure.service=auth-api"
-      - "traefik.http.routers.auth-api-insecure.priority=1"
     environment:
       - ENV=prod
     volumes:
@@ -121,17 +122,18 @@ services:
       - "8080"
     labels:
       - "traefik.enable=true"
+      # 服务定义
+      - "traefik.http.services.image-api.loadbalancer.server.port=8080"
       # 外网 HTTPS 路由
       - "traefik.http.routers.image-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/image`)"
       - "traefik.http.routers.image-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.image-api-secure.service=image-api"
       - "traefik.http.routers.image-api-secure.tls=true"
       - "traefik.http.routers.image-api-secure.tls.certresolver=letsencrypt"
-      - "traefik.http.services.image-api.loadbalancer.server.port=8080"
       # 内网 HTTP 路由
       - "traefik.http.routers.image-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/image`)"
       - "traefik.http.routers.image-api-insecure.entrypoints=web"
       - "traefik.http.routers.image-api-insecure.service=image-api"
-      - "traefik.http.routers.image-api-insecure.priority=1"
     environment:
       - ENV=prod
     volumes:
@@ -198,17 +200,18 @@ services:
       - "8081"
     labels:
       - "traefik.enable=true"
+      # 服务定义
+      - "traefik.http.services.permission-api.loadbalancer.server.port=8081"
       # 外网 HTTPS 路由
       - "traefik.http.routers.permission-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/permission`)"
       - "traefik.http.routers.permission-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.permission-api-secure.service=permission-api"
       - "traefik.http.routers.permission-api-secure.tls=true"
       - "traefik.http.routers.permission-api-secure.tls.certresolver=letsencrypt"
-      - "traefik.http.services.permission-api.loadbalancer.server.port=8081"
       # 内网 HTTP 路由
       - "traefik.http.routers.permission-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/permission`)"
       - "traefik.http.routers.permission-api-insecure.entrypoints=web"
       - "traefik.http.routers.permission-api-insecure.service=permission-api"
-      - "traefik.http.routers.permission-api-insecure.priority=1"
     environment:
       - ENV=prod
     volumes:
