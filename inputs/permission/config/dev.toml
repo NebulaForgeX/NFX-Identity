@@ -9,7 +9,7 @@
     port = 10105
     user = "postgres"
     password = "Lucas127."
-    dbname = "lyuauth_dev"
+    dbname = "nfxid_dev"  # nfxid_dev
     sslmode = "disable"
     timezone = "UTC"
     logger_level = "warn"
@@ -30,7 +30,7 @@
     user = "admin"
     password = "Lucas127."
     auth_source = "admin"
-    database = "lyupermission_dev"
+    database = "nfxid_dev"  # nfxid_dev
     min_pool_size = 1
     max_pool_size = 10
     connect_timeout = "5s"

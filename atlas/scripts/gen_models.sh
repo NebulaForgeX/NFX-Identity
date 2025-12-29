@@ -9,8 +9,18 @@ GEN_DIR="${ATLAS_DIR}/gen/models"
 
 # Source Go environment if available
 if [ -f /volume1/use-menv.sh ]; then
-  source /volume1/use-menv.sh
+  source /volume1/use-menv.sh >/dev/null 2>&1 || true
 fi
+
+# Ensure goimports is in PATH (it's installed in $HOME/go/bin)
+# This must be done before the 'need' check below
+# Try multiple possible HOME locations (root user might have different HOME)
+for home_dir in "$HOME" "/home/LucasAsustor" "/root"; do
+  if [ -d "$home_dir/go/bin" ] && [ -f "$home_dir/go/bin/goimports" ]; then
+    export PATH="$PATH:$home_dir/go/bin"
+    break
+  fi
+done
 
 if [[ -z "${POSTGRES_USER}" ]]; then echo "Error: POSTGRES_USER environment variable is required"; exit 1; fi
 if [[ -z "${POSTGRES_PASSWORD}" ]]; then echo "Error: POSTGRES_PASSWORD environment variable is required"; exit 1; fi
@@ -21,6 +31,9 @@ if [[ -z "${POSTGRES_DB_PROD}" ]]; then echo "Error: POSTGRES_DB_PROD environmen
 if [[ -z "${POSTGRES_DB_SHADOW}" ]]; then echo "Error: POSTGRES_DB_SHADOW environment variable is required"; exit 1; fi
 if [[ -z "${ATLAS_ENV}" ]]; then echo "Error: ATLAS_ENV environment variable is required"; exit 1; fi
 if [[ -z "${RESOURCES_DOCKER_COMPOSE}" ]]; then echo "Error: RESOURCES_DOCKER_COMPOSE environment variable is required"; exit 1; fi
+
+# POSTGRES_CONTAINER_NAME is optional, defaults to NFX-Stack-PostgreSQL
+POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
 
 POSTGRES_USER="${POSTGRES_USER}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
@@ -37,6 +50,18 @@ fi
 
 # --- pre-check ---
 need() { command -v "$1" >/dev/null 2>&1 || { echo "Missing dependency: $1" >&2; exit 1; }; }
+
+# Double-check PATH for goimports (in case source didn't work)
+# Try multiple possible HOME locations
+if ! command -v goimports >/dev/null 2>&1; then
+  for home_dir in "$HOME" "/home/LucasAsustor" "/root"; do
+    if [ -f "$home_dir/go/bin/goimports" ]; then
+      export PATH="$PATH:$home_dir/go/bin"
+      break
+    fi
+  done
+fi
+
 need goimports
 need gofmt
 
@@ -51,7 +76,10 @@ fi
 MODPATH="$(go list -m 2>/dev/null || echo "")"
 [[ -n "$MODPATH" ]] && export GOIMPORTSLOCAL="$MODPATH"
 
-DOCKER_COMPOSE=(sudo docker compose -f "${RESOURCES_DOCKER_COMPOSE}")
+# Use direct docker exec with container name (same as pipeline script)
+# Get container name from environment or use default
+POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
+
 ATLAS_ENV_ARGS=(
   -e "POSTGRES_USER=${POSTGRES_USER}"
   -e "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
@@ -64,7 +92,7 @@ ATLAS_ENV_ARGS=(
 # -------------------------------
 # Ensure shadow DB exists
 # -------------------------------
-"${DOCKER_COMPOSE[@]}" exec -T postgresql psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" 2>/dev/null || true
+docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1 || true
 
 # -------------------------------
 # Run Atlas inspect + generate

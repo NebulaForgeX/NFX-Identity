@@ -55,6 +55,7 @@ if (-not $env:POSTGRES_PORT) { Write-Host "Error: POSTGRES_PORT environment vari
 if (-not $env:POSTGRES_DB_DEV) { Write-Host "Error: POSTGRES_DB_DEV environment variable is required"; exit 1 }
 if (-not $env:POSTGRES_DB_PROD) { Write-Host "Error: POSTGRES_DB_PROD environment variable is required"; exit 1 }
 if (-not $env:POSTGRES_DB_SHADOW) { Write-Host "Error: POSTGRES_DB_SHADOW environment variable is required"; exit 1 }
+if (-not $env:POSTGRES_CONTAINER_NAME) { Write-Host "Error: POSTGRES_CONTAINER_NAME environment variable is required"; exit 1 }
 
 $RESOURCES_DOCKER_COMPOSE = $env:RESOURCES_DOCKER_COMPOSE
 $POSTGRES_USER = $env:POSTGRES_USER
@@ -64,6 +65,7 @@ $POSTGRES_PORT = $env:POSTGRES_PORT
 $POSTGRES_DB_DEV = $env:POSTGRES_DB_DEV
 $POSTGRES_DB_PROD = $env:POSTGRES_DB_PROD
 $POSTGRES_DB_SHADOW = $env:POSTGRES_DB_SHADOW
+$POSTGRES_CONTAINER_NAME = $env:POSTGRES_CONTAINER_NAME
 $ATLAS_CONFIG_PATH = $env:ATLAS_CONFIG_PATH
 
 # 确定目标数据库
@@ -73,9 +75,9 @@ $TARGET_DB = if ($ENV -eq "prod") { $POSTGRES_DB_PROD } else { $POSTGRES_DB_DEV 
 function Ensure-PostgreSQLRunning {
     Write-Header "Checking PostgreSQL service"
     
-    $output = & docker compose -f $RESOURCES_DOCKER_COMPOSE ps postgresql 2>&1
+    $output = & docker ps --filter "name=$POSTGRES_CONTAINER_NAME" --format "{{.Status}}" 2>&1
     if (-not ($output | Select-String -Pattern 'Up' -Quiet)) {
-        Write-Host "PostgreSQL should be running in $RESOURCES_DOCKER_COMPOSE"
+        Write-Host "PostgreSQL container $POSTGRES_CONTAINER_NAME should be running"
         Write-Host "Please start PostgreSQL service first"
         exit 1
     }
@@ -86,13 +88,13 @@ function Ensure-PostgreSQLRunning {
 function Clean-ShadowConnections {
     Write-Header "Cleaning shadow database connections"
     
-    # 强制断开所有连接到 shadow 数据库的会话（使用 Docker 网络内的服务）
-    & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$POSTGRES_DB_SHADOW';" 2>&1 | Out-Null
+    # 强制断开所有连接到 shadow 数据库的会话
+    & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$POSTGRES_DB_SHADOW';" 2>&1 | Out-Null
     
     Start-Sleep -Seconds 2
     
     # 再次检查并断开任何残留连接
-    & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$POSTGRES_DB_SHADOW';" 2>&1 | Out-Null
+    & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$POSTGRES_DB_SHADOW';" 2>&1 | Out-Null
 }
 
 # 函数：清理并重建 Shadow 数据库（用于 diff）
@@ -103,26 +105,26 @@ function Clean-DiffDatabase {
     Clean-ShadowConnections
     
     # 检查数据库是否存在，如果存在则 DROP
-    $result = & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$POSTGRES_DB_SHADOW'" 2>&1
+    $result = & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$POSTGRES_DB_SHADOW'" 2>&1
     $result = $result -join "`n"
     if ($result -match '\s*1\s*') {
         Write-Host "Dropping existing shadow database..."
-        & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -c "DROP DATABASE $POSTGRES_DB_SHADOW;" 2>&1 | Out-Null
+        & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -c "DROP DATABASE $POSTGRES_DB_SHADOW;" 2>&1 | Out-Null
     }
     
     # 创建 shadow 数据库
     Write-Host "Creating shadow database..."
-    $createResult = & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -c "CREATE DATABASE $POSTGRES_DB_SHADOW;" 2>&1
+    $createResult = & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -c "CREATE DATABASE $POSTGRES_DB_SHADOW;" 2>&1
     if ($LASTEXITCODE -ne 0 -and $createResult -notmatch "already exists") {
         Write-Host "Warning: Failed to create shadow database: $createResult"
     }
     
     # 确保目标数据库存在
-    $targetResult = & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$TARGET_DB'" 2>&1
+    $targetResult = & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$TARGET_DB'" 2>&1
     $targetResult = $targetResult -join "`n"
     if (-not ($targetResult -match '\s*1\s*')) {
         Write-Host "Creating target database: $TARGET_DB"
-        $createTargetResult = & docker compose -f $RESOURCES_DOCKER_COMPOSE exec -T postgresql psql -U $POSTGRES_USER -d postgres -c "CREATE DATABASE $TARGET_DB;" 2>&1
+        $createTargetResult = & docker exec -T $POSTGRES_CONTAINER_NAME psql -U $POSTGRES_USER -d postgres -c "CREATE DATABASE $TARGET_DB;" 2>&1
         if ($LASTEXITCODE -ne 0 -and $createTargetResult -notmatch "already exists") {
             Write-Host "Warning: Failed to create target database: $createTargetResult"
         }

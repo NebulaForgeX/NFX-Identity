@@ -10,13 +10,14 @@ vars:
   PROTO_OUT_DIR: protos/gen
   GO_VERSION: "1.24.3"
   MODULE: "auth"
-  POSTGRES_HOST: "localhost"
+  POSTGRES_HOST: "192.168.1.64"
   POSTGRES_PORT: "10105"
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: "Lucas127."
-  POSTGRES_DB_DEV: "lyuauth_dev"
-  POSTGRES_DB_PROD: "lyuauth"
-  POSTGRES_DB_SHADOW: "lyuauth_diff"
+  POSTGRES_DB_DEV: "nfxid_dev"
+  POSTGRES_DB_PROD: "nfxid"
+  POSTGRES_DB_SHADOW: "nfxid_diff"
+  POSTGRES_CONTAINER_NAME: "NFX-Stack-PostgreSQL"
   ATLAS_ENV_FLAGS: >-
     -e POSTGRES_USER={{.POSTGRES_USER}}
     -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}}
@@ -43,6 +44,7 @@ tasks:
       - go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
       - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
       - go install github.com/bufbuild/buf/cmd/buf@v1.49.0
+      - go install golang.org/x/tools/cmd/goimports@latest
     silent: false
 
   proto:mod:update:
@@ -125,6 +127,8 @@ tasks:
         POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
         POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
         POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
+        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
         ATLAS_ENV="{{.ATLAS_ENV}}" \
         bash atlas/scripts/gen_models.sh
     silent: false
@@ -140,6 +144,8 @@ tasks:
         POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
         POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
         POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
+        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
         ATLAS_ENV="{{.ATLAS_ENV}}" \
         bash atlas/scripts/gen_views.sh
     silent: false
@@ -155,6 +161,7 @@ tasks:
         POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
         POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
         POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
+        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
         ATLAS_ENV="{{.ATLAS_ENV}}" \
         bash atlas/scripts/gen_enums.sh
     silent: false
@@ -211,6 +218,7 @@ tasks:
       POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
       POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
       POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
+      POSTGRES_CONTAINER_NAME: "{{.POSTGRES_CONTAINER_NAME}}"
       RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
       ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
     cmds:
@@ -226,6 +234,7 @@ tasks:
       POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
       POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
       POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
+      POSTGRES_CONTAINER_NAME: "{{.POSTGRES_CONTAINER_NAME}}"
       RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
       ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
     cmds:
