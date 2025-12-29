@@ -35,7 +35,7 @@ NFX ID consists of three main services, each serving different purposes:
 - **Badge & Achievement System** - User badges and achievements
 - **Image Management** - Avatar and profile image handling
 
-**API Endpoints**: `/api/v1/auth/*`
+**API Endpoints**: `/auth/*`
 
 **Login Flow**: 
 - Standard user authentication (username/email/phone + password)
@@ -58,7 +58,7 @@ NFX ID consists of three main services, each serving different purposes:
 - **Authorization Code System** - Generate codes for employee registration
 - **Permission Checking** - Verify user permissions
 
-**API Endpoints**: `/api/v1/permission/*`
+**API Endpoints**: `/permission/*`
 
 **Login Flow**:
 - Admin authentication (username/email/phone + password)
@@ -83,19 +83,19 @@ NFX ID consists of three main services, each serving different purposes:
 - **Image Variants** - Multiple sizes and formats
 - **Image Tags** - Flexible tagging system
 
-**API Endpoints**: `/api/v1/image/*`
+**API Endpoints**: `/image/*`
 
 ---
 
 ## 🔑 Key Differences: Auth vs Permission Login
 
-### Auth Service Login (`/api/v1/auth/login`)
+### Auth Service Login (`/auth/login`)
 - **Target**: External backend services and client applications
 - **Returns**: JWT tokens (access token + refresh token), basic user info
 - **Use Case**: Standard user authentication for external services
 - **No Permission Info**: Does not include permission details in response
 
-### Permission Service Login (`/api/v1/permission/login`)
+### Permission Service Login (`/permission/login`)
 - **Target**: NFX Console (Identity-Admin) control panel
 - **Returns**: JWT tokens **plus full permission list and permission tags**
 - **Use Case**: Admin panel authentication with permission-aware access control
@@ -415,8 +415,8 @@ Configuration is loaded via environment variable `ENV=dev|prod`.
 
 Use the **Auth Service** APIs:
 
-1. **User Authentication**: Use `/api/v1/auth/login` for standard user login
-2. **User Management**: Use `/api/v1/auth/*` endpoints for user operations
+1. **User Authentication**: Use `/auth/login` for standard user login
+2. **User Management**: Use `/auth/*` endpoints for user operations
 3. **JWT Validation**: Validate tokens issued by Auth service
 4. **gRPC Client**: Connect to Connection services for inter-service communication
 
@@ -424,15 +424,15 @@ Use the **Auth Service** APIs:
 
 Use the **Permission Service** APIs:
 
-1. **Admin Login**: Use `/api/v1/permission/login` for admin authentication (returns permissions)
-2. **Permission Management**: Use `/api/v1/permission/permissions/*` for permission CRUD
-3. **User Permissions**: Use `/api/v1/permission/user-permissions/*` for permission assignment
-4. **Authorization Codes**: Use `/api/v1/permission/authorization-codes/*` for code management
+1. **Admin Login**: Use `/permission/login` for admin authentication (returns permissions)
+2. **Permission Management**: Use `/permission/permissions/*` for permission CRUD
+3. **User Permissions**: Use `/permission/user-permissions/*` for permission assignment
+4. **Authorization Codes**: Use `/permission/authorization-codes/*` for code management
 
 ### Example: External Service Login (Auth Service)
 
 ```go
-// POST /api/v1/auth/login
+// POST /auth/login
 {
   "identifier": "user@example.com",  // or username, or phone
   "password": "password123"
@@ -449,7 +449,7 @@ Use the **Permission Service** APIs:
 ### Example: Admin Panel Login (Permission Service)
 
 ```go
-// POST /api/v1/permission/login
+// POST /permission/login
 {
   "identifier": "admin@company.com",
   "password": "password123"
@@ -517,8 +517,8 @@ The system default Go 1.21.6 does not meet dependency requirements.
 
 | Service | Purpose | Target Users | Login Endpoint | Login Response Includes |
 |---------|---------|--------------|----------------|------------------------|
-| **Auth** | External user API | External backends, client apps | `/api/v1/auth/login` | JWT tokens, basic user info |
-| **Permission** | Admin console API | NFX Console (Identity-Admin) | `/api/v1/permission/login` | JWT tokens, user info, **permissions**, **permission tags** |
+| **Auth** | External user API | External backends, client apps | `/auth/login` | JWT tokens, basic user info |
+| **Permission** | Admin console API | NFX Console (Identity-Admin) | `/permission/login` | JWT tokens, user info, **permissions**, **permission tags** |
 | **Image** | Image storage | All services | N/A (no login) | N/A |
 
 ---

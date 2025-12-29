@@ -2,7 +2,7 @@
 
 **NFX ID = NebulaForgeX Identity Platform**
 
-This document provides a comprehensive overview of the NFX ID project structure, architecture layers, and module organization.
+This document provides a comprehensive overview of the NFX ID project structure, architecture layers, module organization, and API routing.
 
 ---
 
@@ -45,6 +45,7 @@ NFX ID follows **Clean Architecture** with clear separation of concerns and **CQ
 │  - gRPC handlers                                            │
 │  - Event handlers (Kafka consumers)                         │
 │  - DTOs (Data Transfer Objects)                             │
+│  - Middleware (Auth, CORS, Recovery)                        │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -53,6 +54,7 @@ NFX ID follows **Clean Architecture** with clear separation of concerns and **CQ
 │  - Queries (CQRS Read Side)                                 │
 │  - Application services                                     │
 │  - View models (Application Views)                          │
+│  - Business logic orchestration                             │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -65,6 +67,7 @@ NFX ID follows **Clean Architecture** with clear separation of concerns and **CQ
 │  - Repository interfaces (CQRS Write Side)                  │
 │  - Domain errors                                            │
 │  - Domain views                                             │
+│  - Factories                                                │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -75,6 +78,7 @@ NFX ID follows **Clean Architecture** with clear separation of concerns and **CQ
 │  - Cache implementations (Redis)                            │
 │  - Event bus (Kafka)                                        │
 │  - External service clients (gRPC)                          │
+│  - Mappers (Entity ↔ Model)                                 │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -90,34 +94,33 @@ Each business module (e.g., `auth`, `image`, `permission`) follows the same laye
 modules/{module}/
 ├── application/          # Application layer (use cases)
 │   ├── {entity}/         # Per-entity application logic
-│   │   ├── commands/     # Command definitions (CQRS Write)
-│   │   ├── queries/      # Query definitions (CQRS Read)
-│   │   ├── views/        # Application view models
 │   │   ├── create.go     # Create use case
 │   │   ├── update.go     # Update use case
 │   │   ├── delete.go     # Delete use case
 │   │   ├── get.go        # Get use case
-│   │   └── service.go    # Application service
+│   │   ├── list.go       # List use case
+│   │   └── service.go    # Application service (orchestrates domain)
 │   └── ...
 ├── domain/               # Domain layer (business logic)
 │   ├── {entity}/         # Per-entity domain logic
-│   │   ├── entity.go     # Domain entity
-│   │   ├── behavior.go   # Domain behaviors
-│   │   ├── factory.go    # Entity factory
-│   │   ├── query.go       # Query interface (CQRS Read Side)
+│   │   ├── entity.go     # Domain entity (core business object)
+│   │   ├── behavior.go   # Domain behaviors (business rules)
+│   │   ├── factory.go    # Entity factory (ensures valid creation)
+│   │   ├── query.go      # Query interface (CQRS Read Side)
+│   │   │                  #   - Query struct with Single/List/Count
 │   │   │                  #   - Single interface (returns *View)
 │   │   │                  #   - List interface (returns []*View)
 │   │   │                  #   - ListQuery struct (pagination/sorting)
 │   │   ├── repo.go        # Repository interface (CQRS Write Side)
 │   │   │                  #   - Repo struct with sub-interfaces:
-│   │   │                  #     * Create
-│   │   │                  #     * Get
-│   │   │                  #     * Check
-│   │   │                  #     * Update
-│   │   │                  #     * Delete
-│   │   ├── validation.go # Domain validation
-│   │   ├── errors/        # Domain errors
-│   │   └── views/         # Domain view models
+│   │   │                  #     * Create (New)
+│   │   │                  #     * Get (ByID, ByUsername, etc.)
+│   │   │                  #     * Check (existence checks)
+│   │   │                  #     * Update (Generic, Password, etc.)
+│   │   │                  #     * Delete (ByID)
+│   │   ├── validation.go # Domain validation rules
+│   │   ├── errors/        # Domain-specific errors
+│   │   └── views/         # Domain view models (read models)
 │   └── ...
 ├── infrastructure/       # Infrastructure layer
 │   ├── query/            # Query implementations (CQRS Read Side)
@@ -126,12 +129,14 @@ modules/{module}/
 │   │   │   ├── single/   # Single query handlers
 │   │   │   │   ├── query.go
 │   │   │   │   ├── by_id.go
+│   │   │   │   ├── by_username.go
 │   │   │   │   └── ...
-│   │   │   └── list/      # List query handlers
-│   │   │       ├── query.go
-│   │   │       ├── generic.go
-│   │   │       └── ...
-│   │   └── mapper/       # Query mappers
+│   │   │   ├── list/      # List query handlers
+│   │   │   │   ├── query.go
+│   │   │   │   ├── generic.go
+│   │   │   │   └── ...
+│   │   │   └── mapper/   # Query mappers (Model → View)
+│   │   └── ...
 │   ├── repository/       # Repository implementations (CQRS Write Side)
 │   │   ├── {entity}/     # Per-entity repository implementations
 │   │   │   ├── repo.go   # Repository factory (creates *domain.Repo)
@@ -141,42 +146,46 @@ modules/{module}/
 │   │   │   ├── get/      # Get handlers
 │   │   │   │   ├── repo.go
 │   │   │   │   ├── by_id.go
+│   │   │   │   ├── by_username.go
 │   │   │   │   └── ...
 │   │   │   ├── check/    # Check handlers
 │   │   │   │   ├── repo.go
+│   │   │   │   ├── by_id.go
 │   │   │   │   └── ...
 │   │   │   ├── update/   # Update handlers
 │   │   │   │   ├── repo.go
-│   │   │   │   └── generic.go
+│   │   │   │   ├── generic.go
+│   │   │   │   ├── password.go
+│   │   │   │   └── ...
 │   │   │   └── delete/   # Delete handlers
 │   │   │       ├── repo.go
 │   │   │       └── by_id.go
-│   │   └── mapper/       # Entity mappers
+│   │   └── mapper/       # Entity mappers (Entity ↔ Model)
 │   ├── rdb/              # Database models & views
-│   │   ├── models/       # GORM models
-│   │   └── views/        # Database views
+│   │   ├── models/       # GORM models (write models)
+│   │   └── views/        # Database views (read models)
 │   └── grpcclient/       # gRPC clients to other services
 ├── interfaces/           # Interface layer
 │   ├── http/             # HTTP handlers
-│   │   ├── handler/      # Request handlers
-│   │   ├── dto/          # Data Transfer Objects
-│   │   ├── middleware/   # HTTP middleware
+│   │   ├── handler/      # Request handlers (per entity)
+│   │   ├── dto/          # Data Transfer Objects (request/response)
+│   │   ├── middleware/   # HTTP middleware (auth, CORS, etc.)
 │   │   ├── router.go     # Route definitions
-│   │   └── server.go     # HTTP server setup
+│   │   └── server.go     # HTTP server setup (Fiber app)
 │   ├── grpc/             # gRPC handlers
-│   │   ├── handler/      # gRPC handlers
-│   │   ├── mapper/       # gRPC mappers
+│   │   ├── handler/      # gRPC handlers (per service method)
+│   │   ├── mapper/       # gRPC mappers (Domain ↔ Protobuf)
 │   │   └── server.go     # gRPC server setup
 │   └── eventbus/         # Event handlers
-│       ├── handler/      # Event handlers
+│       ├── handler/      # Event handlers (per event type)
 │       ├── registry.go   # Event handler registry
-│       └── server.go     # Event bus server
+│       └── server.go     # Event bus server (Kafka consumer)
 ├── config/               # Module configuration
 │   ├── config.go         # Config loader
 │   └── types.go          # Config types
 └── server/               # Server wiring
-    ├── server.go         # Server initialization
-    └── wiring.go         # Dependency injection
+    ├── server.go         # Server initialization (HTTP/gRPC/Pipeline)
+    └── wiring.go         # Dependency injection (DI container)
 ```
 
 ---
@@ -191,10 +200,12 @@ modules/{module}/
 type Query struct {
     Single Single
     List   List
+    Count  Count  // Optional
 }
 
 type Single interface {
     ByID(ctx context.Context, id uuid.UUID) (*views.EntityView, error)
+    ByUsername(ctx context.Context, username string) (*views.EntityView, error)
     // Other single-return methods
 }
 
@@ -202,13 +213,20 @@ type List interface {
     Generic(ctx context.Context, q ListQuery) ([]*views.EntityView, int64, error)
     // Other list-return methods
 }
+
+type Count interface {
+    All(ctx context.Context) (int64, error)
+}
 ```
 
 **Infrastructure Implementation** (`infrastructure/query/{entity}/`):
 
+- `query.go` - Factory that creates `*domain.Query` with all implementations
 - `single/` - Handlers for `Single` interface (return `*View`)
+  - `by_id.go`, `by_username.go`, etc.
 - `list/` - Handlers for `List` interface (return `[]*View`)
-- `query.go` - Factory that creates `*domain.Query`
+  - `generic.go` - Generic list with pagination/sorting/filtering
+- `mapper/` - Mappers that convert database models to domain views
 
 ### Repository Layer (Write Side)
 
@@ -229,32 +247,42 @@ type Create interface {
 
 type Get interface {
     ByID(ctx context.Context, id uuid.UUID) (*Entity, error)
+    ByUsername(ctx context.Context, username string) (*Entity, error)
     // Other get methods
 }
 
 type Check interface {
     ByID(ctx context.Context, id uuid.UUID) (bool, error)
+    ByUsername(ctx context.Context, username string) (bool, error)
     // Other check methods
 }
 
 type Update interface {
     Generic(ctx context.Context, e *Entity) error
+    Password(ctx context.Context, userID uuid.UUID, hashedPassword string) error
+    // Other update methods
 }
 
 type Delete interface {
     ByID(ctx context.Context, id uuid.UUID) error
-    // Other delete methods
 }
 ```
 
 **Infrastructure Implementation** (`infrastructure/repository/{entity}/`):
 
+- `repo.go` - Factory that creates `*domain.Repo` with all implementations
 - `create/` - Handlers for `Create` interface
+  - `new.go` - Creates new entity
 - `get/` - Handlers for `Get` interface
+  - `by_id.go`, `by_username.go`, etc.
 - `check/` - Handlers for `Check` interface
+  - `by_id.go`, `by_username.go`, etc.
 - `update/` - Handlers for `Update` interface
+  - `generic.go` - Generic update
+  - `password.go` - Password-specific update
 - `delete/` - Handlers for `Delete` interface
-- `repo.go` - Factory that creates `*domain.Repo`
+  - `by_id.go` - Delete by ID
+- `mapper/` - Mappers that convert between domain entities and database models
 
 ---
 
@@ -268,22 +296,83 @@ type Delete interface {
 - `user` - User accounts, authentication
 - `profile` - User profiles with rich metadata
 - `role` - User roles
+- `user_role` - User-role associations
 - `badge` - Achievement badges
 - `profile_badge` - User badge associations
-- `education` - Education history
-- `occupation` - Occupation history
+- `profile_education` - Education history
+- `profile_occupation` - Occupation history
 
 **Services**:
 - **API Service** (`inputs/auth/api/`) - HTTP REST API
 - **Connection Service** (`inputs/auth/connection/`) - gRPC service
 - **Pipeline Service** (`inputs/auth/pipeline/`) - Kafka event consumers
 
+**HTTP API Routes** (`/auth/*`):
+
+**Public Routes** (no authentication required):
+- `POST /auth/login` - User login
+- `POST /auth/refresh` - Refresh access token
+- `POST /auth/verification-code` - Send verification code
+
+**Protected Routes** (requires JWT token):
+- **Users**:
+  - `POST /auth/users` - Create user
+  - `GET /auth/users` - List users
+  - `GET /auth/users/:id` - Get user by ID
+  - `PUT /auth/users/:id` - Update user
+  - `DELETE /auth/users/:id` - Delete user
+  - `DELETE /auth/users/:id/account` - Delete user account
+- **Profiles**:
+  - `POST /auth/profiles` - Create profile
+  - `GET /auth/profiles` - List profiles
+  - `GET /auth/profiles/:id` - Get profile by ID
+  - `GET /auth/profiles/user/:user_id` - Get profile by user ID
+  - `PUT /auth/profiles/:id` - Update profile
+  - `DELETE /auth/profiles/:id` - Delete profile
+- **Roles**:
+  - `POST /auth/roles` - Create role
+  - `GET /auth/roles` - List roles
+  - `GET /auth/roles/:id` - Get role by ID
+  - `GET /auth/roles/name/:name` - Get role by name
+  - `PUT /auth/roles/:id` - Update role
+  - `DELETE /auth/roles/:id` - Delete role
+- **Badges**:
+  - `POST /auth/badges` - Create badge
+  - `GET /auth/badges` - List badges
+  - `GET /auth/badges/:id` - Get badge by ID
+  - `GET /auth/badges/name/:name` - Get badge by name
+  - `PUT /auth/badges/:id` - Update badge
+  - `DELETE /auth/badges/:id` - Delete badge
+- **Educations**:
+  - `POST /auth/educations` - Create education
+  - `GET /auth/educations` - List educations
+  - `GET /auth/educations/:id` - Get education by ID
+  - `GET /auth/educations/profile/:profile_id` - Get educations by profile ID
+  - `PUT /auth/educations/:id` - Update education
+  - `DELETE /auth/educations/:id` - Delete education
+- **Occupations**:
+  - `POST /auth/occupations` - Create occupation
+  - `GET /auth/occupations` - List occupations
+  - `GET /auth/occupations/:id` - Get occupation by ID
+  - `GET /auth/occupations/profile/:profile_id` - Get occupations by profile ID
+  - `PUT /auth/occupations/:id` - Update occupation
+  - `DELETE /auth/occupations/:id` - Delete occupation
+- **Profile Badges**:
+  - `POST /auth/profile-badges` - Create profile-badge association
+  - `GET /auth/profile-badges/:id` - Get profile-badge by ID
+  - `GET /auth/profile-badges/profile/:profile_id` - Get badges by profile ID
+  - `GET /auth/profile-badges/badge/:badge_id` - Get profiles by badge ID
+  - `PUT /auth/profile-badges/:id` - Update profile-badge
+  - `DELETE /auth/profile-badges/:id` - Delete profile-badge
+  - `DELETE /auth/profile-badges/profile/:profile_id/badge/:badge_id` - Delete by profile and badge
+
 **Key Features**:
 - User registration and login
-- JWT token management
+- JWT token management (access + refresh tokens)
 - Profile CRUD operations
 - Role-based access control
 - Badge and achievement system
+- Education and occupation history
 
 ### 2. Image Module (`modules/image/`)
 
@@ -298,6 +387,23 @@ type Delete interface {
 - **Connection Service** (`inputs/image/connection/`) - gRPC service
 - **Pipeline Service** (`inputs/image/pipeline/`) - Kafka event consumers
 
+**HTTP API Routes** (`/image/*`):
+
+**All Routes** (no authentication required by default):
+- **Images**:
+  - `POST /image/images` - Create/upload image
+  - `GET /image/images` - List images
+  - `GET /image/images/:id` - Get image by ID
+  - `PUT /image/images/:id` - Update image
+  - `DELETE /image/images/:id` - Delete image
+- **Image Types**:
+  - `POST /image/image-types` - Create image type
+  - `GET /image/image-types` - List image types
+  - `GET /image/image-types/:id` - Get image type by ID
+  - `GET /image/image-types/key/:key` - Get image type by key
+  - `PUT /image/image-types/:id` - Update image type
+  - `DELETE /image/image-types/:id` - Delete image type
+
 **Key Features**:
 - Image upload and storage
 - Image metadata management
@@ -306,22 +412,54 @@ type Delete interface {
 
 ### 3. Permission Module (`modules/permission/`)
 
-**Purpose**: Permission management and user-permission associations.
+**Purpose**: Permission management, user-permission associations, and admin authentication.
 
 **Domain Entities**:
 - `permission` - Permission definitions
 - `user_permission` - User-permission associations
+- `authorization_code` - Authorization codes for employee registration
 
 **Services**:
 - **API Service** (`inputs/permission/api/`) - HTTP REST API
 - **Connection Service** (`inputs/permission/connection/`) - gRPC service
 - **Pipeline Service** (`inputs/permission/pipeline/`) - Kafka event consumers
 
+**HTTP API Routes** (`/permission/*`):
+
+**Public Routes** (no authentication required):
+- `POST /permission/login` - Admin login (returns permissions)
+- `POST /permission/register` - User registration with authorization code
+
+**Protected Routes** (requires JWT token):
+- **Permissions**:
+  - `POST /permission/permissions` - Create permission
+  - `PUT /permission/permissions/:id` - Update permission
+  - `DELETE /permission/permissions/:id` - Delete permission
+  - `GET /permission/permissions/:id` - Get permission by ID
+  - `GET /permission/permissions/tag/:tag` - Get permission by tag
+  - `GET /permission/permissions` - List permissions
+- **User Permissions**:
+  - `POST /permission/user-permissions` - Assign permission to user
+  - `DELETE /permission/user-permissions` - Revoke permission from user
+  - `GET /permission/users/:user_id/permissions` - Get permissions by user ID
+  - `GET /permission/users/:user_id/permission-tags` - Get permission tags by user ID
+  - `POST /permission/user-permissions/check` - Check if user has permission
+- **Authorization Codes**:
+  - `POST /permission/authorization-codes` - Create authorization code
+  - `GET /permission/authorization-codes/:id` - Get authorization code by ID
+  - `GET /permission/authorization-codes/code/:code` - Get authorization code by code
+  - `POST /permission/authorization-codes/use` - Use authorization code
+  - `DELETE /permission/authorization-codes/:id` - Delete authorization code
+  - `POST /permission/authorization-codes/:id/activate` - Activate authorization code
+  - `POST /permission/authorization-codes/:id/deactivate` - Deactivate authorization code
+
 **Key Features**:
 - Permission CRUD operations
 - User permission assignment/revocation
 - Permission checking
-- Permission categorization
+- Permission categorization (tags)
+- Authorization code system for employee registration
+- Admin login with permission information
 
 ---
 
@@ -399,13 +537,15 @@ Each module has three service entry points:
 
 - **Purpose**: HTTP REST API server
 - **Framework**: Fiber v2
-- **Port**: 8080 (configurable)
+- **Port**: Configurable (default: 8080 for auth, varies by module)
 - **Features**:
   - RESTful endpoints
-  - JWT authentication middleware
+  - JWT authentication middleware (for protected routes)
   - Request validation
   - Error handling
   - CORS support
+  - Panic recovery middleware
+  - Request logging
 
 **Example**: `inputs/auth/api/main.go`
 
@@ -415,11 +555,12 @@ Each module has three service entry points:
 
 - **Purpose**: gRPC service for inter-service communication
 - **Framework**: Google gRPC
-- **Port**: 10012 (auth), 10013 (image), 10014 (permission)
+- **Port**: Configurable (default: 10012 for auth, 10013 for image, 10014 for permission)
 - **Features**:
-  - gRPC service definitions
+  - gRPC service definitions (from protobuf)
   - Server-to-server authentication
   - OpenTelemetry instrumentation
+  - Interceptor support
 
 **Example**: `inputs/auth/connection/main.go`
 
@@ -434,6 +575,7 @@ Each module has three service entry points:
   - Event processing
   - Dead letter queue handling
   - Retry logic
+  - Event handler registry
 
 **Example**: `inputs/auth/pipeline/main.go`
 
@@ -468,12 +610,14 @@ atlas/
   - Profile tables
   - Role and permission tables
   - Badge and achievement tables
+  - Education and occupation tables
 - **`schemas/image/`** - Image module database schemas
   - Image metadata tables
   - Image type tables
 - **`schemas/permission/`** - Permission module database schemas
   - Permission tables
   - User permission tables
+  - Authorization code tables
 
 ---
 
@@ -510,6 +654,7 @@ Event-driven architecture definitions.
 - **`topics.go`** - Kafka topic definitions
 - **`auth.go`** - Auth module events
 - **`image.go`** - Image module events
+- **`permission.go`** - Permission module events
 
 ### Event Types
 
@@ -609,10 +754,10 @@ Domain Event → Event Publisher → Kafka Topic
 
 The project uses code generation for:
 
-1. **Protocol Buffers** - `task proto:gen`
-2. **Database Models** - `task atlas:gen:models`
-3. **Database Enums** - `task atlas:gen:enums`
-4. **Database Views** - `task atlas:gen:views`
+1. **Protocol Buffers** - `task proto:gen` or `task gen-proto`
+2. **Database Models** - `task atlas:gen:models` (via Atlas pipeline)
+3. **Database Enums** - `task atlas:gen:enums` (via Atlas pipeline)
+4. **Database Views** - `task atlas:gen:views` (via Atlas pipeline)
 
 Generated code is placed in:
 - `protos/gen/` - Generated protobuf code
@@ -628,10 +773,12 @@ Generated code is placed in:
 - **Commands (Write Side)**: Repository interfaces and implementations
   - `Create`, `Update`, `Delete` operations
   - Return domain entities or errors
+  - Write to database models (GORM)
 - **Queries (Read Side)**: Query interfaces and implementations
   - `Single` interface - Returns single objects (`*View`)
   - `List` interface - Returns arrays (`[]*View`)
   - `ListQuery` - Pagination, sorting, and filtering support
+  - Read from database views or models
 - Separate handlers and models for commands and queries
 
 ### Repository Pattern
@@ -677,11 +824,19 @@ Generated code is placed in:
 
 - `modules/{module}/domain/{entity}/query.go` - Query interface (CQRS Read)
 - `modules/{module}/domain/{entity}/repo.go` - Repository interface (CQRS Write)
+- `modules/{module}/domain/{entity}/entity.go` - Domain entity
+- `modules/{module}/domain/{entity}/factory.go` - Entity factory
 
 ### Infrastructure Layer
 
 - `modules/{module}/infrastructure/query/{entity}/query.go` - Query factory
 - `modules/{module}/infrastructure/repository/{entity}/repo.go` - Repository factory
+
+### HTTP Layer
+
+- `modules/{module}/interfaces/http/router.go` - Route definitions
+- `modules/{module}/interfaces/http/server.go` - HTTP server setup
+- `modules/{module}/interfaces/http/handler/` - Request handlers
 
 ### Task Runner
 
