@@ -5,7 +5,7 @@
     grpc_port = 10012
 
 [postgresql]
-    host = "host.docker.internal"
+    host = "192.168.1.64"
     port = 10105
     user = "postgres"
     password = "Lucas127."
@@ -25,7 +25,7 @@
         conn_max_lifetime = "1h"
 
 [mongodb]
-    host = "host.docker.internal"
+    host = "192.168.1.64"
     port = 10103
     user = "admin"
     password = "Lucas127."
@@ -40,7 +40,7 @@
         initial_backoff = "1s"
 
 [cache]
-    host = "host.docker.internal"
+    host = "192.168.1.64"
     port = 10181
     password = "Lucas127."
 
@@ -76,7 +76,7 @@
     base_path = "./data"
 
 [kafka]
-    brokers = ["host.docker.internal:10183"]
+    brokers = ["192.168.1.64:10183"]
     client_id = "nfxid-auth"
 
     [kafka.network]
@@ -128,4 +128,4 @@
     smtp_from = "sjgztea@gmail.com"
 
 [grpc_client]
-    image_addr = "localhost:10013"  # Image 服务的 gRPC 地址（Image 服务 gRPC 端口是 10013）
+    image_addr = "192.168.1.64:10013"  # Image 服务的 gRPC 地址（Image 服务 gRPC 端口是 10013）

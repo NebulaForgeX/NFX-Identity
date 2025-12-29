@@ -5,7 +5,7 @@
     grpc_port = 10014
 
 [postgresql]
-    host = "host.docker.internal"
+    host = "192.168.1.64"
     port = 10105
     user = "postgres"
     password = "Lucas127."
@@ -25,7 +25,7 @@
         conn_max_lifetime = "1h"
 
 [mongodb]
-    host = "host.docker.internal"
+    host = "192.168.1.64"
     port = 10103
     user = "admin"
     password = "Lucas127."
@@ -40,7 +40,7 @@
         initial_backoff = "1s"
 
 [cache]
-    host = "host.docker.internal"
+    host = "192.168.1.64"
     port = 10181
     password = "Lucas127."
 
@@ -73,7 +73,7 @@
     algorithm = "HS256"
 
 [kafka]
-    brokers = ["host.docker.internal:10183"]
+    brokers = ["192.168.1.64:10183"]
     client_id = "nfxid-permission"
 
     [kafka.network]
@@ -114,5 +114,5 @@
         tls_insecure_skip_verify = false
 
 [grpc_client]
-    auth_addr = "localhost:10012"  # Auth 服务的 gRPC 地址（Auth 服务 gRPC 端口是 10012）
+    auth_addr = "192.168.1.64:10012"  # Auth 服务的 gRPC 地址（Auth 服务 gRPC 端口是 10012）
 
