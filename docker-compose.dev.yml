@@ -17,12 +17,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - nfxid
+      - nfx-identity
     restart: unless-stopped
 
   #! Auth API Service
   auth-api:
-    image: nfxid-auth-api:dev
+    image: nfx-identity-auth-api:dev
     container_name: NebulaID-Auth-API-Dev
     build:
       context: .
@@ -83,11 +83,11 @@ services:
       reverse-proxy:
         condition: service_started
     networks:
-      - nfxid
+      - nfx-identity
 
   #! Image API Service
   image-api:
-    image: nfxid-image-api:dev
+    image: nfx-identity-image-api:dev
     container_name: NebulaID-Image-API-Dev
     build:
       context: .
@@ -145,11 +145,11 @@ services:
       reverse-proxy:
         condition: service_started
     networks:
-      - nfxid
+      - nfx-identity
 
   #! Permission API Service
   permission-api:
-    image: nfxid-permission-api:dev
+    image: nfx-identity-permission-api:dev
     container_name: NebulaID-Permission-API-Dev
     build:
       context: .
@@ -210,9 +210,9 @@ services:
       reverse-proxy:
         condition: service_started
     networks:
-      - nfxid
+      - nfx-identity
 
 networks:
-  nfxid:
-    name: nfxid
+  nfx-identity:
+    name: nfx-identity
     driver: bridge

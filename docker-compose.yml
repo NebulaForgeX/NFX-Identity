@@ -30,11 +30,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./certs:/letsencrypt
     networks:
-      - nfxid
+      - nfx-identity
 
   #! Auth API Service
   auth-api:
-    image: nfxid-auth-api:prod
+    image: nfx-identity-auth-api:prod
     container_name: NebulaID-Auth-API-Prod
     build:
       context: .
@@ -65,11 +65,11 @@ services:
     depends_on:
       - reverse-proxy
     networks:
-      - nfxid
+      - nfx-identity
 
   #! Auth Pipeline Service（kafka）
   auth-pipeline:
-    image: nfxid-auth-pipeline:prod
+    image: nfx-identity-auth-pipeline:prod
     container_name: NebulaID-Auth-Pipeline-Prod 
     build:
       context: .
@@ -83,13 +83,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nfxid
+      - nfx-identity
     depends_on:
       - auth-api
 
   #! Auth Connection Service (gRPC)
   auth-connection:
-    image: nfxid-auth-connection:prod
+    image: nfx-identity-auth-connection:prod
     container_name: NebulaID-Auth-Connection-Prod
     build:
       context: .
@@ -106,13 +106,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nfxid
+      - nfx-identity
     depends_on:
       - auth-api
 
   #! Image API Service
   image-api:
-    image: nfxid-image-api:prod
+    image: nfx-identity-image-api:prod
     container_name: NebulaID-Image-API-Prod
     build:
       context: .
@@ -143,11 +143,11 @@ services:
     depends_on:
       - reverse-proxy
     networks:
-      - nfxid
+      - nfx-identity
 
   #! Image Pipeline Service
   image-pipeline:
-    image: nfxid-image-pipeline:prod
+    image: nfx-identity-image-pipeline:prod
     container_name: NebulaID-Image-Pipeline-Prod
     build:
       context: .
@@ -161,13 +161,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nfxid
+      - nfx-identity
     depends_on:
       - image-api
 
   #! Image Connection Service (gRPC)
   image-connection:
-    image: nfxid-image-connection:prod
+    image: nfx-identity-image-connection:prod
     container_name: NebulaID-Image-Connection-Prod
     build:
       context: .
@@ -184,13 +184,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nfxid
+      - nfx-identity
     depends_on:
       - image-api
 
   #! Permission API Service
   permission-api:
-    image: nfxid-permission-api:prod
+    image: nfx-identity-permission-api:prod
     container_name: NebulaID-Permission-API-Prod
     build:
       context: .
@@ -221,11 +221,11 @@ services:
     depends_on:
       - reverse-proxy
     networks:
-      - nfxid
+      - nfx-identity
 
   #! Permission Pipeline Service
   permission-pipeline:
-    image: nfxid-permission-pipeline:prod
+    image: nfx-identity-permission-pipeline:prod
     container_name: NebulaID-Permission-Pipeline-Prod
     build:
       context: .
@@ -239,13 +239,13 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nfxid
+      - nfx-identity
     depends_on:
       - permission-api
 
   #! Permission Connection Service (gRPC)
   permission-connection:
-    image: nfxid-permission-connection:prod
+    image: nfx-identity-permission-connection:prod
     container_name: NebulaID-Permission-Connection-Prod
     build:
       context: .
@@ -262,14 +262,14 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
     networks:
-      - nfxid
+      - nfx-identity
     depends_on:
       - permission-api
 
 
 networks:
-  nfxid:
-    name: nfxid
+  nfx-identity:
+    name: nfx-identity
     driver: bridge
 
 
