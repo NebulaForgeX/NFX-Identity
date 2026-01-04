@@ -1,29 +1,29 @@
-# NFX ID — Unified Authentication & Identity Service
+# NFX-Identity — Unified Authentication & Identity Service
 
-**NFX ID = NebulaForgeX Identity Platform**
+**NFX-Identity = NebulaForgeX Identity Platform**
 
 <div align="center">
-  <img src="image.png" alt="NFX ID Logo" width="200">
+  <img src="image.png" alt="NFX-Identity Logo" width="200">
 </div>
 
-**NFX ID** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
+**NFX-Identity** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
 
 It provides authentication, authorization, user management, permission management, and enriched profile capabilities for all internal applications and microservices.
 
-Built with **Go**, designed with **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles, NFX ID is engineered for scalability, API-first integration, and cross-service interoperability.
+Built with **Go**, designed with **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles, NFX-Identity is engineered for scalability, API-first integration, and cross-service interoperability.
 
 ---
 
 ## 🎯 Service Overview
 
-NFX ID consists of three main services, each serving different purposes:
+NFX-Identity consists of three main services, each serving different purposes:
 
 ### 1. **Auth Service** - External User API Service
 
 **Purpose**: Provides authentication and user management APIs for **external backend services**.
 
 **Target Users**: 
-- Other backend services that need to integrate with NFX ID
+- Other backend services that need to integrate with NFX-Identity
 - Third-party applications requiring user authentication
 - Client applications (mobile apps, web apps) that need user management
 
@@ -106,7 +106,7 @@ NFX ID consists of three main services, each serving different purposes:
 
 ## 🏗️ Architecture
 
-NFX ID follows **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles:
+NFX-Identity follows **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -295,7 +295,7 @@ See [STRUCTURE.md](./STRUCTURE.md) for detailed project structure documentation.
 
 ## 🔄 Event-Driven Architecture
 
-NFX ID uses Kafka for asynchronous event processing:
+NFX-Identity uses Kafka for asynchronous event processing:
 
 ### Event Topics
 

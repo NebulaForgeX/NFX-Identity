@@ -1,8 +1,8 @@
 # Project Structure Documentation
 
-**NFX ID = NebulaForgeX Identity Platform**
+**NFX-Identity = NebulaForgeX Identity Platform**
 
-This document provides a comprehensive overview of the NFX ID project structure, architecture layers, module organization, and API routing.
+This document provides a comprehensive overview of the NFX-Identity project structure, architecture layers, module organization, and API routing.
 
 ---
 
@@ -34,7 +34,7 @@ Identity-Backend/
 
 ## 🏛️ Architecture Layers
 
-NFX ID follows **Clean Architecture** with clear separation of concerns and **CQRS** pattern:
+NFX-Identity follows **Clean Architecture** with clear separation of concerns and **CQRS** pattern:
 
 ### Layer Hierarchy
 

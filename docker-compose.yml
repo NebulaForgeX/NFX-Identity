@@ -4,7 +4,7 @@ services:
   #! Traefik Reverse Proxy
   reverse-proxy:
     image: traefik:v3.4
-    container_name: NebulaID-Reverse-Proxy-Prod
+    container_name: NFX-Identity-Reverse-Proxy-Prod
     restart: always
     command:
       - --api.dashboard=true
@@ -35,7 +35,7 @@ services:
   #! Auth API Service
   auth-api:
     image: nfx-identity-auth-api:prod
-    container_name: NebulaID-Auth-API-Prod
+    container_name: NFX-Identity-Auth-API-Prod
     build:
       context: .
       dockerfile: inputs/auth/api/Dockerfile
@@ -70,7 +70,7 @@ services:
   #! Auth Pipeline Service（kafka）
   auth-pipeline:
     image: nfx-identity-auth-pipeline:prod
-    container_name: NebulaID-Auth-Pipeline-Prod 
+    container_name: NFX-Identity-Auth-Pipeline-Prod 
     build:
       context: .
       dockerfile: inputs/auth/pipeline/Dockerfile
@@ -90,7 +90,7 @@ services:
   #! Auth Connection Service (gRPC)
   auth-connection:
     image: nfx-identity-auth-connection:prod
-    container_name: NebulaID-Auth-Connection-Prod
+    container_name: NFX-Identity-Auth-Connection-Prod
     build:
       context: .
       dockerfile: inputs/auth/connection/Dockerfile
@@ -113,7 +113,7 @@ services:
   #! Image API Service
   image-api:
     image: nfx-identity-image-api:prod
-    container_name: NebulaID-Image-API-Prod
+    container_name: NFX-Identity-Image-API-Prod
     build:
       context: .
       dockerfile: inputs/image/api/Dockerfile
@@ -148,7 +148,7 @@ services:
   #! Image Pipeline Service
   image-pipeline:
     image: nfx-identity-image-pipeline:prod
-    container_name: NebulaID-Image-Pipeline-Prod
+    container_name: NFX-Identity-Image-Pipeline-Prod
     build:
       context: .
       dockerfile: inputs/image/pipeline/Dockerfile
@@ -168,7 +168,7 @@ services:
   #! Image Connection Service (gRPC)
   image-connection:
     image: nfx-identity-image-connection:prod
-    container_name: NebulaID-Image-Connection-Prod
+    container_name: NFX-Identity-Image-Connection-Prod
     build:
       context: .
       dockerfile: inputs/image/connection/Dockerfile
@@ -191,7 +191,7 @@ services:
   #! Permission API Service
   permission-api:
     image: nfx-identity-permission-api:prod
-    container_name: NebulaID-Permission-API-Prod
+    container_name: NFX-Identity-Permission-API-Prod
     build:
       context: .
       dockerfile: inputs/permission/api/Dockerfile
@@ -226,7 +226,7 @@ services:
   #! Permission Pipeline Service
   permission-pipeline:
     image: nfx-identity-permission-pipeline:prod
-    container_name: NebulaID-Permission-Pipeline-Prod
+    container_name: NFX-Identity-Permission-Pipeline-Prod
     build:
       context: .
       dockerfile: inputs/permission/pipeline/Dockerfile
@@ -246,7 +246,7 @@ services:
   #! Permission Connection Service (gRPC)
   permission-connection:
     image: nfx-identity-permission-connection:prod
-    container_name: NebulaID-Permission-Connection-Prod
+    container_name: NFX-Identity-Permission-Connection-Prod
     build:
       context: .
       dockerfile: inputs/permission/connection/Dockerfile

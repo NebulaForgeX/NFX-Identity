@@ -4,7 +4,7 @@ services:
   #! Traefik Reverse Proxy
   reverse-proxy:
     image: traefik:latest
-    container_name: NebulaID-Reverse-Proxy-Dev
+    container_name: NFX-Identity-Reverse-Proxy-Dev
     command:
       - --api.insecure=true
       - --providers.docker
@@ -23,7 +23,7 @@ services:
   #! Auth API Service
   auth-api:
     image: nfx-identity-auth-api:dev
-    container_name: NebulaID-Auth-API-Dev
+    container_name: NFX-Identity-Auth-API-Dev
     build:
       context: .
       dockerfile: inputs/auth/api/Dockerfile
@@ -88,7 +88,7 @@ services:
   #! Image API Service
   image-api:
     image: nfx-identity-image-api:dev
-    container_name: NebulaID-Image-API-Dev
+    container_name: NFX-Identity-Image-API-Dev
     build:
       context: .
       dockerfile: inputs/image/api/Dockerfile
@@ -150,7 +150,7 @@ services:
   #! Permission API Service
   permission-api:
     image: nfx-identity-permission-api:dev
-    container_name: NebulaID-Permission-API-Dev
+    container_name: NFX-Identity-Permission-API-Dev
     build:
       context: .
       dockerfile: inputs/permission/api/Dockerfile
