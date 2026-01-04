@@ -18,13 +18,6 @@ vars:
   POSTGRES_DB_PROD: "nfxid"
   POSTGRES_DB_SHADOW: "nfxid_diff"
   POSTGRES_CONTAINER_NAME: "NFX-Stack-PostgreSQL"
-  ATLAS_ENV_FLAGS: >-
-    -e POSTGRES_USER={{.POSTGRES_USER}}
-    -e POSTGRES_PASSWORD={{.POSTGRES_PASSWORD}}
-    -e POSTGRES_HOST={{.POSTGRES_HOST}}:{{.POSTGRES_PORT}}
-    -e POSTGRES_DB_DEV={{.POSTGRES_DB_DEV}}
-    -e POSTGRES_DB_PROD={{.POSTGRES_DB_PROD}}
-    -e POSTGRES_DB_SHADOW={{.POSTGRES_DB_SHADOW}}
   ATLAS_ENV: "{{default \"dev\" .ATLAS_ENV}}"
   ATLAS_CONFIG_PATH: "file://atlas/atlas.hcl"
   ATLAS_MIGRATIONS_DIR_DEV: "file://atlas/migrations/development"
@@ -98,24 +91,6 @@ tasks:
       - task: fmt
       - task: lint
 
-  atlas:inspect:
-    desc: "Export current database state from remote"
-    cmds:
-      - >
-        docker compose -f docker-compose.yml run --rm -w /app
-        {{.ATLAS_ENV_FLAGS}}
-        atlas schema inspect --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
-    silent: false
-
-  atlas:apply-dev:
-    desc: "Dev (Declarative) - Apply schema to database"
-    cmds:
-      - >
-        docker compose -f docker-compose.yml run --rm -w /app
-        {{.ATLAS_ENV_FLAGS}}
-        atlas schema apply --env dev --config {{.ATLAS_CONFIG_PATH}} --auto-approve
-    silent: false
-
   atlas:gen-models:
     desc: "Generate Go models from the database schema"
     cmds:
@@ -172,39 +147,6 @@ tasks:
       - task: atlas:gen-enums
       - task: atlas:gen-models
       - task: atlas:gen-views
-    silent: false
-
-  atlas:down:
-    desc: "Rollback one step (use with caution)"
-    cmds:
-      - >
-        docker compose -f docker-compose.yml run --rm -w /app
-        {{.ATLAS_ENV_FLAGS}}
-        atlas migrate down --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}} --steps 1
-      - >
-        docker compose -f docker-compose.yml run --rm -w /app
-        {{.ATLAS_ENV_FLAGS}}
-        atlas migrate status --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
-    silent: false
-
-  atlas:set:
-    desc: "Set the database version pointer to a specific version (without executing SQL)"
-    vars:
-      V: '{{.V | default ""}}'
-    cmds:
-      - |
-        powershell -Command "if ([string]::IsNullOrWhiteSpace('{{.V}}')) {
-          Write-Host 'Usage: task atlas:set V=2025xxxxxxxxxx'
-          exit 1
-        }"
-      - >
-        docker compose -f docker-compose.yml run --rm -w /app
-        {{.ATLAS_ENV_FLAGS}}
-        atlas migrate set --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}} {{.V}}
-      - >
-        docker compose -f docker-compose.yml run --rm -w /app
-        {{.ATLAS_ENV_FLAGS}}
-        atlas migrate status --env {{.ATLAS_ENV}} --config {{.ATLAS_CONFIG_PATH}}
     silent: false
 
   atlas:pipeline:run:ps:
