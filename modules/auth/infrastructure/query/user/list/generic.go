@@ -7,8 +7,10 @@ import (
 	"nfxid/modules/auth/infrastructure/query/mapper"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/rdb/views"
+	"nfxid/pkgs/query"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 // Generic 获取 User 列表，实现 userDomain.List 接口
@@ -19,46 +21,26 @@ func (h *Handler) Generic(ctx context.Context, listQuery userDomain.ListQuery) (
 	listQuery.Normalize()
 	commonQuery := mapper.UserListQueryToCommonQuery(listQuery)
 
-	queryBuilder := h.db.WithContext(ctx).Model(&views.UserWithRoleView{})
+	baseQuery := h.db.WithContext(ctx).Model(&views.UserWithRoleView{})
 
-	// Apply search
-	if commonQuery.Search != "" {
-		queryBuilder = queryBuilder.Where(
-			"username ILIKE ? OR email ILIKE ? OR phone ILIKE ?",
-			"%"+commonQuery.Search+"%",
-			"%"+commonQuery.Search+"%",
-			"%"+commonQuery.Search+"%",
-		)
-	}
-
-	// Count total
-	if err := queryBuilder.Count(&total).Error; err != nil {
+	// Use ExecuteQuery for search, pagination, and sorting
+	itemsResult, total, err := query.ExecuteQuery(
+		ctx,
+		baseQuery,
+		&commonQuery,
+		userQueryConfig,
+		func(db *gorm.DB, data *[]views.UserWithRoleView) error {
+			// Apply default sorting if no sort is specified
+			if len(commonQuery.Sorts) == 0 {
+				db = db.Order("user_created_at DESC")
+			}
+			return db.Find(data).Error
+		},
+	)
+	if err != nil {
 		return nil, 0, err
 	}
-
-	// Apply pagination
-	if !commonQuery.All {
-		if commonQuery.Offset > 0 {
-			queryBuilder = queryBuilder.Offset(commonQuery.Offset)
-		}
-		if commonQuery.Limit > 0 {
-			queryBuilder = queryBuilder.Limit(commonQuery.Limit)
-		}
-	}
-
-	// Apply sorting
-	if len(commonQuery.Sorts) > 0 {
-		for _, sort := range commonQuery.Sorts {
-			queryBuilder = queryBuilder.Order(sort.Field + " " + sort.Order)
-		}
-	} else {
-		queryBuilder = queryBuilder.Order("user_created_at DESC")
-	}
-
-	// Execute query
-	if err := queryBuilder.Find(&items).Error; err != nil {
-		return nil, 0, err
-	}
+	items = itemsResult
 
 	// Convert to domain views
 	result := make([]*userDomainViews.UserView, len(items))
@@ -85,4 +67,3 @@ func (h *Handler) Generic(ctx context.Context, listQuery userDomain.ListQuery) (
 
 	return result, total, nil
 }
-
