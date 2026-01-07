@@ -5,7 +5,6 @@
 -- atlas:import tables/invitations.sql
 -- atlas:import tables/tenant_apps.sql
 -- atlas:import tables/tenant_settings.sql
--- atlas:import tables/invitation_roles.sql
 -- atlas:import tables/groups.sql
 -- atlas:import tables/member_groups.sql
 -- atlas:import tables/member_app_roles.sql

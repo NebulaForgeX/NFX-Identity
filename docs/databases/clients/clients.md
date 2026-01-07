@@ -33,20 +33,14 @@ The `clients` schema is the client/application management module of the NFX-Iden
 - **表**: `clients.ip_allowlist`
 - **特点**: 降低凭证泄露风险
 
-### 6. 服务令牌（Service Tokens）
-- **定义**: M2M 访问令牌
-- **表**: `clients.service_tokens`
-- **特点**: 支持令牌撤销、追踪
-
-### 7. 速率限制（Rate Limits）
+### 6. 速率限制（Rate Limits）
 - **定义**: 客户端级别的速率限制
 - **表**: `clients.rate_limits`
 - **特点**: 防止滥用
 
-### 8. 令牌使用日志（Token Usage Logs）
-- **定义**: 记录每次令牌使用
-- **表**: `clients.token_usage_logs`
-- **特点**: 用于审计、分析和滥用检测
+**注意**: 
+- 服务令牌（Service Tokens）仅 Opaque token 模式需要；JWT 模式默认不启用
+- 令牌使用日志已统一写入 `audit.events` 表，避免重复且爆量
 
 ## 表关系图 / Table Relationships
 
@@ -83,20 +77,6 @@ The `clients` schema is the client/application management module of the NFX-Iden
     │    ip_allowlist           │
     │  (IP 白名单)               │
     └───────────────────────────┘
-         │
-         │ 1:N
-         │
-    ┌────▼──────────────────────┐
-    │   service_tokens           │
-    │  (服务令牌)                │
-    └──────┬─────────────────────┘
-           │
-           │ 1:N
-           │
-    ┌──────▼─────────────────────┐
-    │  token_usage_logs          │
-    │  (令牌使用日志)             │
-    └─────────────────────────────┘
 
 ┌─────────────────┐
 │   rate_limits   │
@@ -132,20 +112,10 @@ The `clients` schema is the client/application management module of the NFX-Iden
 - **关键字段**: `app_id`、`cidr`、`status`
 - **详细文档**: [ip_allowlist.md](./ip_allowlist.md)
 
-### 6. `clients.service_tokens` - 服务令牌表
-- **用途**: 存储 M2M 访问令牌
-- **关键字段**: `token_id`、`app_id`、`scopes`、`expires_at`
-- **详细文档**: [service_tokens.md](./service_tokens.md)
-
-### 7. `clients.rate_limits` - 速率限制表
+### 6. `clients.rate_limits` - 速率限制表
 - **用途**: 客户端级别的速率限制
 - **关键字段**: `app_id`、`limit_type`、`limit_value`、`window_seconds`
 - **详细文档**: [rate_limits.md](./rate_limits.md)
-
-### 8. `clients.token_usage_logs` - 令牌使用日志表
-- **用途**: 记录每次令牌使用
-- **关键字段**: `token_id`、`app_id`、`endpoint`、`status_code`
-- **详细文档**: [token_usage_logs.md](./token_usage_logs.md)
 
 ## 应用注册流程 / Application Registration Flow
 
@@ -189,8 +159,8 @@ The `clients` schema is the client/application management module of the NFX-Iden
 2. 系统验证 client_credentials
 3. 检查 ip_allowlist
 4. 检查 client_scopes（允许的 scope）
-5. 签发 service_tokens
-6. 记录 token_usage_logs
+5. 签发访问令牌（JWT 模式，或 Opaque token 模式需要 service_tokens 表）
+6. 记录审计事件到 audit.events
 ```
 
 ### 2. Scope 验证
@@ -213,7 +183,7 @@ The `clients` schema is the client/application management module of the NFX-Iden
 - **速率限制**: 防止滥用
 
 ### 3. 审计追踪
-- **使用日志**: 记录每次令牌使用
+- **统一审计**: 所有事件记录到 `audit.events` 表
 - **状态追踪**: 追踪凭证和令牌状态
 - **撤销记录**: 记录撤销原因
 
@@ -224,7 +194,5 @@ The `clients` schema is the client/application management module of the NFX-Iden
 - [api_keys.md](./api_keys.md) - API 密钥表详细文档
 - [client_scopes.md](./client_scopes.md) - 客户端 Scope 表详细文档
 - [ip_allowlist.md](./ip_allowlist.md) - IP 白名单表详细文档
-- [service_tokens.md](./service_tokens.md) - 服务令牌表详细文档
 - [rate_limits.md](./rate_limits.md) - 速率限制表详细文档
-- [token_usage_logs.md](./token_usage_logs.md) - 令牌使用日志表详细文档
 

@@ -2,9 +2,11 @@
 
 ## 概述 / Overview
 
-`access` schema 是 NFX-Identity 平台的授权（Authorization）核心模块，负责管理权限、角色、OAuth scope、策略和授权关系。
+`access` schema 是 NFX-Identity 平台的授权（Authorization）核心模块，负责管理权限、角色、OAuth scope 和授权关系。
 
-The `access` schema is the authorization core module of the NFX-Identity platform, responsible for managing permissions, roles, OAuth scopes, policies, and authorization relationships.
+The `access` schema is the authorization core module of the NFX-Identity platform, responsible for managing permissions, roles, OAuth scopes, and authorization relationships.
+
+**注意**: ABAC 策略（policies）复杂度高，先做 RBAC+grants 足够，默认不启用。
 
 ## 核心概念 / Core Concepts
 
@@ -23,12 +25,7 @@ The `access` schema is the authorization core module of the NFX-Identity platfor
 - **表**: `access.scopes`
 - **特点**: 外部 API 契约，与内部权限（permissions）分离
 
-### 4. 策略（Policies）
-- **定义**: ABAC 条件授权策略，定义"在什么条件下允许/拒绝访问"
-- **表**: `access.policies`
-- **特点**: 用于处理复杂的条件授权场景
-
-### 5. 授权（Grants）
+### 4. 授权（Grants）
 - **定义**: 核心授权表，定义"谁在什么范围内被授予了什么"
 - **表**: `access.grants`
 - **特点**: 支持角色授权、权限授权、租户级授权、应用级授权、资源级授权
@@ -73,12 +70,6 @@ The `access` schema is the authorization core module of the NFX-Identity platfor
                                     │  scope_permissions   │
                                     │ (Scope-权限映射)      │
                                     └──────────────────────┘
-
-┌─────────────────┐
-│    policies     │
-│  (ABAC 策略)    │
-│  (独立表)       │
-└─────────────────┘
 ```
 
 ## 表列表 / Table List
@@ -108,12 +99,7 @@ The `access` schema is the authorization core module of the NFX-Identity platfor
 - **关键字段**: `scope`、`permission_id`
 - **详细文档**: [scope_permissions.md](./scope_permissions.md)
 
-### 6. `access.policies` - 策略表
-- **用途**: 定义 ABAC 条件授权策略
-- **关键字段**: `effect`（ALLOW/DENY）、`priority`（优先级）、`condition`（JSONB 条件表达式）
-- **详细文档**: [policies.md](./policies.md)
-
-### 7. `access.grants` - 授权表
+### 6. `access.grants` - 授权表
 - **用途**: 核心授权表，定义谁被授予了什么
 - **关键字段**: `subject_type`（USER/CLIENT）、`grant_type`（ROLE/PERMISSION）、`tenant_id`、`app_id`、`resource_type`、`resource_id`
 - **详细文档**: [grants.md](./grants.md)
@@ -140,7 +126,6 @@ The `access` schema is the authorization core module of the NFX-Identity platfor
 3. 权限验证
    - 检查操作所需的权限
    - 验证主体是否拥有该权限
-   - 应用策略（policies）进行条件判断
 ```
 
 ### 3. OAuth Token 授权流程
@@ -157,13 +142,7 @@ The `access` schema is the authorization core module of the NFX-Identity platfor
 - **实现**: 通过 `roles`、`role_permissions`、`grants` 表实现
 - **流程**: 用户被授予角色 → 角色包含权限 → 用户获得权限
 
-### 2. ABAC（基于属性的访问控制）
-- **实现**: 通过 `policies` 表实现
-- **流程**: 定义策略条件 → 评估请求上下文 → 应用策略结果
-
-### 3. 混合模型
-- **实现**: RBAC + ABAC 结合
-- **流程**: 先通过 RBAC 确定基础权限 → 再通过 ABAC 策略进行条件判断
+**注意**: ABAC（基于属性的访问控制）复杂度高，先做 RBAC+grants 足够，默认不启用 policies 表。
 
 ## 作用范围 / Scopes
 
@@ -255,6 +234,5 @@ SELECT EXISTS(
 - [role_permissions.md](./role_permissions.md) - 角色权限关联表详细文档
 - [scopes.md](./scopes.md) - OAuth Scope 表详细文档
 - [scope_permissions.md](./scope_permissions.md) - Scope 权限映射表详细文档
-- [policies.md](./policies.md) - 策略表详细文档
 - [grants.md](./grants.md) - 授权表详细文档
 

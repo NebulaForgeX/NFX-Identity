@@ -3,6 +3,7 @@ CREATE TYPE "directory".user_status AS ENUM ('pending', 'active', 'deactive');
 
 CREATE TABLE IF NOT EXISTS "directory"."users" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  "tenant_id" UUID NOT NULL,
   "username" VARCHAR(50) NOT NULL UNIQUE,
   "password_hash" VARCHAR(255) NOT NULL,
   "status" "directory".user_status NOT NULL DEFAULT 'pending',

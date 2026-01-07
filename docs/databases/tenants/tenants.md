@@ -21,7 +21,7 @@ The `tenants` schema is the multi-tenant management module of the NFX-Identity p
 ### 3. 邀请（Invitations）
 - **定义**: 邀请机制
 - **表**: `tenants.invitations`
-- **特点**: 支持安全的成员邀请流程
+- **特点**: 支持安全的成员邀请流程，包含预分配角色（role_ids 字段）
 
 ### 4. 成员角色（Member Roles）
 - **定义**: 租户内的角色分配
@@ -72,15 +72,8 @@ The `tenants` schema is the multi-tenant management module of the NFX-Identity p
 
 ┌─────────────────┐
 │  invitations    │
-│  (邀请)         │
-└────────┬────────┘
-         │
-         │ 1:N
-         │
-    ┌────▼──────────────────┐
-    │ invitation_roles       │
-    │  (邀请角色)            │
-    └───────────────────────┘
+│  (邀请+角色)    │
+└─────────────────┘
 
 ┌─────────────────┐
 │     groups      │
@@ -128,16 +121,11 @@ The `tenants` schema is the multi-tenant management module of the NFX-Identity p
 - **详细文档**: [members.md](./members.md)
 
 ### 3. `tenants.invitations` - 邀请表
-- **用途**: 邀请机制
-- **关键字段**: `invite_id`、`tenant_id`、`email`、`token_hash`、`status`
+- **用途**: 邀请机制（包含预分配角色）
+- **关键字段**: `invite_id`、`tenant_id`、`email`、`token_hash`、`status`、`role_ids`
 - **详细文档**: [invitations.md](./invitations.md)
 
-### 4. `tenants.invitation_roles` - 邀请角色表
-- **用途**: 邀请时预分配的角色
-- **关键字段**: `invite_id`、`role_id`
-- **详细文档**: [invitation_roles.md](./invitation_roles.md)
-
-### 5. `tenants.member_roles` - 成员角色表
+### 4. `tenants.member_roles` - 成员角色表
 - **用途**: 租户内的角色分配
 - **关键字段**: `member_id`、`role_id`、`expires_at`
 - **详细文档**: [member_roles.md](./member_roles.md)
@@ -175,23 +163,21 @@ The `tenants` schema is the multi-tenant management module of the NFX-Identity p
 ## 成员生命周期 / Member Lifecycle
 
 ```
-1. 管理员发送邀请（invitations）
-2. 预分配角色（invitation_roles）
-3. 用户接受邀请
-4. 创建成员（members）
-5. 分配角色（member_roles）
-6. 添加到组（member_groups）
-7. 分配应用角色（member_app_roles）
-8. 成员激活（members.status = 'ACTIVE'）
-9. 成员移除（members.status = 'REMOVED'）
+1. 管理员发送邀请（invitations，包含预分配角色 role_ids）
+2. 用户接受邀请
+3. 创建成员（members）
+4. 从 invitations.role_ids 分配角色（member_roles）
+5. 添加到组（member_groups）
+6. 分配应用角色（member_app_roles）
+7. 成员激活（members.status = 'ACTIVE'）
+8. 成员移除（members.status = 'REMOVED'）
 ```
 
 ## 相关文档 / Related Documentation
 
 - [tenants.md](./tenants.md) - 租户表详细文档
 - [members.md](./members.md) - 成员表详细文档
-- [invitations.md](./invitations.md) - 邀请表详细文档
-- [invitation_roles.md](./invitation_roles.md) - 邀请角色表详细文档
+- [invitations.md](./invitations.md) - 邀请表详细文档（包含预分配角色）
 - [member_roles.md](./member_roles.md) - 成员角色表详细文档
 - [groups.md](./groups.md) - 组表详细文档
 - [member_groups.md](./member_groups.md) - 成员组表详细文档

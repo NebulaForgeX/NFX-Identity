@@ -4,6 +4,5 @@
 -- atlas:import tables/role_permissions.sql
 -- atlas:import tables/scopes.sql
 -- atlas:import tables/scope_permissions.sql
--- atlas:import tables/policies.sql
 -- atlas:import tables/grants.sql
 

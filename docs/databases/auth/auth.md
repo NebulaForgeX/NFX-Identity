@@ -53,10 +53,7 @@ The `auth` schema is the authentication core module of the NFX-Identity platform
 - **表**: `auth.trusted_devices`
 - **特点**: 支持"记住此设备"，跳过 MFA
 
-### 10. 凭据事件（Credential Events）
-- **定义**: 凭据变更的审计轨迹
-- **表**: `auth.credential_events`
-- **特点**: 用于安全审计
+**注意**: 凭据事件审计已统一使用 `audit.events` 表，不再单独维护 `credential_events` 表。
 
 ## 表关系图 / Table Relationships
 
@@ -111,11 +108,6 @@ The `auth` schema is the authentication core module of the NFX-Identity platform
 │  trusted_devices    │
 │  (信任设备)         │
 └─────────────────────┘
-
-┌─────────────────────┐
-│ credential_events   │
-│ (凭据事件)          │
-└─────────────────────┘
 ```
 
 ## 表列表 / Table List
@@ -165,11 +157,6 @@ The `auth` schema is the authentication core module of the NFX-Identity platform
 - **关键字段**: `device_id`、`user_id`、`trusted_until`
 - **详细文档**: [trusted_devices.md](./trusted_devices.md)
 
-### 10. `auth.credential_events` - 凭据事件表
-- **用途**: 凭据变更的审计轨迹
-- **关键字段**: `event_id`、`user_id`、`event_type`、`actor_type`
-- **详细文档**: [credential_events.md](./credential_events.md)
-
 ## 认证流程 / Authentication Flow
 
 ### 1. 用户登录流程
@@ -196,7 +183,7 @@ The `auth` schema is the authentication core module of the NFX-Identity platform
 7. 检查 password_history 防止重用
 8. 更新 user_credentials
 9. 记录 password_history
-10. 记录 credential_events
+10. 记录审计事件到 audit.events
 11. 撤销所有 refresh_tokens
 ```
 
@@ -207,7 +194,7 @@ The `auth` schema is the authentication core module of the NFX-Identity platform
 3. 创建 mfa_factors 记录
 4. 用户验证 MFA 因子
 5. 启用 mfa_factors（enabled = true）
-6. 记录 credential_events
+6. 记录审计事件到 audit.events
 ```
 
 ## 安全特性 / Security Features
@@ -246,5 +233,4 @@ The `auth` schema is the authentication core module of the NFX-Identity platform
 - [mfa_factors.md](./mfa_factors.md) - MFA 因子表详细文档
 - [password_history.md](./password_history.md) - 密码历史表详细文档
 - [trusted_devices.md](./trusted_devices.md) - 信任设备表详细文档
-- [credential_events.md](./credential_events.md) - 凭据事件表详细文档
 

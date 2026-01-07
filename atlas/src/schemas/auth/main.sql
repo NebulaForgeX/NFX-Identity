@@ -6,7 +6,6 @@
 -- atlas:import tables/password_resets.sql
 -- atlas:import tables/mfa_factors.sql
 -- atlas:import tables/sessions.sql
--- atlas:import tables/credential_events.sql
 -- atlas:import tables/password_history.sql
 -- atlas:import tables/trusted_devices.sql
 
