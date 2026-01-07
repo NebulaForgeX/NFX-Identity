@@ -4,7 +4,7 @@
 
 | 表名 / Table | 作用 / Purpose | 文档 / Documentation |
 |-------------|--------------|---------------------|
-| `users` | 用户主表，存储基本认证信息 | [users.md](./directory/users.md) |
+| `users` | 用户主表，存储用户名和账户状态（认证凭据在 auth.user_credentials） | [users.md](./directory/users.md) |
 | `user_profiles` | 用户详细资料信息 | [user_profiles.md](./directory/user_profiles.md) |
 | `user_emails` | 用户的多个邮箱地址 | [user_emails.md](./directory/user_emails.md) |
 | `user_phones` | 用户的多个手机号码 | [user_phones.md](./directory/user_phones.md) |
