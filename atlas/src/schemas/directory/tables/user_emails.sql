@@ -1,5 +1,6 @@
 -- User Emails table for multiple email addresses per user
 -- One user can have multiple email addresses (primary, secondary, etc.)
+-- Note: Foreign key to users table is added in users.sql after users table is created
 CREATE TABLE IF NOT EXISTS "directory"."user_emails" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "user_id" UUID NOT NULL REFERENCES "directory"."users"("id") ON DELETE CASCADE,

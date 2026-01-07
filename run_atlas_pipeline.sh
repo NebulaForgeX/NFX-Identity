@@ -89,10 +89,37 @@ fi
 ensure_postgresql_running() {
   write_header "Checking PostgreSQL service"
   
-  output=$(docker ps --filter "name=${POSTGRES_CONTAINER_NAME}" --format "{{.Status}}" 2>&1)
+  # 检查 Docker 命令是否可用
+  if ! command -v docker &> /dev/null; then
+    echo "Error: Docker command not found. Please install Docker first."
+    exit 1
+  fi
+  
+  # 尝试检查容器状态，捕获可能的错误
+  output=$(sudo docker ps --filter "name=${POSTGRES_CONTAINER_NAME}" --format "{{.Status}}" 2>&1) || {
+    echo "Error: Failed to check Docker container status."
+    echo "Docker error output: ${output}"
+    echo "Please ensure Docker daemon is running."
+    exit 1
+  }
+  
   if ! echo "${output}" | grep -q "Up"; then
-    echo "PostgreSQL container ${POSTGRES_CONTAINER_NAME} should be running"
-    echo "Please start PostgreSQL service first"
+    # 检查容器是否存在（运行中或已停止）
+    container_exists=$(sudo docker ps -a --filter "name=${POSTGRES_CONTAINER_NAME}" --format "{{.Names}}" 2>&1) || {
+      echo "Error: Failed to list Docker containers."
+      echo "Docker error output: ${container_exists}"
+      exit 1
+    }
+    
+    if [ -z "${container_exists}" ]; then
+      echo "Error: PostgreSQL container '${POSTGRES_CONTAINER_NAME}' not found."
+      echo "Available containers:"
+      sudo docker ps -a --format "  - {{.Names}}" 2>&1 || echo "  (Unable to list containers)"
+    else
+      echo "PostgreSQL container ${POSTGRES_CONTAINER_NAME} should be running"
+      echo "Please start PostgreSQL service first"
+      echo "You can start it with: sudo docker start ${POSTGRES_CONTAINER_NAME}"
+    fi
     exit 1
   fi
   echo "PostgreSQL service is running"
@@ -103,12 +130,12 @@ clean_shadow_connections() {
   write_header "Cleaning shadow database connections"
   
   # 强制断开所有连接到 shadow 数据库的会话
-  docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${POSTGRES_DB_SHADOW}';" >/dev/null 2>&1
+  sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${POSTGRES_DB_SHADOW}';" >/dev/null 2>&1
   
   sleep 2
   
   # 再次检查并断开任何残留连接
-  docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${POSTGRES_DB_SHADOW}';" >/dev/null 2>&1
+  sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${POSTGRES_DB_SHADOW}';" >/dev/null 2>&1
 }
 
 # 函数：清理并重建 Shadow 数据库（用于 diff）
@@ -119,24 +146,24 @@ clean_diff_database() {
   clean_shadow_connections
   
   # 检查数据库是否存在，如果存在则 DROP
-  result=$(docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${POSTGRES_DB_SHADOW}'" 2>&1)
+  result=$(sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${POSTGRES_DB_SHADOW}'" 2>&1)
   if echo "${result}" | grep -qE '\s*1\s*'; then
     echo "Dropping existing shadow database..."
-    docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "DROP DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1
+    sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "DROP DATABASE ${POSTGRES_DB_SHADOW};" >/dev/null 2>&1
   fi
   
   # 创建 shadow 数据库
   echo "Creating shadow database..."
-  create_result=$(docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" 2>&1)
+  create_result=$(sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${POSTGRES_DB_SHADOW};" 2>&1)
   if [ $? -ne 0 ] && ! echo "${create_result}" | grep -qi "already exists"; then
     echo "Warning: Failed to create shadow database: ${create_result}"
   fi
   
   # 确保目标数据库存在
-  target_result=$(docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${TARGET_DB}'" 2>&1)
+  target_result=$(sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${TARGET_DB}'" 2>&1)
   if ! echo "${target_result}" | grep -qE '\s*1\s*'; then
     echo "Creating target database: ${TARGET_DB}"
-    create_target_result=$(docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${TARGET_DB};" 2>&1)
+    create_target_result=$(sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE ${TARGET_DB};" 2>&1)
     if [ $? -ne 0 ] && ! echo "${create_target_result}" | grep -qi "already exists"; then
       echo "Warning: Failed to create target database: ${create_target_result}"
     fi

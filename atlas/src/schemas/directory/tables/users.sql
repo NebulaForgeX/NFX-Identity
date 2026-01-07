@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS "directory"."users" (
   "status" "directory".user_status NOT NULL DEFAULT 'pending',
   "is_verified" BOOLEAN NOT NULL DEFAULT false,
   "last_login_at" TIMESTAMP,
-  "primary_email_id" UUID REFERENCES "directory"."user_emails"("id") ON DELETE SET NULL,
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "deleted_at" TIMESTAMP
@@ -18,5 +17,4 @@ CREATE INDEX IF NOT EXISTS "idx_users_username" ON "directory"."users"("username
 CREATE INDEX IF NOT EXISTS "idx_users_status" ON "directory"."users"("status");
 CREATE INDEX IF NOT EXISTS "idx_users_deleted_at" ON "directory"."users"("deleted_at");
 CREATE INDEX IF NOT EXISTS "idx_users_last_login_at" ON "directory"."users"("last_login_at");
-CREATE INDEX IF NOT EXISTS "idx_users_primary_email_id" ON "directory"."users"("primary_email_id");
 
