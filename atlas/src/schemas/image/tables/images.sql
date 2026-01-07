@@ -11,9 +11,17 @@ CREATE TABLE "image"."images" (
   -- NULL allowed for legacy images or untyped uploads
   "type_id" UUID REFERENCES "image"."image_types"("id") ON DELETE SET NULL,
   
-  -- User who uploaded the image (UUID from auth service)
-  -- No foreign key to avoid cross-service dependencies
+  -- User who uploaded the image (UUID from directory.users)
+  -- No foreign key to avoid cross-service dependencies (application-level consistency)
   "user_id" UUID,
+  
+  -- Tenant isolation: which tenant this image belongs to
+  -- References tenants.tenants.id (application-level consistency)
+  "tenant_id" UUID,
+  
+  -- App isolation: which app uploaded this image (optional)
+  -- References clients.apps.id (application-level consistency)
+  "app_id" UUID,
   
   -- Source domain/service that uploaded this image (e.g., 'auth', 'product', 'post', 'cms')
   -- Helps with analytics and service-specific queries
@@ -61,6 +69,8 @@ CREATE TABLE "image"."images" (
 -- Indexes for common queries
 CREATE INDEX "idx_images_type_id" ON "image"."images"("type_id");
 CREATE INDEX "idx_images_user_id" ON "image"."images"("user_id");
+CREATE INDEX "idx_images_tenant_id" ON "image"."images"("tenant_id");
+CREATE INDEX "idx_images_app_id" ON "image"."images"("app_id");
 CREATE INDEX "idx_images_is_public" ON "image"."images"("is_public");
 CREATE INDEX "idx_images_deleted_at" ON "image"."images"("deleted_at");
 CREATE INDEX "idx_images_source_domain" ON "image"."images"("source_domain");
@@ -71,11 +81,15 @@ CREATE INDEX "idx_images_mime_type" ON "image"."images"("mime_type");
 -- Composite indexes for common query patterns
 CREATE INDEX "idx_images_user_public" ON "image"."images"("user_id", "is_public") WHERE "deleted_at" IS NULL;
 CREATE INDEX "idx_images_type_public" ON "image"."images"("type_id", "is_public") WHERE "deleted_at" IS NULL;
+CREATE INDEX "idx_images_tenant_user" ON "image"."images"("tenant_id", "user_id") WHERE "deleted_at" IS NULL;
+CREATE INDEX "idx_images_tenant_app" ON "image"."images"("tenant_id", "app_id") WHERE "deleted_at" IS NULL;
 
 -- Table and column comments
 COMMENT ON TABLE "image"."images" IS 'Main table storing original image metadata for all uploaded images';
 COMMENT ON COLUMN "image"."images"."type_id" IS 'Reference to image_types table defining the image category/usage';
-COMMENT ON COLUMN "image"."images"."user_id" IS 'UUID of user who uploaded the image (from auth service, no FK constraint)';
+COMMENT ON COLUMN "image"."images"."user_id" IS 'UUID of user who uploaded the image (from directory.users, application-level consistency)';
+COMMENT ON COLUMN "image"."images"."tenant_id" IS 'Tenant isolation: which tenant this image belongs to (from tenants.tenants.id, application-level consistency)';
+COMMENT ON COLUMN "image"."images"."app_id" IS 'App isolation: which app uploaded this image (from clients.apps.id, application-level consistency)';
 COMMENT ON COLUMN "image"."images"."source_domain" IS 'Source service identifier: auth, product, post, cms, etc.';
 COMMENT ON COLUMN "image"."images"."filename" IS 'Current filename after processing (may differ from original_filename)';
 COMMENT ON COLUMN "image"."images"."original_filename" IS 'Original filename as uploaded by user';

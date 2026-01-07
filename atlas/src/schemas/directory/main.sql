@@ -1,0 +1,11 @@
+-- atlas:import schema.sql
+-- atlas:import tables/users.sql
+-- atlas:import tables/user_profiles.sql
+-- atlas:import tables/badges.sql
+-- atlas:import tables/user_badges.sql
+-- atlas:import tables/user_educations.sql
+-- atlas:import tables/user_occupations.sql
+-- atlas:import tables/user_emails.sql
+-- atlas:import tables/user_phones.sql
+-- atlas:import tables/user_preferences.sql
+

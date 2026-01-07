@@ -27,9 +27,25 @@ if [[ $# -eq 0 ]]; then
     [Ee]) echo "Cancelled"; exit 0 ;;
     *) echo "Invalid choice"; exit 1 ;;
   esac
+  
+  # 询问是否跳过迁移步骤，直接跳到代码生成
+  echo ""
+  echo "Skip migration steps and go directly to code generation?"
+  echo -e "\033[32m[Y]es\033[0m - Skip migrations, generate code only"
+  echo -e "\033[33m[N]o\033[0m  - Run full pipeline (migrations + code generation)"
+  echo ""
+  read -n 1 -r skip_choice
+  echo
+  case $skip_choice in
+    [Yy]) SKIP_MIGRATIONS="yes" ;;
+    [Nn]) SKIP_MIGRATIONS="no" ;;
+    *) SKIP_MIGRATIONS="no" ;;  # 默认不跳过
+  esac
 else
   # 第一个参数是环境（dev 或 prod），默认为 dev
   ENV="${1:-dev}"
+  # 第二个参数是是否跳过迁移（yes/no），默认为 no
+  SKIP_MIGRATIONS="${2:-no}"
 fi
 
 if [[ "${ENV}" == "prod" ]]; then
@@ -139,100 +155,107 @@ write_header "Starting Atlas pipeline"
 # 0. Ensure PostgreSQL is running
 ensure_postgresql_running
 
-# 1. Clean diff database before diff
-write_header "Step 1: Preparing diff database"
-clean_diff_database
+# 检查是否跳过迁移步骤
+if [[ "${SKIP_MIGRATIONS}" == "yes" ]]; then
+  echo ""
+  echo "Skipping migration steps, going directly to code generation..."
+  echo ""
+else
+  # 1. Clean diff database before diff
+  write_header "Step 1: Preparing diff database"
+  clean_diff_database
 
-# 2. Generate migrations
-write_header "Step 2: Generating migrations (atlas:diff)"
-echo "Using POSTGRES_HOST=${POSTGRES_HOST} POSTGRES_PORT=${POSTGRES_PORT}"
-# 设置环境变量供 atlas.hcl 使用
-export POSTGRES_USER="${POSTGRES_USER}"
-export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
-export POSTGRES_HOST="${POSTGRES_HOST}"
-export POSTGRES_PORT="${POSTGRES_PORT}"
-export POSTGRES_DB_DEV="${POSTGRES_DB_DEV}"
-export POSTGRES_DB_PROD="${POSTGRES_DB_PROD}"
-export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW}"
-# 切换到 atlas 目录运行，这样 Atlas 可以正确解析相对路径
-cd atlas || exit 1
-# atlas migrate diff 会自动比较 env 配置中的 url（当前数据库）和 src（目标状态），生成迁移
-# 不使用 --config，让 Atlas 自动查找 atlas.hcl
-atlas migrate diff --env ${ATLAS_ENV}
-if [[ $? -ne 0 ]]; then
-  echo "Atlas migrate diff failed with exit code $?"
+  # 2. Generate migrations
+  write_header "Step 2: Generating migrations (atlas:diff)"
+  echo "Using POSTGRES_HOST=${POSTGRES_HOST} POSTGRES_PORT=${POSTGRES_PORT}"
+  # 设置环境变量供 atlas.hcl 使用
+  export POSTGRES_USER="${POSTGRES_USER}"
+  export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+  export POSTGRES_HOST="${POSTGRES_HOST}"
+  export POSTGRES_PORT="${POSTGRES_PORT}"
+  export POSTGRES_DB_DEV="${POSTGRES_DB_DEV}"
+  export POSTGRES_DB_PROD="${POSTGRES_DB_PROD}"
+  export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW}"
+  # 切换到 atlas 目录运行，这样 Atlas 可以正确解析相对路径
+  cd atlas || exit 1
+  # atlas migrate diff 会自动比较 env 配置中的 url（当前数据库）和 src（目标状态），生成迁移
+  # 不使用 --config，让 Atlas 自动查找 atlas.hcl
+  atlas migrate diff --env ${ATLAS_ENV}
+  if [[ $? -ne 0 ]]; then
+    echo "Atlas migrate diff failed with exit code $?"
+    cd .. || true
+    exit $?
+  fi
   cd .. || true
-  exit $?
-fi
-cd .. || true
 
-# 3. Lint migrations (optional, may require Atlas Pro)
-write_header "Step 3: Linting migrations (optional)"
-cd atlas || exit 1
-atlas migrate lint --env ${ATLAS_ENV} --latest 1 -w || {
-  echo "Warning: Lint check failed or skipped (may require Atlas Pro account)"
-  echo "Continuing with migration apply..."
-}
-cd .. || true
-
-# 4. Apply migrations
-write_header "Step 4: Applying migrations (atlas:apply)"
-cd atlas || exit 1
-atlas migrate apply --env ${ATLAS_ENV}
-if [[ $? -ne 0 ]]; then
-  echo "Atlas migrate apply failed with exit code $?"
+  # 3. Lint migrations (optional, may require Atlas Pro)
+  write_header "Step 3: Linting migrations (optional)"
+  cd atlas || exit 1
+  atlas migrate lint --env ${ATLAS_ENV} --latest 1 -w || {
+    echo "Warning: Lint check failed or skipped (may require Atlas Pro account)"
+    echo "Continuing with migration apply..."
+  }
   cd .. || true
-  exit $?
-fi
-cd .. || true
 
-# 5. Check status
-write_header "Step 5: Checking migration status"
-cd atlas || exit 1
-atlas migrate status --env ${ATLAS_ENV}
-if [[ $? -ne 0 ]]; then
-  echo "Atlas migrate status failed with exit code $?"
+  # 4. Apply migrations
+  write_header "Step 4: Applying migrations (atlas:apply)"
+  cd atlas || exit 1
+  atlas migrate apply --env ${ATLAS_ENV}
+  if [[ $? -ne 0 ]]; then
+    echo "Atlas migrate apply failed with exit code $?"
+    cd .. || true
+    exit $?
+  fi
   cd .. || true
-  exit $?
-fi
-cd .. || true
 
-# 5.5. Wait for user to manually add views to migration files
-write_header "Step 5.5: Waiting for manual view migration"
-echo ""
-echo "IMPORTANT: Atlas migrate diff does not include views (Atlas Pro feature)."
-echo "Please manually add CREATE VIEW statements to the migration files in:"
-echo "  - atlas/migrations/${ATLAS_ENV}/"
-echo ""
-echo "After adding views, please:"
-echo "  1. Apply the updated migrations manually, OR"
-echo "  2. Continue and we will apply them in the next step"
-echo ""
-while true; do
-  read -p "Have you finished adding views to migration files? (y/n): " response
-  case $response in
-    [yY] )
-      echo "Continuing with the pipeline..."
-      break
-      ;;
-    [nN] )
-      echo "Waiting... Please add views to migration files and try again."
-      ;;
-    * )
-      echo "Please enter 'y' for yes or 'n' for no."
-      ;;
-  esac
-done
+  # 5. Check status
+  write_header "Step 5: Checking migration status"
+  cd atlas || exit 1
+  atlas migrate status --env ${ATLAS_ENV}
+  if [[ $? -ne 0 ]]; then
+    echo "Atlas migrate status failed with exit code $?"
+    cd .. || true
+    exit $?
+  fi
+  cd .. || true
 
-# 5.6. Re-apply migrations (in case views were added)
-write_header "Step 5.6: Re-applying migrations (includes manual views)"
-cd atlas || exit 1
-atlas migrate apply --env ${ATLAS_ENV}
-if [[ $? -ne 0 ]]; then
-  echo "Warning: Atlas migrate apply failed with exit code $?"
-  echo "This might be expected if views were already applied manually."
+  # 5.5. Wait for user to manually add views to migration files
+  write_header "Step 5.5: Waiting for manual view migration"
+  echo ""
+  echo "IMPORTANT: Atlas migrate diff does not include views (Atlas Pro feature)."
+  echo "Please manually add CREATE VIEW statements to the migration files in:"
+  echo "  - atlas/migrations/${ATLAS_ENV}/"
+  echo ""
+  echo "After adding views, please:"
+  echo "  1. Apply the updated migrations manually, OR"
+  echo "  2. Continue and we will apply them in the next step"
+  echo ""
+  while true; do
+    read -p "Have you finished adding views to migration files? (y/n): " response
+    case $response in
+      [yY] )
+        echo "Continuing with the pipeline..."
+        break
+        ;;
+      [nN] )
+        echo "Waiting... Please add views to migration files and try again."
+        ;;
+      * )
+        echo "Please enter 'y' for yes or 'n' for no."
+        ;;
+    esac
+  done
+
+  # 5.6. Re-apply migrations (in case views were added)
+  write_header "Step 5.6: Re-applying migrations (includes manual views)"
+  cd atlas || exit 1
+  atlas migrate apply --env ${ATLAS_ENV}
+  if [[ $? -ne 0 ]]; then
+    echo "Warning: Atlas migrate apply failed with exit code $?"
+    echo "This might be expected if views were already applied manually."
+  fi
+  cd .. || true
 fi
-cd .. || true
 
 # 6. Generate Go code
 write_header "Step 6: Generating Go code (atlas:gen)"
@@ -245,15 +268,17 @@ fi
 # 7. Clean connections after generation
 clean_gen_connections
 
-# 8. Final status check
-write_header "Step 7: Final status check"
-cd atlas || exit 1
-atlas migrate status --env ${ATLAS_ENV}
-if [[ $? -ne 0 ]]; then
-  echo "Atlas migrate status failed with exit code $?"
+# 8. Final status check (only if migrations were run)
+if [[ "${SKIP_MIGRATIONS}" != "yes" ]]; then
+  write_header "Step 7: Final status check"
+  cd atlas || exit 1
+  atlas migrate status --env ${ATLAS_ENV}
+  if [[ $? -ne 0 ]]; then
+    echo "Atlas migrate status failed with exit code $?"
+    cd .. || true
+    exit $?
+  fi
   cd .. || true
-  exit $?
 fi
-cd .. || true
 
 write_header "All Atlas tasks completed successfully (${ENV})"
