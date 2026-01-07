@@ -98,12 +98,20 @@
 
 **总览文档**: [audit.md](./audit/audit.md)
 
+## System Schema - 系统状态模块
+
+| 表名 / Table | 作用 / Purpose | 文档 / Documentation |
+|-------------|--------------|---------------------|
+| `system_state` | 系统初始化状态记录 | [system_state.md](./system/system_state.md) |
+
+**总览文档**: [system.md](./system/system.md)
+
 ---
 
 ## 统计 / Statistics
 
-- **Schema 数量**: 7
-- **表总数**: 52
+- **Schema 数量**: 8
+- **表总数**: 53
 - **Directory Schema**: 9 张表
 - **Auth Schema**: 9 张表
 - **Clients Schema**: 6 张表
@@ -111,6 +119,7 @@
 - **Tenants Schema**: 10 张表
 - **Image Schema**: 4 张表
 - **Audit Schema**: 5 张表
+- **System Schema**: 1 张表
 
 ## 已移除的表 / Removed Tables
 
