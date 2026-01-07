@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "clients"."service_tokens" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "token_id" VARCHAR(255) NOT NULL UNIQUE, -- Token identifier (for opaque) or JWT jti claim
   "app_id" UUID NOT NULL REFERENCES "clients"."apps"("id") ON DELETE CASCADE,
-  "client_id" VARCHAR(255), -- OAuth client_id that issued this token
+  "client_id" VARCHAR(255) REFERENCES "clients"."client_credentials"("client_id") ON DELETE SET NULL, -- OAuth client_id that issued this token
   "token_type" "clients".token_type NOT NULL DEFAULT 'jwt',
   "token_hash" VARCHAR(255), -- Hashed token (for opaque tokens, if storing)
   "scopes" TEXT[], -- Granted scopes array

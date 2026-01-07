@@ -2,9 +2,9 @@
 -- Records each token usage for security audit, analytics, and abuse detection
 CREATE TABLE IF NOT EXISTS "clients"."token_usage_logs" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "token_id" VARCHAR(255) NOT NULL, -- References service_tokens.token_id
+  "token_id" VARCHAR(255) NOT NULL REFERENCES "clients"."service_tokens"("token_id") ON DELETE CASCADE, -- References service_tokens.token_id
   "app_id" UUID NOT NULL REFERENCES "clients"."apps"("id") ON DELETE CASCADE,
-  "client_id" VARCHAR(255),
+  "client_id" VARCHAR(255) REFERENCES "clients"."client_credentials"("client_id") ON DELETE SET NULL,
   "endpoint" VARCHAR(255), -- API endpoint accessed: "/api/v1/users", "/api/v1/users/count"
   "method" VARCHAR(10), -- HTTP method: "GET", "POST", etc.
   "ip" INET,
