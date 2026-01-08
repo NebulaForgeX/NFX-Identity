@@ -8,7 +8,6 @@ import (
 	"nfxid/pkgs/mongodbx"
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/tokenx"
-	"time"
 )
 
 type Config struct {
@@ -18,7 +17,7 @@ type Config struct {
 	Mongo       mongodbx.Config    `koanf:"mongodb"`
 	Cache       cache.ConnConfig   `koanf:"cache"`
 	Logger      logx.LoggerConfig  `koanf:"logger"`
-	Token       TokenConfig        `koanf:"token"`
+	Token       tokenx.Config      `koanf:"token"`
 	Storage     StorageConfig      `koanf:"storage"`
 	KafkaConfig kafkax.Config      `koanf:"kafka"`
 	Email       EmailConfig        `koanf:"email"`
@@ -27,41 +26,6 @@ type Config struct {
 
 type GRPCClientConfig struct {
 	ImageAddr string `koanf:"image_addr"` // 例如: "localhost:10013" 或 "image:50051"
-}
-
-// TokenConfig Token 配置（TOML 中使用字符串）
-type TokenConfig struct {
-	SecretKey       string `koanf:"secret_key"`
-	Issuer          string `koanf:"issuer"`
-	AccessTokenTTL  string `koanf:"access_token_ttl"`  // 例如: "15m"
-	RefreshTokenTTL string `koanf:"refresh_token_ttl"` // 例如: "168h"
-	Algorithm       string `koanf:"algorithm"`
-}
-
-// ToTokenxConfig 转换为 tokenx.Config
-func (tc TokenConfig) ToTokenxConfig() (tokenx.Config, error) {
-	accessTTL, err := time.ParseDuration(tc.AccessTokenTTL)
-	if err != nil {
-		return tokenx.Config{}, err
-	}
-
-	refreshTTL, err := time.ParseDuration(tc.RefreshTokenTTL)
-	if err != nil {
-		return tokenx.Config{}, err
-	}
-
-	algorithm := tc.Algorithm
-	if algorithm == "" {
-		algorithm = "HS256"
-	}
-
-	return tokenx.Config{
-		SecretKey:       tc.SecretKey,
-		Issuer:          tc.Issuer,
-		AccessTokenTTL:  accessTTL,
-		RefreshTokenTTL: refreshTTL,
-		Algorithm:       algorithm,
-	}, nil
 }
 
 type ServerConfig struct {

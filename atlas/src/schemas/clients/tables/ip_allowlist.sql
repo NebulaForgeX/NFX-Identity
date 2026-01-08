@@ -24,5 +24,9 @@ CREATE INDEX IF NOT EXISTS "idx_ip_allowlist_rule_id" ON "clients"."ip_allowlist
 CREATE INDEX IF NOT EXISTS "idx_ip_allowlist_app_id" ON "clients"."ip_allowlist"("app_id");
 CREATE INDEX IF NOT EXISTS "idx_ip_allowlist_status" ON "clients"."ip_allowlist"("status");
 CREATE INDEX IF NOT EXISTS "idx_ip_allowlist_app_status" ON "clients"."ip_allowlist"("app_id", "status") WHERE "status" = 'active';
-CREATE INDEX IF NOT EXISTS "idx_ip_allowlist_cidr" ON "clients"."ip_allowlist" USING GIST("cidr"); -- GIST index for CIDR range queries
+-- Note: GiST index on cidr is optional. For small-scale deployments (dozens to hundreds of rules),
+-- the composite B-tree index (app_id, status) is sufficient. GiST index is only needed for:
+-- 1. High-volume CIDR matching queries (IP <<= cidr)
+-- 2. Large allowlist datasets (thousands+ rules per app)
+-- See: atlas/migrations/optional/add_gist_index_for_ip_allowlist.sql for optional migration
 

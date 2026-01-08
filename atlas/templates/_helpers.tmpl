@@ -129,11 +129,14 @@
    {{- /* Whether to use pointer for nullable fields (true=*T, false=sql.NullX) */ -}}
   {{- $USE_POINTER_NULLS := true -}}
 
-  {{- /* Collect enums of THIS schema: name(lc) -> GoType(Title) */ -}}
+  {{- /* Collect enums of THIS schema: name(lc) -> GoType(SchemaPrefix + Title) */ -}}
   {{- $ENUMS := dict -}}
+  {{- $schemaPrefix := (include "Title" $schema.Name) -}}
   {{- range $o := $schema.Objects }}
     {{- if eq (printf "%T" $o) "*schema.EnumType" }}
-      {{- $_ := set $ENUMS (lower $o.T) (include "Title" $o.T) -}}
+      {{- $baseType := (include "Title" $o.T) -}}
+      {{- $goType := printf "%s%s" $schemaPrefix $baseType -}}
+      {{- $_ := set $ENUMS (lower $o.T) $goType -}}
     {{- end }}
   {{- end }}
 

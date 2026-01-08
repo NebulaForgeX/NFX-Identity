@@ -9,7 +9,9 @@
   {{- range $o := $schema.Objects }}
     {{- if eq (printf "%T" $o) "*schema.EnumType" }}
       {{- $enumName := lower $o.T -}}
-      {{- $goType   := (include "Title" $o.T) -}}
+      {{- $schemaPrefix := (include "Title" $schema.Name) -}}
+      {{- $baseType := (include "Title" $o.T) -}}
+      {{- $goType := printf "%s%s" $schemaPrefix $baseType -}}
       {{- $bucket   := (include "BucketOf" $o.T) -}}
       {{- if not (hasKey $buckets $bucket) }}
         {{- $_ := set $buckets $bucket (list) -}}

@@ -36,9 +36,9 @@ func main() {
 	defer logx.Sync()
 
 	// === Run API Server (HTTP) ===
-	if err := server.RunServer(ctx, cfg); err != nil && !errors.Is(err, context.Canceled) {
-		logx.L().Fatal("api server stopped with error", zap.Error(err))
+	if err := server.RunHTTP(ctx, cfg); err != nil && !errors.Is(err, context.Canceled) {
+		logx.L().Fatal("HTTP server stopped with error", zap.Error(err))
 	}
 
-	logx.L().Info("api server shutdown gracefully")
+	logx.L().Info("HTTP server shutdown gracefully")
 }
