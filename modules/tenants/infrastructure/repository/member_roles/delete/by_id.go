@@ -2,12 +2,10 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/tenants/domain/member_roles"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByID 根据 ID 删除 MemberRole，实现 member_roles.Delete 接口

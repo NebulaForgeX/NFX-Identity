@@ -2,12 +2,10 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/tenants/domain/tenant_settings"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByID 根据 ID 删除 TenantSetting，实现 tenant_settings.Delete 接口

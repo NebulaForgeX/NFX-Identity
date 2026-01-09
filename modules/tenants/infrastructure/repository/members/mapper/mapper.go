@@ -5,7 +5,6 @@ import (
 	"nfxid/enums"
 	"nfxid/modules/tenants/domain/members"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
 
 	"gorm.io/datatypes"
 )
