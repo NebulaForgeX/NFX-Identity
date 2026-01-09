@@ -1,0 +1,132 @@
+# NFX-Identity Configuration Example
+# Copy this file to inputs/*/config/dev.toml or inputs/*/config/prod.toml and modify according to your environment
+
+[server]
+    name = "Service Name"
+    host = "0.0.0.0"
+    http_port = 8080
+    grpc_port = 10012
+
+[postgresql]
+    host = "localhost"
+    port = 5432
+    user = "postgres"
+    password = "your-password-here"
+    dbname = "nfxid_dev"
+    sslmode = "disable"
+    timezone = "UTC"
+    logger_level = "warn"
+    auto_migrate = false
+
+    [postgresql.connection]
+        timeout = "5s"
+        max_retries = 5
+        retry_interval = "2s"
+        max_idle_connections = 10
+        max_open_connections = 100
+        conn_max_idle_time = "15m"
+        conn_max_lifetime = "1h"
+
+[mongodb]
+    host = "localhost"
+    port = 27017
+    user = "admin"
+    password = "your-password-here"
+    auth_source = "admin"
+    database = "nfxid_dev"
+    min_pool_size = 1
+    max_pool_size = 10
+    connect_timeout = "5s"
+    ping_timeout = "2s"
+    [mongodb.retry]
+        max_retries = 5
+        initial_backoff = "1s"
+
+[cache]
+    host = "localhost"
+    port = 6379
+    password = "your-password-here"
+
+    [cache.connection]
+        dial_timeout = "3s"
+        write_timeout = "3s"
+        read_timeout = "3s"
+        max_retries = 5
+        retry_interval = "2s"
+
+    [cache.tls]
+        enabled = false
+        server_name = ""
+
+[logger]
+    level = "debug"
+    format = "console"
+    output = "stdout"
+    file_path = "logs/service.log"
+    max_size_mb = 100
+    max_backups = 10
+    max_age_day = 30
+    compress = false
+
+[token]
+    secret_key = "your-secret-key-here-change-in-production"
+    issuer = "nfxid"
+    access_token_ttl = "24h"
+    refresh_token_ttl = "168h"
+    algorithm = "HS256"
+
+[storage]
+    base_path = "./data"
+
+[kafka]
+    brokers = ["localhost:9092"]
+    client_id = "nfxid-service"
+
+    [kafka.network]
+        max_open_requests = 1
+
+    [kafka.producer]
+        acks = "all"
+        compression = "snappy"
+        retries = 3
+        batch_bytes = 1048576
+        linger_ms = 5
+        idempotent = true
+
+    [kafka.consumer]
+        group_id = "service-group"
+        initial_offset = "latest"
+        session_timeout_ms = 10000
+        heartbeat_interval_ms = 3000
+        fetch_min_bytes = 1
+        fetch_max_bytes = 5242880
+        return_errors = true
+
+    [kafka.producer_topics]
+        # Service-specific topics - modify according to service
+        event = "event"
+        event_poison = "event_poison"
+
+    [kafka.consumer_topics]
+        # Service-specific topics - modify according to service
+        event = "event"
+        event_poison = "event_poison"
+
+    [kafka.security]
+        enabled = false
+        mechanism = "PLAIN"
+        username = ""
+        password = ""
+        tls_insecure_skip_verify = false
+
+[email]
+    smtp_host = "smtp.gmail.com"
+    smtp_port = 587
+    smtp_user = "your-email@gmail.com"
+    smtp_password = "your-app-password-here"
+    smtp_from = "your-email@gmail.com"
+
+[grpc_client]
+    # Service-specific gRPC client addresses - modify according to service
+    # auth_addr = "localhost:10012"
+    # image_addr = "localhost:10013"

@@ -225,12 +225,21 @@ task install
 4. **Set up environment**
 
 ```bash
-# Copy example config (if exists)
-cp inputs/auth/config/dev.toml.example inputs/auth/config/dev.toml
-cp inputs/image/config/dev.toml.example inputs/image/config/dev.toml
-cp inputs/permission/config/dev.toml.example inputs/permission/config/dev.toml
+# Copy example.toml from root directory to each service's config directory
+cp example.toml inputs/auth_old/config/dev.toml
+cp example.toml inputs/permission_old/config/dev.toml
+cp example.toml inputs/image_old/config/dev.toml
 
-# Edit config files with your database credentials
+# For production environments
+cp example.toml inputs/auth_old/config/prod.toml
+cp example.toml inputs/permission_old/config/prod.toml
+cp example.toml inputs/image_old/config/prod.toml
+
+# Edit each config file with your database credentials and service-specific settings
+# - Update [server] name, ports
+# - Update database connection details
+# - Update Kafka topics (producer_topics, consumer_topics) for each service
+# - Update gRPC client addresses (grpc_client) as needed
 ```
 
 5. **Run database migrations**

@@ -123,6 +123,8 @@ data/**/*.sql
 !inputs/
 !inputs/**
 # Ignore config files in inputs, use example.toml instead
+dev.toml
+prod.toml
 inputs/**/config/*.toml
 inputs/**/config/*.yaml
 inputs/**/config/*.yml
