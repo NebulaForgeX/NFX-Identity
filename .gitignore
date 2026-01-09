@@ -122,6 +122,13 @@ data/**/*.sql
 !enums/**
 !inputs/
 !inputs/**
+# Ignore config files in inputs, use example.toml instead
+inputs/**/config/*.toml
+inputs/**/config/*.yaml
+inputs/**/config/*.yml
+!inputs/**/config/example.toml
+!inputs/**/config/example.yaml
+!inputs/**/config/example.yml
 !modules/
 !modules/**
 !protos/
