@@ -1,0 +1,54 @@
+syntax = "proto3";
+package member_group;
+
+option go_package = "nfxid/protos/gen/tenants/member_group;membergrouppb";
+
+import "google/protobuf/timestamp.proto";
+
+// 成员组信息
+message MemberGroup {
+  string id = 1;                           // 成员组ID (UUID)
+  string member_id = 2;                    // 成员ID (UUID)
+  string group_id = 3;                     // 组ID (UUID)
+  google.protobuf.Timestamp assigned_at = 4;    // 分配时间
+  optional string assigned_by = 5;        // 分配者ID (UUID)
+  optional google.protobuf.Timestamp revoked_at = 6; // 撤销时间
+  optional string revoked_by = 7;         // 撤销者ID (UUID)
+}
+
+// MemberGroup 服务 - 供其他服务通过 gRPC 管理成员组
+service MemberGroupService {
+  // 根据ID获取成员组
+  rpc GetMemberGroupByID (GetMemberGroupByIDRequest) returns (GetMemberGroupByIDResponse);
+  
+  // 根据成员ID获取成员组列表
+  rpc GetMemberGroupsByMemberID (GetMemberGroupsByMemberIDRequest) returns (GetMemberGroupsByMemberIDResponse);
+  
+  // 根据组ID获取成员组列表
+  rpc GetMemberGroupsByGroupID (GetMemberGroupsByGroupIDRequest) returns (GetMemberGroupsByGroupIDResponse);
+}
+
+// MemberGroup Service Messages
+message GetMemberGroupByIDRequest {
+  string id = 1;
+}
+
+message GetMemberGroupByIDResponse {
+  MemberGroup member_group = 1;
+}
+
+message GetMemberGroupsByMemberIDRequest {
+  string member_id = 1;
+}
+
+message GetMemberGroupsByMemberIDResponse {
+  repeated MemberGroup member_groups = 1;
+}
+
+message GetMemberGroupsByGroupIDRequest {
+  string group_id = 1;
+}
+
+message GetMemberGroupsByGroupIDResponse {
+  repeated MemberGroup member_groups = 1;
+}

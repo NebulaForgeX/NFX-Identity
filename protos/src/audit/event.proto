@@ -1,0 +1,126 @@
+syntax = "proto3";
+package event;
+
+option go_package = "nfxid/protos/gen/audit/event;eventpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 审计操作者类型枚举
+enum AuditActorType {
+  AUDIT_ACTOR_TYPE_UNSPECIFIED = 0;
+  AUDIT_ACTOR_TYPE_USER = 1;    // 用户
+  AUDIT_ACTOR_TYPE_SERVICE = 2; // 服务
+  AUDIT_ACTOR_TYPE_SYSTEM = 3;  // 系统
+  AUDIT_ACTOR_TYPE_ADMIN = 4;   // 管理员
+}
+
+// 审计结果类型枚举
+enum AuditResultType {
+  AUDIT_RESULT_TYPE_UNSPECIFIED = 0;
+  AUDIT_RESULT_TYPE_SUCCESS = 1; // 成功
+  AUDIT_RESULT_TYPE_FAILURE = 2; // 失败
+  AUDIT_RESULT_TYPE_DENY = 3;    // 拒绝
+  AUDIT_RESULT_TYPE_ERROR = 4;   // 错误
+}
+
+// 审计风险级别枚举
+enum AuditRiskLevel {
+  AUDIT_RISK_LEVEL_UNSPECIFIED = 0;
+  AUDIT_RISK_LEVEL_LOW = 1;      // 低风险
+  AUDIT_RISK_LEVEL_MEDIUM = 2;   // 中风险
+  AUDIT_RISK_LEVEL_HIGH = 3;     // 高风险
+  AUDIT_RISK_LEVEL_CRITICAL = 4; // 严重风险
+}
+
+// 审计数据分类枚举
+enum AuditDataClassification {
+  AUDIT_DATA_CLASSIFICATION_UNSPECIFIED = 0;
+  AUDIT_DATA_CLASSIFICATION_PUBLIC = 1;       // 公开
+  AUDIT_DATA_CLASSIFICATION_INTERNAL = 2;     // 内部
+  AUDIT_DATA_CLASSIFICATION_CONFIDENTIAL = 3; // 机密
+  AUDIT_DATA_CLASSIFICATION_RESTRICTED = 4;   // 受限
+}
+
+// 审计事件信息
+message Event {
+  string id = 1;                              // 事件ID (UUID)
+  string event_id = 2;                        // 事件标识符 (varchar(255))
+  google.protobuf.Timestamp occurred_at = 3;   // 发生时间
+  google.protobuf.Timestamp received_at = 4;   // 接收时间
+  optional string tenant_id = 5;              // 租户ID (UUID)
+  optional string app_id = 6;                 // 应用ID (UUID)
+  AuditActorType actor_type = 7;              // 操作者类型：user, service, system, admin
+  string actor_id = 8;                        // 操作者ID (UUID)
+  optional string actor_tenant_member_id = 9; // 操作者租户成员ID (UUID)
+  string action = 10;                         // 操作 (varchar(255))
+  optional string target_type = 11;           // 目标类型 (varchar(100))
+  optional string target_id = 12;             // 目标ID (UUID)
+  AuditResultType result = 13;                // 结果：success, failure, deny, error
+  optional string failure_reason_code = 14;   // 失败原因代码 (varchar(100))
+  optional string http_method = 15;           // HTTP 方法 (varchar(10))
+  optional string http_path = 16;             // HTTP 路径 (varchar(500))
+  optional int32 http_status = 17;            // HTTP 状态码
+  optional string request_id = 18;            // 请求ID (varchar(255))
+  optional string trace_id = 19;              // 追踪ID (varchar(255))
+  optional string ip = 20;                    // IP地址 (inet)
+  optional string user_agent = 21;            // User-Agent (text)
+  optional string geo_country = 22;           // 地理位置国家 (varchar(10))
+  AuditRiskLevel risk_level = 23;             // 风险级别：low, medium, high, critical
+  AuditDataClassification data_classification = 24; // 数据分类：public, internal, confidential, restricted
+  optional string prev_hash = 25;             // 前一事件哈希 (varchar(64))
+  optional string event_hash = 26;            // 事件哈希 (varchar(64))
+  optional google.protobuf.Struct metadata = 27; // 元数据 (JSONB)
+  google.protobuf.Timestamp created_at = 28;     // 创建时间
+}
+
+// Event 服务 - 供其他服务通过 gRPC 管理审计事件
+service EventService {
+  // 根据ID获取事件
+  rpc GetEventByID (GetEventByIDRequest) returns (GetEventByIDResponse);
+  
+  // 根据事件ID获取事件
+  rpc GetEventByEventID (GetEventByEventIDRequest) returns (GetEventByEventIDResponse);
+  
+  // 根据操作者获取事件列表
+  rpc GetEventsByActor (GetEventsByActorRequest) returns (GetEventsByActorResponse);
+  
+  // 批量获取事件
+  rpc BatchGetEvents (BatchGetEventsRequest) returns (BatchGetEventsResponse);
+}
+
+// Event Service Messages
+message GetEventByIDRequest {
+  string id = 1;
+}
+
+message GetEventByIDResponse {
+  Event event = 1;
+}
+
+message GetEventByEventIDRequest {
+  string event_id = 1;
+}
+
+message GetEventByEventIDResponse {
+  Event event = 1;
+}
+
+message GetEventsByActorRequest {
+  AuditActorType actor_type = 1;
+  string actor_id = 2;
+  optional string tenant_id = 3;
+  optional int32 limit = 4;
+}
+
+message GetEventsByActorResponse {
+  repeated Event events = 1;
+}
+
+message BatchGetEventsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetEventsResponse {
+  repeated Event events = 1;
+}

@@ -1,0 +1,57 @@
+syntax = "proto3";
+package user_email;
+
+option go_package = "nfxid/protos/gen/directory/user_email;useremailpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户邮箱信息
+message UserEmail {
+  string id = 1;                           // 邮箱ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  string email = 3;                        // 邮箱地址 (varchar(255))
+  bool is_primary = 4;                     // 是否主邮箱
+  bool is_verified = 5;                    // 是否已验证
+  optional google.protobuf.Timestamp verified_at = 6; // 验证时间
+  optional string verification_token = 7; // 验证令牌 (varchar(255))
+  google.protobuf.Timestamp created_at = 8;      // 创建时间
+  google.protobuf.Timestamp updated_at = 9;      // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 10; // 软删除时间
+}
+
+// UserEmail 服务 - 供其他服务通过 gRPC 管理用户邮箱
+service UserEmailService {
+  // 根据ID获取用户邮箱
+  rpc GetUserEmailByID (GetUserEmailByIDRequest) returns (GetUserEmailByIDResponse);
+  
+  // 根据邮箱地址获取用户邮箱
+  rpc GetUserEmailByEmail (GetUserEmailByEmailRequest) returns (GetUserEmailByEmailResponse);
+  
+  // 根据用户ID获取用户邮箱列表
+  rpc GetUserEmailsByUserID (GetUserEmailsByUserIDRequest) returns (GetUserEmailsByUserIDResponse);
+}
+
+// UserEmail Service Messages
+message GetUserEmailByIDRequest {
+  string id = 1;
+}
+
+message GetUserEmailByIDResponse {
+  UserEmail user_email = 1;
+}
+
+message GetUserEmailByEmailRequest {
+  string email = 1;
+}
+
+message GetUserEmailByEmailResponse {
+  UserEmail user_email = 1;
+}
+
+message GetUserEmailsByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserEmailsByUserIDResponse {
+  repeated UserEmail user_emails = 1;
+}

@@ -1,0 +1,103 @@
+syntax = "proto3";
+package app;
+
+option go_package = "nfxid/protos/gen/clients/app;apppb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 应用类型枚举
+enum ClientsAppType {
+  CLIENTS_APP_TYPE_UNSPECIFIED = 0;
+  CLIENTS_APP_TYPE_SERVER = 1;     // 服务器
+  CLIENTS_APP_TYPE_SERVICE = 2;    // 服务
+  CLIENTS_APP_TYPE_INTERNAL = 3;   // 内部
+  CLIENTS_APP_TYPE_PARTNER = 4;    // 合作伙伴
+  CLIENTS_APP_TYPE_THIRD_PARTY = 5; // 第三方
+}
+
+// 应用状态枚举
+enum ClientsAppStatus {
+  CLIENTS_APP_STATUS_UNSPECIFIED = 0;
+  CLIENTS_APP_STATUS_ACTIVE = 1;    // 激活
+  CLIENTS_APP_STATUS_DISABLED = 2;  // 禁用
+  CLIENTS_APP_STATUS_SUSPENDED = 3; // 暂停
+  CLIENTS_APP_STATUS_PENDING = 4;   // 待定
+}
+
+// 环境枚举
+enum ClientsEnvironment {
+  CLIENTS_ENVIRONMENT_UNSPECIFIED = 0;
+  CLIENTS_ENVIRONMENT_PRODUCTION = 1;  // 生产环境
+  CLIENTS_ENVIRONMENT_STAGING = 2;     // 预发布环境
+  CLIENTS_ENVIRONMENT_DEVELOPMENT = 3; // 开发环境
+  CLIENTS_ENVIRONMENT_TEST = 4;        // 测试环境
+}
+
+// 应用信息
+message App {
+  string id = 1;                           // 应用ID (UUID)
+  string app_id = 2;                       // 应用标识符 (varchar(255))
+  string tenant_id = 3;                    // 租户ID (UUID)
+  string name = 4;                         // 应用名称 (varchar(255))
+  optional string description = 5;        // 描述 (text)
+  ClientsAppType type = 6;                 // 应用类型：server, service, internal, partner, third_party
+  ClientsAppStatus status = 7;             // 应用状态：active, disabled, suspended, pending
+  ClientsEnvironment environment = 8;      // 环境：production, staging, development, test
+  google.protobuf.Timestamp created_at = 9;     // 创建时间
+  google.protobuf.Timestamp updated_at = 10;    // 更新时间
+  optional string created_by = 11;        // 创建者ID (UUID)
+  optional string updated_by = 12;        // 更新者ID (UUID)
+  optional google.protobuf.Struct metadata = 13; // 元数据 (JSONB)
+  optional google.protobuf.Timestamp deleted_at = 14; // 软删除时间
+}
+
+// App 服务 - 供其他服务通过 gRPC 管理应用
+service AppService {
+  // 根据ID获取应用
+  rpc GetAppByID (GetAppByIDRequest) returns (GetAppByIDResponse);
+  
+  // 根据应用标识符获取应用
+  rpc GetAppByAppID (GetAppByAppIDRequest) returns (GetAppByAppIDResponse);
+  
+  // 根据租户ID获取应用列表
+  rpc GetAppsByTenantID (GetAppsByTenantIDRequest) returns (GetAppsByTenantIDResponse);
+  
+  // 批量获取应用
+  rpc BatchGetApps (BatchGetAppsRequest) returns (BatchGetAppsResponse);
+}
+
+// App Service Messages
+message GetAppByIDRequest {
+  string id = 1;
+}
+
+message GetAppByIDResponse {
+  App app = 1;
+}
+
+message GetAppByAppIDRequest {
+  string app_id = 1;
+}
+
+message GetAppByAppIDResponse {
+  App app = 1;
+}
+
+message GetAppsByTenantIDRequest {
+  string tenant_id = 1;
+  optional ClientsEnvironment environment = 2;
+  optional ClientsAppStatus status = 3;
+}
+
+message GetAppsByTenantIDResponse {
+  repeated App apps = 1;
+}
+
+message BatchGetAppsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetAppsResponse {
+  repeated App apps = 1;
+}

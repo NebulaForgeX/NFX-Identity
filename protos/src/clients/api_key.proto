@@ -1,0 +1,72 @@
+syntax = "proto3";
+package api_key;
+
+option go_package = "nfxid/protos/gen/clients/api_key;apikeypb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// API 密钥状态枚举
+enum ClientsApiKeyStatus {
+  CLIENTS_API_KEY_STATUS_UNSPECIFIED = 0;
+  CLIENTS_API_KEY_STATUS_ACTIVE = 1;  // 激活
+  CLIENTS_API_KEY_STATUS_REVOKED = 2; // 已撤销
+  CLIENTS_API_KEY_STATUS_EXPIRED = 3; // 已过期
+}
+
+// API 密钥信息
+message ApiKey {
+  string id = 1;                           // 密钥ID (UUID)
+  string key_id = 2;                       // 密钥标识符 (varchar(255))
+  string app_id = 3;                       // 应用ID (UUID)
+  string key_hash = 4;                     // 密钥哈希 (varchar(255))
+  string hash_alg = 5;                     // 哈希算法 (varchar(50))
+  string name = 6;                         // 名称 (varchar(255))
+  ClientsApiKeyStatus status = 7;          // 状态：active, revoked, expired
+  optional google.protobuf.Timestamp expires_at = 8; // 过期时间
+  google.protobuf.Timestamp created_at = 9;     // 创建时间
+  optional google.protobuf.Timestamp revoked_at = 10; // 撤销时间
+  optional string revoked_by = 11;         // 撤销者ID (UUID)
+  optional string revoke_reason = 12;      // 撤销原因 (text)
+  optional google.protobuf.Timestamp last_used_at = 13; // 最后使用时间
+  optional string created_by = 14;         // 创建者ID (UUID)
+  optional google.protobuf.Struct metadata = 15; // 元数据 (JSONB)
+}
+
+// ApiKey 服务 - 供其他服务通过 gRPC 管理API密钥
+service ApiKeyService {
+  // 根据ID获取API密钥
+  rpc GetApiKeyByID (GetApiKeyByIDRequest) returns (GetApiKeyByIDResponse);
+  
+  // 根据密钥ID获取API密钥
+  rpc GetApiKeyByKeyID (GetApiKeyByKeyIDRequest) returns (GetApiKeyByKeyIDResponse);
+  
+  // 根据应用ID获取API密钥列表
+  rpc GetApiKeysByAppID (GetApiKeysByAppIDRequest) returns (GetApiKeysByAppIDResponse);
+}
+
+// ApiKey Service Messages
+message GetApiKeyByIDRequest {
+  string id = 1;
+}
+
+message GetApiKeyByIDResponse {
+  ApiKey api_key = 1;
+}
+
+message GetApiKeyByKeyIDRequest {
+  string key_id = 1;
+}
+
+message GetApiKeyByKeyIDResponse {
+  ApiKey api_key = 1;
+}
+
+message GetApiKeysByAppIDRequest {
+  string app_id = 1;
+  optional ClientsApiKeyStatus status = 2;
+}
+
+message GetApiKeysByAppIDResponse {
+  repeated ApiKey api_keys = 1;
+}

@@ -1,0 +1,47 @@
+syntax = "proto3";
+package member_app_role;
+
+option go_package = "nfxid/protos/gen/tenants/member_app_role;memberapprolepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 成员应用角色信息
+message MemberAppRole {
+  string id = 1;                           // 成员应用角色ID (UUID)
+  string member_id = 2;                    // 成员ID (UUID)
+  string app_id = 3;                       // 应用ID (UUID)
+  string role_id = 4;                      // 角色ID (UUID)
+  google.protobuf.Timestamp assigned_at = 5;    // 分配时间
+  optional string assigned_by = 6;        // 分配者ID (UUID)
+  optional google.protobuf.Timestamp expires_at = 7; // 过期时间
+  optional google.protobuf.Timestamp revoked_at = 8; // 撤销时间
+  optional string revoked_by = 9;         // 撤销者ID (UUID)
+  optional string revoke_reason = 10;     // 撤销原因 (text)
+}
+
+// MemberAppRole 服务 - 供其他服务通过 gRPC 管理成员应用角色
+service MemberAppRoleService {
+  // 根据ID获取成员应用角色
+  rpc GetMemberAppRoleByID (GetMemberAppRoleByIDRequest) returns (GetMemberAppRoleByIDResponse);
+  
+  // 根据成员ID获取成员应用角色列表
+  rpc GetMemberAppRolesByMemberID (GetMemberAppRolesByMemberIDRequest) returns (GetMemberAppRolesByMemberIDResponse);
+}
+
+// MemberAppRole Service Messages
+message GetMemberAppRoleByIDRequest {
+  string id = 1;
+}
+
+message GetMemberAppRoleByIDResponse {
+  MemberAppRole member_app_role = 1;
+}
+
+message GetMemberAppRolesByMemberIDRequest {
+  string member_id = 1;
+  optional string app_id = 2;
+}
+
+message GetMemberAppRolesByMemberIDResponse {
+  repeated MemberAppRole member_app_roles = 1;
+}

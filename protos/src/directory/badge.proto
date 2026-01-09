@@ -1,0 +1,69 @@
+syntax = "proto3";
+package badge;
+
+option go_package = "nfxid/protos/gen/directory/badge;badgepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 徽章信息
+message Badge {
+  string id = 1;                           // 徽章ID (UUID)
+  string name = 2;                         // 名称 (varchar(50))
+  optional string description = 3;        // 描述 (text)
+  optional string icon_url = 4;            // 图标URL (varchar(255))
+  optional string color = 5;               // 颜色 (varchar(20))
+  optional string category = 6;            // 分类 (varchar(50))
+  bool is_system = 7;                      // 是否系统徽章
+  google.protobuf.Timestamp created_at = 8;     // 创建时间
+  google.protobuf.Timestamp updated_at = 9;     // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 10; // 软删除时间
+}
+
+// Badge 服务 - 供其他服务通过 gRPC 管理徽章
+service BadgeService {
+  // 根据ID获取徽章
+  rpc GetBadgeByID (GetBadgeByIDRequest) returns (GetBadgeByIDResponse);
+  
+  // 根据名称获取徽章
+  rpc GetBadgeByName (GetBadgeByNameRequest) returns (GetBadgeByNameResponse);
+  
+  // 获取所有徽章列表
+  rpc GetAllBadges (GetAllBadgesRequest) returns (GetAllBadgesResponse);
+  
+  // 批量获取徽章
+  rpc BatchGetBadges (BatchGetBadgesRequest) returns (BatchGetBadgesResponse);
+}
+
+// Badge Service Messages
+message GetBadgeByIDRequest {
+  string id = 1;
+}
+
+message GetBadgeByIDResponse {
+  Badge badge = 1;
+}
+
+message GetBadgeByNameRequest {
+  string name = 1;
+}
+
+message GetBadgeByNameResponse {
+  Badge badge = 1;
+}
+
+message GetAllBadgesRequest {
+  optional string category = 1;
+  optional bool is_system = 2;
+}
+
+message GetAllBadgesResponse {
+  repeated Badge badges = 1;
+}
+
+message BatchGetBadgesRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetBadgesResponse {
+  repeated Badge badges = 1;
+}

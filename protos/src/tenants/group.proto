@@ -1,0 +1,70 @@
+syntax = "proto3";
+package group;
+
+option go_package = "nfxid/protos/gen/tenants/group;grouppb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 组类型枚举
+enum TenantsGroupType {
+  TENANTS_GROUP_TYPE_UNSPECIFIED = 0;
+  TENANTS_GROUP_TYPE_DEPARTMENT = 1; // 部门
+  TENANTS_GROUP_TYPE_TEAM = 2;       // 团队
+  TENANTS_GROUP_TYPE_GROUP = 3;      // 组
+  TENANTS_GROUP_TYPE_OTHER = 4;      // 其他
+}
+
+// 组信息
+message Group {
+  string id = 1;                           // 组ID (UUID)
+  string group_id = 2;                     // 组标识符 (varchar(255))
+  string tenant_id = 3;                    // 租户ID (UUID)
+  string name = 4;                         // 名称 (varchar(255))
+  TenantsGroupType type = 5;               // 类型：department, team, group, other
+  optional string parent_group_id = 6;     // 父组ID (UUID)
+  optional string description = 7;        // 描述 (text)
+  google.protobuf.Timestamp created_at = 8;     // 创建时间
+  google.protobuf.Timestamp updated_at = 9;     // 更新时间
+  optional string created_by = 10;        // 创建者ID (UUID)
+  optional google.protobuf.Timestamp deleted_at = 11; // 软删除时间
+  optional google.protobuf.Struct metadata = 12; // 元数据 (JSONB)
+}
+
+// Group 服务 - 供其他服务通过 gRPC 管理组
+service GroupService {
+  // 根据ID获取组
+  rpc GetGroupByID (GetGroupByIDRequest) returns (GetGroupByIDResponse);
+  
+  // 根据租户ID获取组列表
+  rpc GetGroupsByTenantID (GetGroupsByTenantIDRequest) returns (GetGroupsByTenantIDResponse);
+  
+  // 批量获取组
+  rpc BatchGetGroups (BatchGetGroupsRequest) returns (BatchGetGroupsResponse);
+}
+
+// Group Service Messages
+message GetGroupByIDRequest {
+  string id = 1;
+}
+
+message GetGroupByIDResponse {
+  Group group = 1;
+}
+
+message GetGroupsByTenantIDRequest {
+  string tenant_id = 1;
+  optional string parent_id = 2;
+}
+
+message GetGroupsByTenantIDResponse {
+  repeated Group groups = 1;
+}
+
+message BatchGetGroupsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetGroupsResponse {
+  repeated Group groups = 1;
+}

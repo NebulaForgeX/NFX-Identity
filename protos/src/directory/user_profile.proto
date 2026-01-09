@@ -1,0 +1,70 @@
+syntax = "proto3";
+package user_profile;
+
+option go_package = "nfxid/protos/gen/directory/user_profile;userprofilepb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 用户资料信息
+message UserProfile {
+  string id = 1;                           // 资料ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  optional string role = 3;                // 角色 (varchar(100))
+  optional string first_name = 4;          // 名 (varchar(100))
+  optional string last_name = 5;           // 姓 (varchar(100))
+  optional string nickname = 6;            // 昵称 (varchar(50))
+  optional string display_name = 7;        // 显示名称 (varchar(100))
+  optional string avatar_id = 8;           // 头像ID (UUID)
+  optional string background_id = 9;       // 背景ID (UUID)
+  optional string background_ids = 10;     // 背景ID数组 (uuid[])
+  optional string bio = 11;                // 简介 (text)
+  optional google.protobuf.Timestamp birthday = 12; // 生日 (date)
+  optional int32 age = 13;                 // 年龄 (integer)
+  optional string gender = 14;             // 性别 (varchar(20))
+  optional string location = 15;           // 位置 (varchar(255))
+  optional string website = 16;            // 网站 (varchar(255))
+  optional string github = 17;             // GitHub (varchar(255))
+  optional google.protobuf.Struct social_links = 18; // 社交链接 (JSONB)
+  optional google.protobuf.Struct skills = 19;      // 技能 (JSONB)
+  google.protobuf.Timestamp created_at = 20;        // 创建时间
+  google.protobuf.Timestamp updated_at = 21;        // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 22; // 软删除时间
+}
+
+// UserProfile 服务 - 供其他服务通过 gRPC 管理用户资料
+service UserProfileService {
+  // 根据ID获取用户资料
+  rpc GetUserProfileByID (GetUserProfileByIDRequest) returns (GetUserProfileByIDResponse);
+  
+  // 根据用户ID获取用户资料
+  rpc GetUserProfileByUserID (GetUserProfileByUserIDRequest) returns (GetUserProfileByUserIDResponse);
+  
+  // 批量获取用户资料
+  rpc BatchGetUserProfiles (BatchGetUserProfilesRequest) returns (BatchGetUserProfilesResponse);
+}
+
+// UserProfile Service Messages
+message GetUserProfileByIDRequest {
+  string id = 1;
+}
+
+message GetUserProfileByIDResponse {
+  UserProfile user_profile = 1;
+}
+
+message GetUserProfileByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserProfileByUserIDResponse {
+  UserProfile user_profile = 1;
+}
+
+message BatchGetUserProfilesRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetUserProfilesResponse {
+  repeated UserProfile user_profiles = 1;
+}

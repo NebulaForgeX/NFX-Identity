@@ -2,6 +2,8 @@ package account_lockouts
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (al *AccountLockout) Unlock(unlockedBy string, unlockActorID *uuid.UUID) error {

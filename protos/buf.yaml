@@ -12,7 +12,12 @@ deps:
 # Lint 配置：代码检查规则
 lint:
   use:
-    - DEFAULT  # 使用默认的 lint 规则集（检查语法、命名规范等）
+    - STANDARD  # 使用标准的 lint 规则集（检查语法、命名规范等）
+  except:
+    - DIRECTORY_SAME_PACKAGE       # 允许同一目录下有多个不同的 package（类似参考项目 Sjgz-Backend）
+    - PACKAGE_DIRECTORY_MATCH      # 允许 package 名称与目录名称不匹配
+    - PACKAGE_VERSION_SUFFIX       # 允许 package 名称不带版本后缀
+    - PACKAGE_SAME_GO_PACKAGE      # 允许同一 package 有不同的 go_package（因为我们使用不同的 package）
 
 # Breaking 配置：破坏性变更检测规则
 breaking:

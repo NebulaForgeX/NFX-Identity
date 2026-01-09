@@ -1,0 +1,105 @@
+syntax = "proto3";
+package event_search_index;
+
+option go_package = "nfxid/protos/gen/audit/event_search_index;eventsearchindexpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 审计操作者类型枚举
+enum AuditActorType {
+  AUDIT_ACTOR_TYPE_UNSPECIFIED = 0;
+  AUDIT_ACTOR_TYPE_USER = 1;    // 用户
+  AUDIT_ACTOR_TYPE_SERVICE = 2; // 服务
+  AUDIT_ACTOR_TYPE_SYSTEM = 3;  // 系统
+  AUDIT_ACTOR_TYPE_ADMIN = 4;   // 管理员
+}
+
+// 审计结果类型枚举
+enum AuditResultType {
+  AUDIT_RESULT_TYPE_UNSPECIFIED = 0;
+  AUDIT_RESULT_TYPE_SUCCESS = 1; // 成功
+  AUDIT_RESULT_TYPE_FAILURE = 2; // 失败
+  AUDIT_RESULT_TYPE_DENY = 3;    // 拒绝
+  AUDIT_RESULT_TYPE_ERROR = 4;   // 错误
+}
+
+// 审计风险级别枚举
+enum AuditRiskLevel {
+  AUDIT_RISK_LEVEL_UNSPECIFIED = 0;
+  AUDIT_RISK_LEVEL_LOW = 1;      // 低风险
+  AUDIT_RISK_LEVEL_MEDIUM = 2;   // 中风险
+  AUDIT_RISK_LEVEL_HIGH = 3;     // 高风险
+  AUDIT_RISK_LEVEL_CRITICAL = 4; // 严重风险
+}
+
+// 审计数据分类枚举
+enum AuditDataClassification {
+  AUDIT_DATA_CLASSIFICATION_UNSPECIFIED = 0;
+  AUDIT_DATA_CLASSIFICATION_PUBLIC = 1;       // 公开
+  AUDIT_DATA_CLASSIFICATION_INTERNAL = 2;     // 内部
+  AUDIT_DATA_CLASSIFICATION_CONFIDENTIAL = 3; // 机密
+  AUDIT_DATA_CLASSIFICATION_RESTRICTED = 4;   // 受限
+}
+
+// 事件搜索索引信息
+message EventSearchIndex {
+  string id = 1;                              // 索引ID (UUID)
+  string event_id = 2;                        // 事件ID (varchar(255))
+  optional string tenant_id = 3;              // 租户ID (UUID)
+  optional string app_id = 4;                 // 应用ID (UUID)
+  AuditActorType actor_type = 5;              // 操作者类型：user, service, system, admin
+  string actor_id = 6;                        // 操作者ID (UUID)
+  string action = 7;                          // 操作 (varchar(255))
+  optional string target_type = 8;            // 目标类型 (varchar(100))
+  optional string target_id = 9;              // 目标ID (UUID)
+  AuditResultType result = 10;                // 结果：success, failure, deny, error
+  google.protobuf.Timestamp occurred_at = 11;  // 发生时间
+  optional string ip = 12;                    // IP地址 (inet)
+  AuditRiskLevel risk_level = 13;             // 风险级别：low, medium, high, critical
+  AuditDataClassification data_classification = 14; // 数据分类：public, internal, confidential, restricted
+  repeated string tags = 15;                  // 标签数组 (text[])
+  google.protobuf.Timestamp created_at = 16;    // 创建时间
+}
+
+// EventSearchIndex 服务 - 供其他服务通过 gRPC 管理事件搜索索引
+service EventSearchIndexService {
+  // 根据ID获取索引
+  rpc GetEventSearchIndexByID (GetEventSearchIndexByIDRequest) returns (GetEventSearchIndexByIDResponse);
+  
+  // 根据事件ID获取索引
+  rpc GetEventSearchIndexByEventID (GetEventSearchIndexByEventIDRequest) returns (GetEventSearchIndexByEventIDResponse);
+  
+  // 搜索事件
+  rpc SearchEvents (SearchEventsRequest) returns (SearchEventsResponse);
+}
+
+// EventSearchIndex Service Messages
+message GetEventSearchIndexByIDRequest {
+  string id = 1;
+}
+
+message GetEventSearchIndexByIDResponse {
+  EventSearchIndex event_search_index = 1;
+}
+
+message GetEventSearchIndexByEventIDRequest {
+  string event_id = 1;
+}
+
+message GetEventSearchIndexByEventIDResponse {
+  EventSearchIndex event_search_index = 1;
+}
+
+message SearchEventsRequest {
+  optional string tenant_id = 1;
+  optional AuditActorType actor_type = 2;
+  optional string actor_id = 3;
+  optional string action = 4;
+  optional AuditResultType result = 5;
+  optional AuditRiskLevel risk_level = 6;
+  optional int32 limit = 7;
+}
+
+message SearchEventsResponse {
+  repeated EventSearchIndex event_search_indices = 1;
+}

@@ -1,0 +1,58 @@
+syntax = "proto3";
+package actor_snapshot;
+
+option go_package = "nfxid/protos/gen/audit/actor_snapshot;actorsnapshotpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 审计操作者类型枚举
+enum AuditActorType {
+  AUDIT_ACTOR_TYPE_UNSPECIFIED = 0;
+  AUDIT_ACTOR_TYPE_USER = 1;    // 用户
+  AUDIT_ACTOR_TYPE_SERVICE = 2; // 服务
+  AUDIT_ACTOR_TYPE_SYSTEM = 3;  // 系统
+  AUDIT_ACTOR_TYPE_ADMIN = 4;   // 管理员
+}
+
+// 操作者快照信息
+message ActorSnapshot {
+  string id = 1;                            // 快照ID (UUID)
+  AuditActorType actor_type = 2;            // 操作者类型：user, service, system, admin
+  string actor_id = 3;                      // 操作者ID (UUID)
+  optional string display_name = 4;         // 显示名称 (varchar(255))
+  optional string email = 5;                // 邮箱 (varchar(255))
+  optional string client_name = 6;          // 客户端名称 (varchar(255))
+  optional string tenant_id = 7;            // 租户ID (UUID)
+  google.protobuf.Timestamp snapshot_at = 8; // 快照时间
+  optional google.protobuf.Struct snapshot_data = 9; // 快照数据 (JSONB)
+  google.protobuf.Timestamp created_at = 10;  // 创建时间
+}
+
+// ActorSnapshot 服务 - 供其他服务通过 gRPC 管理操作者快照
+service ActorSnapshotService {
+  // 根据ID获取操作者快照
+  rpc GetActorSnapshotByID (GetActorSnapshotByIDRequest) returns (GetActorSnapshotByIDResponse);
+  
+  // 根据操作者获取快照列表
+  rpc GetActorSnapshotsByActor (GetActorSnapshotsByActorRequest) returns (GetActorSnapshotsByActorResponse);
+}
+
+// ActorSnapshot Service Messages
+message GetActorSnapshotByIDRequest {
+  string id = 1;
+}
+
+message GetActorSnapshotByIDResponse {
+  ActorSnapshot actor_snapshot = 1;
+}
+
+message GetActorSnapshotsByActorRequest {
+  AuditActorType actor_type = 1;
+  string actor_id = 2;
+  optional int32 limit = 3;
+}
+
+message GetActorSnapshotsByActorResponse {
+  repeated ActorSnapshot actor_snapshots = 1;
+}

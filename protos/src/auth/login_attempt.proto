@@ -1,0 +1,79 @@
+syntax = "proto3";
+package login_attempt;
+
+option go_package = "nfxid/protos/gen/auth/login_attempt;loginattemptpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 登录失败代码枚举
+enum AuthFailureCode {
+  AUTH_FAILURE_CODE_UNSPECIFIED = 0;
+  AUTH_FAILURE_CODE_BAD_PASSWORD = 1;       // 密码错误
+  AUTH_FAILURE_CODE_USER_NOT_FOUND = 2;     // 用户不存在
+  AUTH_FAILURE_CODE_LOCKED = 3;             // 账户已锁定
+  AUTH_FAILURE_CODE_MFA_REQUIRED = 4;       // 需要 MFA
+  AUTH_FAILURE_CODE_MFA_FAILED = 5;         // MFA 验证失败
+  AUTH_FAILURE_CODE_ACCOUNT_DISABLED = 6;   // 账户已禁用
+  AUTH_FAILURE_CODE_CREDENTIAL_EXPIRED = 7; // 凭证已过期
+  AUTH_FAILURE_CODE_RATE_LIMITED = 8;       // 速率限制
+  AUTH_FAILURE_CODE_IP_BLOCKED = 9;         // IP 已阻止
+  AUTH_FAILURE_CODE_DEVICE_NOT_TRUSTED = 10; // 设备未信任
+  AUTH_FAILURE_CODE_OTHER = 11;             // 其他
+}
+
+// 登录尝试信息
+message LoginAttempt {
+  string id = 1;                      // 尝试ID (UUID)
+  string tenant_id = 2;               // 租户ID (UUID)
+  string identifier = 3;              // 标识符（用户名/邮箱/手机号）(varchar(255))
+  optional string user_id = 4;        // 用户ID (UUID)
+  optional string ip = 5;             // IP地址 (inet)
+  optional string ua_hash = 6;        // User-Agent 哈希 (varchar(64))
+  optional string device_fingerprint = 7; // 设备指纹 (varchar(255))
+  bool success = 8;                   // 是否成功
+  optional AuthFailureCode failure_code = 9; // 失败代码
+  bool mfa_required = 10;             // 是否需要 MFA
+  bool mfa_verified = 11;             // MFA 是否已验证
+  google.protobuf.Timestamp created_at = 12; // 创建时间
+}
+
+// LoginAttempt 服务 - 供其他服务通过 gRPC 管理登录尝试
+service LoginAttemptService {
+  // 根据ID获取登录尝试
+  rpc GetLoginAttemptByID (GetLoginAttemptByIDRequest) returns (GetLoginAttemptByIDResponse);
+  
+  // 根据用户ID获取登录尝试列表
+  rpc GetLoginAttemptsByUserID (GetLoginAttemptsByUserIDRequest) returns (GetLoginAttemptsByUserIDResponse);
+  
+  // 根据租户ID和标识符获取登录尝试列表
+  rpc GetLoginAttemptsByIdentifier (GetLoginAttemptsByIdentifierRequest) returns (GetLoginAttemptsByIdentifierResponse);
+}
+
+// LoginAttempt Service Messages
+message GetLoginAttemptByIDRequest {
+  string id = 1;
+}
+
+message GetLoginAttemptByIDResponse {
+  LoginAttempt login_attempt = 1;
+}
+
+message GetLoginAttemptsByUserIDRequest {
+  optional string user_id = 1;
+  string tenant_id = 2;
+  optional int32 limit = 3;
+}
+
+message GetLoginAttemptsByUserIDResponse {
+  repeated LoginAttempt login_attempts = 1;
+}
+
+message GetLoginAttemptsByIdentifierRequest {
+  string tenant_id = 1;
+  string identifier = 2;
+  optional int32 limit = 3;
+}
+
+message GetLoginAttemptsByIdentifierResponse {
+  repeated LoginAttempt login_attempts = 1;
+}

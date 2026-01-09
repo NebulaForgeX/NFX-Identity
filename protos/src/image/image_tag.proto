@@ -1,0 +1,52 @@
+syntax = "proto3";
+package image_tag;
+
+option go_package = "nfxid/protos/gen/image/image_tag;imagetagpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 图片标签信息
+message ImageTag {
+  string id = 1;                         // 标签ID (UUID)
+  string image_id = 2;                   // 图片ID (UUID)
+  string tag = 3;                        // 标签 (text)
+  optional double confidence = 4;        // 置信度 (double precision)
+  google.protobuf.Timestamp created_at = 5; // 创建时间
+}
+
+// ImageTag 服务 - 供其他服务通过 gRPC 管理图片标签
+service ImageTagService {
+  // 根据ID获取图片标签
+  rpc GetImageTagByID (GetImageTagByIDRequest) returns (GetImageTagByIDResponse);
+  
+  // 根据图片ID获取图片标签列表
+  rpc GetImageTagsByImageID (GetImageTagsByImageIDRequest) returns (GetImageTagsByImageIDResponse);
+  
+  // 根据标签名称获取图片标签列表
+  rpc GetImageTagsByTagName (GetImageTagsByTagNameRequest) returns (GetImageTagsByTagNameResponse);
+}
+
+// ImageTag Service Messages
+message GetImageTagByIDRequest {
+  string id = 1;
+}
+
+message GetImageTagByIDResponse {
+  ImageTag image_tag = 1;
+}
+
+message GetImageTagsByImageIDRequest {
+  string image_id = 1;
+}
+
+message GetImageTagsByImageIDResponse {
+  repeated ImageTag image_tags = 1;
+}
+
+message GetImageTagsByTagNameRequest {
+  string tag_name = 1;
+}
+
+message GetImageTagsByTagNameResponse {
+  repeated ImageTag image_tags = 1;
+}

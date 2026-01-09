@@ -1,0 +1,94 @@
+syntax = "proto3";
+package member;
+
+option go_package = "nfxid/protos/gen/tenants/member;memberpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 成员状态枚举
+enum TenantsMemberStatus {
+  TENANTS_MEMBER_STATUS_UNSPECIFIED = 0;
+  TENANTS_MEMBER_STATUS_INVITED = 1;   // 已邀请
+  TENANTS_MEMBER_STATUS_ACTIVE = 2;    // 激活
+  TENANTS_MEMBER_STATUS_SUSPENDED = 3; // 暂停
+  TENANTS_MEMBER_STATUS_REMOVED = 4;   // 已移除
+}
+
+// 成员来源枚举
+enum TenantsMemberSource {
+  TENANTS_MEMBER_SOURCE_UNSPECIFIED = 0;
+  TENANTS_MEMBER_SOURCE_MANUAL = 1;  // 手动
+  TENANTS_MEMBER_SOURCE_INVITE = 2;  // 邀请
+  TENANTS_MEMBER_SOURCE_SCIM = 3;    // SCIM
+  TENANTS_MEMBER_SOURCE_SSO = 4;     // SSO
+  TENANTS_MEMBER_SOURCE_HR_SYNC = 5; // HR同步
+  TENANTS_MEMBER_SOURCE_IMPORT = 6;  // 导入
+}
+
+// 成员信息
+message Member {
+  string id = 1;                           // 成员ID (UUID)
+  string member_id = 2;                    // 成员标识符 (UUID)
+  string tenant_id = 3;                    // 租户ID (UUID)
+  string user_id = 4;                      // 用户ID (UUID)
+  TenantsMemberStatus status = 5;          // 状态：INVITED, ACTIVE, SUSPENDED, REMOVED
+  TenantsMemberSource source = 6;          // 来源：MANUAL, INVITE, SCIM, SSO, HR_SYNC, IMPORT
+  optional google.protobuf.Timestamp joined_at = 7; // 加入时间
+  optional google.protobuf.Timestamp left_at = 8;   // 离开时间
+  google.protobuf.Timestamp created_at = 9;    // 创建时间
+  optional string created_by = 10;        // 创建者ID (UUID)
+  google.protobuf.Timestamp updated_at = 11;   // 更新时间
+  optional string external_ref = 12;      // 外部引用 (varchar(255))
+  optional google.protobuf.Struct metadata = 13; // 元数据 (JSONB)
+}
+
+// Member 服务 - 供其他服务通过 gRPC 管理成员
+service MemberService {
+  // 根据ID获取成员
+  rpc GetMemberByID (GetMemberByIDRequest) returns (GetMemberByIDResponse);
+  
+  // 根据用户ID和租户ID获取成员
+  rpc GetMemberByUserID (GetMemberByUserIDRequest) returns (GetMemberByUserIDResponse);
+  
+  // 根据租户ID获取成员列表
+  rpc GetMembersByTenantID (GetMembersByTenantIDRequest) returns (GetMembersByTenantIDResponse);
+  
+  // 批量获取成员
+  rpc BatchGetMembers (BatchGetMembersRequest) returns (BatchGetMembersResponse);
+}
+
+// Member Service Messages
+message GetMemberByIDRequest {
+  string id = 1;
+}
+
+message GetMemberByIDResponse {
+  Member member = 1;
+}
+
+message GetMemberByUserIDRequest {
+  string user_id = 1;
+  string tenant_id = 2;
+}
+
+message GetMemberByUserIDResponse {
+  Member member = 1;
+}
+
+message GetMembersByTenantIDRequest {
+  string tenant_id = 1;
+  optional TenantsMemberStatus status = 2;
+}
+
+message GetMembersByTenantIDResponse {
+  repeated Member members = 1;
+}
+
+message BatchGetMembersRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetMembersResponse {
+  repeated Member members = 1;
+}

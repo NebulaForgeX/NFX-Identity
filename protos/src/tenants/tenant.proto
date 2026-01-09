@@ -1,0 +1,67 @@
+syntax = "proto3";
+package tenant;
+
+option go_package = "nfxid/protos/gen/tenants/tenant;tenantpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 租户状态枚举
+enum TenantsTenantStatus {
+  TENANTS_TENANT_STATUS_UNSPECIFIED = 0;
+  TENANTS_TENANT_STATUS_ACTIVE = 1;    // 激活
+  TENANTS_TENANT_STATUS_SUSPENDED = 2; // 暂停
+  TENANTS_TENANT_STATUS_CLOSED = 3;    // 关闭
+  TENANTS_TENANT_STATUS_PENDING = 4;   // 待定
+}
+
+// 租户信息
+message Tenant {
+  string id = 1;                           // 租户ID (UUID)
+  string tenant_id = 2;                    // 租户标识符 (varchar(255))
+  string name = 3;                         // 名称 (varchar(255))
+  optional string display_name = 4;       // 显示名称 (varchar(255))
+  TenantsTenantStatus status = 5;          // 状态：ACTIVE, SUSPENDED, CLOSED, PENDING
+  optional string primary_domain = 6;      // 主域名 (varchar(255))
+  google.protobuf.Timestamp created_at = 7;     // 创建时间
+  google.protobuf.Timestamp updated_at = 8;     // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 9; // 软删除时间
+  optional google.protobuf.Struct metadata = 10; // 元数据 (JSONB)
+}
+
+// Tenant 服务 - 供其他服务通过 gRPC 管理租户
+service TenantService {
+  // 根据ID获取租户
+  rpc GetTenantByID (GetTenantByIDRequest) returns (GetTenantByIDResponse);
+  
+  // 根据租户标识符获取租户
+  rpc GetTenantByTenantID (GetTenantByTenantIDRequest) returns (GetTenantByTenantIDResponse);
+  
+  // 批量获取租户
+  rpc BatchGetTenants (BatchGetTenantsRequest) returns (BatchGetTenantsResponse);
+}
+
+// Tenant Service Messages
+message GetTenantByIDRequest {
+  string id = 1;
+}
+
+message GetTenantByIDResponse {
+  Tenant tenant = 1;
+}
+
+message GetTenantByTenantIDRequest {
+  string tenant_id = 1;
+}
+
+message GetTenantByTenantIDResponse {
+  Tenant tenant = 1;
+}
+
+message BatchGetTenantsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetTenantsResponse {
+  repeated Tenant tenants = 1;
+}

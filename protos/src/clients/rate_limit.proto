@@ -1,0 +1,57 @@
+syntax = "proto3";
+package rate_limit;
+
+option go_package = "nfxid/protos/gen/clients/rate_limit;ratelimitpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 速率限制类型枚举
+enum ClientsRateLimitType {
+  CLIENTS_RATE_LIMIT_TYPE_UNSPECIFIED = 0;
+  CLIENTS_RATE_LIMIT_TYPE_REQUESTS_PER_SECOND = 1; // 每秒请求数
+  CLIENTS_RATE_LIMIT_TYPE_REQUESTS_PER_MINUTE = 2; // 每分钟请求数
+  CLIENTS_RATE_LIMIT_TYPE_REQUESTS_PER_HOUR = 3;   // 每小时请求数
+  CLIENTS_RATE_LIMIT_TYPE_REQUESTS_PER_DAY = 4;    // 每天请求数
+}
+
+// 速率限制信息
+message RateLimit {
+  string id = 1;                           // 限制ID (UUID)
+  string app_id = 2;                       // 应用ID (UUID)
+  ClientsRateLimitType limit_type = 3;     // 限制类型
+  int32 limit_value = 4;                   // 限制值
+  int32 window_seconds = 5;                // 窗口秒数
+  optional string description = 6;        // 描述 (text)
+  string status = 7;                       // 状态 (varchar(50))
+  google.protobuf.Timestamp created_at = 8;     // 创建时间
+  optional string created_by = 9;         // 创建者ID (UUID)
+  google.protobuf.Timestamp updated_at = 10;    // 更新时间
+  optional string updated_by = 11;        // 更新者ID (UUID)
+}
+
+// RateLimit 服务 - 供其他服务通过 gRPC 管理速率限制
+service RateLimitService {
+  // 根据ID获取速率限制
+  rpc GetRateLimitByID (GetRateLimitByIDRequest) returns (GetRateLimitByIDResponse);
+  
+  // 根据应用ID获取速率限制列表
+  rpc GetRateLimitsByAppID (GetRateLimitsByAppIDRequest) returns (GetRateLimitsByAppIDResponse);
+}
+
+// RateLimit Service Messages
+message GetRateLimitByIDRequest {
+  string id = 1;
+}
+
+message GetRateLimitByIDResponse {
+  RateLimit rate_limit = 1;
+}
+
+message GetRateLimitsByAppIDRequest {
+  string app_id = 1;
+  optional string status = 2;
+}
+
+message GetRateLimitsByAppIDResponse {
+  repeated RateLimit rate_limits = 1;
+}

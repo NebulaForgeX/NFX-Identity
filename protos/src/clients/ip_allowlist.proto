@@ -1,0 +1,69 @@
+syntax = "proto3";
+package ip_allowlist;
+
+option go_package = "nfxid/protos/gen/clients/ip_allowlist;ipallowlistpb";
+
+import "google/protobuf/timestamp.proto";
+
+// IP 白名单状态枚举
+enum ClientsAllowlistStatus {
+  CLIENTS_ALLOWLIST_STATUS_UNSPECIFIED = 0;
+  CLIENTS_ALLOWLIST_STATUS_ACTIVE = 1;   // 激活
+  CLIENTS_ALLOWLIST_STATUS_DISABLED = 2; // 禁用
+  CLIENTS_ALLOWLIST_STATUS_REVOKED = 3;  // 已撤销
+}
+
+// IP 白名单信息
+message IpAllowlist {
+  string id = 1;                           // 白名单ID (UUID)
+  string rule_id = 2;                      // 规则标识符 (varchar(255))
+  string app_id = 3;                       // 应用ID (UUID)
+  string cidr = 4;                         // CIDR 地址 (cidr)
+  optional string description = 5;        // 描述 (text)
+  ClientsAllowlistStatus status = 6;       // 状态：active, revoked
+  google.protobuf.Timestamp created_at = 7;     // 创建时间
+  optional string created_by = 8;         // 创建者ID (UUID)
+  google.protobuf.Timestamp updated_at = 9;     // 更新时间
+  optional string updated_by = 10;        // 更新者ID (UUID)
+  optional google.protobuf.Timestamp revoked_at = 11; // 撤销时间
+  optional string revoked_by = 12;        // 撤销者ID (UUID)
+  optional string revoke_reason = 13;     // 撤销原因 (text)
+}
+
+// IpAllowlist 服务 - 供其他服务通过 gRPC 管理IP白名单
+service IpAllowlistService {
+  // 根据ID获取IP白名单
+  rpc GetIpAllowlistByID (GetIpAllowlistByIDRequest) returns (GetIpAllowlistByIDResponse);
+  
+  // 根据规则ID获取IP白名单
+  rpc GetIpAllowlistByRuleID (GetIpAllowlistByRuleIDRequest) returns (GetIpAllowlistByRuleIDResponse);
+  
+  // 根据应用ID获取IP白名单列表
+  rpc GetIpAllowlistsByAppID (GetIpAllowlistsByAppIDRequest) returns (GetIpAllowlistsByAppIDResponse);
+}
+
+// IpAllowlist Service Messages
+message GetIpAllowlistByIDRequest {
+  string id = 1;
+}
+
+message GetIpAllowlistByIDResponse {
+  IpAllowlist ip_allowlist = 1;
+}
+
+message GetIpAllowlistByRuleIDRequest {
+  string rule_id = 1;
+}
+
+message GetIpAllowlistByRuleIDResponse {
+  IpAllowlist ip_allowlist = 1;
+}
+
+message GetIpAllowlistsByAppIDRequest {
+  string app_id = 1;
+  optional ClientsAllowlistStatus status = 2;
+}
+
+message GetIpAllowlistsByAppIDResponse {
+  repeated IpAllowlist ip_allowlists = 1;
+}

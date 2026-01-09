@@ -2,6 +2,8 @@ package grants
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (g *Grant) Revoke(revokedBy uuid.UUID, reason string) error {

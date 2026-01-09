@@ -1,7 +1,5 @@
 package actor_snapshots
 
-import "time"
-
 func (as *ActorSnapshot) Update(displayName, email, clientName *string, snapshotData map[string]interface{}) error {
 	if displayName != nil {
 		as.state.DisplayName = displayName

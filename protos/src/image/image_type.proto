@@ -1,0 +1,56 @@
+syntax = "proto3";
+package image_type;
+
+option go_package = "nfxid/protos/gen/image/image_type;imagetypepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 图片类型信息
+message ImageType {
+  string id = 1;                         // 类型ID (UUID)
+  string key = 2;                        // 唯一键 (text)
+  optional string description = 3;       // 描述 (text)
+  optional int32 max_width = 4;          // 最大宽度 (integer)
+  optional int32 max_height = 5;         // 最大高度 (integer)
+  optional string aspect_ratio = 6;      // 宽高比 (text)
+  optional bool is_system = 7;           // 是否系统类型
+  google.protobuf.Timestamp created_at = 8;   // 创建时间
+  google.protobuf.Timestamp updated_at = 9;   // 更新时间
+}
+
+// ImageType 服务 - 供其他服务通过 gRPC 管理图片类型
+service ImageTypeService {
+  // 根据ID获取图片类型
+  rpc GetImageTypeByID (GetImageTypeByIDRequest) returns (GetImageTypeByIDResponse);
+  
+  // 根据名称获取图片类型
+  rpc GetImageTypeByName (GetImageTypeByNameRequest) returns (GetImageTypeByNameResponse);
+  
+  // 获取所有图片类型列表
+  rpc GetAllImageTypes (GetAllImageTypesRequest) returns (GetAllImageTypesResponse);
+}
+
+// ImageType Service Messages
+message GetImageTypeByIDRequest {
+  string id = 1;
+}
+
+message GetImageTypeByIDResponse {
+  ImageType image_type = 1;
+}
+
+message GetImageTypeByNameRequest {
+  string name = 1;
+}
+
+message GetImageTypeByNameResponse {
+  ImageType image_type = 1;
+}
+
+message GetAllImageTypesRequest {
+  optional bool is_system = 1;
+}
+
+message GetAllImageTypesResponse {
+  repeated ImageType image_types = 1;
+}

@@ -1,0 +1,48 @@
+syntax = "proto3";
+package image_variant;
+
+option go_package = "nfxid/protos/gen/image/image_variant;imagevariantpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 图片变体信息
+message ImageVariant {
+  string id = 1;                         // 变体ID (UUID)
+  string image_id = 2;                   // 图片ID (UUID)
+  string variant_key = 3;                // 变体键 (text)
+  optional int32 width = 4;              // 宽度 (integer)
+  optional int32 height = 5;             // 高度 (integer)
+  optional int64 size = 6;               // 文件大小 (bigint)
+  optional string mime_type = 7;         // MIME类型 (text)
+  string storage_path = 8;               // 存储路径 (text)
+  optional string url = 9;               // URL (text)
+  google.protobuf.Timestamp created_at = 10;  // 创建时间
+  google.protobuf.Timestamp updated_at = 11;  // 更新时间
+}
+
+// ImageVariant 服务 - 供其他服务通过 gRPC 管理图片变体
+service ImageVariantService {
+  // 根据ID获取图片变体
+  rpc GetImageVariantByID (GetImageVariantByIDRequest) returns (GetImageVariantByIDResponse);
+  
+  // 根据图片ID获取图片变体列表
+  rpc GetImageVariantsByImageID (GetImageVariantsByImageIDRequest) returns (GetImageVariantsByImageIDResponse);
+}
+
+// ImageVariant Service Messages
+message GetImageVariantByIDRequest {
+  string id = 1;
+}
+
+message GetImageVariantByIDResponse {
+  ImageVariant image_variant = 1;
+}
+
+message GetImageVariantsByImageIDRequest {
+  string image_id = 1;
+  optional string variant_name = 2;
+}
+
+message GetImageVariantsByImageIDResponse {
+  repeated ImageVariant image_variants = 1;
+}

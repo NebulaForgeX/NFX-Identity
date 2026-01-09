@@ -1,0 +1,65 @@
+syntax = "proto3";
+package user;
+
+option go_package = "nfxid/protos/gen/directory/user;userpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户状态枚举
+enum DirectoryUserStatus {
+  DIRECTORY_USER_STATUS_UNSPECIFIED = 0;
+  DIRECTORY_USER_STATUS_PENDING = 1;   // 待定
+  DIRECTORY_USER_STATUS_ACTIVE = 2;    // 激活
+  DIRECTORY_USER_STATUS_DEACTIVE = 3;  // 停用
+}
+
+// 用户信息
+message User {
+  string id = 1;                          // 用户ID (UUID)
+  string tenant_id = 2;                   // 租户ID (UUID)
+  string username = 3;                    // 用户名 (varchar(50))
+  DirectoryUserStatus status = 4;        // 状态：pending, active, deactive
+  bool is_verified = 5;                   // 是否已验证
+  optional google.protobuf.Timestamp last_login_at = 6; // 最后登录时间
+  google.protobuf.Timestamp created_at = 7;       // 创建时间
+  google.protobuf.Timestamp updated_at = 8;       // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 9; // 软删除时间
+}
+
+// User 服务 - 供其他服务通过 gRPC 管理用户
+service UserService {
+  // 根据ID获取用户
+  rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse);
+  
+  // 根据用户名获取用户
+  rpc GetUserByUsername (GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  
+  // 批量获取用户
+  rpc BatchGetUsers (BatchGetUsersRequest) returns (BatchGetUsersResponse);
+}
+
+// User Service Messages
+message GetUserByIDRequest {
+  string id = 1;
+}
+
+message GetUserByIDResponse {
+  User user = 1;
+}
+
+message GetUserByUsernameRequest {
+  string username = 1;
+  optional string tenant_id = 2;
+}
+
+message GetUserByUsernameResponse {
+  User user = 1;
+}
+
+message BatchGetUsersRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetUsersResponse {
+  repeated User users = 1;
+}

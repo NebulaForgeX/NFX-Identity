@@ -1,0 +1,78 @@
+syntax = "proto3";
+package domain_verification;
+
+option go_package = "nfxid/protos/gen/tenants/domain_verification;domainverificationpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 验证方法枚举
+enum TenantsVerificationMethod {
+  TENANTS_VERIFICATION_METHOD_UNSPECIFIED = 0;
+  TENANTS_VERIFICATION_METHOD_DNS = 1;  // DNS
+  TENANTS_VERIFICATION_METHOD_TXT = 2;  // TXT
+  TENANTS_VERIFICATION_METHOD_HTML = 3; // HTML
+  TENANTS_VERIFICATION_METHOD_FILE = 4; // FILE
+}
+
+// 验证状态枚举
+enum TenantsVerificationStatus {
+  TENANTS_VERIFICATION_STATUS_UNSPECIFIED = 0;
+  TENANTS_VERIFICATION_STATUS_PENDING = 1;  // 待定
+  TENANTS_VERIFICATION_STATUS_VERIFIED = 2; // 已验证
+  TENANTS_VERIFICATION_STATUS_FAILED = 3;   // 失败
+  TENANTS_VERIFICATION_STATUS_EXPIRED = 4;  // 已过期
+}
+
+// 域名验证信息
+message DomainVerification {
+  string id = 1;                           // 验证ID (UUID)
+  string tenant_id = 2;                    // 租户ID (UUID)
+  string domain = 3;                       // 域名 (varchar(255))
+  TenantsVerificationMethod verification_method = 4; // 验证方法：DNS, TXT, HTML, FILE
+  optional string verification_token = 5;  // 验证令牌 (varchar(255))
+  TenantsVerificationStatus status = 6;    // 状态：PENDING, VERIFIED, FAILED, EXPIRED
+  optional google.protobuf.Timestamp verified_at = 7; // 验证时间
+  optional google.protobuf.Timestamp expires_at = 8;  // 过期时间
+  google.protobuf.Timestamp created_at = 9;     // 创建时间
+  optional string created_by = 10;        // 创建者ID (UUID)
+  optional google.protobuf.Struct metadata = 11; // 元数据 (JSONB)
+}
+
+// DomainVerification 服务 - 供其他服务通过 gRPC 管理域名验证
+service DomainVerificationService {
+  // 根据ID获取域名验证
+  rpc GetDomainVerificationByID (GetDomainVerificationByIDRequest) returns (GetDomainVerificationByIDResponse);
+  
+  // 根据域名获取域名验证
+  rpc GetDomainVerificationByDomain (GetDomainVerificationByDomainRequest) returns (GetDomainVerificationByDomainResponse);
+  
+  // 根据租户ID获取域名验证列表
+  rpc GetDomainVerificationsByTenantID (GetDomainVerificationsByTenantIDRequest) returns (GetDomainVerificationsByTenantIDResponse);
+}
+
+// DomainVerification Service Messages
+message GetDomainVerificationByIDRequest {
+  string id = 1;
+}
+
+message GetDomainVerificationByIDResponse {
+  DomainVerification domain_verification = 1;
+}
+
+message GetDomainVerificationByDomainRequest {
+  string domain = 1;
+}
+
+message GetDomainVerificationByDomainResponse {
+  DomainVerification domain_verification = 1;
+}
+
+message GetDomainVerificationsByTenantIDRequest {
+  string tenant_id = 1;
+  optional TenantsVerificationStatus status = 2;
+}
+
+message GetDomainVerificationsByTenantIDResponse {
+  repeated DomainVerification domain_verifications = 1;
+}

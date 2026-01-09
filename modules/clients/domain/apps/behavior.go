@@ -2,6 +2,8 @@ package apps
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (a *App) Update(name string, description *string, appType AppType, environment Environment, metadata map[string]interface{}, updatedBy *uuid.UUID) error {

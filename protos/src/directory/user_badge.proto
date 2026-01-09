@@ -1,0 +1,55 @@
+syntax = "proto3";
+package user_badge;
+
+option go_package = "nfxid/protos/gen/directory/user_badge;userbadgepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户徽章信息
+message UserBadge {
+  string id = 1;                           // 用户徽章ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  string badge_id = 3;                     // 徽章ID (UUID)
+  optional string description = 4;        // 描述 (text)
+  optional int32 level = 5;                // 级别 (integer)
+  google.protobuf.Timestamp earned_at = 6;     // 获得时间
+  google.protobuf.Timestamp created_at = 7;    // 创建时间
+  google.protobuf.Timestamp updated_at = 8;    // 更新时间
+}
+
+// UserBadge 服务 - 供其他服务通过 gRPC 管理用户徽章
+service UserBadgeService {
+  // 根据ID获取用户徽章
+  rpc GetUserBadgeByID (GetUserBadgeByIDRequest) returns (GetUserBadgeByIDResponse);
+  
+  // 根据用户ID获取用户徽章列表
+  rpc GetUserBadgesByUserID (GetUserBadgesByUserIDRequest) returns (GetUserBadgesByUserIDResponse);
+  
+  // 根据徽章ID获取用户徽章列表
+  rpc GetUserBadgesByBadgeID (GetUserBadgesByBadgeIDRequest) returns (GetUserBadgesByBadgeIDResponse);
+}
+
+// UserBadge Service Messages
+message GetUserBadgeByIDRequest {
+  string id = 1;
+}
+
+message GetUserBadgeByIDResponse {
+  UserBadge user_badge = 1;
+}
+
+message GetUserBadgesByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserBadgesByUserIDResponse {
+  repeated UserBadge user_badges = 1;
+}
+
+message GetUserBadgesByBadgeIDRequest {
+  string badge_id = 1;
+}
+
+message GetUserBadgesByBadgeIDResponse {
+  repeated UserBadge user_badges = 1;
+}

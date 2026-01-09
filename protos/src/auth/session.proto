@@ -1,0 +1,90 @@
+syntax = "proto3";
+package session;
+
+option go_package = "nfxid/protos/gen/auth/session;sessionpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 会话撤销原因枚举
+enum AuthSessionRevokeReason {
+  AUTH_SESSION_REVOKE_REASON_UNSPECIFIED = 0;
+  AUTH_SESSION_REVOKE_REASON_USER_LOGOUT = 1;          // 用户登出
+  AUTH_SESSION_REVOKE_REASON_ADMIN_REVOKE = 2;         // 管理员撤销
+  AUTH_SESSION_REVOKE_REASON_PASSWORD_CHANGED = 3;     // 密码已更改
+  AUTH_SESSION_REVOKE_REASON_DEVICE_CHANGED = 4;       // 设备已更改
+  AUTH_SESSION_REVOKE_REASON_ACCOUNT_LOCKED = 5;       // 账户已锁定
+  AUTH_SESSION_REVOKE_REASON_SUSPICIOUS_ACTIVITY = 6;  // 可疑活动
+  AUTH_SESSION_REVOKE_REASON_SESSION_EXPIRED = 7;      // 会话已过期
+  AUTH_SESSION_REVOKE_REASON_OTHER = 8;                // 其他
+}
+
+// 会话信息
+message Session {
+  string id = 1;                           // 会话ID (UUID)
+  string session_id = 2;                   // 会话标识符 (varchar(255))
+  string tenant_id = 3;                    // 租户ID (UUID)
+  string user_id = 4;                      // 用户ID (UUID)
+  optional string app_id = 5;              // 应用ID (UUID)
+  optional string client_id = 6;           // 客户端ID (varchar(255))
+  google.protobuf.Timestamp created_at = 7;             // 创建时间
+  google.protobuf.Timestamp last_seen_at = 8;           // 最后活跃时间
+  google.protobuf.Timestamp expires_at = 9;             // 过期时间
+  optional string ip = 10;                 // IP地址 (inet)
+  optional string ua_hash = 11;            // User-Agent 哈希 (varchar(64))
+  optional string device_id = 12;          // 设备ID (varchar(255))
+  optional string device_fingerprint = 13; // 设备指纹 (varchar(255))
+  optional string device_name = 14;        // 设备名称 (varchar(255))
+  optional google.protobuf.Timestamp revoked_at = 15;   // 撤销时间
+  optional AuthSessionRevokeReason revoke_reason = 16;  // 撤销原因
+  optional string revoked_by = 17;         // 撤销者 (varchar(255))
+  google.protobuf.Timestamp updated_at = 18;            // 更新时间
+}
+
+// Session 服务 - 供其他服务通过 gRPC 管理会话
+service SessionService {
+  // 根据ID获取会话
+  rpc GetSessionByID (GetSessionByIDRequest) returns (GetSessionByIDResponse);
+  
+  // 根据会话标识符获取会话
+  rpc GetSessionBySessionID (GetSessionBySessionIDRequest) returns (GetSessionBySessionIDResponse);
+  
+  // 根据用户ID获取会话列表
+  rpc GetSessionsByUserID (GetSessionsByUserIDRequest) returns (GetSessionsByUserIDResponse);
+  
+  // 批量获取会话
+  rpc BatchGetSessions (BatchGetSessionsRequest) returns (BatchGetSessionsResponse);
+}
+
+// Session Service Messages
+message GetSessionByIDRequest {
+  string id = 1;
+}
+
+message GetSessionByIDResponse {
+  Session session = 1;
+}
+
+message GetSessionBySessionIDRequest {
+  string session_id = 1;
+}
+
+message GetSessionBySessionIDResponse {
+  Session session = 1;
+}
+
+message GetSessionsByUserIDRequest {
+  string user_id = 1;
+  optional string tenant_id = 2;
+}
+
+message GetSessionsByUserIDResponse {
+  repeated Session sessions = 1;
+}
+
+message BatchGetSessionsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetSessionsResponse {
+  repeated Session sessions = 1;
+}

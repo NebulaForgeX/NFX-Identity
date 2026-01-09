@@ -1,0 +1,47 @@
+syntax = "proto3";
+package hash_chain_checkpoint;
+
+option go_package = "nfxid/protos/gen/audit/hash_chain_checkpoint;hashchaincheckpointpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 哈希链检查点信息
+message HashChainCheckpoint {
+  string id = 1;                           // 检查点ID (UUID)
+  string checkpoint_id = 2;                // 检查点标识符 (varchar(255))
+  optional string tenant_id = 3;           // 租户ID (UUID)
+  google.protobuf.Timestamp partition_date = 4; // 分区日期 (date) - 使用 Timestamp 表示日期
+  string checkpoint_hash = 5;              // 检查点哈希 (varchar(64))
+  optional string prev_checkpoint_hash = 6; // 前一检查点哈希 (varchar(64))
+  int32 event_count = 7;                   // 事件数量
+  optional string first_event_id = 8;      // 第一个事件ID (varchar(255))
+  optional string last_event_id = 9;       // 最后一个事件ID (varchar(255))
+  google.protobuf.Timestamp created_at = 10; // 创建时间
+  optional string created_by = 11;         // 创建者 (varchar(255))
+}
+
+// HashChainCheckpoint 服务 - 供其他服务通过 gRPC 管理哈希链检查点
+service HashChainCheckpointService {
+  // 根据ID获取检查点
+  rpc GetHashChainCheckpointByID (GetHashChainCheckpointByIDRequest) returns (GetHashChainCheckpointByIDResponse);
+  
+  // 根据检查点ID获取检查点
+  rpc GetHashChainCheckpointByCheckpointID (GetHashChainCheckpointByCheckpointIDRequest) returns (GetHashChainCheckpointByCheckpointIDResponse);
+}
+
+// HashChainCheckpoint Service Messages
+message GetHashChainCheckpointByIDRequest {
+  string id = 1;
+}
+
+message GetHashChainCheckpointByIDResponse {
+  HashChainCheckpoint hash_chain_checkpoint = 1;
+}
+
+message GetHashChainCheckpointByCheckpointIDRequest {
+  string checkpoint_id = 1;
+}
+
+message GetHashChainCheckpointByCheckpointIDResponse {
+  HashChainCheckpoint hash_chain_checkpoint = 1;
+}

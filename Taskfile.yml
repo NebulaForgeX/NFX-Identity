@@ -40,35 +40,18 @@ tasks:
       - go install golang.org/x/tools/cmd/goimports@latest
     silent: false
 
-  proto:mod:update:
+  proto:update:
     desc: "Download buf dependencies"
     dir: "{{.PROTO_SRC_DIR}}"
     cmds:
-      - ./.buf/bin/buf dep update
+      - buf dep update
 
-  proto:mod:update:ps:
-    desc: "Download buf dependencies (PowerShell)"
-    dir: "{{.PROTO_SRC_DIR}}"
-    cmds:
-      - powershell -Command "& (Join-Path (Get-Location) '.bufps\\buf.exe') dep update"
-
-  gen-proto:
+  proto:gen:
     desc: "Generate gRPC & Protobuf code using buf"
-    deps: [proto:mod:update]
+    deps: [proto:update]
     dir: "{{.PROTO_SRC_DIR}}"
     cmds:
-      - ./.buf/bin/buf generate
-    sources:
-      - "{{.PROTO_SRC_DIR}}/**/*.proto"
-    generates:
-      - "{{.PROTO_OUT_DIR}}/**/*.pb.go"
-
-  gen-proto:ps:
-    desc: "Generate gRPC & Protobuf code using buf (PowerShell)"
-    deps: [proto:mod:update:ps]
-    dir: "{{.PROTO_SRC_DIR}}"
-    cmds:
-      - powershell -Command "& (Join-Path (Get-Location) '.bufps\\buf.exe') generate"
+      - buf generate
     sources:
       - "{{.PROTO_SRC_DIR}}/**/*.proto"
     generates:

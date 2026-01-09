@@ -1,0 +1,52 @@
+syntax = "proto3";
+package role_permission;
+
+option go_package = "nfxid/protos/gen/access/role_permission;rolepermissionpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 角色权限关联信息
+message RolePermission {
+  string id = 1;                  // 关联ID (UUID)
+  string role_id = 2;             // 角色ID (UUID)
+  string permission_id = 3;       // 权限ID (UUID)
+  google.protobuf.Timestamp created_at = 4; // 创建时间
+  optional string created_by = 5; // 创建者ID (UUID)
+}
+
+// RolePermission 服务 - 供其他服务通过 gRPC 管理角色权限关联
+service RolePermissionService {
+  // 根据ID获取角色权限关联
+  rpc GetRolePermissionByID (GetRolePermissionByIDRequest) returns (GetRolePermissionByIDResponse);
+  
+  // 根据角色获取权限列表
+  rpc GetPermissionsByRole (GetPermissionsByRoleRequest) returns (GetPermissionsByRoleResponse);
+  
+  // 根据权限获取角色列表
+  rpc GetRolesByPermission (GetRolesByPermissionRequest) returns (GetRolesByPermissionResponse);
+}
+
+// RolePermission Service Messages
+message GetRolePermissionByIDRequest {
+  string id = 1;
+}
+
+message GetRolePermissionByIDResponse {
+  RolePermission role_permission = 1;
+}
+
+message GetPermissionsByRoleRequest {
+  string role_id = 1;
+}
+
+message GetPermissionsByRoleResponse {
+  repeated RolePermission role_permissions = 1;
+}
+
+message GetRolesByPermissionRequest {
+  string permission_id = 1;
+}
+
+message GetRolesByPermissionResponse {
+  repeated RolePermission role_permissions = 1;
+}

@@ -1,0 +1,86 @@
+syntax = "proto3";
+package grant;
+
+option go_package = "nfxid/protos/gen/access/grant;grantpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 授权主体类型枚举
+enum AccessSubjectType {
+  ACCESS_SUBJECT_TYPE_UNSPECIFIED = 0;
+  ACCESS_SUBJECT_TYPE_USER = 1;    // 用户主体
+  ACCESS_SUBJECT_TYPE_CLIENT = 2;  // 客户端主体
+}
+
+// 授权类型枚举
+enum AccessGrantType {
+  ACCESS_GRANT_TYPE_UNSPECIFIED = 0;
+  ACCESS_GRANT_TYPE_ROLE = 1;       // 授予角色
+  ACCESS_GRANT_TYPE_PERMISSION = 2; // 授予权限
+}
+
+// 授权效果枚举
+enum AccessGrantEffect {
+  ACCESS_GRANT_EFFECT_UNSPECIFIED = 0;
+  ACCESS_GRANT_EFFECT_ALLOW = 1; // 允许
+  ACCESS_GRANT_EFFECT_DENY = 2;  // 拒绝
+}
+
+// 授权信息 - 核心授权表，定义谁被授予什么权限
+message Grant {
+  string id = 1;                    // 授权ID (UUID)
+  AccessSubjectType subject_type = 2; // 主体类型：USER 或 CLIENT
+  string subject_id = 3;            // 主体ID (UUID) - user_id 或 client_id
+  AccessGrantType grant_type = 4;   // 授权类型：ROLE 或 PERMISSION
+  string grant_ref_id = 5;          // 授权引用ID (UUID) - role_id 或 permission_id
+  optional string tenant_id = 6;    // 租户ID (UUID) - NULL 表示全局授权
+  optional string app_id = 7;       // 应用ID (UUID) - NULL 表示非应用范围授权
+  optional string resource_type = 8; // 资源类型：如 "user", "tenant", "app", "asset" 等
+  optional string resource_id = 9;   // 特定资源ID (UUID) - 用于资源级授权
+  AccessGrantEffect effect = 10;     // 授权效果：ALLOW 或 DENY
+  optional google.protobuf.Timestamp expires_at = 11; // 过期时间 - NULL 表示永久授权
+  google.protobuf.Timestamp created_at = 12;          // 创建时间
+  optional string created_by = 13;   // 创建者ID (UUID) - 谁授予了这个授权
+  optional google.protobuf.Timestamp revoked_at = 14; // 撤销时间 - NULL 表示未撤销
+  optional string revoked_by = 15;   // 撤销者ID (UUID) - 谁撤销了这个授权
+  optional string revoke_reason = 16; // 撤销原因
+}
+
+// Grant 服务 - 供其他服务通过 gRPC 管理授权
+service GrantService {
+  // 根据ID获取授权
+  rpc GetGrantByID (GetGrantByIDRequest) returns (GetGrantByIDResponse);
+  
+  // 根据主体获取授权列表
+  rpc GetGrantsBySubject (GetGrantsBySubjectRequest) returns (GetGrantsBySubjectResponse);
+  
+  // 批量获取授权
+  rpc BatchGetGrants (BatchGetGrantsRequest) returns (BatchGetGrantsResponse);
+}
+
+// Grant Service Messages
+message GetGrantByIDRequest {
+  string id = 1;
+}
+
+message GetGrantByIDResponse {
+  Grant grant = 1;
+}
+
+message GetGrantsBySubjectRequest {
+  AccessSubjectType subject_type = 1;
+  string subject_id = 2;
+  optional string tenant_id = 3;
+}
+
+message GetGrantsBySubjectResponse {
+  repeated Grant grants = 1;
+}
+
+message BatchGetGrantsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetGrantsResponse {
+  repeated Grant grants = 1;
+}

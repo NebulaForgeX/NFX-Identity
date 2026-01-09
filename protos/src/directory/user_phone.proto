@@ -1,0 +1,59 @@
+syntax = "proto3";
+package user_phone;
+
+option go_package = "nfxid/protos/gen/directory/user_phone;userphonepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户手机信息
+message UserPhone {
+  string id = 1;                           // 手机ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  string phone = 3;                        // 手机号 (varchar(20))
+  optional string country_code = 4;       // 国家代码 (varchar(10))
+  bool is_primary = 5;                     // 是否主手机
+  bool is_verified = 6;                    // 是否已验证
+  optional google.protobuf.Timestamp verified_at = 7; // 验证时间
+  optional string verification_code = 8;  // 验证码 (varchar(10))
+  optional google.protobuf.Timestamp verification_expires_at = 9; // 验证码过期时间
+  google.protobuf.Timestamp created_at = 10;     // 创建时间
+  google.protobuf.Timestamp updated_at = 11;     // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 12; // 软删除时间
+}
+
+// UserPhone 服务 - 供其他服务通过 gRPC 管理用户手机
+service UserPhoneService {
+  // 根据ID获取用户手机
+  rpc GetUserPhoneByID (GetUserPhoneByIDRequest) returns (GetUserPhoneByIDResponse);
+  
+  // 根据手机号获取用户手机
+  rpc GetUserPhoneByPhone (GetUserPhoneByPhoneRequest) returns (GetUserPhoneByPhoneResponse);
+  
+  // 根据用户ID获取用户手机列表
+  rpc GetUserPhonesByUserID (GetUserPhonesByUserIDRequest) returns (GetUserPhonesByUserIDResponse);
+}
+
+// UserPhone Service Messages
+message GetUserPhoneByIDRequest {
+  string id = 1;
+}
+
+message GetUserPhoneByIDResponse {
+  UserPhone user_phone = 1;
+}
+
+message GetUserPhoneByPhoneRequest {
+  string phone = 1;
+}
+
+message GetUserPhoneByPhoneResponse {
+  UserPhone user_phone = 1;
+}
+
+message GetUserPhonesByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserPhonesByUserIDResponse {
+  repeated UserPhone user_phones = 1;
+}

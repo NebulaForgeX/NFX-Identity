@@ -1,0 +1,74 @@
+syntax = "proto3";
+package invitation;
+
+option go_package = "nfxid/protos/gen/tenants/invitation;invitationpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 邀请状态枚举
+enum TenantsInvitationStatus {
+  TENANTS_INVITATION_STATUS_UNSPECIFIED = 0;
+  TENANTS_INVITATION_STATUS_PENDING = 1;  // 待定
+  TENANTS_INVITATION_STATUS_ACCEPTED = 2; // 已接受
+  TENANTS_INVITATION_STATUS_EXPIRED = 3;  // 已过期
+  TENANTS_INVITATION_STATUS_REVOKED = 4;  // 已撤销
+}
+
+// 邀请信息
+message Invitation {
+  string id = 1;                           // 邀请ID (UUID)
+  string invite_id = 2;                    // 邀请标识符 (varchar(255))
+  string tenant_id = 3;                    // 租户ID (UUID)
+  string email = 4;                        // 邮箱 (varchar(255))
+  string token_hash = 5;                   // 令牌哈希 (varchar(255))
+  google.protobuf.Timestamp expires_at = 6;    // 过期时间
+  TenantsInvitationStatus status = 7;      // 状态：PENDING, ACCEPTED, EXPIRED, REVOKED
+  string invited_by = 8;                   // 邀请者ID (UUID)
+  google.protobuf.Timestamp invited_at = 9;    // 邀请时间
+  optional string accepted_by_user_id = 10; // 接受者用户ID (UUID)
+  optional google.protobuf.Timestamp accepted_at = 11; // 接受时间
+  optional string revoked_by = 12;         // 撤销者ID (UUID)
+  optional google.protobuf.Timestamp revoked_at = 13;  // 撤销时间
+  optional string revoke_reason = 14;      // 撤销原因 (text)
+  repeated string role_ids = 15;           // 角色ID数组 (uuid[])
+  optional google.protobuf.Struct metadata = 16; // 元数据 (JSONB)
+}
+
+// Invitation 服务 - 供其他服务通过 gRPC 管理邀请
+service InvitationService {
+  // 根据ID获取邀请
+  rpc GetInvitationByID (GetInvitationByIDRequest) returns (GetInvitationByIDResponse);
+  
+  // 根据邀请ID获取邀请
+  rpc GetInvitationByInvitationID (GetInvitationByInvitationIDRequest) returns (GetInvitationByInvitationIDResponse);
+  
+  // 根据租户ID获取邀请列表
+  rpc GetInvitationsByTenantID (GetInvitationsByTenantIDRequest) returns (GetInvitationsByTenantIDResponse);
+}
+
+// Invitation Service Messages
+message GetInvitationByIDRequest {
+  string id = 1;
+}
+
+message GetInvitationByIDResponse {
+  Invitation invitation = 1;
+}
+
+message GetInvitationByInvitationIDRequest {
+  string invitation_id = 1;
+}
+
+message GetInvitationByInvitationIDResponse {
+  Invitation invitation = 1;
+}
+
+message GetInvitationsByTenantIDRequest {
+  string tenant_id = 1;
+  optional TenantsInvitationStatus status = 2;
+}
+
+message GetInvitationsByTenantIDResponse {
+  repeated Invitation invitations = 1;
+}

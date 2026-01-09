@@ -1,0 +1,61 @@
+syntax = "proto3";
+package account_lockout;
+
+option go_package = "nfxid/protos/gen/auth/account_lockout;accountlockoutpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 账户锁定原因枚举
+enum AuthLockReason {
+  AUTH_LOCK_REASON_UNSPECIFIED = 0;
+  AUTH_LOCK_REASON_TOO_MANY_ATTEMPTS = 1;    // 尝试次数过多
+  AUTH_LOCK_REASON_ADMIN_LOCK = 2;           // 管理员锁定
+  AUTH_LOCK_REASON_RISK_DETECTED = 3;        // 检测到风险
+  AUTH_LOCK_REASON_SUSPICIOUS_ACTIVITY = 4;  // 可疑活动
+  AUTH_LOCK_REASON_COMPLIANCE = 5;           // 合规要求
+  AUTH_LOCK_REASON_OTHER = 6;                // 其他
+}
+
+// 账户锁定信息
+message AccountLockout {
+  string user_id = 1;                       // 用户ID (UUID) - 主键
+  string tenant_id = 2;                     // 租户ID (UUID)
+  optional google.protobuf.Timestamp locked_until = 3; // 锁定到期时间
+  AuthLockReason lock_reason = 4;           // 锁定原因：too_many_attempts, admin_lock, risk_detected, suspicious_activity, compliance, other
+  google.protobuf.Timestamp locked_at = 5;  // 锁定时间
+  optional string locked_by = 6;            // 锁定者 (varchar(255))
+  optional string actor_id = 7;             // 操作者ID (UUID)
+  optional google.protobuf.Timestamp unlocked_at = 8; // 解锁时间
+  optional string unlocked_by = 9;          // 解锁者 (varchar(255))
+  optional string unlock_actor_id = 10;     // 解锁操作者ID (UUID)
+  google.protobuf.Timestamp created_at = 11; // 创建时间
+  google.protobuf.Timestamp updated_at = 12; // 更新时间
+}
+
+// AccountLockout 服务 - 供其他服务通过 gRPC 管理账户锁定
+service AccountLockoutService {
+  // 根据用户ID获取账户锁定
+  rpc GetAccountLockoutByUserID (GetAccountLockoutByUserIDRequest) returns (GetAccountLockoutByUserIDResponse);
+  
+  // 批量获取账户锁定
+  rpc BatchGetAccountLockouts (BatchGetAccountLockoutsRequest) returns (BatchGetAccountLockoutsResponse);
+}
+
+// AccountLockout Service Messages
+message GetAccountLockoutByUserIDRequest {
+  string user_id = 1;
+  optional string tenant_id = 2;
+}
+
+message GetAccountLockoutByUserIDResponse {
+  AccountLockout account_lockout = 1;
+}
+
+message BatchGetAccountLockoutsRequest {
+  repeated string user_ids = 1;
+  optional string tenant_id = 2;
+}
+
+message BatchGetAccountLockoutsResponse {
+  repeated AccountLockout account_lockouts = 1;
+}

@@ -1,0 +1,53 @@
+syntax = "proto3";
+package scope;
+
+option go_package = "nfxid/protos/gen/access/scope;scopepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 范围信息
+message Scope {
+  string scope = 1;               // 范围标识符 (varchar(255)) - 主键
+  optional string description = 2; // 描述 (text)
+  bool is_system = 3;             // 是否系统范围
+  google.protobuf.Timestamp created_at = 4;          // 创建时间
+  google.protobuf.Timestamp updated_at = 5;          // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 6; // 软删除时间
+}
+
+// Scope 服务 - 供其他服务通过 gRPC 管理范围
+service ScopeService {
+  // 根据Scope标识符获取范围
+  rpc GetScopeByScope (GetScopeByScopeRequest) returns (GetScopeByScopeResponse);
+  
+  // 获取所有范围列表
+  rpc GetAllScopes (GetAllScopesRequest) returns (GetAllScopesResponse);
+  
+  // 批量获取范围
+  rpc BatchGetScopes (BatchGetScopesRequest) returns (BatchGetScopesResponse);
+}
+
+// Scope Service Messages
+message GetScopeByScopeRequest {
+  string scope = 1;
+}
+
+message GetScopeByScopeResponse {
+  Scope scope = 1;
+}
+
+message GetAllScopesRequest {
+  optional bool is_system = 1;
+}
+
+message GetAllScopesResponse {
+  repeated Scope scopes = 1;
+}
+
+message BatchGetScopesRequest {
+  repeated string scopes = 1;
+}
+
+message BatchGetScopesResponse {
+  repeated Scope scopes = 1;
+}

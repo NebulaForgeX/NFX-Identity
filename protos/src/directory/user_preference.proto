@@ -1,0 +1,49 @@
+syntax = "proto3";
+package user_preference;
+
+option go_package = "nfxid/protos/gen/directory/user_preference;userpreferencepb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 用户偏好信息
+message UserPreference {
+  string id = 1;                           // 偏好ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  optional string theme = 3;               // 主题 (varchar(50))
+  optional string language = 4;            // 语言 (varchar(10))
+  optional string timezone = 5;            // 时区 (varchar(50))
+  optional google.protobuf.Struct notifications = 6; // 通知设置 (JSONB)
+  optional google.protobuf.Struct privacy = 7;      // 隐私设置 (JSONB)
+  optional google.protobuf.Struct display = 8;      // 显示设置 (JSONB)
+  optional google.protobuf.Struct other = 9;        // 其他设置 (JSONB)
+  google.protobuf.Timestamp created_at = 10;        // 创建时间
+  google.protobuf.Timestamp updated_at = 11;        // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 12; // 软删除时间
+}
+
+// UserPreference 服务 - 供其他服务通过 gRPC 管理用户偏好
+service UserPreferenceService {
+  // 根据ID获取用户偏好
+  rpc GetUserPreferenceByID (GetUserPreferenceByIDRequest) returns (GetUserPreferenceByIDResponse);
+  
+  // 根据用户ID获取用户偏好
+  rpc GetUserPreferenceByUserID (GetUserPreferenceByUserIDRequest) returns (GetUserPreferenceByUserIDResponse);
+}
+
+// UserPreference Service Messages
+message GetUserPreferenceByIDRequest {
+  string id = 1;
+}
+
+message GetUserPreferenceByIDResponse {
+  UserPreference user_preference = 1;
+}
+
+message GetUserPreferenceByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserPreferenceByUserIDResponse {
+  UserPreference user_preference = 1;
+}

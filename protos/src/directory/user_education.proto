@@ -1,0 +1,52 @@
+syntax = "proto3";
+package user_education;
+
+option go_package = "nfxid/protos/gen/directory/user_education;usereducationpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户教育信息
+message UserEducation {
+  string id = 1;                           // 教育ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  string school = 3;                       // 学校 (varchar(255))
+  optional string degree = 4;              // 学位 (varchar(100))
+  optional string major = 5;               // 专业 (varchar(255))
+  optional string field_of_study = 6;      // 研究领域 (varchar(255))
+  optional google.protobuf.Timestamp start_date = 7; // 开始日期 (date)
+  optional google.protobuf.Timestamp end_date = 8;   // 结束日期 (date)
+  bool is_current = 9;                     // 是否当前教育
+  optional string description = 10;        // 描述 (text)
+  optional string grade = 11;              // 成绩 (varchar(50))
+  optional string activities = 12;         // 活动 (text)
+  optional string achievements = 13;       // 成就 (text)
+  google.protobuf.Timestamp created_at = 14;        // 创建时间
+  google.protobuf.Timestamp updated_at = 15;        // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 16; // 软删除时间
+}
+
+// UserEducation 服务 - 供其他服务通过 gRPC 管理用户教育
+service UserEducationService {
+  // 根据ID获取用户教育
+  rpc GetUserEducationByID (GetUserEducationByIDRequest) returns (GetUserEducationByIDResponse);
+  
+  // 根据用户ID获取用户教育列表
+  rpc GetUserEducationsByUserID (GetUserEducationsByUserIDRequest) returns (GetUserEducationsByUserIDResponse);
+}
+
+// UserEducation Service Messages
+message GetUserEducationByIDRequest {
+  string id = 1;
+}
+
+message GetUserEducationByIDResponse {
+  UserEducation user_education = 1;
+}
+
+message GetUserEducationsByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserEducationsByUserIDResponse {
+  repeated UserEducation user_educations = 1;
+}

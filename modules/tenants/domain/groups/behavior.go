@@ -2,6 +2,8 @@ package groups
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (g *Group) Update(name string, groupType GroupType, parentGroupID *uuid.UUID, description *string, metadata map[string]interface{}) error {

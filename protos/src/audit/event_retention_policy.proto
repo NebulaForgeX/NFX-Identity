@@ -1,0 +1,87 @@
+syntax = "proto3";
+package event_retention_policy;
+
+option go_package = "nfxid/protos/gen/audit/event_retention_policy;eventretentionpolicypb";
+
+import "google/protobuf/timestamp.proto";
+
+// 审计数据分类枚举
+enum AuditDataClassification {
+  AUDIT_DATA_CLASSIFICATION_UNSPECIFIED = 0;
+  AUDIT_DATA_CLASSIFICATION_PUBLIC = 1;       // 公开
+  AUDIT_DATA_CLASSIFICATION_INTERNAL = 2;     // 内部
+  AUDIT_DATA_CLASSIFICATION_CONFIDENTIAL = 3; // 机密
+  AUDIT_DATA_CLASSIFICATION_RESTRICTED = 4;   // 受限
+}
+
+// 审计风险级别枚举
+enum AuditRiskLevel {
+  AUDIT_RISK_LEVEL_UNSPECIFIED = 0;
+  AUDIT_RISK_LEVEL_LOW = 1;      // 低风险
+  AUDIT_RISK_LEVEL_MEDIUM = 2;   // 中风险
+  AUDIT_RISK_LEVEL_HIGH = 3;     // 高风险
+  AUDIT_RISK_LEVEL_CRITICAL = 4; // 严重风险
+}
+
+// 审计保留操作枚举
+enum AuditRetentionAction {
+  AUDIT_RETENTION_ACTION_UNSPECIFIED = 0;
+  AUDIT_RETENTION_ACTION_ARCHIVE = 1; // 归档
+  AUDIT_RETENTION_ACTION_DELETE = 2;  // 删除
+  AUDIT_RETENTION_ACTION_EXPORT = 3;  // 导出
+}
+
+// 事件保留策略信息
+message EventRetentionPolicy {
+  string id = 1;                                // 策略ID (UUID)
+  string policy_name = 2;                       // 策略名称 (varchar(255))
+  optional string tenant_id = 3;                // 租户ID (UUID)
+  optional string action_pattern = 4;           // 操作模式 (varchar(255))
+  optional AuditDataClassification data_classification = 5; // 数据分类
+  optional AuditRiskLevel risk_level = 6;       // 风险级别
+  int32 retention_days = 7;                     // 保留天数
+  AuditRetentionAction retention_action = 8;    // 保留操作：archive, delete, export
+  optional string archive_location = 9;         // 归档位置 (text)
+  string status = 10;                           // 状态 (varchar(50))
+  google.protobuf.Timestamp created_at = 11;      // 创建时间
+  google.protobuf.Timestamp updated_at = 12;      // 更新时间
+  optional string created_by = 13;              // 创建者ID (UUID)
+}
+
+// EventRetentionPolicy 服务 - 供其他服务通过 gRPC 管理事件保留策略
+service EventRetentionPolicyService {
+  // 根据ID获取策略
+  rpc GetEventRetentionPolicyByID (GetEventRetentionPolicyByIDRequest) returns (GetEventRetentionPolicyByIDResponse);
+  
+  // 根据策略名称获取策略
+  rpc GetEventRetentionPolicyByName (GetEventRetentionPolicyByNameRequest) returns (GetEventRetentionPolicyByNameResponse);
+  
+  // 获取所有策略列表
+  rpc GetAllEventRetentionPolicies (GetAllEventRetentionPoliciesRequest) returns (GetAllEventRetentionPoliciesResponse);
+}
+
+// EventRetentionPolicy Service Messages
+message GetEventRetentionPolicyByIDRequest {
+  string id = 1;
+}
+
+message GetEventRetentionPolicyByIDResponse {
+  EventRetentionPolicy event_retention_policy = 1;
+}
+
+message GetEventRetentionPolicyByNameRequest {
+  string policy_name = 1;
+}
+
+message GetEventRetentionPolicyByNameResponse {
+  EventRetentionPolicy event_retention_policy = 1;
+}
+
+message GetAllEventRetentionPoliciesRequest {
+  optional string tenant_id = 1;
+  optional string status = 2;
+}
+
+message GetAllEventRetentionPoliciesResponse {
+  repeated EventRetentionPolicy event_retention_policies = 1;
+}

@@ -1,0 +1,48 @@
+syntax = "proto3";
+package tenant_setting;
+
+option go_package = "nfxid/protos/gen/tenants/tenant_setting;tenantsettingpb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 租户设置信息
+message TenantSetting {
+  string id = 1;                           // 设置ID (UUID)
+  string tenant_id = 2;                    // 租户ID (UUID)
+  bool enforce_mfa = 3;                    // 是否强制MFA
+  repeated string allowed_email_domains = 4; // 允许的邮箱域名 (text[])
+  optional int32 session_ttl_minutes = 5; // 会话TTL（分钟）
+  optional google.protobuf.Struct password_policy = 6; // 密码策略 (JSONB)
+  optional google.protobuf.Struct login_policy = 7;    // 登录策略 (JSONB)
+  optional google.protobuf.Struct mfa_policy = 8;      // MFA策略 (JSONB)
+  google.protobuf.Timestamp created_at = 9;      // 创建时间
+  google.protobuf.Timestamp updated_at = 10;     // 更新时间
+  optional string updated_by = 11;        // 更新者ID (UUID)
+}
+
+// TenantSetting 服务 - 供其他服务通过 gRPC 管理租户设置
+service TenantSettingService {
+  // 根据ID获取租户设置
+  rpc GetTenantSettingByID (GetTenantSettingByIDRequest) returns (GetTenantSettingByIDResponse);
+  
+  // 根据租户ID获取租户设置
+  rpc GetTenantSettingByTenantID (GetTenantSettingByTenantIDRequest) returns (GetTenantSettingByTenantIDResponse);
+}
+
+// TenantSetting Service Messages
+message GetTenantSettingByIDRequest {
+  string id = 1;
+}
+
+message GetTenantSettingByIDResponse {
+  TenantSetting tenant_setting = 1;
+}
+
+message GetTenantSettingByTenantIDRequest {
+  string tenant_id = 1;
+}
+
+message GetTenantSettingByTenantIDResponse {
+  TenantSetting tenant_setting = 1;
+}

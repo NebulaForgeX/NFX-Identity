@@ -1,0 +1,58 @@
+syntax = "proto3";
+package system_state;
+
+option go_package = "nfxid/protos/gen/system/system_state;systemstatepb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 系统状态信息
+message SystemState {
+  string id = 1;                                      // 状态ID (UUID)
+  bool initialized = 2;                               // 是否已初始化
+  optional google.protobuf.Timestamp initialized_at = 3;  // 初始化时间
+  optional string initialization_version = 4;         // 初始化版本 (varchar(50))
+  optional google.protobuf.Timestamp last_reset_at = 5;   // 最后重置时间
+  optional string last_reset_by = 6;                 // 最后重置者ID (UUID)
+  int32 reset_count = 7;                             // 重置次数
+  optional google.protobuf.Struct metadata = 8;       // 元数据 (JSONB)
+  google.protobuf.Timestamp created_at = 9;              // 创建时间
+  google.protobuf.Timestamp updated_at = 10;             // 更新时间
+}
+
+// SystemState 服务 - 供其他服务通过 gRPC 管理系统状态
+service SystemStateService {
+  // 根据ID获取系统状态
+  rpc GetSystemStateByID (GetSystemStateByIDRequest) returns (GetSystemStateByIDResponse);
+  
+  // 根据键获取系统状态
+  rpc GetSystemStateByKey (GetSystemStateByKeyRequest) returns (GetSystemStateByKeyResponse);
+  
+  // 获取所有系统状态列表
+  rpc GetAllSystemStates (GetAllSystemStatesRequest) returns (GetAllSystemStatesResponse);
+}
+
+// SystemState Service Messages
+message GetSystemStateByIDRequest {
+  string id = 1;
+}
+
+message GetSystemStateByIDResponse {
+  SystemState system_state = 1;
+}
+
+message GetSystemStateByKeyRequest {
+  string key = 1;
+}
+
+message GetSystemStateByKeyResponse {
+  SystemState system_state = 1;
+}
+
+message GetAllSystemStatesRequest {
+  optional string category = 1;
+}
+
+message GetAllSystemStatesResponse {
+  repeated SystemState system_states = 1;
+}

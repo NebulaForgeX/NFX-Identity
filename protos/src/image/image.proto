@@ -1,0 +1,67 @@
+syntax = "proto3";
+package image;
+
+option go_package = "nfxid/protos/gen/image/image;imagepb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 图片信息
+message Image {
+  string id = 1;                          // 图片ID (UUID)
+  optional string type_id = 2;            // 类型ID (UUID)
+  optional string user_id = 3;            // 用户ID (UUID)
+  optional string tenant_id = 4;          // 租户ID (UUID)
+  optional string app_id = 5;             // 应用ID (UUID)
+  optional string source_domain = 6;      // 来源域名 (text)
+  string filename = 7;                    // 文件名 (text)
+  string original_filename = 8;           // 原始文件名 (text)
+  string mime_type = 9;                   // MIME类型 (text)
+  int64 size = 10;                        // 文件大小 (bigint)
+  optional int32 width = 11;              // 宽度 (integer)
+  optional int32 height = 12;             // 高度 (integer)
+  string storage_path = 13;               // 存储路径 (text)
+  optional string url = 14;               // URL (text)
+  bool is_public = 15;                    // 是否公开
+  optional google.protobuf.Struct metadata = 16; // 元数据 (JSONB)
+  google.protobuf.Timestamp created_at = 17;      // 创建时间
+  google.protobuf.Timestamp updated_at = 18;      // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 19; // 软删除时间
+}
+
+// Image 服务 - 供其他服务通过 gRPC 管理图片
+service ImageService {
+  // 根据ID获取图片
+  rpc GetImageByID (GetImageByIDRequest) returns (GetImageByIDResponse);
+  
+  // 根据图片ID获取图片
+  rpc GetImageByImageID (GetImageByImageIDRequest) returns (GetImageByImageIDResponse);
+  
+  // 批量获取图片
+  rpc BatchGetImages (BatchGetImagesRequest) returns (BatchGetImagesResponse);
+}
+
+// Image Service Messages
+message GetImageByIDRequest {
+  string id = 1;
+}
+
+message GetImageByIDResponse {
+  Image image = 1;
+}
+
+message GetImageByImageIDRequest {
+  string image_id = 1;
+}
+
+message GetImageByImageIDResponse {
+  Image image = 1;
+}
+
+message BatchGetImagesRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetImagesResponse {
+  repeated Image images = 1;
+}
