@@ -15,14 +15,15 @@ func (c *Config) Validate() error {
 
 	// 验证交换机配置
 	if c.Exchange.Type != "" {
-		validTypes := map[string]bool{
-			"direct":  true,
-			"topic":   true,
-			"fanout":  true,
-			"headers": true,
+		if !c.Exchange.Type.IsValid() {
+			return fmt.Errorf("rabbitmq exchange.type is invalid: %s", c.Exchange.Type)
 		}
-		if !validTypes[c.Exchange.Type] {
-			return fmt.Errorf("rabbitmq exchange.type must be one of: direct, topic, fanout, headers, got: %s", c.Exchange.Type)
+	}
+
+	// 验证 ProducerRouting 中的 Exchange 类型
+	for key, routing := range c.ProducerExchanges {
+		if routing.Type != "" && !routing.Type.IsValid() {
+			return fmt.Errorf("rabbitmq producer_exchanges[%s].type is invalid: %s", key, routing.Type)
 		}
 	}
 

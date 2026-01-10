@@ -17,7 +17,31 @@ Exchange 是消息路由中心：
 
 ## Exchange 类型
 
-### 1. Topic Exchange（主题交换机）- 默认类型
+RabbitMQ 支持多种 Exchange 类型，包括基本类型和插件类型。`rabbitmqx` 提供了类型安全的 `ExchangeType` 来管理这些类型。
+
+### ExchangeType 类型定义
+
+`rabbitmqx` 使用 `messaging.ExchangeType` 类型来定义 Exchange 类型，类似 `Priority` 类型：
+
+```go
+import "nfxid/pkgs/rabbitmqx/messaging"
+
+// 基本类型常量
+messaging.ExchangeTypeDirect   // "direct"
+messaging.ExchangeTypeTopic    // "topic" (默认)
+messaging.ExchangeTypeFanout   // "fanout"
+messaging.ExchangeTypeHeaders  // "headers"
+
+// 插件类型常量
+messaging.ExchangeTypeDelayedMessage  // "x-delayed-message"
+messaging.ExchangeTypeConsistentHash  // "x-consistent-hash"
+messaging.ExchangeTypeSharding       // "x-sharding"
+// ... 更多插件类型
+```
+
+### 基本 Exchange 类型
+
+#### 1. Topic Exchange（主题交换机）- 默认类型
 
 **特点**：
 - 支持通配符匹配（`*` 和 `#`）
@@ -28,7 +52,7 @@ Exchange 是消息路由中心：
 ```toml
 [rabbitmq.exchange]
     name = ""
-    type = "topic"
+    type = "topic"  # 或使用 messaging.ExchangeTypeTopic
     durable = true
 ```
 
@@ -39,7 +63,7 @@ Exchange 是消息路由中心：
 
 **使用场景**：需要灵活路由、按消息类型路由
 
-### 2. Direct Exchange（直连交换机）
+#### 2. Direct Exchange（直连交换机）
 
 **特点**：
 - 精确匹配 RoutingKey
@@ -49,13 +73,13 @@ Exchange 是消息路由中心：
 ```toml
 [rabbitmq.exchange]
     name = "direct-exchange"
-    type = "direct"
+    type = "direct"  # 或使用 messaging.ExchangeTypeDirect
     durable = true
 ```
 
 **使用场景**：点对点通信、精确路由
 
-### 3. Fanout Exchange（扇出交换机）
+#### 3. Fanout Exchange（扇出交换机）
 
 **特点**：
 - 忽略 RoutingKey
@@ -65,7 +89,7 @@ Exchange 是消息路由中心：
 ```toml
 [rabbitmq.exchange]
     name = "broadcast-exchange"
-    type = "fanout"
+    type = "fanout"  # 或使用 messaging.ExchangeTypeFanout
     durable = true
 ```
 
@@ -73,7 +97,7 @@ Exchange 是消息路由中心：
 
 详细说明请参考：[USAGE_BROADCAST.md](./USAGE_BROADCAST.md)
 
-### 4. Headers Exchange（头交换机）
+#### 4. Headers Exchange（头交换机）
 
 **特点**：
 - 根据消息头（Headers）匹配
@@ -84,11 +108,136 @@ Exchange 是消息路由中心：
 ```toml
 [rabbitmq.exchange]
     name = "headers-exchange"
-    type = "headers"
+    type = "headers"  # 或使用 messaging.ExchangeTypeHeaders
     durable = true
 ```
 
 **使用场景**：基于消息头进行复杂路由
+
+### 插件 Exchange 类型
+
+RabbitMQ 支持通过插件扩展 Exchange 类型。`rabbitmqx` 支持以下插件类型：
+
+#### 1. x-delayed-message（延迟消息 Exchange）
+
+**需要插件**：`rabbitmq-delayed-message-exchange`
+
+**安装**：
+```bash
+rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+```
+
+**特点**：
+- 支持延迟消息投递
+- 通过 `x-delay` 消息头指定延迟时间（毫秒）
+- 底层使用其他 Exchange 类型（如 topic）
+
+**配置示例**：
+```toml
+[rabbitmq.producer_exchanges]
+    delayed_notification = {
+        exchange = "delayed-events",
+        routing_key = "notification",
+        type = "x-delayed-message"  # ✅ 插件类型
+    }
+```
+
+**使用示例**：
+```go
+// 发布延迟消息（延迟 5 秒）
+messaging.PublishMessage(ctx, publisher, msg,
+    messaging.WithMetadata(map[string]string{
+        "x-delay": "5000",  // 延迟 5 秒（毫秒）
+    }),
+)
+```
+
+#### 2. x-consistent-hash（一致性哈希 Exchange）
+
+**需要插件**：`rabbitmq-consistent-hash-exchange`
+
+**特点**：
+- 根据 RoutingKey 的哈希值路由消息
+- 实现负载均衡
+- 相同 RoutingKey 总是路由到同一个队列
+
+**配置示例**：
+```toml
+[rabbitmq.producer_exchanges]
+    load_balanced = {
+        exchange = "hash-exchange",
+        routing_key = "task",
+        type = "x-consistent-hash"
+    }
+```
+
+#### 3. x-sharding（分片 Exchange）
+
+**需要插件**：`rabbitmq-sharding`
+
+**特点**：
+- 将消息分片到多个队列
+- 提高并发处理能力
+
+**配置示例**：
+```toml
+[rabbitmq.producer_exchanges]
+    sharded = {
+        exchange = "sharded-exchange",
+        routing_key = "data",
+        type = "x-sharding"
+    }
+```
+
+#### 4. 其他插件类型
+
+- `x-modulus-hash`：模数哈希 Exchange
+- `x-random`：随机 Exchange
+- `x-jms-topic`：JMS 主题 Exchange
+
+### ✅ 为每个消息配置不同的 Exchange 类型
+
+**重要功能**：可以为每个消息配置不同的 Exchange 类型，而不是全局配置！
+
+```toml
+[rabbitmq.exchange]
+    name = "nfxid-events"
+    type = "topic"  # 默认类型，如果 ProducerRouting 中未指定 type，使用此值
+    durable = true
+
+[rabbitmq.producer_exchanges]
+    # 使用 Topic Exchange
+    directory = { 
+        exchange = "nfxid-events", 
+        routing_key = "directory.user.update",
+        type = "topic"  # ✅ 可选，指定 Exchange 类型
+    }
+    
+    # 使用 Fanout Exchange（广播）
+    user_cache_invalidate = { 
+        exchange = "cache-broadcast", 
+        routing_key = "",
+        type = "fanout"  # ✅ 指定为 Fanout Exchange
+    }
+    
+    # 使用延迟消息 Exchange（需要插件）
+    delayed_notification = {
+        exchange = "delayed-events",
+        routing_key = "notification",
+        type = "x-delayed-message"  # ✅ 插件类型
+    }
+```
+
+**工作原理**：
+1. 在创建 Publisher 时，收集所有 `ProducerExchanges` 中指定的 Exchange 名称和类型
+2. 使用 amqp091-go 直接连接 RabbitMQ，自动声明所有需要的 Exchange
+3. 每个 Exchange 使用配置中指定的类型（如果未指定，使用全局类型）
+
+**优点**：
+- ✅ 配置更清晰
+- ✅ 可以在配置中指定 Exchange 类型
+- ✅ **自动声明 Exchange**：不需要手动创建
+- ✅ **向后兼容**：如果 `type` 为空，使用全局 `ExchangeConfig.Type`
 
 ## Exchange 配置
 
@@ -389,6 +538,87 @@ messaging.PublishMessage(ctx, publisher, UserUpdatedEvent{...})
 | **消息存储** | ✅ Topic 存储消息 | ❌ Exchange 不存储消息 |
 | **消息顺序** | ✅ 分区内有序 | ✅ Queue 内有序 |
 
+## ✅ 为每个消息配置不同的 Exchange 类型
+
+**重要功能**：可以为每个消息配置不同的 Exchange 类型，而不是全局配置！
+
+### 配置方式
+
+在 `ProducerExchanges` 中为每个消息指定 Exchange 类型：
+
+```toml
+[rabbitmq.exchange]
+    name = "nfxid-events"
+    type = "topic"  # 默认类型，如果 ProducerRouting 中未指定 type，使用此值
+    durable = true
+
+[rabbitmq.producer_exchanges]
+    # 使用 Topic Exchange
+    directory = { 
+        exchange = "nfxid-events", 
+        routing_key = "directory.user.update",
+        type = "topic"  # ✅ 可选，指定 Exchange 类型
+    }
+    
+    # 使用 Fanout Exchange（广播）
+    user_cache_invalidate = { 
+        exchange = "cache-broadcast", 
+        routing_key = "",
+        type = "fanout"  # ✅ 指定为 Fanout Exchange
+    }
+    
+    # 使用 Direct Exchange（精确路由）
+    order_paid = {
+        exchange = "order-events",
+        routing_key = "order.paid",
+        type = "direct"  # ✅ 指定为 Direct Exchange
+    }
+    
+    # 使用延迟消息 Exchange（需要插件）
+    delayed_notification = {
+        exchange = "delayed-events",
+        routing_key = "notification",
+        type = "x-delayed-message"  # ✅ 插件类型
+    }
+```
+
+### 工作原理
+
+1. **收集 Exchange 配置**：在创建 Publisher 时，收集所有 `ProducerExchanges` 中指定的 Exchange 名称和类型
+2. **自动声明 Exchange**：使用 amqp091-go 直接连接 RabbitMQ，自动声明所有需要的 Exchange
+3. **类型优先级**：
+   - 如果 `ProducerRouting.Type` 不为空，使用指定的类型
+   - 如果 `ProducerRouting.Type` 为空，使用全局 `ExchangeConfig.Type`
+   - 如果全局 `ExchangeConfig.Type` 也为空，使用默认值 `"topic"`
+
+### 自动声明 Exchange
+
+在创建 Publisher 时，会自动声明所有需要的 Exchange：
+
+```go
+publisher, err := rabbitmqx.NewPublisher(cfg)
+// ✅ 自动声明所有配置中的 Exchange：
+//    - nfxid-events (topic)
+//    - cache-broadcast (fanout)
+//    - order-events (direct)
+//    - delayed-events (x-delayed-message)
+```
+
+**日志输出**：
+```
+✅ Declared exchange: nfxid-events (type: topic, durable: true)
+✅ Declared exchange: cache-broadcast (type: fanout, durable: true)
+✅ Declared exchange: order-events (type: direct, durable: true)
+✅ Declared exchange: delayed-events (type: x-delayed-message, durable: true)
+```
+
+### 支持的 Exchange 类型
+
+- **基本类型**：`direct`, `topic`, `fanout`, `headers`
+- **插件类型**：`x-delayed-message`, `x-consistent-hash`, `x-sharding`, `x-modulus-hash`, `x-random`, `x-jms-topic`
+
+详细说明请参考：[USAGE_EXCHANGE_TYPE.md](./USAGE_EXCHANGE_TYPE.md)
+
 ## 最佳实践
 
 1. **生产环境使用持久化 Exchange**
@@ -398,13 +628,32 @@ messaging.PublishMessage(ctx, publisher, UserUpdatedEvent{...})
        auto_delete = false
    ```
 
-2. **使用 Topic Exchange 实现灵活路由**
+2. **✅ 在发送消息时动态指定 Exchange 类型**（推荐）
+   ```go
+   // 每次发送时可以指定不同的 Exchange 类型
+   messaging.PublishMessage(ctx, publisher, msg,
+       messaging.WithExchangeType(messaging.ExchangeTypeFanout),
+   )
+   ```
+
+3. **在配置中指定 Exchange 类型**（可选）
+   ```toml
+   [rabbitmq.producer_exchanges]
+       # ✅ 可选：在配置中指定 Exchange 类型
+       directory = { 
+           exchange = "nfxid-events", 
+           routing_key = "directory.user.update",
+           type = "topic"  # ✅ 可选，明确指定
+       }
+   ```
+
+3. **使用 Topic Exchange 实现灵活路由**
    ```toml
    [rabbitmq.exchange]
        type = "topic"  # 默认，最灵活
    ```
 
-3. **为不同服务使用不同的 Exchange**
+4. **为不同服务使用不同的 Exchange**
    ```toml
    # 服务 A
    [rabbitmq.exchange]
@@ -415,7 +664,7 @@ messaging.PublishMessage(ctx, publisher, UserUpdatedEvent{...})
        name = "service-b-events"
    ```
 
-4. **使用有意义的 Exchange 名称**
+5. **使用有意义的 Exchange 名称**
    ```toml
    [rabbitmq.exchange]
        name = "user-events"  # 而不是 "exchange1"
@@ -426,3 +675,4 @@ messaging.PublishMessage(ctx, publisher, UserUpdatedEvent{...})
 - [基本用法](./USAGE_BASIC.md) - 快速上手指南
 - [广播发送](./USAGE_BROADCAST.md) - Fanout Exchange 广播
 - [配置详解](./USAGE_CONFIG.md) - 完整配置选项
+- [Exchange 类型](./USAGE_EXCHANGE_TYPE.md) - ✅ ExchangeType 类型详解，支持为每个消息配置不同的 Exchange 类型

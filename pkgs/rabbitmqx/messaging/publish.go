@@ -84,6 +84,31 @@ func WithMessageTypeHeaderKey(key string) PublishOption {
 	return func(m *message.Message) { m.Metadata.Set("__message_type_header_key__", key) }
 }
 
+// WithExchangeType 设置 Exchange 类型（在发送消息时动态指定）。
+// 如果 Exchange 不存在，会自动创建（使用指定的类型）。
+// 如果 Exchange 已存在但类型不匹配，会返回错误。
+//
+// 参数:
+//   - exchangeType: Exchange 类型（direct, topic, fanout, headers, x-delayed-message 等）
+//
+// 示例:
+//
+//	// 发送到 Fanout Exchange（广播）
+//	messaging.PublishMessage(ctx, publisher, msg,
+//	    messaging.WithExchangeType(messaging.ExchangeTypeFanout),
+//	)
+//
+//	// 发送到延迟消息 Exchange（需要插件）
+//	messaging.PublishMessage(ctx, publisher, msg,
+//	    messaging.WithExchangeType(messaging.ExchangeTypeDelayedMessage),
+//	    messaging.WithMetadata(map[string]string{"x-delay": "5000"}),
+//	)
+func WithExchangeType(exchangeType ExchangeType) PublishOption {
+	return func(m *message.Message) {
+		m.Metadata.Set("__exchange_type__", exchangeType.String())
+	}
+}
+
 // PublishMessage 发布类型化消息到消息总线。
 // 自动序列化消息、设置消息类型头、生成消息 ID，并发布到对应的 Exchange。
 //
@@ -136,6 +161,18 @@ func PublishMessage[T TypedMessage](
 	rawMsg := message.NewMessageWithContext(ctx, id.String(), payload)
 	for _, opt := range opts {
 		opt(rawMsg)
+	}
+
+	// ✅ 检查是否在发送消息时指定了 Exchange 类型
+	if exchangeTypeStr := rawMsg.Metadata.Get("__exchange_type__"); exchangeTypeStr != "" {
+		exchangeType := ExchangeType(exchangeTypeStr)
+		if !exchangeType.IsValid() {
+			return fmt.Errorf("messaging: invalid exchange type: %s", exchangeType)
+		}
+		// 确保 Exchange 存在且类型正确
+		if err := bp.ensureExchange(routing.Exchange, exchangeType); err != nil {
+			return fmt.Errorf("messaging: failed to ensure exchange %s (type: %s): %w", routing.Exchange, exchangeType, err)
+		}
 	}
 
 	headerKey := rawMsg.Metadata.Get("__message_type_header_key__")

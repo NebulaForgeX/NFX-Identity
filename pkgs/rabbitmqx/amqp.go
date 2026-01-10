@@ -6,6 +6,7 @@ import (
 
 	"github.com/ThreeDotsLabs/watermill-amqp/v3/pkg/amqp"
 	amqp091 "github.com/rabbitmq/amqp091-go"
+	"nfxid/pkgs/rabbitmqx/messaging"
 )
 
 // BuildAMQPConfig 构建 AMQP 配置。
@@ -213,10 +214,10 @@ func ConfigureConsumer(cfg *amqp.Config, c ConsumerConfig) {
 func ConfigureExchange(cfg *amqp.Config, e ExchangeConfig) {
 	exchangeType := e.Type
 	if exchangeType == "" {
-		exchangeType = "topic" // 默认使用 topic 交换机
+		exchangeType = messaging.DefaultExchangeType // 默认使用 topic 交换机
 	}
 
-	cfg.Exchange.Type = exchangeType
+	cfg.Exchange.Type = exchangeType.String()
 
 	// 如果指定了交换机名称，使用 GenerateName 函数返回固定名称
 	if e.Name != "" {

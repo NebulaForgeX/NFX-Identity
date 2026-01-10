@@ -159,10 +159,13 @@
 - **说明**：Exchange 名称，如果为空则根据消息键自动生成
 
 #### `type`
-- **类型**：`string`
+- **类型**：`messaging.ExchangeType`（在配置文件中使用字符串）
 - **默认值**：`"topic"`
-- **可选值**：`"direct"`, `"topic"`, `"fanout"`, `"headers"`
-- **说明**：Exchange 类型
+- **可选值**：
+  - **基本类型**：`"direct"`, `"topic"`, `"fanout"`, `"headers"`
+  - **插件类型**：`"x-delayed-message"`, `"x-consistent-hash"`, `"x-sharding"`, `"x-modulus-hash"`, `"x-random"`, `"x-jms-topic"`
+- **说明**：Exchange 类型。如果 `ProducerRouting` 中指定了 `type`，会覆盖此全局配置
+- **注意**：插件类型需要安装对应的 RabbitMQ 插件才能使用
 
 #### `durable`
 - **类型**：`bool`
@@ -215,12 +218,49 @@
 
 #### `producer_exchanges`
 - **类型**：`map[string]ProducerRouting`
-- **说明**：映射消息键到 Exchange 和 RoutingKey
+- **说明**：映射消息键到 Exchange、RoutingKey 和可选的 Exchange 类型
 - **格式**：
   ```toml
   [rabbitmq.producer_exchanges]
-      message_key = { exchange = "exchange-name", routing_key = "routing.key" }
+      message_key = { 
+          exchange = "exchange-name", 
+          routing_key = "routing.key",
+          type = "topic"  # ✅ 可选，指定 Exchange 类型
+      }
   ```
+
+**ProducerRouting 字段**：
+- `exchange`：Exchange 名称，为空则使用 `ExchangeConfig.Name` 或根据消息键生成
+- `routing_key`：RoutingKey，为空则使用消息键作为 RoutingKey
+- `type`：**Exchange 类型（可选）**，支持：
+  - **基本类型**：`direct`, `topic`, `fanout`, `headers`
+  - **插件类型**：`x-delayed-message`, `x-consistent-hash`, `x-sharding`, `x-modulus-hash`, `x-random`, `x-jms-topic`
+  - 如果为空，使用全局 `ExchangeConfig.Type`
+
+**示例**：
+```toml
+[rabbitmq.producer_exchanges]
+    # Topic Exchange（默认）
+    directory = { 
+        exchange = "nfxid-events", 
+        routing_key = "directory.user.update",
+        type = "topic"
+    }
+    
+    # Fanout Exchange（广播）
+    cache_invalidate = { 
+        exchange = "cache-broadcast", 
+        routing_key = "",
+        type = "fanout"
+    }
+    
+    # 延迟消息 Exchange（需要插件）
+    delayed_notification = {
+        exchange = "delayed-events",
+        routing_key = "notification",
+        type = "x-delayed-message"
+    }
+```
 
 #### `consumer_queues`
 - **类型**：`map[string]ConsumerBinding`

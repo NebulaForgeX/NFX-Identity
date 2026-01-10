@@ -21,6 +21,7 @@ go get nfxid/pkgs/rabbitmqx
 - **消息优先级**：[USAGE_PRIORITY.md](./docs/USAGE_PRIORITY.md) - 如何设置消息优先级
 - **配置详解**：[USAGE_CONFIG.md](./docs/USAGE_CONFIG.md) - 完整的配置选项说明
 - **Exchange 详解**：[USAGE_EXCHANGE.md](./docs/USAGE_EXCHANGE.md) - Exchange 类型、使用场景和最佳实践
+- **Exchange 类型**：[USAGE_EXCHANGE_TYPE.md](./docs/USAGE_EXCHANGE_TYPE.md) - ✅ ExchangeType 类型详解，支持为每个消息配置不同的 Exchange 类型
 - **高级功能**：[USAGE_ADVANCED.md](./docs/USAGE_ADVANCED.md) - 延迟队列、死信队列、队列限制等
 
 ## 核心特性 / Core Features
@@ -28,6 +29,8 @@ go get nfxid/pkgs/rabbitmqx
 - ✅ **类型安全**：基于泛型提供编译时类型检查
 - ✅ **RabbitMQ 原生**：完全基于 Exchange、Queue、RoutingKey、BindingKey 等原生概念
 - ✅ **自动路由**：根据消息类型自动路由到对应的 Exchange/Queue
+- ✅ **Exchange 类型**：✅ 支持为每个消息配置不同的 Exchange 类型（topic, fanout, direct, headers 及插件类型）
+- ✅ **自动声明 Exchange**：✅ 在创建 Publisher 时自动声明所有需要的 Exchange（使用指定的类型）
 - ✅ **消息优先级**：支持消息优先级（0-255）
 - ✅ **广播支持**：支持 Fanout Exchange 实现一对多广播
 - ✅ **延迟队列**：支持消息 TTL 和延迟队列
@@ -92,6 +95,7 @@ router.Run(ctx)
 - [消息优先级](./docs/USAGE_PRIORITY.md) - 设置消息优先级
 - [配置详解](./docs/USAGE_CONFIG.md) - 完整配置选项
 - [Exchange 详解](./docs/USAGE_EXCHANGE.md) - Exchange 类型和使用场景
+- [Exchange 类型](./docs/USAGE_EXCHANGE_TYPE.md) - ✅ ExchangeType 类型详解，支持为每个消息配置不同的 Exchange 类型
 - [高级功能](./docs/USAGE_ADVANCED.md) - 延迟队列、死信队列等
 
 ## 许可证 / License

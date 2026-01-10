@@ -1,6 +1,8 @@
 package rabbitmqx
 
-import "nfxid/pkgs/rabbitmqx/messaging"
+import (
+	"nfxid/pkgs/rabbitmqx/messaging"
+)
 
 type Config struct {
 	URI        string           `koanf:"uri"`
@@ -19,10 +21,11 @@ type Config struct {
 	ConsumerQueues map[messaging.MessageKey]ConsumerBinding `koanf:"consumer_queues"`
 }
 
-// ProducerRouting 定义发布者的路由配置（Exchange 和 RoutingKey）
+// ProducerRouting 定义发布者的路由配置（Exchange、RoutingKey 和可选的 Exchange 类型）
 type ProducerRouting struct {
-	Exchange   string `koanf:"exchange"`    // Exchange 名称，为空则使用 ExchangeConfig.Name 或根据事件键生成
-	RoutingKey string `koanf:"routing_key"` // RoutingKey，为空则使用事件键作为 RoutingKey
+	Exchange   string                `koanf:"exchange"`    // Exchange 名称，为空则使用 ExchangeConfig.Name 或根据事件键生成
+	RoutingKey string                `koanf:"routing_key"` // RoutingKey，为空则使用事件键作为 RoutingKey
+	Type       messaging.ExchangeType `koanf:"type"`        // Exchange 类型（可选）。如果为空，使用全局 ExchangeConfig.Type
 }
 
 // ConsumerBinding 定义消费者的绑定配置（Queue 和 BindingKey）
@@ -96,12 +99,12 @@ type ReconnectConfig struct {
 }
 
 type ExchangeConfig struct {
-	Name       string `koanf:"name"`        // 交换机名称，默认 ""（如果为空则根据 topic 生成，对应 ExchangeConfig.GenerateName）
-	Type       string `koanf:"type"`        // 交换机类型: direct, topic, fanout, headers，默认 "topic"
-	Durable    bool   `koanf:"durable"`     // 是否持久化，默认 true（对应 ExchangeConfig.Durable）
-	AutoDelete bool   `koanf:"auto_delete"` // 是否自动删除，默认 false（对应 ExchangeConfig.AutoDeleted）
-	Internal   bool   `koanf:"internal"`    // 是否内部交换机，默认 false（对应 ExchangeConfig.Internal）
-	NoWait     bool   `koanf:"no_wait"`     // 不等待服务器响应，默认 false（对应 ExchangeConfig.NoWait）
+	Name       string                `koanf:"name"`        // 交换机名称，默认 ""（如果为空则根据 topic 生成，对应 ExchangeConfig.GenerateName）
+	Type       messaging.ExchangeType `koanf:"type"`        // 交换机类型，默认 "topic"。支持基本类型和插件类型
+	Durable    bool                  `koanf:"durable"`     // 是否持久化，默认 true（对应 ExchangeConfig.Durable）
+	AutoDelete bool                  `koanf:"auto_delete"` // 是否自动删除，默认 false（对应 ExchangeConfig.AutoDeleted）
+	Internal   bool                  `koanf:"internal"`    // 是否内部交换机，默认 false（对应 ExchangeConfig.Internal）
+	NoWait     bool                  `koanf:"no_wait"`     // 不等待服务器响应，默认 false（对应 ExchangeConfig.NoWait）
 	// Arguments 可以通过 amqp.Table 设置，这里简化处理
 }
 

@@ -6,18 +6,20 @@ import (
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/logx"
 	"nfxid/pkgs/postgresqlx"
+	"nfxid/pkgs/rabbitmqx"
 	"nfxid/pkgs/tokenx"
 )
 
 type Config struct {
-	Env         env.Env
-	Server      ServerConfig       `koanf:"server"`
-	PostgreSQL  postgresqlx.Config `koanf:"postgresql"`
-	Cache       cache.ConnConfig   `koanf:"cache"`
-	Logger      logx.LoggerConfig  `koanf:"logger"`
-	Token       tokenx.Config      `koanf:"token"`
-	KafkaConfig kafkax.Config      `koanf:"kafka"`
-	GRPCClient  GRPCClientConfig   `koanf:"grpc_client"`
+	Env          env.Env
+	Server       ServerConfig       `koanf:"server"`
+	PostgreSQL   postgresqlx.Config `koanf:"postgresql"`
+	Cache        cache.ConnConfig   `koanf:"cache"`
+	Logger       logx.LoggerConfig  `koanf:"logger"`
+	Token        tokenx.Config      `koanf:"token"`
+	KafkaConfig  kafkax.Config      `koanf:"kafka"`
+	RabbitMQConfig rabbitmqx.Config `koanf:"rabbitmq"`
+	GRPCClient   GRPCClientConfig   `koanf:"grpc_client"`
 }
 
 type GRPCClientConfig struct {
