@@ -2,6 +2,7 @@ package invitations
 
 import (
 	"context"
+	invitationDomain "nfxid/modules/tenants/domain/invitations"
 	invitationResult "nfxid/modules/tenants/application/invitations/results"
 
 	"github.com/google/uuid"
@@ -23,4 +24,26 @@ func (s *Service) GetInvitationByInviteID(ctx context.Context, inviteID string) 
 		return invitationResult.InvitationRO{}, err
 	}
 	return invitationResult.InvitationMapper(domainEntity), nil
+}
+
+// GetInvitationsByTenantID 根据租户ID获取邀请列表
+func (s *Service) GetInvitationsByTenantID(ctx context.Context, tenantID uuid.UUID, status *invitationDomain.InvitationStatus) ([]invitationResult.InvitationRO, error) {
+	var domainEntities []*invitationDomain.Invitation
+	var err error
+	
+	if status != nil {
+		domainEntities, err = s.invitationRepo.Get.ByTenantIDAndStatus(ctx, tenantID, *status)
+	} else {
+		domainEntities, err = s.invitationRepo.Get.ByTenantID(ctx, tenantID)
+	}
+	
+	if err != nil {
+		return nil, err
+	}
+	
+	results := make([]invitationResult.InvitationRO, len(domainEntities))
+	for i, entity := range domainEntities {
+		results[i] = invitationResult.InvitationMapper(entity)
+	}
+	return results, nil
 }

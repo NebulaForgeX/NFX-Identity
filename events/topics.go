@@ -30,10 +30,6 @@ const (
 	// =============== Image ===============
 	TKImage    eventbus.TopicKey = "image"
 	TKImageDLQ eventbus.TopicKey = "image_poison"
-
-	// =============== System ===============
-	TKSystem    eventbus.TopicKey = "system"
-	TKSystemDLQ eventbus.TopicKey = "system_poison"
 )
 
 // AccessTopic 提供 Access 模块的 TopicKey
@@ -72,7 +68,3 @@ type ImageTopic struct{}
 
 func (ImageTopic) TopicKey() eventbus.TopicKey { return TKImage }
 
-// SystemTopic 提供 System 模块的 TopicKey
-type SystemTopic struct{}
-
-func (SystemTopic) TopicKey() eventbus.TopicKey { return TKSystem }

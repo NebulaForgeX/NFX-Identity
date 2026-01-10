@@ -24,3 +24,30 @@ func (s *Service) GetBadgeByName(ctx context.Context, name string) (badgeResult.
 	}
 	return badgeResult.BadgeMapper(domainEntity), nil
 }
+
+// GetAllBadges 获取所有徽章列表
+func (s *Service) GetAllBadges(ctx context.Context, category *string, isSystem *bool) ([]badgeResult.BadgeRO, error) {
+	// 注意：repository 层只有 ByCategory 方法，没有 GetAll 方法
+	// 如果 category 为空，无法获取所有徽章，返回空列表
+	if category == nil {
+		return []badgeResult.BadgeRO{}, nil
+	}
+	
+	domainEntities, err := s.badgeRepo.Get.ByCategory(ctx, *category)
+	if err != nil {
+		return nil, err
+	}
+	
+	results := make([]badgeResult.BadgeRO, 0, len(domainEntities))
+	for _, entity := range domainEntities {
+		// 如果指定了isSystem，进行过滤
+		if isSystem != nil {
+			if entity.IsSystem() == *isSystem {
+				results = append(results, badgeResult.BadgeMapper(entity))
+			}
+		} else {
+			results = append(results, badgeResult.BadgeMapper(entity))
+		}
+	}
+	return results, nil
+}

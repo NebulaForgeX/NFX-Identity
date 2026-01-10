@@ -24,3 +24,17 @@ func (s *Service) GetSessionBySessionID(ctx context.Context, sessionID string) (
 	}
 	return sessionResult.SessionMapper(domainEntity), nil
 }
+
+// GetSessionsByUserID 根据UserID获取会话列表
+func (s *Service) GetSessionsByUserID(ctx context.Context, userID uuid.UUID) ([]sessionResult.SessionRO, error) {
+	domainEntities, err := s.sessionRepo.Get.ByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]sessionResult.SessionRO, len(domainEntities))
+	for i, entity := range domainEntities {
+		results[i] = sessionResult.SessionMapper(entity)
+	}
+	return results, nil
+}

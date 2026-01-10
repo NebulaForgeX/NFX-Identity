@@ -24,3 +24,31 @@ func (s *Service) GetRolePermissionByRoleAndPermission(ctx context.Context, role
 	}
 	return rolePermissionResult.RolePermissionMapper(domainEntity), nil
 }
+
+// GetRolePermissionsByRoleID 根据角色ID获取角色权限列表
+func (s *Service) GetRolePermissionsByRoleID(ctx context.Context, roleID uuid.UUID) ([]rolePermissionResult.RolePermissionRO, error) {
+	domainEntities, err := s.rolePermissionRepo.Get.ByRoleID(ctx, roleID)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]rolePermissionResult.RolePermissionRO, len(domainEntities))
+	for i, entity := range domainEntities {
+		results[i] = rolePermissionResult.RolePermissionMapper(entity)
+	}
+	return results, nil
+}
+
+// GetRolePermissionsByPermissionID 根据权限ID获取角色权限列表
+func (s *Service) GetRolePermissionsByPermissionID(ctx context.Context, permissionID uuid.UUID) ([]rolePermissionResult.RolePermissionRO, error) {
+	domainEntities, err := s.rolePermissionRepo.Get.ByPermissionID(ctx, permissionID)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]rolePermissionResult.RolePermissionRO, len(domainEntities))
+	for i, entity := range domainEntities {
+		results[i] = rolePermissionResult.RolePermissionMapper(entity)
+	}
+	return results, nil
+}

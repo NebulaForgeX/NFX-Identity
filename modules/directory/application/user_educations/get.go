@@ -15,3 +15,17 @@ func (s *Service) GetUserEducation(ctx context.Context, userEducationID uuid.UUI
 	}
 	return userEducationResult.UserEducationMapper(domainEntity), nil
 }
+
+// GetUserEducationsByUserID 根据用户ID获取用户教育列表
+func (s *Service) GetUserEducationsByUserID(ctx context.Context, userID uuid.UUID) ([]userEducationResult.UserEducationRO, error) {
+	domainEntities, err := s.userEducationRepo.Get.ByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	
+	results := make([]userEducationResult.UserEducationRO, len(domainEntities))
+	for i, entity := range domainEntities {
+		results[i] = userEducationResult.UserEducationMapper(entity)
+	}
+	return results, nil
+}

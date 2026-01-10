@@ -24,3 +24,17 @@ func (s *Service) GetAppByAppID(ctx context.Context, appID string) (appResult.Ap
 	}
 	return appResult.AppMapper(domainEntity), nil
 }
+
+// GetAppsByTenantID 根据租户ID获取应用列表
+func (s *Service) GetAppsByTenantID(ctx context.Context, tenantID uuid.UUID) ([]appResult.AppRO, error) {
+	domainEntities, err := s.appRepo.Get.ByTenantID(ctx, tenantID)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]appResult.AppRO, len(domainEntities))
+	for i, entity := range domainEntities {
+		results[i] = appResult.AppMapper(entity)
+	}
+	return results, nil
+}

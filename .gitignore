@@ -150,3 +150,9 @@ inputs/**/config/*.yml
 !STRUCTURE.md
 !LICENSE
 !CONTRIBUTING.md
+
+## Console
+/console/dist/
+/console/node_modules/
+!/console/.env.dev
+!/console/.env.prod
