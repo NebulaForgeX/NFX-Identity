@@ -6,6 +6,7 @@ require (
 	github.com/IBM/sarama v1.43.3
 	github.com/MicahParks/keyfunc/v3 v3.7.0
 	github.com/ThreeDotsLabs/watermill v1.5.1
+	github.com/ThreeDotsLabs/watermill-amqp/v3 v3.0.2
 	github.com/ThreeDotsLabs/watermill-kafka/v3 v3.1.2
 	github.com/cenkalti/backoff/v5 v5.0.3
 	github.com/ettle/strcase v0.2.0
@@ -45,6 +46,7 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/MicahParks/jwkset v0.11.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
+	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -86,6 +88,7 @@ require (
 	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect

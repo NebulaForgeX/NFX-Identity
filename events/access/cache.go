@@ -8,7 +8,8 @@ import (
 // EventType 会自动从类型名生成，TopicKey 通过嵌入 events.AccessTopic 自动提供
 type GrantsInvalidateCacheEvent struct {
 	events.AccessTopic
-	ID string `json:"id"` // 要清除的 Grant ID
+	ID          string `json:"id"`           // 要清除的 Grant ID
+	ServiceName string `json:"service_name"` // 服务名称
 }
 
 // PermissionsInvalidateCacheEvent Permissions 缓存清除事件

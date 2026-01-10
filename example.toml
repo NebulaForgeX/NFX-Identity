@@ -119,6 +119,103 @@
         password = ""
         tls_insecure_skip_verify = false
 
+[rabbitmq]
+    uri = "amqp://guest:guest@localhost:5672/"
+    client_id = "nfxid-service"
+
+    [rabbitmq.producer]
+        mandatory = false
+        immediate = false
+        content_type = "application/json"
+        delivery_mode = 2  # 2=持久化, 1=非持久化
+        confirm_delivery = true  # 发布确认（RabbitMQ 特有）
+        channel_pool_size = 10  # 通道池大小（性能优化）
+        transactional = false  # 事务模式
+        default_priority = 0  # 默认消息优先级（0-255），0 表示不设置优先级（RabbitMQ 特有）
+
+    [rabbitmq.consumer]
+        queue_name = ""  # 如果为空则根据 topic 生成
+        consumer_tag = "nfxid-consumer"
+        auto_ack = false
+        exclusive = false
+        no_local = false
+        no_wait = false
+        no_requeue_on_nack = false  # Nack 时不重新入队
+        prefetch_count = 10  # 预取数量
+        prefetch_size = 0  # 预取大小（字节），0 表示不限制
+        qos_global = false  # QOS 是否全局应用
+
+    [rabbitmq.connection]
+        [rabbitmq.connection.tls]
+            enabled = false
+            insecure_skip_verify = false
+            cert_file = ""
+            key_file = ""
+            ca_file = ""
+            server_name = ""
+
+        [rabbitmq.connection.reconnect]
+            enabled = true
+            initial_interval = "1s"
+            randomization_factor = 0.5
+            multiplier = 1.5
+            max_interval = "30s"
+
+        [rabbitmq.connection.amqp]
+            vhost = "/"  # 虚拟主机
+            heartbeat = 10  # 心跳间隔（秒），0 表示禁用
+            locale = "en_US"
+            channel_max = 0  # 最大通道数，0 表示无限制
+            frame_size = 0  # 最大帧大小，0 表示使用默认值
+
+    [rabbitmq.exchange]
+        name = ""  # 如果为空则根据 topic 生成
+        type = "topic"  # direct, topic, fanout, headers
+        durable = true
+        auto_delete = false
+        internal = false
+        no_wait = false
+
+    [rabbitmq.queue]
+        durable = true
+        auto_delete = false
+        exclusive = false
+        no_wait = false
+
+        # 优先级队列（Priority Queue）
+        max_priority = 0  # 队列最大优先级（0-255），0 表示不启用优先级队列
+
+        # 延迟队列（Delayed Queue / Message TTL）
+        message_ttl = 0  # 消息 TTL（毫秒），0 表示不设置 TTL
+
+        # 队列限制
+        max_length = 0  # 队列最大消息数，0 表示不限制
+        max_length_bytes = 0  # 队列最大字节数，0 表示不限制
+
+        # 死信队列（Dead Letter Queue）
+        dead_letter_exchange = ""  # 死信交换机名称
+        dead_letter_routing_key = ""  # 死信路由键
+
+    [rabbitmq.queue_bind]
+        routing_key = ""  # 如果为空则使用 topic 名称
+        no_wait = false
+
+    [rabbitmq.producer_exchanges]
+        # 映射消息键（MessageKey）到 Exchange 和 RoutingKey
+        # 格式: message_key = {exchange = "exchange_name", routing_key = "routing.key"}
+        # 如果 exchange 为空，使用 exchange.name 配置或根据消息键自动生成
+        # 如果 routing_key 为空，使用消息键作为 routing_key
+        event = {exchange = "", routing_key = "event"}
+        event_poison = {exchange = "", routing_key = "event.poison"}
+
+    [rabbitmq.consumer_queues]
+        # 映射消息键（MessageKey）到 Queue 和 BindingKey
+        # 格式: message_key = {queue = "queue_name", binding_key = "binding.key"}
+        # 如果 queue 为空，使用 consumer.queue_name 配置或根据消息键自动生成
+        # 如果 binding_key 为空，使用消息键作为 binding_key
+        event = {queue = "", binding_key = "event"}
+        event_poison = {queue = "", binding_key = "event.poison"}
+
 [email]
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
