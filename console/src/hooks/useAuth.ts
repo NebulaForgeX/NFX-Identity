@@ -2,18 +2,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import {
+  GetUser,
   LoginByEmail,
   LoginByPhone,
   Register,
   SendVerificationCode,
-  Signup,
-  GetUser,
-  UpdateUser,
-  UpdatePassword,
   SendVerificationCodeToCurrentEmail,
+  Signup,
   UpdateEmail,
+  UpdatePassword,
+  UpdateUser,
 } from "@/apis/auth.api";
-import { PermissionRegister, PermissionLoginResponse } from "@/apis/permission.api";
+import { PermissionLoginResponse, PermissionRegister } from "@/apis/permission.api";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import AuthStore, { useAuthStore } from "@/stores/authStore";
 import LayoutStore from "@/stores/layoutStore";
@@ -46,7 +46,7 @@ export const useLoginByEmail = () => {
     mutationFn: LoginByEmail,
     onSuccess: async (response) => {
       if (response.token) {
-        setTokens({  accessToken: response.token});
+        setTokens({ accessToken: response.token });
         setIsAuthValid(true);
         if (response.user?.id) {
           setCurrentUserId(response.user.id);
@@ -73,7 +73,7 @@ export const useLoginByPhone = () => {
     mutationFn: LoginByPhone,
     onSuccess: async (response) => {
       if (response.token) {
-        setTokens({  accessToken: response.token});
+        setTokens({ accessToken: response.token });
         setIsAuthValid(true);
         if (response.user?.id) {
           setCurrentUserId(response.user.id);
@@ -113,12 +113,7 @@ export const useSignup = () => {
   const setCurrentUserId = AuthStore.getState().setCurrentUserId;
   const setIsAuthValid = AuthStore.getState().setIsAuthValid;
   const { mutateAsync: signup, ...rest } = useMutation({
-    mutationFn: async (params: {
-      email: string;
-      inviteCode: string;
-      password: string;
-      verificationCode: string;
-    }) => {
+    mutationFn: async (params: { email: string; inviteCode: string; password: string; verificationCode: string }) => {
       // 转换参数格式以匹配后端 API
       const response = await PermissionRegister({
         email: params.email,

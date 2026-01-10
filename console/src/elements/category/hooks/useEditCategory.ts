@@ -6,9 +6,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { UpdateCategory, UpdateCategoryImage } from "@/apis/category.api";
+import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 import { showError, showSuccess } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
-import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 
 export const useEditCategory = (categoryId: string) => {
   const navigate = useNavigate();
@@ -54,14 +54,11 @@ export const useEditCategory = (categoryId: string) => {
     [mutateAsync],
   );
 
-  const onSubmitError = useCallback(
-    (errors: FieldErrors<CategoryFormValues>) => {
-      console.error("Form validation errors:", errors);
-      const firstError = Object.values(errors)[0];
-      showError(firstError?.message || "请检查表单错误");
-    },
-    [],
-  );
+  const onSubmitError = useCallback((errors: FieldErrors<CategoryFormValues>) => {
+    console.error("Form validation errors:", errors);
+    const firstError = Object.values(errors)[0];
+    showError(firstError?.message || "请检查表单错误");
+  }, []);
 
   return {
     onSubmit,
@@ -71,4 +68,3 @@ export const useEditCategory = (categoryId: string) => {
 };
 
 export default useEditCategory;
-

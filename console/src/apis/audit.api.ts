@@ -1,19 +1,18 @@
 // Audit API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
 import type {
   ActorSnapshot,
-  Event,
-  EventRetentionPolicy,
-  EventSearchIndex,
-  HashChainCheckpoint,
-} from "@/types";
-import type {
+  BaseResponse,
   CreateActorSnapshotRequest,
   CreateEventRequest,
   CreateEventRetentionPolicyRequest,
   CreateEventSearchIndexRequest,
   CreateHashChainCheckpointRequest,
+  DataResponse,
+  Event,
+  EventRetentionPolicy,
+  EventSearchIndex,
+  HashChainCheckpoint,
   UpdateEventRetentionPolicyRequest,
 } from "@/types";
 
@@ -46,7 +45,10 @@ export const DeleteEvent = async (id: string): Promise<BaseResponse> => {
 
 // 创建 Actor Snapshot
 export const CreateActorSnapshot = async (params: CreateActorSnapshotRequest): Promise<ActorSnapshot> => {
-  const { data } = await protectedClient.post<DataResponse<ActorSnapshot>>(URL_PATHS.AUDIT.CREATE_ACTOR_SNAPSHOT, params);
+  const { data } = await protectedClient.post<DataResponse<ActorSnapshot>>(
+    URL_PATHS.AUDIT.CREATE_ACTOR_SNAPSHOT,
+    params,
+  );
   return data.data;
 };
 
@@ -67,8 +69,13 @@ export const DeleteActorSnapshot = async (id: string): Promise<BaseResponse> => 
 // ========== Event Retention Policy 相关 ==========
 
 // 创建 Event Retention Policy
-export const CreateEventRetentionPolicy = async (params: CreateEventRetentionPolicyRequest): Promise<EventRetentionPolicy> => {
-  const { data } = await protectedClient.post<DataResponse<EventRetentionPolicy>>(URL_PATHS.AUDIT.CREATE_EVENT_RETENTION_POLICY, params);
+export const CreateEventRetentionPolicy = async (
+  params: CreateEventRetentionPolicyRequest,
+): Promise<EventRetentionPolicy> => {
+  const { data } = await protectedClient.post<DataResponse<EventRetentionPolicy>>(
+    URL_PATHS.AUDIT.CREATE_EVENT_RETENTION_POLICY,
+    params,
+  );
   return data.data;
 };
 
@@ -80,7 +87,10 @@ export const GetEventRetentionPolicy = async (id: string): Promise<EventRetentio
 };
 
 // 更新 Event Retention Policy
-export const UpdateEventRetentionPolicy = async (id: string, params: UpdateEventRetentionPolicyRequest): Promise<BaseResponse> => {
+export const UpdateEventRetentionPolicy = async (
+  id: string,
+  params: UpdateEventRetentionPolicyRequest,
+): Promise<BaseResponse> => {
   const url = URL_PATHS.AUDIT.UPDATE_EVENT_RETENTION_POLICY.replace(":id", id);
   const { data } = await protectedClient.put<BaseResponse>(url, params);
   return data;
@@ -97,7 +107,10 @@ export const DeleteEventRetentionPolicy = async (id: string): Promise<BaseRespon
 
 // 创建 Event Search Index
 export const CreateEventSearchIndex = async (params: CreateEventSearchIndexRequest): Promise<EventSearchIndex> => {
-  const { data } = await protectedClient.post<DataResponse<EventSearchIndex>>(URL_PATHS.AUDIT.CREATE_EVENT_SEARCH_INDEX, params);
+  const { data } = await protectedClient.post<DataResponse<EventSearchIndex>>(
+    URL_PATHS.AUDIT.CREATE_EVENT_SEARCH_INDEX,
+    params,
+  );
   return data.data;
 };
 
@@ -118,8 +131,13 @@ export const DeleteEventSearchIndex = async (id: string): Promise<BaseResponse> 
 // ========== Hash Chain Checkpoint 相关 ==========
 
 // 创建 Hash Chain Checkpoint
-export const CreateHashChainCheckpoint = async (params: CreateHashChainCheckpointRequest): Promise<HashChainCheckpoint> => {
-  const { data } = await protectedClient.post<DataResponse<HashChainCheckpoint>>(URL_PATHS.AUDIT.CREATE_HASH_CHAIN_CHECKPOINT, params);
+export const CreateHashChainCheckpoint = async (
+  params: CreateHashChainCheckpointRequest,
+): Promise<HashChainCheckpoint> => {
+  const { data } = await protectedClient.post<DataResponse<HashChainCheckpoint>>(
+    URL_PATHS.AUDIT.CREATE_HASH_CHAIN_CHECKPOINT,
+    params,
+  );
   return data.data;
 };
 

@@ -1,10 +1,9 @@
-import { memo, useEffect, useRef, useCallback } from "react";
-import { CheckCircle, Info, XCircle } from "@/assets/icons/lucide";
+import { memo, useCallback, useEffect, useRef } from "react";
 
+import { CheckCircle, Info, XCircle } from "@/assets/icons/lucide";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
 
 import styles from "./Modal.module.css";
-
 
 const BaseModal = memo(() => {
   const dialogRef = useRef<HTMLDialogElement>(null);

@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { authEventEmitter, authEvents } from "@/events/auth";
@@ -29,4 +29,3 @@ export const useRouter = () => {
   // - 监听权限变化，重定向到相应页面
   // - 监听路由变化，记录访问历史等
 };
-

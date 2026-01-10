@@ -9,7 +9,6 @@
     "build": "tsc -b && vite build --mode prod",
     "build:dev": "tsc -b && vite build --mode dev",
     "lint:code-format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,cjs,mjs,json,md}\"",
-    "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky install"
   },

@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
-import { memo } from "react";
+import { memo, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLayoutEffect, useRef, useState, useCallback } from "react";
+
 import { Footer, Header, Sidebar } from "@/components";
 import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
 import { ROUTES } from "@/types/navigation";
@@ -44,42 +44,43 @@ const SideHideLayout = memo(({ children }: SideHideLayoutProps) => {
   const sidebarOpen = useLayoutStore((state) => state.sidebarOpen);
   const toggleSidebar = LayoutStore.getState().toggleSidebar;
   const closeSidebar = LayoutStore.getState().closeSidebar;
-  
+
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const [footerRef, footerHeight] = useElementHeight<HTMLDivElement>();
 
   const handleNavigateHome = useCallback(() => {
     navigate(ROUTES.DASHBOARD);
-  }, [ navigate ]);
+  }, [navigate]);
 
   const handleBackdropClick = useCallback(() => {
     closeSidebar();
-  }, [ closeSidebar ]);
+  }, [closeSidebar]);
 
   console.log("headerHeight", headerHeight);
   console.log("footerHeight", footerHeight);
 
-
   return (
     <div className={styles.layout}>
-
       {/* Header */}
       <header ref={headerRef} className={styles.header}>
         <Header onToggleSidebar={toggleSidebar} onNavigateHome={handleNavigateHome} />
       </header>
 
       {/* Main Content Area with Sidebar */}
-      <main className={styles.mainWrapper} style={{ 
-        marginTop: `${headerHeight}px`,
-        marginBottom: `${footerHeight}px`,
-      }}>
-      {/* Sidebar */}
-      <Sidebar
-        toggled={sidebarOpen}
-        onBackdropClick={handleBackdropClick}
-        breakPoint="all"
-        className={styles.sidebar}
-      />
+      <main
+        className={styles.mainWrapper}
+        style={{
+          marginTop: `${headerHeight}px`,
+          marginBottom: `${footerHeight}px`,
+        }}
+      >
+        {/* Sidebar */}
+        <Sidebar
+          toggled={sidebarOpen}
+          onBackdropClick={handleBackdropClick}
+          breakPoint="all"
+          className={styles.sidebar}
+        />
 
         {/* Content */}
         <div className={styles.content}>{children}</div>

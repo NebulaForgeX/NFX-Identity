@@ -6,9 +6,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { UpdateSubcategory, UpdateSubcategoryImage } from "@/apis/subcategory.api";
+import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 import { showError, showSuccess } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
-import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 
 export const useEditSubcategory = (subcategoryId: string) => {
   const navigate = useNavigate();
@@ -56,14 +56,11 @@ export const useEditSubcategory = (subcategoryId: string) => {
     [mutateAsync],
   );
 
-  const onSubmitError = useCallback(
-    (errors: FieldErrors<SubcategoryFormValues>) => {
-      console.error("Form validation errors:", errors);
-      const firstError = Object.values(errors)[0];
-      showError(firstError?.message || "请检查表单错误");
-    },
-    [],
-  );
+  const onSubmitError = useCallback((errors: FieldErrors<SubcategoryFormValues>) => {
+    console.error("Form validation errors:", errors);
+    const firstError = Object.values(errors)[0];
+    showError(firstError?.message || "请检查表单错误");
+  }, []);
 
   return {
     onSubmit,
@@ -73,4 +70,3 @@ export const useEditSubcategory = (subcategoryId: string) => {
 };
 
 export default useEditSubcategory;
-

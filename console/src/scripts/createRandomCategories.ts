@@ -1,5 +1,6 @@
 import { AddCategory } from "@/apis/category.api";
 import { AuthStore } from "@/stores/authStore";
+
 import { getRandomName, getRandomString } from "./name";
 
 /**
@@ -13,8 +14,18 @@ export const createRandomCategories = async (count: number): Promise<void> => {
   }
 
   const categorySuffixes = [
-    "绿茶", "红茶", "乌龙茶", "白茶", "黄茶", "普洱茶", 
-    "花茶", "果茶", "草本茶", "调配茶", "名优茶", "特色茶"
+    "绿茶",
+    "红茶",
+    "乌龙茶",
+    "白茶",
+    "黄茶",
+    "普洱茶",
+    "花茶",
+    "果茶",
+    "草本茶",
+    "调配茶",
+    "名优茶",
+    "特色茶",
   ];
 
   const promises = [];
@@ -25,7 +36,7 @@ export const createRandomCategories = async (count: number): Promise<void> => {
     const randomDescription = getRandomName(descriptionLength);
     const timestamp = Date.now();
     const randomKey = getRandomString(4);
-    
+
     const categoryData = {
       name: `${randomName}${suffix}`,
       description: randomDescription,
@@ -35,12 +46,11 @@ export const createRandomCategories = async (count: number): Promise<void> => {
     };
 
     promises.push(AddCategory(categoryData));
-    
+
     // 确保每个 key 都是唯一的，添加小延迟
-    await new Promise(resolve => setTimeout(resolve, 1));
+    await new Promise((resolve) => setTimeout(resolve, 1));
   }
 
   await Promise.all(promises);
   console.log(`✅ 成功创建 ${count} 个分类`);
 };
-

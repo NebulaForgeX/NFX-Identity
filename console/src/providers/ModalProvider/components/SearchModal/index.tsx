@@ -1,16 +1,9 @@
 import type { LucideIcon } from "@/assets/icons/lucide";
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Edit,
-  Home,
-  Search,
-  Shield,
-  User,
-  X,
-} from "@/assets/icons/lucide";
 import { useNavigate } from "react-router-dom";
 
+import { Edit, Home, Search, Shield, User, X } from "@/assets/icons/lucide";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
 
@@ -149,63 +142,63 @@ const SearchModal = memo(() => {
 
   return (
     <dialog ref={dialogRef} className={styles.modal} onClose={handleDialogClose}>
-        <div className={styles.searchBox}>
-          <Search size={20} className={styles.searchIcon} />
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="搜索功能、页面..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className={styles.searchInput}
-          />
-          {searchQuery && (
-            <button className={styles.clearBtn} onClick={() => setSearchQuery("")}>
-              <X size={16} />
-            </button>
-          )}
-        </div>
+      <div className={styles.searchBox}>
+        <Search size={20} className={styles.searchIcon} />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="搜索功能、页面..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className={styles.searchInput}
+        />
+        {searchQuery && (
+          <button className={styles.clearBtn} onClick={() => setSearchQuery("")}>
+            <X size={16} />
+          </button>
+        )}
+      </div>
 
-        <div className={styles.results}>
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={index}
-                  className={`${styles.resultItem} ${index === selectedIndex ? styles.selected : ""}`}
-                  onClick={() => handleSelect(item)}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                >
-                  <div className={styles.resultIcon}>
-                    <Icon size={20} />
-                  </div>
-                  <div className={styles.resultContent}>
-                    <div className={styles.resultTitle}>{item.title}</div>
-                    <div className={styles.resultDescription}>{item.description}</div>
-                  </div>
-                </button>
-              );
-            })
-          ) : (
-            <div className={styles.noResults}>
-              <p>未找到 &quot;{searchQuery}&quot; 相关结果</p>
-            </div>
-          )}
-        </div>
+      <div className={styles.results}>
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={index}
+                className={`${styles.resultItem} ${index === selectedIndex ? styles.selected : ""}`}
+                onClick={() => handleSelect(item)}
+                onMouseEnter={() => setSelectedIndex(index)}
+              >
+                <div className={styles.resultIcon}>
+                  <Icon size={20} />
+                </div>
+                <div className={styles.resultContent}>
+                  <div className={styles.resultTitle}>{item.title}</div>
+                  <div className={styles.resultDescription}>{item.description}</div>
+                </div>
+              </button>
+            );
+          })
+        ) : (
+          <div className={styles.noResults}>
+            <p>未找到 &quot;{searchQuery}&quot; 相关结果</p>
+          </div>
+        )}
+      </div>
 
-        <div className={styles.footer}>
-          <span className={styles.hint}>
-            <kbd>↑</kbd> <kbd>↓</kbd> 导航
-          </span>
-          <span className={styles.hint}>
-            <kbd>Enter</kbd> 选择
-          </span>
-          <span className={styles.hint}>
-            <kbd>Esc</kbd> 关闭
-          </span>
-        </div>
+      <div className={styles.footer}>
+        <span className={styles.hint}>
+          <kbd>↑</kbd> <kbd>↓</kbd> 导航
+        </span>
+        <span className={styles.hint}>
+          <kbd>Enter</kbd> 选择
+        </span>
+        <span className={styles.hint}>
+          <kbd>Esc</kbd> 关闭
+        </span>
+      </div>
     </dialog>
   );
 });

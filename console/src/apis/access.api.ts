@@ -1,21 +1,20 @@
 // Access API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
 import type {
-  Grant,
-  Permission,
-  Role,
-  RolePermission,
-  Scope,
-  ScopePermission,
-} from "@/types";
-import type {
+  BaseResponse,
   CreateGrantRequest,
   CreatePermissionRequest,
   CreateRolePermissionRequest,
   CreateRoleRequest,
   CreateScopePermissionRequest,
   CreateScopeRequest,
+  DataResponse,
+  Grant,
+  Permission,
+  Role,
+  RolePermission,
+  Scope,
+  ScopePermission,
   UpdateGrantRequest,
   UpdatePermissionRequest,
   UpdateRoleRequest,
@@ -159,7 +158,10 @@ export const DeleteGrant = async (id: string): Promise<BaseResponse> => {
 
 // 创建角色权限关联
 export const CreateRolePermission = async (params: CreateRolePermissionRequest): Promise<RolePermission> => {
-  const { data } = await protectedClient.post<DataResponse<RolePermission>>(URL_PATHS.ACCESS.CREATE_ROLE_PERMISSION, params);
+  const { data } = await protectedClient.post<DataResponse<RolePermission>>(
+    URL_PATHS.ACCESS.CREATE_ROLE_PERMISSION,
+    params,
+  );
   return data.data;
 };
 
@@ -181,7 +183,10 @@ export const DeleteRolePermission = async (id: string): Promise<BaseResponse> =>
 
 // 创建作用域权限关联
 export const CreateScopePermission = async (params: CreateScopePermissionRequest): Promise<ScopePermission> => {
-  const { data } = await protectedClient.post<DataResponse<ScopePermission>>(URL_PATHS.ACCESS.CREATE_SCOPE_PERMISSION, params);
+  const { data } = await protectedClient.post<DataResponse<ScopePermission>>(
+    URL_PATHS.ACCESS.CREATE_SCOPE_PERMISSION,
+    params,
+  );
   return data.data;
 };
 

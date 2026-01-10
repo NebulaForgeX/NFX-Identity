@@ -1,6 +1,8 @@
+import type { QueryErrorResetBoundaryProps } from "@tanstack/react-query";
 import type { ReactNode, SuspenseProps as ReactSuspenseProps } from "react";
+
 import { memo, Suspense as ReactSuspense, useCallback } from "react";
-import { QueryErrorResetBoundary, type QueryErrorResetBoundaryProps } from "@tanstack/react-query";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
 import { ECGLoading, TruckLoading } from "@/components";
 
@@ -99,10 +101,7 @@ const Suspense = memo((props: SuspenseProps) => {
   return (
     <QueryErrorResetBoundary {...restProps}>
       {({ reset }) => (
-        <SuspenseErrorBoundary
-          onReset={reset}
-          fallbackRender={({ error, retry }) => renderErrorFallback(error, retry)}
-        >
+        <SuspenseErrorBoundary onReset={reset} fallbackRender={({ error, retry }) => renderErrorFallback(error, retry)}>
           <ReactSuspense fallback={renderFallback()} {...restProps}>
             {test ? <AlwaysPending /> : children}
           </ReactSuspense>

@@ -100,11 +100,11 @@ function VirtualListComponent<T>({
   const renderLoadingIndicator = useCallback(() => {
     if (loadingIndicator) return loadingIndicator;
     return (
-       <div className={styles.loadingMore}>
+      <div className={styles.loadingMore}>
         <span>Loading more...</span>
       </div>
     );
-  }, [loadingIndicator]); 
+  }, [loadingIndicator]);
 
   const renderEndOfListIndicator = useCallback(() => {
     if (endOfListIndicator) return endOfListIndicator;
@@ -146,7 +146,11 @@ function VirtualListComponent<T>({
             return (
               <div key={virtualRow.key} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
                 {isLoaderRow ? (
-                  hasNextPage ? renderLoadingIndicator() : renderEndOfListIndicator()
+                  hasNextPage ? (
+                    renderLoadingIndicator()
+                  ) : (
+                    renderEndOfListIndicator()
+                  )
                 ) : (
                   <div key={getItemKey(item, virtualRow.index)}>{renderItem(item, virtualRow.index)}</div>
                 )}

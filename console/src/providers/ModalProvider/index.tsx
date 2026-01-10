@@ -9,7 +9,6 @@ interface ModalProviderProps {
 }
 
 const ModalProvider = memo(({ children }: ModalProviderProps) => {
-
   return (
     <>
       {children}

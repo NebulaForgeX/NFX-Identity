@@ -1,13 +1,13 @@
 import type { AuthCategory } from "@/types/domain";
 
-import axios from "axios";
 import { useCallback } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import { ROUTES } from "@/types/navigation";
 import { DeleteCategory } from "@/apis/category.api";
-import { showConfirm, showSuccess, showError } from "@/stores/modalStore";
 import { cacheEventEmitter, cacheEvents } from "@/events/cache";
+import { showConfirm, showError, showSuccess } from "@/stores/modalStore";
+import { ROUTES } from "@/types/navigation";
 
 /**
  * CategoryListItem 操作 Hook
@@ -95,4 +95,3 @@ export const useActionCategoryItem = () => {
 };
 
 export default useActionCategoryItem;
-

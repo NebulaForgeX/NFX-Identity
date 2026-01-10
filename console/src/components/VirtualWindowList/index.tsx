@@ -60,7 +60,6 @@ function VirtualWindowListComponent<T>({
   innerClass,
   ...virtualizerOptions
 }: VirtualWindowListProps<T>) {
-  
   /* ✅ 真正的 window 虚拟滚动器 */
   const virtualizer = useWindowVirtualizer({
     count: hasNextPage ? data.length + 1 : data.length,
@@ -89,7 +88,7 @@ function VirtualWindowListComponent<T>({
       <div
         className={styles.virtualList}
         style={{
-          height: typeof height === "number" ? `${height}px` : height ?? "auto",
+          height: typeof height === "number" ? `${height}px` : (height ?? "auto"),
         }}
       >
         {emptyState ?? (
@@ -146,20 +145,16 @@ function VirtualWindowListComponent<T>({
             const item = data[row.index];
 
             return (
-              <div
-                key={row.key}
-                data-index={row.index}
-                ref={virtualizer.measureElement}
-              >
-                {isLoaderRow
-                  ? hasNextPage
-                    ? renderLoadingIndicator()
-                    : renderEndOfListIndicator()
-                  : (
-                    <div key={getItemKey(item, row.index)}>
-                      {renderItem(item, row.index)}
-                    </div>
-                  )}
+              <div key={row.key} data-index={row.index} ref={virtualizer.measureElement}>
+                {isLoaderRow ? (
+                  hasNextPage ? (
+                    renderLoadingIndicator()
+                  ) : (
+                    renderEndOfListIndicator()
+                  )
+                ) : (
+                  <div key={getItemKey(item, row.index)}>{renderItem(item, row.index)}</div>
+                )}
               </div>
             );
           })}
@@ -169,8 +164,6 @@ function VirtualWindowListComponent<T>({
   );
 }
 
-const VirtualWindowList = memo(
-  VirtualWindowListComponent
-) as typeof VirtualWindowListComponent;
+const VirtualWindowList = memo(VirtualWindowListComponent) as typeof VirtualWindowListComponent;
 
 export default VirtualWindowList;

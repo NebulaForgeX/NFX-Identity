@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 import { Search, X } from "@/assets/icons/lucide";
 
 import styles from "./styles.module.css";
@@ -36,4 +37,3 @@ const SearchInput = memo(({ value, onChange, placeholder = "搜索..." }: Search
 SearchInput.displayName = "SearchInput";
 
 export default SearchInput;
-

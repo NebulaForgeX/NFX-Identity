@@ -41,4 +41,3 @@ class CacheEventEmitter {
 }
 
 export const cacheEventEmitter = new CacheEventEmitter();
-

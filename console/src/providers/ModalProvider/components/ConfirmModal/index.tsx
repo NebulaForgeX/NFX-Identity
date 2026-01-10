@@ -1,10 +1,9 @@
-import { memo, useEffect, useRef, useCallback } from "react";
-import { AlertCircle } from "@/assets/icons/lucide";
+import { memo, useCallback, useEffect, useRef } from "react";
 
+import { AlertCircle } from "@/assets/icons/lucide";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
 
 import styles from "./Modal.module.css";
-
 
 const ConfirmModal = memo(() => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -45,17 +44,19 @@ const ConfirmModal = memo(() => {
   return (
     <dialog ref={dialogRef} className={styles.modal} onClose={handleClose}>
       <div className={`${styles.content} ${styles[type]}`}>
-        <div className={styles.icon}><AlertCircle size={32} /></div>
+        <div className={styles.icon}>
+          <AlertCircle size={32} />
+        </div>
         {title && <h3 className={styles.title}>{title}</h3>}
         <p className={styles.message}>{message || "No message"}</p>
-          <div className={styles.buttonGroup}>
-            <button className={styles.cancelButton} onClick={handleCancel}>
-              {cancelText || "Cancel"}
-            </button>
-            <button className={styles.confirmButton} onClick={handleConfirm}>
-              {confirmText || "Confirm"}
-            </button>
-          </div>
+        <div className={styles.buttonGroup}>
+          <button className={styles.cancelButton} onClick={handleCancel}>
+            {cancelText || "Cancel"}
+          </button>
+          <button className={styles.confirmButton} onClick={handleConfirm}>
+            {confirmText || "Confirm"}
+          </button>
+        </div>
       </div>
     </dialog>
   );

@@ -9,4 +9,3 @@ export const SubcategoryFormSchema = z.object({
   Image: z.instanceof(File).optional().nullable(),
   Show: z.boolean().default(true),
 });
-

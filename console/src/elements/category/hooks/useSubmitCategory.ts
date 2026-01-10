@@ -6,10 +6,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { AddCategory } from "@/apis/category.api";
+import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 import { AuthStore } from "@/stores/authStore";
 import { showError, showSuccess } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
-import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 
 export const useSubmitCategory = () => {
   const navigate = useNavigate();
@@ -22,13 +22,16 @@ export const useSubmitCategory = () => {
       }
 
       // 一次性创建分类并上传图片（后端支持 multipart/form-data）
-      const category = await AddCategory({
-        name: data.values.Name.trim(),
-        description: data.values.Description || "",
-        key: data.values.Key.trim(),
-        show: data.values.Show,
-        editorId: currentUserId,
-      }, data.imageFile);
+      const category = await AddCategory(
+        {
+          name: data.values.Name.trim(),
+          description: data.values.Description || "",
+          key: data.values.Key.trim(),
+          show: data.values.Show,
+          editorId: currentUserId,
+        },
+        data.imageFile,
+      );
 
       return category;
     },
@@ -58,14 +61,11 @@ export const useSubmitCategory = () => {
     [mutateAsync],
   );
 
-  const onSubmitError = useCallback(
-    (errors: FieldErrors<CategoryFormValues>) => {
-      console.error("Form validation errors:", errors);
-      const firstError = Object.values(errors)[0];
-      showError(firstError?.message || "请检查表单错误");
-    },
-    [],
-  );
+  const onSubmitError = useCallback((errors: FieldErrors<CategoryFormValues>) => {
+    console.error("Form validation errors:", errors);
+    const firstError = Object.values(errors)[0];
+    showError(firstError?.message || "请检查表单错误");
+  }, []);
 
   return {
     onSubmit,
@@ -75,4 +75,3 @@ export const useSubmitCategory = () => {
 };
 
 export default useSubmitCategory;
-

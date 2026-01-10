@@ -1,8 +1,8 @@
 import { memo, useState } from "react";
 
-import { useSignup, useSendVerificationCode } from "@/hooks/useAuth";
+import { useSendVerificationCode, useSignup } from "@/hooks/useAuth";
 import { useResendTimer } from "@/hooks/useResendTimer";
-import { showSuccess, showError } from "@/stores/modalStore";
+import { showError, showSuccess } from "@/stores/modalStore";
 
 import styles from "./styles.module.css";
 

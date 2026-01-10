@@ -8,4 +8,3 @@ export const CategoryFormSchema = z.object({
   Image: z.instanceof(File).optional().nullable(),
   Show: z.boolean().default(true),
 });
-

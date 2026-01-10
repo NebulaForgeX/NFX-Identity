@@ -49,4 +49,3 @@ export const AuthStore = createStore<AuthState>()(
 
 export default AuthStore;
 export const useAuthStore = <T>(selector: (state: AuthState) => T) => useStore(AuthStore, selector);
-

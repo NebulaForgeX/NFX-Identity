@@ -1,18 +1,8 @@
 // Auth API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
 import type {
   AccountLockout,
-  LoginAttempt,
-  MFAFactor,
-  PasswordHistory,
-  PasswordReset,
-  RefreshToken,
-  Session,
-  TrustedDevice,
-  UserCredential,
-} from "@/types";
-import type {
+  BaseResponse,
   CreateAccountLockoutRequest,
   CreateLoginAttemptRequest,
   CreateMFAFactorRequest,
@@ -22,14 +12,22 @@ import type {
   CreateSessionRequest,
   CreateTrustedDeviceRequest,
   CreateUserCredentialRequest,
+  DataResponse,
+  LoginAttempt,
+  MFAFactor,
+  PasswordHistory,
+  PasswordReset,
+  RefreshToken,
   RevokeSessionRequest,
+  Session,
+  TrustedDevice,
   UpdateAccountLockoutRequest,
   UpdateMFAFactorRequest,
   UpdatePasswordResetRequest,
   UpdateRefreshTokenRequest,
   UpdateUserCredentialRequest,
+  UserCredential,
 } from "@/types";
-
 
 import { protectedClient } from "./clients";
 import { URL_PATHS } from "./ip";
@@ -67,7 +65,10 @@ export const DeleteSession = async (id: string): Promise<BaseResponse> => {
 
 // 创建用户凭证
 export const CreateUserCredential = async (params: CreateUserCredentialRequest): Promise<UserCredential> => {
-  const { data } = await protectedClient.post<DataResponse<UserCredential>>(URL_PATHS.AUTH.CREATE_USER_CREDENTIAL, params);
+  const { data } = await protectedClient.post<DataResponse<UserCredential>>(
+    URL_PATHS.AUTH.CREATE_USER_CREDENTIAL,
+    params,
+  );
   return data.data;
 };
 
@@ -154,7 +155,10 @@ export const DeleteRefreshToken = async (id: string): Promise<BaseResponse> => {
 
 // 创建密码重置
 export const CreatePasswordReset = async (params: CreatePasswordResetRequest): Promise<PasswordReset> => {
-  const { data } = await protectedClient.post<DataResponse<PasswordReset>>(URL_PATHS.AUTH.CREATE_PASSWORD_RESET, params);
+  const { data } = await protectedClient.post<DataResponse<PasswordReset>>(
+    URL_PATHS.AUTH.CREATE_PASSWORD_RESET,
+    params,
+  );
   return data.data;
 };
 
@@ -183,7 +187,10 @@ export const DeletePasswordReset = async (id: string): Promise<BaseResponse> => 
 
 // 创建密码历史
 export const CreatePasswordHistory = async (params: CreatePasswordHistoryRequest): Promise<PasswordHistory> => {
-  const { data } = await protectedClient.post<DataResponse<PasswordHistory>>(URL_PATHS.AUTH.CREATE_PASSWORD_HISTORY, params);
+  const { data } = await protectedClient.post<DataResponse<PasswordHistory>>(
+    URL_PATHS.AUTH.CREATE_PASSWORD_HISTORY,
+    params,
+  );
   return data.data;
 };
 
@@ -220,7 +227,10 @@ export const DeleteLoginAttempt = async (id: string): Promise<BaseResponse> => {
 
 // 创建账户锁定
 export const CreateAccountLockout = async (params: CreateAccountLockoutRequest): Promise<AccountLockout> => {
-  const { data } = await protectedClient.post<DataResponse<AccountLockout>>(URL_PATHS.AUTH.CREATE_ACCOUNT_LOCKOUT, params);
+  const { data } = await protectedClient.post<DataResponse<AccountLockout>>(
+    URL_PATHS.AUTH.CREATE_ACCOUNT_LOCKOUT,
+    params,
+  );
   return data.data;
 };
 
@@ -249,7 +259,10 @@ export const DeleteAccountLockout = async (id: string): Promise<BaseResponse> =>
 
 // 创建受信任设备
 export const CreateTrustedDevice = async (params: CreateTrustedDeviceRequest): Promise<TrustedDevice> => {
-  const { data } = await protectedClient.post<DataResponse<TrustedDevice>>(URL_PATHS.AUTH.CREATE_TRUSTED_DEVICE, params);
+  const { data } = await protectedClient.post<DataResponse<TrustedDevice>>(
+    URL_PATHS.AUTH.CREATE_TRUSTED_DEVICE,
+    params,
+  );
   return data.data;
 };
 

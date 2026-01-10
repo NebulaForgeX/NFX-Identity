@@ -1,10 +1,10 @@
 import { memo } from "react";
+
 import { Edit } from "@/assets/icons/lucide";
-
-import QuickStore, { useQuickStore } from "@/stores/quickStore";
 import { Suspense } from "@/components";
+import QuickStore, { useQuickStore } from "@/stores/quickStore";
 
-import { StatsCards, QuickNavigation, ResourceLinks } from "./components";
+import { QuickNavigation, ResourceLinks, StatsCards } from "./components";
 import styles from "./styles.module.css";
 
 const DashboardPage = memo(() => {

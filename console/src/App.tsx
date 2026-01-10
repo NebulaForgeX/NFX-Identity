@@ -2,20 +2,16 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import { TruckLoading } from "@/components";
 import { LayoutSwitcher } from "@/layouts";
-import {
-  DashboardPage,
-  LoginPage,
-  NotFoundPage,
-} from "@/pages";
+import { DashboardPage, LoginPage, NotFoundPage } from "@/pages";
 import { ROUTES } from "@/types/navigation";
 
 import "./App.css";
-import styles from "./App.module.css";
 
-import { useRouter } from "./hooks/useRouter";
-import { useAuthStore } from "./stores/authStore";
+import styles from "./App.module.css";
 import { useAuthInit } from "./hooks/useAuthInit";
 import { useCacheInvalidation } from "./hooks/useCacheInvalidation";
+import { useRouter } from "./hooks/useRouter";
+import { useAuthStore } from "./stores/authStore";
 
 function App() {
   useRouter();
@@ -52,6 +48,5 @@ function App() {
     </LayoutSwitcher>
   );
 }
-
 
 export default App;

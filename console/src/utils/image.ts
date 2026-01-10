@@ -24,10 +24,9 @@ export const buildImageUrl = (
   // 如果是相对路径，构建完整 URL
   const baseUrl = API_ENDPOINTS.IMAGE.replace(/\/$/, ""); // 移除末尾斜杠
   const cleanPath = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath; // 移除开头的斜杠
-  
+
   // 临时图片使用 tmp/${type}/ 前缀
   const prefix = isTemp ? `tmp/${type}` : type;
-  
+
   return `${baseUrl}/images/${prefix}/${cleanPath}`;
 };
-

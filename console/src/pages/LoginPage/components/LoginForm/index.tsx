@@ -90,11 +90,7 @@ const LoginForm = memo(() => {
         <label className={styles.label}>密码</label>
       </div>
 
-      <button
-        type="submit"
-        className={styles.submitBtn}
-        disabled={isEmailLoginPending || isPhoneLoginPending}
-      >
+      <button type="submit" className={styles.submitBtn} disabled={isEmailLoginPending || isPhoneLoginPending}>
         {isEmailLoginPending || isPhoneLoginPending ? "正在登录..." : "登录"}
       </button>
 

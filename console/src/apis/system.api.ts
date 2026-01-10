@@ -1,9 +1,12 @@
 // System API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
-import type { SystemState } from "@/types";
-import type { InitializeSystemStateRequest, ResetSystemStateRequest } from "@/types";
-
+import type {
+  BaseResponse,
+  DataResponse,
+  InitializeSystemStateRequest,
+  ResetSystemStateRequest,
+  SystemState,
+} from "@/types";
 
 import { protectedClient } from "./clients";
 import { URL_PATHS } from "./ip";
@@ -25,7 +28,10 @@ export const GetSystemState = async (id: string): Promise<SystemState> => {
 
 // 初始化系统状态
 export const InitializeSystemState = async (params?: InitializeSystemStateRequest): Promise<SystemState> => {
-  const { data } = await protectedClient.post<DataResponse<SystemState>>(URL_PATHS.SYSTEM.INITIALIZE_SYSTEM_STATE, params);
+  const { data } = await protectedClient.post<DataResponse<SystemState>>(
+    URL_PATHS.SYSTEM.INITIALIZE_SYSTEM_STATE,
+    params,
+  );
   return data.data;
 };
 

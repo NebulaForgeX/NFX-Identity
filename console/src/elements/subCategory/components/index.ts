@@ -5,4 +5,3 @@ export { default as ImageController } from "./ImageController";
 export { default as ShowController } from "./ShowController";
 export { default as ParentCategoryController } from "./ParentCategoryController";
 export { default as SubcategoryListItem } from "./SubcategoryListItem";
-

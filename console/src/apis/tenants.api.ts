@@ -1,20 +1,8 @@
 // Tenants API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
-import type {
-  DomainVerification,
-  Group,
-  Member,
-  MemberAppRole,
-  MemberGroup,
-  MemberRole,
-  Tenant,
-  TenantApp,
-  TenantSetting,
-  Invitation,
-} from "@/types";
 import type {
   AcceptInvitationRequest,
+  BaseResponse,
   CreateDomainVerificationRequest,
   CreateGroupRequest,
   CreateInvitationRequest,
@@ -25,10 +13,21 @@ import type {
   CreateTenantAppRequest,
   CreateTenantRequest,
   CreateTenantSettingRequest,
+  DataResponse,
+  DomainVerification,
+  Group,
+  Invitation,
+  Member,
+  MemberAppRole,
+  MemberGroup,
+  MemberRole,
   RevokeInvitationRequest,
   RevokeMemberAppRoleRequest,
   RevokeMemberGroupRequest,
   RevokeMemberRoleRequest,
+  Tenant,
+  TenantApp,
+  TenantSetting,
   UpdateGroupRequest,
   UpdateMemberStatusRequest,
   UpdateTenantAppRequest,
@@ -217,7 +216,10 @@ export const DeleteTenantApp = async (id: string): Promise<BaseResponse> => {
 
 // 创建租户设置
 export const CreateTenantSetting = async (params: CreateTenantSettingRequest): Promise<TenantSetting> => {
-  const { data } = await protectedClient.post<DataResponse<TenantSetting>>(URL_PATHS.TENANTS.CREATE_TENANT_SETTING, params);
+  const { data } = await protectedClient.post<DataResponse<TenantSetting>>(
+    URL_PATHS.TENANTS.CREATE_TENANT_SETTING,
+    params,
+  );
   return data.data;
 };
 
@@ -245,8 +247,13 @@ export const DeleteTenantSetting = async (id: string): Promise<BaseResponse> => 
 // ========== 域名验证相关 ==========
 
 // 创建域名验证
-export const CreateDomainVerification = async (params: CreateDomainVerificationRequest): Promise<DomainVerification> => {
-  const { data } = await protectedClient.post<DataResponse<DomainVerification>>(URL_PATHS.TENANTS.CREATE_DOMAIN_VERIFICATION, params);
+export const CreateDomainVerification = async (
+  params: CreateDomainVerificationRequest,
+): Promise<DomainVerification> => {
+  const { data } = await protectedClient.post<DataResponse<DomainVerification>>(
+    URL_PATHS.TENANTS.CREATE_DOMAIN_VERIFICATION,
+    params,
+  );
   return data.data;
 };
 
@@ -333,7 +340,10 @@ export const DeleteMemberGroup = async (id: string): Promise<BaseResponse> => {
 
 // 创建成员应用角色
 export const CreateMemberAppRole = async (params: CreateMemberAppRoleRequest): Promise<MemberAppRole> => {
-  const { data } = await protectedClient.post<DataResponse<MemberAppRole>>(URL_PATHS.TENANTS.CREATE_MEMBER_APP_ROLE, params);
+  const { data } = await protectedClient.post<DataResponse<MemberAppRole>>(
+    URL_PATHS.TENANTS.CREATE_MEMBER_APP_ROLE,
+    params,
+  );
   return data.data;
 };
 

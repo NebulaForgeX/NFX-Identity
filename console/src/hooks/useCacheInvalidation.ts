@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+
 import { cacheEventEmitter, cacheEvents } from "@/events/cache";
 
 /**
@@ -45,4 +46,3 @@ export const useCacheInvalidation = () => {
     };
   }, [queryClient]);
 };
-

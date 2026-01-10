@@ -1,5 +1,7 @@
 import React, { memo } from "react";
+
 import { useLayoutStore } from "@/stores/layoutStore";
+
 import SideHideLayout from "./SideHideLayout";
 import SideShowLayout from "./SideShowLayout";
 
@@ -8,7 +10,7 @@ interface LayoutSwitcherProps {
 }
 
 export const LayoutSwitcher = memo(({ children }: LayoutSwitcherProps) => {
-const layoutMode = useLayoutStore((s) => s.layoutMode);
+  const layoutMode = useLayoutStore((s) => s.layoutMode);
   if (layoutMode === "hide") {
     return <SideHideLayout>{children}</SideHideLayout>;
   } else {

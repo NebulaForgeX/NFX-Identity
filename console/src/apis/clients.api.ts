@@ -1,24 +1,22 @@
 // Clients API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
 import type {
   APIKey,
   App,
+  BaseResponse,
   ClientCredential,
   ClientScope,
-  IPAllowlist,
-  RateLimit,
-} from "@/types";
-import type {
   CreateAPIKeyRequest,
   CreateAppRequest,
   CreateClientCredentialRequest,
   CreateClientScopeRequest,
   CreateIPAllowlistRequest,
   CreateRateLimitRequest,
+  DataResponse,
+  IPAllowlist,
+  RateLimit,
   UpdateAppRequest,
 } from "@/types";
-
 
 import { protectedClient } from "./clients";
 import { URL_PATHS } from "./ip";
@@ -85,7 +83,10 @@ export const DeleteAPIKeyByKeyID = async (keyId: string): Promise<BaseResponse> 
 
 // 创建 Client Credential
 export const CreateClientCredential = async (params: CreateClientCredentialRequest): Promise<ClientCredential> => {
-  const { data } = await protectedClient.post<DataResponse<ClientCredential>>(URL_PATHS.CLIENTS.CREATE_CLIENT_CREDENTIAL, params);
+  const { data } = await protectedClient.post<DataResponse<ClientCredential>>(
+    URL_PATHS.CLIENTS.CREATE_CLIENT_CREDENTIAL,
+    params,
+  );
   return data.data;
 };
 

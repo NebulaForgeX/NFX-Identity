@@ -2,12 +2,10 @@ import type { ReactNode } from "react";
 import type { SidebarProps as ProSidebarProps } from "react-pro-sidebar";
 
 import { memo } from "react";
-import {
-  Home,
-} from "@/assets/icons/lucide";
 import { Menu, MenuItem, Sidebar as ProSidebar, SubMenu } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
+import { Home } from "@/assets/icons/lucide";
 import { isActiveRoute, ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";

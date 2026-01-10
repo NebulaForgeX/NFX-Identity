@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { Menu } from "@/assets/icons/lucide";
 
+import { Menu } from "@/assets/icons/lucide";
 import { LayoutSwitcher, ThemeSwitcher } from "@/components";
 
 import styles from "./styles.module.css";

@@ -1,8 +1,8 @@
 import { memo, useState } from "react";
-import { Package, Plus, X } from "@/assets/icons/lucide";
-import * as LucideIcons from "@/assets/icons/lucide";
 import { useNavigate } from "react-router-dom";
 
+import { Package, Plus, X } from "@/assets/icons/lucide";
+import * as LucideIcons from "@/assets/icons/lucide";
 import { showConfirm, showInfo } from "@/stores/modalStore";
 import QuickStore, { ALL_AVAILABLE_ITEMS, useQuickStore } from "@/stores/quickStore";
 
@@ -24,15 +24,13 @@ const QuickNavigation = memo(() => {
 
   const handleDelete = (id: string, title: string, event: React.MouseEvent) => {
     event.stopPropagation();
-    showConfirm(
-      {
-        message: `确定要从快速导航中移除"${title}"吗？`,
-        onConfirm: () => {
-          removeItem(id);
-        },
-        title: "移除项目",
-      }
-    );
+    showConfirm({
+      message: `确定要从快速导航中移除"${title}"吗？`,
+      onConfirm: () => {
+        removeItem(id);
+      },
+      title: "移除项目",
+    });
   };
 
   const handleAddItem = (item: (typeof ALL_AVAILABLE_ITEMS)[0]) => {

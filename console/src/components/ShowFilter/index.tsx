@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 import { Eye, EyeOff, Filter } from "@/assets/icons/lucide";
 
 import styles from "./styles.module.css";
@@ -72,4 +73,3 @@ const ShowFilter = memo(({ value, onChange }: ShowFilterProps) => {
 ShowFilter.displayName = "ShowFilter";
 
 export default ShowFilter;
-

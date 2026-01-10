@@ -1,7 +1,6 @@
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-
 type ModalType = "success" | "error" | "info" | "confirm" | "search" | "yearSelect";
 
 interface BaseModalProps {
@@ -46,11 +45,7 @@ interface ModalState {
 interface ModalActions {
   showModal: (
     modalType: ModalType,
-    props:
-      | BaseModalProps
-      | ConfirmModalProps
-      | SearchModalProps
-      | YearSelectModalProps
+    props: BaseModalProps | ConfirmModalProps | SearchModalProps | YearSelectModalProps,
   ) => void;
   hideModal: (modalType?: ModalType) => void; // undefined 表示关闭所有模态框
 }

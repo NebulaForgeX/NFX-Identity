@@ -42,4 +42,3 @@ export default function useInitCategoryForm(category?: AuthCategory | null) {
 
   return form;
 }
-

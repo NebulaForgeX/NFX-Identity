@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
-import { memo } from "react";
+import { memo, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLayoutEffect, useRef, useState, useCallback } from "react";
+
 import { Footer, Header, Sidebar } from "@/components";
 import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
 import { ROUTES } from "@/types/navigation";
@@ -83,19 +83,17 @@ const SideShowLayout = memo(({ children }: SideShowLayoutProps) => {
 
   return (
     <div className={styles.layout}>
-
-
       {/* Header */}
       <header ref={headerRef} className={styles.header}>
         <Header onToggleSidebar={toggleSidebar} onNavigateHome={handleNavigateHome} />
       </header>
-      {/* Sidebar */}      
+      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={styles.sidebarContainer}
         style={{
           top: `${headerHeight}px`,
-          height: `calc(100vh - ${headerHeight + footerHeight}px)`
+          height: `calc(100vh - ${headerHeight + footerHeight}px)`,
         }}
       >
         <Sidebar
@@ -107,17 +105,18 @@ const SideShowLayout = memo(({ children }: SideShowLayoutProps) => {
         />
       </div>
       {/* Main Content Area with Sidebar */}
-      <main className={styles.mainWrapper} style={{ 
-        marginTop: `${headerHeight}px`,
-        marginBottom: `${footerHeight}px`,
-        // transform: `translateX(${sidebarWidth}px)`,
-        marginLeft: `${sidebarWidth}px`,
-        width: `calc(100% - ${sidebarWidth}px)`,
-      }}>
+      <main
+        className={styles.mainWrapper}
+        style={{
+          marginTop: `${headerHeight}px`,
+          marginBottom: `${footerHeight}px`,
+          // transform: `translateX(${sidebarWidth}px)`,
+          marginLeft: `${sidebarWidth}px`,
+          width: `calc(100% - ${sidebarWidth}px)`,
+        }}
+      >
         {/* Content */}
-        <div className={styles.content}>
-          {children}
-        </div>
+        <div className={styles.content}>{children}</div>
       </main>
 
       {/* Footer */}

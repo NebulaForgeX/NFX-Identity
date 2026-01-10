@@ -12,8 +12,8 @@ export interface YearGroup {
 }
 
 export default function useYearSelection() {
-  const modalType = useModalStore(state => state.modalType);
-  const yearModal = useModalStore(state => state.yearSelectModal);
+  const modalType = useModalStore((state) => state.modalType);
+  const yearModal = useModalStore((state) => state.yearSelectModal);
   const hideModal = ModalStore.getState().hideModal;
 
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -36,7 +36,7 @@ export default function useYearSelection() {
 
   const decadeGroups: YearGroup[] = useMemo(() => {
     const groups = new Map<number, number[]>();
-    years.forEach(year => {
+    years.forEach((year) => {
       const decade = Math.floor(year / 10) * 10;
       if (!groups.has(decade)) groups.set(decade, []);
       groups.get(decade)!.push(year);
@@ -57,14 +57,11 @@ export default function useYearSelection() {
     }
   }, [isOpen, baseYear]);
 
-  const scrollToYear = useCallback(
-    (year: number) => {
-      if (!listContainerRef.current) return;
-      const target = listContainerRef.current.querySelector<HTMLButtonElement>(`[data-year="${year}"]`);
-      target?.scrollIntoView({ block: "center" });
-    },
-    [],
-  );
+  const scrollToYear = useCallback((year: number) => {
+    if (!listContainerRef.current) return;
+    const target = listContainerRef.current.querySelector<HTMLButtonElement>(`[data-year="${year}"]`);
+    target?.scrollIntoView({ block: "center" });
+  }, []);
 
   useEffect(() => {
     if (highlightedYear !== null) {
@@ -140,5 +137,3 @@ export default function useYearSelection() {
     quickSet,
   };
 }
-
-

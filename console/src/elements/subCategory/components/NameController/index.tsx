@@ -31,4 +31,3 @@ const NameController = memo(() => {
 NameController.displayName = "NameController";
 
 export default NameController;
-

@@ -1,6 +1,7 @@
-import { AddSubcategory } from "@/apis/subcategory.api";
 import { GetCategoryListAuth } from "@/apis/category.api";
+import { AddSubcategory } from "@/apis/subcategory.api";
 import { AuthStore } from "@/stores/authStore";
+
 import { getRandomName, getRandomString } from "./name";
 
 /**
@@ -26,7 +27,7 @@ export const createRandomSubcategories = async (min: number, max: number): Promi
 
   for (const category of categories) {
     const count = Math.floor(Math.random() * (max - min + 1)) + min;
-    
+
     for (let i = 0; i < count; i++) {
       const nameSuffixLength = Math.floor(Math.random() * 6) + 10; // 10-15 字符
       const randomNameSuffix = getRandomString(nameSuffixLength);
@@ -34,7 +35,7 @@ export const createRandomSubcategories = async (min: number, max: number): Promi
       const randomDescription = getRandomName(descriptionLength);
       const timestamp = Date.now();
       const randomKey = getRandomString(4);
-      
+
       const subcategoryData = {
         name: `${category.name}${randomNameSuffix}`,
         description: randomDescription,
@@ -44,13 +45,12 @@ export const createRandomSubcategories = async (min: number, max: number): Promi
       };
 
       promises.push(AddSubcategory(subcategoryData));
-      totalCount++;      
+      totalCount++;
       // 确保每个 key 都是唯一的，添加小延迟
-      await new Promise(resolve => setTimeout(resolve, 1));
+      await new Promise((resolve) => setTimeout(resolve, 1));
     }
   }
 
   await Promise.all(promises);
   console.log(`✅ 为 ${categories.length} 个分类创建了总共 ${totalCount} 个子分类`);
 };
-

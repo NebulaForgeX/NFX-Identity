@@ -2,8 +2,8 @@ import type { CategoryFormValues } from "../../controllers/categorySchema";
 
 import { memo, useCallback, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { Upload, X } from "@/assets/icons/lucide";
 
+import { Upload, X } from "@/assets/icons/lucide";
 import { buildImageUrl } from "@/utils/image";
 
 import styles from "./styles.module.css";
@@ -26,7 +26,7 @@ const ImageController = memo(({ existingImageUrl }: ImageControllerProps) => {
         setValue("Image", file, { shouldValidate: true });
         setIsImageRemoved(false); // 重新上传时重置删除标记
       }
-      if (fileInputRef.current)  fileInputRef.current.value = "";
+      if (fileInputRef.current) fileInputRef.current.value = "";
     },
     [setValue],
   );
@@ -59,11 +59,7 @@ const ImageController = memo(({ existingImageUrl }: ImageControllerProps) => {
             )}
 
             {!imageFile && (!existingImageUrl || isImageRemoved) && (
-              <button
-                type="button"
-                className={styles.uploadBtn}
-                onClick={() => fileInputRef.current?.click()}
-              >
+              <button type="button" className={styles.uploadBtn} onClick={() => fileInputRef.current?.click()}>
                 <Upload className={styles.uploadIcon} size={32} />
                 <span className={styles.uploadText}>上传图片</span>
               </button>
@@ -89,4 +85,3 @@ const ImageController = memo(({ existingImageUrl }: ImageControllerProps) => {
 ImageController.displayName = "ImageController";
 
 export default ImageController;
-

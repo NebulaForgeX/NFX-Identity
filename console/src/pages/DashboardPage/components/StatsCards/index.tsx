@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 // import { FolderTree, Layers } from "@/assets/icons/lucide"; // TODO: 根据实际需要启用
 
 import styles from "./styles.module.css";
@@ -32,11 +33,7 @@ const StatsCardsContent = memo(() => {
 
       <div className={styles.grid}>
         {stats.map((stat, index) => (
-          <div
-            key={index}
-            className={styles.statCard}
-            style={{ "--stat-color": stat.color } as React.CSSProperties}
-          >
+          <div key={index} className={styles.statCard} style={{ "--stat-color": stat.color } as React.CSSProperties}>
             <div className={styles.iconWrapper}>{stat.icon}</div>
             <div className={styles.content}>
               <div className={styles.value}>{stat.value.toLocaleString()}</div>
@@ -52,4 +49,3 @@ const StatsCardsContent = memo(() => {
 StatsCardsContent.displayName = "StatsCardsContent";
 
 export default StatsCardsContent;
-

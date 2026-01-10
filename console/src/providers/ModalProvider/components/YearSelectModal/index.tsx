@@ -1,8 +1,7 @@
 import { memo } from "react";
 
-import useYearSelection from "./useYearSelection";
-
 import styles from "./styles.module.css";
+import useYearSelection from "./useYearSelection";
 
 const YearSelectModal = memo(() => {
   const {
@@ -57,11 +56,11 @@ const YearSelectModal = memo(() => {
         aria-label="年份列表"
       >
         <div className={styles.yearSections}>
-          {decadeGroups.map(group => (
+          {decadeGroups.map((group) => (
             <section key={group.decade} className={styles.decadeSection}>
               <header className={styles.decadeHeader}>{group.decade}s</header>
               <div className={styles.yearList}>
-                {group.years.map(year => (
+                {group.years.map((year) => (
                   <button
                     key={year}
                     type="button"
@@ -84,5 +83,3 @@ const YearSelectModal = memo(() => {
 YearSelectModal.displayName = "YearSelectModal";
 
 export default YearSelectModal;
-
-

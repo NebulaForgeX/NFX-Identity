@@ -1,11 +1,11 @@
 import type { AuthCategory } from "@/types/domain";
 
 import { memo, useCallback } from "react";
+
 import { Edit, Eye, Image, Plus, Tag, Trash2 } from "@/assets/icons/lucide";
-
 import { buildImageUrl } from "@/utils/image";
-import { useActionCategoryItem } from "../../hooks";
 
+import { useActionCategoryItem } from "../../hooks";
 import styles from "./styles.module.css";
 
 interface CategoryListItemProps {
@@ -13,10 +13,7 @@ interface CategoryListItemProps {
   onClick?: (category: AuthCategory) => void;
 }
 
-const CategoryListItem = memo(({ 
-  category, 
-  onClick
-}: CategoryListItemProps) => {
+const CategoryListItem = memo(({ category, onClick }: CategoryListItemProps) => {
   const { handleEdit, handleView, handleAddSubcategory, handleDelete } = useActionCategoryItem();
 
   const handleClick = useCallback(() => {
@@ -65,25 +62,23 @@ const CategoryListItem = memo(({
             <button className={styles.actionButton} onClick={handleView(category)} title="查看">
               <Eye size={18} />
             </button>
-            <button className={`${styles.actionButton} ${styles.deleteButton}`} onClick={handleDelete(category)} title="删除">
+            <button
+              className={`${styles.actionButton} ${styles.deleteButton}`}
+              onClick={handleDelete(category)}
+              title="删除"
+            >
               <Trash2 size={18} />
             </button>
           </div>
         </div>
 
-        {category.description && (
-          <p className={styles.description}>{category.description}</p>
-        )}
+        {category.description && <p className={styles.description}>{category.description}</p>}
 
         <div className={styles.metaRow}>
           <span className={`${styles.badge} ${category.show ? styles.show : styles.hide}`}>
             {category.show ? "显示" : "隐藏"}
           </span>
-          {subcategoryCount > 0 && (
-            <span className={styles.subcategoryCount}>
-              {subcategoryCount} 个子分类
-            </span>
-          )}
+          {subcategoryCount > 0 && <span className={styles.subcategoryCount}>{subcategoryCount} 个子分类</span>}
           {category.editor && (
             <span className={styles.editor}>
               编辑者: {category.editor.firstName} {category.editor.lastName}
@@ -98,4 +93,3 @@ const CategoryListItem = memo(({
 CategoryListItem.displayName = "CategoryListItem";
 
 export default CategoryListItem;
-

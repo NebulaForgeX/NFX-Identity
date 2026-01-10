@@ -29,4 +29,3 @@ const DescriptionController = memo(() => {
 DescriptionController.displayName = "DescriptionController";
 
 export default DescriptionController;
-

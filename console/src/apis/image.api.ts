@@ -1,23 +1,21 @@
 // Image API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
 import type {
-  Image,
-  ImageTag,
-  ImageType,
-  ImageVariant,
-} from "@/types";
-import type {
+  BaseResponse,
   CreateImageRequest,
   CreateImageTagRequest,
   CreateImageTypeRequest,
   CreateImageVariantRequest,
+  DataResponse,
+  Image,
+  ImageTag,
+  ImageType,
+  ImageVariant,
   UpdateImageRequest,
   UpdateImageTagRequest,
   UpdateImageTypeRequest,
   UpdateImageVariantRequest,
 } from "@/types";
-
 
 import { protectedClient } from "./clients";
 import { URL_PATHS } from "./ip";

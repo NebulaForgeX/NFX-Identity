@@ -4,4 +4,3 @@ declare module "lucide-react/icons/*" {
   const Icon: LucideIcon;
   export default Icon;
 }
-

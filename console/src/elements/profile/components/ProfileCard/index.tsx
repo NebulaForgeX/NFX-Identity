@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Camera, User } from "@/assets/icons/lucide";
 
+import { Camera, User } from "@/assets/icons/lucide";
 import { compressAvatarImage } from "@/services";
 // import { useUpdateProfileAvatar } from "@/hooks/useProfile"; // TODO: 已删除 profile hooks
 import { showError, showSuccess } from "@/stores/modalStore";

@@ -1,18 +1,8 @@
 // Directory API - 基于 NFX-ID Backend
 
-import type { BaseResponse, DataResponse } from "@/types";
 import type {
   Badge,
-  User,
-  UserBadge,
-  UserEducation,
-  UserEmail,
-  UserOccupation,
-  UserPhone,
-  UserPreference,
-  UserProfile,
-} from "@/types";
-import type {
+  BaseResponse,
   CreateBadgeRequest,
   CreateUserBadgeRequest,
   CreateUserEducationRequest,
@@ -22,6 +12,7 @@ import type {
   CreateUserPreferenceRequest,
   CreateUserProfileRequest,
   CreateUserRequest,
+  DataResponse,
   UpdateBadgeRequest,
   UpdateUserEducationRequest,
   UpdateUserEmailRequest,
@@ -31,6 +22,14 @@ import type {
   UpdateUserProfileRequest,
   UpdateUserStatusRequest,
   UpdateUserUsernameRequest,
+  User,
+  UserBadge,
+  UserEducation,
+  UserEmail,
+  UserOccupation,
+  UserPhone,
+  UserPreference,
+  UserProfile,
 } from "@/types";
 
 import { protectedClient } from "./clients";
@@ -148,7 +147,10 @@ export const DeleteUserBadge = async (id: string): Promise<BaseResponse> => {
 
 // 创建用户教育
 export const CreateUserEducation = async (params: CreateUserEducationRequest): Promise<UserEducation> => {
-  const { data } = await protectedClient.post<DataResponse<UserEducation>>(URL_PATHS.DIRECTORY.CREATE_USER_EDUCATION, params);
+  const { data } = await protectedClient.post<DataResponse<UserEducation>>(
+    URL_PATHS.DIRECTORY.CREATE_USER_EDUCATION,
+    params,
+  );
   return data.data;
 };
 
@@ -220,7 +222,10 @@ export const DeleteUserEmail = async (id: string): Promise<BaseResponse> => {
 
 // 创建用户职业
 export const CreateUserOccupation = async (params: CreateUserOccupationRequest): Promise<UserOccupation> => {
-  const { data } = await protectedClient.post<DataResponse<UserOccupation>>(URL_PATHS.DIRECTORY.CREATE_USER_OCCUPATION, params);
+  const { data } = await protectedClient.post<DataResponse<UserOccupation>>(
+    URL_PATHS.DIRECTORY.CREATE_USER_OCCUPATION,
+    params,
+  );
   return data.data;
 };
 
@@ -292,7 +297,10 @@ export const DeleteUserPhone = async (id: string): Promise<BaseResponse> => {
 
 // 创建用户偏好
 export const CreateUserPreference = async (params: CreateUserPreferenceRequest): Promise<UserPreference> => {
-  const { data } = await protectedClient.post<DataResponse<UserPreference>>(URL_PATHS.DIRECTORY.CREATE_USER_PREFERENCE, params);
+  const { data } = await protectedClient.post<DataResponse<UserPreference>>(
+    URL_PATHS.DIRECTORY.CREATE_USER_PREFERENCE,
+    params,
+  );
   return data.data;
 };
 
@@ -321,7 +329,10 @@ export const DeleteUserPreference = async (id: string): Promise<BaseResponse> =>
 
 // 创建用户资料
 export const CreateUserProfile = async (params: CreateUserProfileRequest): Promise<UserProfile> => {
-  const { data } = await protectedClient.post<DataResponse<UserProfile>>(URL_PATHS.DIRECTORY.CREATE_USER_PROFILE, params);
+  const { data } = await protectedClient.post<DataResponse<UserProfile>>(
+    URL_PATHS.DIRECTORY.CREATE_USER_PROFILE,
+    params,
+  );
   return data.data;
 };
 

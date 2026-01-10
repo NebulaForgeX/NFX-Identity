@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
+
 import { ChevronDown } from "@/assets/icons/lucide";
 
 import styles from "./Dropdown.module.css";
