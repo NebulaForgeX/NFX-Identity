@@ -17,7 +17,7 @@ func Load(ctx context.Context, env env.Env) (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to get working directory: %w", err)
 	}
-	configPath := filepath.Join(wd, "inputs", ServiceName, "config", fmt.Sprintf("%s.toml", env))
+	configPath := filepath.Join(wd, "inputs", ServiceName, "configuration", fmt.Sprintf("%s.toml", env))
 
 	loader, err := configx.NewLoader[Config](ctx, configx.WithPath(configPath))
 	if err != nil {

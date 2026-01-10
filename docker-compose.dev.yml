@@ -212,6 +212,55 @@ services:
     networks:
       - nfx-identity
 
+  #! Console Service (Control Panel Frontend) - Dev mode uses base (all-in-one)
+  console:
+    image: nfx-identity-console-base:dev
+    container_name: NFX-Identity-Console-Dev
+    build:
+      context: .
+      dockerfile: inputs/console/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/console/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.console.entrypoints: web
+      traefik.http.routers.console.rule: PathPrefix(`/`)
+      traefik.http.routers.console.priority: "1"  # 高优先级，确保根路径匹配
+      traefik.http.services.console.loadbalancer.server.port: "8080"
+    volumes:
+      - ./console/dist:/app/console/dist
+    develop:
+      watch:
+        - action: sync
+          path: inputs/console
+          target: /app/inputs/console
+        - action: sync
+          path: modules/console
+          target: /app/modules/console
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: sync
+          path: console/dist
+          target: /app/console/dist
+        - action: rebuild
+          path: inputs/console/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
 networks:
   nfx-identity:
     name: nfx-identity

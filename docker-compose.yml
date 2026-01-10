@@ -266,6 +266,39 @@ services:
     depends_on:
       - permission-api
 
+  #! Console Service (Control Panel Frontend) - Prod mode uses api (HTTP only)
+  console:
+    image: nfx-identity-console-api:prod
+    container_name: NFX-Identity-Console-Prod
+    build:
+      context: .
+      dockerfile: inputs/console/api/Dockerfile
+    restart: always
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      # 服务定义
+      - "traefik.http.services.console.loadbalancer.server.port=80"
+      # 外网 HTTPS 路由 - 控制面板根路径
+      - "traefik.http.routers.console-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/`)"
+      - "traefik.http.routers.console-secure.entrypoints=websecure"
+      - "traefik.http.routers.console-secure.service=console"
+      - "traefik.http.routers.console-secure.tls=true"
+      - "traefik.http.routers.console-secure.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.console-secure.priority=1"  # 高优先级，确保根路径匹配
+      # 内网 HTTP 路由
+      - "traefik.http.routers.console-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/`)"
+      - "traefik.http.routers.console-insecure.entrypoints=web"
+      - "traefik.http.routers.console-insecure.service=console"
+      - "traefik.http.routers.console-insecure.priority=1"  # 高优先级
+    environment:
+      - ENV=prod
+    depends_on:
+      - reverse-proxy
+    networks:
+      - nfx-identity
+
 
 networks:
   nfx-identity:
