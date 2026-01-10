@@ -2,11 +2,8 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/ip_allowlist"
 	"nfxid/modules/clients/infrastructure/rdb/models"
-
-	"gorm.io/gorm"
 )
 
 // ByRuleID 根据 RuleID 删除 IPAllowlist，实现 ip_allowlist.Delete 接口

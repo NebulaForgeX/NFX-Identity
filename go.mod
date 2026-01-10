@@ -3,7 +3,6 @@ module nfxid
 go 1.24.4
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20250912141014-52f32327d4b0.1
 	github.com/IBM/sarama v1.43.3
 	github.com/MicahParks/keyfunc/v3 v3.7.0
 	github.com/ThreeDotsLabs/watermill v1.5.1

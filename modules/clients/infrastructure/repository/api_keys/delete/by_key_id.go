@@ -2,11 +2,8 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/api_keys"
 	"nfxid/modules/clients/infrastructure/rdb/models"
-
-	"gorm.io/gorm"
 )
 
 // ByKeyID 根据 KeyID 删除 APIKey，实现 api_keys.Delete 接口

@@ -10,10 +10,11 @@ import (
 	"github.com/ThreeDotsLabs/watermill/message"
 )
 
+// EventRouterConfig 事件路由器配置。
 type EventRouterConfig struct {
-	CloseTimeout         time.Duration
-	Logger               watermill.LoggerAdapter
-	EventTypeMetadataKey string
+	CloseTimeout         time.Duration           // 关闭超时时间，默认 10 秒
+	Logger               watermill.LoggerAdapter // 日志适配器，默认 NopLogger
+	EventTypeMetadataKey string                  // 事件类型元数据键，默认 "event_type"
 }
 
 func (c *EventRouterConfig) setDefaults() {
@@ -28,6 +29,8 @@ func (c *EventRouterConfig) setDefaults() {
 	}
 }
 
+// EventRouter 事件路由器。
+// 根据事件类型自动路由消息到对应的处理器。
 type EventRouter struct {
 	*message.Router
 	sub             *BusSubscriber
@@ -36,6 +39,22 @@ type EventRouter struct {
 	muxInstalled    map[string]struct{}
 }
 
+// NewEventRouter 创建新的事件路由器。
+//
+// 参数:
+//   - sub: 事件总线订阅器
+//   - cfg: 路由器配置
+//
+// 返回:
+//   - *EventRouter: 事件路由器实例
+//   - error: 创建失败时返回错误
+//
+// 示例:
+//
+//	router, err := eventbus.NewEventRouter(subscriber, eventbus.EventRouterConfig{
+//	    CloseTimeout: 30 * time.Second,
+//	    Logger:       logger,
+//	})
 func NewEventRouter(sub *BusSubscriber, cfg EventRouterConfig) (*EventRouter, error) {
 	cfg.setDefaults()
 	r, err := message.NewRouter(message.RouterConfig{CloseTimeout: cfg.CloseTimeout}, cfg.Logger)
@@ -51,6 +70,23 @@ func NewEventRouter(sub *BusSubscriber, cfg EventRouterConfig) (*EventRouter, er
 	}, nil
 }
 
+// RegisterHandler 注册事件处理器。
+// 根据事件的类型参数自动确定主题和事件类型，并注册对应的处理器。
+//
+// 参数:
+//   - er: 事件路由器
+//   - handler: 事件处理器函数
+//
+// 注意: 如果主题键未找到或处理器已存在，会触发 panic
+//
+// 示例:
+//
+//	// 注册 GrantsInvalidateCacheEvent 的处理器
+//	eventbus.RegisterHandler(router, func(ctx context.Context, evt access.GrantsInvalidateCacheEvent, msg *message.Message) error {
+//	    log.Info("Received grant cache invalidation event", "id", evt.ID)
+//	    // 处理事件逻辑
+//	    return nil
+//	})
 func RegisterHandler[T TypedEvent](
 	er *EventRouter,
 	handler EventHandler[T],

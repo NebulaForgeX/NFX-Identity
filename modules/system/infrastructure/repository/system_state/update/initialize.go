@@ -4,8 +4,6 @@ import (
 	"context"
 	"nfxid/modules/system/infrastructure/rdb/models"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // Initialize 初始化系统，实现 system_state.Update 接口

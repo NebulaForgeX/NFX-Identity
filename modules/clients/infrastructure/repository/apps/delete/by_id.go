@@ -2,12 +2,10 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/apps"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByID 根据 ID 删除 App，实现 apps.Delete 接口

@@ -1,7 +1,7 @@
 package kafkax
 
 import (
-	"nfxid/pkgs/eventbus"
+	"nfxid/pkgs/kafkax/eventbus"
 	"nfxid/pkgs/logx"
 
 	"github.com/IBM/sarama"

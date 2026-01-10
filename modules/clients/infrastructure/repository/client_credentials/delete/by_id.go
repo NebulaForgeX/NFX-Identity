@@ -2,12 +2,10 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/client_credentials"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByID 根据 ID 删除 ClientCredential，实现 client_credentials.Delete 接口

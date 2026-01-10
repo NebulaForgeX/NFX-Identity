@@ -2,7 +2,6 @@ package update
 
 import (
 	"context"
-	"nfxid/enums"
 	"nfxid/modules/clients/domain/ip_allowlist"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/mapper"

@@ -2,12 +2,10 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/ip_allowlist"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByID 根据 ID 删除 IPAllowlist，实现 ip_allowlist.Delete 接口

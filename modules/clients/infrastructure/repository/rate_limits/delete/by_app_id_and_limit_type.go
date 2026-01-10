@@ -2,13 +2,11 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/rate_limits"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByAppIDAndLimitType 根据 AppID 和 LimitType 删除 RateLimit，实现 rate_limits.Delete 接口

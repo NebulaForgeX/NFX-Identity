@@ -2,12 +2,10 @@ package delete
 
 import (
 	"context"
-	"errors"
 	"nfxid/modules/clients/domain/client_scopes"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // ByAppIDAndScope 根据 AppID 和 Scope 删除 ClientScope，实现 client_scopes.Delete 接口
