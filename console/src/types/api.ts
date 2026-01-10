@@ -1,10 +1,10 @@
-// API 响应类型定义
+// API 响应类型定义 - 基于 NFX-ID Backend
 
 export interface BaseResponse {
-  status?: number;
-  code?: number;
-  message?: string;
-  error?: string;
+  status: string; // "success" | "error"
+  code: number;
+  message: string;
+  traceId?: string; // trace_id (axios-case-converter 会自动转换)
 }
 
 export interface DataResponse<T> extends BaseResponse {

@@ -1,11 +1,10 @@
 // API exports - 基于 NFX-ID Backend
 
+export * from "./access.api";
+export * from "./audit.api";
 export * from "./auth.api";
-export * from "./profile.api";
-export * from "./role.api";
-export * from "./badge.api";
-export * from "./education.api";
-export * from "./occupation.api";
-export * from "./profile-badge.api";
+export * from "./clients.api";
+export * from "./directory.api";
 export * from "./image.api";
-export * from "./permission.api";
+export * from "./system.api";
+export * from "./tenants.api";

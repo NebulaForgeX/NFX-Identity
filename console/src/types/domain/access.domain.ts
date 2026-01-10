@@ -1,0 +1,67 @@
+// Access Domain Types - 基于 NFX-ID Backend
+// 注意：由于使用了 axios-case-converter，后端返回的 snake_case 会自动转换为 camelCase
+
+export interface Role {
+  id: string;
+  key: string;
+  name: string;
+  description?: string;
+  scopeType: string;
+  isSystem: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface Permission {
+  id: string;
+  key: string;
+  name: string;
+  description?: string;
+  isSystem: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface Scope {
+  scope: string;
+  description?: string;
+  isSystem: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface Grant {
+  id: string;
+  subjectType: string;
+  subjectId: string;
+  grantType: string;
+  grantRefId: string;
+  tenantId?: string;
+  appId?: string;
+  resourceType?: string;
+  resourceId?: string;
+  effect: string;
+  expiresAt?: string;
+  createdAt: string;
+  createdBy?: string;
+  revokedAt?: string;
+  revokedBy?: string;
+  revokeReason?: string;
+}
+
+export interface RolePermission {
+  id: string;
+  roleId: string;
+  permissionId: string;
+  createdAt: string;
+}
+
+export interface ScopePermission {
+  id: string;
+  scope: string;
+  permissionId: string;
+  createdAt: string;
+}

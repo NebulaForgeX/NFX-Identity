@@ -25,7 +25,7 @@ WORKDIR /app
 RUN apk update && apk upgrade && apk add --no-cache ca-certificates tzdata
 # Copy only the binary (rely on prod-build)
 COPY --from=prod-build /out/auth-base-service /app/auth-base-service
-COPY inputs/auth/config/prod.toml /app/config.toml
+COPY inputs/auth/configuration/prod.toml /app/config.toml
 # Environment variable control（can be replaced with CONFIG_FILE）
 ENV APP_ENV=prod
 ENV CONFIG_FILE=/app/config.toml

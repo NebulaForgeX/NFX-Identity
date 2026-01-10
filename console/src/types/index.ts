@@ -1,3 +1,3 @@
 export * from "./info";
-export * from "@/types/domain";
-export * from "@/apis/types";
+export * from "./domain";
+export * from "./api";

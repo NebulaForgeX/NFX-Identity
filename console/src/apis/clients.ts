@@ -4,7 +4,7 @@ import type { AxiosRequestTransformer, InternalAxiosRequestConfig } from "axios"
 import axios, { AxiosError } from "axios";
 import applyCaseMiddleware from "axios-case-converter";
 
-import { API_ENDPOINTS } from "@/apis/types";
+import { API_ENDPOINTS } from "@/apis/ip";
 import AuthStore from "@/stores/authStore";
 import { onceAsync } from "@/utils/promise";
 
