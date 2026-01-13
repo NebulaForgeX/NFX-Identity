@@ -1,305 +1,529 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 
 import {
-  GetUser,
-  LoginByEmail,
-  LoginByPhone,
-  Register,
-  SendVerificationCode,
-  SendVerificationCodeToCurrentEmail,
-  Signup,
-  UpdateEmail,
-  UpdatePassword,
-  UpdateUser,
+  CreateAccountLockout,
+  CreateLoginAttempt,
+  CreateMFAFactor,
+  CreatePasswordHistory,
+  CreatePasswordReset,
+  CreateRefreshToken,
+  CreateSession,
+  CreateTrustedDevice,
+  CreateUserCredential,
+  DeleteAccountLockout,
+  DeleteLoginAttempt,
+  DeleteMFAFactor,
+  DeletePasswordReset,
+  DeleteRefreshToken,
+  DeleteSession,
+  DeleteTrustedDevice,
+  DeleteUserCredential,
+  GetAccountLockout,
+  GetLoginAttempt,
+  GetMFAFactor,
+  GetPasswordHistory,
+  GetPasswordReset,
+  GetRefreshToken,
+  GetSession,
+  GetTrustedDevice,
+  GetUserCredential,
+  RevokeSession,
+  UpdateAccountLockout,
+  UpdateMFAFactor,
+  UpdatePasswordReset,
+  UpdateRefreshToken,
+  UpdateUserCredential,
 } from "@/apis/auth.api";
-import { PermissionLoginResponse, PermissionRegister } from "@/apis/permission.api";
+import type {
+  CreateAccountLockoutRequest,
+  CreateLoginAttemptRequest,
+  CreateMFAFactorRequest,
+  CreatePasswordHistoryRequest,
+  CreatePasswordResetRequest,
+  CreateRefreshTokenRequest,
+  CreateSessionRequest,
+  CreateTrustedDeviceRequest,
+  CreateUserCredentialRequest,
+  RevokeSessionRequest,
+  UpdateAccountLockoutRequest,
+  UpdateMFAFactorRequest,
+  UpdatePasswordResetRequest,
+  UpdateRefreshTokenRequest,
+  UpdateUserCredentialRequest,
+} from "@/types";
+import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { authEventEmitter, authEvents } from "@/events/auth";
-import AuthStore, { useAuthStore } from "@/stores/authStore";
-import LayoutStore from "@/stores/layoutStore";
 import { showError, showSuccess } from "@/stores/modalStore";
 
-// Helper function to prefetch user data after login
-const prefetchUserData = async (queryClient: ReturnType<typeof useQueryClient>, userId: string) => {
-  // 再次确认 token 存在
-  const accessToken = AuthStore.getState().accessToken;
-  if (!accessToken) {
-    console.warn("Token not found, skipping prefetch");
-    return;
-  }
+// ========== Session 相关 ==========
 
-  // Prefetch user data using React Query
-  await queryClient.prefetchQuery({
-    queryKey: ["user", userId],
-    queryFn: () => GetUser(userId),
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-};
+// 根据 ID 获取会话
+export const useSession = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetSession(params.id);
+  },
+  "normal",
+);
 
-export const useLoginByEmail = () => {
-  const queryClient = useQueryClient();
-  const setTokens = AuthStore.getState().setTokens;
-  const setCurrentUserId = AuthStore.getState().setCurrentUserId;
-  const setIsAuthValid = AuthStore.getState().setIsAuthValid;
-
-  const { mutateAsync: loginByEmail, ...rest } = useMutation({
-    mutationFn: LoginByEmail,
-    onSuccess: async (response) => {
-      if (response.token) {
-        setTokens({ accessToken: response.token });
-        setIsAuthValid(true);
-        if (response.user?.id) {
-          setCurrentUserId(response.user.id);
-          await prefetchUserData(queryClient, response.user.id);
-        }
-        // 发布登录成功事件
-        authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
-      }
-    },
-    onError: (error: AxiosError) => {
-      showError("登录失败，请检查账号或密码是否正确。" + error.message);
-    },
-  });
-
-  return { mutateAsync: loginByEmail, ...rest };
-};
-
-export const useLoginByPhone = () => {
-  const queryClient = useQueryClient();
-  const setTokens = AuthStore.getState().setTokens;
-  const setCurrentUserId = AuthStore.getState().setCurrentUserId;
-  const setIsAuthValid = AuthStore.getState().setIsAuthValid;
-  const { mutateAsync: loginByPhone, ...rest } = useMutation({
-    mutationFn: LoginByPhone,
-    onSuccess: async (response) => {
-      if (response.token) {
-        setTokens({ accessToken: response.token });
-        setIsAuthValid(true);
-        if (response.user?.id) {
-          setCurrentUserId(response.user.id);
-          await prefetchUserData(queryClient, response.user.id);
-        }
-        // 发布登录成功事件
-        authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
-      }
-    },
-    onError: (error: AxiosError) => {
-      showError("登录失败，请检查账号或密码是否正确。" + error.message);
-    },
-  });
-
-  return { mutateAsync: loginByPhone, ...rest };
-};
-
-// 发送验证码
-export const useSendVerificationCode = () => {
-  const { mutateAsync: sendCode, ...rest } = useMutation({
-    mutationFn: SendVerificationCode,
-    onSuccess: () => {
-      // 验证码发送成功，无需特殊处理
-    },
-    onError: (error: AxiosError) => {
-      showError("发送验证码失败，请稍后重试。" + error.message);
-    },
-  });
-
-  return { mutateAsync: sendCode, ...rest };
-};
-
-// 用户自主注册（Signup）- 使用 Permission Service 的 Register
-export const useSignup = () => {
-  const queryClient = useQueryClient();
-  const setTokens = AuthStore.getState().setTokens;
-  const setCurrentUserId = AuthStore.getState().setCurrentUserId;
-  const setIsAuthValid = AuthStore.getState().setIsAuthValid;
-  const { mutateAsync: signup, ...rest } = useMutation({
-    mutationFn: async (params: { email: string; inviteCode: string; password: string; verificationCode: string }) => {
-      // 转换参数格式以匹配后端 API
-      const response = await PermissionRegister({
-        email: params.email,
-        verification_code: params.verificationCode,
-        authorization_code: params.inviteCode,
-        password: params.password,
-      });
-      // 转换为兼容格式（包含 token 字段指向 accessToken）
-      return {
-        ...response,
-        token: response.accessToken,
-        user: {
-          id: response.userId,
-          username: response.username,
-          email: response.email,
-          phone: response.phone,
-        },
-      };
-    },
-    onSuccess: async (response) => {
-      if (response?.token) {
-        setTokens({ accessToken: response.token });
-        setIsAuthValid(true);
-        if (response.user?.id) {
-          setCurrentUserId(response.user.id);
-          await prefetchUserData(queryClient, response.user.id);
-        }
-        // 发布登录成功事件
-        authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
-      } else {
-        showError("注册失败，请稍后重试。");
-      }
-    },
-    onError: (error: AxiosError) => {
-      showError(`注册失败，请稍后重试。${error.message ?? ""}`);
-    },
-  });
-
-  return { mutateAsync: signup, ...rest };
-};
-
-// 管理员帮别人注册（Register - 需要认证）
-export const useRegister = () => {
-  const queryClient = useQueryClient();
-
-  const { mutateAsync: register, ...rest } = useMutation({
-    mutationFn: async (params: { data: Parameters<typeof Register>[0]; avatarFile?: File }) => {
-      return await Register(params.data, params.avatarFile);
-    },
-    onSuccess: async () => {
-      // 刷新用户列表
-      await queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (error: AxiosError) => {
-      showError("创建用户失败，请稍后重试。" + error.message);
-    },
-  });
-
-  return { mutateAsync: register, ...rest };
-};
-
-export const useLogOut = () => {
-  const queryClient = useQueryClient();
-  const clearAuth = AuthStore.getState().clearAuth;
-  const { mutateAsync: logOut, ...rest } = useMutation({
-    mutationFn: async () => {
-      // 后端可能没有 logout 接口，直接清除本地状态
-      clearAuth();
+// 创建会话
+export const useCreateSession = () => {
+  return useMutation({
+    mutationFn: async (params: CreateSessionRequest) => {
+      return await CreateSession(params);
     },
     onSuccess: () => {
-      clearAllStores();
-      queryClient.clear();
+      authEventEmitter.emit(authEvents.INVALIDATE_SESSIONS);
+      showSuccess("会话创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("退出登录失败，请稍后再试。" + error.message);
-      clearAllStores();
-      queryClient.clear();
-    },
-  });
-
-  return { mutateAsync: logOut, ...rest };
-};
-
-// Helper function to clear all stores
-const clearAllStores = () => {
-  // Clear auth store
-  AuthStore.getState().clearAuth();
-
-  // Clear layout store (optional - reset to default)
-  LayoutStore.getState().setSidebarOpen(false);
-};
-
-// 更新密码（需要当前邮箱验证码和新密码）
-export const useSetPassword = () => {
-  const queryClient = useQueryClient();
-  const currentUserId = useAuthStore((state) => state.currentUserId);
-
-  return useMutation({
-    mutationFn: async (params: { password: string; verificationCode: string }) => {
-      await UpdatePassword({
-        verificationCode: params.verificationCode,
-        newPassword: params.password,
-      });
-    },
-    onSuccess: async () => {
-      if (currentUserId) {
-        await queryClient.invalidateQueries({ queryKey: ["user", currentUserId] });
-      }
-      showSuccess("密码更新成功！");
-    },
-    onError: (error: AxiosError) => {
-      showError("设置密码失败，请检查验证码是否正确。" + error.message);
+      showError("创建会话失败，请稍后重试。" + error.message);
     },
   });
 };
 
-// 发送验证码到当前用户的邮箱（通过token解析获取用户ID和邮箱）
-export const useSendVerificationCodeToCurrentEmail = () => {
+// 撤销会话
+export const useRevokeSession = () => {
   return useMutation({
-    mutationFn: async () => {
-      return await SendVerificationCodeToCurrentEmail();
+    mutationFn: async (params: { sessionId: string; data: RevokeSessionRequest }) => {
+      return await RevokeSession(params.sessionId, params.data);
+    },
+    onSuccess: (_, variables) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_SESSIONS);
+      authEventEmitter.emit(authEvents.INVALIDATE_SESSION, variables.sessionId);
+      showSuccess("会话撤销成功！");
     },
     onError: (error: AxiosError) => {
-      showError("发送验证码失败，请重试。" + error.message);
+      showError("撤销会话失败，请稍后重试。" + error.message);
     },
   });
 };
 
-// 发送验证码到新邮箱（用于更新邮箱时验证新邮箱）
-export const useSendSetEmailOTP = () => {
+// 删除会话
+export const useDeleteSession = () => {
   return useMutation({
-    mutationFn: async (params: { email: string }) => {
-      // 使用现有的 SendVerificationCode API（与注册时发送验证码相同）
-      return await SendVerificationCode({ email: params.email });
+    mutationFn: async (id: string) => {
+      return await DeleteSession(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_SESSIONS);
+      authEventEmitter.emit(authEvents.INVALIDATE_SESSION, id);
+      showSuccess("会话删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("发送验证码失败，请重试。" + error.message);
+      showError("删除会话失败，请稍后重试。" + error.message);
     },
   });
 };
 
-// 更新邮箱（需要旧邮箱验证码、新邮箱、新邮箱验证码）
-export const useVerifyAndSetEmail = () => {
-  const queryClient = useQueryClient();
-  const currentUserId = useAuthStore((state) => state.currentUserId);
+// ========== UserCredential 相关 ==========
 
+// 根据 ID 获取用户凭证
+export const useUserCredential = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetUserCredential(params.id);
+  },
+  "normal",
+);
+
+// 创建用户凭证
+export const useCreateUserCredential = () => {
   return useMutation({
-    mutationFn: async (params: { oldEmailCode: string; newEmail: string; newEmailCode: string }) => {
-      await UpdateEmail({
-        oldEmailCode: params.oldEmailCode,
-        newEmail: params.newEmail,
-        newEmailCode: params.newEmailCode,
-      });
+    mutationFn: async (params: CreateUserCredentialRequest) => {
+      return await CreateUserCredential(params);
     },
-    onSuccess: async () => {
-      if (currentUserId) {
-        await queryClient.invalidateQueries({ queryKey: ["user", currentUserId] });
-      }
-      showSuccess("邮箱更新成功！");
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_USER_CREDENTIALS);
+      showSuccess("用户凭证创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新邮箱失败，请检查验证码是否正确。" + error.message);
+      showError("创建用户凭证失败，请稍后重试。" + error.message);
     },
   });
 };
 
-// 设置手机号（不需要验证码，直接更新）
-export const useVerifyAndSetPhone = () => {
-  const queryClient = useQueryClient();
-  const currentUserId = useAuthStore((state) => state.currentUserId);
-
+// 更新用户凭证
+export const useUpdateUserCredential = () => {
   return useMutation({
-    mutationFn: async (params: { phone: string; otp?: string }) => {
-      if (!currentUserId) throw new Error("User ID is required");
-      // 手机号不需要验证码，直接更新
-      await UpdateUser(currentUserId, { phone: params.phone });
-      // UpdateUser 不返回用户数据，依赖 invalidateQueries 重新获取
+    mutationFn: async (params: { id: string; data: UpdateUserCredentialRequest }) => {
+      return await UpdateUserCredential(params.id, params.data);
     },
-    onSuccess: async () => {
-      if (currentUserId) {
-        await queryClient.invalidateQueries({ queryKey: ["user", currentUserId] });
-      }
-      showSuccess("手机号更新成功！");
+    onSuccess: (_, variables) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_USER_CREDENTIALS);
+      authEventEmitter.emit(authEvents.INVALIDATE_USER_CREDENTIAL, variables.id);
+      showSuccess("用户凭证更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新手机号失败，请重试。" + error.message);
+      showError("更新用户凭证失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除用户凭证
+export const useDeleteUserCredential = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteUserCredential(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_USER_CREDENTIALS);
+      authEventEmitter.emit(authEvents.INVALIDATE_USER_CREDENTIAL, id);
+      showSuccess("用户凭证删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除用户凭证失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== MFAFactor 相关 ==========
+
+// 根据 ID 获取 MFA 因子
+export const useMFAFactor = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetMFAFactor(params.id);
+  },
+  "normal",
+);
+
+// 创建 MFA 因子
+export const useCreateMFAFactor = () => {
+  return useMutation({
+    mutationFn: async (params: CreateMFAFactorRequest) => {
+      return await CreateMFAFactor(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_MFA_FACTORS);
+      showSuccess("MFA 因子创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建 MFA 因子失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新 MFA 因子
+export const useUpdateMFAFactor = () => {
+  return useMutation({
+    mutationFn: async (params: { id: string; data: UpdateMFAFactorRequest }) => {
+      return await UpdateMFAFactor(params.id, params.data);
+    },
+    onSuccess: (_, variables) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_MFA_FACTORS);
+      authEventEmitter.emit(authEvents.INVALIDATE_MFA_FACTOR, variables.id);
+      showSuccess("MFA 因子更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新 MFA 因子失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除 MFA 因子
+export const useDeleteMFAFactor = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteMFAFactor(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_MFA_FACTORS);
+      authEventEmitter.emit(authEvents.INVALIDATE_MFA_FACTOR, id);
+      showSuccess("MFA 因子删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除 MFA 因子失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== RefreshToken 相关 ==========
+
+// 根据 ID 获取刷新令牌
+export const useRefreshToken = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetRefreshToken(params.id);
+  },
+  "normal",
+);
+
+// 创建刷新令牌
+export const useCreateRefreshToken = () => {
+  return useMutation({
+    mutationFn: async (params: CreateRefreshTokenRequest) => {
+      return await CreateRefreshToken(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_REFRESH_TOKENS);
+      showSuccess("刷新令牌创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建刷新令牌失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新刷新令牌
+export const useUpdateRefreshToken = () => {
+  return useMutation({
+    mutationFn: async (params: { id: string; data: UpdateRefreshTokenRequest }) => {
+      return await UpdateRefreshToken(params.id, params.data);
+    },
+    onSuccess: (_, variables) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_REFRESH_TOKENS);
+      authEventEmitter.emit(authEvents.INVALIDATE_REFRESH_TOKEN, variables.id);
+      showSuccess("刷新令牌更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新刷新令牌失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除刷新令牌
+export const useDeleteRefreshToken = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteRefreshToken(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_REFRESH_TOKENS);
+      authEventEmitter.emit(authEvents.INVALIDATE_REFRESH_TOKEN, id);
+      showSuccess("刷新令牌删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除刷新令牌失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== PasswordReset 相关 ==========
+
+// 根据 ID 获取密码重置
+export const usePasswordReset = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetPasswordReset(params.id);
+  },
+  "normal",
+);
+
+// 创建密码重置
+export const useCreatePasswordReset = () => {
+  return useMutation({
+    mutationFn: async (params: CreatePasswordResetRequest) => {
+      return await CreatePasswordReset(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_PASSWORD_RESETS);
+      showSuccess("密码重置创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建密码重置失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新密码重置
+export const useUpdatePasswordReset = () => {
+  return useMutation({
+    mutationFn: async (params: { id: string; data: UpdatePasswordResetRequest }) => {
+      return await UpdatePasswordReset(params.id, params.data);
+    },
+    onSuccess: (_, variables) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_PASSWORD_RESETS);
+      authEventEmitter.emit(authEvents.INVALIDATE_PASSWORD_RESET, variables.id);
+      showSuccess("密码重置更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新密码重置失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除密码重置
+export const useDeletePasswordReset = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeletePasswordReset(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_PASSWORD_RESETS);
+      authEventEmitter.emit(authEvents.INVALIDATE_PASSWORD_RESET, id);
+      showSuccess("密码重置删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除密码重置失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== PasswordHistory 相关 ==========
+
+// 根据 ID 获取密码历史
+export const usePasswordHistory = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetPasswordHistory(params.id);
+  },
+  "normal",
+);
+
+// 创建密码历史
+export const useCreatePasswordHistory = () => {
+  return useMutation({
+    mutationFn: async (params: CreatePasswordHistoryRequest) => {
+      return await CreatePasswordHistory(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_PASSWORD_HISTORIES);
+      showSuccess("密码历史创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建密码历史失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== LoginAttempt 相关 ==========
+
+// 根据 ID 获取登录尝试
+export const useLoginAttempt = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetLoginAttempt(params.id);
+  },
+  "normal",
+);
+
+// 创建登录尝试
+export const useCreateLoginAttempt = () => {
+  return useMutation({
+    mutationFn: async (params: CreateLoginAttemptRequest) => {
+      return await CreateLoginAttempt(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_LOGIN_ATTEMPTS);
+      showSuccess("登录尝试创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建登录尝试失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除登录尝试
+export const useDeleteLoginAttempt = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteLoginAttempt(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_LOGIN_ATTEMPTS);
+      authEventEmitter.emit(authEvents.INVALIDATE_LOGIN_ATTEMPT, id);
+      showSuccess("登录尝试删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除登录尝试失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== AccountLockout 相关 ==========
+
+// 根据 ID 获取账户锁定
+export const useAccountLockout = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetAccountLockout(params.id);
+  },
+  "normal",
+);
+
+// 创建账户锁定
+export const useCreateAccountLockout = () => {
+  return useMutation({
+    mutationFn: async (params: CreateAccountLockoutRequest) => {
+      return await CreateAccountLockout(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_ACCOUNT_LOCKOUTS);
+      showSuccess("账户锁定创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建账户锁定失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新账户锁定
+export const useUpdateAccountLockout = () => {
+  return useMutation({
+    mutationFn: async (params: { id: string; data: UpdateAccountLockoutRequest }) => {
+      return await UpdateAccountLockout(params.id, params.data);
+    },
+    onSuccess: (_, variables) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_ACCOUNT_LOCKOUTS);
+      authEventEmitter.emit(authEvents.INVALIDATE_ACCOUNT_LOCKOUT, variables.id);
+      showSuccess("账户锁定更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新账户锁定失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除账户锁定
+export const useDeleteAccountLockout = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteAccountLockout(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_ACCOUNT_LOCKOUTS);
+      authEventEmitter.emit(authEvents.INVALIDATE_ACCOUNT_LOCKOUT, id);
+      showSuccess("账户锁定删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除账户锁定失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== TrustedDevice 相关 ==========
+
+// 根据 ID 获取受信任设备
+export const useTrustedDevice = makeUnifiedQuery(
+  async (params: { id: string }) => {
+    return await GetTrustedDevice(params.id);
+  },
+  "normal",
+);
+
+// 创建受信任设备
+export const useCreateTrustedDevice = () => {
+  return useMutation({
+    mutationFn: async (params: CreateTrustedDeviceRequest) => {
+      return await CreateTrustedDevice(params);
+    },
+    onSuccess: () => {
+      authEventEmitter.emit(authEvents.INVALIDATE_TRUSTED_DEVICES);
+      showSuccess("受信任设备创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建受信任设备失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除受信任设备
+export const useDeleteTrustedDevice = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteTrustedDevice(id);
+    },
+    onSuccess: (_, id) => {
+      authEventEmitter.emit(authEvents.INVALIDATE_TRUSTED_DEVICES);
+      authEventEmitter.emit(authEvents.INVALIDATE_TRUSTED_DEVICE, id);
+      showSuccess("受信任设备删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除受信任设备失败，请稍后重试。" + error.message);
     },
   });
 };
