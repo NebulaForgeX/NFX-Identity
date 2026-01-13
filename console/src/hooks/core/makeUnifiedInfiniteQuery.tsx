@@ -11,7 +11,7 @@ import type {
   InfiniteQueryOptions,
   ListNumberCursorFetchResult,
   NumberPagePayload,
-  QueryOptions,
+  InfiniteNumberQueryOptions,
   SuspenseInfiniteQueryOptions,
 } from "./type";
 
@@ -180,7 +180,7 @@ function buildCommonOptions<T, F extends object = Record<string, unknown>>(
   queryKey: QueryKey,
   fetchFunction: (pageParam: number, filter?: F) => Promise<NumberPagePayload<T>>,
   filter?: F,
-  options?: QueryOptions<T>,
+  options?: InfiniteNumberQueryOptions<T>,
 ) {
   return {
     // eslint-disable-next-line @tanstack/query/exhaustive-deps

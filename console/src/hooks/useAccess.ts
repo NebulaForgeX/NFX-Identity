@@ -26,7 +26,7 @@ import {
   UpdatePermission,
   UpdateRole,
   UpdateScope,
-} from "@/apis/access.api";
+} from "@/apis";
 import type {
   CreateGrantRequest,
   CreatePermissionRequest,
@@ -34,6 +34,12 @@ import type {
   CreateRoleRequest,
   CreateScopePermissionRequest,
   CreateScopeRequest,
+  Grant,
+  Permission,
+  Role,
+  RolePermission,
+  Scope,
+  ScopePermission,
   UpdateGrantRequest,
   UpdatePermissionRequest,
   UpdateRoleRequest,
@@ -43,23 +49,37 @@ import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { accessEventEmitter, accessEvents } from "@/events/access";
 import { showError, showSuccess } from "@/stores/modalStore";
 
+import {
+  ACCESS_ROLE,
+  ACCESS_PERMISSION,
+  ACCESS_SCOPE,
+  ACCESS_GRANT,
+  ACCESS_ROLE_PERMISSION,
+  ACCESS_SCOPE_PERMISSION,
+} from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
+
 // ========== Role 相关 ==========
+export const useRoleById = (params: UnifiedQueryParams<Role> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => await GetRole(params.id),
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_ROLE(id), {id}, options);
+};
 
-// 根据 ID 获取角色
-export const useRole = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetRole(params.id);
-  },
-  "normal",
-);
+export const useRoleByKey = (params: UnifiedQueryParams<Role> & { key: string }) => {
+  const { key, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { key: string }) => await GetRoleByKey(params.key),
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_ROLE(key), {key}, options);
+};
 
-// 根据 Key 获取角色
-export const useRoleByKey = makeUnifiedQuery(
-  async (params: { key: string }) => {
-    return await GetRoleByKey(params.key);
-  },
-  "normal",
-);
 
 // 创建角色
 export const useCreateRole = () => {
@@ -120,20 +140,30 @@ export const useDeleteRole = () => {
 // ========== Permission 相关 ==========
 
 // 根据 ID 获取权限
-export const usePermission = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetPermission(params.id);
-  },
-  "normal",
-);
+export const usePermission = (params: UnifiedQueryParams<Permission> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetPermission(params.id);
+    },
+    "normal",
+    postProcess,
+  );
+  return makeQuery(ACCESS_PERMISSION(id), { id }, options);
+};
 
 // 根据 Key 获取权限
-export const usePermissionByKey = makeUnifiedQuery(
-  async (params: { key: string }) => {
-    return await GetPermissionByKey(params.key);
-  },
-  "normal",
-);
+export const usePermissionByKey = (params: UnifiedQueryParams<Permission> & { key: string }) => {
+  const { key, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { key: string }) => {
+      return await GetPermissionByKey(params.key);
+    },
+    "normal",
+    postProcess,
+  );
+  return makeQuery(ACCESS_PERMISSION(key), { key }, options);
+};
 
 // 创建权限
 export const useCreatePermission = () => {
@@ -194,12 +224,17 @@ export const useDeletePermission = () => {
 // ========== Scope 相关 ==========
 
 // 根据 Scope 获取作用域
-export const useScope = makeUnifiedQuery(
-  async (params: { scope: string }) => {
-    return await GetScope(params.scope);
-  },
-  "normal",
-);
+export const useScope = (params: UnifiedQueryParams<Scope> & { scope: string }) => {
+  const { scope, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { scope: string }) => {
+      return await GetScope(params.scope);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_SCOPE(scope), { scope }, options);
+};
 
 // 创建作用域
 export const useCreateScope = () => {
@@ -260,12 +295,17 @@ export const useDeleteScope = () => {
 // ========== Grant 相关 ==========
 
 // 根据 ID 获取授权
-export const useGrant = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetGrant(params.id);
-  },
-  "normal",
-);
+export const useGrant = (params: UnifiedQueryParams<Grant> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetGrant(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_GRANT(id), { id }, options);
+};
 
 // 创建授权
 export const useCreateGrant = () => {
@@ -326,12 +366,17 @@ export const useDeleteGrant = () => {
 // ========== RolePermission 相关 ==========
 
 // 根据 ID 获取角色权限关联
-export const useRolePermission = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetRolePermission(params.id);
-  },
-  "normal",
-);
+export const useRolePermission = (params: UnifiedQueryParams<RolePermission> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetRolePermission(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_ROLE_PERMISSION(id), { id }, options);
+};
 
 // 创建角色权限关联
 export const useCreateRolePermission = () => {
@@ -377,12 +422,17 @@ export const useDeleteRolePermission = () => {
 // ========== ScopePermission 相关 ==========
 
 // 根据 ID 获取作用域权限关联
-export const useScopePermission = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetScopePermission(params.id);
-  },
-  "normal",
-);
+export const useScopePermission = (params: UnifiedQueryParams<ScopePermission> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetScopePermission(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_SCOPE_PERMISSION(id), { id }, options);
+};
 
 // 创建作用域权限关联
 export const useCreateScopePermission = () => {

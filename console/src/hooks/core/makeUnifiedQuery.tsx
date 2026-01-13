@@ -1,16 +1,14 @@
 import type {
   QueryKey,
-  UseQueryOptions,
   UseQueryResult,
-  UseSuspenseQueryOptions,
   UseSuspenseQueryResult,
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 import { useMemo } from "react";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import type { UnifiedQueryMode, NormalUnifiedQueryOptions, SuspenseUnifiedQueryOptions } from "./type";
 
-type QueryMode = "normal" | "suspense";
 
 // ------------------ Overload Signatures ------------------
 export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
@@ -20,7 +18,7 @@ export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
 ): (
   queryKey: QueryKey,
   filter?: F,
-  options?: Omit<UseSuspenseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">,
+  options?: SuspenseUnifiedQueryOptions<T>,
 ) => UseSuspenseQueryResult<T, AxiosError>;
 
 export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
@@ -30,17 +28,15 @@ export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
 ): (
   queryKey: QueryKey,
   filter?: F,
-  options?: Omit<UseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">,
+  options?: NormalUnifiedQueryOptions<T>,
 ) => UseQueryResult<T, AxiosError>;
 
 // ------------------ Implementation ------------------
 export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
   fetchRemote: (params: F) => Promise<T>,
-  mode: QueryMode = "normal",
+  mode: UnifiedQueryMode = "normal",
   postProcess?: (data: T) => void,
 ) {
-  type QueryOptions = Omit<UseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
-  type SuspenseQueryOptions = Omit<UseSuspenseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
 
   const fetchFunction = async (filter: F): Promise<T> => {
     const data = await fetchRemote(filter);
@@ -48,7 +44,7 @@ export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
     return data;
   };
 
-  const buildCommonOptions = (queryKey: QueryKey, filter?: F, options?: QueryOptions | SuspenseQueryOptions) => {
+  const buildCommonOptions = (queryKey: QueryKey, filter?: F, options?: NormalUnifiedQueryOptions<T> | SuspenseUnifiedQueryOptions<T>) => {
     return {
       queryKey: filter !== undefined ? [...queryKey, filter] : queryKey,
       queryFn: () => fetchFunction(filter || ({} as F)),
@@ -64,7 +60,7 @@ export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
   };
 
   // Normal Query
-  function useQueryNormal(queryKey: QueryKey, filter?: F, options?: QueryOptions): UseQueryResult<T, AxiosError> {
+  function useQueryNormal(queryKey: QueryKey, filter?: F, options?: NormalUnifiedQueryOptions<T>): UseQueryResult<T, AxiosError> {
     const common = useMemo(() => buildCommonOptions(queryKey, filter, options), [queryKey, filter, options]);
     return useQuery(common);
   }
@@ -73,15 +69,15 @@ export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
   function useQuerySuspense(
     queryKey: QueryKey,
     filter?: F,
-    options?: SuspenseQueryOptions,
+    options?: SuspenseUnifiedQueryOptions<T>,
   ): UseSuspenseQueryResult<T, AxiosError> {
     const common = useMemo(() => buildCommonOptions(queryKey, filter, options), [queryKey, filter, options]);
     return useSuspenseQuery(common);
   }
 
   if (mode === "suspense") {
-    return (queryKey: QueryKey, filter?: F, options?: SuspenseQueryOptions) =>
+    return (queryKey: QueryKey, filter?: F, options?: SuspenseUnifiedQueryOptions<T>) =>
       useQuerySuspense(queryKey, filter, options);
   }
-  return (queryKey: QueryKey, filter?: F, options?: QueryOptions) => useQueryNormal(queryKey, filter, options);
+  return (queryKey: QueryKey, filter?: F, options?: NormalUnifiedQueryOptions<T>) => useQueryNormal(queryKey, filter, options);
 }
