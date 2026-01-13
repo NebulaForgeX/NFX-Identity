@@ -20,24 +20,24 @@ services:
       - nfx-identity
     restart: unless-stopped
 
-  #! Auth API Service
-  auth-api:
-    image: nfx-identity-auth-api:dev
-    container_name: NFX-Identity-Auth-API-Dev
+  #! Auth Base Service (all services in goroutines)
+  auth-base:
+    image: nfx-identity-auth-base:dev
+    container_name: NFX-Identity-Auth-Base-Dev
     build:
       context: .
-      dockerfile: inputs/auth/api/Dockerfile
+      dockerfile: inputs/auth/base/Dockerfile
       target: dev
     environment:
       - ENV=dev
-    command: [ "air", "-c", "inputs/auth/api/.air.toml" ]
+    command: [ "air", "-c", "inputs/auth/base/.air.toml" ]
     expose:
       - "8080"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.auth-api.entrypoints: web
-      traefik.http.routers.auth-api.rule: PathPrefix(`/auth`)
-      traefik.http.services.auth-api.loadbalancer.server.port: "8080"
+      traefik.http.routers.auth-base.entrypoints: web
+      traefik.http.routers.auth-base.rule: PathPrefix(`/auth`)
+      traefik.http.services.auth-base.loadbalancer.server.port: "8080"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -45,141 +45,11 @@ services:
     develop:
       watch:
         - action: sync
-          path: inputs/auth/api
-          target: /app/inputs/auth/api
+          path: inputs/auth/base
+          target: /app/inputs/auth/base
         - action: sync
-          path: inputs/auth/config
-          target: /app/inputs/auth/config
-        - action: sync
-          path: modules/auth
-          target: /app/modules/auth
-        - action: sync
-          path: modules/image
-          target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/auth/api/Dockerfile
-    depends_on:
-      reverse-proxy:
-        condition: service_started
-    networks:
-      - nfx-identity
-
-  #! Image API Service
-  image-api:
-    image: nfx-identity-image-api:dev
-    container_name: NFX-Identity-Image-API-Dev
-    build:
-      context: .
-      dockerfile: inputs/image/api/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-    command: [ "air", "-c", "inputs/image/api/.air.toml" ]
-    expose:
-      - "8080"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.image-api.entrypoints: web
-      traefik.http.routers.image-api.rule: PathPrefix(`/image`)
-      traefik.http.services.image-api.loadbalancer.server.port: "8080"
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    develop:
-      watch:
-        - action: sync
-          path: inputs/image/api
-          target: /app/inputs/image/api
-        - action: sync
-          path: inputs/image/config
-          target: /app/inputs/image/config
-        - action: sync
-          path: modules/image
-          target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
-        - action: sync
-          path: enums
-          target: /app/enums
-        - action: sync
-          path: events
-          target: /app/events
-        - action: sync
-          path: pkgs
-          target: /app/pkgs
-        - action: sync
-          path: protos
-          target: /app/protos
-        - action: sync
-          path: go.mod
-          target: /app/go.mod
-        - action: sync
-          path: go.sum
-          target: /app/go.sum
-        - action: rebuild
-          path: inputs/image/api/Dockerfile
-    depends_on:
-      reverse-proxy:
-        condition: service_started
-    networks:
-      - nfx-identity
-
-  #! Permission API Service
-  permission-api:
-    image: nfx-identity-permission-api:dev
-    container_name: NFX-Identity-Permission-API-Dev
-    build:
-      context: .
-      dockerfile: inputs/permission/api/Dockerfile
-      target: dev
-    environment:
-      - ENV=dev
-    command: [ "air", "-c", "inputs/permission/api/.air.toml" ]
-    expose:
-      - "8081"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.permission-api.entrypoints: web
-      traefik.http.routers.permission-api.rule: PathPrefix(`/permission`)
-      traefik.http.services.permission-api.loadbalancer.server.port: "8081"
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    develop:
-      watch:
-        - action: sync
-          path: inputs/permission/api
-          target: /app/inputs/permission/api
-        - action: sync
-          path: inputs/permission/config
-          target: /app/inputs/permission/config
-        - action: sync
-          path: modules/permission
-          target: /app/modules/permission
+          path: inputs/auth/configuration
+          target: /app/inputs/auth/configuration
         - action: sync
           path: modules/auth
           target: /app/modules/auth
@@ -205,56 +75,441 @@ services:
           path: go.sum
           target: /app/go.sum
         - action: rebuild
-          path: inputs/permission/api/Dockerfile
+          path: inputs/auth/base/Dockerfile
     depends_on:
       reverse-proxy:
         condition: service_started
     networks:
       - nfx-identity
 
-  #! Console Service (Control Panel Frontend) - Dev mode uses base (all-in-one)
-  console:
-    image: nfx-identity-console-base:dev
-    container_name: NFX-Identity-Console-Dev
+  #! Image Base Service (all services in goroutines)
+  image-base:
+    image: nfx-identity-image-base:dev
+    container_name: NFX-Identity-Image-Base-Dev
     build:
       context: .
-      dockerfile: inputs/console/base/Dockerfile
+      dockerfile: inputs/image/base/Dockerfile
       target: dev
     environment:
       - ENV=dev
-    command: [ "air", "-c", "inputs/console/base/.air.toml" ]
+    command: [ "air", "-c", "inputs/image/base/.air.toml" ]
     expose:
       - "8080"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.console.entrypoints: web
-      traefik.http.routers.console.rule: PathPrefix(`/`)
-      traefik.http.routers.console.priority: "1"  # 高优先级，确保根路径匹配
-      traefik.http.services.console.loadbalancer.server.port: "8080"
+      traefik.http.routers.image-base.entrypoints: web
+      traefik.http.routers.image-base.rule: PathPrefix(`/image`)
+      traefik.http.services.image-base.loadbalancer.server.port: "8080"
     volumes:
-      - ./console/dist:/app/console/dist
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
     develop:
       watch:
         - action: sync
-          path: inputs/console
-          target: /app/inputs/console
+          path: inputs/image/base
+          target: /app/inputs/image/base
         - action: sync
-          path: modules/console
-          target: /app/modules/console
+          path: inputs/image/configuration
+          target: /app/inputs/image/configuration
+        - action: sync
+          path: modules/image
+          target: /app/modules/image
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
         - action: sync
           path: pkgs
           target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
         - action: sync
           path: go.mod
           target: /app/go.mod
         - action: sync
           path: go.sum
           target: /app/go.sum
-        - action: sync
-          path: console/dist
-          target: /app/console/dist
         - action: rebuild
-          path: inputs/console/base/Dockerfile
+          path: inputs/image/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
+  #! Access Base Service (all services in goroutines)
+  access-base:
+    image: nfx-identity-access-base:dev
+    container_name: NFX-Identity-Access-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/access/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/access/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.access-base.entrypoints: web
+      traefik.http.routers.access-base.rule: PathPrefix(`/access`)
+      traefik.http.services.access-base.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    develop:
+      watch:
+        - action: sync
+          path: inputs/access/base
+          target: /app/inputs/access/base
+        - action: sync
+          path: inputs/access/configuration
+          target: /app/inputs/access/configuration
+        - action: sync
+          path: modules/access
+          target: /app/modules/access
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/access/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
+  #! Audit Base Service (all services in goroutines)
+  audit-base:
+    image: nfx-identity-audit-base:dev
+    container_name: NFX-Identity-Audit-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/audit/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/audit/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.audit-base.entrypoints: web
+      traefik.http.routers.audit-base.rule: PathPrefix(`/audit`)
+      traefik.http.services.audit-base.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    develop:
+      watch:
+        - action: sync
+          path: inputs/audit/base
+          target: /app/inputs/audit/base
+        - action: sync
+          path: inputs/audit/configuration
+          target: /app/inputs/audit/configuration
+        - action: sync
+          path: modules/audit
+          target: /app/modules/audit
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/audit/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
+  #! Clients Base Service (all services in goroutines)
+  clients-base:
+    image: nfx-identity-clients-base:dev
+    container_name: NFX-Identity-Clients-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/clients/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/clients/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.clients-base.entrypoints: web
+      traefik.http.routers.clients-base.rule: PathPrefix(`/clients`)
+      traefik.http.services.clients-base.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    develop:
+      watch:
+        - action: sync
+          path: inputs/clients/base
+          target: /app/inputs/clients/base
+        - action: sync
+          path: inputs/clients/configuration
+          target: /app/inputs/clients/configuration
+        - action: sync
+          path: modules/clients
+          target: /app/modules/clients
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/clients/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
+  #! Directory Base Service (all services in goroutines)
+  directory-base:
+    image: nfx-identity-directory-base:dev
+    container_name: NFX-Identity-Directory-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/directory/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/directory/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.directory-base.entrypoints: web
+      traefik.http.routers.directory-base.rule: PathPrefix(`/directory`)
+      traefik.http.services.directory-base.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    develop:
+      watch:
+        - action: sync
+          path: inputs/directory/base
+          target: /app/inputs/directory/base
+        - action: sync
+          path: inputs/directory/configuration
+          target: /app/inputs/directory/configuration
+        - action: sync
+          path: modules/directory
+          target: /app/modules/directory
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/directory/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
+  #! System Base Service (all services in goroutines)
+  system-base:
+    image: nfx-identity-system-base:dev
+    container_name: NFX-Identity-System-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/system/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/system/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.system-base.entrypoints: web
+      traefik.http.routers.system-base.rule: PathPrefix(`/system`)
+      traefik.http.services.system-base.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    develop:
+      watch:
+        - action: sync
+          path: inputs/system/base
+          target: /app/inputs/system/base
+        - action: sync
+          path: inputs/system/configuration
+          target: /app/inputs/system/configuration
+        - action: sync
+          path: modules/system
+          target: /app/modules/system
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/system/base/Dockerfile
+    depends_on:
+      reverse-proxy:
+        condition: service_started
+    networks:
+      - nfx-identity
+
+  #! Tenants Base Service (all services in goroutines)
+  tenants-base:
+    image: nfx-identity-tenants-base:dev
+    container_name: NFX-Identity-Tenants-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/tenants/base/Dockerfile
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/tenants/base/.air.toml" ]
+    expose:
+      - "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.tenants-base.entrypoints: web
+      traefik.http.routers.tenants-base.rule: PathPrefix(`/tenants`)
+      traefik.http.services.tenants-base.loadbalancer.server.port: "8080"
+    volumes:
+      - ./static:/app/static
+      - ./data:/app/data
+      - ./assets:/app/assets
+    develop:
+      watch:
+        - action: sync
+          path: inputs/tenants/base
+          target: /app/inputs/tenants/base
+        - action: sync
+          path: inputs/tenants/configuration
+          target: /app/inputs/tenants/configuration
+        - action: sync
+          path: modules/tenants
+          target: /app/modules/tenants
+        - action: sync
+          path: models
+          target: /app/models
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: rebuild
+          path: inputs/tenants/base/Dockerfile
     depends_on:
       reverse-proxy:
         condition: service_started
