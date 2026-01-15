@@ -54,9 +54,6 @@ services:
           path: modules/auth
           target: /app/modules/auth
         - action: sync
-          path: models
-          target: /app/models
-        - action: sync
           path: enums
           target: /app/enums
         - action: sync
@@ -115,9 +112,6 @@ services:
         - action: sync
           path: modules/image
           target: /app/modules/image
-        - action: sync
-          path: models
-          target: /app/models
         - action: sync
           path: enums
           target: /app/enums
@@ -178,9 +172,6 @@ services:
           path: modules/access
           target: /app/modules/access
         - action: sync
-          path: models
-          target: /app/models
-        - action: sync
           path: enums
           target: /app/enums
         - action: sync
@@ -239,9 +230,6 @@ services:
         - action: sync
           path: modules/audit
           target: /app/modules/audit
-        - action: sync
-          path: models
-          target: /app/models
         - action: sync
           path: enums
           target: /app/enums
@@ -302,9 +290,6 @@ services:
           path: modules/clients
           target: /app/modules/clients
         - action: sync
-          path: models
-          target: /app/models
-        - action: sync
           path: enums
           target: /app/enums
         - action: sync
@@ -363,9 +348,6 @@ services:
         - action: sync
           path: modules/directory
           target: /app/modules/directory
-        - action: sync
-          path: models
-          target: /app/models
         - action: sync
           path: enums
           target: /app/enums
@@ -426,9 +408,6 @@ services:
           path: modules/system
           target: /app/modules/system
         - action: sync
-          path: models
-          target: /app/models
-        - action: sync
           path: enums
           target: /app/enums
         - action: sync
@@ -487,9 +466,6 @@ services:
         - action: sync
           path: modules/tenants
           target: /app/modules/tenants
-        - action: sync
-          path: models
-          target: /app/models
         - action: sync
           path: enums
           target: /app/enums

@@ -1,21 +1,24 @@
 # NFX-Identity Configuration Example
-# Copy this file to inputs/*/config/dev.toml or inputs/*/config/prod.toml and modify according to your environment
+# Copy this file to inputs/{service}/configuration/{env}.toml and modify according to your service and environment
+# 
+# Configuration structure matches modules/*/config/types.go
+# Each service may have different optional sections (token, email, storage)
 
 [server]
-    name = "Service Name"
+    name = "service-name"  # Service name (e.g., "access-api", "auth-api")
     host = "0.0.0.0"
-    http_port = 8080
-    grpc_port = 10012
+    http_port = 8080  # HTTP REST API port
+    grpc_port = 50051  # gRPC service port
 
 [postgresql]
-    host = "localhost"
-    port = 5432
+    host = "127.0.0.1"
+    port = 10105
     user = "postgres"
     password = "your-password-here"
-    dbname = "nfxid_dev"
+    dbname = "nfxid_dev"  # Use "nfxid" for production
     sslmode = "disable"
     timezone = "UTC"
-    logger_level = "warn"
+    logger_level = "warn"  # silent | error | warn | info
     auto_migrate = false
 
     [postgresql.connection]
@@ -27,23 +30,8 @@
         conn_max_idle_time = "15m"
         conn_max_lifetime = "1h"
 
-[mongodb]
-    host = "localhost"
-    port = 27017
-    user = "admin"
-    password = "your-password-here"
-    auth_source = "admin"
-    database = "nfxid_dev"
-    min_pool_size = 1
-    max_pool_size = 10
-    connect_timeout = "5s"
-    ping_timeout = "2s"
-    [mongodb.retry]
-        max_retries = 5
-        initial_backoff = "1s"
-
 [cache]
-    host = "localhost"
+    host = "127.0.0.1"
     port = 6379
     password = "your-password-here"
 
@@ -59,22 +47,32 @@
         server_name = ""
 
 [logger]
-    level = "debug"
-    format = "console"
-    output = "stdout"
-    file_path = "logs/service.log"
+    level = "debug"  # debug | info | warn | error
+    format = "console"  # json | console
+    output = "stdout"  # stdout | file
+    file_path = "logs/service.log"  # Used when output = "file"
     max_size_mb = 100
     max_backups = 10
     max_age_day = 30
     compress = false
 
+# Token configuration (required for: auth, clients services)
 [token]
     secret_key = "your-secret-key-here-change-in-production"
     issuer = "nfxid"
-    access_token_ttl = "24h"
-    refresh_token_ttl = "168h"
+    access_token_ttl = "24h"  # e.g., "15m", "1h", "24h"
+    refresh_token_ttl = "168h"  # e.g., "7d", "168h"
     algorithm = "HS256"
 
+# Email configuration (required for: auth service)
+[email]
+    smtp_host = "smtp.gmail.com"
+    smtp_port = 587
+    smtp_user = "your-email@gmail.com"
+    smtp_password = "your-app-password-here"
+    smtp_from = "your-email@gmail.com"
+
+# Storage configuration (required for: image service)
 [storage]
     base_path = "./data"
 
@@ -86,64 +84,70 @@
         max_open_requests = 1
 
     [kafka.producer]
-        acks = "all"
-        compression = "snappy"
+        acks = "all"  # "0" | "1" | "all"
+        compression = "snappy"  # none | gzip | snappy | lz4 | zstd
         retries = 3
-        batch_bytes = 1048576
+        batch_bytes = 1048576  # 1MB
         linger_ms = 5
         idempotent = true
 
     [kafka.consumer]
-        group_id = "service-group"
-        initial_offset = "latest"
+        group_id = "service-group"  # Required: unique consumer group ID
+        initial_offset = "latest"  # "earliest" | "latest"
         session_timeout_ms = 10000
         heartbeat_interval_ms = 3000
         fetch_min_bytes = 1
-        fetch_max_bytes = 5242880
+        fetch_max_bytes = 5242880  # 5MB
         return_errors = true
-
-    [kafka.producer_topics]
-        # Service-specific topics - modify according to service
-        event = "event"
-        event_poison = "event_poison"
-
-    [kafka.consumer_topics]
-        # Service-specific topics - modify according to service
-        event = "event"
-        event_poison = "event_poison"
 
     [kafka.security]
         enabled = false
-        mechanism = "PLAIN"
+        mechanism = "PLAIN"  # PLAIN | SCRAM-SHA-256 | SCRAM-SHA-512
         username = ""
         password = ""
         tls_insecure_skip_verify = false
 
+    # Producer topics: map message keys to topic names
+    [kafka.producer_topics]
+        # Service-specific topics - modify according to service
+        # Example:
+        # access = "nfx-identity-access"
+        # event = "event-topic"
+        # event_poison = "event-topic-poison"
+
+    # Consumer topics: map message keys to topic names
+    [kafka.consumer_topics]
+        # Service-specific topics - modify according to service
+        # Example:
+        # access = "nfx-identity-access"
+        # event = "event-topic"
+        # event_poison = "event-topic-poison"
+
 [rabbitmq]
-    uri = "amqp://guest:guest@localhost:5672/"
-    client_id = "nfxid-service"
+    uri = "amqp://guest:guest@localhost:5672/"  # Required
+    client_id = "nfxid-service"  # Required
 
     [rabbitmq.producer]
         mandatory = false
         immediate = false
         content_type = "application/json"
-        delivery_mode = 2  # 2=持久化, 1=非持久化
-        confirm_delivery = true  # 发布确认（RabbitMQ 特有）
-        channel_pool_size = 10  # 通道池大小（性能优化）
-        transactional = false  # 事务模式
-        default_priority = 0  # 默认消息优先级（0-255），0 表示不设置优先级（RabbitMQ 特有）
+        delivery_mode = 2  # 1=non-persistent, 2=persistent
+        confirm_delivery = true
+        channel_pool_size = 10
+        transactional = false
+        default_priority = 0  # 0-255, 0 means no priority
 
     [rabbitmq.consumer]
-        queue_name = ""  # 如果为空则根据 topic 生成
+        queue_name = ""  # If empty, auto-generated from topic
         consumer_tag = "nfxid-consumer"
         auto_ack = false
         exclusive = false
         no_local = false
         no_wait = false
-        no_requeue_on_nack = false  # Nack 时不重新入队
-        prefetch_count = 10  # 预取数量
-        prefetch_size = 0  # 预取大小（字节），0 表示不限制
-        qos_global = false  # QOS 是否全局应用
+        no_requeue_on_nack = false
+        prefetch_count = 10
+        prefetch_size = 0  # 0 means unlimited
+        qos_global = false
 
     [rabbitmq.connection]
         [rabbitmq.connection.tls]
@@ -162,15 +166,15 @@
             max_interval = "30s"
 
         [rabbitmq.connection.amqp]
-            vhost = "/"  # 虚拟主机
-            heartbeat = 10  # 心跳间隔（秒），0 表示禁用
+            vhost = "/"
+            heartbeat = 10  # seconds, 0 means disabled
             locale = "en_US"
-            channel_max = 0  # 最大通道数，0 表示无限制
-            frame_size = 0  # 最大帧大小，0 表示使用默认值
+            channel_max = 0  # 0 means unlimited
+            frame_size = 0  # 0 means use default
 
     [rabbitmq.exchange]
-        name = ""  # 如果为空则根据 topic 生成
-        type = "topic"  # direct, topic, fanout, headers
+        name = ""  # If empty, auto-generated from topic
+        type = "topic"  # direct | topic | fanout | headers
         durable = true
         auto_delete = false
         internal = false
@@ -181,49 +185,77 @@
         auto_delete = false
         exclusive = false
         no_wait = false
-
-        # 优先级队列（Priority Queue）
-        max_priority = 0  # 队列最大优先级（0-255），0 表示不启用优先级队列
-
-        # 延迟队列（Delayed Queue / Message TTL）
-        message_ttl = 0  # 消息 TTL（毫秒），0 表示不设置 TTL
-
-        # 队列限制
-        max_length = 0  # 队列最大消息数，0 表示不限制
-        max_length_bytes = 0  # 队列最大字节数，0 表示不限制
-
-        # 死信队列（Dead Letter Queue）
-        dead_letter_exchange = ""  # 死信交换机名称
-        dead_letter_routing_key = ""  # 死信路由键
+        max_priority = 0  # 0-255, 0 means priority queue disabled
+        message_ttl = 0  # milliseconds, 0 means no TTL
+        max_length = 0  # 0 means unlimited
+        max_length_bytes = 0  # 0 means unlimited
+        dead_letter_exchange = ""
+        dead_letter_routing_key = ""
 
     [rabbitmq.queue_bind]
-        routing_key = ""  # 如果为空则使用 topic 名称
+        routing_key = ""  # If empty, uses topic name
         no_wait = false
 
+    # Producer exchanges: map message keys to exchange and routing key
     [rabbitmq.producer_exchanges]
-        # 映射消息键（MessageKey）到 Exchange 和 RoutingKey
-        # 格式: message_key = {exchange = "exchange_name", routing_key = "routing.key"}
-        # 如果 exchange 为空，使用 exchange.name 配置或根据消息键自动生成
-        # 如果 routing_key 为空，使用消息键作为 routing_key
-        event = {exchange = "", routing_key = "event"}
-        event_poison = {exchange = "", routing_key = "event.poison"}
+        # Format: message_key = {exchange = "exchange_name", routing_key = "routing.key"}
+        # If exchange is empty, uses exchange.name config or auto-generated
+        # If routing_key is empty, uses message key as routing_key
+        # Example:
+        # event = {exchange = "", routing_key = "event"}
+        # event_poison = {exchange = "", routing_key = "event.poison"}
 
+    # Consumer queues: map message keys to queue and binding key
     [rabbitmq.consumer_queues]
-        # 映射消息键（MessageKey）到 Queue 和 BindingKey
-        # 格式: message_key = {queue = "queue_name", binding_key = "binding.key"}
-        # 如果 queue 为空，使用 consumer.queue_name 配置或根据消息键自动生成
-        # 如果 binding_key 为空，使用消息键作为 binding_key
-        event = {queue = "", binding_key = "event"}
-        event_poison = {queue = "", binding_key = "event.poison"}
+        # Format: message_key = {queue = "queue_name", binding_key = "binding.key"}
+        # If queue is empty, uses consumer.queue_name config or auto-generated
+        # If binding_key is empty, uses message key as binding_key
+        # Example:
+        # event = {queue = "", binding_key = "event"}
+        # event_poison = {queue = "", binding_key = "event.poison"}
 
-[email]
-    smtp_host = "smtp.gmail.com"
-    smtp_port = 587
-    smtp_user = "your-email@gmail.com"
-    smtp_password = "your-app-password-here"
-    smtp_from = "your-email@gmail.com"
-
+# gRPC client addresses for inter-service communication
 [grpc_client]
-    # Service-specific gRPC client addresses - modify according to service
-    # auth_addr = "localhost:10012"
-    # image_addr = "localhost:10013"
+    # Service addresses - update according to your deployment
+    # Format: "host:port" (e.g., "localhost:10000" or "service-name:50051")
+    access_addr = "localhost:10000"      # Access service gRPC port
+    auth_addr = "localhost:10001"        # Auth service gRPC port
+    audit_addr = "localhost:10002"       # Audit service gRPC port
+    clients_addr = "localhost:10003"     # Clients service gRPC port
+    directory_addr = "localhost:10004"   # Directory service gRPC port
+    image_addr = "localhost:10005"       # Image service gRPC port
+    system_addr = "localhost:10006"      # System service gRPC port
+    tenants_addr = "localhost:10007"     # Tenants service gRPC port
+
+# ============================================================================
+# Service-specific configuration notes:
+# ============================================================================
+# 
+# 1. Required sections for ALL services:
+#    - [server]
+#    - [postgresql]
+#    - [cache]
+#    - [logger]
+#    - [kafka] (or [rabbitmq], depending on your message broker)
+#    - [grpc_client]
+#
+# 2. Optional sections by service:
+#    - [token]: Required for auth, clients services
+#    - [email]: Required for auth service
+#    - [storage]: Required for image service
+#
+# 3. Service port ranges (HTTP):
+#    - access:   10000
+#    - auth:     10001
+#    - audit:    10002
+#    - clients:  10003
+#    - directory: 10004
+#    - image:    10005
+#    - system:   10006
+#    - tenants:  10007
+#
+# 4. Kafka topics should be configured in [kafka.producer_topics] and
+#    [kafka.consumer_topics] according to your service's event requirements.
+#
+# 5. RabbitMQ exchanges/queues should be configured in [rabbitmq.producer_exchanges]
+#    and [rabbitmq.consumer_queues] according to your service's event requirements.
