@@ -822,7 +822,7 @@ services:
     container_name: NFX-Identity-Console-Prod
     build:
       context: .
-      dockerfile: inputs/console/api/Dockerfile
+      dockerfile: console/Dockerfile
     restart: always
     expose:
       - "80"

@@ -1,9 +1,7 @@
 # Base build stage (cache dependencies)
-FROM golang:alpine AS base-builder
+FROM golang:1.24.4-alpine AS base-builder
 WORKDIR /src
-RUN apk update && apk upgrade && apk add --no-cache git ca-certificates tzdata
-ENV GOPROXY=https://goproxy.cn,direct
-ENV GOSUMDB=sum.golang.google.cn
+RUN apk add --no-cache git ca-certificates tzdata
 COPY go.mod go.sum ./
 RUN go mod download
 
