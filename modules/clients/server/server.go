@@ -194,9 +194,6 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 	}
 	defer grpcLis.Close()
 
-	eventbusSrv.RegisterRoutes()
-	messagingSrv.RegisterRoutes()
-
 	g, gctx := errgroup.WithContext(ctx)
 
 	// HTTP Server
