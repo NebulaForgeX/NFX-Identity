@@ -1,4 +1,4 @@
-name: nfx-id-dev
+name: nfx-identity-dev
 
 services:
   #! Traefik Reverse Proxy
@@ -9,11 +9,12 @@ services:
       - --api.insecure=true
       - --providers.docker
       - --providers.docker.exposedByDefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.traefik.address=:8080
+      - --entrypoints.web.address=:${TRAEFIK_HTTP_INTERNAL_PORT}
+      - --entrypoints.traefik.address=:${TRAEFIK_DASHBOARD_INTERNAL_PORT}
     ports:
-      - "10187:80"   # web entry
-      - "10189:8080" # Traefik Dashboard
+      - "${TRAEFIK_HTTP_PORT}:${TRAEFIK_HTTP_INTERNAL_PORT}"   # 内网 HTTP 入口
+      - "${TRAEFIK_HTTPS_PORT}:${TRAEFIK_HTTPS_INTERNAL_PORT}"  # 外网 HTTPS 入口
+      - "${TRAEFIK_DASHBOARD_PORT}:${TRAEFIK_DASHBOARD_INTERNAL_PORT}" # Traefik Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     extra_hosts:
@@ -34,12 +35,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/auth/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_AUTH}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.auth-base.entrypoints: web
-      traefik.http.routers.auth-base.rule: PathPrefix(`/auth`)
-      traefik.http.services.auth-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.auth-base.rule: PathPrefix(`${API_PREFIX_PATH_AUTH}`)
+      traefik.http.services.auth-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -95,12 +97,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/image/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_IMAGE}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.image-base.entrypoints: web
-      traefik.http.routers.image-base.rule: PathPrefix(`/image`)
-      traefik.http.services.image-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.image-base.rule: PathPrefix(`${API_PREFIX_PATH_IMAGE}`)
+      traefik.http.services.image-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -156,12 +159,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/access/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_ACCESS}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.access-base.entrypoints: web
-      traefik.http.routers.access-base.rule: PathPrefix(`/access`)
-      traefik.http.services.access-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.access-base.rule: PathPrefix(`${API_PREFIX_PATH_ACCESS}`)
+      traefik.http.services.access-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -217,12 +221,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/audit/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_AUDIT}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.audit-base.entrypoints: web
-      traefik.http.routers.audit-base.rule: PathPrefix(`/audit`)
-      traefik.http.services.audit-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.audit-base.rule: PathPrefix(`${API_PREFIX_PATH_AUDIT}`)
+      traefik.http.services.audit-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -278,12 +283,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/clients/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_CLIENTS}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.clients-base.entrypoints: web
-      traefik.http.routers.clients-base.rule: PathPrefix(`/clients`)
-      traefik.http.services.clients-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.clients-base.rule: PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)
+      traefik.http.services.clients-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -339,12 +345,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/directory/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.directory-base.entrypoints: web
-      traefik.http.routers.directory-base.rule: PathPrefix(`/directory`)
-      traefik.http.services.directory-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.directory-base.rule: PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)
+      traefik.http.services.directory-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -400,12 +407,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/system/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_SYSTEM}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.system-base.entrypoints: web
-      traefik.http.routers.system-base.rule: PathPrefix(`/system`)
-      traefik.http.services.system-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.system-base.rule: PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.services.system-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -461,12 +469,13 @@ services:
       - ENV=dev
     command: [ "air", "-c", "inputs/tenants/base/.air.toml" ]
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_TENANTS}"  # gRPC 端口
     labels:
       traefik.enable: "true"
       traefik.http.routers.tenants-base.entrypoints: web
-      traefik.http.routers.tenants-base.rule: PathPrefix(`/tenants`)
-      traefik.http.services.tenants-base.loadbalancer.server.port: "8080"
+      traefik.http.routers.tenants-base.rule: PathPrefix(`${API_PREFIX_PATH_TENANTS}`)
+      traefik.http.services.tenants-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
       - ./static:/app/static
       - ./data:/app/data

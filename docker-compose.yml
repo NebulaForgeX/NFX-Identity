@@ -1,4 +1,4 @@
-name: nfx-id
+name: nfx-identity
 
 services:
   #! Traefik Reverse Proxy
@@ -11,24 +11,24 @@ services:
       - --api.insecure=true
       - --providers.docker
       - --providers.docker.exposedByDefault=false
+      # 文件配置（动态规则目录）
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
       # HTTP 和 HTTPS 入口
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.address=:${TRAEFIK_HTTP_INTERNAL_PORT}
+      - --entrypoints.websecure.address=:${TRAEFIK_HTTPS_INTERNAL_PORT}
       # HTTP → HTTPS 重定向（外网）
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
-      # Let's Encrypt 自动证书
-      - --certificatesresolvers.letsencrypt.acme.email=lyuchongkai@gmail.com
-      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
-      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
-      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
     ports:
-      - "10187:80"   # 内网 HTTP 入口
-      - "10188:443"  # 外网 HTTPS 入口
-      - "10189:8080" # Traefik Dashboard
+      - "${TRAEFIK_HTTP_PORT}:${TRAEFIK_HTTP_INTERNAL_PORT}"   # 内网 HTTP 入口
+      - "${TRAEFIK_HTTPS_PORT}:${TRAEFIK_HTTPS_INTERNAL_PORT}"  # 外网 HTTPS 入口
+      - "${TRAEFIK_DASHBOARD_PORT}:${TRAEFIK_DASHBOARD_INTERNAL_PORT}" # Traefik Dashboard
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./certs:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CERTS_DIR}:/certs/websites:ro
+      - ${TRAEFIK_CONFIG_FILE}:/etc/traefik/traefik.yml:ro
+      - ${TRAEFIK_DYNAMIC_DIR}:/etc/traefik/dynamic:ro
     networks:
       - nfx-identity
 
@@ -41,19 +41,18 @@ services:
       dockerfile: inputs/auth/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.auth-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.auth-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.auth-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/auth`)"
+      - "traefik.http.routers.auth-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)"
       - "traefik.http.routers.auth-api-secure.entrypoints=websecure"
       - "traefik.http.routers.auth-api-secure.service=auth-api"
       - "traefik.http.routers.auth-api-secure.tls=true"
-      - "traefik.http.routers.auth-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由（通过端口访问，允许任何 Host）
-      - "traefik.http.routers.auth-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/auth`)"
+      - "traefik.http.routers.auth-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)"
       - "traefik.http.routers.auth-api-insecure.entrypoints=web"
       - "traefik.http.routers.auth-api-insecure.service=auth-api"
     environment:
@@ -96,9 +95,9 @@ services:
       dockerfile: inputs/auth/connection/Dockerfile
     restart: always
     expose:
-      - "10012"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_AUTH}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10012:10012"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10197:10197"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -119,19 +118,18 @@ services:
       dockerfile: inputs/image/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.image-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.image-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.image-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/image`)"
+      - "traefik.http.routers.image-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IMAGE}`)"
       - "traefik.http.routers.image-api-secure.entrypoints=websecure"
       - "traefik.http.routers.image-api-secure.service=image-api"
       - "traefik.http.routers.image-api-secure.tls=true"
-      - "traefik.http.routers.image-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.image-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/image`)"
+      - "traefik.http.routers.image-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_IMAGE}`)"
       - "traefik.http.routers.image-api-insecure.entrypoints=web"
       - "traefik.http.routers.image-api-insecure.service=image-api"
     environment:
@@ -174,9 +172,9 @@ services:
       dockerfile: inputs/image/connection/Dockerfile
     restart: always
     expose:
-      - "10013"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_IMAGE}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10013:10013"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10194:10194"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -237,19 +235,18 @@ services:
       dockerfile: inputs/access/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.access-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.access-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.access-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/access`)"
+      - "traefik.http.routers.access-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ACCESS}`)"
       - "traefik.http.routers.access-api-secure.entrypoints=websecure"
       - "traefik.http.routers.access-api-secure.service=access-api"
       - "traefik.http.routers.access-api-secure.tls=true"
-      - "traefik.http.routers.access-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.access-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/access`)"
+      - "traefik.http.routers.access-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_ACCESS}`)"
       - "traefik.http.routers.access-api-insecure.entrypoints=web"
       - "traefik.http.routers.access-api-insecure.service=access-api"
     environment:
@@ -292,9 +289,9 @@ services:
       dockerfile: inputs/access/connection/Dockerfile
     restart: always
     expose:
-      - "10015"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_ACCESS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10015:10015"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10190:10190"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -335,19 +332,18 @@ services:
       dockerfile: inputs/audit/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.audit-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.audit-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.audit-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/audit`)"
+      - "traefik.http.routers.audit-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUDIT}`)"
       - "traefik.http.routers.audit-api-secure.entrypoints=websecure"
       - "traefik.http.routers.audit-api-secure.service=audit-api"
       - "traefik.http.routers.audit-api-secure.tls=true"
-      - "traefik.http.routers.audit-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.audit-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/audit`)"
+      - "traefik.http.routers.audit-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_AUDIT}`)"
       - "traefik.http.routers.audit-api-insecure.entrypoints=web"
       - "traefik.http.routers.audit-api-insecure.service=audit-api"
     environment:
@@ -390,9 +386,9 @@ services:
       dockerfile: inputs/audit/connection/Dockerfile
     restart: always
     expose:
-      - "10016"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_AUDIT}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10016:10016"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10191:10191"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -433,19 +429,18 @@ services:
       dockerfile: inputs/clients/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.clients-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.clients-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.clients-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/clients`)"
+      - "traefik.http.routers.clients-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)"
       - "traefik.http.routers.clients-api-secure.entrypoints=websecure"
       - "traefik.http.routers.clients-api-secure.service=clients-api"
       - "traefik.http.routers.clients-api-secure.tls=true"
-      - "traefik.http.routers.clients-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.clients-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/clients`)"
+      - "traefik.http.routers.clients-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)"
       - "traefik.http.routers.clients-api-insecure.entrypoints=web"
       - "traefik.http.routers.clients-api-insecure.service=clients-api"
     environment:
@@ -488,9 +483,9 @@ services:
       dockerfile: inputs/clients/connection/Dockerfile
     restart: always
     expose:
-      - "10017"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_CLIENTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10017:10017"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10192:10192"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -531,19 +526,18 @@ services:
       dockerfile: inputs/directory/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.directory-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.directory-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.directory-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/directory`)"
+      - "traefik.http.routers.directory-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)"
       - "traefik.http.routers.directory-api-secure.entrypoints=websecure"
       - "traefik.http.routers.directory-api-secure.service=directory-api"
       - "traefik.http.routers.directory-api-secure.tls=true"
-      - "traefik.http.routers.directory-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.directory-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/directory`)"
+      - "traefik.http.routers.directory-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)"
       - "traefik.http.routers.directory-api-insecure.entrypoints=web"
       - "traefik.http.routers.directory-api-insecure.service=directory-api"
     environment:
@@ -586,9 +580,9 @@ services:
       dockerfile: inputs/directory/connection/Dockerfile
     restart: always
     expose:
-      - "10018"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10018:10018"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10193:10193"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -629,19 +623,18 @@ services:
       dockerfile: inputs/system/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.system-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.system-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.system-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/system`)"
+      - "traefik.http.routers.system-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)"
       - "traefik.http.routers.system-api-secure.entrypoints=websecure"
       - "traefik.http.routers.system-api-secure.service=system-api"
       - "traefik.http.routers.system-api-secure.tls=true"
-      - "traefik.http.routers.system-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.system-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/system`)"
+      - "traefik.http.routers.system-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)"
       - "traefik.http.routers.system-api-insecure.entrypoints=web"
       - "traefik.http.routers.system-api-insecure.service=system-api"
     environment:
@@ -684,9 +677,9 @@ services:
       dockerfile: inputs/system/connection/Dockerfile
     restart: always
     expose:
-      - "10019"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_SYSTEM}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10019:10019"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10195:10195"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -727,19 +720,18 @@ services:
       dockerfile: inputs/tenants/api/Dockerfile
     restart: always
     expose:
-      - "8080"
+      - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.tenants-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.tenants-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.tenants-api-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/tenants`)"
+      - "traefik.http.routers.tenants-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_TENANTS}`)"
       - "traefik.http.routers.tenants-api-secure.entrypoints=websecure"
       - "traefik.http.routers.tenants-api-secure.service=tenants-api"
       - "traefik.http.routers.tenants-api-secure.tls=true"
-      - "traefik.http.routers.tenants-api-secure.tls.certresolver=letsencrypt"
       # 内网 HTTP 路由
-      - "traefik.http.routers.tenants-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/tenants`)"
+      - "traefik.http.routers.tenants-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_TENANTS}`)"
       - "traefik.http.routers.tenants-api-insecure.entrypoints=web"
       - "traefik.http.routers.tenants-api-insecure.service=tenants-api"
     environment:
@@ -782,9 +774,9 @@ services:
       dockerfile: inputs/tenants/connection/Dockerfile
     restart: always
     expose:
-      - "10020"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_TENANTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10020:10020"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10196:10196"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -825,17 +817,16 @@ services:
       dockerfile: console/Dockerfile
     restart: always
     expose:
-      - "80"
+      - "${CONSOLE_PORT}"
     labels:
       - "traefik.enable=true"
       # 服务定义
-      - "traefik.http.services.console.loadbalancer.server.port=80"
+      - "traefik.http.services.console.loadbalancer.server.port=${CONSOLE_PORT}"
       # 外网 HTTPS 路由 - 控制面板根路径
-      - "traefik.http.routers.console-secure.rule=Host(`auth.lucaslyu.com`) && PathPrefix(`/`)"
+      - "traefik.http.routers.console-secure.rule=Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/`)"
       - "traefik.http.routers.console-secure.entrypoints=websecure"
       - "traefik.http.routers.console-secure.service=console"
       - "traefik.http.routers.console-secure.tls=true"
-      - "traefik.http.routers.console-secure.tls.certresolver=letsencrypt"
       - "traefik.http.routers.console-secure.priority=1"  # 高优先级，确保根路径匹配
       # 内网 HTTP 路由
       - "traefik.http.routers.console-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/`)"
