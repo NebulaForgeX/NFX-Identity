@@ -11,6 +11,7 @@ services:
       - --api.insecure=true
       - --providers.docker
       - --providers.docker.exposedByDefault=false
+      - --providers.docker.constraints=Label(`traefik.project`, `nfx-identity`)
       # 文件配置（动态规则目录）
       - --providers.file.directory=/etc/traefik/dynamic
       - --providers.file.watch=true
@@ -44,6 +45,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.auth-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -121,6 +123,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.image-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -238,6 +241,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.access-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -335,6 +339,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.audit-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -432,6 +437,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.clients-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -529,6 +535,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.directory-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -626,6 +633,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.system-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -723,6 +731,7 @@ services:
       - "${HTTP_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.tenants-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
@@ -820,6 +829,7 @@ services:
       - "${CONSOLE_PORT}"
     labels:
       - "traefik.enable=true"
+      - "traefik.project=nfx-identity"
       # 服务定义
       - "traefik.http.services.console.loadbalancer.server.port=${CONSOLE_PORT}"
       # 外网 HTTPS 路由 - 控制面板根路径

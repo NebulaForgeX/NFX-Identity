@@ -9,6 +9,7 @@ services:
       - --api.insecure=true
       - --providers.docker
       - --providers.docker.exposedByDefault=false
+      - --providers.docker.constraints=Label(`traefik.project`, `nfx-identity`)
       - --entrypoints.web.address=:${TRAEFIK_HTTP_INTERNAL_PORT}
       - --entrypoints.traefik.address=:${TRAEFIK_DASHBOARD_INTERNAL_PORT}
     ports:
@@ -39,6 +40,7 @@ services:
       - "${GRPC_PORT_AUTH}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.auth-base.entrypoints: web
       traefik.http.routers.auth-base.rule: PathPrefix(`${API_PREFIX_PATH_AUTH}`)
       traefik.http.services.auth-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -101,6 +103,7 @@ services:
       - "${GRPC_PORT_IMAGE}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.image-base.entrypoints: web
       traefik.http.routers.image-base.rule: PathPrefix(`${API_PREFIX_PATH_IMAGE}`)
       traefik.http.services.image-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -163,6 +166,7 @@ services:
       - "${GRPC_PORT_ACCESS}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.access-base.entrypoints: web
       traefik.http.routers.access-base.rule: PathPrefix(`${API_PREFIX_PATH_ACCESS}`)
       traefik.http.services.access-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -225,6 +229,7 @@ services:
       - "${GRPC_PORT_AUDIT}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.audit-base.entrypoints: web
       traefik.http.routers.audit-base.rule: PathPrefix(`${API_PREFIX_PATH_AUDIT}`)
       traefik.http.services.audit-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -287,6 +292,7 @@ services:
       - "${GRPC_PORT_CLIENTS}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.clients-base.entrypoints: web
       traefik.http.routers.clients-base.rule: PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)
       traefik.http.services.clients-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -349,6 +355,7 @@ services:
       - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.directory-base.entrypoints: web
       traefik.http.routers.directory-base.rule: PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)
       traefik.http.services.directory-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -411,6 +418,7 @@ services:
       - "${GRPC_PORT_SYSTEM}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.system-base.entrypoints: web
       traefik.http.routers.system-base.rule: PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
       traefik.http.services.system-base.loadbalancer.server.port: "${HTTP_PORT}"
@@ -473,6 +481,7 @@ services:
       - "${GRPC_PORT_TENANTS}"  # gRPC 端口
     labels:
       traefik.enable: "true"
+      traefik.project: "nfx-identity"
       traefik.http.routers.tenants-base.entrypoints: web
       traefik.http.routers.tenants-base.rule: PathPrefix(`${API_PREFIX_PATH_TENANTS}`)
       traefik.http.services.tenants-base.loadbalancer.server.port: "${HTTP_PORT}"
