@@ -164,6 +164,17 @@ tasks:
     cmds:
       - bash run_atlas_pipeline.sh
 
+  atlas:push:
+    desc: "Push migrations to Atlas Cloud"
+    dir: atlas
+    cmds:
+      - |
+        source /volume1/use-menv.sh && \
+        atlas migrate push \
+          --env {{.ATLAS_ENV}} \
+          --dev-url "postgres://{{.POSTGRES_USER}}:{{.POSTGRES_PASSWORD}}@{{.POSTGRES_HOST}}:{{.POSTGRES_PORT}}/{{.POSTGRES_DB_SHADOW}}?sslmode=disable" \
+          nfx-identity
+    silent: false
 
   build:
     desc: "Build all services"
