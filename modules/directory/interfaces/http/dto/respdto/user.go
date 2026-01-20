@@ -10,7 +10,6 @@ import (
 
 type UserDTO struct {
 	ID          uuid.UUID  `json:"id"`
-	TenantID    uuid.UUID  `json:"tenant_id"`
 	Username    string     `json:"username"`
 	Status      string     `json:"status"`
 	IsVerified  bool       `json:"is_verified"`
@@ -28,7 +27,6 @@ func UserROToDTO(v *userAppResult.UserRO) *UserDTO {
 
 	return &UserDTO{
 		ID:          v.ID,
-		TenantID:    v.TenantID,
 		Username:    v.Username,
 		Status:      string(v.Status),
 		IsVerified:  v.IsVerified,

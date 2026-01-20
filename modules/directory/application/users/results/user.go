@@ -10,7 +10,6 @@ import (
 
 type UserRO struct {
 	ID          uuid.UUID
-	TenantID    uuid.UUID
 	Username    string
 	Status      users.UserStatus
 	IsVerified  bool
@@ -28,7 +27,6 @@ func UserMapper(u *users.User) UserRO {
 
 	return UserRO{
 		ID:          u.ID(),
-		TenantID:    u.TenantID(),
 		Username:    u.Username(),
 		Status:      u.Status(),
 		IsVerified:  u.IsVerified(),

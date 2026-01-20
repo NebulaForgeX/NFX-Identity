@@ -7,7 +7,6 @@ import (
 )
 
 type NewUserParams struct {
-	TenantID   uuid.UUID
 	Username   string
 	Status     UserStatus
 	IsVerified bool
@@ -31,7 +30,6 @@ func NewUser(p NewUserParams) (*User, error) {
 	now := time.Now().UTC()
 	return NewUserFromState(UserState{
 		ID:         id,
-		TenantID:   p.TenantID,
 		Username:   p.Username,
 		Status:     status,
 		IsVerified: p.IsVerified,
@@ -47,9 +45,6 @@ func NewUserFromState(st UserState) *User {
 func validateUserParams(p NewUserParams) error {
 	if p.Username == "" {
 		return ErrUsernameRequired
-	}
-	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[UserStatus]struct{}{

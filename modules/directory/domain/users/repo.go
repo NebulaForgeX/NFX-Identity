@@ -24,7 +24,6 @@ type Create interface {
 type Get interface {
 	ByID(ctx context.Context, id uuid.UUID) (*User, error)
 	ByUsername(ctx context.Context, username string) (*User, error)
-	ByTenantID(ctx context.Context, tenantID uuid.UUID) ([]*User, error)
 }
 
 // Check 定义检查相关的方法

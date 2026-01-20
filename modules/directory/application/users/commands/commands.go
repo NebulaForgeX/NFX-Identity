@@ -8,7 +8,6 @@ import (
 
 // CreateUserCmd 创建用户命令
 type CreateUserCmd struct {
-	TenantID   uuid.UUID
 	Username  string
 	Status    users.UserStatus
 	IsVerified bool

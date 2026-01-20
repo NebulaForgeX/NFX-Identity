@@ -1,4 +1,5 @@
 -- atlas:import extensions/pgcrypto.sql
+-- atlas:import extensions/btree_gist.sql
 -- atlas:import schemas/auth/main.sql
 -- atlas:import schemas/image/main.sql
 -- atlas:import schemas/access/main.sql

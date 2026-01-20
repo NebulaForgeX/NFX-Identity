@@ -79,14 +79,13 @@ func (DirectoryUserStatus) EnumDescriptor() ([]byte, []int) {
 type User struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                              // 用户ID (UUID)
-	TenantId      string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                  // 租户ID (UUID)
-	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`                                  // 用户名 (varchar(50))
-	Status        DirectoryUserStatus    `protobuf:"varint,4,opt,name=status,proto3,enum=user.DirectoryUserStatus" json:"status,omitempty"`       // 状态：pending, active, deactive
-	IsVerified    bool                   `protobuf:"varint,5,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`           // 是否已验证
-	LastLoginAt   *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=last_login_at,json=lastLoginAt,proto3,oneof" json:"last_login_at,omitempty"` // 最后登录时间
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`               // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`               // 更新时间
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`         // 软删除时间
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`                                  // 用户名 (varchar(50))
+	Status        DirectoryUserStatus    `protobuf:"varint,3,opt,name=status,proto3,enum=user.DirectoryUserStatus" json:"status,omitempty"`       // 状态：pending, active, deactive
+	IsVerified    bool                   `protobuf:"varint,4,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`           // 是否已验证
+	LastLoginAt   *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=last_login_at,json=lastLoginAt,proto3,oneof" json:"last_login_at,omitempty"` // 最后登录时间
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`               // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`               // 更新时间
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`         // 软删除时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -124,13 +123,6 @@ func (*User) Descriptor() ([]byte, []int) {
 func (x *User) GetId() string {
 	if x != nil {
 		return x.Id
-	}
-	return ""
-}
-
-func (x *User) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -276,7 +268,6 @@ func (x *GetUserByIDResponse) GetUser() *User {
 type GetUserByUsernameRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -314,13 +305,6 @@ func (*GetUserByUsernameRequest) Descriptor() ([]byte, []int) {
 func (x *GetUserByUsernameRequest) GetUsername() string {
 	if x != nil {
 		return x.Username
-	}
-	return ""
-}
-
-func (x *GetUserByUsernameRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -461,33 +445,29 @@ var File_directory_user_proto protoreflect.FileDescriptor
 
 const file_directory_user_proto_rawDesc = "" +
 	"\n" +
-	"\x14directory/user.proto\x12\x04user\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbf\x03\n" +
+	"\x14directory/user.proto\x12\x04user\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa2\x03\n" +
 	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1a\n" +
-	"\busername\x18\x03 \x01(\tR\busername\x121\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x19.user.DirectoryUserStatusR\x06status\x12\x1f\n" +
-	"\vis_verified\x18\x05 \x01(\bR\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x121\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x19.user.DirectoryUserStatusR\x06status\x12\x1f\n" +
+	"\vis_verified\x18\x04 \x01(\bR\n" +
 	"isVerified\x12C\n" +
-	"\rlast_login_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vlastLoginAt\x88\x01\x01\x129\n" +
+	"\rlast_login_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vlastLoginAt\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\x01R\tdeletedAt\x88\x01\x01B\x10\n" +
+	"deleted_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x01R\tdeletedAt\x88\x01\x01B\x10\n" +
 	"\x0e_last_login_atB\r\n" +
 	"\v_deleted_at\"$\n" +
 	"\x12GetUserByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"5\n" +
 	"\x13GetUserByIDResponse\x12\x1e\n" +
 	"\x04user\x18\x01 \x01(\v2\n" +
-	".user.UserR\x04user\"f\n" +
+	".user.UserR\x04user\"6\n" +
 	"\x18GetUserByUsernameRequest\x12\x1a\n" +
-	"\busername\x18\x01 \x01(\tR\busername\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\";\n" +
+	"\busername\x18\x01 \x01(\tR\busername\";\n" +
 	"\x19GetUserByUsernameResponse\x12\x1e\n" +
 	"\x04user\x18\x01 \x01(\v2\n" +
 	".user.UserR\x04user\"(\n" +
@@ -559,7 +539,6 @@ func file_directory_user_proto_init() {
 		return
 	}
 	file_directory_user_proto_msgTypes[0].OneofWrappers = []any{}
-	file_directory_user_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

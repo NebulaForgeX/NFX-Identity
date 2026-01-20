@@ -161,8 +161,8 @@ clean_diff_database() {
   
   # 在 shadow 数据库中创建必需的扩展
   echo "Creating required extensions in shadow database..."
-  sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB_SHADOW}" -c "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public VERSION '1.3';" >/dev/null 2>&1
-  sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB_SHADOW}" -c "CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;" >/dev/null 2>&1
+  # sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB_SHADOW}" -c "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public VERSION '1.3';" >/dev/null 2>&1
+  # sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB_SHADOW}" -c "CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;" >/dev/null 2>&1
   
   # 确保目标数据库存在
   target_result=$(sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '${TARGET_DB}'" 2>&1)
@@ -176,8 +176,8 @@ clean_diff_database() {
   
   # 在目标数据库中创建必需的扩展（如果不存在）
   echo "Ensuring required extensions exist in target database..."
-  sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${TARGET_DB}" -c "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public VERSION '1.3';" >/dev/null 2>&1
-  sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${TARGET_DB}" -c "CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;" >/dev/null 2>&1
+  # sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${TARGET_DB}" -c "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public VERSION '1.3';" >/dev/null 2>&1
+  # sudo docker exec "${POSTGRES_CONTAINER_NAME}" psql -U "${POSTGRES_USER}" -d "${TARGET_DB}" -c "CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;" >/dev/null 2>&1
 }
 
 # 函数：清理数据库连接（生成后使用）

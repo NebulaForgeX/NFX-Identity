@@ -15,7 +15,6 @@ func UserDomainToModel(u *users.User) *models.User {
 
 	return &models.User{
 		ID:          u.ID(),
-		TenantID:    u.TenantID(),
 		Username:    u.Username(),
 		Status:      userStatusDomainToEnum(u.Status()),
 		IsVerified:  u.IsVerified(),
@@ -34,7 +33,6 @@ func UserModelToDomain(m *models.User) *users.User {
 
 	state := users.UserState{
 		ID:          m.ID,
-		TenantID:    m.TenantID,
 		Username:    m.Username,
 		Status:      userStatusEnumToDomain(m.Status),
 		IsVerified:  m.IsVerified,
@@ -50,7 +48,6 @@ func UserModelToDomain(m *models.User) *users.User {
 // UserModelToUpdates 将 Model User 转换为更新字段映射
 func UserModelToUpdates(m *models.User) map[string]any {
 	return map[string]any{
-		models.UserCols.TenantID:    m.TenantID,
 		models.UserCols.Username:    m.Username,
 		models.UserCols.Status:      m.Status,
 		models.UserCols.IsVerified:  m.IsVerified,

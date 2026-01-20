@@ -11,7 +11,6 @@ import (
 
 type User struct {
 	ID          uuid.UUID                 `gorm:"type:uuid;primaryKey"`
-	TenantID    uuid.UUID                 `gorm:"type:uuid"`
 	Username    string                    `gorm:"type:varchar(50);index:idx_users_username;uniqueIndex:users_username_key"`
 	Status      enums.DirectoryUserStatus `gorm:"type:user_status;index:idx_users_status"`
 	IsVerified  bool                      `gorm:"type:boolean"`
@@ -31,11 +30,10 @@ func (m *User) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var UserCols = struct {
-	ID, TenantID, Username, Status, IsVerified, LastLoginAt, CreatedAt,
-	UpdatedAt, DeletedAt string
+	ID, Username, Status, IsVerified, LastLoginAt, CreatedAt, UpdatedAt,
+	DeletedAt string
 }{
 	ID:          "id",
-	TenantID:    "tenant_id",
 	Username:    "username",
 	Status:      "status",
 	IsVerified:  "is_verified",

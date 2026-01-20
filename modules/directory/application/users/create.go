@@ -17,7 +17,6 @@ func (s *Service) CreateUser(ctx context.Context, cmd userCommands.CreateUserCmd
 
 	// Create domain entity
 	user, err := userDomain.NewUser(userDomain.NewUserParams{
-		TenantID:   cmd.TenantID,
 		Username:   cmd.Username,
 		Status:     cmd.Status,
 		IsVerified: cmd.IsVerified,

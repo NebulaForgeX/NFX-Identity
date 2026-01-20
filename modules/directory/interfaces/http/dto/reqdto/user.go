@@ -8,7 +8,6 @@ import (
 )
 
 type UserCreateRequestDTO struct {
-	TenantID   uuid.UUID `json:"tenant_id" validate:"required,uuid"`
 	Username   string    `json:"username" validate:"required"`
 	Status     string    `json:"status,omitempty"`
 	IsVerified bool      `json:"is_verified,omitempty"`
@@ -38,7 +37,6 @@ type UserByUsernameRequestDTO struct {
 
 func (r *UserCreateRequestDTO) ToCreateCmd() userAppCommands.CreateUserCmd {
 	cmd := userAppCommands.CreateUserCmd{
-		TenantID:   r.TenantID,
 		Username:   r.Username,
 		IsVerified: r.IsVerified,
 	}

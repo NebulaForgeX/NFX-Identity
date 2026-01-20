@@ -16,7 +16,6 @@ func UserROToProto(v *userAppResult.UserRO) *userpb.User {
 
 	user := &userpb.User{
 		Id:         v.ID.String(),
-		TenantId:   v.TenantID.String(),
 		Username:   v.Username,
 		Status:     userStatusToProto(v.Status),
 		IsVerified: v.IsVerified,

@@ -30,16 +30,22 @@ COMMENT ON SCHEMA "system" IS 'System-level state and administration schema';
 CREATE SCHEMA "tenants";
 -- Set comment to schema: "tenants"
 COMMENT ON SCHEMA "tenants" IS 'Multi-tenant management schema';
--- Create enum type "api_key_status"
-CREATE TYPE "clients"."api_key_status" AS ENUM ('active', 'revoked', 'expired');
--- Create enum type "reset_delivery"
-CREATE TYPE "auth"."reset_delivery" AS ENUM ('email', 'sms');
+-- Create extension "pgcrypto"
+CREATE EXTENSION "pgcrypto" WITH SCHEMA "public" VERSION "1.3";
+-- Create extension "btree_gist"
+CREATE EXTENSION "btree_gist" WITH SCHEMA "public" VERSION "1.7";
+-- Create enum type "environment"
+CREATE TYPE "clients"."environment" AS ENUM ('production', 'staging', 'development', 'test');
+-- Create enum type "mfa_type"
+CREATE TYPE "auth"."mfa_type" AS ENUM ('totp', 'sms', 'email', 'webauthn', 'backup_code');
+-- Create enum type "scope_type"
+CREATE TYPE "access"."scope_type" AS ENUM ('TENANT', 'APP', 'GLOBAL');
+-- Create enum type "subject_type"
+CREATE TYPE "access"."subject_type" AS ENUM ('USER', 'CLIENT');
 -- Create enum type "grant_type"
 CREATE TYPE "access"."grant_type" AS ENUM ('ROLE', 'PERMISSION');
 -- Create enum type "grant_effect"
 CREATE TYPE "access"."grant_effect" AS ENUM ('ALLOW', 'DENY');
--- Create enum type "subject_type"
-CREATE TYPE "access"."subject_type" AS ENUM ('USER', 'CLIENT');
 -- Create "grants" table
 CREATE TABLE "access"."grants" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -78,16 +84,48 @@ CREATE INDEX "idx_grants_subject" ON "access"."grants" ("subject_type", "subject
 CREATE INDEX "idx_grants_subject_tenant" ON "access"."grants" ("subject_type", "subject_id", "tenant_id");
 -- Create index "idx_grants_tenant_id" to table: "grants"
 CREATE INDEX "idx_grants_tenant_id" ON "access"."grants" ("tenant_id");
+-- Create "system_state" table
+CREATE TABLE "system"."system_state" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "initialized" boolean NOT NULL DEFAULT false,
+  "initialized_at" timestamp NULL,
+  "initialization_version" character varying(50) NULL,
+  "last_reset_at" timestamp NULL,
+  "last_reset_by" uuid NULL,
+  "reset_count" integer NOT NULL DEFAULT 0,
+  "metadata" jsonb NULL DEFAULT '{}',
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("id")
+);
+-- Create index "idx_system_state_created_at" to table: "system_state"
+CREATE INDEX "idx_system_state_created_at" ON "system"."system_state" ("created_at" DESC);
+-- Create index "idx_system_state_initialized" to table: "system_state"
+CREATE INDEX "idx_system_state_initialized" ON "system"."system_state" ("initialized");
+-- Set comment to table: "system_state"
+COMMENT ON TABLE "system"."system_state" IS 'System initialization state: tracks if system has been bootstrapped. Query logic: SELECT initialized FROM system_state ORDER BY created_at DESC LIMIT 1. If no record exists OR initialized = false, system is not initialized.';
+-- Set comment to column: "id" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."id" IS 'UUID primary key (not fixed, allows multiple records for reset/re-initialization)';
+-- Set comment to column: "initialized" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."initialized" IS 'Whether system has been initialized (checked on service startup). Always check latest record by created_at DESC.';
+-- Set comment to column: "initialized_at" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."initialized_at" IS 'Timestamp when system was initialized via /bootstrap/initialize';
+-- Set comment to column: "initialization_version" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."initialization_version" IS 'Version of initialization schema/data for migration tracking';
+-- Set comment to column: "last_reset_at" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."last_reset_at" IS 'Timestamp when system was last reset';
+-- Set comment to column: "last_reset_by" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."last_reset_by" IS 'User ID who reset the system. Even if database is cleared after reset, can be traced via log files for accountability';
+-- Set comment to column: "created_at" on table: "system_state"
+COMMENT ON COLUMN "system"."system_state"."created_at" IS 'Record creation time. Used to determine latest state (ORDER BY created_at DESC LIMIT 1)';
+-- Create enum type "tenant_status"
+CREATE TYPE "tenants"."tenant_status" AS ENUM ('ACTIVE', 'SUSPENDED', 'CLOSED', 'PENDING');
+-- Create enum type "api_key_status"
+CREATE TYPE "clients"."api_key_status" AS ENUM ('active', 'revoked', 'expired');
+-- Create enum type "member_status"
+CREATE TYPE "tenants"."member_status" AS ENUM ('INVITED', 'ACTIVE', 'SUSPENDED', 'REMOVED');
 -- Create enum type "verification_status"
 CREATE TYPE "tenants"."verification_status" AS ENUM ('PENDING', 'VERIFIED', 'FAILED', 'EXPIRED');
--- Create enum type "verification_method"
-CREATE TYPE "tenants"."verification_method" AS ENUM ('DNS', 'TXT', 'HTML', 'FILE');
--- Create enum type "group_type"
-CREATE TYPE "tenants"."group_type" AS ENUM ('department', 'team', 'group', 'other');
--- Create enum type "tenant_app_status"
-CREATE TYPE "tenants"."tenant_app_status" AS ENUM ('ACTIVE', 'DISABLED', 'SUSPENDED');
--- Create enum type "invitation_status"
-CREATE TYPE "tenants"."invitation_status" AS ENUM ('PENDING', 'ACCEPTED', 'EXPIRED', 'REVOKED');
 -- Create enum type "actor_type"
 CREATE TYPE "audit"."actor_type" AS ENUM ('user', 'service', 'system', 'admin');
 -- Create enum type "result_type"
@@ -269,8 +307,6 @@ CREATE INDEX "idx_hash_chain_checkpoints_partition_date" ON "audit"."hash_chain_
 CREATE INDEX "idx_hash_chain_checkpoints_prev_hash" ON "audit"."hash_chain_checkpoints" ("prev_checkpoint_hash");
 -- Create index "idx_hash_chain_checkpoints_tenant_id" to table: "hash_chain_checkpoints"
 CREATE INDEX "idx_hash_chain_checkpoints_tenant_id" ON "audit"."hash_chain_checkpoints" ("tenant_id");
--- Create enum type "environment"
-CREATE TYPE "clients"."environment" AS ENUM ('production', 'staging', 'development', 'test');
 -- Create enum type "credential_status"
 CREATE TYPE "auth"."credential_status" AS ENUM ('active', 'disabled', 'expired');
 -- Create enum type "revoke_reason"
@@ -279,12 +315,12 @@ CREATE TYPE "auth"."revoke_reason" AS ENUM ('user_logout', 'admin_revoke', 'pass
 CREATE TYPE "auth"."failure_code" AS ENUM ('bad_password', 'user_not_found', 'locked', 'mfa_required', 'mfa_failed', 'account_disabled', 'credential_expired', 'rate_limited', 'ip_blocked', 'device_not_trusted', 'other');
 -- Create enum type "lock_reason"
 CREATE TYPE "auth"."lock_reason" AS ENUM ('too_many_attempts', 'admin_lock', 'risk_detected', 'suspicious_activity', 'compliance', 'other');
--- Create enum type "scope_type"
-CREATE TYPE "access"."scope_type" AS ENUM ('TENANT', 'APP', 'GLOBAL');
+-- Create enum type "reset_delivery"
+CREATE TYPE "auth"."reset_delivery" AS ENUM ('email', 'sms');
 -- Create enum type "reset_status"
 CREATE TYPE "auth"."reset_status" AS ENUM ('issued', 'used', 'expired', 'revoked');
--- Create enum type "mfa_type"
-CREATE TYPE "auth"."mfa_type" AS ENUM ('totp', 'sms', 'email', 'webauthn', 'backup_code');
+-- Create enum type "credential_status"
+CREATE TYPE "clients"."credential_status" AS ENUM ('active', 'expired', 'revoked', 'rotating');
 -- Create enum type "session_revoke_reason"
 CREATE TYPE "auth"."session_revoke_reason" AS ENUM ('user_logout', 'admin_revoke', 'password_changed', 'device_changed', 'account_locked', 'suspicious_activity', 'session_expired', 'other');
 -- Create "account_lockouts" table
@@ -555,14 +591,14 @@ CREATE INDEX "idx_user_credentials_user_id" ON "auth"."user_credentials" ("user_
 CREATE TYPE "clients"."app_type" AS ENUM ('server', 'service', 'internal', 'partner', 'third_party');
 -- Create enum type "app_status"
 CREATE TYPE "clients"."app_status" AS ENUM ('active', 'disabled', 'suspended', 'pending');
--- Create enum type "member_source"
-CREATE TYPE "tenants"."member_source" AS ENUM ('MANUAL', 'INVITE', 'SCIM', 'SSO', 'HR_SYNC', 'IMPORT');
+-- Create enum type "verification_method"
+CREATE TYPE "tenants"."verification_method" AS ENUM ('DNS', 'TXT', 'HTML', 'FILE');
 -- Create enum type "allowlist_status"
 CREATE TYPE "clients"."allowlist_status" AS ENUM ('active', 'disabled', 'revoked');
 -- Create enum type "rate_limit_type"
 CREATE TYPE "clients"."rate_limit_type" AS ENUM ('requests_per_second', 'requests_per_minute', 'requests_per_hour', 'requests_per_day');
--- Create enum type "member_status"
-CREATE TYPE "tenants"."member_status" AS ENUM ('INVITED', 'ACTIVE', 'SUSPENDED', 'REMOVED');
+-- Create enum type "member_source"
+CREATE TYPE "tenants"."member_source" AS ENUM ('MANUAL', 'INVITE', 'SCIM', 'SSO', 'HR_SYNC', 'IMPORT');
 -- Create "apps" table
 CREATE TABLE "clients"."apps" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -594,46 +630,14 @@ CREATE INDEX "idx_apps_status" ON "clients"."apps" ("status");
 CREATE INDEX "idx_apps_tenant_environment" ON "clients"."apps" ("tenant_id", "environment");
 -- Create index "idx_apps_tenant_id" to table: "apps"
 CREATE INDEX "idx_apps_tenant_id" ON "clients"."apps" ("tenant_id");
--- Create enum type "tenant_status"
-CREATE TYPE "tenants"."tenant_status" AS ENUM ('ACTIVE', 'SUSPENDED', 'CLOSED', 'PENDING');
--- Create "system_state" table
-CREATE TABLE "system"."system_state" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "initialized" boolean NOT NULL DEFAULT false,
-  "initialized_at" timestamp NULL,
-  "initialization_version" character varying(50) NULL,
-  "last_reset_at" timestamp NULL,
-  "last_reset_by" uuid NULL,
-  "reset_count" integer NOT NULL DEFAULT 0,
-  "metadata" jsonb NULL DEFAULT '{}',
-  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY ("id")
-);
--- Create index "idx_system_state_created_at" to table: "system_state"
-CREATE INDEX "idx_system_state_created_at" ON "system"."system_state" ("created_at" DESC);
--- Create index "idx_system_state_initialized" to table: "system_state"
-CREATE INDEX "idx_system_state_initialized" ON "system"."system_state" ("initialized");
--- Set comment to table: "system_state"
-COMMENT ON TABLE "system"."system_state" IS 'System initialization state: tracks if system has been bootstrapped. Query logic: SELECT initialized FROM system_state ORDER BY created_at DESC LIMIT 1. If no record exists OR initialized = false, system is not initialized.';
--- Set comment to column: "id" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."id" IS 'UUID primary key (not fixed, allows multiple records for reset/re-initialization)';
--- Set comment to column: "initialized" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."initialized" IS 'Whether system has been initialized (checked on service startup). Always check latest record by created_at DESC.';
--- Set comment to column: "initialized_at" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."initialized_at" IS 'Timestamp when system was initialized via /bootstrap/initialize';
--- Set comment to column: "initialization_version" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."initialization_version" IS 'Version of initialization schema/data for migration tracking';
--- Set comment to column: "last_reset_at" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."last_reset_at" IS 'Timestamp when system was last reset';
--- Set comment to column: "last_reset_by" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."last_reset_by" IS 'User ID who reset the system. Even if database is cleared after reset, can be traced via log files for accountability';
--- Set comment to column: "created_at" on table: "system_state"
-COMMENT ON COLUMN "system"."system_state"."created_at" IS 'Record creation time. Used to determine latest state (ORDER BY created_at DESC LIMIT 1)';
--- Create enum type "credential_status"
-CREATE TYPE "clients"."credential_status" AS ENUM ('active', 'expired', 'revoked', 'rotating');
+-- Create enum type "invitation_status"
+CREATE TYPE "tenants"."invitation_status" AS ENUM ('PENDING', 'ACCEPTED', 'EXPIRED', 'REVOKED');
 -- Create enum type "user_status"
 CREATE TYPE "directory"."user_status" AS ENUM ('pending', 'active', 'deactive');
+-- Create enum type "group_type"
+CREATE TYPE "tenants"."group_type" AS ENUM ('department', 'team', 'group', 'other');
+-- Create enum type "tenant_app_status"
+CREATE TYPE "tenants"."tenant_app_status" AS ENUM ('ACTIVE', 'DISABLED', 'SUSPENDED');
 -- Create "api_keys" table
 CREATE TABLE "clients"."api_keys" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1331,7 +1335,6 @@ CREATE INDEX "idx_badges_name" ON "directory"."badges" ("name");
 -- Create "users" table
 CREATE TABLE "directory"."users" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "tenant_id" uuid NOT NULL,
   "username" character varying(50) NOT NULL,
   "status" "directory"."user_status" NOT NULL DEFAULT 'pending',
   "is_verified" boolean NOT NULL DEFAULT false,

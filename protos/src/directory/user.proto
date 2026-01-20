@@ -16,14 +16,13 @@ enum DirectoryUserStatus {
 // 用户信息
 message User {
   string id = 1;                          // 用户ID (UUID)
-  string tenant_id = 2;                   // 租户ID (UUID)
-  string username = 3;                    // 用户名 (varchar(50))
-  DirectoryUserStatus status = 4;        // 状态：pending, active, deactive
-  bool is_verified = 5;                   // 是否已验证
-  optional google.protobuf.Timestamp last_login_at = 6; // 最后登录时间
-  google.protobuf.Timestamp created_at = 7;       // 创建时间
-  google.protobuf.Timestamp updated_at = 8;       // 更新时间
-  optional google.protobuf.Timestamp deleted_at = 9; // 软删除时间
+  string username = 2;                    // 用户名 (varchar(50))
+  DirectoryUserStatus status = 3;        // 状态：pending, active, deactive
+  bool is_verified = 4;                   // 是否已验证
+  optional google.protobuf.Timestamp last_login_at = 5; // 最后登录时间
+  google.protobuf.Timestamp created_at = 6;       // 创建时间
+  google.protobuf.Timestamp updated_at = 7;       // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 8; // 软删除时间
 }
 
 // User 服务 - 供其他服务通过 gRPC 管理用户
@@ -49,7 +48,6 @@ message GetUserByIDResponse {
 
 message GetUserByUsernameRequest {
   string username = 1;
-  optional string tenant_id = 2;
 }
 
 message GetUserByUsernameResponse {
