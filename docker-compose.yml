@@ -99,7 +99,7 @@ services:
     expose:
       - "${GRPC_PORT_AUTH}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10197:10197"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10156:10156"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -177,7 +177,7 @@ services:
     expose:
       - "${GRPC_PORT_IMAGE}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10194:10194"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10160:10160"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -295,7 +295,7 @@ services:
     expose:
       - "${GRPC_PORT_ACCESS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10190:10190"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10155:10155"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -393,7 +393,7 @@ services:
     expose:
       - "${GRPC_PORT_AUDIT}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10191:10191"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10157:10157"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -491,7 +491,7 @@ services:
     expose:
       - "${GRPC_PORT_CLIENTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10192:10192"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10158:10158"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -589,7 +589,7 @@ services:
     expose:
       - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10193:10193"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10159:10159"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -687,7 +687,7 @@ services:
     expose:
       - "${GRPC_PORT_SYSTEM}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10195:10195"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10161:10161"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -785,7 +785,7 @@ services:
     expose:
       - "${GRPC_PORT_TENANTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     # ports:
-    #   - "10196:10196"  # 可选：如果需要从宿主机访问，取消注释
+    #   - "10162:10162"  # 可选：如果需要从宿主机访问，取消注释
     environment:
       - ENV=prod
     volumes:
@@ -825,6 +825,8 @@ services:
       context: .
       dockerfile: console/Dockerfile
     restart: always
+    ports:
+      - "${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"  # 直接访问前端端口
     expose:
       - "${CONSOLE_PORT}"
     labels:

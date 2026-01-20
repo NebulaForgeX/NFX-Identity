@@ -504,28 +504,28 @@
     # Format: "host:port" (e.g., "localhost:10000" or "service-name:50051")
     
     # Access service gRPC address
-    access_addr = "localhost:10000"
+    access_addr = "localhost:10155"
     
     # Auth service gRPC address
-    auth_addr = "localhost:10001"
+    auth_addr = "localhost:10156"
     
     # Audit service gRPC address
-    audit_addr = "localhost:10002"
+    audit_addr = "localhost:10157"
     
     # Clients service gRPC address
-    clients_addr = "localhost:10003"
+    clients_addr = "localhost:10158"
     
     # Directory service gRPC address
-    directory_addr = "localhost:10004"
+    directory_addr = "localhost:10159"
     
     # Image service gRPC address
-    image_addr = "localhost:10005"
+    image_addr = "localhost:10160"
     
     # System service gRPC address
-    system_addr = "localhost:10006"
+    system_addr = "localhost:10161"
     
     # Tenants service gRPC address
-    tenants_addr = "localhost:10007"
+    tenants_addr = "localhost:10162"
 
 # ============================================================================
 # Service-Specific Configuration Notes
@@ -544,15 +544,15 @@
 #    - [email]: Required for auth service
 #    - [storage]: Required for image service
 #
-# 3. Service port ranges (HTTP):
-#    - access:   10000
-#    - auth:     10001
-#    - audit:    10002
-#    - clients:  10003
-#    - directory: 10004
-#    - image:    10005
-#    - system:   10006
-#    - tenants:  10007
+# 3. Service port ranges (gRPC):
+#    - access:   10155
+#    - auth:     10156
+#    - audit:    10157
+#    - clients:  10158
+#    - directory: 10159
+#    - image:    10160
+#    - system:   10161
+#    - tenants:  10162
 #
 # 4. Kafka topics should be configured in [kafka.producer_topics] and
 #    [kafka.consumer_topics] according to your service's event requirements.

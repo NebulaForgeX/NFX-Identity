@@ -5,9 +5,9 @@
  */
 
 // 从环境变量获取配置
-// 通过 Traefik 反向代理访问：10187 是 Traefik 的 HTTP 端口
-const HTTP_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:10187";
-const WS_BASE_URL = import.meta.env.VITE_WS_URL || "ws://localhost:10187";
+// 通过 Traefik 反向代理访问：10166 是 Traefik 的 HTTP 端口
+const HTTP_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:10166";
+const WS_BASE_URL = import.meta.env.VITE_WS_URL || "ws://localhost:10166";
 
 // 图片服务 URL（独立配置）
 // 通过 Traefik 反向代理访问
