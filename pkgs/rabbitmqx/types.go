@@ -1,14 +1,23 @@
 package rabbitmqx
 
 import (
+	"fmt"
+	"net/url"
 	"nfxid/pkgs/rabbitmqx/messaging"
 )
 
 type Config struct {
-	URI        string           `koanf:"uri"`
-	ClientID   string           `koanf:"client_id"`
-	Producer   ProducerConfig   `koanf:"producer"`
-	Consumer   ConsumerConfig   `koanf:"consumer"`
+	// URI 是可选的，如果提供了 URI，则优先使用 URI
+	// 如果 URI 为空，则使用分开的配置字段（host, port, user, password, vhost）构建 URI
+	URI      string           `koanf:"uri"`
+	Host     string           `koanf:"host"`     // RabbitMQ 主机地址
+	Port     int              `koanf:"port"`     // RabbitMQ 端口，默认 5672
+	User     string           `koanf:"user"`     // 用户名
+	Password string           `koanf:"password"` // 密码
+	Vhost    string           `koanf:"vhost"`    // 虚拟主机，默认 "/"
+	ClientID string           `koanf:"client_id"`
+	Producer ProducerConfig   `koanf:"producer"`
+	Consumer ConsumerConfig   `koanf:"consumer"`
 	Connection ConnectionConfig `koanf:"connection"`
 	Exchange   ExchangeConfig   `koanf:"exchange"`
 	Queue      QueueConfig      `koanf:"queue"`
@@ -19,6 +28,49 @@ type Config struct {
 	// ConsumerQueues 映射事件键到 Queue 和 BindingKey
 	// 格式: event_key -> queue:binding_key 或 binding_key (如果 queue 为空则自动生成)
 	ConsumerQueues map[messaging.MessageKey]ConsumerBinding `koanf:"consumer_queues"`
+}
+
+// BuildURI 构建 RabbitMQ URI
+// 如果 Config.URI 不为空，直接返回
+// 否则从分开的配置字段（host, port, user, password, vhost）构建 URI
+func (c *Config) BuildURI() (string, error) {
+	// 如果提供了 URI，直接使用
+	if c.URI != "" {
+		return c.URI, nil
+	}
+
+	// 从分开的配置字段构建 URI
+	host := c.Host
+	if host == "" {
+		host = "localhost"
+	}
+
+	port := c.Port
+	if port == 0 {
+		port = 5672 // 默认 AMQP 端口
+	}
+
+	user := c.User
+	if user == "" {
+		user = "guest" // 默认用户名
+	}
+
+	password := c.Password
+	// 密码可以为空
+
+	vhost := c.Vhost
+	if vhost == "" {
+		vhost = "/" // 默认虚拟主机
+	}
+
+	// URL 编码用户名和密码（处理特殊字符）
+	encodedUser := url.QueryEscape(user)
+	encodedPassword := url.QueryEscape(password)
+	encodedVhost := url.PathEscape(vhost)
+
+	// 构建 AMQP URI: amqp://user:password@host:port/vhost
+	uri := fmt.Sprintf("amqp://%s:%s@%s:%d/%s", encodedUser, encodedPassword, host, port, encodedVhost)
+	return uri, nil
 }
 
 // ProducerRouting 定义发布者的路由配置（Exchange、RoutingKey 和可选的 Exchange 类型）
@@ -68,9 +120,9 @@ type ConnectionConfig struct {
 	// 底层 AMQP 配置（amqp091-go 的 Config）
 	AMQP AMQPConfig `koanf:"amqp"`
 
-	// 注意：AmqpURI 在 Config.URI 中设置
+	// 注意：URI 可以通过 Config.URI 直接指定，或者通过分开的配置字段（host, port, user, password, vhost）构建
 	// Vhost 可以在 URI 中指定，例如: amqp://user:pass@host:port/vhost
-	// 或者通过 AMQP.Vhost 配置
+	// 或者通过 Config.Vhost 或 AMQP.Vhost 配置
 }
 
 type AMQPConfig struct {

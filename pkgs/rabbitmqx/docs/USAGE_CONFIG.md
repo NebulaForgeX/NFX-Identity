@@ -6,7 +6,16 @@
 
 ```toml
 [rabbitmq]
-    uri = "amqp://guest:guest@localhost:5672/"
+    # 方式1：直接提供完整 URI（可选）
+    # uri = "amqp://guest:guest@localhost:5672/"
+    
+    # 方式2：分开配置（推荐，与 PostgreSQL 配置方式一致）
+    host = "localhost"
+    port = 5672
+    user = "guest"
+    password = "guest"
+    vhost = "/"
+    
     client_id = "nfxid-service"
 
     [rabbitmq.producer]
@@ -91,11 +100,37 @@
 
 ### 基础配置
 
-#### `uri`
+#### `uri`（可选）
 - **类型**：`string`
-- **说明**：RabbitMQ 连接 URI
+- **说明**：RabbitMQ 连接 URI（完整连接字符串）
 - **格式**：`amqp://user:password@host:port/vhost`
 - **示例**：`amqp://guest:guest@localhost:5672/`
+- **注意**：如果提供了 `uri`，则优先使用 `uri`；如果 `uri` 为空，则使用分开的配置字段（`host`, `port`, `user`, `password`, `vhost`）构建 URI
+
+#### `host`（可选，当 `uri` 为空时必需）
+- **类型**：`string`
+- **说明**：RabbitMQ 主机地址
+- **默认值**：`localhost`
+
+#### `port`（可选，当 `uri` 为空时可选）
+- **类型**：`int`
+- **说明**：RabbitMQ 端口
+- **默认值**：`5672`（标准 AMQP 端口）
+
+#### `user`（可选，当 `uri` 为空时可选）
+- **类型**：`string`
+- **说明**：RabbitMQ 用户名
+- **默认值**：`guest`
+
+#### `password`（可选，当 `uri` 为空时可选）
+- **类型**：`string`
+- **说明**：RabbitMQ 密码
+- **默认值**：空字符串
+
+#### `vhost`（可选，当 `uri` 为空时可选）
+- **类型**：`string`
+- **说明**：RabbitMQ 虚拟主机
+- **默认值**：`/`
 
 #### `client_id`
 - **类型**：`string`

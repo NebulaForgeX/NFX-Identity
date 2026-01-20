@@ -10,7 +10,17 @@ import (
 )
 
 func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
-	amqpConfig := BuildAMQPConfig(cfg)
+	uri, err := cfg.BuildURI()
+	if err != nil {
+		logx.S().Errorf("❌ Failed to build RabbitMQ URI: %v", err)
+		return nil, err
+	}
+
+	amqpConfig, err := BuildAMQPConfig(cfg)
+	if err != nil {
+		logx.S().Errorf("❌ Failed to build AMQP config: %v", err)
+		return nil, err
+	}
 
 	defaultExchange := cfg.Exchange.Name
 	if defaultExchange == "" {
@@ -20,7 +30,7 @@ func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
 	if defaultExchangeType == "" {
 		defaultExchangeType = messaging.DefaultExchangeType
 	}
-	logx.S().Infof("🔄 Initializing RabbitMQ Publisher with URI: %s (default exchange: %s, type: %s)", maskURI(cfg.URI), defaultExchange, defaultExchangeType.String())
+	logx.S().Infof("🔄 Initializing RabbitMQ Publisher with URI: %s (default exchange: %s, type: %s)", maskURI(uri), defaultExchange, defaultExchangeType.String())
 
 	// 使用支持优先级的 Marshaler（总是启用，以便支持 WithPriority 选项）
 	amqpConfig.Marshaler = &PriorityMarshaler{}
@@ -47,7 +57,7 @@ func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
 	}
 
 	// 声明所有需要的 Exchange（在创建 Publisher 之前）
-	if err := declareExchanges(nil, exchanges, cfg.Exchange.Durable, cfg.Exchange.AutoDelete, cfg.URI); err != nil {
+	if err := declareExchanges(nil, exchanges, cfg.Exchange.Durable, cfg.Exchange.AutoDelete, uri); err != nil {
 		logx.S().Errorf("❌ Failed to declare exchanges: %v", err)
 		return nil, err
 	}
@@ -79,7 +89,7 @@ func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
 	busPublisher := messaging.NewBusPublisherWithConfig(
 		pub,
 		exchangeResolver,
-		cfg.URI,
+		uri,
 		messaging.ExchangeConfig{
 			Durable:    cfg.Exchange.Durable,
 			AutoDelete: cfg.Exchange.AutoDelete,
@@ -88,7 +98,7 @@ func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
 
 	// 预先声明配置中的 Exchange（可选，用于提前验证）
 	if len(exchanges) > 0 {
-		if err := declareExchanges(nil, exchanges, cfg.Exchange.Durable, cfg.Exchange.AutoDelete, cfg.URI); err != nil {
+		if err := declareExchanges(nil, exchanges, cfg.Exchange.Durable, cfg.Exchange.AutoDelete, uri); err != nil {
 			logx.S().Warnf("⚠️ Failed to pre-declare exchanges (will be declared on-demand): %v", err)
 			// 不返回错误，允许在发送消息时动态声明
 		} else {
@@ -99,7 +109,7 @@ func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
 		}
 	}
 
-	logx.S().Infof("✅ Successfully connected to RabbitMQ Publisher: %s (exchanges: %d)", maskURI(cfg.URI), len(exchanges))
+	logx.S().Infof("✅ Successfully connected to RabbitMQ Publisher: %s (exchanges: %d)", maskURI(uri), len(exchanges))
 	return busPublisher, nil
 }
 

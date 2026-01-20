@@ -8,14 +8,24 @@ import (
 )
 
 func NewSubscriber(cfg *Config) (*messaging.BusSubscriber, error) {
-	amqpConfig := BuildAMQPConfig(cfg)
+	uri, err := cfg.BuildURI()
+	if err != nil {
+		logx.S().Errorf("❌ Failed to build RabbitMQ URI: %v", err)
+		return nil, err
+	}
+
+	amqpConfig, err := BuildAMQPConfig(cfg)
+	if err != nil {
+		logx.S().Errorf("❌ Failed to build AMQP config: %v", err)
+		return nil, err
+	}
 
 	defaultQueue := cfg.Consumer.QueueName
 	exchangeName := cfg.Exchange.Name
 	if exchangeName == "" {
 		exchangeName = "default"
 	}
-	logx.S().Infof("🔄 Initializing RabbitMQ Subscriber with URI: %s (default queue: %s, exchange: %s)", maskURI(cfg.URI), defaultQueue, exchangeName)
+	logx.S().Infof("🔄 Initializing RabbitMQ Subscriber with URI: %s (default queue: %s, exchange: %s)", maskURI(uri), defaultQueue, exchangeName)
 
 	// 使用支持优先级的 Marshaler（用于反序列化时保留优先级信息）
 	amqpConfig.Marshaler = &PriorityMarshaler{}
@@ -52,6 +62,6 @@ func NewSubscriber(cfg *Config) (*messaging.BusSubscriber, error) {
 		return nil, err
 	}
 
-	logx.S().Infof("✅ Successfully connected to RabbitMQ Subscriber: %s (queue: %s, exchange: %s)", maskURI(cfg.URI), defaultQueue, exchangeName)
+	logx.S().Infof("✅ Successfully connected to RabbitMQ Subscriber: %s (queue: %s, exchange: %s)", maskURI(uri), defaultQueue, exchangeName)
 	return messaging.NewSubscriber(sub, queueResolver), nil
 }

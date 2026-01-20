@@ -1,234 +1,534 @@
+# ============================================================================
 # NFX-Identity Configuration Example
-# Copy this file to inputs/{service}/configuration/{env}.toml and modify according to your service and environment
+# ============================================================================
+# 
+# This is a comprehensive example configuration file for NFX-Identity services.
+# Copy this file to inputs/{service}/configuration/{env}.toml and modify 
+# according to your service and environment.
 # 
 # Configuration structure matches modules/*/config/types.go
 # Each service may have different optional sections (token, email, storage)
+#
+# ============================================================================
 
+# ============================================================================
+# Server Configuration
+# ============================================================================
 [server]
-    name = "service-name"  # Service name (e.g., "access-api", "auth-api")
+    # Service name (e.g., "Access Service", "Auth Service")
+    name = "service-name"
+    
+    # Server host address (use "0.0.0.0" to listen on all interfaces)
     host = "0.0.0.0"
-    http_port = 8080  # HTTP REST API port
-    grpc_port = 50051  # gRPC service port
+    
+    # HTTP REST API port
+    http_port = 8080
+    
+    # gRPC service port
+    grpc_port = 50051
 
+# ============================================================================
+# PostgreSQL Database Configuration
+# ============================================================================
 [postgresql]
+    # Database host address
     host = "127.0.0.1"
+    
+    # Database port (default: 5432)
     port = 10105
+    
+    # Database user
     user = "postgres"
+    
+    # Database password
     password = "your-password-here"
-    dbname = "nfxid_dev"  # Use "nfxid" for production
+    
+    # Database name (use "nfxid_dev" for development, "nfxid" for production)
+    dbname = "nfxid_dev"
+    
+    # SSL mode: "disable" | "require" | "verify-ca" | "verify-full"
     sslmode = "disable"
+    
+    # Timezone (use "UTC" for consistency)
     timezone = "UTC"
-    logger_level = "warn"  # silent | error | warn | info
+    
+    # Logger level: "silent" | "error" | "warn" | "info"
+    logger_level = "warn"
+    
+    # Auto migrate database schema on startup (use false in production)
     auto_migrate = false
 
+    # Connection pool configuration
     [postgresql.connection]
+        # Connection timeout (e.g., "5s", "10s")
         timeout = "5s"
+        
+        # Maximum number of retry attempts
         max_retries = 5
+        
+        # Retry interval between attempts (e.g., "2s")
         retry_interval = "2s"
+        
+        # Maximum number of idle connections in the pool
         max_idle_connections = 10
+        
+        # Maximum number of open connections to the database
         max_open_connections = 100
+        
+        # Maximum amount of time a connection may be idle (e.g., "15m")
         conn_max_idle_time = "15m"
+        
+        # Maximum amount of time a connection may be reused (e.g., "1h")
         conn_max_lifetime = "1h"
 
+# ============================================================================
+# Redis Cache Configuration
+# ============================================================================
 [cache]
+    # Redis host address
     host = "127.0.0.1"
+    
+    # Redis port (default: 6379)
     port = 6379
+    
+    # Redis password (leave empty if no password)
     password = "your-password-here"
 
+    # Cache connection settings
     [cache.connection]
+        # Dial timeout (e.g., "3s")
         dial_timeout = "3s"
+        
+        # Write timeout (e.g., "3s")
         write_timeout = "3s"
+        
+        # Read timeout (e.g., "3s")
         read_timeout = "3s"
+        
+        # Maximum number of retry attempts
         max_retries = 5
+        
+        # Retry interval between attempts (e.g., "2s")
         retry_interval = "2s"
 
+    # TLS configuration for Redis
     [cache.tls]
+        # Enable TLS connection (use true for secure connections)
         enabled = false
+        
+        # Server name for TLS verification
         server_name = ""
 
+# ============================================================================
+# Logger Configuration
+# ============================================================================
 [logger]
-    level = "debug"  # debug | info | warn | error
-    format = "console"  # json | console
-    output = "stdout"  # stdout | file
-    file_path = "logs/service.log"  # Used when output = "file"
+    # Log level: "debug" | "info" | "warn" | "error"
+    level = "debug"
+    
+    # Log format: "json" | "console"
+    format = "console"
+    
+    # Output destination: "stdout" | "file"
+    output = "stdout"
+    
+    # Log file path (used when output = "file")
+    file_path = "logs/service.log"
+    
+    # Maximum log file size in MB before rotation
     max_size_mb = 100
+    
+    # Maximum number of backup log files to keep
     max_backups = 10
+    
+    # Maximum age of log files in days before deletion
     max_age_day = 30
+    
+    # Compress rotated log files
     compress = false
 
-# Token configuration (required for: auth, clients services)
+# ============================================================================
+# Token Configuration (Required for: auth, clients services)
+# ============================================================================
 [token]
+    # Secret key for JWT token signing (CHANGE IN PRODUCTION!)
     secret_key = "your-secret-key-here-change-in-production"
+    
+    # Token issuer name
     issuer = "nfxid"
-    access_token_ttl = "24h"  # e.g., "15m", "1h", "24h"
-    refresh_token_ttl = "168h"  # e.g., "7d", "168h"
+    
+    # Access token time-to-live (e.g., "15m", "1h", "24h")
+    access_token_ttl = "24h"
+    
+    # Refresh token time-to-live (e.g., "7d", "168h")
+    refresh_token_ttl = "168h"
+    
+    # JWT signing algorithm: "HS256" | "HS384" | "HS512" | "RS256" | etc.
     algorithm = "HS256"
 
-# Email configuration (required for: auth service)
+# ============================================================================
+# Email Configuration (Required for: auth service)
+# ============================================================================
 [email]
+    # SMTP server host
     smtp_host = "smtp.gmail.com"
+    
+    # SMTP server port (587 for TLS, 465 for SSL)
     smtp_port = 587
+    
+    # SMTP username (usually your email address)
     smtp_user = "your-email@gmail.com"
+    
+    # SMTP password (use app-specific password for Gmail)
     smtp_password = "your-app-password-here"
+    
+    # From email address
     smtp_from = "your-email@gmail.com"
 
-# Storage configuration (required for: image service)
+# ============================================================================
+# Storage Configuration (Required for: image service)
+# ============================================================================
 [storage]
+    # Base path for file storage
     base_path = "./data"
 
+# ============================================================================
+# Kafka Message Broker Configuration
+# ============================================================================
 [kafka]
+    # Kafka broker addresses (format: "host:port")
     brokers = ["localhost:9092"]
+    
+    # Client ID for Kafka connections
     client_id = "nfxid-service"
 
+    # Network configuration
     [kafka.network]
+        # Maximum number of open requests per connection
         max_open_requests = 1
 
+    # Producer configuration
     [kafka.producer]
-        acks = "all"  # "0" | "1" | "all"
-        compression = "snappy"  # none | gzip | snappy | lz4 | zstd
+        # Acknowledgment mode: "0" (no ack) | "1" (leader only) | "all" (all replicas)
+        acks = "all"
+        
+        # Compression type: "none" | "gzip" | "snappy" | "lz4" | "zstd"
+        compression = "snappy"
+        
+        # Number of retries for failed messages
         retries = 3
-        batch_bytes = 1048576  # 1MB
+        
+        # Batch size in bytes (1MB = 1048576)
+        batch_bytes = 1048576
+        
+        # Delay in milliseconds before sending a batch
         linger_ms = 5
+        
+        # Enable idempotent producer (prevents duplicate messages)
         idempotent = true
 
+    # Consumer configuration
     [kafka.consumer]
-        group_id = "service-group"  # Required: unique consumer group ID
-        initial_offset = "latest"  # "earliest" | "latest"
+        # Consumer group ID (must be unique per service)
+        group_id = "service-group"
+        
+        # Initial offset: "earliest" (from beginning) | "latest" (from end)
+        initial_offset = "latest"
+        
+        # Session timeout in milliseconds
         session_timeout_ms = 10000
+        
+        # Heartbeat interval in milliseconds
         heartbeat_interval_ms = 3000
+        
+        # Minimum bytes to fetch per request
         fetch_min_bytes = 1
-        fetch_max_bytes = 5242880  # 5MB
+        
+        # Maximum bytes to fetch per request (5MB = 5242880)
+        fetch_max_bytes = 5242880
+        
+        # Return errors to consumer
         return_errors = true
 
+    # Security configuration
     [kafka.security]
+        # Enable SASL authentication
         enabled = false
-        mechanism = "PLAIN"  # PLAIN | SCRAM-SHA-256 | SCRAM-SHA-512
+        
+        # SASL mechanism: "PLAIN" | "SCRAM-SHA-256" | "SCRAM-SHA-512"
+        mechanism = "PLAIN"
+        
+        # SASL username
         username = ""
+        
+        # SASL password
         password = ""
+        
+        # Skip TLS certificate verification (use false in production)
         tls_insecure_skip_verify = false
 
     # Producer topics: map message keys to topic names
+    # Format: message_key = "topic-name"
     [kafka.producer_topics]
-        # Service-specific topics - modify according to service
         # Example:
-        # access = "nfx-identity-access"
-        # event = "event-topic"
-        # event_poison = "event-topic-poison"
+        # access = "nfxid.access"
+        # event = "nfxid.event"
+        # event_poison = "nfxid.event_poison"
 
     # Consumer topics: map message keys to topic names
+    # Format: message_key = "topic-name"
     [kafka.consumer_topics]
-        # Service-specific topics - modify according to service
         # Example:
-        # access = "nfx-identity-access"
-        # event = "event-topic"
-        # event_poison = "event-topic-poison"
+        # access = "nfxid.access"
+        # event = "nfxid.event"
+        # event_poison = "nfxid.event_poison"
 
+# ============================================================================
+# RabbitMQ Message Broker Configuration
+# ============================================================================
 [rabbitmq]
-    uri = "amqp://guest:guest@localhost:5672/"  # Required
-    client_id = "nfxid-service"  # Required
+    # Connection configuration - two ways to configure:
+    #
+    # Method 1: Direct URI (optional, if provided, other fields are ignored)
+    # uri = "amqp://user:password@host:port/vhost"
+    #
+    # Method 2: Separate fields (recommended, consistent with PostgreSQL config)
+    host = "localhost"
+    port = 5672
+    user = "guest"
+    password = "guest"
+    vhost = "/"
+    
+    # Client ID for RabbitMQ connections
+    client_id = "nfxid-service"
 
+    # Producer configuration
     [rabbitmq.producer]
+        # If true, return error when message cannot be routed
         mandatory = false
+        
+        # If true, return error when message cannot be delivered immediately
         immediate = false
+        
+        # Message content type
         content_type = "application/json"
-        delivery_mode = 2  # 1=non-persistent, 2=persistent
+        
+        # Delivery mode: 1 = non-persistent, 2 = persistent
+        delivery_mode = 2
+        
+        # Wait for server confirmation (Publisher Confirms)
         confirm_delivery = true
+        
+        # Channel pool size (0 = no pooling)
         channel_pool_size = 10
+        
+        # Enable transactional mode
         transactional = false
-        default_priority = 0  # 0-255, 0 means no priority
+        
+        # Default message priority (0-255, 0 = no priority)
+        default_priority = 0
 
+    # Consumer configuration
     [rabbitmq.consumer]
-        queue_name = ""  # If empty, auto-generated from topic
+        # Queue name (if empty, auto-generated from topic)
+        queue_name = ""
+        
+        # Consumer tag identifier
         consumer_tag = "nfxid-consumer"
+        
+        # Automatically acknowledge messages (not recommended)
         auto_ack = false
+        
+        # Exclusive queue (only this consumer can access)
         exclusive = false
+        
+        # Don't receive messages published on the same connection
         no_local = false
+        
+        # Don't wait for server response
         no_wait = false
+        
+        # Don't requeue message on nack
         no_requeue_on_nack = false
+        
+        # Prefetch count (0 = unlimited)
         prefetch_count = 10
-        prefetch_size = 0  # 0 means unlimited
+        
+        # Prefetch size in bytes (0 = unlimited)
+        prefetch_size = 0
+        
+        # Apply QOS globally to all channels
         qos_global = false
 
+    # Connection settings
     [rabbitmq.connection]
+        # TLS configuration
         [rabbitmq.connection.tls]
+            # Enable TLS connection
             enabled = false
+            
+            # Skip TLS certificate verification (use false in production)
             insecure_skip_verify = false
+            
+            # Client certificate file path
             cert_file = ""
+            
+            # Client private key file path
             key_file = ""
+            
+            # CA certificate file path
             ca_file = ""
+            
+            # Server name for TLS verification
             server_name = ""
 
+        # Reconnection settings
         [rabbitmq.connection.reconnect]
+            # Enable automatic reconnection
             enabled = true
+            
+            # Initial reconnection interval (e.g., "1s")
             initial_interval = "1s"
+            
+            # Randomization factor for backoff (0.0 - 1.0)
             randomization_factor = 0.5
+            
+            # Backoff multiplier
             multiplier = 1.5
+            
+            # Maximum reconnection interval (e.g., "30s")
             max_interval = "30s"
 
+        # AMQP protocol settings
         [rabbitmq.connection.amqp]
+            # Virtual host
             vhost = "/"
-            heartbeat = 10  # seconds, 0 means disabled
+            
+            # Heartbeat interval in seconds (0 = disabled)
+            heartbeat = 10
+            
+            # Locale setting
             locale = "en_US"
-            channel_max = 0  # 0 means unlimited
-            frame_size = 0  # 0 means use default
+            
+            # Maximum number of channels (0 = unlimited)
+            channel_max = 0
+            
+            # Maximum frame size (0 = use default)
+            frame_size = 0
 
+    # Exchange configuration
     [rabbitmq.exchange]
-        name = ""  # If empty, auto-generated from topic
-        type = "topic"  # direct | topic | fanout | headers
+        # Exchange name (if empty, auto-generated from topic)
+        name = ""
+        
+        # Exchange type: "direct" | "topic" | "fanout" | "headers"
+        # Plugin types: "x-delayed-message" | "x-consistent-hash" | etc.
+        type = "topic"
+        
+        # Exchange survives broker restart
         durable = true
+        
+        # Auto-delete when no queues are bound
         auto_delete = false
+        
+        # Internal exchange (cannot be published to directly)
         internal = false
+        
+        # Don't wait for server response
         no_wait = false
 
+    # Queue configuration
     [rabbitmq.queue]
+        # Queue survives broker restart
         durable = true
+        
+        # Auto-delete when no consumers
         auto_delete = false
+        
+        # Exclusive queue (only this connection can access)
         exclusive = false
+        
+        # Don't wait for server response
         no_wait = false
-        max_priority = 0  # 0-255, 0 means priority queue disabled
-        message_ttl = 0  # milliseconds, 0 means no TTL
-        max_length = 0  # 0 means unlimited
-        max_length_bytes = 0  # 0 means unlimited
+        
+        # Maximum priority (0-255, 0 = priority queue disabled)
+        max_priority = 0
+        
+        # Message TTL in milliseconds (0 = no TTL)
+        message_ttl = 0
+        
+        # Maximum queue length in messages (0 = unlimited)
+        max_length = 0
+        
+        # Maximum queue length in bytes (0 = unlimited)
+        max_length_bytes = 0
+        
+        # Dead letter exchange name
         dead_letter_exchange = ""
+        
+        # Dead letter routing key
         dead_letter_routing_key = ""
 
+    # Queue binding configuration
     [rabbitmq.queue_bind]
-        routing_key = ""  # If empty, uses topic name
+        # Routing key (if empty, uses topic name)
+        routing_key = ""
+        
+        # Don't wait for server response
         no_wait = false
 
     # Producer exchanges: map message keys to exchange and routing key
+    # Format: message_key = {exchange = "exchange_name", routing_key = "routing.key"}
+    # - If exchange is empty, uses exchange.name config or auto-generated
+    # - If routing_key is empty, uses message key as routing_key
     [rabbitmq.producer_exchanges]
-        # Format: message_key = {exchange = "exchange_name", routing_key = "routing.key"}
-        # If exchange is empty, uses exchange.name config or auto-generated
-        # If routing_key is empty, uses message key as routing_key
         # Example:
         # event = {exchange = "", routing_key = "event"}
         # event_poison = {exchange = "", routing_key = "event.poison"}
 
     # Consumer queues: map message keys to queue and binding key
+    # Format: message_key = {queue = "queue_name", binding_key = "binding.key"}
+    # - If queue is empty, uses consumer.queue_name config or auto-generated
+    # - If binding_key is empty, uses message key as binding_key
     [rabbitmq.consumer_queues]
-        # Format: message_key = {queue = "queue_name", binding_key = "binding.key"}
-        # If queue is empty, uses consumer.queue_name config or auto-generated
-        # If binding_key is empty, uses message key as binding_key
         # Example:
         # event = {queue = "", binding_key = "event"}
         # event_poison = {queue = "", binding_key = "event.poison"}
 
-# gRPC client addresses for inter-service communication
+# ============================================================================
+# gRPC Client Configuration
+# ============================================================================
+# Inter-service communication addresses
 [grpc_client]
     # Service addresses - update according to your deployment
     # Format: "host:port" (e.g., "localhost:10000" or "service-name:50051")
-    access_addr = "localhost:10000"      # Access service gRPC port
-    auth_addr = "localhost:10001"        # Auth service gRPC port
-    audit_addr = "localhost:10002"       # Audit service gRPC port
-    clients_addr = "localhost:10003"     # Clients service gRPC port
-    directory_addr = "localhost:10004"   # Directory service gRPC port
-    image_addr = "localhost:10005"       # Image service gRPC port
-    system_addr = "localhost:10006"      # System service gRPC port
-    tenants_addr = "localhost:10007"     # Tenants service gRPC port
+    
+    # Access service gRPC address
+    access_addr = "localhost:10000"
+    
+    # Auth service gRPC address
+    auth_addr = "localhost:10001"
+    
+    # Audit service gRPC address
+    audit_addr = "localhost:10002"
+    
+    # Clients service gRPC address
+    clients_addr = "localhost:10003"
+    
+    # Directory service gRPC address
+    directory_addr = "localhost:10004"
+    
+    # Image service gRPC address
+    image_addr = "localhost:10005"
+    
+    # System service gRPC address
+    system_addr = "localhost:10006"
+    
+    # Tenants service gRPC address
+    tenants_addr = "localhost:10007"
 
 # ============================================================================
-# Service-specific configuration notes:
+# Service-Specific Configuration Notes
 # ============================================================================
 # 
 # 1. Required sections for ALL services:
@@ -236,7 +536,7 @@
 #    - [postgresql]
 #    - [cache]
 #    - [logger]
-#    - [kafka] (or [rabbitmq], depending on your message broker)
+#    - [kafka] OR [rabbitmq] (choose one message broker)
 #    - [grpc_client]
 #
 # 2. Optional sections by service:
@@ -257,5 +557,12 @@
 # 4. Kafka topics should be configured in [kafka.producer_topics] and
 #    [kafka.consumer_topics] according to your service's event requirements.
 #
-# 5. RabbitMQ exchanges/queues should be configured in [rabbitmq.producer_exchanges]
-#    and [rabbitmq.consumer_queues] according to your service's event requirements.
+# 5. RabbitMQ exchanges/queues should be configured in 
+#    [rabbitmq.producer_exchanges] and [rabbitmq.consumer_queues] according 
+#    to your service's event requirements.
+#
+# 6. For RabbitMQ, you can use either:
+#    - Direct URI: uri = "amqp://user:pass@host:port/vhost"
+#    - Separate fields: host, port, user, password, vhost (recommended)
+#
+# ============================================================================

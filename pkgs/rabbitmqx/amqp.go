@@ -11,8 +11,13 @@ import (
 
 // BuildAMQPConfig 构建 AMQP 配置。
 // 根据提供的 Config 创建适合 RabbitMQ 的 AMQP 配置。
-func BuildAMQPConfig(c *Config) amqp.Config {
-	cfg := amqp.NewDurableQueueConfig(c.URI)
+func BuildAMQPConfig(c *Config) (amqp.Config, error) {
+	uri, err := c.BuildURI()
+	if err != nil {
+		return amqp.Config{}, err
+	}
+
+	cfg := amqp.NewDurableQueueConfig(uri)
 
 	// 配置连接选项（TLS 和 Reconnect）
 	ConfigureConnection(&cfg, c.Connection)
@@ -32,7 +37,7 @@ func BuildAMQPConfig(c *Config) amqp.Config {
 	// 配置队列绑定（RabbitMQ 特有）
 	ConfigureQueueBind(&cfg, c.QueueBind)
 
-	return cfg
+	return cfg, nil
 }
 
 // ConfigureConnection 配置连接相关选项（TLS、Reconnect 和底层 AMQP）。
