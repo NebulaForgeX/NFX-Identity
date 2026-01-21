@@ -593,3 +593,74 @@ export const useDeleteTrustedDevice = () => {
     },
   });
 };
+
+// ========== 登录相关 ==========
+
+// 通过邮箱登录
+export const useLoginByEmail = () => {
+  return useMutation({
+    mutationFn: async (params: { email: string; password: string }) => {
+      // TODO: 实现邮箱登录逻辑
+      // 1. 验证用户凭证
+      // 2. 创建会话
+      // 3. 设置 token
+      throw new Error("邮箱登录功能尚未实现");
+    },
+    onError: (error: AxiosError) => {
+      showError("登录失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 通过手机号登录
+export const useLoginByPhone = () => {
+  return useMutation({
+    mutationFn: async (params: { phone: string; password: string }) => {
+      // TODO: 实现手机号登录逻辑
+      // 1. 验证用户凭证
+      // 2. 创建会话
+      // 3. 设置 token
+      throw new Error("手机号登录功能尚未实现");
+    },
+    onError: (error: AxiosError) => {
+      showError("登录失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== 注册相关 ==========
+
+// 发送验证码
+export const useSendVerificationCode = () => {
+  return useMutation({
+    mutationFn: async (params: { email: string }) => {
+      // TODO: 实现发送验证码逻辑
+      throw new Error("发送验证码功能尚未实现");
+    },
+    onError: (error: AxiosError) => {
+      showError("发送验证码失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 注册
+export const useSignup = () => {
+  return useMutation({
+    mutationFn: async (params: {
+      email: string;
+      password: string;
+      verificationCode: string;
+      inviteCode: string;
+    }) => {
+      // TODO: 实现注册逻辑
+      // 1. 验证验证码
+      // 2. 创建用户
+      // 3. 创建用户凭证
+      // 4. 创建会话
+      throw new Error("注册功能尚未实现");
+    },
+    onError: (error: AxiosError) => {
+      showError("注册失败，请稍后重试。" + error.message);
+    },
+  });
+};

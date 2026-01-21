@@ -2,11 +2,9 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { GetUser } from "@/apis/auth.api";
+import { GetUser, GetUserEmail, GetUserProfile } from "@/apis/directory.api";
 import { Bell, Mail, Search } from "@/assets/icons/lucide";
-import { useLogOut } from "@/hooks/useAuth";
 import { useAuthStore } from "@/stores/authStore";
-// import { useSelfProfile } from "@/hooks/useProfile"; // TODO: 已删除 profile hooks，改用 GetUser
 import { useChatStore } from "@/stores/chatStore";
 import { showError, showSearch } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
@@ -46,15 +44,16 @@ export default RightContainer;
 
 const UserEmail = memo(() => {
   const currentUserId = useAuthStore((state) => state.currentUserId);
-  const { data: user } = useQuery({
-    queryKey: ["user", currentUserId],
-    queryFn: () => (currentUserId ? GetUser(currentUserId) : null),
+  const { data: userEmail } = useQuery({
+    queryKey: ["user-email", currentUserId],
+    queryFn: () => (currentUserId ? GetUserEmail(currentUserId) : null),
     enabled: !!currentUserId,
+    select: (data) => data?.email || null,
   });
   return (
     <div className={styles.contactInfo}>
       <Mail size={16} />
-      <span className={styles.email}>{user?.email || "未设置"}</span>
+      <span className={styles.email}>{userEmail || "未设置"}</span>
     </div>
   );
 });
@@ -63,39 +62,50 @@ UserEmail.displayName = "UserEmail";
 const UserMenu = memo(() => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const currentUserId = useAuthStore((state) => state.currentUserId);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
   const { data: user } = useQuery({
     queryKey: ["user", currentUserId],
     queryFn: () => (currentUserId ? GetUser(currentUserId) : null),
     enabled: !!currentUserId,
   });
+  const { data: userProfile } = useQuery({
+    queryKey: ["user-profile", currentUserId],
+    queryFn: () => (currentUserId ? GetUserProfile(currentUserId) : null),
+    enabled: !!currentUserId,
+  });
+  const { data: userEmail } = useQuery({
+    queryKey: ["user-email", currentUserId],
+    queryFn: () => (currentUserId ? GetUserEmail(currentUserId) : null),
+    enabled: !!currentUserId,
+    select: (data) => data?.email || null,
+  });
   const navigate = useNavigate();
-  const { mutateAsync: logOut, isPending: isLoggingOut } = useLogOut();
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = useCallback(() => {
     try {
-      await logOut();
+      clearAuth();
+      navigate(ROUTES.LOGIN);
     } catch (error) {
       showError("退出登录失败: " + error);
     }
-  }, [logOut]);
+  }, [clearAuth, navigate]);
 
   const userMenu: Array<{ title: string; action: () => void; disabled?: boolean }> = useMemo(
     () => [
-      { title: "个人资料", action: () => navigate(ROUTES.PROFILE) },
-      { title: "退出登录", action: handleLogout, disabled: isLoggingOut },
+      { title: "退出登录", action: handleLogout },
     ],
-    [navigate, handleLogout, isLoggingOut],
+    [handleLogout],
   );
 
   return (
     <div className={`${styles.userAction} ${styles.controlItem}`}>
       <button className={styles.user} onClick={() => setUserMenuOpen(!userMenuOpen)}>
         <img
-          src={buildImageUrl(user?.profile?.avatarId, "avatar") || "/default-avatar.png"}
+          src={buildImageUrl(userProfile?.avatarId, "avatar") || "/default-avatar.png"}
           alt={user?.username || "用户"}
           className={styles.userPicture}
         />
-        <span className={styles.userName}>{user?.username || user?.email || "用户"}</span>
+        <span className={styles.userName}>{user?.username || userEmail || "用户"}</span>
       </button>
 
       {userMenuOpen && (

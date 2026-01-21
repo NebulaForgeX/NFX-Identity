@@ -17,10 +17,9 @@ interface BootstrapProviderProps {
  */
 function BootstrapContent({ children }: { children: ReactNode }) {
   const systemState = useSystemInit();
-  const isInitialized = systemState.data.initialized;
 
   // 如果系统未初始化，显示引导页面
-  if (!isInitialized) {
+  if (!systemState.data.initialized) {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
@@ -44,7 +43,7 @@ function BootstrapContent({ children }: { children: ReactNode }) {
 export function BootstrapProvider({ children }: BootstrapProviderProps) {
   return (
     <Suspense
-      loadingType="truck"
+      loadingType="ecg"
       loadingText="检查系统状态..."
       loadingSize="medium"
     >

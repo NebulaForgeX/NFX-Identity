@@ -24,6 +24,12 @@ func NewRouter(app fiber.Router, tokenVerifier token.Verifier, handlers *Registr
 func (r *Router) RegisterRoutes() {
 	system := r.app.Group("/system")
 
+	// 公开路由（不需要认证）
+	{
+		// 系统状态相关 - 公开接口
+		system.Get("/system-state/latest", r.handlers.SystemState.GetLatest)
+	}
+
 	// 需要认证的路由（需要token）
 	auth := system.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
 	{

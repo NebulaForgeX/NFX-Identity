@@ -4,7 +4,7 @@ import { LayoutSwitcher } from "@/layouts";
 import { DashboardPage, LoginPage, NotFoundPage } from "@/pages";
 import { ROUTES } from "@/types/navigation";
 
-import "./App.css";
+import "./App.module.css";
 
 import { useRouter } from "./hooks/useRouter";
 import { useAuthStore } from "./stores/authStore";

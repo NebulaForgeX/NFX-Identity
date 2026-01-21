@@ -21,7 +21,7 @@ func NewSystemStateHandler(appSvc *systemStateApp.Service) *SystemStateHandler {
 func (h *SystemStateHandler) GetLatest(c *fiber.Ctx) error {
 	result, err := h.appSvc.GetLatestSystemState(c.Context())
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "System state not found: "+err.Error())
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get system state: "+err.Error())
 	}
 
 	return httpresp.Success(c, fiber.StatusOK, "System state retrieved successfully", httpresp.SuccessOptions{Data: result})

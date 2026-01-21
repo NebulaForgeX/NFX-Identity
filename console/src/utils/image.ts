@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "@/apis/types";
+import { API_ENDPOINTS } from "@/apis/ip";
 
 /**
  * 构建图片的完整 URL
@@ -22,7 +22,7 @@ export const buildImageUrl = (
   }
 
   // 如果是相对路径，构建完整 URL
-  const baseUrl = API_ENDPOINTS.IMAGE.replace(/\/$/, ""); // 移除末尾斜杠
+  const baseUrl = API_ENDPOINTS.PURE.replace(/\/$/, ""); // 移除末尾斜杠
   const cleanPath = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath; // 移除开头的斜杠
 
   // 临时图片使用 tmp/${type}/ 前缀
