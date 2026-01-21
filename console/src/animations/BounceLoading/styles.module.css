@@ -1,6 +1,8 @@
 .loader {
-  margin: auto;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .loader::before {

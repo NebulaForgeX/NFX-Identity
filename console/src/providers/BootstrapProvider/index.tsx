@@ -47,8 +47,7 @@ function BootstrapContent({ children }: { children: ReactNode }) {
 export function BootstrapProvider({ children }: BootstrapProviderProps) {
   return (
     <Suspense
-      loadingType="bounce"
-      loadingShape="circle"
+      loadingType="truck"
       loadingText="检查系统状态..."
       loadingSize="medium"
     >
