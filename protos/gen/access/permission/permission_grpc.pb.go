@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	PermissionService_CreatePermission_FullMethodName    = "/permission.PermissionService/CreatePermission"
 	PermissionService_GetPermissionByID_FullMethodName   = "/permission.PermissionService/GetPermissionByID"
 	PermissionService_GetPermissionByKey_FullMethodName  = "/permission.PermissionService/GetPermissionByKey"
 	PermissionService_GetAllPermissions_FullMethodName   = "/permission.PermissionService/GetAllPermissions"
@@ -31,6 +32,8 @@ const (
 //
 // Permission 服务 - 供其他服务通过 gRPC 管理权限
 type PermissionServiceClient interface {
+	// 创建权限
+	CreatePermission(ctx context.Context, in *CreatePermissionRequest, opts ...grpc.CallOption) (*CreatePermissionResponse, error)
 	// 根据ID获取权限
 	GetPermissionByID(ctx context.Context, in *GetPermissionByIDRequest, opts ...grpc.CallOption) (*GetPermissionByIDResponse, error)
 	// 根据Key获取权限
@@ -47,6 +50,16 @@ type permissionServiceClient struct {
 
 func NewPermissionServiceClient(cc grpc.ClientConnInterface) PermissionServiceClient {
 	return &permissionServiceClient{cc}
+}
+
+func (c *permissionServiceClient) CreatePermission(ctx context.Context, in *CreatePermissionRequest, opts ...grpc.CallOption) (*CreatePermissionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePermissionResponse)
+	err := c.cc.Invoke(ctx, PermissionService_CreatePermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *permissionServiceClient) GetPermissionByID(ctx context.Context, in *GetPermissionByIDRequest, opts ...grpc.CallOption) (*GetPermissionByIDResponse, error) {
@@ -95,6 +108,8 @@ func (c *permissionServiceClient) BatchGetPermissions(ctx context.Context, in *B
 //
 // Permission 服务 - 供其他服务通过 gRPC 管理权限
 type PermissionServiceServer interface {
+	// 创建权限
+	CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error)
 	// 根据ID获取权限
 	GetPermissionByID(context.Context, *GetPermissionByIDRequest) (*GetPermissionByIDResponse, error)
 	// 根据Key获取权限
@@ -113,6 +128,9 @@ type PermissionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPermissionServiceServer struct{}
 
+func (UnimplementedPermissionServiceServer) CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreatePermission not implemented")
+}
 func (UnimplementedPermissionServiceServer) GetPermissionByID(context.Context, *GetPermissionByIDRequest) (*GetPermissionByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetPermissionByID not implemented")
 }
@@ -144,6 +162,24 @@ func RegisterPermissionServiceServer(s grpc.ServiceRegistrar, srv PermissionServ
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&PermissionService_ServiceDesc, srv)
+}
+
+func _PermissionService_CreatePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PermissionServiceServer).CreatePermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PermissionService_CreatePermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PermissionServiceServer).CreatePermission(ctx, req.(*CreatePermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _PermissionService_GetPermissionByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -225,6 +261,10 @@ var PermissionService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "permission.PermissionService",
 	HandlerType: (*PermissionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreatePermission",
+			Handler:    _PermissionService_CreatePermission_Handler,
+		},
 		{
 			MethodName: "GetPermissionByID",
 			Handler:    _PermissionService_GetPermissionByID_Handler,

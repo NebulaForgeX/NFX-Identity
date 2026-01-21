@@ -3,8 +3,8 @@ package http
 import (
 	"encoding/json"
 
+	bootstrapApp "nfxid/modules/system/application/bootstrap"
 	systemStateApp "nfxid/modules/system/application/system_state"
-	"nfxid/modules/system/interfaces/http/handler"
 	"nfxid/pkgs/recover"
 	"nfxid/pkgs/security/token"
 
@@ -15,6 +15,7 @@ import (
 
 type httpDeps interface {
 	SystemStateAppSvc() *systemStateApp.Service
+	BootstrapSvc() *bootstrapApp.Service
 	UserTokenVerifier() token.Verifier
 }
 
@@ -34,9 +35,7 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 
 	app.Use(recover.RecoverMiddleware(), logger.New())
 
-	reg := &Registry{
-		SystemState: handler.NewSystemStateHandler(d.SystemStateAppSvc()),
-	}
+	reg := NewRegistry(d.SystemStateAppSvc(), d.BootstrapSvc())
 
 	router := NewRouter(app, d.UserTokenVerifier(), reg)
 	router.RegisterRoutes()

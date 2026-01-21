@@ -293,6 +293,126 @@ func (x *UserCredential) GetDeletedAt() *timestamppb.Timestamp {
 }
 
 // UserCredential Service Messages
+type CreateUserCredentialRequest struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	UserId             string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                  // 用户ID (UUID)
+	TenantId           *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`                                                      // 租户ID (UUID)
+	CredentialType     AuthCredentialType     `protobuf:"varint,3,opt,name=credential_type,json=credentialType,proto3,enum=user_credential.AuthCredentialType" json:"credential_type,omitempty"` // 凭证类型：password, passkey, oauth_link, saml, ldap
+	Password           string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`                                                                            // 密码（明文，服务端会进行哈希）
+	MustChangePassword bool                   `protobuf:"varint,5,opt,name=must_change_password,json=mustChangePassword,proto3" json:"must_change_password,omitempty"`                           // 是否必须更改密码
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *CreateUserCredentialRequest) Reset() {
+	*x = CreateUserCredentialRequest{}
+	mi := &file_auth_user_credential_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserCredentialRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserCredentialRequest) ProtoMessage() {}
+
+func (x *CreateUserCredentialRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_user_credential_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserCredentialRequest.ProtoReflect.Descriptor instead.
+func (*CreateUserCredentialRequest) Descriptor() ([]byte, []int) {
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateUserCredentialRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreateUserCredentialRequest) GetTenantId() string {
+	if x != nil && x.TenantId != nil {
+		return *x.TenantId
+	}
+	return ""
+}
+
+func (x *CreateUserCredentialRequest) GetCredentialType() AuthCredentialType {
+	if x != nil {
+		return x.CredentialType
+	}
+	return AuthCredentialType_AUTH_CREDENTIAL_TYPE_UNSPECIFIED
+}
+
+func (x *CreateUserCredentialRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *CreateUserCredentialRequest) GetMustChangePassword() bool {
+	if x != nil {
+		return x.MustChangePassword
+	}
+	return false
+}
+
+type CreateUserCredentialResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserCredential *UserCredential        `protobuf:"bytes,1,opt,name=user_credential,json=userCredential,proto3" json:"user_credential,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CreateUserCredentialResponse) Reset() {
+	*x = CreateUserCredentialResponse{}
+	mi := &file_auth_user_credential_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserCredentialResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserCredentialResponse) ProtoMessage() {}
+
+func (x *CreateUserCredentialResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_user_credential_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserCredentialResponse.ProtoReflect.Descriptor instead.
+func (*CreateUserCredentialResponse) Descriptor() ([]byte, []int) {
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateUserCredentialResponse) GetUserCredential() *UserCredential {
+	if x != nil {
+		return x.UserCredential
+	}
+	return nil
+}
+
 type GetUserCredentialByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -302,7 +422,7 @@ type GetUserCredentialByIDRequest struct {
 
 func (x *GetUserCredentialByIDRequest) Reset() {
 	*x = GetUserCredentialByIDRequest{}
-	mi := &file_auth_user_credential_proto_msgTypes[1]
+	mi := &file_auth_user_credential_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -314,7 +434,7 @@ func (x *GetUserCredentialByIDRequest) String() string {
 func (*GetUserCredentialByIDRequest) ProtoMessage() {}
 
 func (x *GetUserCredentialByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_user_credential_proto_msgTypes[1]
+	mi := &file_auth_user_credential_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -327,7 +447,7 @@ func (x *GetUserCredentialByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserCredentialByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserCredentialByIDRequest) Descriptor() ([]byte, []int) {
-	return file_auth_user_credential_proto_rawDescGZIP(), []int{1}
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserCredentialByIDRequest) GetId() string {
@@ -346,7 +466,7 @@ type GetUserCredentialByIDResponse struct {
 
 func (x *GetUserCredentialByIDResponse) Reset() {
 	*x = GetUserCredentialByIDResponse{}
-	mi := &file_auth_user_credential_proto_msgTypes[2]
+	mi := &file_auth_user_credential_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -358,7 +478,7 @@ func (x *GetUserCredentialByIDResponse) String() string {
 func (*GetUserCredentialByIDResponse) ProtoMessage() {}
 
 func (x *GetUserCredentialByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_user_credential_proto_msgTypes[2]
+	mi := &file_auth_user_credential_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,7 +491,7 @@ func (x *GetUserCredentialByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserCredentialByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserCredentialByIDResponse) Descriptor() ([]byte, []int) {
-	return file_auth_user_credential_proto_rawDescGZIP(), []int{2}
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserCredentialByIDResponse) GetUserCredential() *UserCredential {
@@ -391,7 +511,7 @@ type GetUserCredentialByUserIDRequest struct {
 
 func (x *GetUserCredentialByUserIDRequest) Reset() {
 	*x = GetUserCredentialByUserIDRequest{}
-	mi := &file_auth_user_credential_proto_msgTypes[3]
+	mi := &file_auth_user_credential_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +523,7 @@ func (x *GetUserCredentialByUserIDRequest) String() string {
 func (*GetUserCredentialByUserIDRequest) ProtoMessage() {}
 
 func (x *GetUserCredentialByUserIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_user_credential_proto_msgTypes[3]
+	mi := &file_auth_user_credential_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +536,7 @@ func (x *GetUserCredentialByUserIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserCredentialByUserIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserCredentialByUserIDRequest) Descriptor() ([]byte, []int) {
-	return file_auth_user_credential_proto_rawDescGZIP(), []int{3}
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserCredentialByUserIDRequest) GetUserId() string {
@@ -442,7 +562,7 @@ type GetUserCredentialByUserIDResponse struct {
 
 func (x *GetUserCredentialByUserIDResponse) Reset() {
 	*x = GetUserCredentialByUserIDResponse{}
-	mi := &file_auth_user_credential_proto_msgTypes[4]
+	mi := &file_auth_user_credential_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +574,7 @@ func (x *GetUserCredentialByUserIDResponse) String() string {
 func (*GetUserCredentialByUserIDResponse) ProtoMessage() {}
 
 func (x *GetUserCredentialByUserIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_user_credential_proto_msgTypes[4]
+	mi := &file_auth_user_credential_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +587,7 @@ func (x *GetUserCredentialByUserIDResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetUserCredentialByUserIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserCredentialByUserIDResponse) Descriptor() ([]byte, []int) {
-	return file_auth_user_credential_proto_rawDescGZIP(), []int{4}
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetUserCredentialByUserIDResponse) GetUserCredential() *UserCredential {
@@ -486,7 +606,7 @@ type BatchGetUserCredentialsRequest struct {
 
 func (x *BatchGetUserCredentialsRequest) Reset() {
 	*x = BatchGetUserCredentialsRequest{}
-	mi := &file_auth_user_credential_proto_msgTypes[5]
+	mi := &file_auth_user_credential_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -498,7 +618,7 @@ func (x *BatchGetUserCredentialsRequest) String() string {
 func (*BatchGetUserCredentialsRequest) ProtoMessage() {}
 
 func (x *BatchGetUserCredentialsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_user_credential_proto_msgTypes[5]
+	mi := &file_auth_user_credential_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -511,7 +631,7 @@ func (x *BatchGetUserCredentialsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetUserCredentialsRequest.ProtoReflect.Descriptor instead.
 func (*BatchGetUserCredentialsRequest) Descriptor() ([]byte, []int) {
-	return file_auth_user_credential_proto_rawDescGZIP(), []int{5}
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BatchGetUserCredentialsRequest) GetIds() []string {
@@ -530,7 +650,7 @@ type BatchGetUserCredentialsResponse struct {
 
 func (x *BatchGetUserCredentialsResponse) Reset() {
 	*x = BatchGetUserCredentialsResponse{}
-	mi := &file_auth_user_credential_proto_msgTypes[6]
+	mi := &file_auth_user_credential_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -542,7 +662,7 @@ func (x *BatchGetUserCredentialsResponse) String() string {
 func (*BatchGetUserCredentialsResponse) ProtoMessage() {}
 
 func (x *BatchGetUserCredentialsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_user_credential_proto_msgTypes[6]
+	mi := &file_auth_user_credential_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -555,7 +675,7 @@ func (x *BatchGetUserCredentialsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetUserCredentialsResponse.ProtoReflect.Descriptor instead.
 func (*BatchGetUserCredentialsResponse) Descriptor() ([]byte, []int) {
-	return file_auth_user_credential_proto_rawDescGZIP(), []int{6}
+	return file_auth_user_credential_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BatchGetUserCredentialsResponse) GetUserCredentials() []*UserCredential {
@@ -596,7 +716,17 @@ const file_auth_user_credential_proto_rawDesc = "" +
 	"\f_hash_paramsB\x16\n" +
 	"\x14_password_updated_atB\x18\n" +
 	"\x16_last_success_login_atB\r\n" +
-	"\v_deleted_at\".\n" +
+	"\v_deleted_at\"\x82\x02\n" +
+	"\x1bCreateUserCredentialRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
+	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01\x12L\n" +
+	"\x0fcredential_type\x18\x03 \x01(\x0e2#.user_credential.AuthCredentialTypeR\x0ecredentialType\x12\x1a\n" +
+	"\bpassword\x18\x04 \x01(\tR\bpassword\x120\n" +
+	"\x14must_change_password\x18\x05 \x01(\bR\x12mustChangePasswordB\f\n" +
+	"\n" +
+	"_tenant_id\"h\n" +
+	"\x1cCreateUserCredentialResponse\x12H\n" +
+	"\x0fuser_credential\x18\x01 \x01(\v2\x1f.user_credential.UserCredentialR\x0euserCredential\".\n" +
 	"\x1cGetUserCredentialByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"i\n" +
 	"\x1dGetUserCredentialByIDResponse\x12H\n" +
@@ -623,8 +753,9 @@ const file_auth_user_credential_proto_rawDesc = "" +
 	"\"AUTH_CREDENTIAL_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dAUTH_CREDENTIAL_STATUS_ACTIVE\x10\x01\x12#\n" +
 	"\x1fAUTH_CREDENTIAL_STATUS_DISABLED\x10\x02\x12\"\n" +
-	"\x1eAUTH_CREDENTIAL_STATUS_EXPIRED\x10\x032\x92\x03\n" +
-	"\x15UserCredentialService\x12v\n" +
+	"\x1eAUTH_CREDENTIAL_STATUS_EXPIRED\x10\x032\x87\x04\n" +
+	"\x15UserCredentialService\x12s\n" +
+	"\x14CreateUserCredential\x12,.user_credential.CreateUserCredentialRequest\x1a-.user_credential.CreateUserCredentialResponse\x12v\n" +
 	"\x15GetUserCredentialByID\x12-.user_credential.GetUserCredentialByIDRequest\x1a..user_credential.GetUserCredentialByIDResponse\x12\x82\x01\n" +
 	"\x19GetUserCredentialByUserID\x121.user_credential.GetUserCredentialByUserIDRequest\x1a2.user_credential.GetUserCredentialByUserIDResponse\x12|\n" +
 	"\x17BatchGetUserCredentials\x12/.user_credential.BatchGetUserCredentialsRequest\x1a0.user_credential.BatchGetUserCredentialsResponseB8Z6nfxid/protos/gen/auth/user_credential;usercredentialpbb\x06proto3"
@@ -642,43 +773,49 @@ func file_auth_user_credential_proto_rawDescGZIP() []byte {
 }
 
 var file_auth_user_credential_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_auth_user_credential_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_auth_user_credential_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_auth_user_credential_proto_goTypes = []any{
 	(AuthCredentialType)(0),                   // 0: user_credential.AuthCredentialType
 	(AuthCredentialStatus)(0),                 // 1: user_credential.AuthCredentialStatus
 	(*UserCredential)(nil),                    // 2: user_credential.UserCredential
-	(*GetUserCredentialByIDRequest)(nil),      // 3: user_credential.GetUserCredentialByIDRequest
-	(*GetUserCredentialByIDResponse)(nil),     // 4: user_credential.GetUserCredentialByIDResponse
-	(*GetUserCredentialByUserIDRequest)(nil),  // 5: user_credential.GetUserCredentialByUserIDRequest
-	(*GetUserCredentialByUserIDResponse)(nil), // 6: user_credential.GetUserCredentialByUserIDResponse
-	(*BatchGetUserCredentialsRequest)(nil),    // 7: user_credential.BatchGetUserCredentialsRequest
-	(*BatchGetUserCredentialsResponse)(nil),   // 8: user_credential.BatchGetUserCredentialsResponse
-	(*structpb.Struct)(nil),                   // 9: google.protobuf.Struct
-	(*timestamppb.Timestamp)(nil),             // 10: google.protobuf.Timestamp
+	(*CreateUserCredentialRequest)(nil),       // 3: user_credential.CreateUserCredentialRequest
+	(*CreateUserCredentialResponse)(nil),      // 4: user_credential.CreateUserCredentialResponse
+	(*GetUserCredentialByIDRequest)(nil),      // 5: user_credential.GetUserCredentialByIDRequest
+	(*GetUserCredentialByIDResponse)(nil),     // 6: user_credential.GetUserCredentialByIDResponse
+	(*GetUserCredentialByUserIDRequest)(nil),  // 7: user_credential.GetUserCredentialByUserIDRequest
+	(*GetUserCredentialByUserIDResponse)(nil), // 8: user_credential.GetUserCredentialByUserIDResponse
+	(*BatchGetUserCredentialsRequest)(nil),    // 9: user_credential.BatchGetUserCredentialsRequest
+	(*BatchGetUserCredentialsResponse)(nil),   // 10: user_credential.BatchGetUserCredentialsResponse
+	(*structpb.Struct)(nil),                   // 11: google.protobuf.Struct
+	(*timestamppb.Timestamp)(nil),             // 12: google.protobuf.Timestamp
 }
 var file_auth_user_credential_proto_depIdxs = []int32{
 	0,  // 0: user_credential.UserCredential.credential_type:type_name -> user_credential.AuthCredentialType
-	9,  // 1: user_credential.UserCredential.hash_params:type_name -> google.protobuf.Struct
-	10, // 2: user_credential.UserCredential.password_updated_at:type_name -> google.protobuf.Timestamp
-	10, // 3: user_credential.UserCredential.last_success_login_at:type_name -> google.protobuf.Timestamp
+	11, // 1: user_credential.UserCredential.hash_params:type_name -> google.protobuf.Struct
+	12, // 2: user_credential.UserCredential.password_updated_at:type_name -> google.protobuf.Timestamp
+	12, // 3: user_credential.UserCredential.last_success_login_at:type_name -> google.protobuf.Timestamp
 	1,  // 4: user_credential.UserCredential.status:type_name -> user_credential.AuthCredentialStatus
-	10, // 5: user_credential.UserCredential.created_at:type_name -> google.protobuf.Timestamp
-	10, // 6: user_credential.UserCredential.updated_at:type_name -> google.protobuf.Timestamp
-	10, // 7: user_credential.UserCredential.deleted_at:type_name -> google.protobuf.Timestamp
-	2,  // 8: user_credential.GetUserCredentialByIDResponse.user_credential:type_name -> user_credential.UserCredential
-	2,  // 9: user_credential.GetUserCredentialByUserIDResponse.user_credential:type_name -> user_credential.UserCredential
-	2,  // 10: user_credential.BatchGetUserCredentialsResponse.user_credentials:type_name -> user_credential.UserCredential
-	3,  // 11: user_credential.UserCredentialService.GetUserCredentialByID:input_type -> user_credential.GetUserCredentialByIDRequest
-	5,  // 12: user_credential.UserCredentialService.GetUserCredentialByUserID:input_type -> user_credential.GetUserCredentialByUserIDRequest
-	7,  // 13: user_credential.UserCredentialService.BatchGetUserCredentials:input_type -> user_credential.BatchGetUserCredentialsRequest
-	4,  // 14: user_credential.UserCredentialService.GetUserCredentialByID:output_type -> user_credential.GetUserCredentialByIDResponse
-	6,  // 15: user_credential.UserCredentialService.GetUserCredentialByUserID:output_type -> user_credential.GetUserCredentialByUserIDResponse
-	8,  // 16: user_credential.UserCredentialService.BatchGetUserCredentials:output_type -> user_credential.BatchGetUserCredentialsResponse
-	14, // [14:17] is the sub-list for method output_type
-	11, // [11:14] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	12, // 5: user_credential.UserCredential.created_at:type_name -> google.protobuf.Timestamp
+	12, // 6: user_credential.UserCredential.updated_at:type_name -> google.protobuf.Timestamp
+	12, // 7: user_credential.UserCredential.deleted_at:type_name -> google.protobuf.Timestamp
+	0,  // 8: user_credential.CreateUserCredentialRequest.credential_type:type_name -> user_credential.AuthCredentialType
+	2,  // 9: user_credential.CreateUserCredentialResponse.user_credential:type_name -> user_credential.UserCredential
+	2,  // 10: user_credential.GetUserCredentialByIDResponse.user_credential:type_name -> user_credential.UserCredential
+	2,  // 11: user_credential.GetUserCredentialByUserIDResponse.user_credential:type_name -> user_credential.UserCredential
+	2,  // 12: user_credential.BatchGetUserCredentialsResponse.user_credentials:type_name -> user_credential.UserCredential
+	3,  // 13: user_credential.UserCredentialService.CreateUserCredential:input_type -> user_credential.CreateUserCredentialRequest
+	5,  // 14: user_credential.UserCredentialService.GetUserCredentialByID:input_type -> user_credential.GetUserCredentialByIDRequest
+	7,  // 15: user_credential.UserCredentialService.GetUserCredentialByUserID:input_type -> user_credential.GetUserCredentialByUserIDRequest
+	9,  // 16: user_credential.UserCredentialService.BatchGetUserCredentials:input_type -> user_credential.BatchGetUserCredentialsRequest
+	4,  // 17: user_credential.UserCredentialService.CreateUserCredential:output_type -> user_credential.CreateUserCredentialResponse
+	6,  // 18: user_credential.UserCredentialService.GetUserCredentialByID:output_type -> user_credential.GetUserCredentialByIDResponse
+	8,  // 19: user_credential.UserCredentialService.GetUserCredentialByUserID:output_type -> user_credential.GetUserCredentialByUserIDResponse
+	10, // 20: user_credential.UserCredentialService.BatchGetUserCredentials:output_type -> user_credential.BatchGetUserCredentialsResponse
+	17, // [17:21] is the sub-list for method output_type
+	13, // [13:17] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_auth_user_credential_proto_init() }
@@ -687,14 +824,15 @@ func file_auth_user_credential_proto_init() {
 		return
 	}
 	file_auth_user_credential_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_user_credential_proto_msgTypes[3].OneofWrappers = []any{}
+	file_auth_user_credential_proto_msgTypes[1].OneofWrappers = []any{}
+	file_auth_user_credential_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_user_credential_proto_rawDesc), len(file_auth_user_credential_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

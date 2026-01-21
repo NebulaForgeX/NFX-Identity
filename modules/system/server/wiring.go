@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	bootstrapApp "nfxid/modules/system/application/bootstrap"
 	systemStateApp "nfxid/modules/system/application/system_state"
 	"nfxid/modules/system/config"
+	grpcClients "nfxid/modules/system/infrastructure/grpc"
 	systemStateRepo "nfxid/modules/system/infrastructure/repository/system_state"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
@@ -20,16 +22,18 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr          *health.Manager
-	cache              *cache.Connection
-	postgres           *postgresqlx.Connection
-	kafkaConfig        *kafkax.Config
-	busPublisher       *eventbus.BusPublisher
-	rabbitMQConfig     *rabbitmqx.Config
-	systemStateAppSvc  *systemStateApp.Service
-	userTokenVerifier  token.Verifier
+	healthMgr           *health.Manager
+	cache               *cache.Connection
+	postgres            *postgresqlx.Connection
+	kafkaConfig         *kafkax.Config
+	busPublisher        *eventbus.BusPublisher
+	rabbitMQConfig      *rabbitmqx.Config
+	systemStateAppSvc   *systemStateApp.Service
+	bootstrapSvc        *bootstrapApp.Service
+	grpcClients         *grpcClients.Clients
+	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
-	tokenxInstance     *tokenx.Tokenx
+	tokenxInstance      *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -81,20 +85,30 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	//! === Repository ===
 	systemStateRepoInstance := systemStateRepo.NewRepo(postgres.DB())
 
+	//! === gRPC Clients ===
+	grpcClientsInstance, err := grpcClients.NewClients(ctx, &cfg.GRPCClient, &tokenCfg)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
+	}
+	grpcClientsAdapter := grpcClients.NewAdapter(grpcClientsInstance)
+
 	//! === Application Services ===
 	systemStateAppSvc := systemStateApp.NewService(systemStateRepoInstance)
+	bootstrapSvc := bootstrapApp.NewService(systemStateAppSvc, systemStateRepoInstance, grpcClientsAdapter)
 
 	return &Dependencies{
-		healthMgr:          healthMgr,
-		postgres:           postgres,
-		cache:              cacheConn,
-		kafkaConfig:        &kafkaConfig,
-		busPublisher:       busPublisher,
-		rabbitMQConfig:     &rabbitMQConfig,
-		systemStateAppSvc:  systemStateAppSvc,
-		userTokenVerifier:  userTokenVerifier,
+		healthMgr:           healthMgr,
+		postgres:            postgres,
+		cache:               cacheConn,
+		kafkaConfig:         &kafkaConfig,
+		busPublisher:        busPublisher,
+		rabbitMQConfig:      &rabbitMQConfig,
+		systemStateAppSvc:   systemStateAppSvc,
+		bootstrapSvc:        bootstrapSvc,
+		grpcClients:         grpcClientsInstance,
+		userTokenVerifier:   userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
-		tokenxInstance:     tokenxInstance,
+		tokenxInstance:      tokenxInstance,
 	}, nil
 }
 
@@ -102,14 +116,18 @@ func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()
 	d.postgres.Close()
 	d.cache.Close()
+	if d.grpcClients != nil {
+		_ = d.grpcClients.Close()
+	}
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) SystemStateAppSvc() *systemStateApp.Service    { return d.systemStateAppSvc }
-func (d *Dependencies) UserTokenVerifier() token.Verifier            { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier         { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                 { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher        { return d.busPublisher }
+func (d *Dependencies) SystemStateAppSvc() *systemStateApp.Service { return d.systemStateAppSvc }
+func (d *Dependencies) BootstrapSvc() *bootstrapApp.Service        { return d.bootstrapSvc }
+func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口

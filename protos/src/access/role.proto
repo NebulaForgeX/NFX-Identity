@@ -28,6 +28,9 @@ message Role {
 
 // Role 服务 - 供其他服务通过 gRPC 管理角色
 service RoleService {
+  // 创建角色
+  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse);
+  
   // 根据ID获取角色
   rpc GetRoleByID (GetRoleByIDRequest) returns (GetRoleByIDResponse);
   
@@ -42,6 +45,18 @@ service RoleService {
 }
 
 // Role Service Messages
+message CreateRoleRequest {
+  string key = 1;                 // 唯一键 (varchar(255))
+  string name = 2;                // 角色名称 (varchar(255))
+  optional string description = 3; // 描述 (text)
+  AccessScopeType scope_type = 4; // 范围类型：TENANT, APP, GLOBAL
+  bool is_system = 5;             // 是否系统角色
+}
+
+message CreateRoleResponse {
+  Role role = 1;
+}
+
 message GetRoleByIDRequest {
   string id = 1;
 }

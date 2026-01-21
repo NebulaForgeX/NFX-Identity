@@ -177,6 +177,110 @@ func (x *User) GetDeletedAt() *timestamppb.Timestamp {
 }
 
 // User Service Messages
+type CreateUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`                            // 用户名 (varchar(50))
+	Status        DirectoryUserStatus    `protobuf:"varint,2,opt,name=status,proto3,enum=user.DirectoryUserStatus" json:"status,omitempty"` // 状态：pending, active, deactive
+	IsVerified    bool                   `protobuf:"varint,3,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`     // 是否已验证
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateUserRequest) Reset() {
+	*x = CreateUserRequest{}
+	mi := &file_directory_user_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserRequest) ProtoMessage() {}
+
+func (x *CreateUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserRequest.ProtoReflect.Descriptor instead.
+func (*CreateUserRequest) Descriptor() ([]byte, []int) {
+	return file_directory_user_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateUserRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *CreateUserRequest) GetStatus() DirectoryUserStatus {
+	if x != nil {
+		return x.Status
+	}
+	return DirectoryUserStatus_DIRECTORY_USER_STATUS_UNSPECIFIED
+}
+
+func (x *CreateUserRequest) GetIsVerified() bool {
+	if x != nil {
+		return x.IsVerified
+	}
+	return false
+}
+
+type CreateUserResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateUserResponse) Reset() {
+	*x = CreateUserResponse{}
+	mi := &file_directory_user_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserResponse) ProtoMessage() {}
+
+func (x *CreateUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserResponse.ProtoReflect.Descriptor instead.
+func (*CreateUserResponse) Descriptor() ([]byte, []int) {
+	return file_directory_user_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateUserResponse) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 type GetUserByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -186,7 +290,7 @@ type GetUserByIDRequest struct {
 
 func (x *GetUserByIDRequest) Reset() {
 	*x = GetUserByIDRequest{}
-	mi := &file_directory_user_proto_msgTypes[1]
+	mi := &file_directory_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -198,7 +302,7 @@ func (x *GetUserByIDRequest) String() string {
 func (*GetUserByIDRequest) ProtoMessage() {}
 
 func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_proto_msgTypes[1]
+	mi := &file_directory_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -211,7 +315,7 @@ func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_proto_rawDescGZIP(), []int{1}
+	return file_directory_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserByIDRequest) GetId() string {
@@ -230,7 +334,7 @@ type GetUserByIDResponse struct {
 
 func (x *GetUserByIDResponse) Reset() {
 	*x = GetUserByIDResponse{}
-	mi := &file_directory_user_proto_msgTypes[2]
+	mi := &file_directory_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -242,7 +346,7 @@ func (x *GetUserByIDResponse) String() string {
 func (*GetUserByIDResponse) ProtoMessage() {}
 
 func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_proto_msgTypes[2]
+	mi := &file_directory_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -255,7 +359,7 @@ func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserByIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_proto_rawDescGZIP(), []int{2}
+	return file_directory_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserByIDResponse) GetUser() *User {
@@ -274,7 +378,7 @@ type GetUserByUsernameRequest struct {
 
 func (x *GetUserByUsernameRequest) Reset() {
 	*x = GetUserByUsernameRequest{}
-	mi := &file_directory_user_proto_msgTypes[3]
+	mi := &file_directory_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -286,7 +390,7 @@ func (x *GetUserByUsernameRequest) String() string {
 func (*GetUserByUsernameRequest) ProtoMessage() {}
 
 func (x *GetUserByUsernameRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_proto_msgTypes[3]
+	mi := &file_directory_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -299,7 +403,7 @@ func (x *GetUserByUsernameRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByUsernameRequest.ProtoReflect.Descriptor instead.
 func (*GetUserByUsernameRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_proto_rawDescGZIP(), []int{3}
+	return file_directory_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserByUsernameRequest) GetUsername() string {
@@ -318,7 +422,7 @@ type GetUserByUsernameResponse struct {
 
 func (x *GetUserByUsernameResponse) Reset() {
 	*x = GetUserByUsernameResponse{}
-	mi := &file_directory_user_proto_msgTypes[4]
+	mi := &file_directory_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -330,7 +434,7 @@ func (x *GetUserByUsernameResponse) String() string {
 func (*GetUserByUsernameResponse) ProtoMessage() {}
 
 func (x *GetUserByUsernameResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_proto_msgTypes[4]
+	mi := &file_directory_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -343,7 +447,7 @@ func (x *GetUserByUsernameResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByUsernameResponse.ProtoReflect.Descriptor instead.
 func (*GetUserByUsernameResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_proto_rawDescGZIP(), []int{4}
+	return file_directory_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetUserByUsernameResponse) GetUser() *User {
@@ -362,7 +466,7 @@ type BatchGetUsersRequest struct {
 
 func (x *BatchGetUsersRequest) Reset() {
 	*x = BatchGetUsersRequest{}
-	mi := &file_directory_user_proto_msgTypes[5]
+	mi := &file_directory_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -374,7 +478,7 @@ func (x *BatchGetUsersRequest) String() string {
 func (*BatchGetUsersRequest) ProtoMessage() {}
 
 func (x *BatchGetUsersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_proto_msgTypes[5]
+	mi := &file_directory_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -387,7 +491,7 @@ func (x *BatchGetUsersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetUsersRequest.ProtoReflect.Descriptor instead.
 func (*BatchGetUsersRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_proto_rawDescGZIP(), []int{5}
+	return file_directory_user_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BatchGetUsersRequest) GetIds() []string {
@@ -406,7 +510,7 @@ type BatchGetUsersResponse struct {
 
 func (x *BatchGetUsersResponse) Reset() {
 	*x = BatchGetUsersResponse{}
-	mi := &file_directory_user_proto_msgTypes[6]
+	mi := &file_directory_user_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -418,7 +522,7 @@ func (x *BatchGetUsersResponse) String() string {
 func (*BatchGetUsersResponse) ProtoMessage() {}
 
 func (x *BatchGetUsersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_proto_msgTypes[6]
+	mi := &file_directory_user_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -431,7 +535,7 @@ func (x *BatchGetUsersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetUsersResponse.ProtoReflect.Descriptor instead.
 func (*BatchGetUsersResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_proto_rawDescGZIP(), []int{6}
+	return file_directory_user_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BatchGetUsersResponse) GetUsers() []*User {
@@ -460,7 +564,15 @@ const file_directory_user_proto_rawDesc = "" +
 	"\n" +
 	"deleted_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x01R\tdeletedAt\x88\x01\x01B\x10\n" +
 	"\x0e_last_login_atB\r\n" +
-	"\v_deleted_at\"$\n" +
+	"\v_deleted_at\"\x83\x01\n" +
+	"\x11CreateUserRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x121\n" +
+	"\x06status\x18\x02 \x01(\x0e2\x19.user.DirectoryUserStatusR\x06status\x12\x1f\n" +
+	"\vis_verified\x18\x03 \x01(\bR\n" +
+	"isVerified\"4\n" +
+	"\x12CreateUserResponse\x12\x1e\n" +
+	"\x04user\x18\x01 \x01(\v2\n" +
+	".user.UserR\x04user\"$\n" +
 	"\x12GetUserByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"5\n" +
 	"\x13GetUserByIDResponse\x12\x1e\n" +
@@ -480,8 +592,10 @@ const file_directory_user_proto_rawDesc = "" +
 	"!DIRECTORY_USER_STATUS_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dDIRECTORY_USER_STATUS_PENDING\x10\x01\x12 \n" +
 	"\x1cDIRECTORY_USER_STATUS_ACTIVE\x10\x02\x12\"\n" +
-	"\x1eDIRECTORY_USER_STATUS_DEACTIVE\x10\x032\xf1\x01\n" +
-	"\vUserService\x12B\n" +
+	"\x1eDIRECTORY_USER_STATUS_DEACTIVE\x10\x032\xb2\x02\n" +
+	"\vUserService\x12?\n" +
+	"\n" +
+	"CreateUser\x12\x17.user.CreateUserRequest\x1a\x18.user.CreateUserResponse\x12B\n" +
 	"\vGetUserByID\x12\x18.user.GetUserByIDRequest\x1a\x19.user.GetUserByIDResponse\x12T\n" +
 	"\x11GetUserByUsername\x12\x1e.user.GetUserByUsernameRequest\x1a\x1f.user.GetUserByUsernameResponse\x12H\n" +
 	"\rBatchGetUsers\x12\x1a.user.BatchGetUsersRequest\x1a\x1b.user.BatchGetUsersResponseB(Z&nfxid/protos/gen/directory/user;userpbb\x06proto3"
@@ -499,38 +613,44 @@ func file_directory_user_proto_rawDescGZIP() []byte {
 }
 
 var file_directory_user_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_directory_user_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_directory_user_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_directory_user_proto_goTypes = []any{
 	(DirectoryUserStatus)(0),          // 0: user.DirectoryUserStatus
 	(*User)(nil),                      // 1: user.User
-	(*GetUserByIDRequest)(nil),        // 2: user.GetUserByIDRequest
-	(*GetUserByIDResponse)(nil),       // 3: user.GetUserByIDResponse
-	(*GetUserByUsernameRequest)(nil),  // 4: user.GetUserByUsernameRequest
-	(*GetUserByUsernameResponse)(nil), // 5: user.GetUserByUsernameResponse
-	(*BatchGetUsersRequest)(nil),      // 6: user.BatchGetUsersRequest
-	(*BatchGetUsersResponse)(nil),     // 7: user.BatchGetUsersResponse
-	(*timestamppb.Timestamp)(nil),     // 8: google.protobuf.Timestamp
+	(*CreateUserRequest)(nil),         // 2: user.CreateUserRequest
+	(*CreateUserResponse)(nil),        // 3: user.CreateUserResponse
+	(*GetUserByIDRequest)(nil),        // 4: user.GetUserByIDRequest
+	(*GetUserByIDResponse)(nil),       // 5: user.GetUserByIDResponse
+	(*GetUserByUsernameRequest)(nil),  // 6: user.GetUserByUsernameRequest
+	(*GetUserByUsernameResponse)(nil), // 7: user.GetUserByUsernameResponse
+	(*BatchGetUsersRequest)(nil),      // 8: user.BatchGetUsersRequest
+	(*BatchGetUsersResponse)(nil),     // 9: user.BatchGetUsersResponse
+	(*timestamppb.Timestamp)(nil),     // 10: google.protobuf.Timestamp
 }
 var file_directory_user_proto_depIdxs = []int32{
 	0,  // 0: user.User.status:type_name -> user.DirectoryUserStatus
-	8,  // 1: user.User.last_login_at:type_name -> google.protobuf.Timestamp
-	8,  // 2: user.User.created_at:type_name -> google.protobuf.Timestamp
-	8,  // 3: user.User.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 4: user.User.deleted_at:type_name -> google.protobuf.Timestamp
-	1,  // 5: user.GetUserByIDResponse.user:type_name -> user.User
-	1,  // 6: user.GetUserByUsernameResponse.user:type_name -> user.User
-	1,  // 7: user.BatchGetUsersResponse.users:type_name -> user.User
-	2,  // 8: user.UserService.GetUserByID:input_type -> user.GetUserByIDRequest
-	4,  // 9: user.UserService.GetUserByUsername:input_type -> user.GetUserByUsernameRequest
-	6,  // 10: user.UserService.BatchGetUsers:input_type -> user.BatchGetUsersRequest
-	3,  // 11: user.UserService.GetUserByID:output_type -> user.GetUserByIDResponse
-	5,  // 12: user.UserService.GetUserByUsername:output_type -> user.GetUserByUsernameResponse
-	7,  // 13: user.UserService.BatchGetUsers:output_type -> user.BatchGetUsersResponse
-	11, // [11:14] is the sub-list for method output_type
-	8,  // [8:11] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	10, // 1: user.User.last_login_at:type_name -> google.protobuf.Timestamp
+	10, // 2: user.User.created_at:type_name -> google.protobuf.Timestamp
+	10, // 3: user.User.updated_at:type_name -> google.protobuf.Timestamp
+	10, // 4: user.User.deleted_at:type_name -> google.protobuf.Timestamp
+	0,  // 5: user.CreateUserRequest.status:type_name -> user.DirectoryUserStatus
+	1,  // 6: user.CreateUserResponse.user:type_name -> user.User
+	1,  // 7: user.GetUserByIDResponse.user:type_name -> user.User
+	1,  // 8: user.GetUserByUsernameResponse.user:type_name -> user.User
+	1,  // 9: user.BatchGetUsersResponse.users:type_name -> user.User
+	2,  // 10: user.UserService.CreateUser:input_type -> user.CreateUserRequest
+	4,  // 11: user.UserService.GetUserByID:input_type -> user.GetUserByIDRequest
+	6,  // 12: user.UserService.GetUserByUsername:input_type -> user.GetUserByUsernameRequest
+	8,  // 13: user.UserService.BatchGetUsers:input_type -> user.BatchGetUsersRequest
+	3,  // 14: user.UserService.CreateUser:output_type -> user.CreateUserResponse
+	5,  // 15: user.UserService.GetUserByID:output_type -> user.GetUserByIDResponse
+	7,  // 16: user.UserService.GetUserByUsername:output_type -> user.GetUserByUsernameResponse
+	9,  // 17: user.UserService.BatchGetUsers:output_type -> user.BatchGetUsersResponse
+	14, // [14:18] is the sub-list for method output_type
+	10, // [10:14] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_directory_user_proto_init() }
@@ -545,7 +665,7 @@ func file_directory_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_directory_user_proto_rawDesc), len(file_directory_user_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

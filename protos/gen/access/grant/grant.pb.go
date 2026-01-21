@@ -338,6 +338,174 @@ func (x *Grant) GetRevokeReason() string {
 }
 
 // Grant Service Messages
+type CreateGrantRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SubjectType   AccessSubjectType      `protobuf:"varint,1,opt,name=subject_type,json=subjectType,proto3,enum=grant.AccessSubjectType" json:"subject_type,omitempty"` // 主体类型：USER 或 CLIENT
+	SubjectId     string                 `protobuf:"bytes,2,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`                                     // 主体ID (UUID) - user_id 或 client_id
+	GrantType     AccessGrantType        `protobuf:"varint,3,opt,name=grant_type,json=grantType,proto3,enum=grant.AccessGrantType" json:"grant_type,omitempty"`         // 授权类型：ROLE 或 PERMISSION
+	GrantRefId    string                 `protobuf:"bytes,4,opt,name=grant_ref_id,json=grantRefId,proto3" json:"grant_ref_id,omitempty"`                                // 授权引用ID (UUID) - role_id 或 permission_id
+	TenantId      *string                `protobuf:"bytes,5,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`                                  // 租户ID (UUID) - NULL 表示全局授权
+	AppId         *string                `protobuf:"bytes,6,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                           // 应用ID (UUID) - NULL 表示非应用范围授权
+	ResourceType  *string                `protobuf:"bytes,7,opt,name=resource_type,json=resourceType,proto3,oneof" json:"resource_type,omitempty"`                      // 资源类型：如 "user", "tenant", "app", "asset" 等
+	ResourceId    *string                `protobuf:"bytes,8,opt,name=resource_id,json=resourceId,proto3,oneof" json:"resource_id,omitempty"`                            // 特定资源ID (UUID) - 用于资源级授权
+	Effect        AccessGrantEffect      `protobuf:"varint,9,opt,name=effect,proto3,enum=grant.AccessGrantEffect" json:"effect,omitempty"`                              // 授权效果：ALLOW 或 DENY
+	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=expires_at,json=expiresAt,proto3,oneof" json:"expires_at,omitempty"`                              // 过期时间 - NULL 表示永久授权
+	CreatedBy     *string                `protobuf:"bytes,11,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"`                              // 创建者ID (UUID) - 谁授予了这个授权
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateGrantRequest) Reset() {
+	*x = CreateGrantRequest{}
+	mi := &file_access_grant_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateGrantRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateGrantRequest) ProtoMessage() {}
+
+func (x *CreateGrantRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_access_grant_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateGrantRequest.ProtoReflect.Descriptor instead.
+func (*CreateGrantRequest) Descriptor() ([]byte, []int) {
+	return file_access_grant_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateGrantRequest) GetSubjectType() AccessSubjectType {
+	if x != nil {
+		return x.SubjectType
+	}
+	return AccessSubjectType_ACCESS_SUBJECT_TYPE_UNSPECIFIED
+}
+
+func (x *CreateGrantRequest) GetSubjectId() string {
+	if x != nil {
+		return x.SubjectId
+	}
+	return ""
+}
+
+func (x *CreateGrantRequest) GetGrantType() AccessGrantType {
+	if x != nil {
+		return x.GrantType
+	}
+	return AccessGrantType_ACCESS_GRANT_TYPE_UNSPECIFIED
+}
+
+func (x *CreateGrantRequest) GetGrantRefId() string {
+	if x != nil {
+		return x.GrantRefId
+	}
+	return ""
+}
+
+func (x *CreateGrantRequest) GetTenantId() string {
+	if x != nil && x.TenantId != nil {
+		return *x.TenantId
+	}
+	return ""
+}
+
+func (x *CreateGrantRequest) GetAppId() string {
+	if x != nil && x.AppId != nil {
+		return *x.AppId
+	}
+	return ""
+}
+
+func (x *CreateGrantRequest) GetResourceType() string {
+	if x != nil && x.ResourceType != nil {
+		return *x.ResourceType
+	}
+	return ""
+}
+
+func (x *CreateGrantRequest) GetResourceId() string {
+	if x != nil && x.ResourceId != nil {
+		return *x.ResourceId
+	}
+	return ""
+}
+
+func (x *CreateGrantRequest) GetEffect() AccessGrantEffect {
+	if x != nil {
+		return x.Effect
+	}
+	return AccessGrantEffect_ACCESS_GRANT_EFFECT_UNSPECIFIED
+}
+
+func (x *CreateGrantRequest) GetExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ExpiresAt
+	}
+	return nil
+}
+
+func (x *CreateGrantRequest) GetCreatedBy() string {
+	if x != nil && x.CreatedBy != nil {
+		return *x.CreatedBy
+	}
+	return ""
+}
+
+type CreateGrantResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Grant         *Grant                 `protobuf:"bytes,1,opt,name=grant,proto3" json:"grant,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateGrantResponse) Reset() {
+	*x = CreateGrantResponse{}
+	mi := &file_access_grant_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateGrantResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateGrantResponse) ProtoMessage() {}
+
+func (x *CreateGrantResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_access_grant_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateGrantResponse.ProtoReflect.Descriptor instead.
+func (*CreateGrantResponse) Descriptor() ([]byte, []int) {
+	return file_access_grant_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateGrantResponse) GetGrant() *Grant {
+	if x != nil {
+		return x.Grant
+	}
+	return nil
+}
+
 type GetGrantByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -347,7 +515,7 @@ type GetGrantByIDRequest struct {
 
 func (x *GetGrantByIDRequest) Reset() {
 	*x = GetGrantByIDRequest{}
-	mi := &file_access_grant_proto_msgTypes[1]
+	mi := &file_access_grant_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -359,7 +527,7 @@ func (x *GetGrantByIDRequest) String() string {
 func (*GetGrantByIDRequest) ProtoMessage() {}
 
 func (x *GetGrantByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_access_grant_proto_msgTypes[1]
+	mi := &file_access_grant_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -372,7 +540,7 @@ func (x *GetGrantByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGrantByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetGrantByIDRequest) Descriptor() ([]byte, []int) {
-	return file_access_grant_proto_rawDescGZIP(), []int{1}
+	return file_access_grant_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetGrantByIDRequest) GetId() string {
@@ -391,7 +559,7 @@ type GetGrantByIDResponse struct {
 
 func (x *GetGrantByIDResponse) Reset() {
 	*x = GetGrantByIDResponse{}
-	mi := &file_access_grant_proto_msgTypes[2]
+	mi := &file_access_grant_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +571,7 @@ func (x *GetGrantByIDResponse) String() string {
 func (*GetGrantByIDResponse) ProtoMessage() {}
 
 func (x *GetGrantByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_access_grant_proto_msgTypes[2]
+	mi := &file_access_grant_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +584,7 @@ func (x *GetGrantByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGrantByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetGrantByIDResponse) Descriptor() ([]byte, []int) {
-	return file_access_grant_proto_rawDescGZIP(), []int{2}
+	return file_access_grant_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetGrantByIDResponse) GetGrant() *Grant {
@@ -437,7 +605,7 @@ type GetGrantsBySubjectRequest struct {
 
 func (x *GetGrantsBySubjectRequest) Reset() {
 	*x = GetGrantsBySubjectRequest{}
-	mi := &file_access_grant_proto_msgTypes[3]
+	mi := &file_access_grant_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -449,7 +617,7 @@ func (x *GetGrantsBySubjectRequest) String() string {
 func (*GetGrantsBySubjectRequest) ProtoMessage() {}
 
 func (x *GetGrantsBySubjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_access_grant_proto_msgTypes[3]
+	mi := &file_access_grant_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -462,7 +630,7 @@ func (x *GetGrantsBySubjectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGrantsBySubjectRequest.ProtoReflect.Descriptor instead.
 func (*GetGrantsBySubjectRequest) Descriptor() ([]byte, []int) {
-	return file_access_grant_proto_rawDescGZIP(), []int{3}
+	return file_access_grant_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetGrantsBySubjectRequest) GetSubjectType() AccessSubjectType {
@@ -495,7 +663,7 @@ type GetGrantsBySubjectResponse struct {
 
 func (x *GetGrantsBySubjectResponse) Reset() {
 	*x = GetGrantsBySubjectResponse{}
-	mi := &file_access_grant_proto_msgTypes[4]
+	mi := &file_access_grant_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -507,7 +675,7 @@ func (x *GetGrantsBySubjectResponse) String() string {
 func (*GetGrantsBySubjectResponse) ProtoMessage() {}
 
 func (x *GetGrantsBySubjectResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_access_grant_proto_msgTypes[4]
+	mi := &file_access_grant_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -520,7 +688,7 @@ func (x *GetGrantsBySubjectResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGrantsBySubjectResponse.ProtoReflect.Descriptor instead.
 func (*GetGrantsBySubjectResponse) Descriptor() ([]byte, []int) {
-	return file_access_grant_proto_rawDescGZIP(), []int{4}
+	return file_access_grant_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetGrantsBySubjectResponse) GetGrants() []*Grant {
@@ -539,7 +707,7 @@ type BatchGetGrantsRequest struct {
 
 func (x *BatchGetGrantsRequest) Reset() {
 	*x = BatchGetGrantsRequest{}
-	mi := &file_access_grant_proto_msgTypes[5]
+	mi := &file_access_grant_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -551,7 +719,7 @@ func (x *BatchGetGrantsRequest) String() string {
 func (*BatchGetGrantsRequest) ProtoMessage() {}
 
 func (x *BatchGetGrantsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_access_grant_proto_msgTypes[5]
+	mi := &file_access_grant_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -564,7 +732,7 @@ func (x *BatchGetGrantsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetGrantsRequest.ProtoReflect.Descriptor instead.
 func (*BatchGetGrantsRequest) Descriptor() ([]byte, []int) {
-	return file_access_grant_proto_rawDescGZIP(), []int{5}
+	return file_access_grant_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BatchGetGrantsRequest) GetIds() []string {
@@ -583,7 +751,7 @@ type BatchGetGrantsResponse struct {
 
 func (x *BatchGetGrantsResponse) Reset() {
 	*x = BatchGetGrantsResponse{}
-	mi := &file_access_grant_proto_msgTypes[6]
+	mi := &file_access_grant_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -595,7 +763,7 @@ func (x *BatchGetGrantsResponse) String() string {
 func (*BatchGetGrantsResponse) ProtoMessage() {}
 
 func (x *BatchGetGrantsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_access_grant_proto_msgTypes[6]
+	mi := &file_access_grant_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -608,7 +776,7 @@ func (x *BatchGetGrantsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetGrantsResponse.ProtoReflect.Descriptor instead.
 func (*BatchGetGrantsResponse) Descriptor() ([]byte, []int) {
-	return file_access_grant_proto_rawDescGZIP(), []int{6}
+	return file_access_grant_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BatchGetGrantsResponse) GetGrants() []*Grant {
@@ -659,7 +827,35 @@ const file_access_grant_proto_rawDesc = "" +
 	"\v_created_byB\r\n" +
 	"\v_revoked_atB\r\n" +
 	"\v_revoked_byB\x10\n" +
-	"\x0e_revoke_reason\"%\n" +
+	"\x0e_revoke_reason\"\xc6\x04\n" +
+	"\x12CreateGrantRequest\x12;\n" +
+	"\fsubject_type\x18\x01 \x01(\x0e2\x18.grant.AccessSubjectTypeR\vsubjectType\x12\x1d\n" +
+	"\n" +
+	"subject_id\x18\x02 \x01(\tR\tsubjectId\x125\n" +
+	"\n" +
+	"grant_type\x18\x03 \x01(\x0e2\x16.grant.AccessGrantTypeR\tgrantType\x12 \n" +
+	"\fgrant_ref_id\x18\x04 \x01(\tR\n" +
+	"grantRefId\x12 \n" +
+	"\ttenant_id\x18\x05 \x01(\tH\x00R\btenantId\x88\x01\x01\x12\x1a\n" +
+	"\x06app_id\x18\x06 \x01(\tH\x01R\x05appId\x88\x01\x01\x12(\n" +
+	"\rresource_type\x18\a \x01(\tH\x02R\fresourceType\x88\x01\x01\x12$\n" +
+	"\vresource_id\x18\b \x01(\tH\x03R\n" +
+	"resourceId\x88\x01\x01\x120\n" +
+	"\x06effect\x18\t \x01(\x0e2\x18.grant.AccessGrantEffectR\x06effect\x12>\n" +
+	"\n" +
+	"expires_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\x04R\texpiresAt\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"created_by\x18\v \x01(\tH\x05R\tcreatedBy\x88\x01\x01B\f\n" +
+	"\n" +
+	"_tenant_idB\t\n" +
+	"\a_app_idB\x10\n" +
+	"\x0e_resource_typeB\x0e\n" +
+	"\f_resource_idB\r\n" +
+	"\v_expires_atB\r\n" +
+	"\v_created_by\"9\n" +
+	"\x13CreateGrantResponse\x12\"\n" +
+	"\x05grant\x18\x01 \x01(\v2\f.grant.GrantR\x05grant\"%\n" +
 	"\x13GetGrantByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\":\n" +
 	"\x14GetGrantByIDResponse\x12\"\n" +
@@ -688,8 +884,9 @@ const file_access_grant_proto_rawDesc = "" +
 	"\x11AccessGrantEffect\x12#\n" +
 	"\x1fACCESS_GRANT_EFFECT_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19ACCESS_GRANT_EFFECT_ALLOW\x10\x01\x12\x1c\n" +
-	"\x18ACCESS_GRANT_EFFECT_DENY\x10\x022\x81\x02\n" +
-	"\fGrantService\x12G\n" +
+	"\x18ACCESS_GRANT_EFFECT_DENY\x10\x022\xc7\x02\n" +
+	"\fGrantService\x12D\n" +
+	"\vCreateGrant\x12\x19.grant.CreateGrantRequest\x1a\x1a.grant.CreateGrantResponse\x12G\n" +
 	"\fGetGrantByID\x12\x1a.grant.GetGrantByIDRequest\x1a\x1b.grant.GetGrantByIDResponse\x12Y\n" +
 	"\x12GetGrantsBySubject\x12 .grant.GetGrantsBySubjectRequest\x1a!.grant.GetGrantsBySubjectResponse\x12M\n" +
 	"\x0eBatchGetGrants\x12\x1c.grant.BatchGetGrantsRequest\x1a\x1d.grant.BatchGetGrantsResponseB'Z%nfxid/protos/gen/access/grant;grantpbb\x06proto3"
@@ -707,42 +904,51 @@ func file_access_grant_proto_rawDescGZIP() []byte {
 }
 
 var file_access_grant_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_access_grant_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_access_grant_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_access_grant_proto_goTypes = []any{
 	(AccessSubjectType)(0),             // 0: grant.AccessSubjectType
 	(AccessGrantType)(0),               // 1: grant.AccessGrantType
 	(AccessGrantEffect)(0),             // 2: grant.AccessGrantEffect
 	(*Grant)(nil),                      // 3: grant.Grant
-	(*GetGrantByIDRequest)(nil),        // 4: grant.GetGrantByIDRequest
-	(*GetGrantByIDResponse)(nil),       // 5: grant.GetGrantByIDResponse
-	(*GetGrantsBySubjectRequest)(nil),  // 6: grant.GetGrantsBySubjectRequest
-	(*GetGrantsBySubjectResponse)(nil), // 7: grant.GetGrantsBySubjectResponse
-	(*BatchGetGrantsRequest)(nil),      // 8: grant.BatchGetGrantsRequest
-	(*BatchGetGrantsResponse)(nil),     // 9: grant.BatchGetGrantsResponse
-	(*timestamppb.Timestamp)(nil),      // 10: google.protobuf.Timestamp
+	(*CreateGrantRequest)(nil),         // 4: grant.CreateGrantRequest
+	(*CreateGrantResponse)(nil),        // 5: grant.CreateGrantResponse
+	(*GetGrantByIDRequest)(nil),        // 6: grant.GetGrantByIDRequest
+	(*GetGrantByIDResponse)(nil),       // 7: grant.GetGrantByIDResponse
+	(*GetGrantsBySubjectRequest)(nil),  // 8: grant.GetGrantsBySubjectRequest
+	(*GetGrantsBySubjectResponse)(nil), // 9: grant.GetGrantsBySubjectResponse
+	(*BatchGetGrantsRequest)(nil),      // 10: grant.BatchGetGrantsRequest
+	(*BatchGetGrantsResponse)(nil),     // 11: grant.BatchGetGrantsResponse
+	(*timestamppb.Timestamp)(nil),      // 12: google.protobuf.Timestamp
 }
 var file_access_grant_proto_depIdxs = []int32{
 	0,  // 0: grant.Grant.subject_type:type_name -> grant.AccessSubjectType
 	1,  // 1: grant.Grant.grant_type:type_name -> grant.AccessGrantType
 	2,  // 2: grant.Grant.effect:type_name -> grant.AccessGrantEffect
-	10, // 3: grant.Grant.expires_at:type_name -> google.protobuf.Timestamp
-	10, // 4: grant.Grant.created_at:type_name -> google.protobuf.Timestamp
-	10, // 5: grant.Grant.revoked_at:type_name -> google.protobuf.Timestamp
-	3,  // 6: grant.GetGrantByIDResponse.grant:type_name -> grant.Grant
-	0,  // 7: grant.GetGrantsBySubjectRequest.subject_type:type_name -> grant.AccessSubjectType
-	3,  // 8: grant.GetGrantsBySubjectResponse.grants:type_name -> grant.Grant
-	3,  // 9: grant.BatchGetGrantsResponse.grants:type_name -> grant.Grant
-	4,  // 10: grant.GrantService.GetGrantByID:input_type -> grant.GetGrantByIDRequest
-	6,  // 11: grant.GrantService.GetGrantsBySubject:input_type -> grant.GetGrantsBySubjectRequest
-	8,  // 12: grant.GrantService.BatchGetGrants:input_type -> grant.BatchGetGrantsRequest
-	5,  // 13: grant.GrantService.GetGrantByID:output_type -> grant.GetGrantByIDResponse
-	7,  // 14: grant.GrantService.GetGrantsBySubject:output_type -> grant.GetGrantsBySubjectResponse
-	9,  // 15: grant.GrantService.BatchGetGrants:output_type -> grant.BatchGetGrantsResponse
-	13, // [13:16] is the sub-list for method output_type
-	10, // [10:13] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	12, // 3: grant.Grant.expires_at:type_name -> google.protobuf.Timestamp
+	12, // 4: grant.Grant.created_at:type_name -> google.protobuf.Timestamp
+	12, // 5: grant.Grant.revoked_at:type_name -> google.protobuf.Timestamp
+	0,  // 6: grant.CreateGrantRequest.subject_type:type_name -> grant.AccessSubjectType
+	1,  // 7: grant.CreateGrantRequest.grant_type:type_name -> grant.AccessGrantType
+	2,  // 8: grant.CreateGrantRequest.effect:type_name -> grant.AccessGrantEffect
+	12, // 9: grant.CreateGrantRequest.expires_at:type_name -> google.protobuf.Timestamp
+	3,  // 10: grant.CreateGrantResponse.grant:type_name -> grant.Grant
+	3,  // 11: grant.GetGrantByIDResponse.grant:type_name -> grant.Grant
+	0,  // 12: grant.GetGrantsBySubjectRequest.subject_type:type_name -> grant.AccessSubjectType
+	3,  // 13: grant.GetGrantsBySubjectResponse.grants:type_name -> grant.Grant
+	3,  // 14: grant.BatchGetGrantsResponse.grants:type_name -> grant.Grant
+	4,  // 15: grant.GrantService.CreateGrant:input_type -> grant.CreateGrantRequest
+	6,  // 16: grant.GrantService.GetGrantByID:input_type -> grant.GetGrantByIDRequest
+	8,  // 17: grant.GrantService.GetGrantsBySubject:input_type -> grant.GetGrantsBySubjectRequest
+	10, // 18: grant.GrantService.BatchGetGrants:input_type -> grant.BatchGetGrantsRequest
+	5,  // 19: grant.GrantService.CreateGrant:output_type -> grant.CreateGrantResponse
+	7,  // 20: grant.GrantService.GetGrantByID:output_type -> grant.GetGrantByIDResponse
+	9,  // 21: grant.GrantService.GetGrantsBySubject:output_type -> grant.GetGrantsBySubjectResponse
+	11, // 22: grant.GrantService.BatchGetGrants:output_type -> grant.BatchGetGrantsResponse
+	19, // [19:23] is the sub-list for method output_type
+	15, // [15:19] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_access_grant_proto_init() }
@@ -751,14 +957,15 @@ func file_access_grant_proto_init() {
 		return
 	}
 	file_access_grant_proto_msgTypes[0].OneofWrappers = []any{}
-	file_access_grant_proto_msgTypes[3].OneofWrappers = []any{}
+	file_access_grant_proto_msgTypes[1].OneofWrappers = []any{}
+	file_access_grant_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_access_grant_proto_rawDesc), len(file_access_grant_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

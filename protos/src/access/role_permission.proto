@@ -16,6 +16,9 @@ message RolePermission {
 
 // RolePermission 服务 - 供其他服务通过 gRPC 管理角色权限关联
 service RolePermissionService {
+  // 创建角色权限关联
+  rpc CreateRolePermission (CreateRolePermissionRequest) returns (CreateRolePermissionResponse);
+  
   // 根据ID获取角色权限关联
   rpc GetRolePermissionByID (GetRolePermissionByIDRequest) returns (GetRolePermissionByIDResponse);
   
@@ -27,6 +30,16 @@ service RolePermissionService {
 }
 
 // RolePermission Service Messages
+message CreateRolePermissionRequest {
+  string role_id = 1;             // 角色ID (UUID)
+  string permission_id = 2;       // 权限ID (UUID)
+  optional string created_by = 3; // 创建者ID (UUID)
+}
+
+message CreateRolePermissionResponse {
+  RolePermission role_permission = 1;
+}
+
 message GetRolePermissionByIDRequest {
   string id = 1;
 }

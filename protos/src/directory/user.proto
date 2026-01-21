@@ -27,6 +27,9 @@ message User {
 
 // User 服务 - 供其他服务通过 gRPC 管理用户
 service UserService {
+  // 创建用户
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  
   // 根据ID获取用户
   rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse);
   
@@ -38,6 +41,16 @@ service UserService {
 }
 
 // User Service Messages
+message CreateUserRequest {
+  string username = 1;                    // 用户名 (varchar(50))
+  DirectoryUserStatus status = 2;        // 状态：pending, active, deactive
+  bool is_verified = 3;                   // 是否已验证
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
 message GetUserByIDRequest {
   string id = 1;
 }

@@ -19,6 +19,9 @@ message Permission {
 
 // Permission 服务 - 供其他服务通过 gRPC 管理权限
 service PermissionService {
+  // 创建权限
+  rpc CreatePermission (CreatePermissionRequest) returns (CreatePermissionResponse);
+  
   // 根据ID获取权限
   rpc GetPermissionByID (GetPermissionByIDRequest) returns (GetPermissionByIDResponse);
   
@@ -33,6 +36,17 @@ service PermissionService {
 }
 
 // Permission Service Messages
+message CreatePermissionRequest {
+  string key = 1;                 // 唯一键 (varchar(255))
+  string name = 2;                // 权限名称 (varchar(255))
+  optional string description = 3; // 描述 (text)
+  bool is_system = 4;             // 是否系统权限
+}
+
+message CreatePermissionResponse {
+  Permission permission = 1;
+}
+
 message GetPermissionByIDRequest {
   string id = 1;
 }

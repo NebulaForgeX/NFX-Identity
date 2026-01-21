@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	RolePermissionService_CreateRolePermission_FullMethodName  = "/role_permission.RolePermissionService/CreateRolePermission"
 	RolePermissionService_GetRolePermissionByID_FullMethodName = "/role_permission.RolePermissionService/GetRolePermissionByID"
 	RolePermissionService_GetPermissionsByRole_FullMethodName  = "/role_permission.RolePermissionService/GetPermissionsByRole"
 	RolePermissionService_GetRolesByPermission_FullMethodName  = "/role_permission.RolePermissionService/GetRolesByPermission"
@@ -30,6 +31,8 @@ const (
 //
 // RolePermission 服务 - 供其他服务通过 gRPC 管理角色权限关联
 type RolePermissionServiceClient interface {
+	// 创建角色权限关联
+	CreateRolePermission(ctx context.Context, in *CreateRolePermissionRequest, opts ...grpc.CallOption) (*CreateRolePermissionResponse, error)
 	// 根据ID获取角色权限关联
 	GetRolePermissionByID(ctx context.Context, in *GetRolePermissionByIDRequest, opts ...grpc.CallOption) (*GetRolePermissionByIDResponse, error)
 	// 根据角色获取权限列表
@@ -44,6 +47,16 @@ type rolePermissionServiceClient struct {
 
 func NewRolePermissionServiceClient(cc grpc.ClientConnInterface) RolePermissionServiceClient {
 	return &rolePermissionServiceClient{cc}
+}
+
+func (c *rolePermissionServiceClient) CreateRolePermission(ctx context.Context, in *CreateRolePermissionRequest, opts ...grpc.CallOption) (*CreateRolePermissionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateRolePermissionResponse)
+	err := c.cc.Invoke(ctx, RolePermissionService_CreateRolePermission_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *rolePermissionServiceClient) GetRolePermissionByID(ctx context.Context, in *GetRolePermissionByIDRequest, opts ...grpc.CallOption) (*GetRolePermissionByIDResponse, error) {
@@ -82,6 +95,8 @@ func (c *rolePermissionServiceClient) GetRolesByPermission(ctx context.Context, 
 //
 // RolePermission 服务 - 供其他服务通过 gRPC 管理角色权限关联
 type RolePermissionServiceServer interface {
+	// 创建角色权限关联
+	CreateRolePermission(context.Context, *CreateRolePermissionRequest) (*CreateRolePermissionResponse, error)
 	// 根据ID获取角色权限关联
 	GetRolePermissionByID(context.Context, *GetRolePermissionByIDRequest) (*GetRolePermissionByIDResponse, error)
 	// 根据角色获取权限列表
@@ -98,6 +113,9 @@ type RolePermissionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRolePermissionServiceServer struct{}
 
+func (UnimplementedRolePermissionServiceServer) CreateRolePermission(context.Context, *CreateRolePermissionRequest) (*CreateRolePermissionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateRolePermission not implemented")
+}
 func (UnimplementedRolePermissionServiceServer) GetRolePermissionByID(context.Context, *GetRolePermissionByIDRequest) (*GetRolePermissionByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRolePermissionByID not implemented")
 }
@@ -126,6 +144,24 @@ func RegisterRolePermissionServiceServer(s grpc.ServiceRegistrar, srv RolePermis
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&RolePermissionService_ServiceDesc, srv)
+}
+
+func _RolePermissionService_CreateRolePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRolePermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RolePermissionServiceServer).CreateRolePermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RolePermissionService_CreateRolePermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RolePermissionServiceServer).CreateRolePermission(ctx, req.(*CreateRolePermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _RolePermissionService_GetRolePermissionByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +225,10 @@ var RolePermissionService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "role_permission.RolePermissionService",
 	HandlerType: (*RolePermissionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateRolePermission",
+			Handler:    _RolePermissionService_CreateRolePermission_Handler,
+		},
 		{
 			MethodName: "GetRolePermissionByID",
 			Handler:    _RolePermissionService_GetRolePermissionByID_Handler,

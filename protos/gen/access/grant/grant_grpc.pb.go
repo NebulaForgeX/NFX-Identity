@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	GrantService_CreateGrant_FullMethodName        = "/grant.GrantService/CreateGrant"
 	GrantService_GetGrantByID_FullMethodName       = "/grant.GrantService/GetGrantByID"
 	GrantService_GetGrantsBySubject_FullMethodName = "/grant.GrantService/GetGrantsBySubject"
 	GrantService_BatchGetGrants_FullMethodName     = "/grant.GrantService/BatchGetGrants"
@@ -30,6 +31,8 @@ const (
 //
 // Grant 服务 - 供其他服务通过 gRPC 管理授权
 type GrantServiceClient interface {
+	// 创建授权
+	CreateGrant(ctx context.Context, in *CreateGrantRequest, opts ...grpc.CallOption) (*CreateGrantResponse, error)
 	// 根据ID获取授权
 	GetGrantByID(ctx context.Context, in *GetGrantByIDRequest, opts ...grpc.CallOption) (*GetGrantByIDResponse, error)
 	// 根据主体获取授权列表
@@ -44,6 +47,16 @@ type grantServiceClient struct {
 
 func NewGrantServiceClient(cc grpc.ClientConnInterface) GrantServiceClient {
 	return &grantServiceClient{cc}
+}
+
+func (c *grantServiceClient) CreateGrant(ctx context.Context, in *CreateGrantRequest, opts ...grpc.CallOption) (*CreateGrantResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateGrantResponse)
+	err := c.cc.Invoke(ctx, GrantService_CreateGrant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *grantServiceClient) GetGrantByID(ctx context.Context, in *GetGrantByIDRequest, opts ...grpc.CallOption) (*GetGrantByIDResponse, error) {
@@ -82,6 +95,8 @@ func (c *grantServiceClient) BatchGetGrants(ctx context.Context, in *BatchGetGra
 //
 // Grant 服务 - 供其他服务通过 gRPC 管理授权
 type GrantServiceServer interface {
+	// 创建授权
+	CreateGrant(context.Context, *CreateGrantRequest) (*CreateGrantResponse, error)
 	// 根据ID获取授权
 	GetGrantByID(context.Context, *GetGrantByIDRequest) (*GetGrantByIDResponse, error)
 	// 根据主体获取授权列表
@@ -98,6 +113,9 @@ type GrantServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGrantServiceServer struct{}
 
+func (UnimplementedGrantServiceServer) CreateGrant(context.Context, *CreateGrantRequest) (*CreateGrantResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateGrant not implemented")
+}
 func (UnimplementedGrantServiceServer) GetGrantByID(context.Context, *GetGrantByIDRequest) (*GetGrantByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetGrantByID not implemented")
 }
@@ -126,6 +144,24 @@ func RegisterGrantServiceServer(s grpc.ServiceRegistrar, srv GrantServiceServer)
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&GrantService_ServiceDesc, srv)
+}
+
+func _GrantService_CreateGrant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGrantRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GrantServiceServer).CreateGrant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GrantService_CreateGrant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GrantServiceServer).CreateGrant(ctx, req.(*CreateGrantRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _GrantService_GetGrantByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +225,10 @@ var GrantService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "grant.GrantService",
 	HandlerType: (*GrantServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateGrant",
+			Handler:    _GrantService_CreateGrant_Handler,
+		},
 		{
 			MethodName: "GetGrantByID",
 			Handler:    _GrantService_GetGrantByID_Handler,

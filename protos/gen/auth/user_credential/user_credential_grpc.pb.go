@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserCredentialService_CreateUserCredential_FullMethodName      = "/user_credential.UserCredentialService/CreateUserCredential"
 	UserCredentialService_GetUserCredentialByID_FullMethodName     = "/user_credential.UserCredentialService/GetUserCredentialByID"
 	UserCredentialService_GetUserCredentialByUserID_FullMethodName = "/user_credential.UserCredentialService/GetUserCredentialByUserID"
 	UserCredentialService_BatchGetUserCredentials_FullMethodName   = "/user_credential.UserCredentialService/BatchGetUserCredentials"
@@ -30,6 +31,8 @@ const (
 //
 // UserCredential 服务 - 供其他服务通过 gRPC 管理用户凭证
 type UserCredentialServiceClient interface {
+	// 创建用户凭证
+	CreateUserCredential(ctx context.Context, in *CreateUserCredentialRequest, opts ...grpc.CallOption) (*CreateUserCredentialResponse, error)
 	// 根据ID获取用户凭证
 	GetUserCredentialByID(ctx context.Context, in *GetUserCredentialByIDRequest, opts ...grpc.CallOption) (*GetUserCredentialByIDResponse, error)
 	// 根据用户ID获取用户凭证
@@ -44,6 +47,16 @@ type userCredentialServiceClient struct {
 
 func NewUserCredentialServiceClient(cc grpc.ClientConnInterface) UserCredentialServiceClient {
 	return &userCredentialServiceClient{cc}
+}
+
+func (c *userCredentialServiceClient) CreateUserCredential(ctx context.Context, in *CreateUserCredentialRequest, opts ...grpc.CallOption) (*CreateUserCredentialResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserCredentialResponse)
+	err := c.cc.Invoke(ctx, UserCredentialService_CreateUserCredential_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userCredentialServiceClient) GetUserCredentialByID(ctx context.Context, in *GetUserCredentialByIDRequest, opts ...grpc.CallOption) (*GetUserCredentialByIDResponse, error) {
@@ -82,6 +95,8 @@ func (c *userCredentialServiceClient) BatchGetUserCredentials(ctx context.Contex
 //
 // UserCredential 服务 - 供其他服务通过 gRPC 管理用户凭证
 type UserCredentialServiceServer interface {
+	// 创建用户凭证
+	CreateUserCredential(context.Context, *CreateUserCredentialRequest) (*CreateUserCredentialResponse, error)
 	// 根据ID获取用户凭证
 	GetUserCredentialByID(context.Context, *GetUserCredentialByIDRequest) (*GetUserCredentialByIDResponse, error)
 	// 根据用户ID获取用户凭证
@@ -98,6 +113,9 @@ type UserCredentialServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserCredentialServiceServer struct{}
 
+func (UnimplementedUserCredentialServiceServer) CreateUserCredential(context.Context, *CreateUserCredentialRequest) (*CreateUserCredentialResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUserCredential not implemented")
+}
 func (UnimplementedUserCredentialServiceServer) GetUserCredentialByID(context.Context, *GetUserCredentialByIDRequest) (*GetUserCredentialByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserCredentialByID not implemented")
 }
@@ -126,6 +144,24 @@ func RegisterUserCredentialServiceServer(s grpc.ServiceRegistrar, srv UserCreden
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserCredentialService_ServiceDesc, srv)
+}
+
+func _UserCredentialService_CreateUserCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserCredentialRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCredentialServiceServer).CreateUserCredential(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserCredentialService_CreateUserCredential_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCredentialServiceServer).CreateUserCredential(ctx, req.(*CreateUserCredentialRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserCredentialService_GetUserCredentialByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +225,10 @@ var UserCredentialService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user_credential.UserCredentialService",
 	HandlerType: (*UserCredentialServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUserCredential",
+			Handler:    _UserCredentialService_CreateUserCredential_Handler,
+		},
 		{
 			MethodName: "GetUserCredentialByID",
 			Handler:    _UserCredentialService_GetUserCredentialByID_Handler,
