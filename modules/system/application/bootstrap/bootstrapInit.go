@@ -187,7 +187,7 @@ func (s *Service) initAccessService(ctx context.Context, adminUserID uuid.UUID) 
 	}
 
 	// 4. 将角色分配给用户（通过 Grant）
-	_, err = s.grpcClients.AccessClient.Grant.CreateGrantSimple(ctx, "user", adminUserID.String(), "role", adminRoleID, nil, nil)
+	_, err = s.grpcClients.AccessClient.Grant.CreateGrant(ctx, "user", adminUserID.String(), "role", adminRoleID, nil)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("failed to grant role to user: %w", err)
 	}

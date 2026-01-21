@@ -94,14 +94,6 @@ func (c *GrantClient) CreateGrant(ctx context.Context, subjectType, subjectID, g
 	return resp.Grant.Id, nil
 }
 
-// CreateGrantSimple 创建授权（简化版本，保持向后兼容）
-func (c *GrantClient) CreateGrantSimple(ctx context.Context, subjectType, subjectID, grantType, grantRefID string, tenantID, appID *string) (string, error) {
-	return c.CreateGrant(ctx, subjectType, subjectID, grantType, grantRefID, &CreateGrantOptions{
-		TenantID: tenantID,
-		AppID:    appID,
-	})
-}
-
 // GetGrantByID 根据ID获取授权
 func (c *GrantClient) GetGrantByID(ctx context.Context, id string) (*grantpb.Grant, error) {
 	req := &grantpb.GetGrantByIDRequest{

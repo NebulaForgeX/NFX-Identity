@@ -34,3 +34,46 @@ func (c *UserCredentialClient) CreateUserCredential(ctx context.Context, userID,
 
 	return nil
 }
+
+// GetUserCredentialByID 根据ID获取用户凭证
+func (c *UserCredentialClient) GetUserCredentialByID(ctx context.Context, id string) (*usercredentialpb.UserCredential, error) {
+	req := &usercredentialpb.GetUserCredentialByIDRequest{
+		Id: id,
+	}
+
+	resp, err := c.client.GetUserCredentialByID(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.UserCredential, nil
+}
+
+// GetUserCredentialByUserID 根据用户ID获取用户凭证
+func (c *UserCredentialClient) GetUserCredentialByUserID(ctx context.Context, userID string, tenantID *string) (*usercredentialpb.UserCredential, error) {
+	req := &usercredentialpb.GetUserCredentialByUserIDRequest{
+		UserId:   userID,
+		TenantId: tenantID,
+	}
+
+	resp, err := c.client.GetUserCredentialByUserID(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.UserCredential, nil
+}
+
+// BatchGetUserCredentials 批量获取用户凭证
+func (c *UserCredentialClient) BatchGetUserCredentials(ctx context.Context, ids []string) ([]*usercredentialpb.UserCredential, error) {
+	req := &usercredentialpb.BatchGetUserCredentialsRequest{
+		Ids: ids,
+	}
+
+	resp, err := c.client.BatchGetUserCredentials(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.UserCredentials, nil
+}
