@@ -30,7 +30,7 @@ type Dependencies struct {
 	rabbitMQConfig      *rabbitmqx.Config
 	systemStateAppSvc   *systemStateApp.Service
 	bootstrapSvc        *bootstrapApp.Service
-	grpcClients         *grpcClients.Clients
+	grpcClients         *grpcClients.GRPCClients
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
 	tokenxInstance      *tokenx.Tokenx
@@ -86,15 +86,14 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	systemStateRepoInstance := systemStateRepo.NewRepo(postgres.DB())
 
 	//! === gRPC Clients ===
-	grpcClientsInstance, err := grpcClients.NewClients(ctx, &cfg.GRPCClient, &tokenCfg)
+	grpcClientsInstance, err := grpcClients.NewGRPCClients(ctx, &cfg.GRPCClient, &tokenCfg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
 	}
-	grpcClientsAdapter := grpcClients.NewAdapter(grpcClientsInstance)
 
 	//! === Application Services ===
 	systemStateAppSvc := systemStateApp.NewService(systemStateRepoInstance)
-	bootstrapSvc := bootstrapApp.NewService(systemStateAppSvc, systemStateRepoInstance, grpcClientsAdapter)
+	bootstrapSvc := bootstrapApp.NewService(systemStateAppSvc, systemStateRepoInstance, grpcClientsInstance)
 
 	return &Dependencies{
 		healthMgr:           healthMgr,
