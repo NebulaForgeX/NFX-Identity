@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserEmailService_CreateUserEmail_FullMethodName       = "/user_email.UserEmailService/CreateUserEmail"
 	UserEmailService_GetUserEmailByID_FullMethodName      = "/user_email.UserEmailService/GetUserEmailByID"
 	UserEmailService_GetUserEmailByEmail_FullMethodName   = "/user_email.UserEmailService/GetUserEmailByEmail"
 	UserEmailService_GetUserEmailsByUserID_FullMethodName = "/user_email.UserEmailService/GetUserEmailsByUserID"
@@ -30,6 +31,8 @@ const (
 //
 // UserEmail 服务 - 供其他服务通过 gRPC 管理用户邮箱
 type UserEmailServiceClient interface {
+	// 创建用户邮箱
+	CreateUserEmail(ctx context.Context, in *CreateUserEmailRequest, opts ...grpc.CallOption) (*CreateUserEmailResponse, error)
 	// 根据ID获取用户邮箱
 	GetUserEmailByID(ctx context.Context, in *GetUserEmailByIDRequest, opts ...grpc.CallOption) (*GetUserEmailByIDResponse, error)
 	// 根据邮箱地址获取用户邮箱
@@ -44,6 +47,16 @@ type userEmailServiceClient struct {
 
 func NewUserEmailServiceClient(cc grpc.ClientConnInterface) UserEmailServiceClient {
 	return &userEmailServiceClient{cc}
+}
+
+func (c *userEmailServiceClient) CreateUserEmail(ctx context.Context, in *CreateUserEmailRequest, opts ...grpc.CallOption) (*CreateUserEmailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserEmailResponse)
+	err := c.cc.Invoke(ctx, UserEmailService_CreateUserEmail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userEmailServiceClient) GetUserEmailByID(ctx context.Context, in *GetUserEmailByIDRequest, opts ...grpc.CallOption) (*GetUserEmailByIDResponse, error) {
@@ -82,6 +95,8 @@ func (c *userEmailServiceClient) GetUserEmailsByUserID(ctx context.Context, in *
 //
 // UserEmail 服务 - 供其他服务通过 gRPC 管理用户邮箱
 type UserEmailServiceServer interface {
+	// 创建用户邮箱
+	CreateUserEmail(context.Context, *CreateUserEmailRequest) (*CreateUserEmailResponse, error)
 	// 根据ID获取用户邮箱
 	GetUserEmailByID(context.Context, *GetUserEmailByIDRequest) (*GetUserEmailByIDResponse, error)
 	// 根据邮箱地址获取用户邮箱
@@ -98,6 +113,9 @@ type UserEmailServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserEmailServiceServer struct{}
 
+func (UnimplementedUserEmailServiceServer) CreateUserEmail(context.Context, *CreateUserEmailRequest) (*CreateUserEmailResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUserEmail not implemented")
+}
 func (UnimplementedUserEmailServiceServer) GetUserEmailByID(context.Context, *GetUserEmailByIDRequest) (*GetUserEmailByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserEmailByID not implemented")
 }
@@ -126,6 +144,24 @@ func RegisterUserEmailServiceServer(s grpc.ServiceRegistrar, srv UserEmailServic
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserEmailService_ServiceDesc, srv)
+}
+
+func _UserEmailService_CreateUserEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserEmailServiceServer).CreateUserEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserEmailService_CreateUserEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserEmailServiceServer).CreateUserEmail(ctx, req.(*CreateUserEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserEmailService_GetUserEmailByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +225,10 @@ var UserEmailService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user_email.UserEmailService",
 	HandlerType: (*UserEmailServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUserEmail",
+			Handler:    _UserEmailService_CreateUserEmail_Handler,
+		},
 		{
 			MethodName: "GetUserEmailByID",
 			Handler:    _UserEmailService_GetUserEmailByID_Handler,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"nfxid/connections/directory/dto"
 	userprofilepb "nfxid/protos/gen/directory/user_profile"
 )
 
@@ -15,6 +16,31 @@ type UserProfileClient struct {
 // NewUserProfileClient 创建 UserProfile 客户端
 func NewUserProfileClient(client userprofilepb.UserProfileServiceClient) *UserProfileClient {
 	return &UserProfileClient{client: client}
+}
+
+// CreateUserProfile 创建用户资料（完整参数）
+func (c *UserProfileClient) CreateUserProfile(ctx context.Context, createDTO *dto.CreateUserProfileDTO) (string, error) {
+	req, err := createDTO.ToCreateUserProfileRequest()
+	if err != nil {
+		return "", fmt.Errorf("failed to convert DTO to request: %w", err)
+	}
+
+	resp, err := c.client.CreateUserProfile(ctx, req)
+	if err != nil {
+		return "", fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.UserProfile.Id, nil
+}
+
+// CreateUserProfileDefault 创建用户资料（默认值，用于系统初始化）
+func (c *UserProfileClient) CreateUserProfileDefault(ctx context.Context, userID string) (string, error) {
+	createDTO := &dto.CreateUserProfileDTO{
+		UserID: userID,
+		// 其他字段为 nil，使用默认值
+	}
+
+	return c.CreateUserProfile(ctx, createDTO)
 }
 
 // GetUserProfileByID 根据ID获取用户资料

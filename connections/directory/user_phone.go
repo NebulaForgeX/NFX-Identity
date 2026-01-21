@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"nfxid/connections/directory/dto"
 	userphonepb "nfxid/protos/gen/directory/user_phone"
 )
 
@@ -15,6 +16,33 @@ type UserPhoneClient struct {
 // NewUserPhoneClient 创建 UserPhone 客户端
 func NewUserPhoneClient(client userphonepb.UserPhoneServiceClient) *UserPhoneClient {
 	return &UserPhoneClient{client: client}
+}
+
+// CreateUserPhone 创建用户手机（完整参数）
+func (c *UserPhoneClient) CreateUserPhone(ctx context.Context, createDTO *dto.CreateUserPhoneDTO) (string, error) {
+	req := createDTO.ToCreateUserPhoneRequest()
+
+	resp, err := c.client.CreateUserPhone(ctx, req)
+	if err != nil {
+		return "", fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.UserPhone.Id, nil
+}
+
+// CreateUserPhoneDefault 创建用户手机（默认值，用于系统初始化）
+func (c *UserPhoneClient) CreateUserPhoneDefault(ctx context.Context, userID, phone string) (string, error) {
+	createDTO := &dto.CreateUserPhoneDTO{
+		UserID:                userID,
+		Phone:                 phone,
+		CountryCode:           nil,
+		IsPrimary:             true,
+		IsVerified:             true,
+		VerificationCode:      nil,
+		VerificationExpiresAt: nil,
+	}
+
+	return c.CreateUserPhone(ctx, createDTO)
 }
 
 // GetUserPhoneByID 根据ID获取用户手机

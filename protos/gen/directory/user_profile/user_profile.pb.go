@@ -237,6 +237,230 @@ func (x *UserProfile) GetDeletedAt() *timestamppb.Timestamp {
 }
 
 // UserProfile Service Messages
+type CreateUserProfileRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                         // 用户ID (UUID)
+	Role          *string                `protobuf:"bytes,2,opt,name=role,proto3,oneof" json:"role,omitempty"`                                     // 角色 (varchar(100))
+	FirstName     *string                `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3,oneof" json:"first_name,omitempty"`          // 名 (varchar(100))
+	LastName      *string                `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3,oneof" json:"last_name,omitempty"`             // 姓 (varchar(100))
+	Nickname      *string                `protobuf:"bytes,5,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`                             // 昵称 (varchar(50))
+	DisplayName   *string                `protobuf:"bytes,6,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`    // 显示名称 (varchar(100))
+	AvatarId      *string                `protobuf:"bytes,7,opt,name=avatar_id,json=avatarId,proto3,oneof" json:"avatar_id,omitempty"`             // 头像ID (UUID)
+	BackgroundId  *string                `protobuf:"bytes,8,opt,name=background_id,json=backgroundId,proto3,oneof" json:"background_id,omitempty"` // 背景ID (UUID)
+	BackgroundIds []string               `protobuf:"bytes,9,rep,name=background_ids,json=backgroundIds,proto3" json:"background_ids,omitempty"`    // 背景ID数组 (uuid[])
+	Bio           *string                `protobuf:"bytes,10,opt,name=bio,proto3,oneof" json:"bio,omitempty"`                                      // 简介 (text)
+	Birthday      *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=birthday,proto3,oneof" json:"birthday,omitempty"`                            // 生日 (date)
+	Age           *int32                 `protobuf:"varint,12,opt,name=age,proto3,oneof" json:"age,omitempty"`                                     // 年龄 (integer)
+	Gender        *string                `protobuf:"bytes,13,opt,name=gender,proto3,oneof" json:"gender,omitempty"`                                // 性别 (varchar(20))
+	Location      *string                `protobuf:"bytes,14,opt,name=location,proto3,oneof" json:"location,omitempty"`                            // 位置 (varchar(255))
+	Website       *string                `protobuf:"bytes,15,opt,name=website,proto3,oneof" json:"website,omitempty"`                              // 网站 (varchar(255))
+	Github        *string                `protobuf:"bytes,16,opt,name=github,proto3,oneof" json:"github,omitempty"`                                // GitHub (varchar(255))
+	SocialLinks   *structpb.Struct       `protobuf:"bytes,17,opt,name=social_links,json=socialLinks,proto3,oneof" json:"social_links,omitempty"`   // 社交链接 (JSONB)
+	Skills        *structpb.Struct       `protobuf:"bytes,18,opt,name=skills,proto3,oneof" json:"skills,omitempty"`                                // 技能 (JSONB)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateUserProfileRequest) Reset() {
+	*x = CreateUserProfileRequest{}
+	mi := &file_directory_user_profile_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserProfileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserProfileRequest) ProtoMessage() {}
+
+func (x *CreateUserProfileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_profile_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserProfileRequest.ProtoReflect.Descriptor instead.
+func (*CreateUserProfileRequest) Descriptor() ([]byte, []int) {
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateUserProfileRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetRole() string {
+	if x != nil && x.Role != nil {
+		return *x.Role
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetFirstName() string {
+	if x != nil && x.FirstName != nil {
+		return *x.FirstName
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetLastName() string {
+	if x != nil && x.LastName != nil {
+		return *x.LastName
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetNickname() string {
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetDisplayName() string {
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetAvatarId() string {
+	if x != nil && x.AvatarId != nil {
+		return *x.AvatarId
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetBackgroundId() string {
+	if x != nil && x.BackgroundId != nil {
+		return *x.BackgroundId
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetBackgroundIds() []string {
+	if x != nil {
+		return x.BackgroundIds
+	}
+	return nil
+}
+
+func (x *CreateUserProfileRequest) GetBio() string {
+	if x != nil && x.Bio != nil {
+		return *x.Bio
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetBirthday() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Birthday
+	}
+	return nil
+}
+
+func (x *CreateUserProfileRequest) GetAge() int32 {
+	if x != nil && x.Age != nil {
+		return *x.Age
+	}
+	return 0
+}
+
+func (x *CreateUserProfileRequest) GetGender() string {
+	if x != nil && x.Gender != nil {
+		return *x.Gender
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetLocation() string {
+	if x != nil && x.Location != nil {
+		return *x.Location
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetWebsite() string {
+	if x != nil && x.Website != nil {
+		return *x.Website
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetGithub() string {
+	if x != nil && x.Github != nil {
+		return *x.Github
+	}
+	return ""
+}
+
+func (x *CreateUserProfileRequest) GetSocialLinks() *structpb.Struct {
+	if x != nil {
+		return x.SocialLinks
+	}
+	return nil
+}
+
+func (x *CreateUserProfileRequest) GetSkills() *structpb.Struct {
+	if x != nil {
+		return x.Skills
+	}
+	return nil
+}
+
+type CreateUserProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserProfile   *UserProfile           `protobuf:"bytes,1,opt,name=user_profile,json=userProfile,proto3" json:"user_profile,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateUserProfileResponse) Reset() {
+	*x = CreateUserProfileResponse{}
+	mi := &file_directory_user_profile_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserProfileResponse) ProtoMessage() {}
+
+func (x *CreateUserProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_profile_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserProfileResponse.ProtoReflect.Descriptor instead.
+func (*CreateUserProfileResponse) Descriptor() ([]byte, []int) {
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateUserProfileResponse) GetUserProfile() *UserProfile {
+	if x != nil {
+		return x.UserProfile
+	}
+	return nil
+}
+
 type GetUserProfileByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -246,7 +470,7 @@ type GetUserProfileByIDRequest struct {
 
 func (x *GetUserProfileByIDRequest) Reset() {
 	*x = GetUserProfileByIDRequest{}
-	mi := &file_directory_user_profile_proto_msgTypes[1]
+	mi := &file_directory_user_profile_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +482,7 @@ func (x *GetUserProfileByIDRequest) String() string {
 func (*GetUserProfileByIDRequest) ProtoMessage() {}
 
 func (x *GetUserProfileByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_profile_proto_msgTypes[1]
+	mi := &file_directory_user_profile_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +495,7 @@ func (x *GetUserProfileByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserProfileByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserProfileByIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_profile_proto_rawDescGZIP(), []int{1}
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserProfileByIDRequest) GetId() string {
@@ -290,7 +514,7 @@ type GetUserProfileByIDResponse struct {
 
 func (x *GetUserProfileByIDResponse) Reset() {
 	*x = GetUserProfileByIDResponse{}
-	mi := &file_directory_user_profile_proto_msgTypes[2]
+	mi := &file_directory_user_profile_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -302,7 +526,7 @@ func (x *GetUserProfileByIDResponse) String() string {
 func (*GetUserProfileByIDResponse) ProtoMessage() {}
 
 func (x *GetUserProfileByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_profile_proto_msgTypes[2]
+	mi := &file_directory_user_profile_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -315,7 +539,7 @@ func (x *GetUserProfileByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserProfileByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserProfileByIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_profile_proto_rawDescGZIP(), []int{2}
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserProfileByIDResponse) GetUserProfile() *UserProfile {
@@ -334,7 +558,7 @@ type GetUserProfileByUserIDRequest struct {
 
 func (x *GetUserProfileByUserIDRequest) Reset() {
 	*x = GetUserProfileByUserIDRequest{}
-	mi := &file_directory_user_profile_proto_msgTypes[3]
+	mi := &file_directory_user_profile_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -346,7 +570,7 @@ func (x *GetUserProfileByUserIDRequest) String() string {
 func (*GetUserProfileByUserIDRequest) ProtoMessage() {}
 
 func (x *GetUserProfileByUserIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_profile_proto_msgTypes[3]
+	mi := &file_directory_user_profile_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -359,7 +583,7 @@ func (x *GetUserProfileByUserIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserProfileByUserIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserProfileByUserIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_profile_proto_rawDescGZIP(), []int{3}
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserProfileByUserIDRequest) GetUserId() string {
@@ -378,7 +602,7 @@ type GetUserProfileByUserIDResponse struct {
 
 func (x *GetUserProfileByUserIDResponse) Reset() {
 	*x = GetUserProfileByUserIDResponse{}
-	mi := &file_directory_user_profile_proto_msgTypes[4]
+	mi := &file_directory_user_profile_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -390,7 +614,7 @@ func (x *GetUserProfileByUserIDResponse) String() string {
 func (*GetUserProfileByUserIDResponse) ProtoMessage() {}
 
 func (x *GetUserProfileByUserIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_profile_proto_msgTypes[4]
+	mi := &file_directory_user_profile_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -403,7 +627,7 @@ func (x *GetUserProfileByUserIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserProfileByUserIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserProfileByUserIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_profile_proto_rawDescGZIP(), []int{4}
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetUserProfileByUserIDResponse) GetUserProfile() *UserProfile {
@@ -422,7 +646,7 @@ type BatchGetUserProfilesRequest struct {
 
 func (x *BatchGetUserProfilesRequest) Reset() {
 	*x = BatchGetUserProfilesRequest{}
-	mi := &file_directory_user_profile_proto_msgTypes[5]
+	mi := &file_directory_user_profile_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -434,7 +658,7 @@ func (x *BatchGetUserProfilesRequest) String() string {
 func (*BatchGetUserProfilesRequest) ProtoMessage() {}
 
 func (x *BatchGetUserProfilesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_profile_proto_msgTypes[5]
+	mi := &file_directory_user_profile_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -447,7 +671,7 @@ func (x *BatchGetUserProfilesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetUserProfilesRequest.ProtoReflect.Descriptor instead.
 func (*BatchGetUserProfilesRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_profile_proto_rawDescGZIP(), []int{5}
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *BatchGetUserProfilesRequest) GetIds() []string {
@@ -466,7 +690,7 @@ type BatchGetUserProfilesResponse struct {
 
 func (x *BatchGetUserProfilesResponse) Reset() {
 	*x = BatchGetUserProfilesResponse{}
-	mi := &file_directory_user_profile_proto_msgTypes[6]
+	mi := &file_directory_user_profile_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -478,7 +702,7 @@ func (x *BatchGetUserProfilesResponse) String() string {
 func (*BatchGetUserProfilesResponse) ProtoMessage() {}
 
 func (x *BatchGetUserProfilesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_profile_proto_msgTypes[6]
+	mi := &file_directory_user_profile_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -491,7 +715,7 @@ func (x *BatchGetUserProfilesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchGetUserProfilesResponse.ProtoReflect.Descriptor instead.
 func (*BatchGetUserProfilesResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_profile_proto_rawDescGZIP(), []int{6}
+	return file_directory_user_profile_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BatchGetUserProfilesResponse) GetUserProfiles() []*UserProfile {
@@ -555,7 +779,50 @@ const file_directory_user_profile_proto_rawDesc = "" +
 	"\a_githubB\x0f\n" +
 	"\r_social_linksB\t\n" +
 	"\a_skillsB\r\n" +
-	"\v_deleted_at\"+\n" +
+	"\v_deleted_at\"\xf6\x06\n" +
+	"\x18CreateUserProfileRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\x04role\x18\x02 \x01(\tH\x00R\x04role\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"first_name\x18\x03 \x01(\tH\x01R\tfirstName\x88\x01\x01\x12 \n" +
+	"\tlast_name\x18\x04 \x01(\tH\x02R\blastName\x88\x01\x01\x12\x1f\n" +
+	"\bnickname\x18\x05 \x01(\tH\x03R\bnickname\x88\x01\x01\x12&\n" +
+	"\fdisplay_name\x18\x06 \x01(\tH\x04R\vdisplayName\x88\x01\x01\x12 \n" +
+	"\tavatar_id\x18\a \x01(\tH\x05R\bavatarId\x88\x01\x01\x12(\n" +
+	"\rbackground_id\x18\b \x01(\tH\x06R\fbackgroundId\x88\x01\x01\x12%\n" +
+	"\x0ebackground_ids\x18\t \x03(\tR\rbackgroundIds\x12\x15\n" +
+	"\x03bio\x18\n" +
+	" \x01(\tH\aR\x03bio\x88\x01\x01\x12;\n" +
+	"\bbirthday\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\bR\bbirthday\x88\x01\x01\x12\x15\n" +
+	"\x03age\x18\f \x01(\x05H\tR\x03age\x88\x01\x01\x12\x1b\n" +
+	"\x06gender\x18\r \x01(\tH\n" +
+	"R\x06gender\x88\x01\x01\x12\x1f\n" +
+	"\blocation\x18\x0e \x01(\tH\vR\blocation\x88\x01\x01\x12\x1d\n" +
+	"\awebsite\x18\x0f \x01(\tH\fR\awebsite\x88\x01\x01\x12\x1b\n" +
+	"\x06github\x18\x10 \x01(\tH\rR\x06github\x88\x01\x01\x12?\n" +
+	"\fsocial_links\x18\x11 \x01(\v2\x17.google.protobuf.StructH\x0eR\vsocialLinks\x88\x01\x01\x124\n" +
+	"\x06skills\x18\x12 \x01(\v2\x17.google.protobuf.StructH\x0fR\x06skills\x88\x01\x01B\a\n" +
+	"\x05_roleB\r\n" +
+	"\v_first_nameB\f\n" +
+	"\n" +
+	"_last_nameB\v\n" +
+	"\t_nicknameB\x0f\n" +
+	"\r_display_nameB\f\n" +
+	"\n" +
+	"_avatar_idB\x10\n" +
+	"\x0e_background_idB\x06\n" +
+	"\x04_bioB\v\n" +
+	"\t_birthdayB\x06\n" +
+	"\x04_ageB\t\n" +
+	"\a_genderB\v\n" +
+	"\t_locationB\n" +
+	"\n" +
+	"\b_websiteB\t\n" +
+	"\a_githubB\x0f\n" +
+	"\r_social_linksB\t\n" +
+	"\a_skills\"Y\n" +
+	"\x19CreateUserProfileResponse\x12<\n" +
+	"\fuser_profile\x18\x01 \x01(\v2\x19.user_profile.UserProfileR\vuserProfile\"+\n" +
 	"\x19GetUserProfileByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"Z\n" +
 	"\x1aGetUserProfileByIDResponse\x12<\n" +
@@ -567,8 +834,9 @@ const file_directory_user_profile_proto_rawDesc = "" +
 	"\x1bBatchGetUserProfilesRequest\x12\x10\n" +
 	"\x03ids\x18\x01 \x03(\tR\x03ids\"^\n" +
 	"\x1cBatchGetUserProfilesResponse\x12>\n" +
-	"\ruser_profiles\x18\x01 \x03(\v2\x19.user_profile.UserProfileR\fuserProfiles2\xe1\x02\n" +
-	"\x12UserProfileService\x12g\n" +
+	"\ruser_profiles\x18\x01 \x03(\v2\x19.user_profile.UserProfileR\fuserProfiles2\xc7\x03\n" +
+	"\x12UserProfileService\x12d\n" +
+	"\x11CreateUserProfile\x12&.user_profile.CreateUserProfileRequest\x1a'.user_profile.CreateUserProfileResponse\x12g\n" +
 	"\x12GetUserProfileByID\x12'.user_profile.GetUserProfileByIDRequest\x1a(.user_profile.GetUserProfileByIDResponse\x12s\n" +
 	"\x16GetUserProfileByUserID\x12+.user_profile.GetUserProfileByUserIDRequest\x1a,.user_profile.GetUserProfileByUserIDResponse\x12m\n" +
 	"\x14BatchGetUserProfiles\x12).user_profile.BatchGetUserProfilesRequest\x1a*.user_profile.BatchGetUserProfilesResponseB7Z5nfxid/protos/gen/directory/user_profile;userprofilepbb\x06proto3"
@@ -585,39 +853,47 @@ func file_directory_user_profile_proto_rawDescGZIP() []byte {
 	return file_directory_user_profile_proto_rawDescData
 }
 
-var file_directory_user_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_directory_user_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_directory_user_profile_proto_goTypes = []any{
 	(*UserProfile)(nil),                    // 0: user_profile.UserProfile
-	(*GetUserProfileByIDRequest)(nil),      // 1: user_profile.GetUserProfileByIDRequest
-	(*GetUserProfileByIDResponse)(nil),     // 2: user_profile.GetUserProfileByIDResponse
-	(*GetUserProfileByUserIDRequest)(nil),  // 3: user_profile.GetUserProfileByUserIDRequest
-	(*GetUserProfileByUserIDResponse)(nil), // 4: user_profile.GetUserProfileByUserIDResponse
-	(*BatchGetUserProfilesRequest)(nil),    // 5: user_profile.BatchGetUserProfilesRequest
-	(*BatchGetUserProfilesResponse)(nil),   // 6: user_profile.BatchGetUserProfilesResponse
-	(*timestamppb.Timestamp)(nil),          // 7: google.protobuf.Timestamp
-	(*structpb.Struct)(nil),                // 8: google.protobuf.Struct
+	(*CreateUserProfileRequest)(nil),       // 1: user_profile.CreateUserProfileRequest
+	(*CreateUserProfileResponse)(nil),      // 2: user_profile.CreateUserProfileResponse
+	(*GetUserProfileByIDRequest)(nil),      // 3: user_profile.GetUserProfileByIDRequest
+	(*GetUserProfileByIDResponse)(nil),     // 4: user_profile.GetUserProfileByIDResponse
+	(*GetUserProfileByUserIDRequest)(nil),  // 5: user_profile.GetUserProfileByUserIDRequest
+	(*GetUserProfileByUserIDResponse)(nil), // 6: user_profile.GetUserProfileByUserIDResponse
+	(*BatchGetUserProfilesRequest)(nil),    // 7: user_profile.BatchGetUserProfilesRequest
+	(*BatchGetUserProfilesResponse)(nil),   // 8: user_profile.BatchGetUserProfilesResponse
+	(*timestamppb.Timestamp)(nil),          // 9: google.protobuf.Timestamp
+	(*structpb.Struct)(nil),                // 10: google.protobuf.Struct
 }
 var file_directory_user_profile_proto_depIdxs = []int32{
-	7,  // 0: user_profile.UserProfile.birthday:type_name -> google.protobuf.Timestamp
-	8,  // 1: user_profile.UserProfile.social_links:type_name -> google.protobuf.Struct
-	8,  // 2: user_profile.UserProfile.skills:type_name -> google.protobuf.Struct
-	7,  // 3: user_profile.UserProfile.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 4: user_profile.UserProfile.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 5: user_profile.UserProfile.deleted_at:type_name -> google.protobuf.Timestamp
-	0,  // 6: user_profile.GetUserProfileByIDResponse.user_profile:type_name -> user_profile.UserProfile
-	0,  // 7: user_profile.GetUserProfileByUserIDResponse.user_profile:type_name -> user_profile.UserProfile
-	0,  // 8: user_profile.BatchGetUserProfilesResponse.user_profiles:type_name -> user_profile.UserProfile
-	1,  // 9: user_profile.UserProfileService.GetUserProfileByID:input_type -> user_profile.GetUserProfileByIDRequest
-	3,  // 10: user_profile.UserProfileService.GetUserProfileByUserID:input_type -> user_profile.GetUserProfileByUserIDRequest
-	5,  // 11: user_profile.UserProfileService.BatchGetUserProfiles:input_type -> user_profile.BatchGetUserProfilesRequest
-	2,  // 12: user_profile.UserProfileService.GetUserProfileByID:output_type -> user_profile.GetUserProfileByIDResponse
-	4,  // 13: user_profile.UserProfileService.GetUserProfileByUserID:output_type -> user_profile.GetUserProfileByUserIDResponse
-	6,  // 14: user_profile.UserProfileService.BatchGetUserProfiles:output_type -> user_profile.BatchGetUserProfilesResponse
-	12, // [12:15] is the sub-list for method output_type
-	9,  // [9:12] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	9,  // 0: user_profile.UserProfile.birthday:type_name -> google.protobuf.Timestamp
+	10, // 1: user_profile.UserProfile.social_links:type_name -> google.protobuf.Struct
+	10, // 2: user_profile.UserProfile.skills:type_name -> google.protobuf.Struct
+	9,  // 3: user_profile.UserProfile.created_at:type_name -> google.protobuf.Timestamp
+	9,  // 4: user_profile.UserProfile.updated_at:type_name -> google.protobuf.Timestamp
+	9,  // 5: user_profile.UserProfile.deleted_at:type_name -> google.protobuf.Timestamp
+	9,  // 6: user_profile.CreateUserProfileRequest.birthday:type_name -> google.protobuf.Timestamp
+	10, // 7: user_profile.CreateUserProfileRequest.social_links:type_name -> google.protobuf.Struct
+	10, // 8: user_profile.CreateUserProfileRequest.skills:type_name -> google.protobuf.Struct
+	0,  // 9: user_profile.CreateUserProfileResponse.user_profile:type_name -> user_profile.UserProfile
+	0,  // 10: user_profile.GetUserProfileByIDResponse.user_profile:type_name -> user_profile.UserProfile
+	0,  // 11: user_profile.GetUserProfileByUserIDResponse.user_profile:type_name -> user_profile.UserProfile
+	0,  // 12: user_profile.BatchGetUserProfilesResponse.user_profiles:type_name -> user_profile.UserProfile
+	1,  // 13: user_profile.UserProfileService.CreateUserProfile:input_type -> user_profile.CreateUserProfileRequest
+	3,  // 14: user_profile.UserProfileService.GetUserProfileByID:input_type -> user_profile.GetUserProfileByIDRequest
+	5,  // 15: user_profile.UserProfileService.GetUserProfileByUserID:input_type -> user_profile.GetUserProfileByUserIDRequest
+	7,  // 16: user_profile.UserProfileService.BatchGetUserProfiles:input_type -> user_profile.BatchGetUserProfilesRequest
+	2,  // 17: user_profile.UserProfileService.CreateUserProfile:output_type -> user_profile.CreateUserProfileResponse
+	4,  // 18: user_profile.UserProfileService.GetUserProfileByID:output_type -> user_profile.GetUserProfileByIDResponse
+	6,  // 19: user_profile.UserProfileService.GetUserProfileByUserID:output_type -> user_profile.GetUserProfileByUserIDResponse
+	8,  // 20: user_profile.UserProfileService.BatchGetUserProfiles:output_type -> user_profile.BatchGetUserProfilesResponse
+	17, // [17:21] is the sub-list for method output_type
+	13, // [13:17] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_directory_user_profile_proto_init() }
@@ -626,13 +902,14 @@ func file_directory_user_profile_proto_init() {
 		return
 	}
 	file_directory_user_profile_proto_msgTypes[0].OneofWrappers = []any{}
+	file_directory_user_profile_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_directory_user_profile_proto_rawDesc), len(file_directory_user_profile_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

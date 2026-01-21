@@ -156,6 +156,142 @@ func (x *UserPhone) GetDeletedAt() *timestamppb.Timestamp {
 }
 
 // UserPhone Service Messages
+type CreateUserPhoneRequest struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	UserId                string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                      // 用户ID (UUID)
+	Phone                 string                 `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`                                                                      // 手机号 (varchar(20))
+	CountryCode           *string                `protobuf:"bytes,3,opt,name=country_code,json=countryCode,proto3,oneof" json:"country_code,omitempty"`                                 // 国家代码 (varchar(10))
+	IsPrimary             bool                   `protobuf:"varint,4,opt,name=is_primary,json=isPrimary,proto3" json:"is_primary,omitempty"`                                            // 是否主手机
+	IsVerified            bool                   `protobuf:"varint,5,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`                                         // 是否已验证
+	VerificationCode      *string                `protobuf:"bytes,6,opt,name=verification_code,json=verificationCode,proto3,oneof" json:"verification_code,omitempty"`                  // 验证码 (varchar(10))
+	VerificationExpiresAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=verification_expires_at,json=verificationExpiresAt,proto3,oneof" json:"verification_expires_at,omitempty"` // 验证码过期时间
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *CreateUserPhoneRequest) Reset() {
+	*x = CreateUserPhoneRequest{}
+	mi := &file_directory_user_phone_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserPhoneRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserPhoneRequest) ProtoMessage() {}
+
+func (x *CreateUserPhoneRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_phone_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserPhoneRequest.ProtoReflect.Descriptor instead.
+func (*CreateUserPhoneRequest) Descriptor() ([]byte, []int) {
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateUserPhoneRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreateUserPhoneRequest) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+func (x *CreateUserPhoneRequest) GetCountryCode() string {
+	if x != nil && x.CountryCode != nil {
+		return *x.CountryCode
+	}
+	return ""
+}
+
+func (x *CreateUserPhoneRequest) GetIsPrimary() bool {
+	if x != nil {
+		return x.IsPrimary
+	}
+	return false
+}
+
+func (x *CreateUserPhoneRequest) GetIsVerified() bool {
+	if x != nil {
+		return x.IsVerified
+	}
+	return false
+}
+
+func (x *CreateUserPhoneRequest) GetVerificationCode() string {
+	if x != nil && x.VerificationCode != nil {
+		return *x.VerificationCode
+	}
+	return ""
+}
+
+func (x *CreateUserPhoneRequest) GetVerificationExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.VerificationExpiresAt
+	}
+	return nil
+}
+
+type CreateUserPhoneResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserPhone     *UserPhone             `protobuf:"bytes,1,opt,name=user_phone,json=userPhone,proto3" json:"user_phone,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateUserPhoneResponse) Reset() {
+	*x = CreateUserPhoneResponse{}
+	mi := &file_directory_user_phone_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserPhoneResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserPhoneResponse) ProtoMessage() {}
+
+func (x *CreateUserPhoneResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_phone_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserPhoneResponse.ProtoReflect.Descriptor instead.
+func (*CreateUserPhoneResponse) Descriptor() ([]byte, []int) {
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateUserPhoneResponse) GetUserPhone() *UserPhone {
+	if x != nil {
+		return x.UserPhone
+	}
+	return nil
+}
+
 type GetUserPhoneByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -165,7 +301,7 @@ type GetUserPhoneByIDRequest struct {
 
 func (x *GetUserPhoneByIDRequest) Reset() {
 	*x = GetUserPhoneByIDRequest{}
-	mi := &file_directory_user_phone_proto_msgTypes[1]
+	mi := &file_directory_user_phone_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -177,7 +313,7 @@ func (x *GetUserPhoneByIDRequest) String() string {
 func (*GetUserPhoneByIDRequest) ProtoMessage() {}
 
 func (x *GetUserPhoneByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_phone_proto_msgTypes[1]
+	mi := &file_directory_user_phone_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -190,7 +326,7 @@ func (x *GetUserPhoneByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPhoneByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPhoneByIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_phone_proto_rawDescGZIP(), []int{1}
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserPhoneByIDRequest) GetId() string {
@@ -209,7 +345,7 @@ type GetUserPhoneByIDResponse struct {
 
 func (x *GetUserPhoneByIDResponse) Reset() {
 	*x = GetUserPhoneByIDResponse{}
-	mi := &file_directory_user_phone_proto_msgTypes[2]
+	mi := &file_directory_user_phone_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -221,7 +357,7 @@ func (x *GetUserPhoneByIDResponse) String() string {
 func (*GetUserPhoneByIDResponse) ProtoMessage() {}
 
 func (x *GetUserPhoneByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_phone_proto_msgTypes[2]
+	mi := &file_directory_user_phone_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -234,7 +370,7 @@ func (x *GetUserPhoneByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPhoneByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPhoneByIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_phone_proto_rawDescGZIP(), []int{2}
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserPhoneByIDResponse) GetUserPhone() *UserPhone {
@@ -253,7 +389,7 @@ type GetUserPhoneByPhoneRequest struct {
 
 func (x *GetUserPhoneByPhoneRequest) Reset() {
 	*x = GetUserPhoneByPhoneRequest{}
-	mi := &file_directory_user_phone_proto_msgTypes[3]
+	mi := &file_directory_user_phone_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -265,7 +401,7 @@ func (x *GetUserPhoneByPhoneRequest) String() string {
 func (*GetUserPhoneByPhoneRequest) ProtoMessage() {}
 
 func (x *GetUserPhoneByPhoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_phone_proto_msgTypes[3]
+	mi := &file_directory_user_phone_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -278,7 +414,7 @@ func (x *GetUserPhoneByPhoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPhoneByPhoneRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPhoneByPhoneRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_phone_proto_rawDescGZIP(), []int{3}
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserPhoneByPhoneRequest) GetPhone() string {
@@ -297,7 +433,7 @@ type GetUserPhoneByPhoneResponse struct {
 
 func (x *GetUserPhoneByPhoneResponse) Reset() {
 	*x = GetUserPhoneByPhoneResponse{}
-	mi := &file_directory_user_phone_proto_msgTypes[4]
+	mi := &file_directory_user_phone_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -309,7 +445,7 @@ func (x *GetUserPhoneByPhoneResponse) String() string {
 func (*GetUserPhoneByPhoneResponse) ProtoMessage() {}
 
 func (x *GetUserPhoneByPhoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_phone_proto_msgTypes[4]
+	mi := &file_directory_user_phone_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -322,7 +458,7 @@ func (x *GetUserPhoneByPhoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPhoneByPhoneResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPhoneByPhoneResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_phone_proto_rawDescGZIP(), []int{4}
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetUserPhoneByPhoneResponse) GetUserPhone() *UserPhone {
@@ -341,7 +477,7 @@ type GetUserPhonesByUserIDRequest struct {
 
 func (x *GetUserPhonesByUserIDRequest) Reset() {
 	*x = GetUserPhonesByUserIDRequest{}
-	mi := &file_directory_user_phone_proto_msgTypes[5]
+	mi := &file_directory_user_phone_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +489,7 @@ func (x *GetUserPhonesByUserIDRequest) String() string {
 func (*GetUserPhonesByUserIDRequest) ProtoMessage() {}
 
 func (x *GetUserPhonesByUserIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_phone_proto_msgTypes[5]
+	mi := &file_directory_user_phone_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +502,7 @@ func (x *GetUserPhonesByUserIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPhonesByUserIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPhonesByUserIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_phone_proto_rawDescGZIP(), []int{5}
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetUserPhonesByUserIDRequest) GetUserId() string {
@@ -385,7 +521,7 @@ type GetUserPhonesByUserIDResponse struct {
 
 func (x *GetUserPhonesByUserIDResponse) Reset() {
 	*x = GetUserPhonesByUserIDResponse{}
-	mi := &file_directory_user_phone_proto_msgTypes[6]
+	mi := &file_directory_user_phone_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -397,7 +533,7 @@ func (x *GetUserPhonesByUserIDResponse) String() string {
 func (*GetUserPhonesByUserIDResponse) ProtoMessage() {}
 
 func (x *GetUserPhonesByUserIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_phone_proto_msgTypes[6]
+	mi := &file_directory_user_phone_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -410,7 +546,7 @@ func (x *GetUserPhonesByUserIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPhonesByUserIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPhonesByUserIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_phone_proto_rawDescGZIP(), []int{6}
+	return file_directory_user_phone_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetUserPhonesByUserIDResponse) GetUserPhones() []*UserPhone {
@@ -450,7 +586,23 @@ const file_directory_user_phone_proto_rawDesc = "" +
 	"\f_verified_atB\x14\n" +
 	"\x12_verification_codeB\x1a\n" +
 	"\x18_verification_expires_atB\r\n" +
-	"\v_deleted_at\")\n" +
+	"\v_deleted_at\"\xfd\x02\n" +
+	"\x16CreateUserPhoneRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05phone\x18\x02 \x01(\tR\x05phone\x12&\n" +
+	"\fcountry_code\x18\x03 \x01(\tH\x00R\vcountryCode\x88\x01\x01\x12\x1d\n" +
+	"\n" +
+	"is_primary\x18\x04 \x01(\bR\tisPrimary\x12\x1f\n" +
+	"\vis_verified\x18\x05 \x01(\bR\n" +
+	"isVerified\x120\n" +
+	"\x11verification_code\x18\x06 \x01(\tH\x01R\x10verificationCode\x88\x01\x01\x12W\n" +
+	"\x17verification_expires_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x02R\x15verificationExpiresAt\x88\x01\x01B\x0f\n" +
+	"\r_country_codeB\x14\n" +
+	"\x12_verification_codeB\x1a\n" +
+	"\x18_verification_expires_at\"O\n" +
+	"\x17CreateUserPhoneResponse\x124\n" +
+	"\n" +
+	"user_phone\x18\x01 \x01(\v2\x15.user_phone.UserPhoneR\tuserPhone\")\n" +
 	"\x17GetUserPhoneByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"P\n" +
 	"\x18GetUserPhoneByIDResponse\x124\n" +
@@ -465,8 +617,9 @@ const file_directory_user_phone_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"W\n" +
 	"\x1dGetUserPhonesByUserIDResponse\x126\n" +
 	"\vuser_phones\x18\x01 \x03(\v2\x15.user_phone.UserPhoneR\n" +
-	"userPhones2\xc7\x02\n" +
-	"\x10UserPhoneService\x12]\n" +
+	"userPhones2\xa3\x03\n" +
+	"\x10UserPhoneService\x12Z\n" +
+	"\x0fCreateUserPhone\x12\".user_phone.CreateUserPhoneRequest\x1a#.user_phone.CreateUserPhoneResponse\x12]\n" +
 	"\x10GetUserPhoneByID\x12#.user_phone.GetUserPhoneByIDRequest\x1a$.user_phone.GetUserPhoneByIDResponse\x12f\n" +
 	"\x13GetUserPhoneByPhone\x12&.user_phone.GetUserPhoneByPhoneRequest\x1a'.user_phone.GetUserPhoneByPhoneResponse\x12l\n" +
 	"\x15GetUserPhonesByUserID\x12(.user_phone.GetUserPhonesByUserIDRequest\x1a).user_phone.GetUserPhonesByUserIDResponseB3Z1nfxid/protos/gen/directory/user_phone;userphonepbb\x06proto3"
@@ -483,37 +636,43 @@ func file_directory_user_phone_proto_rawDescGZIP() []byte {
 	return file_directory_user_phone_proto_rawDescData
 }
 
-var file_directory_user_phone_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_directory_user_phone_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_directory_user_phone_proto_goTypes = []any{
 	(*UserPhone)(nil),                     // 0: user_phone.UserPhone
-	(*GetUserPhoneByIDRequest)(nil),       // 1: user_phone.GetUserPhoneByIDRequest
-	(*GetUserPhoneByIDResponse)(nil),      // 2: user_phone.GetUserPhoneByIDResponse
-	(*GetUserPhoneByPhoneRequest)(nil),    // 3: user_phone.GetUserPhoneByPhoneRequest
-	(*GetUserPhoneByPhoneResponse)(nil),   // 4: user_phone.GetUserPhoneByPhoneResponse
-	(*GetUserPhonesByUserIDRequest)(nil),  // 5: user_phone.GetUserPhonesByUserIDRequest
-	(*GetUserPhonesByUserIDResponse)(nil), // 6: user_phone.GetUserPhonesByUserIDResponse
-	(*timestamppb.Timestamp)(nil),         // 7: google.protobuf.Timestamp
+	(*CreateUserPhoneRequest)(nil),        // 1: user_phone.CreateUserPhoneRequest
+	(*CreateUserPhoneResponse)(nil),       // 2: user_phone.CreateUserPhoneResponse
+	(*GetUserPhoneByIDRequest)(nil),       // 3: user_phone.GetUserPhoneByIDRequest
+	(*GetUserPhoneByIDResponse)(nil),      // 4: user_phone.GetUserPhoneByIDResponse
+	(*GetUserPhoneByPhoneRequest)(nil),    // 5: user_phone.GetUserPhoneByPhoneRequest
+	(*GetUserPhoneByPhoneResponse)(nil),   // 6: user_phone.GetUserPhoneByPhoneResponse
+	(*GetUserPhonesByUserIDRequest)(nil),  // 7: user_phone.GetUserPhonesByUserIDRequest
+	(*GetUserPhonesByUserIDResponse)(nil), // 8: user_phone.GetUserPhonesByUserIDResponse
+	(*timestamppb.Timestamp)(nil),         // 9: google.protobuf.Timestamp
 }
 var file_directory_user_phone_proto_depIdxs = []int32{
-	7,  // 0: user_phone.UserPhone.verified_at:type_name -> google.protobuf.Timestamp
-	7,  // 1: user_phone.UserPhone.verification_expires_at:type_name -> google.protobuf.Timestamp
-	7,  // 2: user_phone.UserPhone.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 3: user_phone.UserPhone.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 4: user_phone.UserPhone.deleted_at:type_name -> google.protobuf.Timestamp
-	0,  // 5: user_phone.GetUserPhoneByIDResponse.user_phone:type_name -> user_phone.UserPhone
-	0,  // 6: user_phone.GetUserPhoneByPhoneResponse.user_phone:type_name -> user_phone.UserPhone
-	0,  // 7: user_phone.GetUserPhonesByUserIDResponse.user_phones:type_name -> user_phone.UserPhone
-	1,  // 8: user_phone.UserPhoneService.GetUserPhoneByID:input_type -> user_phone.GetUserPhoneByIDRequest
-	3,  // 9: user_phone.UserPhoneService.GetUserPhoneByPhone:input_type -> user_phone.GetUserPhoneByPhoneRequest
-	5,  // 10: user_phone.UserPhoneService.GetUserPhonesByUserID:input_type -> user_phone.GetUserPhonesByUserIDRequest
-	2,  // 11: user_phone.UserPhoneService.GetUserPhoneByID:output_type -> user_phone.GetUserPhoneByIDResponse
-	4,  // 12: user_phone.UserPhoneService.GetUserPhoneByPhone:output_type -> user_phone.GetUserPhoneByPhoneResponse
-	6,  // 13: user_phone.UserPhoneService.GetUserPhonesByUserID:output_type -> user_phone.GetUserPhonesByUserIDResponse
-	11, // [11:14] is the sub-list for method output_type
-	8,  // [8:11] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	9,  // 0: user_phone.UserPhone.verified_at:type_name -> google.protobuf.Timestamp
+	9,  // 1: user_phone.UserPhone.verification_expires_at:type_name -> google.protobuf.Timestamp
+	9,  // 2: user_phone.UserPhone.created_at:type_name -> google.protobuf.Timestamp
+	9,  // 3: user_phone.UserPhone.updated_at:type_name -> google.protobuf.Timestamp
+	9,  // 4: user_phone.UserPhone.deleted_at:type_name -> google.protobuf.Timestamp
+	9,  // 5: user_phone.CreateUserPhoneRequest.verification_expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 6: user_phone.CreateUserPhoneResponse.user_phone:type_name -> user_phone.UserPhone
+	0,  // 7: user_phone.GetUserPhoneByIDResponse.user_phone:type_name -> user_phone.UserPhone
+	0,  // 8: user_phone.GetUserPhoneByPhoneResponse.user_phone:type_name -> user_phone.UserPhone
+	0,  // 9: user_phone.GetUserPhonesByUserIDResponse.user_phones:type_name -> user_phone.UserPhone
+	1,  // 10: user_phone.UserPhoneService.CreateUserPhone:input_type -> user_phone.CreateUserPhoneRequest
+	3,  // 11: user_phone.UserPhoneService.GetUserPhoneByID:input_type -> user_phone.GetUserPhoneByIDRequest
+	5,  // 12: user_phone.UserPhoneService.GetUserPhoneByPhone:input_type -> user_phone.GetUserPhoneByPhoneRequest
+	7,  // 13: user_phone.UserPhoneService.GetUserPhonesByUserID:input_type -> user_phone.GetUserPhonesByUserIDRequest
+	2,  // 14: user_phone.UserPhoneService.CreateUserPhone:output_type -> user_phone.CreateUserPhoneResponse
+	4,  // 15: user_phone.UserPhoneService.GetUserPhoneByID:output_type -> user_phone.GetUserPhoneByIDResponse
+	6,  // 16: user_phone.UserPhoneService.GetUserPhoneByPhone:output_type -> user_phone.GetUserPhoneByPhoneResponse
+	8,  // 17: user_phone.UserPhoneService.GetUserPhonesByUserID:output_type -> user_phone.GetUserPhonesByUserIDResponse
+	14, // [14:18] is the sub-list for method output_type
+	10, // [10:14] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_directory_user_phone_proto_init() }
@@ -522,13 +681,14 @@ func file_directory_user_phone_proto_init() {
 		return
 	}
 	file_directory_user_phone_proto_msgTypes[0].OneofWrappers = []any{}
+	file_directory_user_phone_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_directory_user_phone_proto_rawDesc), len(file_directory_user_phone_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

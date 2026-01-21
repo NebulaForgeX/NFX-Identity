@@ -34,6 +34,9 @@ message UserProfile {
 
 // UserProfile 服务 - 供其他服务通过 gRPC 管理用户资料
 service UserProfileService {
+  // 创建用户资料
+  rpc CreateUserProfile (CreateUserProfileRequest) returns (CreateUserProfileResponse);
+  
   // 根据ID获取用户资料
   rpc GetUserProfileByID (GetUserProfileByIDRequest) returns (GetUserProfileByIDResponse);
   
@@ -45,6 +48,31 @@ service UserProfileService {
 }
 
 // UserProfile Service Messages
+message CreateUserProfileRequest {
+  string user_id = 1;                    // 用户ID (UUID)
+  optional string role = 2;               // 角色 (varchar(100))
+  optional string first_name = 3;         // 名 (varchar(100))
+  optional string last_name = 4;         // 姓 (varchar(100))
+  optional string nickname = 5;          // 昵称 (varchar(50))
+  optional string display_name = 6;      // 显示名称 (varchar(100))
+  optional string avatar_id = 7;         // 头像ID (UUID)
+  optional string background_id = 8;      // 背景ID (UUID)
+  repeated string background_ids = 9;    // 背景ID数组 (uuid[])
+  optional string bio = 10;              // 简介 (text)
+  optional google.protobuf.Timestamp birthday = 11; // 生日 (date)
+  optional int32 age = 12;               // 年龄 (integer)
+  optional string gender = 13;           // 性别 (varchar(20))
+  optional string location = 14;         // 位置 (varchar(255))
+  optional string website = 15;         // 网站 (varchar(255))
+  optional string github = 16;          // GitHub (varchar(255))
+  optional google.protobuf.Struct social_links = 17; // 社交链接 (JSONB)
+  optional google.protobuf.Struct skills = 18;       // 技能 (JSONB)
+}
+
+message CreateUserProfileResponse {
+  UserProfile user_profile = 1;
+}
+
 message GetUserProfileByIDRequest {
   string id = 1;
 }

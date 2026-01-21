@@ -15,20 +15,32 @@ import (
 	rolepb "nfxid/protos/gen/access/role"
 	rolepermissionpb "nfxid/protos/gen/access/role_permission"
 	usercredentialpb "nfxid/protos/gen/auth/user_credential"
+	useremailpb "nfxid/protos/gen/directory/user_email"
 	userpb "nfxid/protos/gen/directory/user"
+	userphonepb "nfxid/protos/gen/directory/user_phone"
+	userpreferencepb "nfxid/protos/gen/directory/user_preference"
+	userprofilepb "nfxid/protos/gen/directory/user_profile"
 
 	"google.golang.org/grpc"
 )
 
 // DirectoryClient Directory 服务客户端（只包含需要的服务）
 type DirectoryClient struct {
-	User *directory.UserClient
+	User          *directory.UserClient
+	UserEmail     *directory.UserEmailClient
+	UserPhone     *directory.UserPhoneClient
+	UserProfile   *directory.UserProfileClient
+	UserPreference *directory.UserPreferenceClient
 }
 
 // NewDirectoryClient 创建 Directory 客户端
 func NewDirectoryClient(conn *grpc.ClientConn) *DirectoryClient {
 	return &DirectoryClient{
-		User: directory.NewUserClient(userpb.NewUserServiceClient(conn)),
+		User:          directory.NewUserClient(userpb.NewUserServiceClient(conn)),
+		UserEmail:     directory.NewUserEmailClient(useremailpb.NewUserEmailServiceClient(conn)),
+		UserPhone:     directory.NewUserPhoneClient(userphonepb.NewUserPhoneServiceClient(conn)),
+		UserProfile:   directory.NewUserProfileClient(userprofilepb.NewUserProfileServiceClient(conn)),
+		UserPreference: directory.NewUserPreferenceClient(userpreferencepb.NewUserPreferenceServiceClient(conn)),
 	}
 }
 

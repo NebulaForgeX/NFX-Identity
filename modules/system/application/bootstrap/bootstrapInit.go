@@ -131,8 +131,9 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 }
 
 // initDirectoryService 初始化 Directory 服务
-// 创建第一个系统管理员用户
+// 创建第一个系统管理员用户及其关联数据
 func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) (uuid.UUID, error) {
+	// 1. 创建用户
 	userIDStr, err := s.grpcClients.DirectoryClient.User.CreateUser(ctx, cmd.AdminUsername, "active", true)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("failed to create admin user: %w", err)
@@ -141,6 +142,34 @@ func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommand
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("invalid user ID returned: %w", err)
+	}
+
+	// 2. 创建用户邮箱（如果提供了）
+	if cmd.AdminEmail != nil && *cmd.AdminEmail != "" {
+		_, err := s.grpcClients.DirectoryClient.UserEmail.CreateUserEmailDefault(ctx, userID.String(), *cmd.AdminEmail)
+		if err != nil {
+			return uuid.Nil, fmt.Errorf("failed to create admin user email: %w", err)
+		}
+	}
+
+	// 3. 创建用户手机（如果提供了）
+	if cmd.AdminPhone != nil && *cmd.AdminPhone != "" {
+		_, err := s.grpcClients.DirectoryClient.UserPhone.CreateUserPhoneDefault(ctx, userID.String(), *cmd.AdminPhone)
+		if err != nil {
+			return uuid.Nil, fmt.Errorf("failed to create admin user phone: %w", err)
+		}
+	}
+
+	// 4. 创建用户资料（创建空的，后续可以更新）
+	_, err = s.grpcClients.DirectoryClient.UserProfile.CreateUserProfileDefault(ctx, userID.String())
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("failed to create admin user profile: %w", err)
+	}
+
+	// 5. 创建用户偏好（创建空的，使用默认值）
+	_, err = s.grpcClients.DirectoryClient.UserPreference.CreateUserPreferenceDefault(ctx, userID.String())
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("failed to create admin user preference: %w", err)
 	}
 
 	return userID, nil

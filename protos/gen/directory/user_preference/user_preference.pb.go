@@ -157,6 +157,150 @@ func (x *UserPreference) GetDeletedAt() *timestamppb.Timestamp {
 }
 
 // UserPreference Service Messages
+type CreateUserPreferenceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`       // 用户ID (UUID)
+	Theme         *string                `protobuf:"bytes,2,opt,name=theme,proto3,oneof" json:"theme,omitempty"`                 // 主题 (varchar(50))
+	Language      *string                `protobuf:"bytes,3,opt,name=language,proto3,oneof" json:"language,omitempty"`           // 语言 (varchar(10))
+	Timezone      *string                `protobuf:"bytes,4,opt,name=timezone,proto3,oneof" json:"timezone,omitempty"`           // 时区 (varchar(50))
+	Notifications *structpb.Struct       `protobuf:"bytes,5,opt,name=notifications,proto3,oneof" json:"notifications,omitempty"` // 通知设置 (JSONB)
+	Privacy       *structpb.Struct       `protobuf:"bytes,6,opt,name=privacy,proto3,oneof" json:"privacy,omitempty"`             // 隐私设置 (JSONB)
+	Display       *structpb.Struct       `protobuf:"bytes,7,opt,name=display,proto3,oneof" json:"display,omitempty"`             // 显示设置 (JSONB)
+	Other         *structpb.Struct       `protobuf:"bytes,8,opt,name=other,proto3,oneof" json:"other,omitempty"`                 // 其他设置 (JSONB)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateUserPreferenceRequest) Reset() {
+	*x = CreateUserPreferenceRequest{}
+	mi := &file_directory_user_preference_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserPreferenceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserPreferenceRequest) ProtoMessage() {}
+
+func (x *CreateUserPreferenceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_preference_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserPreferenceRequest.ProtoReflect.Descriptor instead.
+func (*CreateUserPreferenceRequest) Descriptor() ([]byte, []int) {
+	return file_directory_user_preference_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateUserPreferenceRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreateUserPreferenceRequest) GetTheme() string {
+	if x != nil && x.Theme != nil {
+		return *x.Theme
+	}
+	return ""
+}
+
+func (x *CreateUserPreferenceRequest) GetLanguage() string {
+	if x != nil && x.Language != nil {
+		return *x.Language
+	}
+	return ""
+}
+
+func (x *CreateUserPreferenceRequest) GetTimezone() string {
+	if x != nil && x.Timezone != nil {
+		return *x.Timezone
+	}
+	return ""
+}
+
+func (x *CreateUserPreferenceRequest) GetNotifications() *structpb.Struct {
+	if x != nil {
+		return x.Notifications
+	}
+	return nil
+}
+
+func (x *CreateUserPreferenceRequest) GetPrivacy() *structpb.Struct {
+	if x != nil {
+		return x.Privacy
+	}
+	return nil
+}
+
+func (x *CreateUserPreferenceRequest) GetDisplay() *structpb.Struct {
+	if x != nil {
+		return x.Display
+	}
+	return nil
+}
+
+func (x *CreateUserPreferenceRequest) GetOther() *structpb.Struct {
+	if x != nil {
+		return x.Other
+	}
+	return nil
+}
+
+type CreateUserPreferenceResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserPreference *UserPreference        `protobuf:"bytes,1,opt,name=user_preference,json=userPreference,proto3" json:"user_preference,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CreateUserPreferenceResponse) Reset() {
+	*x = CreateUserPreferenceResponse{}
+	mi := &file_directory_user_preference_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateUserPreferenceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateUserPreferenceResponse) ProtoMessage() {}
+
+func (x *CreateUserPreferenceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_directory_user_preference_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateUserPreferenceResponse.ProtoReflect.Descriptor instead.
+func (*CreateUserPreferenceResponse) Descriptor() ([]byte, []int) {
+	return file_directory_user_preference_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateUserPreferenceResponse) GetUserPreference() *UserPreference {
+	if x != nil {
+		return x.UserPreference
+	}
+	return nil
+}
+
 type GetUserPreferenceByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -166,7 +310,7 @@ type GetUserPreferenceByIDRequest struct {
 
 func (x *GetUserPreferenceByIDRequest) Reset() {
 	*x = GetUserPreferenceByIDRequest{}
-	mi := &file_directory_user_preference_proto_msgTypes[1]
+	mi := &file_directory_user_preference_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -178,7 +322,7 @@ func (x *GetUserPreferenceByIDRequest) String() string {
 func (*GetUserPreferenceByIDRequest) ProtoMessage() {}
 
 func (x *GetUserPreferenceByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_preference_proto_msgTypes[1]
+	mi := &file_directory_user_preference_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -191,7 +335,7 @@ func (x *GetUserPreferenceByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPreferenceByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPreferenceByIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_preference_proto_rawDescGZIP(), []int{1}
+	return file_directory_user_preference_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetUserPreferenceByIDRequest) GetId() string {
@@ -210,7 +354,7 @@ type GetUserPreferenceByIDResponse struct {
 
 func (x *GetUserPreferenceByIDResponse) Reset() {
 	*x = GetUserPreferenceByIDResponse{}
-	mi := &file_directory_user_preference_proto_msgTypes[2]
+	mi := &file_directory_user_preference_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -222,7 +366,7 @@ func (x *GetUserPreferenceByIDResponse) String() string {
 func (*GetUserPreferenceByIDResponse) ProtoMessage() {}
 
 func (x *GetUserPreferenceByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_preference_proto_msgTypes[2]
+	mi := &file_directory_user_preference_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -235,7 +379,7 @@ func (x *GetUserPreferenceByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPreferenceByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPreferenceByIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_preference_proto_rawDescGZIP(), []int{2}
+	return file_directory_user_preference_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserPreferenceByIDResponse) GetUserPreference() *UserPreference {
@@ -254,7 +398,7 @@ type GetUserPreferenceByUserIDRequest struct {
 
 func (x *GetUserPreferenceByUserIDRequest) Reset() {
 	*x = GetUserPreferenceByUserIDRequest{}
-	mi := &file_directory_user_preference_proto_msgTypes[3]
+	mi := &file_directory_user_preference_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -266,7 +410,7 @@ func (x *GetUserPreferenceByUserIDRequest) String() string {
 func (*GetUserPreferenceByUserIDRequest) ProtoMessage() {}
 
 func (x *GetUserPreferenceByUserIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_preference_proto_msgTypes[3]
+	mi := &file_directory_user_preference_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -279,7 +423,7 @@ func (x *GetUserPreferenceByUserIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPreferenceByUserIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPreferenceByUserIDRequest) Descriptor() ([]byte, []int) {
-	return file_directory_user_preference_proto_rawDescGZIP(), []int{3}
+	return file_directory_user_preference_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserPreferenceByUserIDRequest) GetUserId() string {
@@ -298,7 +442,7 @@ type GetUserPreferenceByUserIDResponse struct {
 
 func (x *GetUserPreferenceByUserIDResponse) Reset() {
 	*x = GetUserPreferenceByUserIDResponse{}
-	mi := &file_directory_user_preference_proto_msgTypes[4]
+	mi := &file_directory_user_preference_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -310,7 +454,7 @@ func (x *GetUserPreferenceByUserIDResponse) String() string {
 func (*GetUserPreferenceByUserIDResponse) ProtoMessage() {}
 
 func (x *GetUserPreferenceByUserIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_directory_user_preference_proto_msgTypes[4]
+	mi := &file_directory_user_preference_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -323,7 +467,7 @@ func (x *GetUserPreferenceByUserIDResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetUserPreferenceByUserIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPreferenceByUserIDResponse) Descriptor() ([]byte, []int) {
-	return file_directory_user_preference_proto_rawDescGZIP(), []int{4}
+	return file_directory_user_preference_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetUserPreferenceByUserIDResponse) GetUserPreference() *UserPreference {
@@ -364,7 +508,27 @@ const file_directory_user_preference_proto_rawDesc = "" +
 	"\n" +
 	"\b_displayB\b\n" +
 	"\x06_otherB\r\n" +
-	"\v_deleted_at\".\n" +
+	"\v_deleted_at\"\xd3\x03\n" +
+	"\x1bCreateUserPreferenceRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x19\n" +
+	"\x05theme\x18\x02 \x01(\tH\x00R\x05theme\x88\x01\x01\x12\x1f\n" +
+	"\blanguage\x18\x03 \x01(\tH\x01R\blanguage\x88\x01\x01\x12\x1f\n" +
+	"\btimezone\x18\x04 \x01(\tH\x02R\btimezone\x88\x01\x01\x12B\n" +
+	"\rnotifications\x18\x05 \x01(\v2\x17.google.protobuf.StructH\x03R\rnotifications\x88\x01\x01\x126\n" +
+	"\aprivacy\x18\x06 \x01(\v2\x17.google.protobuf.StructH\x04R\aprivacy\x88\x01\x01\x126\n" +
+	"\adisplay\x18\a \x01(\v2\x17.google.protobuf.StructH\x05R\adisplay\x88\x01\x01\x122\n" +
+	"\x05other\x18\b \x01(\v2\x17.google.protobuf.StructH\x06R\x05other\x88\x01\x01B\b\n" +
+	"\x06_themeB\v\n" +
+	"\t_languageB\v\n" +
+	"\t_timezoneB\x10\n" +
+	"\x0e_notificationsB\n" +
+	"\n" +
+	"\b_privacyB\n" +
+	"\n" +
+	"\b_displayB\b\n" +
+	"\x06_other\"h\n" +
+	"\x1cCreateUserPreferenceResponse\x12H\n" +
+	"\x0fuser_preference\x18\x01 \x01(\v2\x1f.user_preference.UserPreferenceR\x0euserPreference\".\n" +
 	"\x1cGetUserPreferenceByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"i\n" +
 	"\x1dGetUserPreferenceByIDResponse\x12H\n" +
@@ -372,8 +536,9 @@ const file_directory_user_preference_proto_rawDesc = "" +
 	" GetUserPreferenceByUserIDRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"m\n" +
 	"!GetUserPreferenceByUserIDResponse\x12H\n" +
-	"\x0fuser_preference\x18\x01 \x01(\v2\x1f.user_preference.UserPreferenceR\x0euserPreference2\x94\x02\n" +
-	"\x15UserPreferenceService\x12v\n" +
+	"\x0fuser_preference\x18\x01 \x01(\v2\x1f.user_preference.UserPreferenceR\x0euserPreference2\x89\x03\n" +
+	"\x15UserPreferenceService\x12s\n" +
+	"\x14CreateUserPreference\x12,.user_preference.CreateUserPreferenceRequest\x1a-.user_preference.CreateUserPreferenceResponse\x12v\n" +
 	"\x15GetUserPreferenceByID\x12-.user_preference.GetUserPreferenceByIDRequest\x1a..user_preference.GetUserPreferenceByIDResponse\x12\x82\x01\n" +
 	"\x19GetUserPreferenceByUserID\x121.user_preference.GetUserPreferenceByUserIDRequest\x1a2.user_preference.GetUserPreferenceByUserIDResponseB=Z;nfxid/protos/gen/directory/user_preference;userpreferencepbb\x06proto3"
 
@@ -389,35 +554,44 @@ func file_directory_user_preference_proto_rawDescGZIP() []byte {
 	return file_directory_user_preference_proto_rawDescData
 }
 
-var file_directory_user_preference_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_directory_user_preference_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_directory_user_preference_proto_goTypes = []any{
 	(*UserPreference)(nil),                    // 0: user_preference.UserPreference
-	(*GetUserPreferenceByIDRequest)(nil),      // 1: user_preference.GetUserPreferenceByIDRequest
-	(*GetUserPreferenceByIDResponse)(nil),     // 2: user_preference.GetUserPreferenceByIDResponse
-	(*GetUserPreferenceByUserIDRequest)(nil),  // 3: user_preference.GetUserPreferenceByUserIDRequest
-	(*GetUserPreferenceByUserIDResponse)(nil), // 4: user_preference.GetUserPreferenceByUserIDResponse
-	(*structpb.Struct)(nil),                   // 5: google.protobuf.Struct
-	(*timestamppb.Timestamp)(nil),             // 6: google.protobuf.Timestamp
+	(*CreateUserPreferenceRequest)(nil),       // 1: user_preference.CreateUserPreferenceRequest
+	(*CreateUserPreferenceResponse)(nil),      // 2: user_preference.CreateUserPreferenceResponse
+	(*GetUserPreferenceByIDRequest)(nil),      // 3: user_preference.GetUserPreferenceByIDRequest
+	(*GetUserPreferenceByIDResponse)(nil),     // 4: user_preference.GetUserPreferenceByIDResponse
+	(*GetUserPreferenceByUserIDRequest)(nil),  // 5: user_preference.GetUserPreferenceByUserIDRequest
+	(*GetUserPreferenceByUserIDResponse)(nil), // 6: user_preference.GetUserPreferenceByUserIDResponse
+	(*structpb.Struct)(nil),                   // 7: google.protobuf.Struct
+	(*timestamppb.Timestamp)(nil),             // 8: google.protobuf.Timestamp
 }
 var file_directory_user_preference_proto_depIdxs = []int32{
-	5,  // 0: user_preference.UserPreference.notifications:type_name -> google.protobuf.Struct
-	5,  // 1: user_preference.UserPreference.privacy:type_name -> google.protobuf.Struct
-	5,  // 2: user_preference.UserPreference.display:type_name -> google.protobuf.Struct
-	5,  // 3: user_preference.UserPreference.other:type_name -> google.protobuf.Struct
-	6,  // 4: user_preference.UserPreference.created_at:type_name -> google.protobuf.Timestamp
-	6,  // 5: user_preference.UserPreference.updated_at:type_name -> google.protobuf.Timestamp
-	6,  // 6: user_preference.UserPreference.deleted_at:type_name -> google.protobuf.Timestamp
-	0,  // 7: user_preference.GetUserPreferenceByIDResponse.user_preference:type_name -> user_preference.UserPreference
-	0,  // 8: user_preference.GetUserPreferenceByUserIDResponse.user_preference:type_name -> user_preference.UserPreference
-	1,  // 9: user_preference.UserPreferenceService.GetUserPreferenceByID:input_type -> user_preference.GetUserPreferenceByIDRequest
-	3,  // 10: user_preference.UserPreferenceService.GetUserPreferenceByUserID:input_type -> user_preference.GetUserPreferenceByUserIDRequest
-	2,  // 11: user_preference.UserPreferenceService.GetUserPreferenceByID:output_type -> user_preference.GetUserPreferenceByIDResponse
-	4,  // 12: user_preference.UserPreferenceService.GetUserPreferenceByUserID:output_type -> user_preference.GetUserPreferenceByUserIDResponse
-	11, // [11:13] is the sub-list for method output_type
-	9,  // [9:11] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	7,  // 0: user_preference.UserPreference.notifications:type_name -> google.protobuf.Struct
+	7,  // 1: user_preference.UserPreference.privacy:type_name -> google.protobuf.Struct
+	7,  // 2: user_preference.UserPreference.display:type_name -> google.protobuf.Struct
+	7,  // 3: user_preference.UserPreference.other:type_name -> google.protobuf.Struct
+	8,  // 4: user_preference.UserPreference.created_at:type_name -> google.protobuf.Timestamp
+	8,  // 5: user_preference.UserPreference.updated_at:type_name -> google.protobuf.Timestamp
+	8,  // 6: user_preference.UserPreference.deleted_at:type_name -> google.protobuf.Timestamp
+	7,  // 7: user_preference.CreateUserPreferenceRequest.notifications:type_name -> google.protobuf.Struct
+	7,  // 8: user_preference.CreateUserPreferenceRequest.privacy:type_name -> google.protobuf.Struct
+	7,  // 9: user_preference.CreateUserPreferenceRequest.display:type_name -> google.protobuf.Struct
+	7,  // 10: user_preference.CreateUserPreferenceRequest.other:type_name -> google.protobuf.Struct
+	0,  // 11: user_preference.CreateUserPreferenceResponse.user_preference:type_name -> user_preference.UserPreference
+	0,  // 12: user_preference.GetUserPreferenceByIDResponse.user_preference:type_name -> user_preference.UserPreference
+	0,  // 13: user_preference.GetUserPreferenceByUserIDResponse.user_preference:type_name -> user_preference.UserPreference
+	1,  // 14: user_preference.UserPreferenceService.CreateUserPreference:input_type -> user_preference.CreateUserPreferenceRequest
+	3,  // 15: user_preference.UserPreferenceService.GetUserPreferenceByID:input_type -> user_preference.GetUserPreferenceByIDRequest
+	5,  // 16: user_preference.UserPreferenceService.GetUserPreferenceByUserID:input_type -> user_preference.GetUserPreferenceByUserIDRequest
+	2,  // 17: user_preference.UserPreferenceService.CreateUserPreference:output_type -> user_preference.CreateUserPreferenceResponse
+	4,  // 18: user_preference.UserPreferenceService.GetUserPreferenceByID:output_type -> user_preference.GetUserPreferenceByIDResponse
+	6,  // 19: user_preference.UserPreferenceService.GetUserPreferenceByUserID:output_type -> user_preference.GetUserPreferenceByUserIDResponse
+	17, // [17:20] is the sub-list for method output_type
+	14, // [14:17] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_directory_user_preference_proto_init() }
@@ -426,13 +600,14 @@ func file_directory_user_preference_proto_init() {
 		return
 	}
 	file_directory_user_preference_proto_msgTypes[0].OneofWrappers = []any{}
+	file_directory_user_preference_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_directory_user_preference_proto_rawDesc), len(file_directory_user_preference_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

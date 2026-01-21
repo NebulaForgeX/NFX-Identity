@@ -23,6 +23,9 @@ message UserPhone {
 
 // UserPhone 服务 - 供其他服务通过 gRPC 管理用户手机
 service UserPhoneService {
+  // 创建用户手机
+  rpc CreateUserPhone (CreateUserPhoneRequest) returns (CreateUserPhoneResponse);
+  
   // 根据ID获取用户手机
   rpc GetUserPhoneByID (GetUserPhoneByIDRequest) returns (GetUserPhoneByIDResponse);
   
@@ -34,6 +37,20 @@ service UserPhoneService {
 }
 
 // UserPhone Service Messages
+message CreateUserPhoneRequest {
+  string user_id = 1;                    // 用户ID (UUID)
+  string phone = 2;                      // 手机号 (varchar(20))
+  optional string country_code = 3;     // 国家代码 (varchar(10))
+  bool is_primary = 4;                  // 是否主手机
+  bool is_verified = 5;                 // 是否已验证
+  optional string verification_code = 6; // 验证码 (varchar(10))
+  optional google.protobuf.Timestamp verification_expires_at = 7; // 验证码过期时间
+}
+
+message CreateUserPhoneResponse {
+  UserPhone user_phone = 1;
+}
+
 message GetUserPhoneByIDRequest {
   string id = 1;
 }

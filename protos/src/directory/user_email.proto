@@ -21,6 +21,9 @@ message UserEmail {
 
 // UserEmail 服务 - 供其他服务通过 gRPC 管理用户邮箱
 service UserEmailService {
+  // 创建用户邮箱
+  rpc CreateUserEmail (CreateUserEmailRequest) returns (CreateUserEmailResponse);
+  
   // 根据ID获取用户邮箱
   rpc GetUserEmailByID (GetUserEmailByIDRequest) returns (GetUserEmailByIDResponse);
   
@@ -32,6 +35,18 @@ service UserEmailService {
 }
 
 // UserEmail Service Messages
+message CreateUserEmailRequest {
+  string user_id = 1;                    // 用户ID (UUID)
+  string email = 2;                     // 邮箱地址 (varchar(255))
+  bool is_primary = 3;                  // 是否主邮箱
+  bool is_verified = 4;                 // 是否已验证
+  optional string verification_token = 5; // 验证令牌 (varchar(255))
+}
+
+message CreateUserEmailResponse {
+  UserEmail user_email = 1;
+}
+
 message GetUserEmailByIDRequest {
   string id = 1;
 }

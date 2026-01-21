@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserPreferenceService_CreateUserPreference_FullMethodName      = "/user_preference.UserPreferenceService/CreateUserPreference"
 	UserPreferenceService_GetUserPreferenceByID_FullMethodName     = "/user_preference.UserPreferenceService/GetUserPreferenceByID"
 	UserPreferenceService_GetUserPreferenceByUserID_FullMethodName = "/user_preference.UserPreferenceService/GetUserPreferenceByUserID"
 )
@@ -29,6 +30,8 @@ const (
 //
 // UserPreference 服务 - 供其他服务通过 gRPC 管理用户偏好
 type UserPreferenceServiceClient interface {
+	// 创建用户偏好
+	CreateUserPreference(ctx context.Context, in *CreateUserPreferenceRequest, opts ...grpc.CallOption) (*CreateUserPreferenceResponse, error)
 	// 根据ID获取用户偏好
 	GetUserPreferenceByID(ctx context.Context, in *GetUserPreferenceByIDRequest, opts ...grpc.CallOption) (*GetUserPreferenceByIDResponse, error)
 	// 根据用户ID获取用户偏好
@@ -41,6 +44,16 @@ type userPreferenceServiceClient struct {
 
 func NewUserPreferenceServiceClient(cc grpc.ClientConnInterface) UserPreferenceServiceClient {
 	return &userPreferenceServiceClient{cc}
+}
+
+func (c *userPreferenceServiceClient) CreateUserPreference(ctx context.Context, in *CreateUserPreferenceRequest, opts ...grpc.CallOption) (*CreateUserPreferenceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserPreferenceResponse)
+	err := c.cc.Invoke(ctx, UserPreferenceService_CreateUserPreference_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userPreferenceServiceClient) GetUserPreferenceByID(ctx context.Context, in *GetUserPreferenceByIDRequest, opts ...grpc.CallOption) (*GetUserPreferenceByIDResponse, error) {
@@ -69,6 +82,8 @@ func (c *userPreferenceServiceClient) GetUserPreferenceByUserID(ctx context.Cont
 //
 // UserPreference 服务 - 供其他服务通过 gRPC 管理用户偏好
 type UserPreferenceServiceServer interface {
+	// 创建用户偏好
+	CreateUserPreference(context.Context, *CreateUserPreferenceRequest) (*CreateUserPreferenceResponse, error)
 	// 根据ID获取用户偏好
 	GetUserPreferenceByID(context.Context, *GetUserPreferenceByIDRequest) (*GetUserPreferenceByIDResponse, error)
 	// 根据用户ID获取用户偏好
@@ -83,6 +98,9 @@ type UserPreferenceServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserPreferenceServiceServer struct{}
 
+func (UnimplementedUserPreferenceServiceServer) CreateUserPreference(context.Context, *CreateUserPreferenceRequest) (*CreateUserPreferenceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUserPreference not implemented")
+}
 func (UnimplementedUserPreferenceServiceServer) GetUserPreferenceByID(context.Context, *GetUserPreferenceByIDRequest) (*GetUserPreferenceByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserPreferenceByID not implemented")
 }
@@ -108,6 +126,24 @@ func RegisterUserPreferenceServiceServer(s grpc.ServiceRegistrar, srv UserPrefer
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserPreferenceService_ServiceDesc, srv)
+}
+
+func _UserPreferenceService_CreateUserPreference_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserPreferenceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPreferenceServiceServer).CreateUserPreference(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserPreferenceService_CreateUserPreference_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPreferenceServiceServer).CreateUserPreference(ctx, req.(*CreateUserPreferenceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserPreferenceService_GetUserPreferenceByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -153,6 +189,10 @@ var UserPreferenceService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user_preference.UserPreferenceService",
 	HandlerType: (*UserPreferenceServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUserPreference",
+			Handler:    _UserPreferenceService_CreateUserPreference_Handler,
+		},
 		{
 			MethodName: "GetUserPreferenceByID",
 			Handler:    _UserPreferenceService_GetUserPreferenceByID_Handler,

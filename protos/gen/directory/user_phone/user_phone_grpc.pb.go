@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserPhoneService_CreateUserPhone_FullMethodName       = "/user_phone.UserPhoneService/CreateUserPhone"
 	UserPhoneService_GetUserPhoneByID_FullMethodName      = "/user_phone.UserPhoneService/GetUserPhoneByID"
 	UserPhoneService_GetUserPhoneByPhone_FullMethodName   = "/user_phone.UserPhoneService/GetUserPhoneByPhone"
 	UserPhoneService_GetUserPhonesByUserID_FullMethodName = "/user_phone.UserPhoneService/GetUserPhonesByUserID"
@@ -30,6 +31,8 @@ const (
 //
 // UserPhone 服务 - 供其他服务通过 gRPC 管理用户手机
 type UserPhoneServiceClient interface {
+	// 创建用户手机
+	CreateUserPhone(ctx context.Context, in *CreateUserPhoneRequest, opts ...grpc.CallOption) (*CreateUserPhoneResponse, error)
 	// 根据ID获取用户手机
 	GetUserPhoneByID(ctx context.Context, in *GetUserPhoneByIDRequest, opts ...grpc.CallOption) (*GetUserPhoneByIDResponse, error)
 	// 根据手机号获取用户手机
@@ -44,6 +47,16 @@ type userPhoneServiceClient struct {
 
 func NewUserPhoneServiceClient(cc grpc.ClientConnInterface) UserPhoneServiceClient {
 	return &userPhoneServiceClient{cc}
+}
+
+func (c *userPhoneServiceClient) CreateUserPhone(ctx context.Context, in *CreateUserPhoneRequest, opts ...grpc.CallOption) (*CreateUserPhoneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserPhoneResponse)
+	err := c.cc.Invoke(ctx, UserPhoneService_CreateUserPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userPhoneServiceClient) GetUserPhoneByID(ctx context.Context, in *GetUserPhoneByIDRequest, opts ...grpc.CallOption) (*GetUserPhoneByIDResponse, error) {
@@ -82,6 +95,8 @@ func (c *userPhoneServiceClient) GetUserPhonesByUserID(ctx context.Context, in *
 //
 // UserPhone 服务 - 供其他服务通过 gRPC 管理用户手机
 type UserPhoneServiceServer interface {
+	// 创建用户手机
+	CreateUserPhone(context.Context, *CreateUserPhoneRequest) (*CreateUserPhoneResponse, error)
 	// 根据ID获取用户手机
 	GetUserPhoneByID(context.Context, *GetUserPhoneByIDRequest) (*GetUserPhoneByIDResponse, error)
 	// 根据手机号获取用户手机
@@ -98,6 +113,9 @@ type UserPhoneServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserPhoneServiceServer struct{}
 
+func (UnimplementedUserPhoneServiceServer) CreateUserPhone(context.Context, *CreateUserPhoneRequest) (*CreateUserPhoneResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUserPhone not implemented")
+}
 func (UnimplementedUserPhoneServiceServer) GetUserPhoneByID(context.Context, *GetUserPhoneByIDRequest) (*GetUserPhoneByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserPhoneByID not implemented")
 }
@@ -126,6 +144,24 @@ func RegisterUserPhoneServiceServer(s grpc.ServiceRegistrar, srv UserPhoneServic
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserPhoneService_ServiceDesc, srv)
+}
+
+func _UserPhoneService_CreateUserPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPhoneServiceServer).CreateUserPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserPhoneService_CreateUserPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPhoneServiceServer).CreateUserPhone(ctx, req.(*CreateUserPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserPhoneService_GetUserPhoneByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +225,10 @@ var UserPhoneService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user_phone.UserPhoneService",
 	HandlerType: (*UserPhoneServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUserPhone",
+			Handler:    _UserPhoneService_CreateUserPhone_Handler,
+		},
 		{
 			MethodName: "GetUserPhoneByID",
 			Handler:    _UserPhoneService_GetUserPhoneByID_Handler,

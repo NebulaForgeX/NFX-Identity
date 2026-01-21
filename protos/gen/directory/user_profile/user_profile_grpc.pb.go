@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserProfileService_CreateUserProfile_FullMethodName      = "/user_profile.UserProfileService/CreateUserProfile"
 	UserProfileService_GetUserProfileByID_FullMethodName     = "/user_profile.UserProfileService/GetUserProfileByID"
 	UserProfileService_GetUserProfileByUserID_FullMethodName = "/user_profile.UserProfileService/GetUserProfileByUserID"
 	UserProfileService_BatchGetUserProfiles_FullMethodName   = "/user_profile.UserProfileService/BatchGetUserProfiles"
@@ -30,6 +31,8 @@ const (
 //
 // UserProfile 服务 - 供其他服务通过 gRPC 管理用户资料
 type UserProfileServiceClient interface {
+	// 创建用户资料
+	CreateUserProfile(ctx context.Context, in *CreateUserProfileRequest, opts ...grpc.CallOption) (*CreateUserProfileResponse, error)
 	// 根据ID获取用户资料
 	GetUserProfileByID(ctx context.Context, in *GetUserProfileByIDRequest, opts ...grpc.CallOption) (*GetUserProfileByIDResponse, error)
 	// 根据用户ID获取用户资料
@@ -44,6 +47,16 @@ type userProfileServiceClient struct {
 
 func NewUserProfileServiceClient(cc grpc.ClientConnInterface) UserProfileServiceClient {
 	return &userProfileServiceClient{cc}
+}
+
+func (c *userProfileServiceClient) CreateUserProfile(ctx context.Context, in *CreateUserProfileRequest, opts ...grpc.CallOption) (*CreateUserProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateUserProfileResponse)
+	err := c.cc.Invoke(ctx, UserProfileService_CreateUserProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userProfileServiceClient) GetUserProfileByID(ctx context.Context, in *GetUserProfileByIDRequest, opts ...grpc.CallOption) (*GetUserProfileByIDResponse, error) {
@@ -82,6 +95,8 @@ func (c *userProfileServiceClient) BatchGetUserProfiles(ctx context.Context, in 
 //
 // UserProfile 服务 - 供其他服务通过 gRPC 管理用户资料
 type UserProfileServiceServer interface {
+	// 创建用户资料
+	CreateUserProfile(context.Context, *CreateUserProfileRequest) (*CreateUserProfileResponse, error)
 	// 根据ID获取用户资料
 	GetUserProfileByID(context.Context, *GetUserProfileByIDRequest) (*GetUserProfileByIDResponse, error)
 	// 根据用户ID获取用户资料
@@ -98,6 +113,9 @@ type UserProfileServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserProfileServiceServer struct{}
 
+func (UnimplementedUserProfileServiceServer) CreateUserProfile(context.Context, *CreateUserProfileRequest) (*CreateUserProfileResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateUserProfile not implemented")
+}
 func (UnimplementedUserProfileServiceServer) GetUserProfileByID(context.Context, *GetUserProfileByIDRequest) (*GetUserProfileByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserProfileByID not implemented")
 }
@@ -126,6 +144,24 @@ func RegisterUserProfileServiceServer(s grpc.ServiceRegistrar, srv UserProfileSe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserProfileService_ServiceDesc, srv)
+}
+
+func _UserProfileService_CreateUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserProfileServiceServer).CreateUserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserProfileService_CreateUserProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserProfileServiceServer).CreateUserProfile(ctx, req.(*CreateUserProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserProfileService_GetUserProfileByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +225,10 @@ var UserProfileService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user_profile.UserProfileService",
 	HandlerType: (*UserProfileServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateUserProfile",
+			Handler:    _UserProfileService_CreateUserProfile_Handler,
+		},
 		{
 			MethodName: "GetUserProfileByID",
 			Handler:    _UserProfileService_GetUserProfileByID_Handler,

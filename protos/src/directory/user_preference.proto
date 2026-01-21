@@ -24,6 +24,9 @@ message UserPreference {
 
 // UserPreference 服务 - 供其他服务通过 gRPC 管理用户偏好
 service UserPreferenceService {
+  // 创建用户偏好
+  rpc CreateUserPreference (CreateUserPreferenceRequest) returns (CreateUserPreferenceResponse);
+  
   // 根据ID获取用户偏好
   rpc GetUserPreferenceByID (GetUserPreferenceByIDRequest) returns (GetUserPreferenceByIDResponse);
   
@@ -32,6 +35,21 @@ service UserPreferenceService {
 }
 
 // UserPreference Service Messages
+message CreateUserPreferenceRequest {
+  string user_id = 1;                    // 用户ID (UUID)
+  optional string theme = 2;             // 主题 (varchar(50))
+  optional string language = 3;           // 语言 (varchar(10))
+  optional string timezone = 4;           // 时区 (varchar(50))
+  optional google.protobuf.Struct notifications = 5; // 通知设置 (JSONB)
+  optional google.protobuf.Struct privacy = 6;      // 隐私设置 (JSONB)
+  optional google.protobuf.Struct display = 7;       // 显示设置 (JSONB)
+  optional google.protobuf.Struct other = 8;         // 其他设置 (JSONB)
+}
+
+message CreateUserPreferenceResponse {
+  UserPreference user_preference = 1;
+}
+
 message GetUserPreferenceByIDRequest {
   string id = 1;
 }
