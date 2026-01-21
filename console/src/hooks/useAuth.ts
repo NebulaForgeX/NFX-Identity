@@ -36,6 +36,7 @@ import {
   UpdateUserCredential,
 } from "@/apis/auth.api";
 import type {
+  AccountLockout,
   CreateAccountLockoutRequest,
   CreateLoginAttemptRequest,
   CreateMFAFactorRequest,
@@ -45,26 +46,51 @@ import type {
   CreateSessionRequest,
   CreateTrustedDeviceRequest,
   CreateUserCredentialRequest,
+  LoginAttempt,
+  MFAFactor,
+  PasswordHistory,
+  PasswordReset,
+  RefreshToken,
   RevokeSessionRequest,
+  Session,
+  TrustedDevice,
   UpdateAccountLockoutRequest,
   UpdateMFAFactorRequest,
   UpdatePasswordResetRequest,
   UpdateRefreshTokenRequest,
   UpdateUserCredentialRequest,
+  UserCredential,
 } from "@/types";
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { showError, showSuccess } from "@/stores/modalStore";
+import {
+  AUTH_SESSION,
+  AUTH_USER_CREDENTIAL,
+  AUTH_MFA_FACTOR,
+  AUTH_REFRESH_TOKEN,
+  AUTH_PASSWORD_RESET,
+  AUTH_PASSWORD_HISTORY,
+  AUTH_LOGIN_ATTEMPT,
+  AUTH_ACCOUNT_LOCKOUT,
+  AUTH_TRUSTED_DEVICE,
+} from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Session 相关 ==========
 
 // 根据 ID 获取会话
-export const useSession = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetSession(params.id);
-  },
-  "normal",
-);
+export const useSession = (params: UnifiedQueryParams<Session> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetSession(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_SESSION(id), { id }, options);
+};
 
 // 创建会话
 export const useCreateSession = () => {
@@ -119,12 +145,17 @@ export const useDeleteSession = () => {
 // ========== UserCredential 相关 ==========
 
 // 根据 ID 获取用户凭证
-export const useUserCredential = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserCredential(params.id);
-  },
-  "normal",
-);
+export const useUserCredential = (params: UnifiedQueryParams<UserCredential> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserCredential(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_USER_CREDENTIAL(id), { id }, options);
+};
 
 // 创建用户凭证
 export const useCreateUserCredential = () => {
@@ -179,12 +210,17 @@ export const useDeleteUserCredential = () => {
 // ========== MFAFactor 相关 ==========
 
 // 根据 ID 获取 MFA 因子
-export const useMFAFactor = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetMFAFactor(params.id);
-  },
-  "normal",
-);
+export const useMFAFactor = (params: UnifiedQueryParams<MFAFactor> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetMFAFactor(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_MFA_FACTOR(id), { id }, options);
+};
 
 // 创建 MFA 因子
 export const useCreateMFAFactor = () => {
@@ -239,12 +275,17 @@ export const useDeleteMFAFactor = () => {
 // ========== RefreshToken 相关 ==========
 
 // 根据 ID 获取刷新令牌
-export const useRefreshToken = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetRefreshToken(params.id);
-  },
-  "normal",
-);
+export const useRefreshToken = (params: UnifiedQueryParams<RefreshToken> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetRefreshToken(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_REFRESH_TOKEN(id), { id }, options);
+};
 
 // 创建刷新令牌
 export const useCreateRefreshToken = () => {
@@ -299,12 +340,17 @@ export const useDeleteRefreshToken = () => {
 // ========== PasswordReset 相关 ==========
 
 // 根据 ID 获取密码重置
-export const usePasswordReset = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetPasswordReset(params.id);
-  },
-  "normal",
-);
+export const usePasswordReset = (params: UnifiedQueryParams<PasswordReset> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetPasswordReset(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_PASSWORD_RESET(id), { id }, options);
+};
 
 // 创建密码重置
 export const useCreatePasswordReset = () => {
@@ -359,12 +405,17 @@ export const useDeletePasswordReset = () => {
 // ========== PasswordHistory 相关 ==========
 
 // 根据 ID 获取密码历史
-export const usePasswordHistory = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetPasswordHistory(params.id);
-  },
-  "normal",
-);
+export const usePasswordHistory = (params: UnifiedQueryParams<PasswordHistory> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetPasswordHistory(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_PASSWORD_HISTORY(id), { id }, options);
+};
 
 // 创建密码历史
 export const useCreatePasswordHistory = () => {
@@ -385,12 +436,17 @@ export const useCreatePasswordHistory = () => {
 // ========== LoginAttempt 相关 ==========
 
 // 根据 ID 获取登录尝试
-export const useLoginAttempt = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetLoginAttempt(params.id);
-  },
-  "normal",
-);
+export const useLoginAttempt = (params: UnifiedQueryParams<LoginAttempt> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetLoginAttempt(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_LOGIN_ATTEMPT(id), { id }, options);
+};
 
 // 创建登录尝试
 export const useCreateLoginAttempt = () => {
@@ -428,12 +484,17 @@ export const useDeleteLoginAttempt = () => {
 // ========== AccountLockout 相关 ==========
 
 // 根据 ID 获取账户锁定
-export const useAccountLockout = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetAccountLockout(params.id);
-  },
-  "normal",
-);
+export const useAccountLockout = (params: UnifiedQueryParams<AccountLockout> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetAccountLockout(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_ACCOUNT_LOCKOUT(id), { id }, options);
+};
 
 // 创建账户锁定
 export const useCreateAccountLockout = () => {
@@ -488,12 +549,17 @@ export const useDeleteAccountLockout = () => {
 // ========== TrustedDevice 相关 ==========
 
 // 根据 ID 获取受信任设备
-export const useTrustedDevice = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetTrustedDevice(params.id);
-  },
-  "normal",
-);
+export const useTrustedDevice = (params: UnifiedQueryParams<TrustedDevice> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetTrustedDevice(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUTH_TRUSTED_DEVICE(id), { id }, options);
+};
 
 // 创建受信任设备
 export const useCreateTrustedDevice = () => {

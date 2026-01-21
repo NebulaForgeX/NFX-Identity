@@ -83,8 +83,6 @@ export const useRoleByKey = (params: UnifiedQueryParams<Role> & { key: string })
 
 // 创建角色
 export const useCreateRole = () => {
-  
-
   return useMutation({
     mutationFn: async (params: CreateRoleRequest) => {
       return await CreateRole(params);
@@ -101,8 +99,6 @@ export const useCreateRole = () => {
 
 // 更新角色
 export const useUpdateRole = () => {
-  
-
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateRoleRequest }) => {
       return await UpdateRole(params.id, params.data);
@@ -120,8 +116,6 @@ export const useUpdateRole = () => {
 
 // 删除角色
 export const useDeleteRole = () => {
-  
-
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteRole(id);
@@ -146,7 +140,7 @@ export const usePermission = (params: UnifiedQueryParams<Permission> & { id: str
     async (params: { id: string }) => {
       return await GetPermission(params.id);
     },
-    "normal",
+    "suspense",
     postProcess,
   );
   return makeQuery(ACCESS_PERMISSION(id), { id }, options);
@@ -159,7 +153,7 @@ export const usePermissionByKey = (params: UnifiedQueryParams<Permission> & { ke
     async (params: { key: string }) => {
       return await GetPermissionByKey(params.key);
     },
-    "normal",
+    "suspense",
     postProcess,
   );
   return makeQuery(ACCESS_PERMISSION(key), { key }, options);
@@ -436,8 +430,6 @@ export const useScopePermission = (params: UnifiedQueryParams<ScopePermission> &
 
 // 创建作用域权限关联
 export const useCreateScopePermission = () => {
-  
-
   return useMutation({
     mutationFn: async (params: CreateScopePermissionRequest) => {
       return await CreateScopePermission(params);
@@ -456,8 +448,6 @@ export const useCreateScopePermission = () => {
 
 // 删除作用域权限关联
 export const useDeleteScopePermission = () => {
-  
-
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteScopePermission(id);

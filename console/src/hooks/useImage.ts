@@ -24,6 +24,10 @@ import type {
   CreateImageTagRequest,
   CreateImageTypeRequest,
   CreateImageVariantRequest,
+  Image,
+  ImageTag,
+  ImageType,
+  ImageVariant,
   UpdateImageRequest,
   UpdateImageTagRequest,
   UpdateImageTypeRequest,
@@ -32,16 +36,23 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { imageEventEmitter, imageEvents } from "@/events/image";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { IMAGE_IMAGE, IMAGE_IMAGE_TYPE, IMAGE_IMAGE_VARIANT, IMAGE_IMAGE_TAG } from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Image 相关 ==========
 
 // 根据 ID 获取图片
-export const useImage = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetImage(params.id);
-  },
-  "normal",
-);
+export const useImage = (params: UnifiedQueryParams<Image> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetImage(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(IMAGE_IMAGE(id), { id }, options);
+};
 
 // 创建图片
 export const useCreateImage = () => {
@@ -96,12 +107,17 @@ export const useDeleteImage = () => {
 // ========== ImageType 相关 ==========
 
 // 根据 ID 获取图片类型
-export const useImageType = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetImageType(params.id);
-  },
-  "normal",
-);
+export const useImageType = (params: UnifiedQueryParams<ImageType> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetImageType(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(IMAGE_IMAGE_TYPE(id), { id }, options);
+};
 
 // 创建图片类型
 export const useCreateImageType = () => {
@@ -156,12 +172,17 @@ export const useDeleteImageType = () => {
 // ========== ImageVariant 相关 ==========
 
 // 根据 ID 获取图片变体
-export const useImageVariant = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetImageVariant(params.id);
-  },
-  "normal",
-);
+export const useImageVariant = (params: UnifiedQueryParams<ImageVariant> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetImageVariant(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(IMAGE_IMAGE_VARIANT(id), { id }, options);
+};
 
 // 创建图片变体
 export const useCreateImageVariant = () => {
@@ -216,12 +237,17 @@ export const useDeleteImageVariant = () => {
 // ========== ImageTag 相关 ==========
 
 // 根据 ID 获取图片标签
-export const useImageTag = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetImageTag(params.id);
-  },
-  "normal",
-);
+export const useImageTag = (params: UnifiedQueryParams<ImageTag> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetImageTag(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(IMAGE_IMAGE_TAG(id), { id }, options);
+};
 
 // 创建图片标签
 export const useCreateImageTag = () => {

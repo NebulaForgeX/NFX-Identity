@@ -45,7 +45,7 @@ export type Id = string;
 
 //! ================ High Order Type ================
 
-export type InfiniteQueryMode = "normal" | "suspense";
+export type InfiniteQueryMode = "suspense" | "suspense";
 export type InfiniteQueryOptions<T> = Omit<
   UseInfiniteQueryOptions<NumberPagePayload<T>, AxiosError, T[]>,
   "queryKey" | "queryFn" | "getNextPageParam" | "initialPageParam"
@@ -69,8 +69,8 @@ export type SuspenseStringInfiniteQueryOptions<T> = Omit<
 export type InfiniteNumberQueryOptions<T> = InfiniteQueryOptions<T> | SuspenseInfiniteQueryOptions<T>;
 export type InfiniteStringQueryOptions<T> = StringInfiniteQueryOptions<T> | SuspenseStringInfiniteQueryOptions<T>;
 
-export type UnifiedQueryMode = "normal" | "suspense";
-export type NormalUnifiedQueryOptions<T> =  Omit<UseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
+export type UnifiedQueryMode = "suspense" | "suspense";
+export type suspenseUnifiedQueryOptions<T> =  Omit<UseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
 export type SuspenseUnifiedQueryOptions<T> =  Omit<UseSuspenseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
 
 // 固定包含 options 和 postProcess，同时允许添加任意其他属性

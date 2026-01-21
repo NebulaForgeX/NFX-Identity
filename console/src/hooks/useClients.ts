@@ -24,35 +24,60 @@ import {
   UpdateApp,
 } from "@/apis/clients.api";
 import type {
+  APIKey,
+  App,
+  ClientCredential,
+  ClientScope,
   CreateAPIKeyRequest,
   CreateAppRequest,
   CreateClientCredentialRequest,
   CreateClientScopeRequest,
   CreateIPAllowlistRequest,
   CreateRateLimitRequest,
+  IPAllowlist,
+  RateLimit,
   UpdateAppRequest,
 } from "@/types";
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { clientsEventEmitter, clientsEvents } from "@/events/clients";
 import { showError, showSuccess } from "@/stores/modalStore";
+import {
+  CLIENTS_APP,
+  CLIENTS_API_KEY,
+  CLIENTS_CLIENT_CREDENTIAL,
+  CLIENTS_CLIENT_SCOPE,
+  CLIENTS_IP_ALLOWLIST,
+  CLIENTS_RATE_LIMIT,
+} from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
 
 // ========== App 相关 ==========
 
 // 根据 ID 获取应用
-export const useApp = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetApp(params.id);
-  },
-  "normal",
-);
+export const useApp = (params: UnifiedQueryParams<App> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetApp(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_APP(id), { id }, options);
+};
 
 // 根据 App ID 获取应用
-export const useAppByAppID = makeUnifiedQuery(
-  async (params: { appId: string }) => {
-    return await GetAppByAppID(params.appId);
-  },
-  "normal",
-);
+export const useAppByAppID = (params: UnifiedQueryParams<App> & { appId: string }) => {
+  const { appId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { appId: string }) => {
+      return await GetAppByAppID(params.appId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_APP(appId), { appId }, options);
+};
 
 // 创建应用
 export const useCreateApp = () => {
@@ -107,12 +132,17 @@ export const useDeleteApp = () => {
 // ========== APIKey 相关 ==========
 
 // 根据 ID 获取 API Key
-export const useAPIKey = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetAPIKey(params.id);
-  },
-  "normal",
-);
+export const useAPIKey = (params: UnifiedQueryParams<APIKey> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetAPIKey(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_API_KEY(id), { id }, options);
+};
 
 // 创建 API Key
 export const useCreateAPIKey = () => {
@@ -150,12 +180,17 @@ export const useDeleteAPIKeyByKeyID = () => {
 // ========== ClientCredential 相关 ==========
 
 // 根据 ID 获取 Client Credential
-export const useClientCredential = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetClientCredential(params.id);
-  },
-  "normal",
-);
+export const useClientCredential = (params: UnifiedQueryParams<ClientCredential> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetClientCredential(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_CLIENT_CREDENTIAL(id), { id }, options);
+};
 
 // 创建 Client Credential
 export const useCreateClientCredential = () => {
@@ -193,12 +228,17 @@ export const useDeleteClientCredentialByClientID = () => {
 // ========== ClientScope 相关 ==========
 
 // 根据 ID 获取 Client Scope
-export const useClientScope = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetClientScope(params.id);
-  },
-  "normal",
-);
+export const useClientScope = (params: UnifiedQueryParams<ClientScope> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetClientScope(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_CLIENT_SCOPE(id), { id }, options);
+};
 
 // 创建 Client Scope
 export const useCreateClientScope = () => {
@@ -236,12 +276,17 @@ export const useDeleteClientScope = () => {
 // ========== IPAllowlist 相关 ==========
 
 // 根据 ID 获取 IP Allowlist
-export const useIPAllowlist = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetIPAllowlist(params.id);
-  },
-  "normal",
-);
+export const useIPAllowlist = (params: UnifiedQueryParams<IPAllowlist> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetIPAllowlist(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_IP_ALLOWLIST(id), { id }, options);
+};
 
 // 创建 IP Allowlist
 export const useCreateIPAllowlist = () => {
@@ -279,12 +324,17 @@ export const useDeleteIPAllowlistByRuleID = () => {
 // ========== RateLimit 相关 ==========
 
 // 根据 ID 获取 Rate Limit
-export const useRateLimit = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetRateLimit(params.id);
-  },
-  "normal",
-);
+export const useRateLimit = (params: UnifiedQueryParams<RateLimit> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetRateLimit(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(CLIENTS_RATE_LIMIT(id), { id }, options);
+};
 
 // 创建 Rate Limit
 export const useCreateRateLimit = () => {

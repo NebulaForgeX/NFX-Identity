@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import type { Theme, ThemeName } from "../assets/themes/types";
+import type { Theme, ThemeName } from "@/assets/themes/types";
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { themes } from "../assets/themes/base";
+import { themes } from "@/assets/themes/base";
 
 interface ThemeContextType {
   currentTheme: Theme;

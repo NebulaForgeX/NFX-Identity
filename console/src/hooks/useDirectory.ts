@@ -47,6 +47,7 @@ import {
   VerifyUserPhone,
 } from "@/apis/directory.api";
 import type {
+  Badge,
   CreateBadgeRequest,
   CreateUserBadgeRequest,
   CreateUserEducationRequest,
@@ -65,28 +66,58 @@ import type {
   UpdateUserProfileRequest,
   UpdateUserStatusRequest,
   UpdateUserUsernameRequest,
+  User,
+  UserBadge,
+  UserEducation,
+  UserEmail,
+  UserOccupation,
+  UserPhone,
+  UserPreference,
+  UserProfile,
 } from "@/types";
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { directoryEventEmitter, directoryEvents } from "@/events/directory";
 import { showError, showSuccess } from "@/stores/modalStore";
+import {
+  DIRECTORY_USER,
+  DIRECTORY_BADGE,
+  DIRECTORY_USER_BADGE,
+  DIRECTORY_USER_EDUCATION,
+  DIRECTORY_USER_EMAIL,
+  DIRECTORY_USER_OCCUPATION,
+  DIRECTORY_USER_PHONE,
+  DIRECTORY_USER_PREFERENCE,
+  DIRECTORY_USER_PROFILE,
+} from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
 
 // ========== User 相关 ==========
 
 // 根据 ID 获取用户
-export const useUser = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUser(params.id);
-  },
-  "normal",
-);
+export const useUser = (params: UnifiedQueryParams<User> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUser(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER(id), { id }, options);
+};
 
 // 根据用户名获取用户
-export const useUserByUsername = makeUnifiedQuery(
-  async (params: { username: string }) => {
-    return await GetUserByUsername(params.username);
-  },
-  "normal",
-);
+export const useUserByUsername = (params: UnifiedQueryParams<User> & { username: string }) => {
+  const { username, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { username: string }) => {
+      return await GetUserByUsername(params.username);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER(username), { username }, options);
+};
 
 // 创建用户
 export const useCreateUser = () => {
@@ -175,20 +206,30 @@ export const useDeleteUser = () => {
 // ========== Badge 相关 ==========
 
 // 根据 ID 获取徽章
-export const useBadge = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetBadge(params.id);
-  },
-  "normal",
-);
+export const useBadge = (params: UnifiedQueryParams<Badge> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetBadge(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_BADGE(id), { id }, options);
+};
 
 // 根据名称获取徽章
-export const useBadgeByName = makeUnifiedQuery(
-  async (params: { name: string }) => {
-    return await GetBadgeByName(params.name);
-  },
-  "normal",
-);
+export const useBadgeByName = (params: UnifiedQueryParams<Badge> & { name: string }) => {
+  const { name, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { name: string }) => {
+      return await GetBadgeByName(params.name);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_BADGE(name), { name }, options);
+};
 
 // 创建徽章
 export const useCreateBadge = () => {
@@ -243,12 +284,17 @@ export const useDeleteBadge = () => {
 // ========== UserBadge 相关 ==========
 
 // 根据 ID 获取用户徽章
-export const useUserBadge = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserBadge(params.id);
-  },
-  "normal",
-);
+export const useUserBadge = (params: UnifiedQueryParams<UserBadge> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserBadge(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_BADGE(id), { id }, options);
+};
 
 // 创建用户徽章
 export const useCreateUserBadge = () => {
@@ -288,12 +334,17 @@ export const useDeleteUserBadge = () => {
 // ========== UserEducation 相关 ==========
 
 // 根据 ID 获取用户教育
-export const useUserEducation = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserEducation(params.id);
-  },
-  "normal",
-);
+export const useUserEducation = (params: UnifiedQueryParams<UserEducation> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserEducation(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_EDUCATION(id), { id }, options);
+};
 
 // 创建用户教育
 export const useCreateUserEducation = () => {
@@ -348,12 +399,17 @@ export const useDeleteUserEducation = () => {
 // ========== UserEmail 相关 ==========
 
 // 根据 ID 获取用户邮箱
-export const useUserEmail = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserEmail(params.id);
-  },
-  "normal",
-);
+export const useUserEmail = (params: UnifiedQueryParams<UserEmail> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserEmail(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_EMAIL(id), { id }, options);
+};
 
 // 创建用户邮箱
 export const useCreateUserEmail = () => {
@@ -442,12 +498,17 @@ export const useDeleteUserEmail = () => {
 // ========== UserOccupation 相关 ==========
 
 // 根据 ID 获取用户职业
-export const useUserOccupation = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserOccupation(params.id);
-  },
-  "normal",
-);
+export const useUserOccupation = (params: UnifiedQueryParams<UserOccupation> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserOccupation(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_OCCUPATION(id), { id }, options);
+};
 
 // 创建用户职业
 export const useCreateUserOccupation = () => {
@@ -502,12 +563,17 @@ export const useDeleteUserOccupation = () => {
 // ========== UserPhone 相关 ==========
 
 // 根据 ID 获取用户电话
-export const useUserPhone = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserPhone(params.id);
-  },
-  "normal",
-);
+export const useUserPhone = (params: UnifiedQueryParams<UserPhone> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserPhone(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_PHONE(id), { id }, options);
+};
 
 // 创建用户电话
 export const useCreateUserPhone = () => {
@@ -596,12 +662,17 @@ export const useDeleteUserPhone = () => {
 // ========== UserPreference 相关 ==========
 
 // 根据 ID 获取用户偏好
-export const useUserPreference = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserPreference(params.id);
-  },
-  "normal",
-);
+export const useUserPreference = (params: UnifiedQueryParams<UserPreference> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserPreference(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_PREFERENCE(id), { id }, options);
+};
 
 // 创建用户偏好
 export const useCreateUserPreference = () => {
@@ -656,12 +727,17 @@ export const useDeleteUserPreference = () => {
 // ========== UserProfile 相关 ==========
 
 // 根据 ID 获取用户资料
-export const useUserProfile = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUserProfile(params.id);
-  },
-  "normal",
-);
+export const useUserProfile = (params: UnifiedQueryParams<UserProfile> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserProfile(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_PROFILE(id), { id }, options);
+};
 
 // 创建用户资料
 export const useCreateUserProfile = () => {

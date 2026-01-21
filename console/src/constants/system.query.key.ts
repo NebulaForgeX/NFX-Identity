@@ -9,6 +9,8 @@ import { CACHE_ITEM, CACHE_LIST } from "./cache.key";
 // ========== SystemState 相关 ==========
 export const SYSTEM_SYSTEM_STATE_LIST = [DOMAIN_SYSTEM, CACHE_LIST, DOMAIN_SYSTEM_STATE];
 export const SYSTEM_SYSTEM_STATE = (item: string): QueryKey => [DOMAIN_SYSTEM, CACHE_ITEM, DOMAIN_SYSTEM_STATE, item];
+export const SYSTEM_SYSTEM_STATE_LATEST: QueryKey = [DOMAIN_SYSTEM, CACHE_ITEM, DOMAIN_SYSTEM_STATE, "latest"];
+export const SYSTEM_SYSTEM_STATE_INIT: QueryKey = [DOMAIN_SYSTEM, CACHE_ITEM, DOMAIN_SYSTEM_STATE, "init", "public"];
 
 /**
  * 用于 useCacheInvalidationEvents.ts 的 query key 前缀

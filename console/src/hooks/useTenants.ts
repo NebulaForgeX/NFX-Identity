@@ -59,10 +59,20 @@ import type {
   CreateTenantAppRequest,
   CreateTenantRequest,
   CreateTenantSettingRequest,
+  DomainVerification,
+  Group,
+  Invitation,
+  Member,
+  MemberAppRole,
+  MemberGroup,
+  MemberRole,
   RevokeInvitationRequest,
   RevokeMemberAppRoleRequest,
   RevokeMemberGroupRequest,
   RevokeMemberRoleRequest,
+  Tenant,
+  TenantApp,
+  TenantSetting,
   UpdateGroupRequest,
   UpdateMemberStatusRequest,
   UpdateTenantAppRequest,
@@ -73,24 +83,47 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { tenantsEventEmitter, tenantsEvents } from "@/events/tenants";
 import { showError, showSuccess } from "@/stores/modalStore";
+import {
+  TENANTS_TENANT,
+  TENANTS_GROUP,
+  TENANTS_MEMBER,
+  TENANTS_INVITATION,
+  TENANTS_TENANT_APP,
+  TENANTS_TENANT_SETTING,
+  TENANTS_DOMAIN_VERIFICATION,
+  TENANTS_MEMBER_ROLE,
+  TENANTS_MEMBER_GROUP,
+  TENANTS_MEMBER_APP_ROLE,
+} from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Tenant 相关 ==========
 
 // 根据 ID 获取租户
-export const useTenant = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetTenant(params.id);
-  },
-  "normal",
-);
+export const useTenant = (params: UnifiedQueryParams<Tenant> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetTenant(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_TENANT(id), { id }, options);
+};
 
 // 根据 Tenant ID 获取租户
-export const useTenantByTenantID = makeUnifiedQuery(
-  async (params: { tenantId: string }) => {
-    return await GetTenantByTenantID(params.tenantId);
-  },
-  "normal",
-);
+export const useTenantByTenantID = (params: UnifiedQueryParams<Tenant> & { tenantId: string }) => {
+  const { tenantId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { tenantId: string }) => {
+      return await GetTenantByTenantID(params.tenantId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_TENANT(tenantId), { tenantId }, options);
+};
 
 // 创建租户
 export const useCreateTenant = () => {
@@ -162,12 +195,17 @@ export const useDeleteTenant = () => {
 // ========== Group 相关 ==========
 
 // 根据 ID 获取组
-export const useGroup = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetGroup(params.id);
-  },
-  "normal",
-);
+export const useGroup = (params: UnifiedQueryParams<Group> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetGroup(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_GROUP(id), { id }, options);
+};
 
 // 创建组
 export const useCreateGroup = () => {
@@ -222,12 +260,17 @@ export const useDeleteGroup = () => {
 // ========== Member 相关 ==========
 
 // 根据 ID 获取成员
-export const useMember = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetMember(params.id);
-  },
-  "normal",
-);
+export const useMember = (params: UnifiedQueryParams<Member> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetMember(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_MEMBER(id), { id }, options);
+};
 
 // 创建成员
 export const useCreateMember = () => {
@@ -282,20 +325,30 @@ export const useDeleteMember = () => {
 // ========== Invitation 相关 ==========
 
 // 根据 ID 获取邀请
-export const useInvitation = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetInvitation(params.id);
-  },
-  "normal",
-);
+export const useInvitation = (params: UnifiedQueryParams<Invitation> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetInvitation(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_INVITATION(id), { id }, options);
+};
 
 // 根据 Invite ID 获取邀请
-export const useInvitationByInviteID = makeUnifiedQuery(
-  async (params: { inviteId: string }) => {
-    return await GetInvitationByInviteID(params.inviteId);
-  },
-  "normal",
-);
+export const useInvitationByInviteID = (params: UnifiedQueryParams<Invitation> & { inviteId: string }) => {
+  const { inviteId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { inviteId: string }) => {
+      return await GetInvitationByInviteID(params.inviteId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_INVITATION(inviteId), { inviteId }, options);
+};
 
 // 创建邀请
 export const useCreateInvitation = () => {
@@ -367,12 +420,17 @@ export const useDeleteInvitation = () => {
 // ========== TenantApp 相关 ==========
 
 // 根据 ID 获取租户应用
-export const useTenantApp = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetTenantApp(params.id);
-  },
-  "normal",
-);
+export const useTenantApp = (params: UnifiedQueryParams<TenantApp> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetTenantApp(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_TENANT_APP(id), { id }, options);
+};
 
 // 创建租户应用
 export const useCreateTenantApp = () => {
@@ -427,12 +485,17 @@ export const useDeleteTenantApp = () => {
 // ========== TenantSetting 相关 ==========
 
 // 根据 ID 获取租户设置
-export const useTenantSetting = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetTenantSetting(params.id);
-  },
-  "normal",
-);
+export const useTenantSetting = (params: UnifiedQueryParams<TenantSetting> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetTenantSetting(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_TENANT_SETTING(id), { id }, options);
+};
 
 // 创建租户设置
 export const useCreateTenantSetting = () => {
@@ -487,12 +550,17 @@ export const useDeleteTenantSetting = () => {
 // ========== DomainVerification 相关 ==========
 
 // 根据 ID 获取域名验证
-export const useDomainVerification = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetDomainVerification(params.id);
-  },
-  "normal",
-);
+export const useDomainVerification = (params: UnifiedQueryParams<DomainVerification> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetDomainVerification(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_DOMAIN_VERIFICATION(id), { id }, options);
+};
 
 // 创建域名验证
 export const useCreateDomainVerification = () => {
@@ -547,12 +615,17 @@ export const useDeleteDomainVerification = () => {
 // ========== MemberRole 相关 ==========
 
 // 根据 ID 获取成员角色
-export const useMemberRole = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetMemberRole(params.id);
-  },
-  "normal",
-);
+export const useMemberRole = (params: UnifiedQueryParams<MemberRole> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetMemberRole(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_MEMBER_ROLE(id), { id }, options);
+};
 
 // 创建成员角色
 export const useCreateMemberRole = () => {
@@ -610,12 +683,17 @@ export const useDeleteMemberRole = () => {
 // ========== MemberGroup 相关 ==========
 
 // 根据 ID 获取成员组
-export const useMemberGroup = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetMemberGroup(params.id);
-  },
-  "normal",
-);
+export const useMemberGroup = (params: UnifiedQueryParams<MemberGroup> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetMemberGroup(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_MEMBER_GROUP(id), { id }, options);
+};
 
 // 创建成员组
 export const useCreateMemberGroup = () => {
@@ -673,12 +751,17 @@ export const useDeleteMemberGroup = () => {
 // ========== MemberAppRole 相关 ==========
 
 // 根据 ID 获取成员应用角色
-export const useMemberAppRole = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetMemberAppRole(params.id);
-  },
-  "normal",
-);
+export const useMemberAppRole = (params: UnifiedQueryParams<MemberAppRole> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetMemberAppRole(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(TENANTS_MEMBER_APP_ROLE(id), { id }, options);
+};
 
 // 创建成员应用角色
 export const useCreateMemberAppRole = () => {

@@ -20,26 +20,44 @@ import {
   UpdateEventRetentionPolicy,
 } from "@/apis/audit.api";
 import type {
+  ActorSnapshot,
   CreateActorSnapshotRequest,
   CreateEventRequest,
   CreateEventRetentionPolicyRequest,
   CreateEventSearchIndexRequest,
   CreateHashChainCheckpointRequest,
+  Event,
+  EventRetentionPolicy,
+  EventSearchIndex,
+  HashChainCheckpoint,
   UpdateEventRetentionPolicyRequest,
 } from "@/types";
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { auditEventEmitter, auditEvents } from "@/events/audit";
 import { showError, showSuccess } from "@/stores/modalStore";
+import {
+  AUDIT_EVENT,
+  AUDIT_ACTOR_SNAPSHOT,
+  AUDIT_EVENT_RETENTION_POLICY,
+  AUDIT_EVENT_SEARCH_INDEX,
+  AUDIT_HASH_CHAIN_CHECKPOINT,
+} from "@/constants";
+import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Event 相关 ==========
 
 // 根据 ID 获取事件
-export const useEvent = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetEvent(params.id);
-  },
-  "normal",
-);
+export const useEvent = (params: UnifiedQueryParams<Event> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetEvent(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUDIT_EVENT(id), { id }, options);
+};
 
 // 创建事件
 export const useCreateEvent = () => {
@@ -81,12 +99,17 @@ export const useDeleteEvent = () => {
 // ========== ActorSnapshot 相关 ==========
 
 // 根据 ID 获取 Actor Snapshot
-export const useActorSnapshot = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetActorSnapshot(params.id);
-  },
-  "normal",
-);
+export const useActorSnapshot = (params: UnifiedQueryParams<ActorSnapshot> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetActorSnapshot(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUDIT_ACTOR_SNAPSHOT(id), { id }, options);
+};
 
 // 创建 Actor Snapshot
 export const useCreateActorSnapshot = () => {
@@ -128,12 +151,17 @@ export const useDeleteActorSnapshot = () => {
 // ========== EventRetentionPolicy 相关 ==========
 
 // 根据 ID 获取 Event Retention Policy
-export const useEventRetentionPolicy = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetEventRetentionPolicy(params.id);
-  },
-  "normal",
-);
+export const useEventRetentionPolicy = (params: UnifiedQueryParams<EventRetentionPolicy> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetEventRetentionPolicy(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUDIT_EVENT_RETENTION_POLICY(id), { id }, options);
+};
 
 // 创建 Event Retention Policy
 export const useCreateEventRetentionPolicy = () => {
@@ -194,12 +222,17 @@ export const useDeleteEventRetentionPolicy = () => {
 // ========== EventSearchIndex 相关 ==========
 
 // 根据 ID 获取 Event Search Index
-export const useEventSearchIndex = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetEventSearchIndex(params.id);
-  },
-  "normal",
-);
+export const useEventSearchIndex = (params: UnifiedQueryParams<EventSearchIndex> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetEventSearchIndex(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUDIT_EVENT_SEARCH_INDEX(id), { id }, options);
+};
 
 // 创建 Event Search Index
 export const useCreateEventSearchIndex = () => {
@@ -241,12 +274,17 @@ export const useDeleteEventSearchIndex = () => {
 // ========== HashChainCheckpoint 相关 ==========
 
 // 根据 ID 获取 Hash Chain Checkpoint
-export const useHashChainCheckpoint = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetHashChainCheckpoint(params.id);
-  },
-  "normal",
-);
+export const useHashChainCheckpoint = (params: UnifiedQueryParams<HashChainCheckpoint> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetHashChainCheckpoint(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(AUDIT_HASH_CHAIN_CHECKPOINT(id), { id }, options);
+};
 
 // 创建 Hash Chain Checkpoint
 export const useCreateHashChainCheckpoint = () => {

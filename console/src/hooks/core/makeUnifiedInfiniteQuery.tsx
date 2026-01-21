@@ -110,7 +110,7 @@ export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, un
  * @template F - 过滤器对象类型，必须是对象类型，默认为 Record<string, unknown>
  *
  * @param {Function} fetchRemote - 远程数据获取函数，接收分页参数和过滤器，返回 Promise
- * @param {string} [mode="normal"] - 查询模式，设置为 "normal" 或省略使用普通模式
+ * @param {string} [mode="suspense"] - 查询模式，设置为 "suspense" 或省略使用普通模式
  * @param {number} [pageSize=20] - 每页数据条数，默认 20
  * @param {Function} [postProcess] - 可选的数据后处理函数，在数据返回后调用
  *
@@ -127,7 +127,7 @@ export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, un
  * * 创建 Hook（普通模式）
  * const useProductList = makeUnifiedInfiniteQuery(
  *   fetchProducts,
- *   "normal",  * 或省略此参数
+ *   "suspense",  * 或省略此参数
  *   20
  * );
  *
@@ -152,7 +152,7 @@ export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, un
  */
 export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, unknown>>(
   fetchRemote: (params: FetchNumberListParams<F>) => Promise<ListNumberCursorFetchResult<T>>,
-  mode?: "normal",
+  mode?: "suspense",
   pageSize?: number,
   postProcess?: (data: T[]) => void,
 ): (queryKey: QueryKey, filter?: F, options?: InfiniteQueryOptions<T>) => UseInfiniteQueryResult<T[], AxiosError>;
@@ -160,7 +160,7 @@ export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, un
 //! ================ Function implementation ================
 export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, unknown>>(
   fetchRemote: (params: FetchNumberListParams<F>) => Promise<ListNumberCursorFetchResult<T>>,
-  mode: InfiniteQueryMode = "normal",
+  mode: InfiniteQueryMode = "suspense",
   pageSize: number = 20,
   postProcess?: (data: T[]) => void,
 ) {
@@ -171,7 +171,7 @@ export function makeUnifiedInfiniteQuery<T, F extends object = Record<string, un
       useCreateSuspenseInfiniteQuery(queryKey, fetchFunction, filter, options);
   }
   return (queryKey: QueryKey, filter?: F, options?: InfiniteQueryOptions<T>) =>
-    useCreateNormalInfiniteQuery(queryKey, fetchFunction, filter, options);
+    useCreatesuspenseInfiniteQuery(queryKey, fetchFunction, filter, options);
 }
 
 //! ================ Private Function ================
@@ -198,7 +198,7 @@ function buildCommonOptions<T, F extends object = Record<string, unknown>>(
   };
 }
 
-function useCreateNormalInfiniteQuery<T, F extends object = Record<string, unknown>>(
+function useCreatesuspenseInfiniteQuery<T, F extends object = Record<string, unknown>>(
   queryKey: QueryKey,
   fetchFunction: (pageParam: number, filter?: F) => Promise<NumberPagePayload<T>>,
   filter?: F,

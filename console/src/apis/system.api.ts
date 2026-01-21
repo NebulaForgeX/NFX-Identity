@@ -8,12 +8,18 @@ import type {
   SystemState,
 } from "@/types";
 
-import { protectedClient } from "./clients";
+import { protectedClient, publicClient } from "./clients";
 import { URL_PATHS } from "./ip";
 
 // ========== 系统状态相关 ==========
 
-// 获取最新系统状态
+// 获取最新系统状态（公开接口，不需要认证）
+export const GetSystemStateLatestPublic = async (): Promise<SystemState> => {
+  const { data } = await publicClient.get<DataResponse<SystemState>>(URL_PATHS.SYSTEM.GET_SYSTEM_STATE_LATEST);
+  return data.data;
+};
+
+// 获取最新系统状态（需要认证）
 export const GetSystemStateLatest = async (): Promise<SystemState> => {
   const { data } = await protectedClient.get<DataResponse<SystemState>>(URL_PATHS.SYSTEM.GET_SYSTEM_STATE_LATEST);
   return data.data;

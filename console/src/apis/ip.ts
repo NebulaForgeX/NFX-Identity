@@ -221,10 +221,11 @@ export const URL_PATHS = {
     UPDATE_IMAGE_TAG: "/image/auth/image-tags/:id",
     DELETE_IMAGE_TAG: "/image/auth/image-tags/:id",
   },
-  // System 模块 - /system/auth
+  // System 模块 - /system
   SYSTEM: {
+    // 系统状态相关 - 公开接口（不需要认证）
+    GET_SYSTEM_STATE_LATEST: "/system/system-state/latest",
     // 系统状态相关 - 需要认证
-    GET_SYSTEM_STATE_LATEST: "/system/auth/system-state/latest",
     GET_SYSTEM_STATE: "/system/auth/system-state/:id",
     INITIALIZE_SYSTEM_STATE: "/system/auth/system-state/initialize",
     RESET_SYSTEM_STATE: "/system/auth/system-state/reset",
