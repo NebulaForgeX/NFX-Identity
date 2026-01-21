@@ -18,9 +18,9 @@ vars:
   POSTGRES_DB_SHADOW: "nfxid_diff"
   POSTGRES_CONTAINER_NAME: "NFX-Stack-PostgreSQL"
   ATLAS_ENV: "{{default \"dev\" .ATLAS_ENV}}"
-  ATLAS_CONFIG_PATH: "file://atlas/atlas.hcl"
-  ATLAS_MIGRATIONS_DIR_DEV: "file://atlas/migrations/development"
-  ATLAS_MIGRATIONS_DIR_PROD: "file://atlas/migrations/production"
+  ATLAS_CONFIG_PATH: "file://databases/atlas.hcl"
+  ATLAS_MIGRATIONS_DIR_DEV: "file://databases/migrations/development"
+  ATLAS_MIGRATIONS_DIR_PROD: "file://databases/migrations/production"
   ATLAS_MIGRATIONS_DIR: "{{if eq .ATLAS_ENV \"prod\"}}{{.ATLAS_MIGRATIONS_DIR_PROD}}{{else}}{{.ATLAS_MIGRATIONS_DIR_DEV}}{{end}}"
   # Resources docker-compose.yml path (relative to Identity-Backend directory)
   RESOURCES_DOCKER_COMPOSE: "../Resources/docker-compose.yml"
@@ -87,7 +87,7 @@ tasks:
         POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
         RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
         ATLAS_ENV="{{.ATLAS_ENV}}" \
-        bash atlas/scripts/gen_models.sh
+        bash databases/scripts/gen_models.sh
     silent: false
 
   atlas:gen-views:
@@ -104,7 +104,7 @@ tasks:
         POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
         RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
         ATLAS_ENV="{{.ATLAS_ENV}}" \
-        bash atlas/scripts/gen_views.sh
+        bash databases/scripts/gen_views.sh
     silent: false
 
   atlas:gen-enums:
@@ -120,7 +120,7 @@ tasks:
         POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
         POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
         ATLAS_ENV="{{.ATLAS_ENV}}" \
-        bash atlas/scripts/gen_enums.sh
+        bash databases/scripts/gen_enums.sh
     silent: false
 
   atlas:gen:

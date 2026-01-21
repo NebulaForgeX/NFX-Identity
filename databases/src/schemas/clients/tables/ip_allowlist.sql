@@ -28,5 +28,5 @@ CREATE INDEX IF NOT EXISTS "idx_ip_allowlist_app_status" ON "clients"."ip_allowl
 -- the composite B-tree index (app_id, status) is sufficient. GiST index is only needed for:
 -- 1. High-volume CIDR matching queries (IP <<= cidr)
 -- 2. Large allowlist datasets (thousands+ rules per app)
--- See: atlas/migrations/optional/add_gist_index_for_ip_allowlist.sql for optional migration
+-- See: databases/migrations/optional/add_gist_index_for_ip_allowlist.sql for optional migration
 

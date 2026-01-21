@@ -158,8 +158,8 @@ $env:POSTGRES_PORT = $POSTGRES_PORT
 $env:POSTGRES_DB_DEV = $POSTGRES_DB_DEV
 $env:POSTGRES_DB_PROD = $POSTGRES_DB_PROD
 $env:POSTGRES_DB_SHADOW = $POSTGRES_DB_SHADOW
-# 切换到 atlas 目录运行，这样 Atlas 可以正确解析相对路径
-Push-Location atlas
+# 切换到 databases 目录运行，这样 Atlas 可以正确解析相对路径
+Push-Location databases
 try {
     # atlas migrate diff 会自动比较 env 配置中的 url（当前数据库）和 src（目标状态），生成迁移
     # 不使用 --config，让 Atlas 自动查找 atlas.hcl
@@ -174,7 +174,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 3. Lint migrations (optional, may require Atlas Pro)
 Write-Header "Step 3: Linting migrations (optional)"
-Push-Location atlas
+Push-Location databases
 try {
     & atlas migrate lint --env $env:ATLAS_ENV --latest 1 -w
 } finally {
@@ -187,7 +187,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 4. Apply migrations
 Write-Header "Step 4: Applying migrations (atlas:apply)"
-Push-Location atlas
+Push-Location databases
 try {
     & atlas migrate apply --env $env:ATLAS_ENV
 } finally {
@@ -200,7 +200,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 5. Check status
 Write-Header "Step 5: Checking migration status"
-Push-Location atlas
+Push-Location databases
 try {
     & atlas migrate status --env $env:ATLAS_ENV
 } finally {
@@ -216,7 +216,7 @@ Write-Header "Step 5.5: Waiting for manual view migration"
 Write-Host ""
 Write-Host "IMPORTANT: Atlas migrate diff does not include views (Atlas Pro feature)."
 Write-Host "Please manually add CREATE VIEW statements to the migration files in:"
-Write-Host "  - atlas/migrations/$env:ATLAS_ENV/"
+Write-Host "  - databases/migrations/$env:ATLAS_ENV/"
 Write-Host ""
 Write-Host "After adding views, please:"
 Write-Host "  1. Apply the updated migrations manually, OR"
@@ -236,7 +236,7 @@ do {
 
 # 5.6. Re-apply migrations (in case views were added)
 Write-Header "Step 5.6: Re-applying migrations (includes manual views)"
-Push-Location atlas
+Push-Location databases
 try {
     & atlas migrate apply --env $env:ATLAS_ENV
 } finally {
@@ -249,7 +249,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 6. Generate Go code
 Write-Header "Step 6: Generating Go code (atlas:gen)"
-$ScriptsDir = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) "atlas\scripts"
+$ScriptsDir = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) "databases\scripts"
 
 # Ensure RESOURCES_DOCKER_COMPOSE is set for child scripts
 $env:RESOURCES_DOCKER_COMPOSE = $RESOURCES_DOCKER_COMPOSE
@@ -283,7 +283,7 @@ Clean-GenConnections
 
 # 8. Final status check
 Write-Header "Step 7: Final status check"
-Push-Location atlas
+Push-Location databases
 try {
     & atlas migrate status --env $env:ATLAS_ENV
 } finally {

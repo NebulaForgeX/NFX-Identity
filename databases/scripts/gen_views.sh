@@ -4,7 +4,7 @@ export NO_COLOR=1 CLICOLOR=0 FORCE_COLOR=0 TERM=dumb
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-ATLAS_DIR="${REPO_ROOT}/atlas"
+ATLAS_DIR="${REPO_ROOT}/databases"
 GEN_DIR="${ATLAS_DIR}/gen/views"
 
 # Source Go environment if available

@@ -1,12 +1,13 @@
-# PowerShell version of gen_models.sh
+# PowerShell version of gen_enums.sh
 
 $ErrorActionPreference = "Stop"
 
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
-# Script runs from nfxid/atlas directory, so atlas root is parent of scripts
+# Script runs from nfxid/databases directory, so databases root is parent of scripts
 $ATLAS_DIR = (Get-Item $SCRIPT_DIR).Parent.FullName
 $REPO_ROOT = (Get-Item $ATLAS_DIR).Parent.FullName
-$GEN_DIR = Join-Path $ATLAS_DIR "gen\models"
+$GEN_DIR = Join-Path $ATLAS_DIR "gen\enums"
+$DEST_DIR = Join-Path $REPO_ROOT "enums"
 
 # Check required environment variables
 if (-not $env:POSTGRES_USER) { Write-Host "Error: POSTGRES_USER environment variable is required"; exit 1 }
@@ -23,31 +24,11 @@ if ($env:ATLAS_ENV -eq "prod") {
     $env:POSTGRES_DB_DEV = $env:POSTGRES_DB_PROD
 }
 
-# Check for required Go tools
-if (-not (Get-Command goimports -ErrorAction SilentlyContinue)) {
-    Write-Host "Error: Missing dependency: goimports" -ForegroundColor Red
-    exit 1
-}
-if (-not (Get-Command gofmt -ErrorAction SilentlyContinue)) {
-    Write-Host "Error: Missing dependency: gofmt" -ForegroundColor Red
-    exit 1
-}
-
 # Clean and create gen directory
 if (Test-Path $GEN_DIR) {
     Remove-Item -Path "$GEN_DIR\*" -Recurse -Force
 } else {
     New-Item -ItemType Directory -Path $GEN_DIR -Force | Out-Null
-}
-
-# Set local module prefix for goimports grouping
-try {
-    $MODPATH = & go list -m 2>&1
-    if ($MODPATH -and -not ($MODPATH -match "error|not found")) {
-        $env:GOIMPORTSLOCAL = $MODPATH
-    }
-} catch {
-    # Ignore if go list fails
 }
 
 $DOCKER_COMPOSE_FILE = $env:RESOURCES_DOCKER_COMPOSE
@@ -66,9 +47,10 @@ try {
 
 # Run Atlas inspect + generate
 # Use local atlas command directly (same as pipeline script)
+# Script runs from databases directory, so we can run atlas directly
 Push-Location $ATLAS_DIR
 try {
-    & atlas schema inspect --env gen-models
+    & atlas schema inspect --env gen-enums
 } finally {
     Pop-Location
 }
@@ -80,22 +62,24 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Distribute generated files to module directories based on schema name
-# Format: {schema}__{table}.go -> modules/{schema}/infrastructure/rdb/models/{table}_dbgen.go
+# Create destination directory
+New-Item -ItemType Directory -Path $DEST_DIR -Force | Out-Null
+
+# Move generated files to enums directory
+# Format: {schema}__{bucket}.go -> enums/{schema}_{bucket}_enum_dbgen.go
 $fileCount = 0
 if (Test-Path $GEN_DIR) {
     $goFiles = Get-ChildItem -Path $GEN_DIR -Filter "*.go"
     foreach ($src in $goFiles) {
         $base = $src.Name
         if ($base -match "^([^_]+)__(.+)$") {
-            $schemaName = $matches[1]
-            $tableName = $matches[2] -replace "\.go$", ""
-            
-            $DEST_DIR = Join-Path $REPO_ROOT "modules\$schemaName\infrastructure\rdb\models"
-            New-Item -ItemType Directory -Path $DEST_DIR -Force | Out-Null
+            $schema = $matches[1]
+            $rest = $matches[2]
+            $bucket = $rest -replace "\.go$", ""
+            $destName = "${schema}_${bucket}_enum_dbgen.go"
+            $destFile = Join-Path $DEST_DIR $destName
             
             # Clean old file
-            $destFile = Join-Path $DEST_DIR "${tableName}_dbgen.go"
             if (Test-Path $destFile) {
                 Remove-Item -Path $destFile -Force
             }
@@ -110,40 +94,32 @@ if (Test-Path $GEN_DIR) {
 }
 
 if ($fileCount -eq 0) {
-    Write-Host "Warning: No model files generated in $GEN_DIR" -ForegroundColor Yellow
+    Write-Host "Info: No enum files generated in $GEN_DIR" -ForegroundColor Yellow
     Write-Host "This might indicate that:"
-    Write-Host "  1. Tables are in 'public' schema (which is excluded)"
-    Write-Host "  2. Schema apply did not run successfully"
-    Write-Host "  3. Template generation failed"
-    exit 1
+    Write-Host "  1. No enums are defined in the schema (this is OK)"
+    Write-Host "  2. Template generation failed"
+    # Don't exit with error - it's OK to have no enums
 }
 
-# Format generated Go files in all module directories
-$modulesDir = Join-Path $REPO_ROOT "modules"
-if (Test-Path $modulesDir) {
-    $modelDirs = Get-ChildItem -Path $modulesDir -Directory | ForEach-Object {
-        $modelsPath = Join-Path $_.FullName "infrastructure\rdb\models"
-        if (Test-Path $modelsPath) {
-            $modelsPath
-        }
+# Format generated Go files
+if (Get-Command goimports -ErrorAction SilentlyContinue) {
+    & goimports -w $DEST_DIR 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Warning: goimports failed (non-fatal)" -ForegroundColor Yellow
     }
-    
-    foreach ($moduleDir in $modelDirs) {
-        if (Get-Command goimports -ErrorAction SilentlyContinue) {
-            & goimports -w $moduleDir 2>&1 | Out-Null
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "Warning: goimports failed for $moduleDir (non-fatal)" -ForegroundColor Yellow
-            }
-        }
-        if (Get-Command gofmt -ErrorAction SilentlyContinue) {
-            & gofmt -s -w $moduleDir 2>&1 | Out-Null
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "Warning: gofmt failed for $moduleDir (non-fatal)" -ForegroundColor Yellow
-            }
-        }
-    }
+} else {
+    Write-Host "Info: goimports not found, skipping formatting"
 }
 
-Write-Host "Models generated successfully."
+if (Get-Command gofmt -ErrorAction SilentlyContinue) {
+    & gofmt -s -w $DEST_DIR 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Warning: gofmt failed (non-fatal)" -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "Info: gofmt not found, skipping formatting"
+}
+
+Write-Host "Enums generated successfully."
 exit 0
 

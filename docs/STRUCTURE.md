@@ -11,7 +11,7 @@ This document provides a comprehensive overview of the NFX-Identity project stru
 ```
 Identity-Backend/
 ├── assets/              # Static assets (templates, etc.)
-├── atlas/               # Database schema & migrations (Atlas)
+├── databases/               # Database schema & migrations (Atlas)
 ├── certs/               # SSL certificates (Let's Encrypt)
 ├── data/                # User-uploaded data (avatars, backgrounds)
 ├── enums/               # Generated database enum types
@@ -581,14 +581,14 @@ Each module has three service entry points:
 
 ---
 
-## 🗄️ Database Schema (`atlas/`)
+## 🗄️ Database Schema (`databases/`)
 
 Atlas is used for database schema management and migrations.
 
 ### Directory Structure
 
 ```
-atlas/
+databases/
 ├── src/                   # Source SQL schemas
 │   ├── main.sql           # Main schema entry
 │   ├── schemas/           # Schema definitions
@@ -761,7 +761,7 @@ The project uses code generation for:
 
 Generated code is placed in:
 - `protos/gen/` - Generated protobuf code
-- `atlas/gen/` - Generated database code
+- `databases/gen/` - Generated database code
 - `enums/` - Generated enum types
 
 ---

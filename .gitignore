@@ -46,9 +46,9 @@ log/
 *.backup
 
 ## Atlas generated content
-atlas/build/
-atlas/gen/
-atlas/debug.txt
+databases/build/
+databases/gen/
+databases/debug.txt
 
 ## Uploaded assets
 assets/**/*
@@ -116,8 +116,8 @@ data/**/*.sql
 !pkgs/**
 !pkgs/cache/
 !pkgs/cache/**
-!atlas/
-!atlas/**
+!databases/
+!databases/**
 !enums/
 !enums/**
 !inputs/

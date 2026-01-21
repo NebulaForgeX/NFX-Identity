@@ -213,8 +213,8 @@ else
   export POSTGRES_DB_DEV="${POSTGRES_DB_DEV}"
   export POSTGRES_DB_PROD="${POSTGRES_DB_PROD}"
   export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW}"
-  # 切换到 atlas 目录运行，这样 Atlas 可以正确解析相对路径
-  cd atlas || exit 1
+  # 切换到 databases 目录运行，这样 Atlas 可以正确解析相对路径
+  cd databases || exit 1
   # atlas migrate diff 会自动比较 env 配置中的 url（当前数据库）和 src（目标状态），生成迁移
   # 不使用 --config，让 Atlas 自动查找 atlas.hcl
   atlas migrate diff --env ${ATLAS_ENV}
@@ -227,7 +227,7 @@ else
 
   # 3. Lint migrations (optional, may require Atlas Pro)
   write_header "Step 3: Linting migrations (optional)"
-  cd atlas || exit 1
+  cd databases || exit 1
   atlas migrate lint --env ${ATLAS_ENV} --latest 1 -w || {
     echo "Warning: Lint check failed or skipped (may require Atlas Pro account)"
     echo "Continuing with migration apply..."
@@ -236,7 +236,7 @@ else
 
   # 4. Apply migrations
   write_header "Step 4: Applying migrations (atlas:apply)"
-  cd atlas || exit 1
+  cd databases || exit 1
   atlas migrate apply --env ${ATLAS_ENV}
   if [[ $? -ne 0 ]]; then
     echo "Atlas migrate apply failed with exit code $?"
@@ -247,7 +247,7 @@ else
 
   # 5. Check status
   write_header "Step 5: Checking migration status"
-  cd atlas || exit 1
+  cd databases || exit 1
   atlas migrate status --env ${ATLAS_ENV}
   if [[ $? -ne 0 ]]; then
     echo "Atlas migrate status failed with exit code $?"
@@ -261,7 +261,7 @@ else
   echo ""
   echo "IMPORTANT: Atlas migrate diff does not include views (Atlas Pro feature)."
   echo "Please manually add CREATE VIEW statements to the migration files in:"
-  echo "  - atlas/migrations/${ATLAS_ENV}/"
+  echo "  - databases/migrations/${ATLAS_ENV}/"
   echo ""
   echo "After adding views, please:"
   echo "  1. Apply the updated migrations manually, OR"
@@ -285,7 +285,7 @@ else
 
   # 5.6. Re-apply migrations (in case views were added)
   write_header "Step 5.6: Re-applying migrations (includes manual views)"
-  cd atlas || exit 1
+  cd databases || exit 1
   atlas migrate apply --env ${ATLAS_ENV}
   if [[ $? -ne 0 ]]; then
     echo "Warning: Atlas migrate apply failed with exit code $?"
@@ -305,10 +305,10 @@ fi
 # 7. Clean connections after generation
 clean_gen_connections
 
-# 8. Final status check (only if migrations were run)
-if [[ "${SKIP_MIGRATIONS}" != "yes" ]]; then
-  write_header "Step 7: Final status check"
-  cd atlas || exit 1
+  # 8. Final status check (only if migrations were run)
+  if [[ "${SKIP_MIGRATIONS}" != "yes" ]]; then
+    write_header "Step 7: Final status check"
+    cd databases || exit 1
   atlas migrate status --env ${ATLAS_ENV}
   if [[ $? -ne 0 ]]; then
     echo "Atlas migrate status failed with exit code $?"
