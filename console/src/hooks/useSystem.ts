@@ -18,35 +18,17 @@ import type { UnifiedQueryParams } from "./core/type";
 
 // ========== SystemState 相关 ==========
 
-// 检查系统是否已初始化（公开接口，不需要认证）
-export const useSystemInit = (params?: UnifiedQueryParams<boolean>) => {
+// 获取最新系统状态（公开接口，不需要认证）- suspense 模式
+export const useSystemInit = (params?: UnifiedQueryParams<SystemState>) => {
   const { options, postProcess } = params || {};
   const makeQuery = makeUnifiedQuery(
     async () => {
-      try {
-        const systemState = await GetSystemStateLatestPublic();
-        return systemState.initialized;
-      } catch (err) {
-        // If API returns 404 or no record, system is not initialized
-        // If API returns other error, we'll treat it as not initialized for safety
-        console.warn("Failed to check system initialization status:", err);
-        return false;
-      }
+      return await GetSystemStateLatestPublic();
     },
-    undefined, // 使用 normal 模式（非 suspense），返回 UseQueryResult
+    "suspense",
     postProcess,
   );
-  const queryResult = makeQuery(SYSTEM_SYSTEM_STATE_INIT, {}, {
-    retry: 1, // Only retry once
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    ...options,
-  });
-
-  return {
-    isInitialized: queryResult.data,
-    isLoading: queryResult.isLoading,
-    error: queryResult.error as Error | null,
-  };
+  return makeQuery(SYSTEM_SYSTEM_STATE_INIT, {}, options);
 };
 
 // 获取最新系统状态

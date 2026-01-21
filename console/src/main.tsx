@@ -6,18 +6,22 @@ import "./index.css";
 import "@/assets/themes/global.css";
 import "@/assets/languages/i18n";
 
-import { ModalProvider, QueryProvider, ThemeProvider } from "@/providers";
+import { BootstrapProvider, ModalProvider, QueryProvider, ThemeProvider, LenisProvider } from "@/providers";  
 
 import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryProvider>
-      <ThemeProvider defaultTheme="default">
+      <ThemeProvider>
         <BrowserRouter>
-          <ModalProvider>
-            <App />
-          </ModalProvider>
+          <LenisProvider>
+            <ModalProvider>
+              <BootstrapProvider>
+                <App />
+              </BootstrapProvider>
+            </ModalProvider>
+          </LenisProvider>
         </BrowserRouter>
       </ThemeProvider>
     </QueryProvider>

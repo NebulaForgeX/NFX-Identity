@@ -69,7 +69,7 @@ export type SuspenseStringInfiniteQueryOptions<T> = Omit<
 export type InfiniteNumberQueryOptions<T> = InfiniteQueryOptions<T> | SuspenseInfiniteQueryOptions<T>;
 export type InfiniteStringQueryOptions<T> = StringInfiniteQueryOptions<T> | SuspenseStringInfiniteQueryOptions<T>;
 
-export type UnifiedQueryMode = "suspense" | "suspense";
+export type UnifiedQueryMode = "suspense" | "normal";
 export type suspenseUnifiedQueryOptions<T> =  Omit<UseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
 export type SuspenseUnifiedQueryOptions<T> =  Omit<UseSuspenseQueryOptions<T, AxiosError, T>, "queryKey" | "queryFn">;
 

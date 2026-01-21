@@ -23,6 +23,16 @@ export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
 
 export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
   fetchRemote: (params: F) => Promise<T>,
+  mode: "normal",
+  postProcess?: (data: T) => void,
+): (
+  queryKey: QueryKey,
+  filter?: F,
+  options?: suspenseUnifiedQueryOptions<T>,
+) => UseQueryResult<T, AxiosError>;
+
+export function makeUnifiedQuery<T, F extends object = Record<string, unknown>>(
+  fetchRemote: (params: F) => Promise<T>,
   mode?: "suspense",
   postProcess?: (data: T) => void,
 ): (

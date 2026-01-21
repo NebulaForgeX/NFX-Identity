@@ -2,7 +2,7 @@ import type { ThemeName } from "@/assets/themes/types";
 
 import { memo, useEffect, useRef, useState } from "react";
 
-import { useTheme } from "@/providers/ThemeProvider";
+import { useTheme } from "@/hooks";
 
 import styles from "./styles.module.css";
 
