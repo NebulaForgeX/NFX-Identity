@@ -28,6 +28,7 @@
   text-align: center;
   color: var(--color-fg-heading);
   max-width: 500px;
+  gap: 1rem;
 }
 
 .title {

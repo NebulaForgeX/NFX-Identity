@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Suspense from "@/components/Suspense";
 import { BounceLoading } from "@/animations";
 import { TruckLoading } from "@/animations";
+import { ECGLoading } from "@/animations";
 
 import { useSystemInit } from "@/hooks/useSystem";
 
@@ -26,6 +27,7 @@ function BootstrapContent({ children }: { children: ReactNode }) {
         <div className={styles.content}>
           <BounceLoading size="large" shape="square" />
           <TruckLoading size="medium" />
+          <ECGLoading size="medium" />
           <h1 className={styles.title}>欢迎使用 NFX-Identity</h1>
           <p className={styles.description}>
             系统正在初始化，请稍候...
