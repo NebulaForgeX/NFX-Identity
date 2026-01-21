@@ -4,7 +4,7 @@ import type { ReactNode, SuspenseProps as ReactSuspenseProps } from "react";
 import { memo, Suspense as ReactSuspense, useCallback } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
-import { ECGLoading, TruckLoading } from "@/components";
+import { BounceLoading, ECGLoading, TruckLoading } from "@/animations";
 
 import styles from "./styles.module.css";
 import SuspenseErrorBoundary from "./SuspenseErrorBoundary";
@@ -12,7 +12,8 @@ import SuspenseErrorBoundary from "./SuspenseErrorBoundary";
 interface SuspenseProps extends Omit<ReactSuspenseProps, "fallback">, Omit<QueryErrorResetBoundaryProps, "children"> {
   fallback?: ReactNode;
   test?: boolean;
-  loadingType?: "ecg" | "truck";
+  loadingType?: "ecg" | "truck" | "bounce";
+  loadingShape?: "square" | "circle";
   loadingText?: string;
   loadingSize?: "small" | "medium" | "large";
   loadingContainerClassName?: string;
@@ -32,6 +33,7 @@ const Suspense = memo((props: SuspenseProps) => {
     fallback,
     test,
     loadingType = "ecg",
+    loadingShape = "square",
     loadingClassName,
     loadingText,
     loadingSize = "medium",
@@ -53,10 +55,12 @@ const Suspense = memo((props: SuspenseProps) => {
         return <ECGLoading size={loadingSize} className={loadingClassName} />;
       case "truck":
         return <TruckLoading size={loadingSize} className={loadingClassName} />;
+      case "bounce":
+        return <BounceLoading size={loadingSize} shape={loadingShape} className={loadingClassName} />;
       default:
         return <ECGLoading size={loadingSize} className={loadingClassName} />;
     }
-  }, [loadingType, loadingSize, loadingClassName]);
+  }, [loadingType, loadingShape, loadingSize, loadingClassName]);
 
   const renderFallback = useCallback(() => {
     if (fallback) {

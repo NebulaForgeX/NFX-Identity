@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { TruckLoading } from "@/components";
+import { TruckLoading } from "@/animations";
 import { ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";

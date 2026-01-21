@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
 import Suspense from "@/components/Suspense";
-import { TruckLoading } from "@/components";
+import { BounceLoading } from "@/animations";
+import { TruckLoading } from "@/animations";
 
 import { useSystemInit } from "@/hooks/useSystem";
 
@@ -23,7 +24,8 @@ function BootstrapContent({ children }: { children: ReactNode }) {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <TruckLoading size="large" />
+          <BounceLoading size="large" shape="square" />
+          <TruckLoading size="medium" />
           <h1 className={styles.title}>欢迎使用 NFX-Identity</h1>
           <p className={styles.description}>
             系统正在初始化，请稍候...
@@ -43,7 +45,8 @@ function BootstrapContent({ children }: { children: ReactNode }) {
 export function BootstrapProvider({ children }: BootstrapProviderProps) {
   return (
     <Suspense
-      loadingType="ecg"
+      loadingType="bounce"
+      loadingShape="circle"
       loadingText="检查系统状态..."
       loadingSize="medium"
     >

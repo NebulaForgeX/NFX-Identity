@@ -1,4 +1,4 @@
-import { TruckLoading } from "@/components";
+import { TruckLoading } from "@/animations";
 
 import styles from "./styles.module.css";
 

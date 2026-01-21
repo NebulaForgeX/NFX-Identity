@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { TruckLoading } from "@/components";
+import { TruckLoading } from "@/animations";
 
 import { LoginForm, RegisterForm } from "./components";
 import styles from "./styles.module.css";

@@ -4,8 +4,6 @@ export { default as LayoutSwitcher } from "./LayoutSwitcher";
 export { default as Footer } from "./Footer";
 export { default as Sidebar } from "./Sidebar";
 export { default as Button } from "./Button";
-export { default as ECGLoading } from "./ECGLoading";
-export { default as TruckLoading } from "./TruckLoading";
 export { default as Dropdown } from "./Dropdown";
 export { default as VirtualList } from "./VirtualList";
 export { default as VirtualWindowList } from "./VirtualWindowList";
