@@ -21,11 +21,12 @@ func NewRouter(sub *eventbus.BusSubscriber, registry *Registry, config eventbus.
 }
 
 func (r *Router) RegisterRoutes() {
-	// TODO: Register event handlers when events are defined and application layer is created
-	// eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImagesInvalidateCache)
-	// eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageTypesInvalidateCache)
-	// eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageVariantsInvalidateCache)
-	// eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageTagsInvalidateCache)
+	// 注册事件处理器
+	// 注意：使用 eventbus.RegisterHandler，但文件夹名称是 pipeline
+	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImagesInvalidateCache)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageTypesInvalidateCache)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageVariantsInvalidateCache)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageTagsInvalidateCache)
 }
 
 func (r *Router) Run(ctx context.Context) error {
