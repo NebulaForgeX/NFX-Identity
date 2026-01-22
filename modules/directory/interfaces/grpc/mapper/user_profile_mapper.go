@@ -51,7 +51,7 @@ func UserProfileROToProto(v *userProfileAppResult.UserProfileRO) *userprofilepb.
 		userProfile.BackgroundId = &backgroundID
 	}
 
-	if v.BackgroundIDs != nil && len(v.BackgroundIDs) > 0 {
+	if len(v.BackgroundIDs) > 0 {
 		// proto定义background_ids是string，需要将UUID数组序列化为字符串
 		// 这里简单处理，将第一个ID作为字符串，或者可以序列化为JSON字符串
 		backgroundIDsStr := v.BackgroundIDs[0].String()
@@ -87,13 +87,13 @@ func UserProfileROToProto(v *userProfileAppResult.UserProfileRO) *userprofilepb.
 		userProfile.Github = v.Github
 	}
 
-	if v.SocialLinks != nil && len(v.SocialLinks) > 0 {
+	if len(v.SocialLinks) > 0 {
 		if socialLinksStruct, err := structpb.NewStruct(v.SocialLinks); err == nil {
 			userProfile.SocialLinks = socialLinksStruct
 		}
 	}
 
-	if v.Skills != nil && len(v.Skills) > 0 {
+	if len(v.Skills) > 0 {
 		if skillsStruct, err := structpb.NewStruct(v.Skills); err == nil {
 			userProfile.Skills = skillsStruct
 		}

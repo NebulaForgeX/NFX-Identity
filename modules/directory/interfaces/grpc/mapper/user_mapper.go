@@ -56,3 +56,17 @@ func userStatusToProto(status userDomain.UserStatus) userpb.DirectoryUserStatus 
 		return userpb.DirectoryUserStatus_DIRECTORY_USER_STATUS_UNSPECIFIED
 	}
 }
+
+// ProtoStatusToDomain 将 proto DirectoryUserStatus 转换为 domain UserStatus
+func ProtoStatusToDomain(status userpb.DirectoryUserStatus) userDomain.UserStatus {
+	switch status {
+	case userpb.DirectoryUserStatus_DIRECTORY_USER_STATUS_PENDING:
+		return userDomain.UserStatusPending
+	case userpb.DirectoryUserStatus_DIRECTORY_USER_STATUS_ACTIVE:
+		return userDomain.UserStatusActive
+	case userpb.DirectoryUserStatus_DIRECTORY_USER_STATUS_DEACTIVE:
+		return userDomain.UserStatusDeactive
+	default:
+		return userDomain.UserStatusPending
+	}
+}

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	userApp "nfxid/modules/directory/application/users"
+	userAppCommands "nfxid/modules/directory/application/users/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	userpb "nfxid/protos/gen/directory/user"
@@ -22,6 +23,37 @@ func NewUserHandler(userAppSvc *userApp.Service) *UserHandler {
 	return &UserHandler{
 		userAppSvc: userAppSvc,
 	}
+}
+
+// CreateUser 创建用户
+func (h *UserHandler) CreateUser(ctx context.Context, req *userpb.CreateUserRequest) (*userpb.CreateUserResponse, error) {
+	// 转换 protobuf 状态到 domain 状态
+	userStatus := mapper.ProtoStatusToDomain(req.Status)
+
+	// 创建命令
+	cmd := userAppCommands.CreateUserCmd{
+		Username:   req.Username,
+		Status:     userStatus,
+		IsVerified: req.IsVerified,
+	}
+
+	// 调用应用服务创建用户
+	userID, err := h.userAppSvc.CreateUser(ctx, cmd)
+	if err != nil {
+		logx.S().Errorf("failed to create user: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create user: %v", err)
+	}
+
+	// 获取创建的用户
+	userView, err := h.userAppSvc.GetUser(ctx, userID)
+	if err != nil {
+		logx.S().Errorf("failed to get created user: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to get created user: %v", err)
+	}
+
+	// 转换为 protobuf 响应
+	user := mapper.UserROToProto(&userView)
+	return &userpb.CreateUserResponse{User: user}, nil
 }
 
 // GetUserByID 根据ID获取用户

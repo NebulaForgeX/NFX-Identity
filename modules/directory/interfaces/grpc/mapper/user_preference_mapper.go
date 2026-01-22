@@ -33,25 +33,25 @@ func UserPreferenceROToProto(v *userPreferenceAppResult.UserPreferenceRO) *userp
 		userPreference.Timezone = &v.Timezone
 	}
 
-	if v.Notifications != nil && len(v.Notifications) > 0 {
+	if len(v.Notifications) > 0 {
 		if notificationsStruct, err := structpb.NewStruct(v.Notifications); err == nil {
 			userPreference.Notifications = notificationsStruct
 		}
 	}
 
-	if v.Privacy != nil && len(v.Privacy) > 0 {
+	if len(v.Privacy) > 0 {
 		if privacyStruct, err := structpb.NewStruct(v.Privacy); err == nil {
 			userPreference.Privacy = privacyStruct
 		}
 	}
 
-	if v.Display != nil && len(v.Display) > 0 {
+	if len(v.Display) > 0 {
 		if displayStruct, err := structpb.NewStruct(v.Display); err == nil {
 			userPreference.Display = displayStruct
 		}
 	}
 
-	if v.Other != nil && len(v.Other) > 0 {
+	if len(v.Other) > 0 {
 		if otherStruct, err := structpb.NewStruct(v.Other); err == nil {
 			userPreference.Other = otherStruct
 		}
