@@ -27,10 +27,10 @@ func NewUserPreferenceHandler(userPreferenceAppSvc *userPreferenceApp.Service) *
 
 // CreateUserPreference 创建用户偏好
 func (h *UserPreferenceHandler) CreateUserPreference(ctx context.Context, req *userpreferencepb.CreateUserPreferenceRequest) (*userpreferencepb.CreateUserPreferenceResponse, error) {
-	// 解析用户ID
-	userID, err := uuid.Parse(req.UserId)
+	// 解析用户ID（id 直接引用 users.id）
+	userID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
 	}
 
 	// 转换 protobuf Struct 到 map[string]interface{}

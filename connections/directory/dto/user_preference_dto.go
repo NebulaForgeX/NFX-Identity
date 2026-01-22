@@ -7,7 +7,7 @@ import (
 
 // CreateUserPreferenceDTO 创建用户偏好的 DTO
 type CreateUserPreferenceDTO struct {
-	UserID        string
+	ID            string // id 直接引用 users.id
 	Theme         *string
 	Language      *string
 	Timezone      *string
@@ -20,7 +20,7 @@ type CreateUserPreferenceDTO struct {
 // ToCreateUserPreferenceRequest 转换为 protobuf 请求
 func (d *CreateUserPreferenceDTO) ToCreateUserPreferenceRequest() (*userpreferencepb.CreateUserPreferenceRequest, error) {
 	req := &userpreferencepb.CreateUserPreferenceRequest{
-		UserId:   d.UserID,
+		Id:       d.ID,
 		Theme:    d.Theme,
 		Language: d.Language,
 		Timezone: d.Timezone,

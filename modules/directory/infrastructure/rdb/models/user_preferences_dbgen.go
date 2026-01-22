@@ -11,7 +11,6 @@ import (
 
 type UserPreference struct {
 	ID            uuid.UUID       `gorm:"type:uuid;primaryKey"`
-	UserID        uuid.UUID       `gorm:"type:uuid;index:idx_user_preferences_user_id;uniqueIndex:user_preferences_user_id_key"`
 	Theme         *string         `gorm:"type:varchar(50)"`
 	Language      *string         `gorm:"type:varchar(10)"`
 	Timezone      *string         `gorm:"type:varchar(50)"`
@@ -34,11 +33,10 @@ func (m *UserPreference) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var UserPreferenceCols = struct {
-	ID, UserID, Theme, Language, Timezone, Notifications, Privacy,
-	Display, Other, CreatedAt, UpdatedAt, DeletedAt string
+	ID, Theme, Language, Timezone, Notifications, Privacy, Display,
+	Other, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:            "id",
-	UserID:        "user_id",
 	Theme:         "theme",
 	Language:      "language",
 	Timezone:      "timezone",
@@ -52,7 +50,6 @@ var UserPreferenceCols = struct {
 }
 
 const (
-	UserPreferencePk           = "user_preferences_pkey"
-	UserPreferenceUkUserIdKey  = "user_preferences_user_id_key"
-	UserPreferenceFkUserIdFkey = "user_preferences_user_id_fkey"
+	UserPreferencePk       = "user_preferences_pkey"
+	UserPreferenceFkIdFkey = "user_preferences_id_fkey"
 )

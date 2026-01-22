@@ -15,8 +15,7 @@ func UserPreferenceROToProto(v *userPreferenceAppResult.UserPreferenceRO) *userp
 	}
 
 	userPreference := &userpreferencepb.UserPreference{
-		Id:        v.ID.String(),
-		UserId:    v.UserID.String(),
+		Id:        v.ID.String(), // id 直接引用 users.id
 		CreatedAt: timestamppb.New(v.CreatedAt),
 		UpdatedAt: timestamppb.New(v.UpdatedAt),
 	}

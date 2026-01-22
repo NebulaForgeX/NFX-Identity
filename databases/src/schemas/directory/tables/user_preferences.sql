@@ -1,8 +1,8 @@
 -- User Preferences table for user settings and preferences
 -- Stores user-specific preferences and settings
+-- Note: id directly references users.id (one-to-one relationship)
 CREATE TABLE IF NOT EXISTS "directory"."user_preferences" (
-  "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "user_id" UUID NOT NULL UNIQUE REFERENCES "directory"."users"("id") ON DELETE CASCADE,
+  "id" UUID PRIMARY KEY REFERENCES "directory"."users"("id") ON DELETE CASCADE,
   "theme" VARCHAR(50) DEFAULT 'light', -- Theme preference: light, dark, auto
   "language" VARCHAR(10) DEFAULT 'en', -- Language preference: en, zh, etc.
   "timezone" VARCHAR(50) DEFAULT 'Etc/UTC', -- Timezone preference
@@ -15,6 +15,5 @@ CREATE TABLE IF NOT EXISTS "directory"."user_preferences" (
   "deleted_at" TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS "idx_user_preferences_user_id" ON "directory"."user_preferences"("user_id");
 CREATE INDEX IF NOT EXISTS "idx_user_preferences_deleted_at" ON "directory"."user_preferences"("deleted_at");
 

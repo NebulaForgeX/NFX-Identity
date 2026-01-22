@@ -43,8 +43,7 @@ func TenantSettingDomainToModel(ts *tenant_settings.TenantSetting) *models.Tenan
 	}
 
 	return &models.TenantSetting{
-		ID:                  ts.ID(),
-		TenantID:            ts.TenantID(),
+		ID:                  ts.ID(), // id 直接引用 tenants.id
 		EnforceMfa:          ts.EnforceMFA(), // Model 使用 EnforceMfa，Domain 使用 EnforceMFA
 		AllowedEmailDomains: allowedEmailDomains,
 		SessionTtlMinutes:   ts.SessionTTLMinutes(), // Model 使用 SessionTtlMinutes，Domain 使用 SessionTTLMinutes
@@ -84,8 +83,8 @@ func TenantSettingModelToDomain(m *models.TenantSetting) *tenant_settings.Tenant
 	}
 
 	state := tenant_settings.TenantSettingState{
-		ID:                 m.ID,
-		TenantID:           m.TenantID,
+		ID:                 m.ID, // id 直接引用 tenants.id
+		TenantID:           m.ID, // TenantID 从 ID 获取（一对一关系）
 		EnforceMFA:         m.EnforceMfa, // Model 使用 EnforceMfa，Domain 使用 EnforceMFA
 		AllowedEmailDomains: allowedEmailDomains,
 		SessionTTLMinutes:  m.SessionTtlMinutes, // Model 使用 SessionTtlMinutes，Domain 使用 SessionTTLMinutes
@@ -118,7 +117,7 @@ func TenantSettingModelToUpdates(m *models.TenantSetting) map[string]any {
 	}
 
 	return map[string]any{
-		models.TenantSettingCols.TenantID:            m.TenantID,
+		// 注意：TenantID 不再存在，id 直接引用 tenants.id
 		models.TenantSettingCols.EnforceMfa:         m.EnforceMfa,
 		models.TenantSettingCols.AllowedEmailDomains: m.AllowedEmailDomains,
 		models.TenantSettingCols.SessionTtlMinutes:   m.SessionTtlMinutes,

@@ -4,36 +4,37 @@ import (
 	"time"
 
 	userprofilepb "nfxid/protos/gen/directory/user_profile"
+
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // CreateUserProfileDTO 创建用户资料的 DTO
 type CreateUserProfileDTO struct {
-	UserID       string
-	Role         *string
-	FirstName    *string
-	LastName     *string
-	Nickname     *string
-	DisplayName  *string
-	AvatarID     *string
-	BackgroundID *string
+	ID            string // id 直接引用 users.id
+	Role          *string
+	FirstName     *string
+	LastName      *string
+	Nickname      *string
+	DisplayName   *string
+	AvatarID      *string
+	BackgroundID  *string
 	BackgroundIDs []string
-	Bio          *string
-	Birthday     *time.Time
-	Age          *int32
-	Gender       *string
-	Location     *string
-	Website      *string
-	Github       *string
-	SocialLinks  map[string]interface{}
-	Skills       map[string]interface{}
+	Bio           *string
+	Birthday      *time.Time
+	Age           *int32
+	Gender        *string
+	Location      *string
+	Website       *string
+	Github        *string
+	SocialLinks   map[string]interface{}
+	Skills        map[string]interface{}
 }
 
 // ToCreateUserProfileRequest 转换为 protobuf 请求
 func (d *CreateUserProfileDTO) ToCreateUserProfileRequest() (*userprofilepb.CreateUserProfileRequest, error) {
 	req := &userprofilepb.CreateUserProfileRequest{
-		UserId:        d.UserID,
+		Id:            d.ID,
 		Role:          d.Role,
 		FirstName:     d.FirstName,
 		LastName:      d.LastName,

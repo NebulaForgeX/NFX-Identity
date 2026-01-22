@@ -36,7 +36,7 @@ func (c *UserProfileClient) CreateUserProfile(ctx context.Context, createDTO *dt
 // CreateUserProfileDefault 创建用户资料（默认值，用于系统初始化）
 func (c *UserProfileClient) CreateUserProfileDefault(ctx context.Context, userID string) (string, error) {
 	createDTO := &dto.CreateUserProfileDTO{
-		UserID: userID,
+		ID: userID, // id 直接引用 users.id
 		// 其他字段为 nil，使用默认值
 	}
 

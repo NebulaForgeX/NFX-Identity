@@ -27,10 +27,10 @@ func NewUserProfileHandler(userProfileAppSvc *userProfileApp.Service) *UserProfi
 
 // CreateUserProfile 创建用户资料
 func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userprofilepb.CreateUserProfileRequest) (*userprofilepb.CreateUserProfileResponse, error) {
-	// 解析用户ID
-	userID, err := uuid.Parse(req.UserId)
+	// 解析用户ID（id 直接引用 users.id）
+	userID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
 	}
 
 	// 解析可选UUID字段

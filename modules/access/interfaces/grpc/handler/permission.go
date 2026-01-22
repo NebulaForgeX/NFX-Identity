@@ -4,6 +4,7 @@ import (
 	"context"
 
 	permissionApp "nfxid/modules/access/application/permissions"
+	permissionAppCommands "nfxid/modules/access/application/permissions/commands"
 	"nfxid/modules/access/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	permissionpb "nfxid/protos/gen/access/permission"
@@ -22,6 +23,35 @@ func NewPermissionHandler(permissionAppSvc *permissionApp.Service) *PermissionHa
 	return &PermissionHandler{
 		permissionAppSvc: permissionAppSvc,
 	}
+}
+
+// CreatePermission 创建权限
+func (h *PermissionHandler) CreatePermission(ctx context.Context, req *permissionpb.CreatePermissionRequest) (*permissionpb.CreatePermissionResponse, error) {
+	// 创建命令
+	cmd := permissionAppCommands.CreatePermissionCmd{
+		Key:         req.Key,
+		Name:        req.Name,
+		Description: req.Description,
+		IsSystem:    req.IsSystem,
+	}
+
+	// 调用应用服务创建权限
+	permissionID, err := h.permissionAppSvc.CreatePermission(ctx, cmd)
+	if err != nil {
+		logx.S().Errorf("failed to create permission: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create permission: %v", err)
+	}
+
+	// 获取创建的权限
+	permissionView, err := h.permissionAppSvc.GetPermission(ctx, permissionID)
+	if err != nil {
+		logx.S().Errorf("failed to get created permission: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to get created permission: %v", err)
+	}
+
+	// 转换为 protobuf 响应
+	permission := mapper.PermissionROToProto(&permissionView)
+	return &permissionpb.CreatePermissionResponse{Permission: permission}, nil
 }
 
 // GetPermissionByID 根据ID获取权限

@@ -1,11 +1,11 @@
 -- User Credentials table for authentication materials
 -- Stores how to verify a user (password, passkey, oauth links, etc.)
+-- Note: id directly references directory.users.id (one-to-one relationship)
 CREATE TYPE "auth".credential_type AS ENUM ('password', 'passkey', 'oauth_link', 'saml', 'ldap');
 CREATE TYPE "auth".credential_status AS ENUM ('active', 'disabled', 'expired');
 
 CREATE TABLE IF NOT EXISTS "auth"."user_credentials" (
-  "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "user_id" UUID NOT NULL UNIQUE, -- References directory.users.id (application-level consistency)
+  "id" UUID PRIMARY KEY, -- References directory.users.id (application-level consistency, no FK to avoid cross-schema dependency)
   "tenant_id" UUID NOT NULL, -- Multi-tenant isolation (references tenants.tenants.id)
   "credential_type" "auth".credential_type NOT NULL DEFAULT 'password',
   "password_hash" VARCHAR(255), -- For password type
@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS "auth"."user_credentials" (
   "deleted_at" TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS "idx_user_credentials_user_id" ON "auth"."user_credentials"("user_id");
 CREATE INDEX IF NOT EXISTS "idx_user_credentials_tenant_id" ON "auth"."user_credentials"("tenant_id");
 CREATE INDEX IF NOT EXISTS "idx_user_credentials_type" ON "auth"."user_credentials"("credential_type");
 CREATE INDEX IF NOT EXISTS "idx_user_credentials_status" ON "auth"."user_credentials"("status");

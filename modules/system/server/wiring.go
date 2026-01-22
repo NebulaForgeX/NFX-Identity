@@ -69,9 +69,9 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	rabbitMQConfig := cfg.RabbitMQConfig
 
 	//! === Tokenx ===
-	// 使用默认 token 配置（system 模块可能不需要 token 生成，只需要验证）
-	tokenCfg := tokenx.DefaultConfig()
-	tokenxInstance := tokenx.New(tokenCfg)
+	// 使用配置文件中的 token 配置（确保与其他服务一致）
+	tokenCfg := cfg.Token
+	tokenxInstance := tokenx.New(cfg.Token)
 
 	//! === Token Verifiers ===
 	// User Token Verifier (用于 HTTP 中间件 - 验证用户 token)
@@ -127,8 +127,8 @@ func (d *Dependencies) Cleanup() {
 // Getter methods for interfaces
 func (d *Dependencies) SystemStateAppSvc() *systemStateApp.Service { return d.systemStateAppSvc }
 func (d *Dependencies) BootstrapSvc() *bootstrapApp.Service        { return d.bootstrapSvc }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service        { return d.resourceSvc }
-func (d *Dependencies) HealthMgr() *health.Manager                { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service          { return d.resourceSvc }
+func (d *Dependencies) HealthMgr() *health.Manager                 { return d.healthMgr }
 func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }

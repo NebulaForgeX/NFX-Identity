@@ -18,6 +18,6 @@ func (h *Handler) UpdateLastSuccessLogin(ctx context.Context, userID uuid.UUID) 
 
 	return h.db.WithContext(ctx).
 		Model(&models.UserCredential{}).
-		Where("user_id = ?", userID).
+		Where("id = ?", userID).
 		Updates(updates).Error
 }

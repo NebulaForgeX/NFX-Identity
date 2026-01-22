@@ -62,8 +62,7 @@ func UserPreferenceDomainToModel(up *user_preferences.UserPreference) *models.Us
 	}
 
 	return &models.UserPreference{
-		ID:            up.ID(),
-		UserID:        up.UserID(),
+		ID:            up.ID(), // id 直接引用 users.id
 		Theme:         theme,
 		Language:      language,
 		Timezone:      timezone,
@@ -119,8 +118,8 @@ func UserPreferenceModelToDomain(m *models.UserPreference) *user_preferences.Use
 	}
 
 	state := user_preferences.UserPreferenceState{
-		ID:            m.ID,
-		UserID:        m.UserID,
+		ID:            m.ID, // id 直接引用 users.id
+		UserID:        m.ID, // UserID 从 ID 获取（一对一关系）
 		Theme:         theme,
 		Language:      language,
 		Timezone:      timezone,
@@ -159,7 +158,7 @@ func UserPreferenceModelToUpdates(m *models.UserPreference) map[string]any {
 	}
 
 	return map[string]any{
-		models.UserPreferenceCols.UserID:        m.UserID,
+		// 注意：UserID 不再存在，id 直接引用 users.id
 		models.UserPreferenceCols.Theme:         m.Theme,
 		models.UserPreferenceCols.Language:      m.Language,
 		models.UserPreferenceCols.Timezone:      m.Timezone,

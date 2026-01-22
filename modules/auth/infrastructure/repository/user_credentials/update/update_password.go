@@ -31,6 +31,6 @@ func (h *Handler) UpdatePassword(ctx context.Context, userID uuid.UUID, password
 
 	return h.db.WithContext(ctx).
 		Model(&models.UserCredential{}).
-		Where("user_id = ?", userID).
+		Where("id = ?", userID).
 		Updates(updates).Error
 }

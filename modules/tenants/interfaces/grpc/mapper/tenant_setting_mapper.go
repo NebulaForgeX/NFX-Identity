@@ -15,8 +15,7 @@ func TenantSettingROToProto(v *tenantSettingAppResult.TenantSettingRO) *tenantse
 	}
 
 	tenantSetting := &tenantsettingpb.TenantSetting{
-		Id:                  v.ID.String(),
-		TenantId:           v.TenantID.String(),
+		Id:                  v.ID.String(), // id 直接引用 tenants.id
 		EnforceMfa:         v.EnforceMFA,
 		AllowedEmailDomains: v.AllowedEmailDomains,
 		CreatedAt:          timestamppb.New(v.CreatedAt),

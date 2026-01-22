@@ -24,20 +24,20 @@ const (
 )
 
 // 用户偏好信息
+// Note: id directly references users.id (one-to-one relationship)
 type UserPreference struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                       // 偏好ID (UUID)
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                 // 用户ID (UUID)
-	Theme         *string                `protobuf:"bytes,3,opt,name=theme,proto3,oneof" json:"theme,omitempty"`                           // 主题 (varchar(50))
-	Language      *string                `protobuf:"bytes,4,opt,name=language,proto3,oneof" json:"language,omitempty"`                     // 语言 (varchar(10))
-	Timezone      *string                `protobuf:"bytes,5,opt,name=timezone,proto3,oneof" json:"timezone,omitempty"`                     // 时区 (varchar(50))
-	Notifications *structpb.Struct       `protobuf:"bytes,6,opt,name=notifications,proto3,oneof" json:"notifications,omitempty"`           // 通知设置 (JSONB)
-	Privacy       *structpb.Struct       `protobuf:"bytes,7,opt,name=privacy,proto3,oneof" json:"privacy,omitempty"`                       // 隐私设置 (JSONB)
-	Display       *structpb.Struct       `protobuf:"bytes,8,opt,name=display,proto3,oneof" json:"display,omitempty"`                       // 显示设置 (JSONB)
-	Other         *structpb.Struct       `protobuf:"bytes,9,opt,name=other,proto3,oneof" json:"other,omitempty"`                           // 其他设置 (JSONB)
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`       // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`       // 更新时间
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"` // 软删除时间
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                       // 偏好ID (UUID) - 直接引用 users.id
+	Theme         *string                `protobuf:"bytes,2,opt,name=theme,proto3,oneof" json:"theme,omitempty"`                           // 主题 (varchar(50))
+	Language      *string                `protobuf:"bytes,3,opt,name=language,proto3,oneof" json:"language,omitempty"`                     // 语言 (varchar(10))
+	Timezone      *string                `protobuf:"bytes,4,opt,name=timezone,proto3,oneof" json:"timezone,omitempty"`                     // 时区 (varchar(50))
+	Notifications *structpb.Struct       `protobuf:"bytes,5,opt,name=notifications,proto3,oneof" json:"notifications,omitempty"`           // 通知设置 (JSONB)
+	Privacy       *structpb.Struct       `protobuf:"bytes,6,opt,name=privacy,proto3,oneof" json:"privacy,omitempty"`                       // 隐私设置 (JSONB)
+	Display       *structpb.Struct       `protobuf:"bytes,7,opt,name=display,proto3,oneof" json:"display,omitempty"`                       // 显示设置 (JSONB)
+	Other         *structpb.Struct       `protobuf:"bytes,8,opt,name=other,proto3,oneof" json:"other,omitempty"`                           // 其他设置 (JSONB)
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`        // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`       // 更新时间
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"` // 软删除时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,13 +75,6 @@ func (*UserPreference) Descriptor() ([]byte, []int) {
 func (x *UserPreference) GetId() string {
 	if x != nil {
 		return x.Id
-	}
-	return ""
-}
-
-func (x *UserPreference) GetUserId() string {
-	if x != nil {
-		return x.UserId
 	}
 	return ""
 }
@@ -159,7 +152,7 @@ func (x *UserPreference) GetDeletedAt() *timestamppb.Timestamp {
 // UserPreference Service Messages
 type CreateUserPreferenceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`       // 用户ID (UUID)
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                             // 用户ID (UUID) - 直接引用 users.id
 	Theme         *string                `protobuf:"bytes,2,opt,name=theme,proto3,oneof" json:"theme,omitempty"`                 // 主题 (varchar(50))
 	Language      *string                `protobuf:"bytes,3,opt,name=language,proto3,oneof" json:"language,omitempty"`           // 语言 (varchar(10))
 	Timezone      *string                `protobuf:"bytes,4,opt,name=timezone,proto3,oneof" json:"timezone,omitempty"`           // 时区 (varchar(50))
@@ -201,9 +194,9 @@ func (*CreateUserPreferenceRequest) Descriptor() ([]byte, []int) {
 	return file_directory_user_preference_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateUserPreferenceRequest) GetUserId() string {
+func (x *CreateUserPreferenceRequest) GetId() string {
 	if x != nil {
-		return x.UserId
+		return x.Id
 	}
 	return ""
 }
@@ -481,24 +474,23 @@ var File_directory_user_preference_proto protoreflect.FileDescriptor
 
 const file_directory_user_preference_proto_rawDesc = "" +
 	"\n" +
-	"\x1fdirectory/user_preference.proto\x12\x0fuser_preference\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x9b\x05\n" +
+	"\x1fdirectory/user_preference.proto\x12\x0fuser_preference\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x82\x05\n" +
 	"\x0eUserPreference\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x19\n" +
-	"\x05theme\x18\x03 \x01(\tH\x00R\x05theme\x88\x01\x01\x12\x1f\n" +
-	"\blanguage\x18\x04 \x01(\tH\x01R\blanguage\x88\x01\x01\x12\x1f\n" +
-	"\btimezone\x18\x05 \x01(\tH\x02R\btimezone\x88\x01\x01\x12B\n" +
-	"\rnotifications\x18\x06 \x01(\v2\x17.google.protobuf.StructH\x03R\rnotifications\x88\x01\x01\x126\n" +
-	"\aprivacy\x18\a \x01(\v2\x17.google.protobuf.StructH\x04R\aprivacy\x88\x01\x01\x126\n" +
-	"\adisplay\x18\b \x01(\v2\x17.google.protobuf.StructH\x05R\adisplay\x88\x01\x01\x122\n" +
-	"\x05other\x18\t \x01(\v2\x17.google.protobuf.StructH\x06R\x05other\x88\x01\x01\x129\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
+	"\x05theme\x18\x02 \x01(\tH\x00R\x05theme\x88\x01\x01\x12\x1f\n" +
+	"\blanguage\x18\x03 \x01(\tH\x01R\blanguage\x88\x01\x01\x12\x1f\n" +
+	"\btimezone\x18\x04 \x01(\tH\x02R\btimezone\x88\x01\x01\x12B\n" +
+	"\rnotifications\x18\x05 \x01(\v2\x17.google.protobuf.StructH\x03R\rnotifications\x88\x01\x01\x126\n" +
+	"\aprivacy\x18\x06 \x01(\v2\x17.google.protobuf.StructH\x04R\aprivacy\x88\x01\x01\x126\n" +
+	"\adisplay\x18\a \x01(\v2\x17.google.protobuf.StructH\x05R\adisplay\x88\x01\x01\x122\n" +
+	"\x05other\x18\b \x01(\v2\x17.google.protobuf.StructH\x06R\x05other\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\aR\tdeletedAt\x88\x01\x01B\b\n" +
+	"deleted_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\aR\tdeletedAt\x88\x01\x01B\b\n" +
 	"\x06_themeB\v\n" +
 	"\t_languageB\v\n" +
 	"\t_timezoneB\x10\n" +
@@ -508,9 +500,9 @@ const file_directory_user_preference_proto_rawDesc = "" +
 	"\n" +
 	"\b_displayB\b\n" +
 	"\x06_otherB\r\n" +
-	"\v_deleted_at\"\xd3\x03\n" +
-	"\x1bCreateUserPreferenceRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x19\n" +
+	"\v_deleted_at\"\xca\x03\n" +
+	"\x1bCreateUserPreferenceRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\x05theme\x18\x02 \x01(\tH\x00R\x05theme\x88\x01\x01\x12\x1f\n" +
 	"\blanguage\x18\x03 \x01(\tH\x01R\blanguage\x88\x01\x01\x12\x1f\n" +
 	"\btimezone\x18\x04 \x01(\tH\x02R\btimezone\x88\x01\x01\x12B\n" +

@@ -20,6 +20,6 @@ func (h *Handler) UpdateStatus(ctx context.Context, userID uuid.UUID, status use
 
 	return h.db.WithContext(ctx).
 		Model(&models.UserCredential{}).
-		Where("user_id = ?", userID).
+		Where("id = ?", userID).
 		Updates(updates).Error
 }

@@ -7,18 +7,18 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 
 // 租户设置信息
+// Note: id directly references tenants.id (one-to-one relationship)
 message TenantSetting {
-  string id = 1;                           // 设置ID (UUID)
-  string tenant_id = 2;                    // 租户ID (UUID)
-  bool enforce_mfa = 3;                    // 是否强制MFA
-  repeated string allowed_email_domains = 4; // 允许的邮箱域名 (text[])
-  optional int32 session_ttl_minutes = 5; // 会话TTL（分钟）
-  optional google.protobuf.Struct password_policy = 6; // 密码策略 (JSONB)
-  optional google.protobuf.Struct login_policy = 7;    // 登录策略 (JSONB)
-  optional google.protobuf.Struct mfa_policy = 8;      // MFA策略 (JSONB)
-  google.protobuf.Timestamp created_at = 9;      // 创建时间
-  google.protobuf.Timestamp updated_at = 10;     // 更新时间
-  optional string updated_by = 11;        // 更新者ID (UUID)
+  string id = 1;                           // 设置ID (UUID) - 直接引用 tenants.id
+  bool enforce_mfa = 2;                    // 是否强制MFA
+  repeated string allowed_email_domains = 3; // 允许的邮箱域名 (text[])
+  optional int32 session_ttl_minutes = 4; // 会话TTL（分钟）
+  optional google.protobuf.Struct password_policy = 5; // 密码策略 (JSONB)
+  optional google.protobuf.Struct login_policy = 6;    // 登录策略 (JSONB)
+  optional google.protobuf.Struct mfa_policy = 7;      // MFA策略 (JSONB)
+  google.protobuf.Timestamp created_at = 8;      // 创建时间
+  google.protobuf.Timestamp updated_at = 9;     // 更新时间
+  optional string updated_by = 10;        // 更新者ID (UUID)
 }
 
 // TenantSetting 服务 - 供其他服务通过 gRPC 管理租户设置

@@ -11,7 +11,6 @@ import (
 
 type UserProfile struct {
 	ID            uuid.UUID       `gorm:"type:uuid;primaryKey"`
-	UserID        uuid.UUID       `gorm:"type:uuid;index:idx_user_profiles_user_id;uniqueIndex:user_profiles_user_id_key"`
 	Role          *string         `gorm:"type:varchar(100);index:idx_user_profiles_role"`
 	FirstName     *string         `gorm:"type:varchar(100);index:idx_user_profiles_first_and_last_name,priority:1"`
 	LastName      *string         `gorm:"type:varchar(100);index:idx_user_profiles_first_and_last_name,priority:2"`
@@ -44,13 +43,11 @@ func (m *UserProfile) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var UserProfileCols = struct {
-	ID, UserID, Role, FirstName, LastName, Nickname, DisplayName,
-	AvatarID, BackgroundID, BackgroundIds, Bio, Birthday, Age, Gender,
-	Location, Website, Github, SocialLinks, Skills, CreatedAt, UpdatedAt,
-	DeletedAt string
+	ID, Role, FirstName, LastName, Nickname, DisplayName, AvatarID,
+	BackgroundID, BackgroundIds, Bio, Birthday, Age, Gender, Location,
+	Website, Github, SocialLinks, Skills, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:            "id",
-	UserID:        "user_id",
 	Role:          "role",
 	FirstName:     "first_name",
 	LastName:      "last_name",
@@ -76,6 +73,5 @@ var UserProfileCols = struct {
 const (
 	UserProfilePk            = "user_profiles_pkey"
 	UserProfileUkNicknameKey = "user_profiles_nickname_key"
-	UserProfileUkUserIdKey   = "user_profiles_user_id_key"
-	UserProfileFkUserIdFkey  = "user_profiles_user_id_fkey"
+	UserProfileFkIdFkey      = "user_profiles_id_fkey"
 )

@@ -7,19 +7,19 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 
 // 用户偏好信息
+// Note: id directly references users.id (one-to-one relationship)
 message UserPreference {
-  string id = 1;                           // 偏好ID (UUID)
-  string user_id = 2;                      // 用户ID (UUID)
-  optional string theme = 3;               // 主题 (varchar(50))
-  optional string language = 4;            // 语言 (varchar(10))
-  optional string timezone = 5;            // 时区 (varchar(50))
-  optional google.protobuf.Struct notifications = 6; // 通知设置 (JSONB)
-  optional google.protobuf.Struct privacy = 7;      // 隐私设置 (JSONB)
-  optional google.protobuf.Struct display = 8;      // 显示设置 (JSONB)
-  optional google.protobuf.Struct other = 9;        // 其他设置 (JSONB)
-  google.protobuf.Timestamp created_at = 10;        // 创建时间
-  google.protobuf.Timestamp updated_at = 11;        // 更新时间
-  optional google.protobuf.Timestamp deleted_at = 12; // 软删除时间
+  string id = 1;                           // 偏好ID (UUID) - 直接引用 users.id
+  optional string theme = 2;               // 主题 (varchar(50))
+  optional string language = 3;            // 语言 (varchar(10))
+  optional string timezone = 4;            // 时区 (varchar(50))
+  optional google.protobuf.Struct notifications = 5; // 通知设置 (JSONB)
+  optional google.protobuf.Struct privacy = 6;      // 隐私设置 (JSONB)
+  optional google.protobuf.Struct display = 7;      // 显示设置 (JSONB)
+  optional google.protobuf.Struct other = 8;        // 其他设置 (JSONB)
+  google.protobuf.Timestamp created_at = 9;        // 创建时间
+  google.protobuf.Timestamp updated_at = 10;        // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 11; // 软删除时间
 }
 
 // UserPreference 服务 - 供其他服务通过 gRPC 管理用户偏好
@@ -36,7 +36,7 @@ service UserPreferenceService {
 
 // UserPreference Service Messages
 message CreateUserPreferenceRequest {
-  string user_id = 1;                    // 用户ID (UUID)
+  string id = 1;                         // 用户ID (UUID) - 直接引用 users.id
   optional string theme = 2;             // 主题 (varchar(50))
   optional string language = 3;           // 语言 (varchar(10))
   optional string timezone = 4;           // 时区 (varchar(50))

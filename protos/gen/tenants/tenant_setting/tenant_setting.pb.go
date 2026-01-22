@@ -24,19 +24,19 @@ const (
 )
 
 // 租户设置信息
+// Note: id directly references tenants.id (one-to-one relationship)
 type TenantSetting struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	Id                  string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                 // 设置ID (UUID)
-	TenantId            string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                     // 租户ID (UUID)
-	EnforceMfa          bool                   `protobuf:"varint,3,opt,name=enforce_mfa,json=enforceMfa,proto3" json:"enforce_mfa,omitempty"`                              // 是否强制MFA
-	AllowedEmailDomains []string               `protobuf:"bytes,4,rep,name=allowed_email_domains,json=allowedEmailDomains,proto3" json:"allowed_email_domains,omitempty"`  // 允许的邮箱域名 (text[])
-	SessionTtlMinutes   *int32                 `protobuf:"varint,5,opt,name=session_ttl_minutes,json=sessionTtlMinutes,proto3,oneof" json:"session_ttl_minutes,omitempty"` // 会话TTL（分钟）
-	PasswordPolicy      *structpb.Struct       `protobuf:"bytes,6,opt,name=password_policy,json=passwordPolicy,proto3,oneof" json:"password_policy,omitempty"`             // 密码策略 (JSONB)
-	LoginPolicy         *structpb.Struct       `protobuf:"bytes,7,opt,name=login_policy,json=loginPolicy,proto3,oneof" json:"login_policy,omitempty"`                      // 登录策略 (JSONB)
-	MfaPolicy           *structpb.Struct       `protobuf:"bytes,8,opt,name=mfa_policy,json=mfaPolicy,proto3,oneof" json:"mfa_policy,omitempty"`                            // MFA策略 (JSONB)
-	CreatedAt           *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                  // 创建时间
-	UpdatedAt           *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                 // 更新时间
-	UpdatedBy           *string                `protobuf:"bytes,11,opt,name=updated_by,json=updatedBy,proto3,oneof" json:"updated_by,omitempty"`                           // 更新者ID (UUID)
+	Id                  string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                 // 设置ID (UUID) - 直接引用 tenants.id
+	EnforceMfa          bool                   `protobuf:"varint,2,opt,name=enforce_mfa,json=enforceMfa,proto3" json:"enforce_mfa,omitempty"`                              // 是否强制MFA
+	AllowedEmailDomains []string               `protobuf:"bytes,3,rep,name=allowed_email_domains,json=allowedEmailDomains,proto3" json:"allowed_email_domains,omitempty"`  // 允许的邮箱域名 (text[])
+	SessionTtlMinutes   *int32                 `protobuf:"varint,4,opt,name=session_ttl_minutes,json=sessionTtlMinutes,proto3,oneof" json:"session_ttl_minutes,omitempty"` // 会话TTL（分钟）
+	PasswordPolicy      *structpb.Struct       `protobuf:"bytes,5,opt,name=password_policy,json=passwordPolicy,proto3,oneof" json:"password_policy,omitempty"`             // 密码策略 (JSONB)
+	LoginPolicy         *structpb.Struct       `protobuf:"bytes,6,opt,name=login_policy,json=loginPolicy,proto3,oneof" json:"login_policy,omitempty"`                      // 登录策略 (JSONB)
+	MfaPolicy           *structpb.Struct       `protobuf:"bytes,7,opt,name=mfa_policy,json=mfaPolicy,proto3,oneof" json:"mfa_policy,omitempty"`                            // MFA策略 (JSONB)
+	CreatedAt           *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                  // 创建时间
+	UpdatedAt           *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                  // 更新时间
+	UpdatedBy           *string                `protobuf:"bytes,10,opt,name=updated_by,json=updatedBy,proto3,oneof" json:"updated_by,omitempty"`                           // 更新者ID (UUID)
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -74,13 +74,6 @@ func (*TenantSetting) Descriptor() ([]byte, []int) {
 func (x *TenantSetting) GetId() string {
 	if x != nil {
 		return x.Id
-	}
-	return ""
-}
-
-func (x *TenantSetting) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -329,25 +322,24 @@ var File_tenants_tenant_setting_proto protoreflect.FileDescriptor
 
 const file_tenants_tenant_setting_proto_rawDesc = "" +
 	"\n" +
-	"\x1ctenants/tenant_setting.proto\x12\x0etenant_setting\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x80\x05\n" +
+	"\x1ctenants/tenant_setting.proto\x12\x0etenant_setting\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xe3\x04\n" +
 	"\rTenantSetting\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1f\n" +
-	"\venforce_mfa\x18\x03 \x01(\bR\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
+	"\venforce_mfa\x18\x02 \x01(\bR\n" +
 	"enforceMfa\x122\n" +
-	"\x15allowed_email_domains\x18\x04 \x03(\tR\x13allowedEmailDomains\x123\n" +
-	"\x13session_ttl_minutes\x18\x05 \x01(\x05H\x00R\x11sessionTtlMinutes\x88\x01\x01\x12E\n" +
-	"\x0fpassword_policy\x18\x06 \x01(\v2\x17.google.protobuf.StructH\x01R\x0epasswordPolicy\x88\x01\x01\x12?\n" +
-	"\flogin_policy\x18\a \x01(\v2\x17.google.protobuf.StructH\x02R\vloginPolicy\x88\x01\x01\x12;\n" +
+	"\x15allowed_email_domains\x18\x03 \x03(\tR\x13allowedEmailDomains\x123\n" +
+	"\x13session_ttl_minutes\x18\x04 \x01(\x05H\x00R\x11sessionTtlMinutes\x88\x01\x01\x12E\n" +
+	"\x0fpassword_policy\x18\x05 \x01(\v2\x17.google.protobuf.StructH\x01R\x0epasswordPolicy\x88\x01\x01\x12?\n" +
+	"\flogin_policy\x18\x06 \x01(\v2\x17.google.protobuf.StructH\x02R\vloginPolicy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"mfa_policy\x18\b \x01(\v2\x17.google.protobuf.StructH\x03R\tmfaPolicy\x88\x01\x01\x129\n" +
+	"mfa_policy\x18\a \x01(\v2\x17.google.protobuf.StructH\x03R\tmfaPolicy\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\"\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\"\n" +
 	"\n" +
-	"updated_by\x18\v \x01(\tH\x04R\tupdatedBy\x88\x01\x01B\x16\n" +
+	"updated_by\x18\n" +
+	" \x01(\tH\x04R\tupdatedBy\x88\x01\x01B\x16\n" +
 	"\x14_session_ttl_minutesB\x12\n" +
 	"\x10_password_policyB\x0f\n" +
 	"\r_login_policyB\r\n" +

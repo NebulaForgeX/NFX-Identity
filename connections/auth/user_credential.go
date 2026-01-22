@@ -20,7 +20,7 @@ func NewUserCredentialClient(client usercredentialpb.UserCredentialServiceClient
 // CreateUserCredential 创建用户凭证
 func (c *UserCredentialClient) CreateUserCredential(ctx context.Context, userID, password string, tenantID *string, mustChangePassword bool) error {
 	req := &usercredentialpb.CreateUserCredentialRequest{
-		UserId:             userID,
+		Id:                 userID, // id 直接引用 directory.users.id
 		TenantId:           tenantID,
 		CredentialType:     usercredentialpb.AuthCredentialType_AUTH_CREDENTIAL_TYPE_PASSWORD,
 		Password:           password,

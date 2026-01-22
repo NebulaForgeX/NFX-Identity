@@ -43,8 +43,7 @@ func UserProfileDomainToModel(up *user_profiles.UserProfile) *models.UserProfile
 	}
 
 	return &models.UserProfile{
-		ID:            up.ID(),
-		UserID:        up.UserID(),
+		ID:            up.ID(), // id 直接引用 users.id
 		Role:          up.Role(),
 		FirstName:     up.FirstName(),
 		LastName:      up.LastName(),
@@ -101,8 +100,8 @@ func UserProfileModelToDomain(m *models.UserProfile) *user_profiles.UserProfile 
 	}
 
 	state := user_profiles.UserProfileState{
-		ID:            m.ID,
-		UserID:        m.UserID,
+		ID:            m.ID, // id 直接引用 users.id
+		UserID:        m.ID, // UserID 从 ID 获取（一对一关系）
 		Role:          m.Role,
 		FirstName:     m.FirstName,
 		LastName:      m.LastName,
@@ -141,7 +140,7 @@ func UserProfileModelToUpdates(m *models.UserProfile) map[string]any {
 	}
 
 	return map[string]any{
-		models.UserProfileCols.UserID:        m.UserID,
+		// 注意：UserID 不再存在，id 直接引用 users.id
 		models.UserProfileCols.Role:          m.Role,
 		models.UserProfileCols.FirstName:     m.FirstName,
 		models.UserProfileCols.LastName:      m.LastName,

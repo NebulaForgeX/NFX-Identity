@@ -11,7 +11,6 @@ import (
 
 type TenantSetting struct {
 	ID                  uuid.UUID       `gorm:"type:uuid;primaryKey"`
-	TenantID            uuid.UUID       `gorm:"type:uuid;index:idx_tenant_settings_tenant_id;uniqueIndex:tenant_settings_tenant_id_key"`
 	EnforceMfa          bool            `gorm:"type:boolean"`
 	AllowedEmailDomains *string         `gorm:"type:text[]"`
 	SessionTtlMinutes   *int            `gorm:"type:integer"`
@@ -33,11 +32,10 @@ func (m *TenantSetting) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var TenantSettingCols = struct {
-	ID, TenantID, EnforceMfa, AllowedEmailDomains, SessionTtlMinutes, PasswordPolicy, LoginPolicy,
-	MfaPolicy, CreatedAt, UpdatedAt, UpdatedBy string
+	ID, EnforceMfa, AllowedEmailDomains, SessionTtlMinutes, PasswordPolicy, LoginPolicy, MfaPolicy,
+	CreatedAt, UpdatedAt, UpdatedBy string
 }{
 	ID:                  "id",
-	TenantID:            "tenant_id",
 	EnforceMfa:          "enforce_mfa",
 	AllowedEmailDomains: "allowed_email_domains",
 	SessionTtlMinutes:   "session_ttl_minutes",
@@ -50,7 +48,6 @@ var TenantSettingCols = struct {
 }
 
 const (
-	TenantSettingPk             = "tenant_settings_pkey"
-	TenantSettingUkTenantIdKey  = "tenant_settings_tenant_id_key"
-	TenantSettingFkTenantIdFkey = "tenant_settings_tenant_id_fkey"
+	TenantSettingPk       = "tenant_settings_pkey"
+	TenantSettingFkIdFkey = "tenant_settings_id_fkey"
 )

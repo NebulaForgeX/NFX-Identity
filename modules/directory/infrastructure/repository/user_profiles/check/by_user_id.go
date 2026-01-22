@@ -12,7 +12,7 @@ func (h *Handler) ByUserID(ctx context.Context, userID uuid.UUID) (bool, error) 
 	var count int64
 	err := h.db.WithContext(ctx).
 		Model(&models.UserProfile{}).
-		Where("user_id = ?", userID).
+		Where("id = ?", userID).
 		Count(&count).Error
 	return count > 0, err
 }

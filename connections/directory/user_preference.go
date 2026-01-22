@@ -36,7 +36,7 @@ func (c *UserPreferenceClient) CreateUserPreference(ctx context.Context, createD
 // CreateUserPreferenceDefault 创建用户偏好（默认值，用于系统初始化）
 func (c *UserPreferenceClient) CreateUserPreferenceDefault(ctx context.Context, userID string) (string, error) {
 	createDTO := &dto.CreateUserPreferenceDTO{
-		UserID: userID,
+		ID: userID, // id 直接引用 users.id
 		// 其他字段为 nil，使用默认值
 	}
 

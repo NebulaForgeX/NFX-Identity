@@ -12,7 +12,7 @@ func (h *Handler) ByTenantID(ctx context.Context, tenantID uuid.UUID) (bool, err
 	var count int64
 	err := h.db.WithContext(ctx).
 		Model(&models.TenantSetting{}).
-		Where("tenant_id = ?", tenantID).
+		Where("id = ?", tenantID).
 		Count(&count).Error
 	return count > 0, err
 }

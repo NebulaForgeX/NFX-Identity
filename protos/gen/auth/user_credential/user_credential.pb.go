@@ -136,23 +136,23 @@ func (AuthCredentialStatus) EnumDescriptor() ([]byte, []int) {
 }
 
 // 用户凭证信息
+// Note: id directly references directory.users.id (one-to-one relationship)
 type UserCredential struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	Id                 string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                        // 凭证ID (UUID)
-	UserId             string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                  // 用户ID (UUID)
-	TenantId           string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                                            // 租户ID (UUID)
-	CredentialType     AuthCredentialType     `protobuf:"varint,4,opt,name=credential_type,json=credentialType,proto3,enum=user_credential.AuthCredentialType" json:"credential_type,omitempty"` // 凭证类型：password, passkey, oauth_link, saml, ldap
-	PasswordHash       *string                `protobuf:"bytes,5,opt,name=password_hash,json=passwordHash,proto3,oneof" json:"password_hash,omitempty"`                                          // 密码哈希
-	HashAlg            *string                `protobuf:"bytes,6,opt,name=hash_alg,json=hashAlg,proto3,oneof" json:"hash_alg,omitempty"`                                                         // 哈希算法
-	HashParams         *structpb.Struct       `protobuf:"bytes,7,opt,name=hash_params,json=hashParams,proto3,oneof" json:"hash_params,omitempty"`                                                // 哈希参数 (JSONB)
-	PasswordUpdatedAt  *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=password_updated_at,json=passwordUpdatedAt,proto3,oneof" json:"password_updated_at,omitempty"`                         // 密码更新时间
-	LastSuccessLoginAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=last_success_login_at,json=lastSuccessLoginAt,proto3,oneof" json:"last_success_login_at,omitempty"`                    // 最后成功登录时间
-	Status             AuthCredentialStatus   `protobuf:"varint,10,opt,name=status,proto3,enum=user_credential.AuthCredentialStatus" json:"status,omitempty"`                                    // 凭证状态：active, disabled, expired
-	MustChangePassword bool                   `protobuf:"varint,11,opt,name=must_change_password,json=mustChangePassword,proto3" json:"must_change_password,omitempty"`                          // 是否必须更改密码
-	Version            int32                  `protobuf:"varint,12,opt,name=version,proto3" json:"version,omitempty"`                                                                            // 版本号
-	CreatedAt          *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                        // 创建时间
-	UpdatedAt          *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                        // 更新时间
-	DeletedAt          *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`                                                  // 软删除时间
+	Id                 string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                        // 凭证ID (UUID) - 直接引用 directory.users.id
+	TenantId           string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                                            // 租户ID (UUID)
+	CredentialType     AuthCredentialType     `protobuf:"varint,3,opt,name=credential_type,json=credentialType,proto3,enum=user_credential.AuthCredentialType" json:"credential_type,omitempty"` // 凭证类型：password, passkey, oauth_link, saml, ldap
+	PasswordHash       *string                `protobuf:"bytes,4,opt,name=password_hash,json=passwordHash,proto3,oneof" json:"password_hash,omitempty"`                                          // 密码哈希
+	HashAlg            *string                `protobuf:"bytes,5,opt,name=hash_alg,json=hashAlg,proto3,oneof" json:"hash_alg,omitempty"`                                                         // 哈希算法
+	HashParams         *structpb.Struct       `protobuf:"bytes,6,opt,name=hash_params,json=hashParams,proto3,oneof" json:"hash_params,omitempty"`                                                // 哈希参数 (JSONB)
+	PasswordUpdatedAt  *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=password_updated_at,json=passwordUpdatedAt,proto3,oneof" json:"password_updated_at,omitempty"`                         // 密码更新时间
+	LastSuccessLoginAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=last_success_login_at,json=lastSuccessLoginAt,proto3,oneof" json:"last_success_login_at,omitempty"`                    // 最后成功登录时间
+	Status             AuthCredentialStatus   `protobuf:"varint,9,opt,name=status,proto3,enum=user_credential.AuthCredentialStatus" json:"status,omitempty"`                                     // 凭证状态：active, disabled, expired
+	MustChangePassword bool                   `protobuf:"varint,10,opt,name=must_change_password,json=mustChangePassword,proto3" json:"must_change_password,omitempty"`                          // 是否必须更改密码
+	Version            int32                  `protobuf:"varint,11,opt,name=version,proto3" json:"version,omitempty"`                                                                            // 版本号
+	CreatedAt          *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                        // 创建时间
+	UpdatedAt          *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                        // 更新时间
+	DeletedAt          *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`                                                  // 软删除时间
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -190,13 +190,6 @@ func (*UserCredential) Descriptor() ([]byte, []int) {
 func (x *UserCredential) GetId() string {
 	if x != nil {
 		return x.Id
-	}
-	return ""
-}
-
-func (x *UserCredential) GetUserId() string {
-	if x != nil {
-		return x.UserId
 	}
 	return ""
 }
@@ -295,7 +288,7 @@ func (x *UserCredential) GetDeletedAt() *timestamppb.Timestamp {
 // UserCredential Service Messages
 type CreateUserCredentialRequest struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	UserId             string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                  // 用户ID (UUID)
+	Id                 string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                        // 用户ID (UUID) - 直接引用 directory.users.id
 	TenantId           *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`                                                      // 租户ID (UUID)
 	CredentialType     AuthCredentialType     `protobuf:"varint,3,opt,name=credential_type,json=credentialType,proto3,enum=user_credential.AuthCredentialType" json:"credential_type,omitempty"` // 凭证类型：password, passkey, oauth_link, saml, ldap
 	Password           string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`                                                                            // 密码（明文，服务端会进行哈希）
@@ -334,9 +327,9 @@ func (*CreateUserCredentialRequest) Descriptor() ([]byte, []int) {
 	return file_auth_user_credential_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateUserCredentialRequest) GetUserId() string {
+func (x *CreateUserCredentialRequest) GetId() string {
 	if x != nil {
-		return x.UserId
+		return x.Id
 	}
 	return ""
 }
@@ -689,36 +682,35 @@ var File_auth_user_credential_proto protoreflect.FileDescriptor
 
 const file_auth_user_credential_proto_rawDesc = "" +
 	"\n" +
-	"\x1aauth/user_credential.proto\x12\x0fuser_credential\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x83\a\n" +
+	"\x1aauth/user_credential.proto\x12\x0fuser_credential\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xea\x06\n" +
 	"\x0eUserCredential\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x03 \x01(\tR\btenantId\x12L\n" +
-	"\x0fcredential_type\x18\x04 \x01(\x0e2#.user_credential.AuthCredentialTypeR\x0ecredentialType\x12(\n" +
-	"\rpassword_hash\x18\x05 \x01(\tH\x00R\fpasswordHash\x88\x01\x01\x12\x1e\n" +
-	"\bhash_alg\x18\x06 \x01(\tH\x01R\ahashAlg\x88\x01\x01\x12=\n" +
-	"\vhash_params\x18\a \x01(\v2\x17.google.protobuf.StructH\x02R\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
+	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12L\n" +
+	"\x0fcredential_type\x18\x03 \x01(\x0e2#.user_credential.AuthCredentialTypeR\x0ecredentialType\x12(\n" +
+	"\rpassword_hash\x18\x04 \x01(\tH\x00R\fpasswordHash\x88\x01\x01\x12\x1e\n" +
+	"\bhash_alg\x18\x05 \x01(\tH\x01R\ahashAlg\x88\x01\x01\x12=\n" +
+	"\vhash_params\x18\x06 \x01(\v2\x17.google.protobuf.StructH\x02R\n" +
 	"hashParams\x88\x01\x01\x12O\n" +
-	"\x13password_updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x11passwordUpdatedAt\x88\x01\x01\x12R\n" +
-	"\x15last_success_login_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\x04R\x12lastSuccessLoginAt\x88\x01\x01\x12=\n" +
-	"\x06status\x18\n" +
-	" \x01(\x0e2%.user_credential.AuthCredentialStatusR\x06status\x120\n" +
-	"\x14must_change_password\x18\v \x01(\bR\x12mustChangePassword\x12\x18\n" +
-	"\aversion\x18\f \x01(\x05R\aversion\x129\n" +
+	"\x13password_updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x11passwordUpdatedAt\x88\x01\x01\x12R\n" +
+	"\x15last_success_login_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x04R\x12lastSuccessLoginAt\x88\x01\x01\x12=\n" +
+	"\x06status\x18\t \x01(\x0e2%.user_credential.AuthCredentialStatusR\x06status\x120\n" +
+	"\x14must_change_password\x18\n" +
+	" \x01(\bR\x12mustChangePassword\x12\x18\n" +
+	"\aversion\x18\v \x01(\x05R\aversion\x129\n" +
 	"\n" +
-	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tdeletedAt\x88\x01\x01B\x10\n" +
+	"deleted_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tdeletedAt\x88\x01\x01B\x10\n" +
 	"\x0e_password_hashB\v\n" +
 	"\t_hash_algB\x0e\n" +
 	"\f_hash_paramsB\x16\n" +
 	"\x14_password_updated_atB\x18\n" +
 	"\x16_last_success_login_atB\r\n" +
-	"\v_deleted_at\"\x82\x02\n" +
-	"\x1bCreateUserCredentialRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
+	"\v_deleted_at\"\xf9\x01\n" +
+	"\x1bCreateUserCredentialRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12 \n" +
 	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01\x12L\n" +
 	"\x0fcredential_type\x18\x03 \x01(\x0e2#.user_credential.AuthCredentialTypeR\x0ecredentialType\x12\x1a\n" +
 	"\bpassword\x18\x04 \x01(\tR\bpassword\x120\n" +

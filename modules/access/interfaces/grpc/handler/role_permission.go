@@ -4,6 +4,7 @@ import (
 	"context"
 
 	rolePermissionApp "nfxid/modules/access/application/role_permissions"
+	rolePermissionAppCommands "nfxid/modules/access/application/role_permissions/commands"
 	"nfxid/modules/access/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	rolepermissionpb "nfxid/protos/gen/access/role_permission"
@@ -22,6 +23,56 @@ func NewRolePermissionHandler(rolePermissionAppSvc *rolePermissionApp.Service) *
 	return &RolePermissionHandler{
 		rolePermissionAppSvc: rolePermissionAppSvc,
 	}
+}
+
+// CreateRolePermission 创建角色权限关联
+func (h *RolePermissionHandler) CreateRolePermission(ctx context.Context, req *rolepermissionpb.CreateRolePermissionRequest) (*rolepermissionpb.CreateRolePermissionResponse, error) {
+	// 解析角色ID
+	roleID, err := uuid.Parse(req.RoleId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid role_id: %v", err)
+	}
+
+	// 解析权限ID
+	permissionID, err := uuid.Parse(req.PermissionId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid permission_id: %v", err)
+	}
+
+	// 解析创建者ID（如果提供）
+	var createdBy *uuid.UUID
+	if req.CreatedBy != nil && *req.CreatedBy != "" {
+		createdByID, err := uuid.Parse(*req.CreatedBy)
+		if err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid created_by: %v", err)
+		}
+		createdBy = &createdByID
+	}
+
+	// 创建命令
+	cmd := rolePermissionAppCommands.CreateRolePermissionCmd{
+		RoleID:       roleID,
+		PermissionID: permissionID,
+		CreatedBy:    createdBy,
+	}
+
+	// 调用应用服务创建角色权限关联
+	rolePermissionID, err := h.rolePermissionAppSvc.CreateRolePermission(ctx, cmd)
+	if err != nil {
+		logx.S().Errorf("failed to create role permission: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create role permission: %v", err)
+	}
+
+	// 获取创建的角色权限关联
+	rolePermissionView, err := h.rolePermissionAppSvc.GetRolePermission(ctx, rolePermissionID)
+	if err != nil {
+		logx.S().Errorf("failed to get created role permission: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to get created role permission: %v", err)
+	}
+
+	// 转换为 protobuf 响应
+	rolePermission := mapper.RolePermissionROToProto(&rolePermissionView)
+	return &rolepermissionpb.CreateRolePermissionResponse{RolePermission: rolePermission}, nil
 }
 
 // GetRolePermissionByID 根据ID获取角色权限关联

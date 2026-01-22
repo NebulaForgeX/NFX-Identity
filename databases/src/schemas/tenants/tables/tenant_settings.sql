@@ -1,9 +1,9 @@
 -- Tenant Settings table: Tenant-level policies and configurations
 -- Enterprise policies: enforce MFA, password minimum length, session duration, allowed login methods, email domain restrictions, etc.
 -- Not recommended to scatter in metadata
+-- Note: id directly references tenants.id (one-to-one relationship)
 CREATE TABLE IF NOT EXISTS "tenants"."tenant_settings" (
-  "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "tenant_id" UUID NOT NULL UNIQUE REFERENCES "tenants"."tenants"("id") ON DELETE CASCADE,
+  "id" UUID PRIMARY KEY REFERENCES "tenants"."tenants"("id") ON DELETE CASCADE,
   "enforce_mfa" BOOLEAN NOT NULL DEFAULT false, -- Whether to enforce MFA
   "allowed_email_domains" TEXT[], -- Allowed email domains for this tenant
   "session_ttl_minutes" INTEGER, -- Session TTL in minutes
@@ -15,5 +15,4 @@ CREATE TABLE IF NOT EXISTS "tenants"."tenant_settings" (
   "updated_by" UUID
 );
 
-CREATE INDEX IF NOT EXISTS "idx_tenant_settings_tenant_id" ON "tenants"."tenant_settings"("tenant_id");
 

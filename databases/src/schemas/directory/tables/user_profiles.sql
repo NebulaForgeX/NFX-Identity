@@ -3,9 +3,9 @@
 -- These UUIDs can be used to query the image service via API
 -- background_id: current/active background image
 -- background_ids: collection of background images (history/favorites)
+-- Note: id directly references users.id (one-to-one relationship)
 CREATE TABLE IF NOT EXISTS "directory"."user_profiles" (
-  "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "user_id" UUID NOT NULL UNIQUE REFERENCES "directory"."users"("id") ON DELETE CASCADE,
+  "id" UUID PRIMARY KEY REFERENCES "directory"."users"("id") ON DELETE CASCADE,
   "role" VARCHAR(100), -- User role for external companies (e.g., "admin", "user", "manager")
   "first_name" VARCHAR(100),
   "last_name" VARCHAR(100),
@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS "directory"."user_profiles" (
   "deleted_at" TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS "idx_user_profiles_user_id" ON "directory"."user_profiles"("user_id");
 CREATE INDEX IF NOT EXISTS "idx_user_profiles_nickname" ON "directory"."user_profiles"("nickname");
 CREATE INDEX IF NOT EXISTS "idx_user_profiles_github" ON "directory"."user_profiles"("github");
 CREATE INDEX IF NOT EXISTS "idx_user_profiles_avatar_id" ON "directory"."user_profiles"("avatar_id");

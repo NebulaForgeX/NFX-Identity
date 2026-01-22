@@ -4,6 +4,8 @@ import (
 	"context"
 
 	roleApp "nfxid/modules/access/application/roles"
+	roleAppCommands "nfxid/modules/access/application/roles/commands"
+	roleDomain "nfxid/modules/access/domain/roles"
 	"nfxid/modules/access/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	rolepb "nfxid/protos/gen/access/role"
@@ -21,6 +23,53 @@ type RoleHandler struct {
 func NewRoleHandler(roleAppSvc *roleApp.Service) *RoleHandler {
 	return &RoleHandler{
 		roleAppSvc: roleAppSvc,
+	}
+}
+
+// CreateRole 创建角色
+func (h *RoleHandler) CreateRole(ctx context.Context, req *rolepb.CreateRoleRequest) (*rolepb.CreateRoleResponse, error) {
+	// 转换 protobuf AccessScopeType 到 domain ScopeType
+	scopeType := protoScopeTypeToDomain(req.ScopeType)
+
+	// 创建命令
+	cmd := roleAppCommands.CreateRoleCmd{
+		Key:         req.Key,
+		Name:        req.Name,
+		Description: req.Description,
+		ScopeType:   scopeType,
+		IsSystem:    req.IsSystem,
+	}
+
+	// 调用应用服务创建角色
+	roleID, err := h.roleAppSvc.CreateRole(ctx, cmd)
+	if err != nil {
+		logx.S().Errorf("failed to create role: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create role: %v", err)
+	}
+
+	// 获取创建的角色
+	roleView, err := h.roleAppSvc.GetRole(ctx, roleID)
+	if err != nil {
+		logx.S().Errorf("failed to get created role: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to get created role: %v", err)
+	}
+
+	// 转换为 protobuf 响应
+	role := mapper.RoleROToProto(&roleView)
+	return &rolepb.CreateRoleResponse{Role: role}, nil
+}
+
+// protoScopeTypeToDomain 将 protobuf AccessScopeType 转换为 domain ScopeType
+func protoScopeTypeToDomain(scopeType rolepb.AccessScopeType) roleDomain.ScopeType {
+	switch scopeType {
+	case rolepb.AccessScopeType_ACCESS_SCOPE_TYPE_TENANT:
+		return roleDomain.ScopeTypeTenant
+	case rolepb.AccessScopeType_ACCESS_SCOPE_TYPE_APP:
+		return roleDomain.ScopeTypeApp
+	case rolepb.AccessScopeType_ACCESS_SCOPE_TYPE_GLOBAL:
+		return roleDomain.ScopeTypeGlobal
+	default:
+		return roleDomain.ScopeTypeTenant // 默认值
 	}
 }
 

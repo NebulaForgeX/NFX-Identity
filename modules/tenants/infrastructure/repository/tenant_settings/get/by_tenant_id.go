@@ -14,7 +14,7 @@ import (
 // ByTenantID 根据 TenantID 获取 TenantSetting，实现 tenant_settings.Get 接口
 func (h *Handler) ByTenantID(ctx context.Context, tenantID uuid.UUID) (*tenant_settings.TenantSetting, error) {
 	var m models.TenantSetting
-	if err := h.db.WithContext(ctx).Where("tenant_id = ?", tenantID).First(&m).Error; err != nil {
+	if err := h.db.WithContext(ctx).Where("id = ?", tenantID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, tenant_settings.ErrTenantSettingNotFound
 		}
