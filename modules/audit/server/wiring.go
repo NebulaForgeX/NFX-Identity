@@ -6,6 +6,7 @@ import (
 	"time"
 
 	actorSnapshotApp "nfxid/modules/audit/application/actor_snapshots"
+	resourceApp "nfxid/modules/audit/application/resource"
 	eventApp "nfxid/modules/audit/application/events"
 	eventRetentionPolicyApp "nfxid/modules/audit/application/event_retention_policies"
 	eventSearchIndexApp "nfxid/modules/audit/application/event_search_index"
@@ -41,6 +42,7 @@ type Dependencies struct {
 	hashChainCheckpointAppSvc    *hashChainCheckpointApp.Service
 	userTokenVerifier            token.Verifier
 	serverTokenVerifier          token.Verifier
+	resourceSvc         *resourceApp.Service
 	tokenxInstance               *tokenx.Tokenx
 }
 
@@ -104,6 +106,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	eventSearchIndexAppSvc := eventSearchIndexApp.NewService(eventSearchIndexRepoInstance)
 	hashChainCheckpointAppSvc := hashChainCheckpointApp.NewService(hashChainCheckpointRepoInstance)
 
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
+
 	return &Dependencies{
 		healthMgr:                  healthMgr,
 		postgres:                   postgres,
@@ -118,6 +122,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		hashChainCheckpointAppSvc:  hashChainCheckpointAppSvc,
 		userTokenVerifier:          userTokenVerifier,
 		serverTokenVerifier:        serverTokenVerifier,
+		resourceSvc:         resourceSvc,
 		tokenxInstance:             tokenxInstance,
 	}, nil
 }
@@ -129,6 +134,8 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
+func (d *Dependencies) HealthMgr() *health.Manager                           { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
 func (d *Dependencies) EventAppSvc() *eventApp.Service                        { return d.eventAppSvc }
 func (d *Dependencies) ActorSnapshotAppSvc() *actorSnapshotApp.Service       { return d.actorSnapshotAppSvc }
 func (d *Dependencies) EventRetentionPolicyAppSvc() *eventRetentionPolicyApp.Service { return d.eventRetentionPolicyAppSvc }

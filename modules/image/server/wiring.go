@@ -5,7 +5,16 @@ import (
 	"fmt"
 	"time"
 
+	imageApp "nfxid/modules/image/application/images"
+	imageTagApp "nfxid/modules/image/application/image_tags"
+	imageTypeApp "nfxid/modules/image/application/image_types"
+	imageVariantApp "nfxid/modules/image/application/image_variants"
+	resourceApp "nfxid/modules/image/application/resource"
 	"nfxid/modules/image/config"
+	imageRepo "nfxid/modules/image/infrastructure/repository/images"
+	imageTagRepo "nfxid/modules/image/infrastructure/repository/image_tags"
+	imageTypeRepo "nfxid/modules/image/infrastructure/repository/image_types"
+	imageVariantRepo "nfxid/modules/image/infrastructure/repository/image_variants"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -18,15 +27,20 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr          *health.Manager
-	cache              *cache.Connection
-	postgres           *postgresqlx.Connection
-	kafkaConfig        *kafkax.Config
-	busPublisher       *eventbus.BusPublisher
-	rabbitMQConfig     *rabbitmqx.Config
-	userTokenVerifier  token.Verifier
+	healthMgr           *health.Manager
+	cache               *cache.Connection
+	postgres            *postgresqlx.Connection
+	kafkaConfig         *kafkax.Config
+	busPublisher        *eventbus.BusPublisher
+	rabbitMQConfig      *rabbitmqx.Config
+	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
-	tokenxInstance     *tokenx.Tokenx
+	resourceSvc         *resourceApp.Service
+	tokenxInstance      *tokenx.Tokenx
+	imageAppSvc         *imageApp.Service
+	imageTypeAppSvc     *imageTypeApp.Service
+	imageTagAppSvc      *imageTagApp.Service
+	imageVariantAppSvc  *imageVariantApp.Service
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -75,16 +89,34 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		servertoken.WithAllowedSkew(5*time.Second),
 	)
 
+	//! === Repository ===
+	imageRepoInstance := imageRepo.NewRepo(postgres.DB())
+	imageTypeRepoInstance := imageTypeRepo.NewRepo(postgres.DB())
+	imageTagRepoInstance := imageTagRepo.NewRepo(postgres.DB())
+	imageVariantRepoInstance := imageVariantRepo.NewRepo(postgres.DB())
+
+	//! === Application Services ===
+	imageAppSvc := imageApp.NewService(imageRepoInstance)
+	imageTypeAppSvc := imageTypeApp.NewService(imageTypeRepoInstance)
+	imageTagAppSvc := imageTagApp.NewService(imageTagRepoInstance)
+	imageVariantAppSvc := imageVariantApp.NewService(imageVariantRepoInstance)
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
+
 	return &Dependencies{
-		healthMgr:          healthMgr,
-		postgres:           postgres,
-		cache:              cacheConn,
-		kafkaConfig:        &kafkaConfig,
-		busPublisher:       busPublisher,
-		rabbitMQConfig:     &rabbitMQConfig,
-		userTokenVerifier:  userTokenVerifier,
+		healthMgr:           healthMgr,
+		postgres:            postgres,
+		cache:               cacheConn,
+		kafkaConfig:         &kafkaConfig,
+		busPublisher:        busPublisher,
+		rabbitMQConfig:      &rabbitMQConfig,
+		userTokenVerifier:   userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
-		tokenxInstance:     tokenxInstance,
+		resourceSvc:         resourceSvc,
+		tokenxInstance:      tokenxInstance,
+		imageAppSvc:         imageAppSvc,
+		imageTypeAppSvc:     imageTypeAppSvc,
+		imageTagAppSvc:      imageTagAppSvc,
+		imageVariantAppSvc:  imageVariantAppSvc,
 	}, nil
 }
 
@@ -95,11 +127,17 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) UserTokenVerifier() token.Verifier            { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier         { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                 { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher         { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
+func (d *Dependencies) HealthMgr() *health.Manager           { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service    { return d.resourceSvc }
+func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config    { return d.rabbitMQConfig }
+func (d *Dependencies) ImageAppSvc() *imageApp.Service       { return d.imageAppSvc }
+func (d *Dependencies) ImageTypeAppSvc() *imageTypeApp.Service { return d.imageTypeAppSvc }
+func (d *Dependencies) ImageTagAppSvc() *imageTagApp.Service { return d.imageTagAppSvc }
+func (d *Dependencies) ImageVariantAppSvc() *imageVariantApp.Service { return d.imageVariantAppSvc }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

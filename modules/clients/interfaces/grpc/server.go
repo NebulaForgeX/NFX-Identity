@@ -7,9 +7,11 @@ import (
 	clientScopeApp "nfxid/modules/clients/application/client_scopes"
 	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
+	resourceApp "nfxid/modules/clients/application/resource"
 	grpcHandler "nfxid/modules/clients/interfaces/grpc/handler"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
+	healthpb "nfxid/protos/gen/common/health"
 	apppb "nfxid/protos/gen/clients/app"
 	apikeypb "nfxid/protos/gen/clients/api_key"
 	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
@@ -27,6 +29,7 @@ type Deps interface {
 	ClientScopeAppSvc() *clientScopeApp.Service
 	IPAllowlistAppSvc() *ipAllowlistApp.Service
 	RateLimitAppSvc() *rateLimitApp.Service
+	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
 }
 
@@ -44,6 +47,9 @@ func NewServer(d Deps) *grpc.Server {
 	clientscopepb.RegisterClientScopeServiceServer(s, grpcHandler.NewClientScopeHandler(d.ClientScopeAppSvc()))
 	ipallowlistpb.RegisterIpAllowlistServiceServer(s, grpcHandler.NewIPAllowlistHandler(d.IPAllowlistAppSvc()))
 	ratelimitpb.RegisterRateLimitServiceServer(s, grpcHandler.NewRateLimitHandler(d.RateLimitAppSvc()))
+
+	// Register health check service
+	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "clients"))
 
 	return s
 }

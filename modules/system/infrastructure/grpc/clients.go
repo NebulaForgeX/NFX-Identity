@@ -18,12 +18,13 @@ type GRPCClients struct {
 	AccessClient    *AccessClient
 	AuthClient      *AuthClient
 
-	conns []*grpc.ClientConn
-	mu    sync.Mutex
+	healthChecker *HealthChecker // 健康检查客户端管理器
+	conns         []*grpc.ClientConn
+	mu            sync.Mutex
 }
 
 // NewClients 创建 gRPC 客户端连接
-func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, tokenCfg *tokenx.Config) (*GRPCClients, error) {
+func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg *config.ServerConfig, tokenCfg *tokenx.Config) (*GRPCClients, error) {
 	// 创建 server token provider
 	tokenProvider := createTokenProvider(tokenCfg)
 
@@ -56,6 +57,12 @@ func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, tokenCfg 
 	}
 	grpcClients.conns = append(grpcClients.conns, authConn)
 	grpcClients.AuthClient = NewAuthClient(authConn)
+
+	// 初始化健康检查客户端
+	if err := initHealthClients(grpcClients, cfg, serverCfg, tokenProvider); err != nil {
+		grpcClients.Close()
+		return nil, fmt.Errorf("failed to initialize health clients: %w", err)
+	}
 
 	return grpcClients, nil
 }

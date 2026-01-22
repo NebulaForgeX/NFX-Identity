@@ -10,9 +10,11 @@ import (
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
+	resourceApp "nfxid/modules/auth/application/resource"
 	grpcHandler "nfxid/modules/auth/interfaces/grpc/handler"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
+	healthpb "nfxid/protos/gen/common/health"
 	sessionpb "nfxid/protos/gen/auth/session"
 	usercredentialpb "nfxid/protos/gen/auth/user_credential"
 	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
@@ -36,6 +38,7 @@ type Deps interface {
 	LoginAttemptAppSvc() *loginAttemptApp.Service
 	AccountLockoutAppSvc() *accountLockoutApp.Service
 	TrustedDeviceAppSvc() *trustedDeviceApp.Service
+	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
 }
 
@@ -83,6 +86,9 @@ func NewServer(d Deps) *grpc.Server {
 	trusteddevicepb.RegisterTrustedDeviceServiceServer(s, grpcHandler.NewTrustedDeviceHandler(
 		d.TrustedDeviceAppSvc(),
 	))
+
+	// Register health check service
+	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "auth"))
 
 	return s
 }

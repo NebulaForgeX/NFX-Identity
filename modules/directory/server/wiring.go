@@ -6,6 +6,7 @@ import (
 	"time"
 
 	badgeApp "nfxid/modules/directory/application/badges"
+	resourceApp "nfxid/modules/directory/application/resource"
 	userApp "nfxid/modules/directory/application/users"
 	userBadgeApp "nfxid/modules/directory/application/user_badges"
 	userEducationApp "nfxid/modules/directory/application/user_educations"
@@ -53,6 +54,7 @@ type Dependencies struct {
 	userProfileAppSvc        *userProfileApp.Service
 	userTokenVerifier        token.Verifier
 	serverTokenVerifier      token.Verifier
+	resourceSvc         *resourceApp.Service
 	tokenxInstance           *tokenx.Tokenx
 }
 
@@ -124,6 +126,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	userPreferenceAppSvc := userPreferenceApp.NewService(userPreferenceRepoInstance)
 	userProfileAppSvc := userProfileApp.NewService(userProfileRepoInstance)
 
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
+
 	return &Dependencies{
 		healthMgr:            healthMgr,
 		postgres:             postgres,
@@ -142,6 +146,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userProfileAppSvc:    userProfileAppSvc,
 		userTokenVerifier:    userTokenVerifier,
 		serverTokenVerifier:  serverTokenVerifier,
+		resourceSvc:         resourceSvc,
 		tokenxInstance:       tokenxInstance,
 	}, nil
 }
@@ -153,6 +158,8 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
+func (d *Dependencies) HealthMgr() *health.Manager                      { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
 func (d *Dependencies) UserAppSvc() *userApp.Service                    { return d.userAppSvc }
 func (d *Dependencies) BadgeAppSvc() *badgeApp.Service                 { return d.badgeAppSvc }
 func (d *Dependencies) UserBadgeAppSvc() *userBadgeApp.Service          { return d.userBadgeAppSvc }

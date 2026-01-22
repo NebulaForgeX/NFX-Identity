@@ -3,6 +3,10 @@ package http
 import (
 	"encoding/json"
 
+	imageApp "nfxid/modules/image/application/images"
+	imageTagApp "nfxid/modules/image/application/image_tags"
+	imageTypeApp "nfxid/modules/image/application/image_types"
+	imageVariantApp "nfxid/modules/image/application/image_variants"
 	"nfxid/modules/image/interfaces/http/handler"
 	"nfxid/pkgs/recover"
 	"nfxid/pkgs/security/token"
@@ -13,11 +17,10 @@ import (
 )
 
 type httpDeps interface {
-	// TODO: Add application services when application layer is created
-	// ImageAppSvc() *imageApp.Service
-	// ImageTypeAppSvc() *imageTypeApp.Service
-	// ImageVariantAppSvc() *imageVariantApp.Service
-	// ImageTagAppSvc() *imageTagApp.Service
+	ImageAppSvc() *imageApp.Service
+	ImageTypeAppSvc() *imageTypeApp.Service
+	ImageVariantAppSvc() *imageVariantApp.Service
+	ImageTagAppSvc() *imageTagApp.Service
 	UserTokenVerifier() token.Verifier
 }
 
@@ -39,12 +42,11 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 	app.Use(recover.RecoverMiddleware(), logger.New())
 
 	// 创建handlers
-	// TODO: Pass application services when available
 	reg := &Registry{
-		Image:        handler.NewImageHandler(),
-		ImageType:    handler.NewImageTypeHandler(),
-		ImageVariant: handler.NewImageVariantHandler(),
-		ImageTag:     handler.NewImageTagHandler(),
+		Image:        handler.NewImageHandler(d.ImageAppSvc()),
+		ImageType:    handler.NewImageTypeHandler(d.ImageTypeAppSvc()),
+		ImageVariant: handler.NewImageVariantHandler(d.ImageVariantAppSvc()),
+		ImageTag:     handler.NewImageTagHandler(d.ImageTagAppSvc()),
 	}
 
 	// 注册路由

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	bootstrapApp "nfxid/modules/system/application/bootstrap"
+	resourceApp "nfxid/modules/system/application/resource"
 	systemStateApp "nfxid/modules/system/application/system_state"
 	"nfxid/modules/system/config"
 	grpcClients "nfxid/modules/system/infrastructure/grpc"
@@ -30,6 +31,7 @@ type Dependencies struct {
 	rabbitMQConfig      *rabbitmqx.Config
 	systemStateAppSvc   *systemStateApp.Service
 	bootstrapSvc        *bootstrapApp.Service
+	resourceSvc         *resourceApp.Service
 	grpcClients         *grpcClients.GRPCClients
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
@@ -86,7 +88,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	systemStateRepoInstance := systemStateRepo.NewRepo(postgres.DB())
 
 	//! === gRPC Clients ===
-	grpcClientsInstance, err := grpcClients.NewGRPCClients(ctx, &cfg.GRPCClient, &tokenCfg)
+	grpcClientsInstance, err := grpcClients.NewGRPCClients(ctx, &cfg.GRPCClient, &cfg.Server, &tokenCfg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
 	}
@@ -94,6 +96,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	//! === Application Services ===
 	systemStateAppSvc := systemStateApp.NewService(systemStateRepoInstance)
 	bootstrapSvc := bootstrapApp.NewService(systemStateAppSvc, systemStateRepoInstance, grpcClientsInstance)
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
 	return &Dependencies{
 		healthMgr:           healthMgr,
@@ -104,6 +107,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		rabbitMQConfig:      &rabbitMQConfig,
 		systemStateAppSvc:   systemStateAppSvc,
 		bootstrapSvc:        bootstrapSvc,
+		resourceSvc:         resourceSvc,
 		grpcClients:         grpcClientsInstance,
 		userTokenVerifier:   userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
@@ -123,6 +127,8 @@ func (d *Dependencies) Cleanup() {
 // Getter methods for interfaces
 func (d *Dependencies) SystemStateAppSvc() *systemStateApp.Service { return d.systemStateAppSvc }
 func (d *Dependencies) BootstrapSvc() *bootstrapApp.Service        { return d.bootstrapSvc }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service        { return d.resourceSvc }
+func (d *Dependencies) HealthMgr() *health.Manager                { return d.healthMgr }
 func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }

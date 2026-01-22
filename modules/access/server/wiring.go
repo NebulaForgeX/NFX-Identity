@@ -7,6 +7,7 @@ import (
 
 	grantApp "nfxid/modules/access/application/grants"
 	permissionApp "nfxid/modules/access/application/permissions"
+	resourceApp "nfxid/modules/access/application/resource"
 	roleApp "nfxid/modules/access/application/roles"
 	rolePermissionApp "nfxid/modules/access/application/role_permissions"
 	scopeApp "nfxid/modules/access/application/scopes"
@@ -42,6 +43,7 @@ type Dependencies struct {
 	grantAppSvc              *grantApp.Service
 	rolePermissionAppSvc     *rolePermissionApp.Service
 	scopePermissionAppSvc    *scopePermissionApp.Service
+	resourceSvc              *resourceApp.Service
 	userTokenVerifier        token.Verifier
 	serverTokenVerifier      token.Verifier
 	tokenxInstance           *tokenx.Tokenx
@@ -108,6 +110,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	grantAppSvc := grantApp.NewService(grantRepoInstance)
 	rolePermissionAppSvc := rolePermissionApp.NewService(rolePermissionRepoInstance)
 	scopePermissionAppSvc := scopePermissionApp.NewService(scopePermissionRepoInstance)
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
 	return &Dependencies{
 		healthMgr:             healthMgr,
@@ -122,11 +125,16 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		grantAppSvc:           grantAppSvc,
 		rolePermissionAppSvc: rolePermissionAppSvc,
 		scopePermissionAppSvc: scopePermissionAppSvc,
+		resourceSvc:           resourceSvc,
 		userTokenVerifier:     userTokenVerifier,
 		serverTokenVerifier:   serverTokenVerifier,
 		tokenxInstance:        tokenxInstance,
 	}, nil
 }
+
+// Getter methods for interfaces
+func (d *Dependencies) HealthMgr() *health.Manager { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
 
 func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()

@@ -11,9 +11,11 @@ import (
 	tenantApp "nfxid/modules/tenants/application/tenants"
 	tenantAppApp "nfxid/modules/tenants/application/tenant_apps"
 	tenantSettingApp "nfxid/modules/tenants/application/tenant_settings"
+	resourceApp "nfxid/modules/tenants/application/resource"
 	grpcHandler "nfxid/modules/tenants/interfaces/grpc/handler"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
+	healthpb "nfxid/protos/gen/common/health"
 	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 	grouppb "nfxid/protos/gen/tenants/group"
 	invitationpb "nfxid/protos/gen/tenants/invitation"
@@ -39,6 +41,7 @@ type Deps interface {
 	MemberRoleAppSvc() *memberRoleApp.Service
 	MemberGroupAppSvc() *memberGroupApp.Service
 	MemberAppRoleAppSvc() *memberApp.Service
+	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
 }
 
@@ -60,6 +63,9 @@ func NewServer(d Deps) *grpc.Server {
 	memberrolepb.RegisterMemberRoleServiceServer(s, grpcHandler.NewMemberRoleHandler(d.MemberRoleAppSvc()))
 	membergrouppb.RegisterMemberGroupServiceServer(s, grpcHandler.NewMemberGroupHandler(d.MemberGroupAppSvc()))
 	memberapprolepb.RegisterMemberAppRoleServiceServer(s, grpcHandler.NewMemberAppRoleHandler(d.MemberAppRoleAppSvc()))
+
+	// Register health check service
+	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "tenants"))
 
 	return s
 }

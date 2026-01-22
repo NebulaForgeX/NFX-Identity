@@ -6,6 +6,7 @@ import (
 	"time"
 
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
+	resourceApp "nfxid/modules/auth/application/resource"
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
 	passwordHistoryApp "nfxid/modules/auth/application/password_history"
@@ -53,6 +54,7 @@ type Dependencies struct {
 	trustedDeviceAppSvc    *trustedDeviceApp.Service
 	userTokenVerifier      token.Verifier // 用于 HTTP 中间件（用户 token）
 	serverTokenVerifier    token.Verifier // 用于 gRPC 拦截器（服务间通信）
+	resourceSvc         *resourceApp.Service
 	tokenxInstance         *tokenx.Tokenx
 }
 
@@ -123,6 +125,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	accountLockoutAppSvc := accountLockoutApp.NewService(accountLockoutRepoInstance)
 	trustedDeviceAppSvc := trustedDeviceApp.NewService(trustedDeviceRepoInstance)
 
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
+
 	return &Dependencies{
 		healthMgr:             healthMgr,
 		postgres:              postgres,
@@ -141,6 +145,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		trustedDeviceAppSvc:   trustedDeviceAppSvc,
 		userTokenVerifier:     userTokenVerifier,
 		serverTokenVerifier:    serverTokenVerifier,
+		resourceSvc:         resourceSvc,
 		tokenxInstance:        tokenxInstance,
 	}, nil
 }
@@ -161,6 +166,8 @@ func (d *Dependencies) PasswordHistoryAppSvc() *passwordHistoryApp.Service { ret
 func (d *Dependencies) LoginAttemptAppSvc() *loginAttemptApp.Service     { return d.loginAttemptAppSvc }
 func (d *Dependencies) AccountLockoutAppSvc() *accountLockoutApp.Service { return d.accountLockoutAppSvc }
 func (d *Dependencies) TrustedDeviceAppSvc() *trustedDeviceApp.Service    { return d.trustedDeviceAppSvc }
+func (d *Dependencies) HealthMgr() *health.Manager                       { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
 func (d *Dependencies) UserTokenVerifier() token.Verifier               { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                       { return d.kafkaConfig }

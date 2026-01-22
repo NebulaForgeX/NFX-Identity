@@ -10,9 +10,11 @@ import (
 	userPhoneApp "nfxid/modules/directory/application/user_phones"
 	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
 	userProfileApp "nfxid/modules/directory/application/user_profiles"
+	resourceApp "nfxid/modules/directory/application/resource"
 	grpcHandler "nfxid/modules/directory/interfaces/grpc/handler"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
+	healthpb "nfxid/protos/gen/common/health"
 	badgepb "nfxid/protos/gen/directory/badge"
 	userbadgepb "nfxid/protos/gen/directory/user_badge"
 	usereducationpb "nfxid/protos/gen/directory/user_education"
@@ -36,6 +38,7 @@ type Deps interface {
 	UserPhoneAppSvc() *userPhoneApp.Service
 	UserPreferenceAppSvc() *userPreferenceApp.Service
 	UserProfileAppSvc() *userProfileApp.Service
+	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
 }
 
@@ -56,6 +59,9 @@ func NewServer(d Deps) *grpc.Server {
 	userphonepb.RegisterUserPhoneServiceServer(s, grpcHandler.NewUserPhoneHandler(d.UserPhoneAppSvc()))
 	userpreferencepb.RegisterUserPreferenceServiceServer(s, grpcHandler.NewUserPreferenceHandler(d.UserPreferenceAppSvc()))
 	userprofilepb.RegisterUserProfileServiceServer(s, grpcHandler.NewUserProfileHandler(d.UserProfileAppSvc()))
+
+	// Register health check service
+	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "directory"))
 
 	return s
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	apiKeyApp "nfxid/modules/clients/application/api_keys"
+	resourceApp "nfxid/modules/clients/application/resource"
 	appApp "nfxid/modules/clients/application/apps"
 	clientCredentialApp "nfxid/modules/clients/application/client_credentials"
 	clientScopeApp "nfxid/modules/clients/application/client_scopes"
@@ -44,6 +45,7 @@ type Dependencies struct {
 	rateLimitAppSvc          *rateLimitApp.Service
 	userTokenVerifier        token.Verifier
 	serverTokenVerifier      token.Verifier
+	resourceSvc         *resourceApp.Service
 	tokenxInstance           *tokenx.Tokenx
 }
 
@@ -107,6 +109,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	ipAllowlistAppSvc := ipAllowlistApp.NewService(ipAllowlistRepoInstance)
 	rateLimitAppSvc := rateLimitApp.NewService(rateLimitRepoInstance)
 
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
+
 	return &Dependencies{
 		healthMgr:              healthMgr,
 		postgres:               postgres,
@@ -122,6 +126,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		rateLimitAppSvc:        rateLimitAppSvc,
 		userTokenVerifier:      userTokenVerifier,
 		serverTokenVerifier:    serverTokenVerifier,
+		resourceSvc:         resourceSvc,
 		tokenxInstance:         tokenxInstance,
 	}, nil
 }
@@ -133,6 +138,8 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
+func (d *Dependencies) HealthMgr() *health.Manager                   { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
 func (d *Dependencies) AppAppSvc() *appApp.Service                    { return d.appAppSvc }
 func (d *Dependencies) APIKeyAppSvc() *apiKeyApp.Service            { return d.apiKeyAppSvc }
 func (d *Dependencies) ClientCredentialAppSvc() *clientCredentialApp.Service { return d.clientCredentialAppSvc }

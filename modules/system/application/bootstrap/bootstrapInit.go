@@ -110,10 +110,80 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 		return fmt.Errorf("failed to save updated system state metadata: %w", err)
 	}
 
-	// 步骤 5: 等待所有服务初始化完成（这里可以添加健康检查）
-	logx.S().Info("⏳ Waiting for all services to be ready...")
-	// TODO: 实现服务健康检查逻辑
-	time.Sleep(1 * time.Second) // 临时等待，实际应该检查服务健康状态
+	// 步骤 5: 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
+	logx.S().Info("⏳ Checking health of all 8 services (including infrastructure: database, Redis)...")
+	maxRetries := 10
+	retryInterval := 2 * time.Second
+
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		healthResults, err := s.grpcClients.CheckAllServicesHealth(ctx)
+		if err != nil {
+			logx.S().Warnf("Health check attempt %d/%d failed: %v", attempt, maxRetries, err)
+			if attempt < maxRetries {
+				time.Sleep(retryInterval)
+				continue
+			}
+			return fmt.Errorf("failed to check service health after %d attempts: %w", maxRetries, err)
+		}
+
+		// 检查所有服务及其基础设施是否健康
+		allHealthy := true
+		unhealthyServices := []string{}
+		unhealthyInfra := []string{}
+
+		for serviceName, healthResp := range healthResults {
+			if !healthResp.Healthy {
+				allHealthy = false
+				unhealthyServices = append(unhealthyServices, serviceName)
+				logx.S().Warnf("❌ Service %s is not healthy", serviceName)
+				continue
+			}
+
+			// 检查基础设施
+			if healthResp.Infrastructure != nil {
+				infraIssues := []string{}
+				if healthResp.Infrastructure.Database != nil && !healthResp.Infrastructure.Database.Healthy {
+					errorMsg := "unknown"
+					if healthResp.Infrastructure.Database.ErrorMessage != nil {
+						errorMsg = *healthResp.Infrastructure.Database.ErrorMessage
+					}
+					infraIssues = append(infraIssues, fmt.Sprintf("database: %s", errorMsg))
+				}
+				if healthResp.Infrastructure.Redis != nil && !healthResp.Infrastructure.Redis.Healthy {
+					errorMsg := "unknown"
+					if healthResp.Infrastructure.Redis.ErrorMessage != nil {
+						errorMsg = *healthResp.Infrastructure.Redis.ErrorMessage
+					}
+					infraIssues = append(infraIssues, fmt.Sprintf("redis: %s", errorMsg))
+				}
+
+				if len(infraIssues) > 0 {
+					allHealthy = false
+					unhealthyInfra = append(unhealthyInfra, fmt.Sprintf("%s (%s)", serviceName, fmt.Sprint(infraIssues)))
+					logx.S().Warnf("⚠️  Service %s is running but infrastructure unhealthy: %v", serviceName, infraIssues)
+				} else {
+					logx.S().Infof("✅ Service %s is healthy (service + database + redis)", serviceName)
+				}
+			} else {
+				logx.S().Infof("✅ Service %s is healthy (no infrastructure info)", serviceName)
+			}
+		}
+
+		if allHealthy {
+			logx.S().Info("✅ All 8 services and their infrastructure (database, Redis) are healthy!")
+			break
+		}
+
+		if attempt < maxRetries {
+			allIssues := append(unhealthyServices, unhealthyInfra...)
+			logx.S().Warnf("⚠️  Some services or infrastructure are not healthy (attempt %d/%d): %v. Retrying in %v...",
+				attempt, maxRetries, allIssues, retryInterval)
+			time.Sleep(retryInterval)
+		} else {
+			allIssues := append(unhealthyServices, unhealthyInfra...)
+			return fmt.Errorf("some services or infrastructure are not healthy after %d attempts: %v", maxRetries, allIssues)
+		}
+	}
 
 	// 步骤 6: 使用 domain entity 的 Initialize 方法更新 system_state 为 initialized = true
 	logx.S().Info("✅ All services initialized, marking system as initialized...")

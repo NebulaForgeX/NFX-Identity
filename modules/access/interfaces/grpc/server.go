@@ -7,9 +7,11 @@ import (
 	scopeApp "nfxid/modules/access/application/scopes"
 	rolePermissionApp "nfxid/modules/access/application/role_permissions"
 	scopePermissionApp "nfxid/modules/access/application/scope_permissions"
+	resourceApp "nfxid/modules/access/application/resource"
 	grpcHandler "nfxid/modules/access/interfaces/grpc/handler"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
+	healthpb "nfxid/protos/gen/common/health"
 	rolepb "nfxid/protos/gen/access/role"
 	permissionpb "nfxid/protos/gen/access/permission"
 	grantpb "nfxid/protos/gen/access/grant"
@@ -27,6 +29,7 @@ type Deps interface {
 	ScopeAppSvc() *scopeApp.Service
 	RolePermissionAppSvc() *rolePermissionApp.Service
 	ScopePermissionAppSvc() *scopePermissionApp.Service
+	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
 }
 
@@ -62,6 +65,9 @@ func NewServer(d Deps) *grpc.Server {
 	scopepermissionpb.RegisterScopePermissionServiceServer(s, grpcHandler.NewScopePermissionHandler(
 		d.ScopePermissionAppSvc(),
 	))
+
+	// Register health check service
+	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "access"))
 
 	return s
 }
