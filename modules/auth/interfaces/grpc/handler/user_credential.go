@@ -35,15 +35,6 @@ func (h *UserCredentialHandler) CreateUserCredential(ctx context.Context, req *u
 		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
 	}
 
-	// 解析租户ID（如果提供）
-	var tenantID uuid.UUID
-	if req.TenantId != nil && *req.TenantId != "" {
-		tenantID, err = uuid.Parse(*req.TenantId)
-		if err != nil {
-			return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
-		}
-	}
-
 	// 转换 protobuf 凭证类型到 domain 类型
 	var credentialType userCredentialDomain.CredentialType
 	switch req.CredentialType {
@@ -82,7 +73,6 @@ func (h *UserCredentialHandler) CreateUserCredential(ctx context.Context, req *u
 	// 创建命令
 	cmd := userCredentialAppCommands.CreateUserCredentialCmd{
 		UserID:             userID,
-		TenantID:           tenantID,
 		CredentialType:     credentialType,
 		PasswordHash:       passwordHash,
 		HashAlg:            hashAlg,

@@ -6,9 +6,6 @@ func (uc *UserCredential) Validate() error {
 	if uc.UserID() == uuid.Nil {
 		return ErrUserIDRequired
 	}
-	if uc.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
-	}
 	validTypes := map[CredentialType]struct{}{
 		CredentialTypePassword:  {},
 		CredentialTypePasskey:   {},

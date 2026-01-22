@@ -18,10 +18,9 @@ func NewUserCredentialClient(client usercredentialpb.UserCredentialServiceClient
 }
 
 // CreateUserCredential 创建用户凭证
-func (c *UserCredentialClient) CreateUserCredential(ctx context.Context, userID, password string, tenantID *string, mustChangePassword bool) error {
+func (c *UserCredentialClient) CreateUserCredential(ctx context.Context, userID, password string, mustChangePassword bool) error {
 	req := &usercredentialpb.CreateUserCredentialRequest{
 		Id:                 userID, // id 直接引用 directory.users.id
-		TenantId:           tenantID,
 		CredentialType:     usercredentialpb.AuthCredentialType_AUTH_CREDENTIAL_TYPE_PASSWORD,
 		Password:           password,
 		MustChangePassword: mustChangePassword,
@@ -50,10 +49,9 @@ func (c *UserCredentialClient) GetUserCredentialByID(ctx context.Context, id str
 }
 
 // GetUserCredentialByUserID 根据用户ID获取用户凭证
-func (c *UserCredentialClient) GetUserCredentialByUserID(ctx context.Context, userID string, tenantID *string) (*usercredentialpb.UserCredential, error) {
+func (c *UserCredentialClient) GetUserCredentialByUserID(ctx context.Context, userID string) (*usercredentialpb.UserCredential, error) {
 	req := &usercredentialpb.GetUserCredentialByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
+		UserId: userID,
 	}
 
 	resp, err := c.client.GetUserCredentialByUserID(ctx, req)

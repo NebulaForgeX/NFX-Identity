@@ -31,7 +31,6 @@ type UserCredential struct {
 type UserCredentialState struct {
 	ID                  uuid.UUID
 	UserID              uuid.UUID
-	TenantID            uuid.UUID
 	CredentialType      CredentialType
 	PasswordHash        *string
 	HashAlg             *string
@@ -48,7 +47,6 @@ type UserCredentialState struct {
 
 func (uc *UserCredential) ID() uuid.UUID                    { return uc.state.ID }
 func (uc *UserCredential) UserID() uuid.UUID                { return uc.state.UserID }
-func (uc *UserCredential) TenantID() uuid.UUID              { return uc.state.TenantID }
 func (uc *UserCredential) CredentialType() CredentialType   { return uc.state.CredentialType }
 func (uc *UserCredential) PasswordHash() *string            { return uc.state.PasswordHash }
 func (uc *UserCredential) HashAlg() *string                 { return uc.state.HashAlg }

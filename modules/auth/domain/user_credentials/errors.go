@@ -5,7 +5,6 @@ import "errors"
 var (
 	ErrUserCredentialNotFound    = errors.New("user credential not found")
 	ErrUserIDRequired            = errors.New("user id is required")
-	ErrTenantIDRequired          = errors.New("tenant id is required")
 	ErrCredentialTypeRequired    = errors.New("credential type is required")
 	ErrInvalidCredentialType     = errors.New("invalid credential type")
 	ErrInvalidCredentialStatus   = errors.New("invalid credential status")

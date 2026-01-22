@@ -6,7 +6,6 @@ CREATE TYPE "auth".credential_status AS ENUM ('active', 'disabled', 'expired');
 
 CREATE TABLE IF NOT EXISTS "auth"."user_credentials" (
   "id" UUID PRIMARY KEY, -- References directory.users.id (application-level consistency, no FK to avoid cross-schema dependency)
-  "tenant_id" UUID NOT NULL, -- Multi-tenant isolation (references tenants.tenants.id)
   "credential_type" "auth".credential_type NOT NULL DEFAULT 'password',
   "password_hash" VARCHAR(255), -- For password type
   "hash_alg" VARCHAR(50), -- e.g., 'bcrypt', 'argon2id', 'scrypt'
@@ -21,7 +20,6 @@ CREATE TABLE IF NOT EXISTS "auth"."user_credentials" (
   "deleted_at" TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS "idx_user_credentials_tenant_id" ON "auth"."user_credentials"("tenant_id");
 CREATE INDEX IF NOT EXISTS "idx_user_credentials_type" ON "auth"."user_credentials"("credential_type");
 CREATE INDEX IF NOT EXISTS "idx_user_credentials_status" ON "auth"."user_credentials"("status");
 CREATE INDEX IF NOT EXISTS "idx_user_credentials_deleted_at" ON "auth"."user_credentials"("deleted_at");

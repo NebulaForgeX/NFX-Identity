@@ -17,7 +17,6 @@ func UserCredentialROToProto(v *userCredentialAppResult.UserCredentialRO) *userc
 
 	userCredential := &usercredentialpb.UserCredential{
 		Id:                 v.ID.String(), // id 直接引用 directory.users.id
-		TenantId:           v.TenantID.String(),
 		CredentialType:     credentialTypeToProto(v.CredentialType),
 		Status:             credentialStatusToProto(v.Status),
 		MustChangePassword: v.MustChangePassword,

@@ -28,6 +28,10 @@ func UnaryAuthInterceptor(verifier token.Verifier) grpc.UnaryServerInterceptor {
 		if strings.HasSuffix(info.FullMethod, "/GetHealth") {
 			return handler(ctx, req)
 		}
+		// // 跳过 schema clear 方法的认证（允许在系统初始化时清空 schema）
+		// if strings.HasSuffix(info.FullMethod, "/ClearSchema") {
+		// 	return handler(ctx, req)
+		// }
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
 			return nil, status.Error(codes.Unauthenticated, "missing metadata")

@@ -25,7 +25,6 @@ func UserCredentialDomainToModel(uc *user_credentials.UserCredential) *models.Us
 
 	return &models.UserCredential{
 		ID:                 uc.ID(), // id 直接引用 directory.users.id
-		TenantID:           uc.TenantID(),
 		CredentialType:     credentialTypeDomainToEnum(uc.CredentialType()),
 		PasswordHash:       uc.PasswordHash(),
 		HashAlg:            uc.HashAlg(),
@@ -55,7 +54,6 @@ func UserCredentialModelToDomain(m *models.UserCredential) *user_credentials.Use
 	state := user_credentials.UserCredentialState{
 		ID:                 m.ID, // id 直接引用 directory.users.id
 		UserID:             m.ID, // UserID 从 ID 获取（一对一关系）
-		TenantID:           m.TenantID,
 		CredentialType:     credentialTypeEnumToDomain(m.CredentialType),
 		PasswordHash:       m.PasswordHash,
 		HashAlg:            m.HashAlg,
@@ -81,7 +79,6 @@ func UserCredentialModelToUpdates(m *models.UserCredential) map[string]any {
 	}
 
 	return map[string]any{
-		models.UserCredentialCols.TenantID:           m.TenantID,
 		models.UserCredentialCols.CredentialType:     m.CredentialType,
 		models.UserCredentialCols.PasswordHash:       m.PasswordHash,
 		models.UserCredentialCols.HashAlg:            m.HashAlg,

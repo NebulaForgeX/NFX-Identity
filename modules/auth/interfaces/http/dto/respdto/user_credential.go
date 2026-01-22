@@ -11,7 +11,6 @@ import (
 type UserCredentialDTO struct {
 	ID                 uuid.UUID              `json:"id"`
 	UserID             uuid.UUID              `json:"user_id"`
-	TenantID           uuid.UUID              `json:"tenant_id"`
 	CredentialType     string                 `json:"credential_type"`
 	PasswordHash       *string                `json:"password_hash,omitempty"`
 	HashAlg            *string                `json:"hash_alg,omitempty"`
@@ -35,7 +34,6 @@ func UserCredentialROToDTO(v *userCredentialAppResult.UserCredentialRO) *UserCre
 	return &UserCredentialDTO{
 		ID:                 v.ID,
 		UserID:             v.UserID,
-		TenantID:           v.TenantID,
 		CredentialType:     string(v.CredentialType),
 		PasswordHash:       v.PasswordHash,
 		HashAlg:            v.HashAlg,

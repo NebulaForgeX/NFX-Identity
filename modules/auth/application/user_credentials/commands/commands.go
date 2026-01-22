@@ -9,7 +9,6 @@ import (
 // CreateUserCredentialCmd 创建用户凭证命令
 type CreateUserCredentialCmd struct {
 	UserID            uuid.UUID
-	TenantID          uuid.UUID
 	CredentialType    user_credentials.CredentialType
 	PasswordHash      *string
 	HashAlg           *string

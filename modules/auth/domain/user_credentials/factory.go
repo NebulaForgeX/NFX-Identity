@@ -8,7 +8,6 @@ import (
 
 type NewUserCredentialParams struct {
 	UserID             uuid.UUID
-	TenantID           uuid.UUID
 	CredentialType     CredentialType
 	PasswordHash       *string
 	HashAlg            *string
@@ -42,7 +41,6 @@ func NewUserCredential(p NewUserCredentialParams) (*UserCredential, error) {
 	return NewUserCredentialFromState(UserCredentialState{
 		ID:                 p.UserID, // id 直接引用 directory.users.id
 		UserID:             p.UserID,
-		TenantID:           p.TenantID,
 		CredentialType:     credentialType,
 		PasswordHash:       p.PasswordHash,
 		HashAlg:            p.HashAlg,
@@ -63,9 +61,6 @@ func NewUserCredentialFromState(st UserCredentialState) *UserCredential {
 func validateUserCredentialParams(p NewUserCredentialParams) error {
 	if p.UserID == uuid.Nil {
 		return ErrUserIDRequired
-	}
-	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
 	}
 	if p.CredentialType != "" {
 		validTypes := map[CredentialType]struct{}{

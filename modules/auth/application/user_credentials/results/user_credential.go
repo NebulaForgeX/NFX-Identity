@@ -11,7 +11,6 @@ import (
 type UserCredentialRO struct {
 	ID                 uuid.UUID
 	UserID             uuid.UUID
-	TenantID           uuid.UUID
 	CredentialType     user_credentials.CredentialType
 	PasswordHash       *string
 	HashAlg            *string
@@ -35,7 +34,6 @@ func UserCredentialMapper(uc *user_credentials.UserCredential) UserCredentialRO 
 	return UserCredentialRO{
 		ID:                 uc.ID(),
 		UserID:             uc.UserID(),
-		TenantID:           uc.TenantID(),
 		CredentialType:     uc.CredentialType(),
 		PasswordHash:       uc.PasswordHash(),
 		HashAlg:            uc.HashAlg(),

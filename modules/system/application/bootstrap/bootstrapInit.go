@@ -20,49 +20,57 @@ import (
 // 3. 清空所有服务的 schema（清空所有表数据，不删除表），确保 system_state 只有一条记录
 // 4. 创建 system_state 记录（initialized = false），表示初始化开始
 // 5. 通过 gRPC 调用其他服务初始化基础数据
-// 6. 更新 metadata 记录已初始化的服务
-// 7. 更新 system_state 为 initialized = true
+// 6. 更新 metadata 并标记系统为已初始化
 func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) error {
 	logx.S().Info("🚀 Starting system bootstrap initialization...")
-
 	// 步骤 1: 检查系统是否已经初始化
 	if err := s.checkSystemInitialized(ctx); err != nil {
 		return err
 	}
-
 	// 步骤 2: 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
 	if err := s.checkAllServicesHealth(ctx); err != nil {
 		return err
 	}
-
-	// 步骤 3: 清空所有服务的 schema（清空所有表数据，不删除表）
-	// 注意：这会清空 system_state 表，确保只有一条记录
+	// 步骤 3: 清空所有服务的 schema（清空所有表数据，不删除表） 注意：这会清空 system_state 表，确保只有一条记录
 	if err := s.clearAllSchemas(ctx); err != nil {
 		return err
 	}
-
 	// 步骤 4: 创建 system_state 记录（initialized = false），表示初始化开始
 	systemState, err := s.createInitialSystemState(ctx, cmd)
 	if err != nil {
 		return err
 	}
-
 	// 步骤 5: 初始化各个服务的基础数据
-	adminUserID, adminRoleID, initializedServices, err := s.initializeAllServices(ctx, cmd)
+	initializedServices := []string{}
+	// 5.1 初始化 Directory 服务 - 创建第一个系统管理员用户
+	logx.S().Info("📦 Initializing Directory service - creating admin user...")
+	adminUserID, err := s.initDirectoryService(ctx, cmd)
 	if err != nil {
+		return fmt.Errorf("failed to initialize directory service: %w", err)
+	}
+	initializedServices = append(initializedServices, "directory")
+	logx.S().Infof("✅ Directory service initialized - admin user ID: %s", adminUserID)
+
+	// 5.2 初始化 Access 服务 - 创建初始角色和权限
+	logx.S().Info("📦 Initializing Access service - creating roles and permissions...")
+	adminRoleID, err := s.initAccessService(ctx, adminUserID)
+	if err != nil {
+		return fmt.Errorf("failed to initialize access service: %w", err)
+	}
+	initializedServices = append(initializedServices, "access")
+	logx.S().Infof("✅ Access service initialized - admin role ID: %s", adminRoleID)
+
+	// 5.3 初始化 Auth 服务 - 创建用户凭证
+	logx.S().Info("📦 Initializing Auth service - creating user credentials...")
+	if err := s.initAuthService(ctx, adminUserID, cmd.AdminPassword); err != nil {
+		return fmt.Errorf("failed to initialize auth service: %w", err)
+	}
+	initializedServices = append(initializedServices, "auth")
+	logx.S().Info("✅ Auth service initialized")
+	// 步骤 6: 更新 metadata 并标记系统为已初始化
+	if err := s.finalizeSystemState(ctx, systemState, adminUserID, adminRoleID, initializedServices, cmd.Version); err != nil {
 		return err
 	}
-
-	// 步骤 6: 更新 metadata 记录已初始化的服务
-	if err := s.updateSystemStateMetadata(ctx, systemState, adminUserID, adminRoleID, initializedServices); err != nil {
-		return err
-	}
-
-	// 步骤 7: 更新 system_state 为 initialized = true
-	if err := s.markSystemAsInitialized(ctx, systemState, cmd.Version); err != nil {
-		return err
-	}
-
 	logx.S().Info("🎉 System bootstrap initialization completed successfully!")
 	return nil
 }
@@ -229,41 +237,9 @@ func (s *Service) clearAllSchemas(ctx context.Context) error {
 	return nil
 }
 
-// initializeAllServices 初始化各个服务的基础数据
-func (s *Service) initializeAllServices(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) (uuid.UUID, uuid.UUID, []string, error) {
-	initializedServices := []string{}
-
-	// 4.1 初始化 Directory 服务 - 创建第一个系统管理员用户
-	logx.S().Info("📦 Initializing Directory service - creating admin user...")
-	adminUserID, err := s.initDirectoryService(ctx, cmd)
-	if err != nil {
-		return uuid.Nil, uuid.Nil, nil, fmt.Errorf("failed to initialize directory service: %w", err)
-	}
-	initializedServices = append(initializedServices, "directory")
-	logx.S().Infof("✅ Directory service initialized - admin user ID: %s", adminUserID)
-
-	// 4.2 初始化 Access 服务 - 创建初始角色和权限
-	logx.S().Info("📦 Initializing Access service - creating roles and permissions...")
-	adminRoleID, err := s.initAccessService(ctx, adminUserID)
-	if err != nil {
-		return uuid.Nil, uuid.Nil, nil, fmt.Errorf("failed to initialize access service: %w", err)
-	}
-	initializedServices = append(initializedServices, "access")
-	logx.S().Infof("✅ Access service initialized - admin role ID: %s", adminRoleID)
-
-	// 4.3 初始化 Auth 服务 - 创建用户凭证
-	logx.S().Info("📦 Initializing Auth service - creating user credentials...")
-	if err := s.initAuthService(ctx, adminUserID, cmd.AdminPassword); err != nil {
-		return uuid.Nil, uuid.Nil, nil, fmt.Errorf("failed to initialize auth service: %w", err)
-	}
-	initializedServices = append(initializedServices, "auth")
-	logx.S().Info("✅ Auth service initialized")
-
-	return adminUserID, adminRoleID, initializedServices, nil
-}
-
-// updateSystemStateMetadata 更新 metadata 记录已初始化的服务
-func (s *Service) updateSystemStateMetadata(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string) error {
+// finalizeSystemState 更新 metadata 并标记系统为已初始化
+func (s *Service) finalizeSystemState(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string, version string) error {
+	// 更新 metadata
 	updatedMetadata := map[string]interface{}{
 		"bootstrap_started_at":   systemState.Metadata()["bootstrap_started_at"],
 		"admin_username":         systemState.Metadata()["admin_username"],
@@ -273,29 +249,19 @@ func (s *Service) updateSystemStateMetadata(ctx context.Context, systemState *sy
 		"bootstrap_completed_at": time.Now().UTC().Format(time.RFC3339),
 	}
 
-	// 使用 domain 方法更新 metadata
 	if err := systemState.UpdateMetadata(updatedMetadata); err != nil {
 		return fmt.Errorf("failed to update system state metadata: %w", err)
 	}
 
-	// 保存更新后的 metadata
-	if err := s.systemStateRepo.Update.Generic(ctx, systemState); err != nil {
-		return fmt.Errorf("failed to save updated system state metadata: %w", err)
-	}
-
-	return nil
-}
-
-// markSystemAsInitialized 使用 domain entity 的 Initialize 方法更新 system_state 为 initialized = true
-func (s *Service) markSystemAsInitialized(ctx context.Context, systemState *systemStateDomain.SystemState, version string) error {
+	// 标记系统为已初始化
 	logx.S().Info("✅ All services initialized, marking system as initialized...")
 	if err := systemState.Initialize(version); err != nil {
 		return fmt.Errorf("failed to initialize system state: %w", err)
 	}
 
-	// 保存更新后的 system_state
+	// 一次性保存所有更新
 	if err := s.systemStateRepo.Update.Generic(ctx, systemState); err != nil {
-		return fmt.Errorf("failed to save initialized system state: %w", err)
+		return fmt.Errorf("failed to save finalized system state: %w", err)
 	}
 
 	return nil
@@ -412,7 +378,7 @@ func (s *Service) initAccessService(ctx context.Context, adminUserID uuid.UUID) 
 // 创建用户凭证（密码）
 func (s *Service) initAuthService(ctx context.Context, userID uuid.UUID, password string) error {
 	// 创建用户凭证，首次登录不需要强制修改密码
-	if err := s.grpcClients.AuthClient.UserCredential.CreateUserCredential(ctx, userID.String(), password, nil, false); err != nil {
+	if err := s.grpcClients.AuthClient.UserCredential.CreateUserCredential(ctx, userID.String(), password, false); err != nil {
 		return fmt.Errorf("failed to create user credential: %w", err)
 	}
 

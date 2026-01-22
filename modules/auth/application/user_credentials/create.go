@@ -13,7 +13,6 @@ func (s *Service) CreateUserCredential(ctx context.Context, cmd userCredentialCo
 	// Create domain entity
 	userCredential, err := userCredentialDomain.NewUserCredential(userCredentialDomain.NewUserCredentialParams{
 		UserID:             cmd.UserID,
-		TenantID:           cmd.TenantID,
 		CredentialType:     cmd.CredentialType,
 		PasswordHash:       cmd.PasswordHash,
 		HashAlg:            cmd.HashAlg,

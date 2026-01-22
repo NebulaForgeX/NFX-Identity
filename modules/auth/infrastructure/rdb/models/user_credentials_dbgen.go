@@ -12,7 +12,6 @@ import (
 
 type UserCredential struct {
 	ID                 uuid.UUID                  `gorm:"type:uuid;primaryKey"`
-	TenantID           uuid.UUID                  `gorm:"type:uuid;index:idx_user_credentials_tenant_id"`
 	CredentialType     enums.AuthCredentialType   `gorm:"type:credential_type;index:idx_user_credentials_type"`
 	PasswordHash       *string                    `gorm:"type:varchar(255)"`
 	HashAlg            *string                    `gorm:"type:varchar(50)"`
@@ -37,11 +36,10 @@ func (m *UserCredential) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var UserCredentialCols = struct {
-	ID, TenantID, CredentialType, PasswordHash, HashAlg, HashParams, PasswordUpdatedAt,
-	LastSuccessLoginAt, Status, MustChangePassword, Version, CreatedAt, UpdatedAt, DeletedAt string
+	ID, CredentialType, PasswordHash, HashAlg, HashParams, PasswordUpdatedAt, LastSuccessLoginAt,
+	Status, MustChangePassword, Version, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:                 "id",
-	TenantID:           "tenant_id",
 	CredentialType:     "credential_type",
 	PasswordHash:       "password_hash",
 	HashAlg:            "hash_alg",

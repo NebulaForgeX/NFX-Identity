@@ -9,7 +9,6 @@ import (
 
 type UserCredentialCreateRequestDTO struct {
 	UserID            uuid.UUID                `json:"user_id" validate:"required"`
-	TenantID          uuid.UUID                `json:"tenant_id" validate:"required"`
 	CredentialType    string                    `json:"credential_type" validate:"required"`
 	PasswordHash      *string                   `json:"password_hash,omitempty"`
 	HashAlg           *string                   `json:"hash_alg,omitempty"`
@@ -31,7 +30,6 @@ type UserCredentialByIDRequestDTO struct {
 func (r *UserCredentialCreateRequestDTO) ToCreateCmd() userCredentialAppCommands.CreateUserCredentialCmd {
 	cmd := userCredentialAppCommands.CreateUserCredentialCmd{
 		UserID:            r.UserID,
-		TenantID:          r.TenantID,
 		PasswordHash:      r.PasswordHash,
 		HashAlg:           r.HashAlg,
 		HashParams:        r.HashParams,
