@@ -21,14 +21,10 @@ func NewTenantSetting(p NewTenantSettingParams) (*TenantSetting, error) {
 		return nil, err
 	}
 
-	id, err := uuid.NewV7()
-	if err != nil {
-		return nil, err
-	}
-
+	// id 必须等于 TenantID（一对一关系，id 直接引用 tenants.id）
 	now := time.Now().UTC()
 	return NewTenantSettingFromState(TenantSettingState{
-		ID:                 id,
+		ID:                 p.TenantID, // id 直接引用 tenants.id
 		TenantID:           p.TenantID,
 		EnforceMFA:         p.EnforceMFA,
 		AllowedEmailDomains: p.AllowedEmailDomains,

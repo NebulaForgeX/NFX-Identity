@@ -32,14 +32,10 @@ func NewUserProfile(p NewUserProfileParams) (*UserProfile, error) {
 		return nil, err
 	}
 
-	id, err := uuid.NewV7()
-	if err != nil {
-		return nil, err
-	}
-
+	// id 必须等于 UserID（一对一关系，id 直接引用 users.id）
 	now := time.Now().UTC()
 	return NewUserProfileFromState(UserProfileState{
-		ID:           id,
+		ID:           p.UserID, // id 直接引用 users.id
 		UserID:       p.UserID,
 		Role:         p.Role,
 		FirstName:    p.FirstName,

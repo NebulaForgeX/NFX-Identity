@@ -32,11 +32,7 @@ func NewUserCredential(p NewUserCredentialParams) (*UserCredential, error) {
 		status = CredentialStatusActive
 	}
 
-	id, err := uuid.NewV7()
-	if err != nil {
-		return nil, err
-	}
-
+	// id 必须等于 UserID（一对一关系，id 直接引用 directory.users.id）
 	now := time.Now().UTC()
 	var passwordUpdatedAt *time.Time
 	if p.PasswordHash != nil {
@@ -44,7 +40,7 @@ func NewUserCredential(p NewUserCredentialParams) (*UserCredential, error) {
 	}
 
 	return NewUserCredentialFromState(UserCredentialState{
-		ID:                 id,
+		ID:                 p.UserID, // id 直接引用 directory.users.id
 		UserID:             p.UserID,
 		TenantID:           p.TenantID,
 		CredentialType:     credentialType,

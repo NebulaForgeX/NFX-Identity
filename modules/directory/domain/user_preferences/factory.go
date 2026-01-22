@@ -37,14 +37,10 @@ func NewUserPreference(p NewUserPreferenceParams) (*UserPreference, error) {
 		timezone = "UTC"
 	}
 
-	id, err := uuid.NewV7()
-	if err != nil {
-		return nil, err
-	}
-
+	// id 必须等于 UserID（一对一关系，id 直接引用 users.id）
 	now := time.Now().UTC()
 	return NewUserPreferenceFromState(UserPreferenceState{
-		ID:            id,
+		ID:            p.UserID, // id 直接引用 users.id
 		UserID:        p.UserID,
 		Theme:         theme,
 		Language:      language,
