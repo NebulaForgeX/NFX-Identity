@@ -4,6 +4,7 @@ import (
 	"context"
 
 	userEmailApp "nfxid/modules/directory/application/user_emails"
+	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
 	"nfxid/pkgs/logx"
 	useremailpb "nfxid/protos/gen/directory/user_email"
@@ -22,6 +23,42 @@ func NewUserEmailHandler(userEmailAppSvc *userEmailApp.Service) *UserEmailHandle
 	return &UserEmailHandler{
 		userEmailAppSvc: userEmailAppSvc,
 	}
+}
+
+// CreateUserEmail 创建用户邮箱
+func (h *UserEmailHandler) CreateUserEmail(ctx context.Context, req *useremailpb.CreateUserEmailRequest) (*useremailpb.CreateUserEmailResponse, error) {
+	// 解析用户ID
+	userID, err := uuid.Parse(req.UserId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+	}
+
+	// 创建命令
+	cmd := userEmailAppCommands.CreateUserEmailCmd{
+		UserID:            userID,
+		Email:             req.Email,
+		IsPrimary:         req.IsPrimary,
+		IsVerified:        req.IsVerified,
+		VerificationToken: req.VerificationToken,
+	}
+
+	// 调用应用服务创建用户邮箱
+	userEmailID, err := h.userEmailAppSvc.CreateUserEmail(ctx, cmd)
+	if err != nil {
+		logx.S().Errorf("failed to create user email: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create user email: %v", err)
+	}
+
+	// 获取创建的用户邮箱
+	userEmailView, err := h.userEmailAppSvc.GetUserEmail(ctx, userEmailID)
+	if err != nil {
+		logx.S().Errorf("failed to get created user email: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to get created user email: %v", err)
+	}
+
+	// 转换为 protobuf 响应
+	userEmail := mapper.UserEmailROToProto(&userEmailView)
+	return &useremailpb.CreateUserEmailResponse{UserEmail: userEmail}, nil
 }
 
 // GetUserEmailByID 根据ID获取用户邮箱
