@@ -176,6 +176,7 @@ func (d *Dependencies) DomainVerificationAppSvc() *domainVerificationApp.Service
 func (d *Dependencies) MemberRoleAppSvc() *memberRoleApp.Service             { return d.memberRoleAppSvc }
 func (d *Dependencies) MemberGroupAppSvc() *memberGroupApp.Service            { return d.memberGroupAppSvc }
 func (d *Dependencies) MemberAppRoleAppSvc() *memberAppRoleApp.Service       { return d.memberAppRoleAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection                  { return d.postgres }
 func (d *Dependencies) UserTokenVerifier() token.Verifier                   { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier                   { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                           { return d.kafkaConfig }

@@ -134,6 +134,7 @@ func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.se
 func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
+func (d *Dependencies) Postgres() *postgresqlx.Connection         { return d.postgres }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

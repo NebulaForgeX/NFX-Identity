@@ -17,6 +17,7 @@ import (
 // 1. 检查系统是否已经初始化
 // 2. 创建 system_state 记录（initialized = false），表示初始化开始
 // 3. 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
+// 3.5. 清空所有服务的 schema（清空所有表数据，不删除表），确保 system_state 只有一条记录
 // 4. 通过 gRPC 调用其他服务初始化基础数据
 // 5. 更新 metadata 记录已初始化的服务
 // 6. 更新 system_state 为 initialized = true
@@ -138,6 +139,37 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 			return fmt.Errorf("some services or infrastructure are not healthy after %d attempts: %v", maxRetries, allIssues)
 		}
 	}
+
+	// 步骤 3.5: 清空所有服务的 schema（清空所有表数据，不删除表）
+	// 确保 system_state 表只有一条记录
+	logx.S().Info("🧹 Clearing all schemas - removing all table data (keeping table structure)...")
+	clearResults, err := s.grpcClients.ClearAllSchemas(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to clear schemas: %w", err)
+	}
+
+	// 检查清空结果
+	allCleared := true
+	failedServices := []string{}
+	for serviceName, result := range clearResults {
+		if !result.Success {
+			allCleared = false
+			errMsg := "unknown error"
+			if result.ErrorMessage != nil {
+				errMsg = *result.ErrorMessage
+			}
+			failedServices = append(failedServices, fmt.Sprintf("%s: %s", serviceName, errMsg))
+			logx.S().Warnf("⚠️  Failed to clear schema for %s: %s", serviceName, errMsg)
+		} else {
+			logx.S().Infof("✅ Cleared schema for %s: %d tables cleared", serviceName, result.TablesCleared)
+		}
+	}
+
+	if !allCleared {
+		return fmt.Errorf("failed to clear schemas for some services: %v", failedServices)
+	}
+
+	logx.S().Info("✅ All schemas cleared successfully!")
 
 	// 步骤 4: 初始化各个服务的基础数据
 	initializedServices := []string{}

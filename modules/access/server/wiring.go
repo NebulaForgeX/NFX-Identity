@@ -149,6 +149,7 @@ func (d *Dependencies) ScopeAppSvc() *scopeApp.Service                  { return
 func (d *Dependencies) GrantAppSvc() *grantApp.Service                 { return d.grantAppSvc }
 func (d *Dependencies) RolePermissionAppSvc() *rolePermissionApp.Service { return d.rolePermissionAppSvc }
 func (d *Dependencies) ScopePermissionAppSvc() *scopePermissionApp.Service { return d.scopePermissionAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection             { return d.postgres }
 func (d *Dependencies) UserTokenVerifier() token.Verifier              { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                     { return d.kafkaConfig }

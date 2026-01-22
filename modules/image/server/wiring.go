@@ -129,6 +129,7 @@ func (d *Dependencies) Cleanup() {
 // Getter methods for interfaces
 func (d *Dependencies) HealthMgr() *health.Manager           { return d.healthMgr }
 func (d *Dependencies) ResourceSvc() *resourceApp.Service    { return d.resourceSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection     { return d.postgres }
 func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }

@@ -2,6 +2,7 @@ package servertoken
 
 import (
 	"context"
+	"fmt"
 	"nfxid/pkgs/security/token"
 	"time"
 
@@ -56,8 +57,12 @@ func (v *verifier) Verify(ctx context.Context, tok string) (*token.Claims, error
 		jwt.WithValidMethods([]string{v.signer.Method().Alg()}),
 		jwt.WithLeeway(v.allowedSkew),
 	)
-	if err != nil || !serverToken.Valid {
-		return nil, err
+	if err != nil {
+		// 返回详细错误信息以便调试
+		return nil, fmt.Errorf("token verification failed: %w (issuer expected: %s)", err, v.issuer)
+	}
+	if !serverToken.Valid {
+		return nil, fmt.Errorf("token is not valid (issuer expected: %s)", v.issuer)
 	}
 
 	return &token.Claims{

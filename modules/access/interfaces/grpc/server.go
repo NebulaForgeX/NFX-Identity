@@ -9,9 +9,11 @@ import (
 	scopePermissionApp "nfxid/modules/access/application/scope_permissions"
 	resourceApp "nfxid/modules/access/application/resource"
 	grpcHandler "nfxid/modules/access/interfaces/grpc/handler"
+	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 	rolepb "nfxid/protos/gen/access/role"
 	permissionpb "nfxid/protos/gen/access/permission"
 	grantpb "nfxid/protos/gen/access/grant"
@@ -31,6 +33,7 @@ type Deps interface {
 	ScopePermissionAppSvc() *scopePermissionApp.Service
 	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
+	Postgres() *postgresqlx.Connection
 }
 
 func NewServer(d Deps) *grpc.Server {
@@ -68,6 +71,9 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "access"))
+	
+	// Register schema service
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "access"))
 
 	return s
 }

@@ -13,9 +13,11 @@ import (
 	tenantSettingApp "nfxid/modules/tenants/application/tenant_settings"
 	resourceApp "nfxid/modules/tenants/application/resource"
 	grpcHandler "nfxid/modules/tenants/interfaces/grpc/handler"
+	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 	grouppb "nfxid/protos/gen/tenants/group"
 	invitationpb "nfxid/protos/gen/tenants/invitation"
@@ -43,6 +45,7 @@ type Deps interface {
 	MemberAppRoleAppSvc() *memberApp.Service
 	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
+	Postgres() *postgresqlx.Connection
 }
 
 func NewServer(d Deps) *grpc.Server {
@@ -66,6 +69,9 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "tenants"))
+	
+	// Register schema service
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "tenants"))
 
 	return s
 }

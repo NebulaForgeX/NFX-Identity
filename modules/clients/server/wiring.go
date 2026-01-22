@@ -146,6 +146,7 @@ func (d *Dependencies) ClientCredentialAppSvc() *clientCredentialApp.Service { r
 func (d *Dependencies) ClientScopeAppSvc() *clientScopeApp.Service    { return d.clientScopeAppSvc }
 func (d *Dependencies) IPAllowlistAppSvc() *ipAllowlistApp.Service    { return d.ipAllowlistAppSvc }
 func (d *Dependencies) RateLimitAppSvc() *rateLimitApp.Service        { return d.rateLimitAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection            { return d.postgres }
 func (d *Dependencies) UserTokenVerifier() token.Verifier           { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier         { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                 { return d.kafkaConfig }

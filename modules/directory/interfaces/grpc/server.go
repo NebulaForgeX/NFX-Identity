@@ -12,9 +12,11 @@ import (
 	userProfileApp "nfxid/modules/directory/application/user_profiles"
 	resourceApp "nfxid/modules/directory/application/resource"
 	grpcHandler "nfxid/modules/directory/interfaces/grpc/handler"
+	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 	badgepb "nfxid/protos/gen/directory/badge"
 	userbadgepb "nfxid/protos/gen/directory/user_badge"
 	usereducationpb "nfxid/protos/gen/directory/user_education"
@@ -40,6 +42,7 @@ type Deps interface {
 	UserProfileAppSvc() *userProfileApp.Service
 	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
+	Postgres() *postgresqlx.Connection
 }
 
 func NewServer(d Deps) *grpc.Server {
@@ -62,6 +65,9 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "directory"))
+	
+	// Register schema service
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "directory"))
 
 	return s
 }

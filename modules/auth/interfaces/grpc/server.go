@@ -12,9 +12,11 @@ import (
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
 	resourceApp "nfxid/modules/auth/application/resource"
 	grpcHandler "nfxid/modules/auth/interfaces/grpc/handler"
+	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 	sessionpb "nfxid/protos/gen/auth/session"
 	usercredentialpb "nfxid/protos/gen/auth/user_credential"
 	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
@@ -40,6 +42,7 @@ type Deps interface {
 	TrustedDeviceAppSvc() *trustedDeviceApp.Service
 	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
+	Postgres() *postgresqlx.Connection
 }
 
 func NewServer(d Deps) *grpc.Server {
@@ -89,6 +92,9 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "auth"))
+	
+	// Register schema service
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "auth"))
 
 	return s
 }

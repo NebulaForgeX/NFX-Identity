@@ -40,7 +40,8 @@ func UnaryAuthInterceptor(verifier token.Verifier) grpc.UnaryServerInterceptor {
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
 		claims, err := verifier.Verify(ctx, tokenStr)
 		if err != nil {
-			return nil, status.Error(codes.Unauthenticated, "invalid or expired token")
+			// 返回详细错误信息以便调试
+			return nil, status.Errorf(codes.Unauthenticated, "invalid or expired token: %v", err)
 		}
 
 		// Inject service ID into context

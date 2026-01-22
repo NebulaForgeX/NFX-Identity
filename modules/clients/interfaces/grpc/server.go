@@ -9,9 +9,11 @@ import (
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
 	resourceApp "nfxid/modules/clients/application/resource"
 	grpcHandler "nfxid/modules/clients/interfaces/grpc/handler"
+	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 	apppb "nfxid/protos/gen/clients/app"
 	apikeypb "nfxid/protos/gen/clients/api_key"
 	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
@@ -31,6 +33,7 @@ type Deps interface {
 	RateLimitAppSvc() *rateLimitApp.Service
 	ResourceSvc() *resourceApp.Service
 	ServerTokenVerifier() token.Verifier
+	Postgres() *postgresqlx.Connection
 }
 
 func NewServer(d Deps) *grpc.Server {
@@ -50,6 +53,9 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "clients"))
+	
+	// Register schema service
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "clients"))
 
 	return s
 }

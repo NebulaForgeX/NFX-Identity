@@ -141,6 +141,7 @@ func (d *Dependencies) ActorSnapshotAppSvc() *actorSnapshotApp.Service       { r
 func (d *Dependencies) EventRetentionPolicyAppSvc() *eventRetentionPolicyApp.Service { return d.eventRetentionPolicyAppSvc }
 func (d *Dependencies) EventSearchIndexAppSvc() *eventSearchIndexApp.Service  { return d.eventSearchIndexAppSvc }
 func (d *Dependencies) HashChainCheckpointAppSvc() *hashChainCheckpointApp.Service { return d.hashChainCheckpointAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection                    { return d.postgres }
 func (d *Dependencies) UserTokenVerifier() token.Verifier                    { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier                  { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                          { return d.kafkaConfig }

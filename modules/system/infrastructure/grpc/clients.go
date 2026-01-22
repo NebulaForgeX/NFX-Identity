@@ -19,6 +19,7 @@ type GRPCClients struct {
 	AuthClient      *AuthClient
 
 	healthChecker *HealthChecker // 健康检查客户端管理器
+	schemaChecker *SchemaChecker // schema 清空客户端管理器
 	conns         []*grpc.ClientConn
 	mu            sync.Mutex
 }
@@ -62,6 +63,12 @@ func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg
 	if err := initHealthClients(grpcClients, cfg, serverCfg, tokenProvider); err != nil {
 		grpcClients.Close()
 		return nil, fmt.Errorf("failed to initialize health clients: %w", err)
+	}
+
+	// 初始化 schema 清空客户端
+	if err := initSchemaClients(grpcClients, cfg, serverCfg, tokenProvider); err != nil {
+		grpcClients.Close()
+		return nil, fmt.Errorf("failed to initialize schema clients: %w", err)
 	}
 
 	return grpcClients, nil
