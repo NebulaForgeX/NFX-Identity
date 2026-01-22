@@ -7,6 +7,7 @@ import (
 	"nfxid/pkgs/logx"
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/rabbitmqx"
+	"nfxid/pkgs/tokenx"
 )
 
 type Config struct {
@@ -19,6 +20,7 @@ type Config struct {
 	KafkaConfig  kafkax.Config      `koanf:"kafka"`
 	RabbitMQConfig rabbitmqx.Config `koanf:"rabbitmq"`
 	GRPCClient   GRPCClientConfig   `koanf:"grpc_client"`
+	Token        tokenx.Config      `koanf:"token"`
 }
 
 type GRPCClientConfig struct {

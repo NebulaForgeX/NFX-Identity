@@ -74,8 +74,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	rabbitMQConfig := cfg.RabbitMQConfig
 
 	//! === Tokenx ===
-	// 使用默认 token 配置（image 模块可能不需要 token 生成，只需要验证）
-	tokenCfg := tokenx.DefaultConfig()
+	// 使用配置文件中的 token 配置（确保与其他服务一致）
+	tokenCfg := cfg.Token
 	tokenxInstance := tokenx.New(tokenCfg)
 
 	//! === Token Verifiers ===

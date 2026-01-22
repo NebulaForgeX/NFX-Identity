@@ -24,11 +24,14 @@ func UnaryAuthInterceptor(verifier token.Verifier) grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (any, error) {
+		// 跳过 health check 方法的认证（允许在系统初始化时进行健康检查）
+		if strings.HasSuffix(info.FullMethod, "/GetHealth") {
+			return handler(ctx, req)
+		}
 		md, ok := metadata.FromIncomingContext(ctx)
 		if !ok {
 			return nil, status.Error(codes.Unauthenticated, "missing metadata")
 		}
-
 		auth := strings.Join(md.Get("authorization"), "")
 		if !strings.HasPrefix(auth, "Bearer ") {
 			return nil, status.Error(codes.Unauthenticated, "missing or invalid Authorization header")

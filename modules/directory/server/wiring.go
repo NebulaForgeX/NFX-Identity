@@ -7,7 +7,6 @@ import (
 
 	badgeApp "nfxid/modules/directory/application/badges"
 	resourceApp "nfxid/modules/directory/application/resource"
-	userApp "nfxid/modules/directory/application/users"
 	userBadgeApp "nfxid/modules/directory/application/user_badges"
 	userEducationApp "nfxid/modules/directory/application/user_educations"
 	userEmailApp "nfxid/modules/directory/application/user_emails"
@@ -15,9 +14,9 @@ import (
 	userPhoneApp "nfxid/modules/directory/application/user_phones"
 	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
 	userProfileApp "nfxid/modules/directory/application/user_profiles"
+	userApp "nfxid/modules/directory/application/users"
 	"nfxid/modules/directory/config"
 	badgeRepo "nfxid/modules/directory/infrastructure/repository/badges"
-	userRepo "nfxid/modules/directory/infrastructure/repository/users"
 	userBadgeRepo "nfxid/modules/directory/infrastructure/repository/user_badges"
 	userEducationRepo "nfxid/modules/directory/infrastructure/repository/user_educations"
 	userEmailRepo "nfxid/modules/directory/infrastructure/repository/user_emails"
@@ -25,6 +24,7 @@ import (
 	userPhoneRepo "nfxid/modules/directory/infrastructure/repository/user_phones"
 	userPreferenceRepo "nfxid/modules/directory/infrastructure/repository/user_preferences"
 	userProfileRepo "nfxid/modules/directory/infrastructure/repository/user_profiles"
+	userRepo "nfxid/modules/directory/infrastructure/repository/users"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -37,25 +37,25 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr                *health.Manager
-	cache                    *cache.Connection
-	postgres                 *postgresqlx.Connection
-	kafkaConfig              *kafkax.Config
-	busPublisher             *eventbus.BusPublisher
-	rabbitMQConfig           *rabbitmqx.Config
-	userAppSvc               *userApp.Service
-	badgeAppSvc              *badgeApp.Service
-	userBadgeAppSvc          *userBadgeApp.Service
-	userEducationAppSvc      *userEducationApp.Service
-	userEmailAppSvc          *userEmailApp.Service
-	userOccupationAppSvc     *userOccupationApp.Service
-	userPhoneAppSvc          *userPhoneApp.Service
-	userPreferenceAppSvc     *userPreferenceApp.Service
-	userProfileAppSvc        *userProfileApp.Service
-	userTokenVerifier        token.Verifier
-	serverTokenVerifier      token.Verifier
-	resourceSvc         *resourceApp.Service
-	tokenxInstance           *tokenx.Tokenx
+	healthMgr            *health.Manager
+	cache                *cache.Connection
+	postgres             *postgresqlx.Connection
+	kafkaConfig          *kafkax.Config
+	busPublisher         *eventbus.BusPublisher
+	rabbitMQConfig       *rabbitmqx.Config
+	userAppSvc           *userApp.Service
+	badgeAppSvc          *badgeApp.Service
+	userBadgeAppSvc      *userBadgeApp.Service
+	userEducationAppSvc  *userEducationApp.Service
+	userEmailAppSvc      *userEmailApp.Service
+	userOccupationAppSvc *userOccupationApp.Service
+	userPhoneAppSvc      *userPhoneApp.Service
+	userPreferenceAppSvc *userPreferenceApp.Service
+	userProfileAppSvc    *userProfileApp.Service
+	userTokenVerifier    token.Verifier
+	serverTokenVerifier  token.Verifier
+	resourceSvc          *resourceApp.Service
+	tokenxInstance       *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -89,8 +89,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	rabbitMQConfig := cfg.RabbitMQConfig
 
 	//! === Tokenx ===
-	// 使用默认 token 配置（directory 模块可能不需要 token 生成，只需要验证）
-	tokenCfg := tokenx.DefaultConfig()
+	// 使用配置文件中的 token 配置（确保与其他服务一致）
+	tokenCfg := cfg.Token
 	tokenxInstance := tokenx.New(tokenCfg)
 
 	//! === Token Verifiers ===
@@ -146,7 +146,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userProfileAppSvc:    userProfileAppSvc,
 		userTokenVerifier:    userTokenVerifier,
 		serverTokenVerifier:  serverTokenVerifier,
-		resourceSvc:         resourceSvc,
+		resourceSvc:          resourceSvc,
 		tokenxInstance:       tokenxInstance,
 	}, nil
 }
@@ -158,22 +158,26 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) HealthMgr() *health.Manager                      { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
-func (d *Dependencies) UserAppSvc() *userApp.Service                    { return d.userAppSvc }
+func (d *Dependencies) HealthMgr() *health.Manager                     { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service              { return d.resourceSvc }
+func (d *Dependencies) UserAppSvc() *userApp.Service                   { return d.userAppSvc }
 func (d *Dependencies) BadgeAppSvc() *badgeApp.Service                 { return d.badgeAppSvc }
-func (d *Dependencies) UserBadgeAppSvc() *userBadgeApp.Service          { return d.userBadgeAppSvc }
-func (d *Dependencies) UserEducationAppSvc() *userEducationApp.Service  { return d.userEducationAppSvc }
-func (d *Dependencies) UserEmailAppSvc() *userEmailApp.Service          { return d.userEmailAppSvc }
-func (d *Dependencies) UserOccupationAppSvc() *userOccupationApp.Service { return d.userOccupationAppSvc }
-func (d *Dependencies) UserPhoneAppSvc() *userPhoneApp.Service         { return d.userPhoneAppSvc }
-func (d *Dependencies) UserPreferenceAppSvc() *userPreferenceApp.Service { return d.userPreferenceAppSvc }
-func (d *Dependencies) UserProfileAppSvc() *userProfileApp.Service     { return d.userProfileAppSvc }
-func (d *Dependencies) UserTokenVerifier() token.Verifier              { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier             { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                    { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher          { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config             { return d.rabbitMQConfig }
+func (d *Dependencies) UserBadgeAppSvc() *userBadgeApp.Service         { return d.userBadgeAppSvc }
+func (d *Dependencies) UserEducationAppSvc() *userEducationApp.Service { return d.userEducationAppSvc }
+func (d *Dependencies) UserEmailAppSvc() *userEmailApp.Service         { return d.userEmailAppSvc }
+func (d *Dependencies) UserOccupationAppSvc() *userOccupationApp.Service {
+	return d.userOccupationAppSvc
+}
+func (d *Dependencies) UserPhoneAppSvc() *userPhoneApp.Service { return d.userPhoneAppSvc }
+func (d *Dependencies) UserPreferenceAppSvc() *userPreferenceApp.Service {
+	return d.userPreferenceAppSvc
+}
+func (d *Dependencies) UserProfileAppSvc() *userProfileApp.Service { return d.userProfileAppSvc }
+func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {
