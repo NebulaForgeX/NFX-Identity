@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -15,27 +16,77 @@ import (
 // BootstrapInit 系统初始化
 // 流程：
 // 1. 检查系统是否已经初始化
-// 2. 创建 system_state 记录（initialized = false），表示初始化开始
-// 3. 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
-// 3.5. 清空所有服务的 schema（清空所有表数据，不删除表），确保 system_state 只有一条记录
-// 4. 通过 gRPC 调用其他服务初始化基础数据
-// 5. 更新 metadata 记录已初始化的服务
-// 6. 更新 system_state 为 initialized = true
+// 2. 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
+// 3. 清空所有服务的 schema（清空所有表数据，不删除表），确保 system_state 只有一条记录
+// 4. 创建 system_state 记录（initialized = false），表示初始化开始
+// 5. 通过 gRPC 调用其他服务初始化基础数据
+// 6. 更新 metadata 记录已初始化的服务
+// 7. 更新 system_state 为 initialized = true
 func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) error {
 	logx.S().Info("🚀 Starting system bootstrap initialization...")
 
 	// 步骤 1: 检查系统是否已经初始化
-	latestState, err := s.systemStateAppSvc.GetLatestSystemState(ctx)
+	if err := s.checkSystemInitialized(ctx); err != nil {
+		return err
+	}
+
+	// 步骤 2: 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
+	if err := s.checkAllServicesHealth(ctx); err != nil {
+		return err
+	}
+
+	// 步骤 3: 清空所有服务的 schema（清空所有表数据，不删除表）
+	// 注意：这会清空 system_state 表，确保只有一条记录
+	if err := s.clearAllSchemas(ctx); err != nil {
+		return err
+	}
+
+	// 步骤 4: 创建 system_state 记录（initialized = false），表示初始化开始
+	systemState, err := s.createInitialSystemState(ctx, cmd)
 	if err != nil {
+		return err
+	}
+
+	// 步骤 5: 初始化各个服务的基础数据
+	adminUserID, adminRoleID, initializedServices, err := s.initializeAllServices(ctx, cmd)
+	if err != nil {
+		return err
+	}
+
+	// 步骤 6: 更新 metadata 记录已初始化的服务
+	if err := s.updateSystemStateMetadata(ctx, systemState, adminUserID, adminRoleID, initializedServices); err != nil {
+		return err
+	}
+
+	// 步骤 7: 更新 system_state 为 initialized = true
+	if err := s.markSystemAsInitialized(ctx, systemState, cmd.Version); err != nil {
+		return err
+	}
+
+	logx.S().Info("🎉 System bootstrap initialization completed successfully!")
+	return nil
+}
+
+// checkSystemInitialized 检查系统是否已经初始化
+func (s *Service) checkSystemInitialized(ctx context.Context) error {
+	latestState, err := s.systemStateRepo.Get.Latest(ctx)
+	if err != nil {
+		if errors.Is(err, systemStateDomain.ErrSystemStateNotFound) {
+			logx.S().Info("ℹ️  No system state record found, proceeding with initialization...")
+			return nil
+		}
 		return fmt.Errorf("failed to get latest system state: %w", err)
 	}
 
-	if latestState.Initialized {
+	if latestState.Initialized() {
 		return fmt.Errorf("system is already initialized")
 	}
 
-	// 步骤 2: 创建 system_state 记录（initialized = false），表示初始化开始
-	// 使用最小化的参数创建，默认值由 factory 处理
+	return nil
+}
+
+// createInitialSystemState 创建 system_state 记录（initialized = false），表示初始化开始
+func (s *Service) createInitialSystemState(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) (*systemStateDomain.SystemState, error) {
 	now := time.Now().UTC()
 	initialMetadata := map[string]interface{}{
 		"bootstrap_started_at": now.Format(time.RFC3339),
@@ -54,18 +105,20 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to create system state: %w", err)
+		return nil, fmt.Errorf("failed to create system state: %w", err)
 	}
 
 	// 保存初始状态记录
 	if err := s.systemStateRepo.Create.New(ctx, systemState); err != nil {
-		return fmt.Errorf("failed to save initial system state: %w", err)
+		return nil, fmt.Errorf("failed to save initial system state: %w", err)
 	}
 
 	logx.S().Info("✅ Created initial system state record (initialized=false)")
+	return systemState, nil
+}
 
-	// 步骤 3: 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
-	// 在创建数据之前先确保所有服务都健康
+// checkAllServicesHealth 检查所有服务的健康状态（包括基础设施：数据库、Redis等）
+func (s *Service) checkAllServicesHealth(ctx context.Context) error {
 	logx.S().Info("⏳ Checking health of all 8 services (including infrastructure: database, Redis)...")
 	maxRetries := 10
 	retryInterval := 2 * time.Second
@@ -140,8 +193,11 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 		}
 	}
 
-	// 步骤 3.5: 清空所有服务的 schema（清空所有表数据，不删除表）
-	// 确保 system_state 表只有一条记录
+	return nil
+}
+
+// clearAllSchemas 清空所有服务的 schema（清空所有表数据，不删除表）
+func (s *Service) clearAllSchemas(ctx context.Context) error {
 	logx.S().Info("🧹 Clearing all schemas - removing all table data (keeping table structure)...")
 	clearResults, err := s.grpcClients.ClearAllSchemas(ctx)
 	if err != nil {
@@ -170,37 +226,44 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 	}
 
 	logx.S().Info("✅ All schemas cleared successfully!")
+	return nil
+}
 
-	// 步骤 4: 初始化各个服务的基础数据
+// initializeAllServices 初始化各个服务的基础数据
+func (s *Service) initializeAllServices(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) (uuid.UUID, uuid.UUID, []string, error) {
 	initializedServices := []string{}
 
 	// 4.1 初始化 Directory 服务 - 创建第一个系统管理员用户
 	logx.S().Info("📦 Initializing Directory service - creating admin user...")
 	adminUserID, err := s.initDirectoryService(ctx, cmd)
 	if err != nil {
-		return fmt.Errorf("failed to initialize directory service: %w", err)
+		return uuid.Nil, uuid.Nil, nil, fmt.Errorf("failed to initialize directory service: %w", err)
 	}
 	initializedServices = append(initializedServices, "directory")
 	logx.S().Infof("✅ Directory service initialized - admin user ID: %s", adminUserID)
 
-	// 3.2 初始化 Access 服务 - 创建初始角色和权限
+	// 4.2 初始化 Access 服务 - 创建初始角色和权限
 	logx.S().Info("📦 Initializing Access service - creating roles and permissions...")
 	adminRoleID, err := s.initAccessService(ctx, adminUserID)
 	if err != nil {
-		return fmt.Errorf("failed to initialize access service: %w", err)
+		return uuid.Nil, uuid.Nil, nil, fmt.Errorf("failed to initialize access service: %w", err)
 	}
 	initializedServices = append(initializedServices, "access")
 	logx.S().Infof("✅ Access service initialized - admin role ID: %s", adminRoleID)
 
-	// 3.3 初始化 Auth 服务 - 创建用户凭证
+	// 4.3 初始化 Auth 服务 - 创建用户凭证
 	logx.S().Info("📦 Initializing Auth service - creating user credentials...")
 	if err := s.initAuthService(ctx, adminUserID, cmd.AdminPassword); err != nil {
-		return fmt.Errorf("failed to initialize auth service: %w", err)
+		return uuid.Nil, uuid.Nil, nil, fmt.Errorf("failed to initialize auth service: %w", err)
 	}
 	initializedServices = append(initializedServices, "auth")
 	logx.S().Info("✅ Auth service initialized")
 
-	// 步骤 5: 使用 UpdateMetadata 方法更新 metadata 记录已初始化的服务
+	return adminUserID, adminRoleID, initializedServices, nil
+}
+
+// updateSystemStateMetadata 更新 metadata 记录已初始化的服务
+func (s *Service) updateSystemStateMetadata(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string) error {
 	updatedMetadata := map[string]interface{}{
 		"bootstrap_started_at":   systemState.Metadata()["bootstrap_started_at"],
 		"admin_username":         systemState.Metadata()["admin_username"],
@@ -220,9 +283,13 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 		return fmt.Errorf("failed to save updated system state metadata: %w", err)
 	}
 
-	// 步骤 6: 使用 domain entity 的 Initialize 方法更新 system_state 为 initialized = true
+	return nil
+}
+
+// markSystemAsInitialized 使用 domain entity 的 Initialize 方法更新 system_state 为 initialized = true
+func (s *Service) markSystemAsInitialized(ctx context.Context, systemState *systemStateDomain.SystemState, version string) error {
 	logx.S().Info("✅ All services initialized, marking system as initialized...")
-	if err := systemState.Initialize(cmd.Version); err != nil {
+	if err := systemState.Initialize(version); err != nil {
 		return fmt.Errorf("failed to initialize system state: %w", err)
 	}
 
@@ -231,7 +298,6 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 		return fmt.Errorf("failed to save initialized system state: %w", err)
 	}
 
-	logx.S().Info("🎉 System bootstrap initialization completed successfully!")
 	return nil
 }
 

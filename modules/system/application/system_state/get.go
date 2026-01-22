@@ -29,16 +29,16 @@ func (s *Service) GetLatestSystemState(ctx context.Context) (systemStateResult.S
 		if errors.Is(err, systemStateDomain.ErrSystemStateNotFound) {
 			now := time.Now()
 			return systemStateResult.SystemStateRO{
-				ID:                   uuid.Nil,
-				Initialized:          false,
-				InitializedAt:        nil,
+				ID:                    uuid.Nil,
+				Initialized:           false,
+				InitializedAt:         nil,
 				InitializationVersion: nil,
-				LastResetAt:          nil,
-				LastResetBy:          nil,
-				ResetCount:           0,
-				Metadata:             make(map[string]interface{}),
-				CreatedAt:            now,
-				UpdatedAt:            now,
+				LastResetAt:           nil,
+				LastResetBy:           nil,
+				ResetCount:            0,
+				Metadata:              make(map[string]interface{}),
+				CreatedAt:             now,
+				UpdatedAt:             now,
 			}, nil
 		}
 		return systemStateResult.SystemStateRO{}, err
