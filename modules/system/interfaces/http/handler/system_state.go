@@ -28,7 +28,6 @@ func (h *SystemStateHandler) GetLatest(c *fiber.Ctx) error {
 	if err != nil {
 		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get system state: "+err.Error())
 	}
-
 	return httpresp.Success(c, fiber.StatusOK, "System state retrieved successfully", httpresp.SuccessOptions{Data: result})
 }
 

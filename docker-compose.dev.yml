@@ -38,6 +38,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_AUTH}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_AUTH}:${GRPC_PORT_AUTH}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -101,6 +103,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_IMAGE}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_IMAGE}:${GRPC_PORT_IMAGE}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -164,6 +168,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_ACCESS}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_ACCESS}:${GRPC_PORT_ACCESS}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -227,6 +233,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_AUDIT}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_AUDIT}:${GRPC_PORT_AUDIT}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -290,6 +298,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_CLIENTS}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_CLIENTS}:${GRPC_PORT_CLIENTS}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -353,6 +363,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_DIRECTORY}:${GRPC_PORT_DIRECTORY}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -416,6 +428,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_SYSTEM}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -479,6 +493,8 @@ services:
     expose:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_TENANTS}"  # gRPC 端口
+    ports:
+      - "${GRPC_PORT_TENANTS}:${GRPC_PORT_TENANTS}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"

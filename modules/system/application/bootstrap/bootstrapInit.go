@@ -221,10 +221,14 @@ func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommand
 			return uuid.Nil, fmt.Errorf("failed to create admin user email: %w", err)
 		}
 	}
-
+	
 	// 3. 创建用户手机（如果提供了）
 	if cmd.AdminPhone != nil && *cmd.AdminPhone != "" {
-		_, err := s.grpcClients.DirectoryClient.UserPhone.CreateUserPhoneDefault(ctx, userID.String(), *cmd.AdminPhone)
+		countryCode := ""
+		if cmd.AdminCountryCode != nil {
+			countryCode = *cmd.AdminCountryCode
+		}
+		_, err := s.grpcClients.DirectoryClient.UserPhone.CreateUserPhoneDefault(ctx, userID.String(), *cmd.AdminPhone, countryCode)
 		if err != nil {
 			return uuid.Nil, fmt.Errorf("failed to create admin user phone: %w", err)
 		}

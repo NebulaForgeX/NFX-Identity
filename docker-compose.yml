@@ -98,8 +98,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_AUTH}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10156:10156"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_AUTH}:${GRPC_PORT_AUTH}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -176,8 +176,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_IMAGE}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10160:10160"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_IMAGE}:${GRPC_PORT_IMAGE}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -294,8 +294,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_ACCESS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10155:10155"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_ACCESS}:${GRPC_PORT_ACCESS}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -392,8 +392,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_AUDIT}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10157:10157"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_AUDIT}:${GRPC_PORT_AUDIT}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -490,8 +490,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_CLIENTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10158:10158"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_CLIENTS}:${GRPC_PORT_CLIENTS}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -588,8 +588,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10159:10159"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_DIRECTORY}:${GRPC_PORT_DIRECTORY}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -686,8 +686,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_SYSTEM}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10161:10161"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -784,8 +784,8 @@ services:
     restart: always
     expose:
       - "${GRPC_PORT_TENANTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    # ports:
-    #   - "10162:10162"  # 可选：如果需要从宿主机访问，取消注释
+    ports:
+      - "${GRPC_PORT_TENANTS}:${GRPC_PORT_TENANTS}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:

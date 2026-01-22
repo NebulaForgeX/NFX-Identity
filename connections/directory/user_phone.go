@@ -31,11 +31,11 @@ func (c *UserPhoneClient) CreateUserPhone(ctx context.Context, createDTO *dto.Cr
 }
 
 // CreateUserPhoneDefault 创建用户手机（默认值，用于系统初始化）
-func (c *UserPhoneClient) CreateUserPhoneDefault(ctx context.Context, userID, phone string) (string, error) {
+func (c *UserPhoneClient) CreateUserPhoneDefault(ctx context.Context, userID, phone, countryCode string) (string, error) {
 	createDTO := &dto.CreateUserPhoneDTO{
 		UserID:                userID,
 		Phone:                 phone,
-		CountryCode:           nil,
+		CountryCode:           &countryCode,
 		IsPrimary:             true,
 		IsVerified:             true,
 		VerificationCode:      nil,

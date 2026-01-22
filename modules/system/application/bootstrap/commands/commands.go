@@ -17,4 +17,6 @@ type BootstrapInitCmd struct {
 	AdminEmail *string
 	// 管理员手机号（可选）
 	AdminPhone *string
+	// 管理员手机国家代码（可选）
+	AdminCountryCode *string
 }
