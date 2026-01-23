@@ -5,5 +5,6 @@
   "admin_section": "Administrator Account",
   "optional_section": "Optional Information",
   "initializing": "Initializing...",
-  "start_initialization": "Start Initialization"
+  "start_initialization": "Start Initialization",
+  "checking_system_status": "Checking system status..."
 }

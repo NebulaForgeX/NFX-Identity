@@ -43,6 +43,7 @@
     "form_validation_failed": "Form validation failed"
   },
   "messages": {
+    "initializing": "Initializing...",
     "init_success_title": "System Initialization Successful!",
     "init_success_message": "System has been successfully initialized, redirecting to login page...",
     "init_failed_title": "System Initialization Failed",

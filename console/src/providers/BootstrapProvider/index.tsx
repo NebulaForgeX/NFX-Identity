@@ -35,12 +35,6 @@ const BootstrapFormContent = memo(() => {
   const { onSubmit, onSubmitError, isPending } = useSubmitBootstrap();
 
   return (
-    <div className={styles.container}>
-      {/* 左上角语言和主题切换按钮 */}
-      <div className={styles.topControls}>
-        <LanguageSwitcher status="default" />
-        <ThemeSwitcher status="default" />
-      </div>
 
       <div className={styles.formCard}>
         <h2 className={styles.formTitle}>{t("title")}</h2>
@@ -78,16 +72,15 @@ const BootstrapFormContent = memo(() => {
               type="button"
               variant="primary"
               size="medium"
-              loading={isPending}
               disabled={isPending}
               onClick={methods.handleSubmit(onSubmit, onSubmitError)}
             >
-              {isPending ? t("initializing") : t("start_initialization")}
+              {t("start_initialization")}
             </Button>
           </div>
         </form>
       </div>
-    </div>
+
   );
 });
 
@@ -118,13 +111,21 @@ BootstrapContent.displayName = "BootstrapContent";
  * 检查系统是否已初始化，如果未初始化则显示初始化表单
  */
 export function BootstrapProvider({ children }: BootstrapProviderProps) {
+  const { t } = useTranslation("BootstrapProvider");
   return (
-    <Suspense
-      loadingType="truck"
-      loadingText="检查系统状态..."
-      loadingSize="medium"
-    >
-      <BootstrapContent>{children}</BootstrapContent>
-    </Suspense>
+    <div className={styles.container}>
+      {/* 左上角语言和主题切换按钮 */}
+      <div className={styles.topControls}>
+        <LanguageSwitcher status="default" />
+        <ThemeSwitcher status="default" />
+      </div>
+      <Suspense
+        loadingType="truck"
+        loadingText={t("checking_system_status")}
+        loadingSize="medium"
+      >
+        <BootstrapContent>{children}</BootstrapContent>
+      </Suspense>
+    </div>
   );
 }

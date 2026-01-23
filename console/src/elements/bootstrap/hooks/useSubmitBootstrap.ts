@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { InitializeSystemState } from "@/apis/system.api";
 import { routerEventEmitter } from "@/events/router";
-import { showError, showSuccess } from "@/stores/modalStore";
+import { hideLoading, showError, showLoading, showSuccess } from "@/stores/modalStore";
 
 export const useSubmitBootstrap = () => {
   const { t } = useTranslation("elements.bootstrap");
@@ -25,17 +25,19 @@ export const useSubmitBootstrap = () => {
 
       return await InitializeSystemState(params);
     },
+    onMutate: () => {
+      showLoading({ message: t("messages.initializing") });
+    },
     onSuccess: () => {
+      hideLoading();
       showSuccess({
         title: t("messages.init_success_title"),
         message: t("messages.init_success_message"),
+        onClick: () => routerEventEmitter.navigateToLogin(),
       });
-      // 延迟跳转，让用户看到成功消息
-      setTimeout(() => {
-        routerEventEmitter.navigateToLogin();
-      }, 2000);
     },
     onError: (error: Error) => {
+      hideLoading();
       showError(error.message || t("messages.init_failed_unknown"), t("messages.init_failed_title"));
     },
   });

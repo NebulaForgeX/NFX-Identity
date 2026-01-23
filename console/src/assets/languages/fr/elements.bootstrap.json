@@ -43,6 +43,7 @@
     "form_validation_failed": "Échec de la validation du formulaire"
   },
   "messages": {
+    "initializing": "Initialisation en cours...",
     "init_success_title": "Initialisation du système réussie !",
     "init_success_message": "Le système a été initialisé avec succès, redirection vers la page de connexion...",
     "init_failed_title": "Échec de l'initialisation du système",

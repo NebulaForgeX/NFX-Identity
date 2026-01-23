@@ -1,7 +1,7 @@
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-type ModalType = "success" | "error" | "info" | "confirm" | "search" | "yearSelect";
+type ModalType = "success" | "error" | "info" | "confirm" | "search" | "yearSelect" | "loading";
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -34,18 +34,29 @@ interface YearSelectModalProps {
   onSelect?: (year: number) => void;
 }
 
+interface LoadingModalProps {
+  isOpen: boolean;
+  message?: string;
+}
+
 interface ModalState {
   modalType: ModalType;
   baseModal: BaseModalProps;
   confirmModal: ConfirmModalProps;
   searchModal: SearchModalProps;
   yearSelectModal: YearSelectModalProps;
+  loadingModal: LoadingModalProps;
 }
 
 interface ModalActions {
   showModal: (
     modalType: ModalType,
-    props: BaseModalProps | ConfirmModalProps | SearchModalProps | YearSelectModalProps,
+    props:
+      | BaseModalProps
+      | ConfirmModalProps
+      | SearchModalProps
+      | YearSelectModalProps
+      | LoadingModalProps,
   ) => void;
   hideModal: (modalType?: ModalType) => void; // undefined 表示关闭所有模态框
 }
@@ -77,6 +88,10 @@ const defaultYearSelectModalProps: YearSelectModalProps = {
   maxOffset: 500,
   onSelect: undefined,
 };
+const defaultLoadingModalProps: LoadingModalProps = {
+  isOpen: false,
+  message: undefined,
+};
 
 export const ModalStore = createStore<ModalState & ModalActions>()(
   subscribeWithSelector((set) => ({
@@ -85,6 +100,7 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
     confirmModal: defaultConfirmModalProps,
     searchModal: defaultSearchModalProps,
     yearSelectModal: defaultYearSelectModalProps,
+    loadingModal: defaultLoadingModalProps,
 
     showModal: (modalType, props) => {
       // 根据 modalType 设置对应的模态框状态
@@ -124,6 +140,15 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
             ...restProps,
           },
         });
+      } else if (modalType === "loading") {
+        const { isOpen, ...restProps } = props as LoadingModalProps;
+        set({
+          modalType,
+          loadingModal: {
+            isOpen: true,
+            ...restProps,
+          },
+        });
       }
     },
 
@@ -136,6 +161,7 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
           confirmModal: defaultConfirmModalProps,
           searchModal: defaultSearchModalProps,
           yearSelectModal: defaultYearSelectModalProps,
+          loadingModal: defaultLoadingModalProps,
         });
         return;
       }
@@ -159,6 +185,11 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
         set({
           modalType: undefined,
           yearSelectModal: defaultYearSelectModalProps,
+        });
+      } else if (modalType === "loading") {
+        set({
+          modalType: undefined,
+          loadingModal: defaultLoadingModalProps,
         });
       }
     },
@@ -250,4 +281,19 @@ export const showYearSelect = (props: ShowYearSelectProps) => {
     maxOffset: props.maxOffset,
     onSelect: props.onSelect,
   });
+};
+
+export interface ShowLoadingProps {
+  message?: string;
+}
+
+export const showLoading = (props?: ShowLoadingProps) => {
+  ModalStore.getState().showModal("loading", {
+    isOpen: true,
+    message: props?.message,
+  });
+};
+
+export const hideLoading = () => {
+  ModalStore.getState().hideModal("loading");
 };

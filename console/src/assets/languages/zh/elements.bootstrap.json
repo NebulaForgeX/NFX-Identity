@@ -43,6 +43,7 @@
     "form_validation_failed": "表单验证失败"
   },
   "messages": {
+    "initializing": "初始化中...",
     "init_success_title": "系统初始化成功！",
     "init_success_message": "系统已成功初始化，正在跳转到登录页面...",
     "init_failed_title": "系统初始化失败",

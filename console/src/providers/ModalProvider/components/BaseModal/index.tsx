@@ -30,15 +30,6 @@ const BaseModal = memo(() => {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (type === "success") {
-      const timer = setTimeout(() => {
-        handleClose();
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [type, handleClose]);
-
   const getIcon = useCallback(() => {
     switch (type) {
       case "success":
