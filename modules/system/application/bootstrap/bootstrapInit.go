@@ -32,7 +32,8 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 		return err
 	}
 	// 步骤 3: 清空所有服务的 schema（清空所有表数据，不删除表） 注意：这会清空 system_state 表，确保只有一条记录
-	if err := s.clearAllSchemas(ctx); err != nil {
+	schemaClearResults, err := s.clearAllSchemas(ctx)
+	if err != nil {
 		return err
 	}
 	// 步骤 4: 创建 system_state 记录（initialized = false），表示初始化开始
@@ -68,7 +69,7 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 	initializedServices = append(initializedServices, "auth")
 	logx.S().Info("✅ Auth service initialized")
 	// 步骤 6: 更新 metadata 并标记系统为已初始化
-	if err := s.finalizeSystemState(ctx, systemState, adminUserID, adminRoleID, initializedServices, cmd.Version); err != nil {
+	if err := s.finalizeSystemState(ctx, systemState, adminUserID, adminRoleID, initializedServices, schemaClearResults, cmd.Version); err != nil {
 		return err
 	}
 	logx.S().Info("🎉 System bootstrap initialization completed successfully!")
@@ -205,16 +206,16 @@ func (s *Service) checkAllServicesHealth(ctx context.Context) error {
 }
 
 // clearAllSchemas 清空所有服务的 schema（清空所有表数据，不删除表）
-func (s *Service) clearAllSchemas(ctx context.Context) error {
+func (s *Service) clearAllSchemas(ctx context.Context) (map[string]int, error) {
 	logx.S().Info("🧹 Clearing all schemas - removing all table data (keeping table structure)...")
 	clearResults, err := s.grpcClients.ClearAllSchemas(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to clear schemas: %w", err)
+		return nil, fmt.Errorf("failed to clear schemas: %w", err)
 	}
-
-	// 检查清空结果
+	// 检查清空结果并收集清除的表数量
 	allCleared := true
 	failedServices := []string{}
+	schemaClearResults := make(map[string]int)
 	for serviceName, result := range clearResults {
 		if !result.Success {
 			allCleared = false
@@ -225,20 +226,21 @@ func (s *Service) clearAllSchemas(ctx context.Context) error {
 			failedServices = append(failedServices, fmt.Sprintf("%s: %s", serviceName, errMsg))
 			logx.S().Warnf("⚠️  Failed to clear schema for %s: %s", serviceName, errMsg)
 		} else {
+			schemaClearResults[serviceName] = int(result.TablesCleared)
 			logx.S().Infof("✅ Cleared schema for %s: %d tables cleared", serviceName, result.TablesCleared)
 		}
 	}
 
 	if !allCleared {
-		return fmt.Errorf("failed to clear schemas for some services: %v", failedServices)
+		return nil, fmt.Errorf("failed to clear schemas for some services: %v", failedServices)
 	}
 
 	logx.S().Info("✅ All schemas cleared successfully!")
-	return nil
+	return schemaClearResults, nil
 }
 
 // finalizeSystemState 更新 metadata 并标记系统为已初始化
-func (s *Service) finalizeSystemState(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string, version string) error {
+func (s *Service) finalizeSystemState(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string, schemaClearResults map[string]int, version string) error {
 	// 更新 metadata
 	updatedMetadata := map[string]interface{}{
 		"bootstrap_started_at":   systemState.Metadata()["bootstrap_started_at"],
@@ -247,6 +249,7 @@ func (s *Service) finalizeSystemState(ctx context.Context, systemState *systemSt
 		"admin_user_id":          adminUserID.String(),
 		"admin_role_id":          adminRoleID.String(),
 		"bootstrap_completed_at": time.Now().UTC().Format(time.RFC3339),
+		"schema_clear_results":   schemaClearResults,
 	}
 
 	if err := systemState.UpdateMetadata(updatedMetadata); err != nil {

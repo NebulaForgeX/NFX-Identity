@@ -17,12 +17,20 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/status"
 )
 
 func DefaultServerOptions(verifier token.Verifier) []grpc.ServerOption {
 	return []grpc.ServerOption{
 		grpc.StatsHandler(otelgrpc.NewServerHandler()), // TODO: Add OpenTelemetry on client side to inherit parent traceID
+		// 配置 keepalive enforcement policy，允许客户端每 5 分钟发送一次 ping
+		// MinTime 设置为 1 分钟，确保不会因为 ping 太频繁而拒绝连接
+		// 客户端配置是 5 分钟发送一次，所以 1 分钟足够宽松，可以容忍网络延迟和抖动
+		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+			MinTime:             1 * time.Minute, // 允许客户端每 1 分钟发送一次 ping（客户端配置是 5 分钟，所以这个值足够宽松）
+			PermitWithoutStream: true,              // 允许无流时发送 ping
+		}),
 		grpc.ChainUnaryInterceptor(
 			logmw.UnaryLoggerInjectInterceptor(),
 			logging.UnaryServerInterceptor(
