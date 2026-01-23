@@ -34,7 +34,7 @@ type LoginAttemptServiceClient interface {
 	GetLoginAttemptByID(ctx context.Context, in *GetLoginAttemptByIDRequest, opts ...grpc.CallOption) (*GetLoginAttemptByIDResponse, error)
 	// 根据用户ID获取登录尝试列表
 	GetLoginAttemptsByUserID(ctx context.Context, in *GetLoginAttemptsByUserIDRequest, opts ...grpc.CallOption) (*GetLoginAttemptsByUserIDResponse, error)
-	// 根据租户ID和标识符获取登录尝试列表
+	// 根据标识符获取登录尝试列表
 	GetLoginAttemptsByIdentifier(ctx context.Context, in *GetLoginAttemptsByIdentifierRequest, opts ...grpc.CallOption) (*GetLoginAttemptsByIdentifierResponse, error)
 }
 
@@ -86,7 +86,7 @@ type LoginAttemptServiceServer interface {
 	GetLoginAttemptByID(context.Context, *GetLoginAttemptByIDRequest) (*GetLoginAttemptByIDResponse, error)
 	// 根据用户ID获取登录尝试列表
 	GetLoginAttemptsByUserID(context.Context, *GetLoginAttemptsByUserIDRequest) (*GetLoginAttemptsByUserIDResponse, error)
-	// 根据租户ID和标识符获取登录尝试列表
+	// 根据标识符获取登录尝试列表
 	GetLoginAttemptsByIdentifier(context.Context, *GetLoginAttemptsByIdentifierRequest) (*GetLoginAttemptsByIdentifierResponse, error)
 	mustEmbedUnimplementedLoginAttemptServiceServer()
 }

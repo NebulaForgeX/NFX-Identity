@@ -12,11 +12,11 @@ import (
 )
 
 // Unlock 解锁账户，实现 account_lockouts.Update 接口
-func (h *Handler) Unlock(ctx context.Context, userID, tenantID uuid.UUID, unlockedBy string, unlockActorID *uuid.UUID) error {
+func (h *Handler) Unlock(ctx context.Context, userID uuid.UUID, unlockedBy string, unlockActorID *uuid.UUID) error {
 	// 先检查 AccountLockout 是否存在
 	var m models.AccountLockout
 	if err := h.db.WithContext(ctx).
-		Where("user_id = ? AND tenant_id = ?", userID, tenantID).
+		Where("user_id = ?", userID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return account_lockouts.ErrAccountLockoutNotFound
@@ -39,6 +39,6 @@ func (h *Handler) Unlock(ctx context.Context, userID, tenantID uuid.UUID, unlock
 
 	return h.db.WithContext(ctx).
 		Model(&models.AccountLockout{}).
-		Where("user_id = ? AND tenant_id = ?", userID, tenantID).
+		Where("user_id = ?", userID).
 		Updates(updates).Error
 }

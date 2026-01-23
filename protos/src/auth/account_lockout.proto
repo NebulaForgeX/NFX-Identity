@@ -17,19 +17,19 @@ enum AuthLockReason {
 }
 
 // 账户锁定信息
+// Note: No tenant_id because account lockout is user-level, not tenant-level (user can belong to multiple tenants)
 message AccountLockout {
   string user_id = 1;                       // 用户ID (UUID) - 主键
-  string tenant_id = 2;                     // 租户ID (UUID)
-  optional google.protobuf.Timestamp locked_until = 3; // 锁定到期时间
-  AuthLockReason lock_reason = 4;           // 锁定原因：too_many_attempts, admin_lock, risk_detected, suspicious_activity, compliance, other
-  google.protobuf.Timestamp locked_at = 5;  // 锁定时间
-  optional string locked_by = 6;            // 锁定者 (varchar(255))
-  optional string actor_id = 7;             // 操作者ID (UUID)
-  optional google.protobuf.Timestamp unlocked_at = 8; // 解锁时间
-  optional string unlocked_by = 9;          // 解锁者 (varchar(255))
-  optional string unlock_actor_id = 10;     // 解锁操作者ID (UUID)
-  google.protobuf.Timestamp created_at = 11; // 创建时间
-  google.protobuf.Timestamp updated_at = 12; // 更新时间
+  optional google.protobuf.Timestamp locked_until = 2; // 锁定到期时间
+  AuthLockReason lock_reason = 3;           // 锁定原因：too_many_attempts, admin_lock, risk_detected, suspicious_activity, compliance, other
+  google.protobuf.Timestamp locked_at = 4;  // 锁定时间
+  optional string locked_by = 5;            // 锁定者 (varchar(255))
+  optional string actor_id = 6;             // 操作者ID (UUID)
+  optional google.protobuf.Timestamp unlocked_at = 7; // 解锁时间
+  optional string unlocked_by = 8;          // 解锁者 (varchar(255))
+  optional string unlock_actor_id = 9;       // 解锁操作者ID (UUID)
+  google.protobuf.Timestamp created_at = 10; // 创建时间
+  google.protobuf.Timestamp updated_at = 11; // 更新时间
 }
 
 // AccountLockout 服务 - 供其他服务通过 gRPC 管理账户锁定
@@ -44,7 +44,6 @@ service AccountLockoutService {
 // AccountLockout Service Messages
 message GetAccountLockoutByUserIDRequest {
   string user_id = 1;
-  optional string tenant_id = 2;
 }
 
 message GetAccountLockoutByUserIDResponse {
@@ -53,7 +52,6 @@ message GetAccountLockoutByUserIDResponse {
 
 message BatchGetAccountLockoutsRequest {
   repeated string user_ids = 1;
-  optional string tenant_id = 2;
 }
 
 message BatchGetAccountLockoutsResponse {

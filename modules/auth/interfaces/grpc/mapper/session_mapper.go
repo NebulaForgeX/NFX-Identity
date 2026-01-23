@@ -17,7 +17,6 @@ func SessionROToProto(v *sessionAppResult.SessionRO) *sessionpb.Session {
 	session := &sessionpb.Session{
 		Id:        v.ID.String(),
 		SessionId: v.SessionID,
-		TenantId:  v.TenantID.String(),
 		UserId:    v.UserID.String(),
 		CreatedAt: timestamppb.New(v.CreatedAt),
 		LastSeenAt: timestamppb.New(v.LastSeenAt),

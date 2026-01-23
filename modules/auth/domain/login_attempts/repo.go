@@ -23,9 +23,9 @@ type Create interface {
 // Get 定义获取数据相关的方法
 type Get interface {
 	ByID(ctx context.Context, id uuid.UUID) (*LoginAttempt, error)
-	ByTenantIDAndIdentifier(ctx context.Context, tenantID uuid.UUID, identifier string) ([]*LoginAttempt, error)
+	ByIdentifier(ctx context.Context, identifier string) ([]*LoginAttempt, error)
 	ByUserID(ctx context.Context, userID uuid.UUID) ([]*LoginAttempt, error)
-	ByTenantIDAndIP(ctx context.Context, tenantID uuid.UUID, ip string) ([]*LoginAttempt, error)
+	ByIP(ctx context.Context, ip string) ([]*LoginAttempt, error)
 }
 
 // Check 定义检查相关的方法

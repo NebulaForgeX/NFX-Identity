@@ -20,7 +20,6 @@ func LoginAttemptDomainToModel(la *login_attempts.LoginAttempt) *models.LoginAtt
 
 	return &models.LoginAttempt{
 		ID:                la.ID(),
-		TenantID:          la.TenantID(),
 		Identifier:        la.Identifier(),
 		UserID:            la.UserID(),
 		IP:                la.IP(),
@@ -48,7 +47,6 @@ func LoginAttemptModelToDomain(m *models.LoginAttempt) *login_attempts.LoginAtte
 
 	state := login_attempts.LoginAttemptState{
 		ID:                m.ID,
-		TenantID:          m.TenantID,
 		Identifier:        m.Identifier,
 		UserID:            m.UserID,
 		IP:                m.IP,
@@ -67,7 +65,6 @@ func LoginAttemptModelToDomain(m *models.LoginAttempt) *login_attempts.LoginAtte
 // LoginAttemptModelToUpdates 将 Model LoginAttempt 转换为更新字段映射
 func LoginAttemptModelToUpdates(m *models.LoginAttempt) map[string]any {
 	return map[string]any{
-		models.LoginAttemptCols.TenantID:          m.TenantID,
 		models.LoginAttemptCols.Identifier:        m.Identifier,
 		models.LoginAttemptCols.UserID:            m.UserID,
 		models.LoginAttemptCols.IP:                m.IP,

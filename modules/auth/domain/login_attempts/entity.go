@@ -28,7 +28,6 @@ type LoginAttempt struct {
 
 type LoginAttemptState struct {
 	ID                uuid.UUID
-	TenantID          uuid.UUID
 	Identifier        string
 	UserID            *uuid.UUID
 	IP                *string
@@ -42,7 +41,6 @@ type LoginAttemptState struct {
 }
 
 func (la *LoginAttempt) ID() uuid.UUID              { return la.state.ID }
-func (la *LoginAttempt) TenantID() uuid.UUID         { return la.state.TenantID }
 func (la *LoginAttempt) Identifier() string         { return la.state.Identifier }
 func (la *LoginAttempt) UserID() *uuid.UUID         { return la.state.UserID }
 func (la *LoginAttempt) IP() *string                 { return la.state.IP }

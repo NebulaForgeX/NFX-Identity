@@ -23,20 +23,20 @@ const (
 )
 
 // 信任设备信息
+// Note: No tenant_id because trusted devices are user-level, not tenant-level (user can belong to multiple tenants)
 type TrustedDevice struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	Id                    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                      // 设备ID (UUID)
 	DeviceId              string                 `protobuf:"bytes,2,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`                                          // 设备标识符 (varchar(255))
 	UserId                string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                // 用户ID (UUID)
-	TenantId              string                 `protobuf:"bytes,4,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                          // 租户ID (UUID)
-	DeviceFingerprintHash string                 `protobuf:"bytes,5,opt,name=device_fingerprint_hash,json=deviceFingerprintHash,proto3" json:"device_fingerprint_hash,omitempty"` // 设备指纹哈希 (varchar(255))
-	DeviceName            *string                `protobuf:"bytes,6,opt,name=device_name,json=deviceName,proto3,oneof" json:"device_name,omitempty"`                              // 设备名称 (varchar(255))
-	TrustedUntil          *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=trusted_until,json=trustedUntil,proto3" json:"trusted_until,omitempty"`                              // 信任到期时间
-	LastUsedAt            *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=last_used_at,json=lastUsedAt,proto3" json:"last_used_at,omitempty"`                                  // 最后使用时间
-	Ip                    *string                `protobuf:"bytes,9,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                // IP地址 (inet)
-	UaHash                *string                `protobuf:"bytes,10,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                         // User-Agent 哈希 (varchar(64))
-	CreatedAt             *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                      // 创建时间
-	UpdatedAt             *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                      // 更新时间
+	DeviceFingerprintHash string                 `protobuf:"bytes,4,opt,name=device_fingerprint_hash,json=deviceFingerprintHash,proto3" json:"device_fingerprint_hash,omitempty"` // 设备指纹哈希 (varchar(255))
+	DeviceName            *string                `protobuf:"bytes,5,opt,name=device_name,json=deviceName,proto3,oneof" json:"device_name,omitempty"`                              // 设备名称 (varchar(255))
+	TrustedUntil          *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=trusted_until,json=trustedUntil,proto3" json:"trusted_until,omitempty"`                              // 信任到期时间
+	LastUsedAt            *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=last_used_at,json=lastUsedAt,proto3" json:"last_used_at,omitempty"`                                  // 最后使用时间
+	Ip                    *string                `protobuf:"bytes,8,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                // IP地址 (inet)
+	UaHash                *string                `protobuf:"bytes,9,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                          // User-Agent 哈希 (varchar(64))
+	CreatedAt             *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                      // 创建时间
+	UpdatedAt             *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                      // 更新时间
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -88,13 +88,6 @@ func (x *TrustedDevice) GetDeviceId() string {
 func (x *TrustedDevice) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *TrustedDevice) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -248,7 +241,6 @@ type GetTrustedDeviceByDeviceIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	DeviceId      string                 `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
 	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -293,13 +285,6 @@ func (x *GetTrustedDeviceByDeviceIDRequest) GetDeviceId() string {
 func (x *GetTrustedDeviceByDeviceIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetTrustedDeviceByDeviceIDRequest) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -351,7 +336,6 @@ func (x *GetTrustedDeviceByDeviceIDResponse) GetTrustedDevice() *TrustedDevice {
 type GetTrustedDevicesByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -389,13 +373,6 @@ func (*GetTrustedDevicesByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetTrustedDevicesByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetTrustedDevicesByUserIDRequest) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -448,25 +425,24 @@ var File_auth_trusted_device_proto protoreflect.FileDescriptor
 
 const file_auth_trusted_device_proto_rawDesc = "" +
 	"\n" +
-	"\x19auth/trusted_device.proto\x12\x0etrusted_device\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9b\x04\n" +
+	"\x19auth/trusted_device.proto\x12\x0etrusted_device\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfe\x03\n" +
 	"\rTrustedDevice\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tdevice_id\x18\x02 \x01(\tR\bdeviceId\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x04 \x01(\tR\btenantId\x126\n" +
-	"\x17device_fingerprint_hash\x18\x05 \x01(\tR\x15deviceFingerprintHash\x12$\n" +
-	"\vdevice_name\x18\x06 \x01(\tH\x00R\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x126\n" +
+	"\x17device_fingerprint_hash\x18\x04 \x01(\tR\x15deviceFingerprintHash\x12$\n" +
+	"\vdevice_name\x18\x05 \x01(\tH\x00R\n" +
 	"deviceName\x88\x01\x01\x12?\n" +
-	"\rtrusted_until\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\ftrustedUntil\x12<\n" +
-	"\flast_used_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"\rtrusted_until\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\ftrustedUntil\x12<\n" +
+	"\flast_used_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"lastUsedAt\x12\x13\n" +
-	"\x02ip\x18\t \x01(\tH\x01R\x02ip\x88\x01\x01\x12\x1c\n" +
-	"\aua_hash\x18\n" +
-	" \x01(\tH\x02R\x06uaHash\x88\x01\x01\x129\n" +
+	"\x02ip\x18\b \x01(\tH\x01R\x02ip\x88\x01\x01\x12\x1c\n" +
+	"\aua_hash\x18\t \x01(\tH\x02R\x06uaHash\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x0e\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x0e\n" +
 	"\f_device_nameB\x05\n" +
 	"\x03_ipB\n" +
 	"\n" +
@@ -474,16 +450,14 @@ const file_auth_trusted_device_proto_rawDesc = "" +
 	"\x1bGetTrustedDeviceByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"d\n" +
 	"\x1cGetTrustedDeviceByIDResponse\x12D\n" +
-	"\x0etrusted_device\x18\x01 \x01(\v2\x1d.trusted_device.TrustedDeviceR\rtrustedDevice\"v\n" +
+	"\x0etrusted_device\x18\x01 \x01(\v2\x1d.trusted_device.TrustedDeviceR\rtrustedDevice\"Y\n" +
 	"!GetTrustedDeviceByDeviceIDRequest\x12\x1b\n" +
 	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x03 \x01(\tR\btenantId\"j\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"j\n" +
 	"\"GetTrustedDeviceByDeviceIDResponse\x12D\n" +
-	"\x0etrusted_device\x18\x01 \x01(\v2\x1d.trusted_device.TrustedDeviceR\rtrustedDevice\"X\n" +
+	"\x0etrusted_device\x18\x01 \x01(\v2\x1d.trusted_device.TrustedDeviceR\rtrustedDevice\";\n" +
 	" GetTrustedDevicesByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"k\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"k\n" +
 	"!GetTrustedDevicesByUserIDResponse\x12F\n" +
 	"\x0ftrusted_devices\x18\x01 \x03(\v2\x1d.trusted_device.TrustedDeviceR\x0etrustedDevices2\x92\x03\n" +
 	"\x14TrustedDeviceService\x12q\n" +

@@ -11,7 +11,6 @@ import (
 type SessionDTO struct {
 	ID                uuid.UUID  `json:"id"`
 	SessionID         string     `json:"session_id"`
-	TenantID          uuid.UUID  `json:"tenant_id"`
 	UserID            uuid.UUID  `json:"user_id"`
 	AppID             *uuid.UUID `json:"app_id,omitempty"`
 	ClientID          *string    `json:"client_id,omitempty"`
@@ -38,7 +37,6 @@ func SessionROToDTO(v *sessionAppResult.SessionRO) *SessionDTO {
 	dto := &SessionDTO{
 		ID:                v.ID,
 		SessionID:         v.SessionID,
-		TenantID:          v.TenantID,
 		UserID:            v.UserID,
 		AppID:             v.AppID,
 		ClientID:          v.ClientID,

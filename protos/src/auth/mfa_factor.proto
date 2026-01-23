@@ -16,22 +16,22 @@ enum AuthMfaType {
 }
 
 // MFA 因子信息
+// Note: No tenant_id because MFA factors are user-level, not tenant-level (user can belong to multiple tenants)
 message MfaFactor {
   string id = 1;                         // 因子ID (UUID)
   string factor_id = 2;                  // 因子标识符 (varchar(255))
-  string tenant_id = 3;                  // 租户ID (UUID)
-  string user_id = 4;                    // 用户ID (UUID)
-  AuthMfaType type = 5;                  // MFA 类型：totp, sms, email, webauthn, backup_code
-  optional string secret_encrypted = 6;  // 加密的密钥 (text)
-  optional string phone = 7;             // 手机号 (varchar(20))
-  optional string email = 8;             // 邮箱 (varchar(255))
-  optional string name = 9;              // 名称 (varchar(255))
-  bool enabled = 10;                     // 是否启用
-  google.protobuf.Timestamp created_at = 11;          // 创建时间
-  optional google.protobuf.Timestamp last_used_at = 12; // 最后使用时间
-  optional string recovery_codes_hash = 13;           // 恢复码哈希 (text)
-  google.protobuf.Timestamp updated_at = 14;          // 更新时间
-  optional google.protobuf.Timestamp deleted_at = 15; // 软删除时间
+  string user_id = 3;                    // 用户ID (UUID)
+  AuthMfaType type = 4;                  // MFA 类型：totp, sms, email, webauthn, backup_code
+  optional string secret_encrypted = 5;  // 加密的密钥 (text)
+  optional string phone = 6;             // 手机号 (varchar(20))
+  optional string email = 7;             // 邮箱 (varchar(255))
+  optional string name = 8;              // 名称 (varchar(255))
+  bool enabled = 9;                      // 是否启用
+  google.protobuf.Timestamp created_at = 10;          // 创建时间
+  optional google.protobuf.Timestamp last_used_at = 11; // 最后使用时间
+  optional string recovery_codes_hash = 12;           // 恢复码哈希 (text)
+  google.protobuf.Timestamp updated_at = 13;          // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 14; // 软删除时间
 }
 
 // MfaFactor 服务 - 供其他服务通过 gRPC 管理MFA因子
@@ -68,8 +68,7 @@ message GetMfaFactorByFactorIDResponse {
 
 message GetMfaFactorsByUserIDRequest {
   string user_id = 1;
-  optional string tenant_id = 2;
-  optional bool enabled_only = 3;
+  optional bool enabled_only = 2;
 }
 
 message GetMfaFactorsByUserIDResponse {

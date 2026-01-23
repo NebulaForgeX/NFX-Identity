@@ -9,10 +9,10 @@ import (
 )
 
 // IsLocked 检查账户是否被锁定，实现 account_lockouts.Check 接口
-func (h *Handler) IsLocked(ctx context.Context, userID, tenantID uuid.UUID) (bool, error) {
+func (h *Handler) IsLocked(ctx context.Context, userID uuid.UUID) (bool, error) {
 	var m models.AccountLockout
 	if err := h.db.WithContext(ctx).
-		Where("user_id = ? AND tenant_id = ?", userID, tenantID).
+		Where("user_id = ?", userID).
 		First(&m).Error; err != nil {
 		return false, err
 	}

@@ -5,15 +5,13 @@ import (
 	"nfxid/modules/auth/domain/login_attempts"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/login_attempts/mapper"
-
-	"github.com/google/uuid"
 )
 
-// ByTenantIDAndIP 根据 TenantID 和 IP 获取 LoginAttempt 列表，实现 login_attempts.Get 接口
-func (h *Handler) ByTenantIDAndIP(ctx context.Context, tenantID uuid.UUID, ip string) ([]*login_attempts.LoginAttempt, error) {
+// ByIdentifier 根据 Identifier 获取 LoginAttempt 列表，实现 login_attempts.Get 接口
+func (h *Handler) ByIdentifier(ctx context.Context, identifier string) ([]*login_attempts.LoginAttempt, error) {
 	var ms []models.LoginAttempt
 	if err := h.db.WithContext(ctx).
-		Where("tenant_id = ? AND ip = ?", tenantID, ip).
+		Where("identifier = ?", identifier).
 		Find(&ms).Error; err != nil {
 		return nil, err
 	}

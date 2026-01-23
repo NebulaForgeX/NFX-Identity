@@ -100,20 +100,20 @@ func (AuthFailureCode) EnumDescriptor() ([]byte, []int) {
 }
 
 // 登录尝试信息
+// Note: No tenant_id because login happens before tenant selection (user can belong to multiple tenants)
 type LoginAttempt struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                // 尝试ID (UUID)
-	TenantId          string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                                    // 租户ID (UUID)
-	Identifier        string                 `protobuf:"bytes,3,opt,name=identifier,proto3" json:"identifier,omitempty"`                                                                // 标识符（用户名/邮箱/手机号）(varchar(255))
-	UserId            *string                `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`                                                    // 用户ID (UUID)
-	Ip                *string                `protobuf:"bytes,5,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                          // IP地址 (inet)
-	UaHash            *string                `protobuf:"bytes,6,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                                    // User-Agent 哈希 (varchar(64))
-	DeviceFingerprint *string                `protobuf:"bytes,7,opt,name=device_fingerprint,json=deviceFingerprint,proto3,oneof" json:"device_fingerprint,omitempty"`                   // 设备指纹 (varchar(255))
-	Success           bool                   `protobuf:"varint,8,opt,name=success,proto3" json:"success,omitempty"`                                                                     // 是否成功
-	FailureCode       *AuthFailureCode       `protobuf:"varint,9,opt,name=failure_code,json=failureCode,proto3,enum=login_attempt.AuthFailureCode,oneof" json:"failure_code,omitempty"` // 失败代码
-	MfaRequired       bool                   `protobuf:"varint,10,opt,name=mfa_required,json=mfaRequired,proto3" json:"mfa_required,omitempty"`                                         // 是否需要 MFA
-	MfaVerified       bool                   `protobuf:"varint,11,opt,name=mfa_verified,json=mfaVerified,proto3" json:"mfa_verified,omitempty"`                                         // MFA 是否已验证
-	CreatedAt         *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                // 创建时间
+	Identifier        string                 `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`                                                                // 标识符（用户名/邮箱/手机号）(varchar(255))
+	UserId            *string                `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`                                                    // 用户ID (UUID)
+	Ip                *string                `protobuf:"bytes,4,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                          // IP地址 (inet)
+	UaHash            *string                `protobuf:"bytes,5,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                                    // User-Agent 哈希 (varchar(64))
+	DeviceFingerprint *string                `protobuf:"bytes,6,opt,name=device_fingerprint,json=deviceFingerprint,proto3,oneof" json:"device_fingerprint,omitempty"`                   // 设备指纹 (varchar(255))
+	Success           bool                   `protobuf:"varint,7,opt,name=success,proto3" json:"success,omitempty"`                                                                     // 是否成功
+	FailureCode       *AuthFailureCode       `protobuf:"varint,8,opt,name=failure_code,json=failureCode,proto3,enum=login_attempt.AuthFailureCode,oneof" json:"failure_code,omitempty"` // 失败代码
+	MfaRequired       bool                   `protobuf:"varint,9,opt,name=mfa_required,json=mfaRequired,proto3" json:"mfa_required,omitempty"`                                          // 是否需要 MFA
+	MfaVerified       bool                   `protobuf:"varint,10,opt,name=mfa_verified,json=mfaVerified,proto3" json:"mfa_verified,omitempty"`                                         // MFA 是否已验证
+	CreatedAt         *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                // 创建时间
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -151,13 +151,6 @@ func (*LoginAttempt) Descriptor() ([]byte, []int) {
 func (x *LoginAttempt) GetId() string {
 	if x != nil {
 		return x.Id
-	}
-	return ""
-}
-
-func (x *LoginAttempt) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -323,9 +316,8 @@ func (x *GetLoginAttemptByIDResponse) GetLoginAttempt() *LoginAttempt {
 
 type GetLoginAttemptsByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        *string                `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	TenantId      string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
-	Limit         *int32                 `protobuf:"varint,3,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Limit         *int32                 `protobuf:"varint,2,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,15 +353,8 @@ func (*GetLoginAttemptsByUserIDRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *GetLoginAttemptsByUserIDRequest) GetUserId() string {
-	if x != nil && x.UserId != nil {
-		return *x.UserId
-	}
-	return ""
-}
-
-func (x *GetLoginAttemptsByUserIDRequest) GetTenantId() string {
 	if x != nil {
-		return x.TenantId
+		return x.UserId
 	}
 	return ""
 }
@@ -427,9 +412,8 @@ func (x *GetLoginAttemptsByUserIDResponse) GetLoginAttempts() []*LoginAttempt {
 
 type GetLoginAttemptsByIdentifierRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantId      string                 `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
-	Identifier    string                 `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`
-	Limit         *int32                 `protobuf:"varint,3,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	Identifier    string                 `protobuf:"bytes,1,opt,name=identifier,proto3" json:"identifier,omitempty"`
+	Limit         *int32                 `protobuf:"varint,2,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -462,13 +446,6 @@ func (x *GetLoginAttemptsByIdentifierRequest) ProtoReflect() protoreflect.Messag
 // Deprecated: Use GetLoginAttemptsByIdentifierRequest.ProtoReflect.Descriptor instead.
 func (*GetLoginAttemptsByIdentifierRequest) Descriptor() ([]byte, []int) {
 	return file_auth_login_attempt_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *GetLoginAttemptsByIdentifierRequest) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
-	}
-	return ""
 }
 
 func (x *GetLoginAttemptsByIdentifierRequest) GetIdentifier() string {
@@ -533,24 +510,23 @@ var File_auth_login_attempt_proto protoreflect.FileDescriptor
 
 const file_auth_login_attempt_proto_rawDesc = "" +
 	"\n" +
-	"\x18auth/login_attempt.proto\x12\rlogin_attempt\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8a\x04\n" +
+	"\x18auth/login_attempt.proto\x12\rlogin_attempt\x1a\x1fgoogle/protobuf/timestamp.proto\"\xed\x03\n" +
 	"\fLoginAttempt\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1e\n" +
 	"\n" +
-	"identifier\x18\x03 \x01(\tR\n" +
+	"identifier\x18\x02 \x01(\tR\n" +
 	"identifier\x12\x1c\n" +
-	"\auser_id\x18\x04 \x01(\tH\x00R\x06userId\x88\x01\x01\x12\x13\n" +
-	"\x02ip\x18\x05 \x01(\tH\x01R\x02ip\x88\x01\x01\x12\x1c\n" +
-	"\aua_hash\x18\x06 \x01(\tH\x02R\x06uaHash\x88\x01\x01\x122\n" +
-	"\x12device_fingerprint\x18\a \x01(\tH\x03R\x11deviceFingerprint\x88\x01\x01\x12\x18\n" +
-	"\asuccess\x18\b \x01(\bR\asuccess\x12F\n" +
-	"\ffailure_code\x18\t \x01(\x0e2\x1e.login_attempt.AuthFailureCodeH\x04R\vfailureCode\x88\x01\x01\x12!\n" +
-	"\fmfa_required\x18\n" +
-	" \x01(\bR\vmfaRequired\x12!\n" +
-	"\fmfa_verified\x18\v \x01(\bR\vmfaVerified\x129\n" +
+	"\auser_id\x18\x03 \x01(\tH\x00R\x06userId\x88\x01\x01\x12\x13\n" +
+	"\x02ip\x18\x04 \x01(\tH\x01R\x02ip\x88\x01\x01\x12\x1c\n" +
+	"\aua_hash\x18\x05 \x01(\tH\x02R\x06uaHash\x88\x01\x01\x122\n" +
+	"\x12device_fingerprint\x18\x06 \x01(\tH\x03R\x11deviceFingerprint\x88\x01\x01\x12\x18\n" +
+	"\asuccess\x18\a \x01(\bR\asuccess\x12F\n" +
+	"\ffailure_code\x18\b \x01(\x0e2\x1e.login_attempt.AuthFailureCodeH\x04R\vfailureCode\x88\x01\x01\x12!\n" +
+	"\fmfa_required\x18\t \x01(\bR\vmfaRequired\x12!\n" +
+	"\fmfa_verified\x18\n" +
+	" \x01(\bR\vmfaVerified\x129\n" +
 	"\n" +
-	"created_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\n" +
+	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\n" +
 	"\n" +
 	"\b_user_idB\x05\n" +
 	"\x03_ipB\n" +
@@ -561,22 +537,18 @@ const file_auth_login_attempt_proto_rawDesc = "" +
 	"\x1aGetLoginAttemptByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"_\n" +
 	"\x1bGetLoginAttemptByIDResponse\x12@\n" +
-	"\rlogin_attempt\x18\x01 \x01(\v2\x1b.login_attempt.LoginAttemptR\floginAttempt\"\x8d\x01\n" +
-	"\x1fGetLoginAttemptsByUserIDRequest\x12\x1c\n" +
-	"\auser_id\x18\x01 \x01(\tH\x00R\x06userId\x88\x01\x01\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x19\n" +
-	"\x05limit\x18\x03 \x01(\x05H\x01R\x05limit\x88\x01\x01B\n" +
-	"\n" +
-	"\b_user_idB\b\n" +
+	"\rlogin_attempt\x18\x01 \x01(\v2\x1b.login_attempt.LoginAttemptR\floginAttempt\"_\n" +
+	"\x1fGetLoginAttemptsByUserIDRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x19\n" +
+	"\x05limit\x18\x02 \x01(\x05H\x00R\x05limit\x88\x01\x01B\b\n" +
 	"\x06_limit\"f\n" +
 	" GetLoginAttemptsByUserIDResponse\x12B\n" +
-	"\x0elogin_attempts\x18\x01 \x03(\v2\x1b.login_attempt.LoginAttemptR\rloginAttempts\"\x87\x01\n" +
-	"#GetLoginAttemptsByIdentifierRequest\x12\x1b\n" +
-	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x1e\n" +
+	"\x0elogin_attempts\x18\x01 \x03(\v2\x1b.login_attempt.LoginAttemptR\rloginAttempts\"j\n" +
+	"#GetLoginAttemptsByIdentifierRequest\x12\x1e\n" +
 	"\n" +
-	"identifier\x18\x02 \x01(\tR\n" +
+	"identifier\x18\x01 \x01(\tR\n" +
 	"identifier\x12\x19\n" +
-	"\x05limit\x18\x03 \x01(\x05H\x00R\x05limit\x88\x01\x01B\b\n" +
+	"\x05limit\x18\x02 \x01(\x05H\x00R\x05limit\x88\x01\x01B\b\n" +
 	"\x06_limit\"j\n" +
 	"$GetLoginAttemptsByIdentifierResponse\x12B\n" +
 	"\x0elogin_attempts\x18\x01 \x03(\v2\x1b.login_attempt.LoginAttemptR\rloginAttempts*\xc1\x03\n" +

@@ -10,7 +10,6 @@ import (
 
 type LoginAttemptRO struct {
 	ID                uuid.UUID
-	TenantID          uuid.UUID
 	Identifier        string
 	UserID            *uuid.UUID
 	IP                *string
@@ -31,7 +30,6 @@ func LoginAttemptMapper(la *login_attempts.LoginAttempt) LoginAttemptRO {
 
 	return LoginAttemptRO{
 		ID:                la.ID(),
-		TenantID:          la.TenantID(),
 		Identifier:        la.Identifier(),
 		UserID:            la.UserID(),
 		IP:                la.IP(),

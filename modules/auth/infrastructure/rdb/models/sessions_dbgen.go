@@ -12,8 +12,7 @@ import (
 type Session struct {
 	ID                uuid.UUID                      `gorm:"type:uuid;primaryKey"`
 	SessionID         string                         `gorm:"type:varchar(255);index:idx_sessions_session_id;uniqueIndex:sessions_session_id_key"`
-	TenantID          uuid.UUID                      `gorm:"type:uuid;index:idx_sessions_tenant_id;index:idx_sessions_user_tenant_active,priority:2"`
-	UserID            uuid.UUID                      `gorm:"type:uuid;index:idx_sessions_user_id;index:idx_sessions_user_tenant_active,priority:1"`
+	UserID            uuid.UUID                      `gorm:"type:uuid;index:idx_sessions_user_active,priority:1;index:idx_sessions_user_id"`
 	AppID             *uuid.UUID                     `gorm:"type:uuid;index:idx_sessions_app_id"`
 	ClientID          *string                        `gorm:"type:varchar(255)"`
 	CreatedAt         time.Time                      `gorm:"autoCreateTime"`
@@ -24,7 +23,7 @@ type Session struct {
 	DeviceID          *string                        `gorm:"type:varchar(255)"`
 	DeviceFingerprint *string                        `gorm:"type:varchar(255)"`
 	DeviceName        *string                        `gorm:"type:varchar(255)"`
-	RevokedAt         *time.Time                     `gorm:"type:timestamp;index:idx_sessions_revoked_at;index:idx_sessions_user_tenant_active,priority:3"`
+	RevokedAt         *time.Time                     `gorm:"type:timestamp;index:idx_sessions_revoked_at;index:idx_sessions_user_active,priority:2"`
 	RevokeReason      *enums.AuthSessionRevokeReason `gorm:"type:session_revoke_reason"`
 	RevokedBy         *string                        `gorm:"type:varchar(255)"`
 	UpdatedAt         time.Time                      `gorm:"autoUpdateTime"`
@@ -40,13 +39,12 @@ func (m *Session) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var SessionCols = struct {
-	ID, SessionID, TenantID, UserID, AppID, ClientID, CreatedAt,
-	LastSeenAt, ExpiresAt, IP, UaHash, DeviceID, DeviceFingerprint, DeviceName,
-	RevokedAt, RevokeReason, RevokedBy, UpdatedAt string
+	ID, SessionID, UserID, AppID, ClientID, CreatedAt, LastSeenAt,
+	ExpiresAt, IP, UaHash, DeviceID, DeviceFingerprint, DeviceName, RevokedAt,
+	RevokeReason, RevokedBy, UpdatedAt string
 }{
 	ID:                "id",
 	SessionID:         "session_id",
-	TenantID:          "tenant_id",
 	UserID:            "user_id",
 	AppID:             "app_id",
 	ClientID:          "client_id",

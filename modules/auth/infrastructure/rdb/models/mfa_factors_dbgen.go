@@ -12,7 +12,6 @@ import (
 type MfaFactor struct {
 	ID                uuid.UUID         `gorm:"type:uuid;primaryKey"`
 	FactorID          string            `gorm:"type:varchar(255);index:idx_mfa_factors_factor_id;uniqueIndex:mfa_factors_factor_id_key"`
-	TenantID          uuid.UUID         `gorm:"type:uuid;index:idx_mfa_factors_tenant_id"`
 	UserID            uuid.UUID         `gorm:"type:uuid;index:idx_mfa_factors_enabled,priority:1;index:idx_mfa_factors_user_id"`
 	Type              enums.AuthMfaType `gorm:"type:mfa_type;index:idx_mfa_factors_type"`
 	SecretEncrypted   *string           `gorm:"type:text"`
@@ -37,13 +36,11 @@ func (m *MfaFactor) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var MfaFactorCols = struct {
-	ID, FactorID, TenantID, UserID, Type, SecretEncrypted, Phone,
-	Email, Name, Enabled, CreatedAt, LastUsedAt, RecoveryCodesHash, UpdatedAt,
-	DeletedAt string
+	ID, FactorID, UserID, Type, SecretEncrypted, Phone, Email,
+	Name, Enabled, CreatedAt, LastUsedAt, RecoveryCodesHash, UpdatedAt, DeletedAt string
 }{
 	ID:                "id",
 	FactorID:          "factor_id",
-	TenantID:          "tenant_id",
 	UserID:            "user_id",
 	Type:              "type",
 	SecretEncrypted:   "secret_encrypted",

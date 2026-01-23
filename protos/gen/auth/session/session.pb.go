@@ -91,26 +91,26 @@ func (AuthSessionRevokeReason) EnumDescriptor() ([]byte, []int) {
 }
 
 // 会话信息
+// Note: No tenant_id because sessions are user-level, not tenant-level (user can belong to multiple tenants)
 type Session struct {
 	state             protoimpl.MessageState   `protogen:"open.v1"`
 	Id                string                   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                      // 会话ID (UUID)
 	SessionId         string                   `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`                                                       // 会话标识符 (varchar(255))
-	TenantId          string                   `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                                          // 租户ID (UUID)
-	UserId            string                   `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                // 用户ID (UUID)
-	AppId             *string                  `protobuf:"bytes,5,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                             // 应用ID (UUID)
-	ClientId          *string                  `protobuf:"bytes,6,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`                                                    // 客户端ID (varchar(255))
-	CreatedAt         *timestamppb.Timestamp   `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                       // 创建时间
-	LastSeenAt        *timestamppb.Timestamp   `protobuf:"bytes,8,opt,name=last_seen_at,json=lastSeenAt,proto3" json:"last_seen_at,omitempty"`                                                  // 最后活跃时间
-	ExpiresAt         *timestamppb.Timestamp   `protobuf:"bytes,9,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`                                                       // 过期时间
-	Ip                *string                  `protobuf:"bytes,10,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                               // IP地址 (inet)
-	UaHash            *string                  `protobuf:"bytes,11,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                                         // User-Agent 哈希 (varchar(64))
-	DeviceId          *string                  `protobuf:"bytes,12,opt,name=device_id,json=deviceId,proto3,oneof" json:"device_id,omitempty"`                                                   // 设备ID (varchar(255))
-	DeviceFingerprint *string                  `protobuf:"bytes,13,opt,name=device_fingerprint,json=deviceFingerprint,proto3,oneof" json:"device_fingerprint,omitempty"`                        // 设备指纹 (varchar(255))
-	DeviceName        *string                  `protobuf:"bytes,14,opt,name=device_name,json=deviceName,proto3,oneof" json:"device_name,omitempty"`                                             // 设备名称 (varchar(255))
-	RevokedAt         *timestamppb.Timestamp   `protobuf:"bytes,15,opt,name=revoked_at,json=revokedAt,proto3,oneof" json:"revoked_at,omitempty"`                                                // 撤销时间
-	RevokeReason      *AuthSessionRevokeReason `protobuf:"varint,16,opt,name=revoke_reason,json=revokeReason,proto3,enum=session.AuthSessionRevokeReason,oneof" json:"revoke_reason,omitempty"` // 撤销原因
-	RevokedBy         *string                  `protobuf:"bytes,17,opt,name=revoked_by,json=revokedBy,proto3,oneof" json:"revoked_by,omitempty"`                                                // 撤销者 (varchar(255))
-	UpdatedAt         *timestamppb.Timestamp   `protobuf:"bytes,18,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                      // 更新时间
+	UserId            string                   `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                // 用户ID (UUID)
+	AppId             *string                  `protobuf:"bytes,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                             // 应用ID (UUID)
+	ClientId          *string                  `protobuf:"bytes,5,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`                                                    // 客户端ID (varchar(255))
+	CreatedAt         *timestamppb.Timestamp   `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                       // 创建时间
+	LastSeenAt        *timestamppb.Timestamp   `protobuf:"bytes,7,opt,name=last_seen_at,json=lastSeenAt,proto3" json:"last_seen_at,omitempty"`                                                  // 最后活跃时间
+	ExpiresAt         *timestamppb.Timestamp   `protobuf:"bytes,8,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`                                                       // 过期时间
+	Ip                *string                  `protobuf:"bytes,9,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                                // IP地址 (inet)
+	UaHash            *string                  `protobuf:"bytes,10,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                                         // User-Agent 哈希 (varchar(64))
+	DeviceId          *string                  `protobuf:"bytes,11,opt,name=device_id,json=deviceId,proto3,oneof" json:"device_id,omitempty"`                                                   // 设备ID (varchar(255))
+	DeviceFingerprint *string                  `protobuf:"bytes,12,opt,name=device_fingerprint,json=deviceFingerprint,proto3,oneof" json:"device_fingerprint,omitempty"`                        // 设备指纹 (varchar(255))
+	DeviceName        *string                  `protobuf:"bytes,13,opt,name=device_name,json=deviceName,proto3,oneof" json:"device_name,omitempty"`                                             // 设备名称 (varchar(255))
+	RevokedAt         *timestamppb.Timestamp   `protobuf:"bytes,14,opt,name=revoked_at,json=revokedAt,proto3,oneof" json:"revoked_at,omitempty"`                                                // 撤销时间
+	RevokeReason      *AuthSessionRevokeReason `protobuf:"varint,15,opt,name=revoke_reason,json=revokeReason,proto3,enum=session.AuthSessionRevokeReason,oneof" json:"revoke_reason,omitempty"` // 撤销原因
+	RevokedBy         *string                  `protobuf:"bytes,16,opt,name=revoked_by,json=revokedBy,proto3,oneof" json:"revoked_by,omitempty"`                                                // 撤销者 (varchar(255))
+	UpdatedAt         *timestamppb.Timestamp   `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                      // 更新时间
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -155,13 +155,6 @@ func (x *Session) GetId() string {
 func (x *Session) GetSessionId() string {
 	if x != nil {
 		return x.SessionId
-	}
-	return ""
-}
-
-func (x *Session) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -451,7 +444,6 @@ func (x *GetSessionBySessionIDResponse) GetSession() *Session {
 type GetSessionsByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -489,13 +481,6 @@ func (*GetSessionsByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetSessionsByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetSessionsByUserIDRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -636,35 +621,34 @@ var File_auth_session_proto protoreflect.FileDescriptor
 
 const file_auth_session_proto_rawDesc = "" +
 	"\n" +
-	"\x12auth/session.proto\x12\asession\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8b\a\n" +
+	"\x12auth/session.proto\x12\asession\x1a\x1fgoogle/protobuf/timestamp.proto\"\xee\x06\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x1b\n" +
-	"\ttenant_id\x18\x03 \x01(\tR\btenantId\x12\x17\n" +
-	"\auser_id\x18\x04 \x01(\tR\x06userId\x12\x1a\n" +
-	"\x06app_id\x18\x05 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
-	"\tclient_id\x18\x06 \x01(\tH\x01R\bclientId\x88\x01\x01\x129\n" +
+	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1a\n" +
+	"\x06app_id\x18\x04 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
+	"\tclient_id\x18\x05 \x01(\tH\x01R\bclientId\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12<\n" +
-	"\flast_seen_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12<\n" +
+	"\flast_seen_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"lastSeenAt\x129\n" +
 	"\n" +
-	"expires_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12\x13\n" +
-	"\x02ip\x18\n" +
-	" \x01(\tH\x02R\x02ip\x88\x01\x01\x12\x1c\n" +
-	"\aua_hash\x18\v \x01(\tH\x03R\x06uaHash\x88\x01\x01\x12 \n" +
-	"\tdevice_id\x18\f \x01(\tH\x04R\bdeviceId\x88\x01\x01\x122\n" +
-	"\x12device_fingerprint\x18\r \x01(\tH\x05R\x11deviceFingerprint\x88\x01\x01\x12$\n" +
-	"\vdevice_name\x18\x0e \x01(\tH\x06R\n" +
+	"expires_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12\x13\n" +
+	"\x02ip\x18\t \x01(\tH\x02R\x02ip\x88\x01\x01\x12\x1c\n" +
+	"\aua_hash\x18\n" +
+	" \x01(\tH\x03R\x06uaHash\x88\x01\x01\x12 \n" +
+	"\tdevice_id\x18\v \x01(\tH\x04R\bdeviceId\x88\x01\x01\x122\n" +
+	"\x12device_fingerprint\x18\f \x01(\tH\x05R\x11deviceFingerprint\x88\x01\x01\x12$\n" +
+	"\vdevice_name\x18\r \x01(\tH\x06R\n" +
 	"deviceName\x88\x01\x01\x12>\n" +
 	"\n" +
-	"revoked_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\aR\trevokedAt\x88\x01\x01\x12J\n" +
-	"\rrevoke_reason\x18\x10 \x01(\x0e2 .session.AuthSessionRevokeReasonH\bR\frevokeReason\x88\x01\x01\x12\"\n" +
+	"revoked_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\aR\trevokedAt\x88\x01\x01\x12J\n" +
+	"\rrevoke_reason\x18\x0f \x01(\x0e2 .session.AuthSessionRevokeReasonH\bR\frevokeReason\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"revoked_by\x18\x11 \x01(\tH\tR\trevokedBy\x88\x01\x01\x129\n" +
+	"revoked_by\x18\x10 \x01(\tH\tR\trevokedBy\x88\x01\x01\x129\n" +
 	"\n" +
-	"updated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\t\n" +
+	"updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\t\n" +
 	"\a_app_idB\f\n" +
 	"\n" +
 	"_client_idB\x05\n" +
@@ -686,12 +670,9 @@ const file_auth_session_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\"K\n" +
 	"\x1dGetSessionBySessionIDResponse\x12*\n" +
-	"\asession\x18\x01 \x01(\v2\x10.session.SessionR\asession\"e\n" +
+	"\asession\x18\x01 \x01(\v2\x10.session.SessionR\asession\"5\n" +
 	"\x1aGetSessionsByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\"K\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"K\n" +
 	"\x1bGetSessionsByUserIDResponse\x12,\n" +
 	"\bsessions\x18\x01 \x03(\v2\x10.session.SessionR\bsessions\"+\n" +
 	"\x17BatchGetSessionsRequest\x12\x10\n" +
@@ -773,7 +754,6 @@ func file_auth_session_proto_init() {
 		return
 	}
 	file_auth_session_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_session_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

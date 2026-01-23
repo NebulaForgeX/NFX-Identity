@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
+	authApp "nfxid/modules/auth/application/auth"
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
 	passwordHistoryApp "nfxid/modules/auth/application/password_history"
@@ -31,6 +32,7 @@ type httpDeps interface {
 	LoginAttemptAppSvc() *loginAttemptApp.Service
 	AccountLockoutAppSvc() *accountLockoutApp.Service
 	TrustedDeviceAppSvc() *trustedDeviceApp.Service
+	AuthAppSvc() *authApp.Service
 	UserTokenVerifier() token.Verifier
 }
 
@@ -62,6 +64,7 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 		LoginAttempt:    handler.NewLoginAttemptHandler(d.LoginAttemptAppSvc()),
 		AccountLockout:  handler.NewAccountLockoutHandler(d.AccountLockoutAppSvc()),
 		TrustedDevice:   handler.NewTrustedDeviceHandler(d.TrustedDeviceAppSvc()),
+		Auth:            handler.NewAuthHandler(d.AuthAppSvc()),
 	}
 
 	// 注册路由

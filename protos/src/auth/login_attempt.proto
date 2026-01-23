@@ -22,19 +22,19 @@ enum AuthFailureCode {
 }
 
 // 登录尝试信息
+// Note: No tenant_id because login happens before tenant selection (user can belong to multiple tenants)
 message LoginAttempt {
   string id = 1;                      // 尝试ID (UUID)
-  string tenant_id = 2;               // 租户ID (UUID)
-  string identifier = 3;              // 标识符（用户名/邮箱/手机号）(varchar(255))
-  optional string user_id = 4;        // 用户ID (UUID)
-  optional string ip = 5;             // IP地址 (inet)
-  optional string ua_hash = 6;        // User-Agent 哈希 (varchar(64))
-  optional string device_fingerprint = 7; // 设备指纹 (varchar(255))
-  bool success = 8;                   // 是否成功
-  optional AuthFailureCode failure_code = 9; // 失败代码
-  bool mfa_required = 10;             // 是否需要 MFA
-  bool mfa_verified = 11;             // MFA 是否已验证
-  google.protobuf.Timestamp created_at = 12; // 创建时间
+  string identifier = 2;              // 标识符（用户名/邮箱/手机号）(varchar(255))
+  optional string user_id = 3;        // 用户ID (UUID)
+  optional string ip = 4;             // IP地址 (inet)
+  optional string ua_hash = 5;        // User-Agent 哈希 (varchar(64))
+  optional string device_fingerprint = 6; // 设备指纹 (varchar(255))
+  bool success = 7;                   // 是否成功
+  optional AuthFailureCode failure_code = 8; // 失败代码
+  bool mfa_required = 9;             // 是否需要 MFA
+  bool mfa_verified = 10;             // MFA 是否已验证
+  google.protobuf.Timestamp created_at = 11; // 创建时间
 }
 
 // LoginAttempt 服务 - 供其他服务通过 gRPC 管理登录尝试
@@ -45,7 +45,7 @@ service LoginAttemptService {
   // 根据用户ID获取登录尝试列表
   rpc GetLoginAttemptsByUserID (GetLoginAttemptsByUserIDRequest) returns (GetLoginAttemptsByUserIDResponse);
   
-  // 根据租户ID和标识符获取登录尝试列表
+  // 根据标识符获取登录尝试列表
   rpc GetLoginAttemptsByIdentifier (GetLoginAttemptsByIdentifierRequest) returns (GetLoginAttemptsByIdentifierResponse);
 }
 
@@ -59,9 +59,8 @@ message GetLoginAttemptByIDResponse {
 }
 
 message GetLoginAttemptsByUserIDRequest {
-  optional string user_id = 1;
-  string tenant_id = 2;
-  optional int32 limit = 3;
+  string user_id = 1;
+  optional int32 limit = 2;
 }
 
 message GetLoginAttemptsByUserIDResponse {
@@ -69,9 +68,8 @@ message GetLoginAttemptsByUserIDResponse {
 }
 
 message GetLoginAttemptsByIdentifierRequest {
-  string tenant_id = 1;
-  string identifier = 2;
-  optional int32 limit = 3;
+  string identifier = 1;
+  optional int32 limit = 2;
 }
 
 message GetLoginAttemptsByIdentifierResponse {

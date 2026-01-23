@@ -18,10 +18,9 @@ func NewAccountLockoutClient(client accountlockoutpb.AccountLockoutServiceClient
 }
 
 // GetAccountLockoutByUserID 根据用户ID获取账户锁定
-func (c *AccountLockoutClient) GetAccountLockoutByUserID(ctx context.Context, userID string, tenantID *string) (*accountlockoutpb.AccountLockout, error) {
+func (c *AccountLockoutClient) GetAccountLockoutByUserID(ctx context.Context, userID string) (*accountlockoutpb.AccountLockout, error) {
 	req := &accountlockoutpb.GetAccountLockoutByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
+		UserId: userID,
 	}
 
 	resp, err := c.client.GetAccountLockoutByUserID(ctx, req)
@@ -33,10 +32,9 @@ func (c *AccountLockoutClient) GetAccountLockoutByUserID(ctx context.Context, us
 }
 
 // BatchGetAccountLockouts 批量获取账户锁定
-func (c *AccountLockoutClient) BatchGetAccountLockouts(ctx context.Context, userIDs []string, tenantID *string) ([]*accountlockoutpb.AccountLockout, error) {
+func (c *AccountLockoutClient) BatchGetAccountLockouts(ctx context.Context, userIDs []string) ([]*accountlockoutpb.AccountLockout, error) {
 	req := &accountlockoutpb.BatchGetAccountLockoutsRequest{
-		UserIds:  userIDs,
-		TenantId: tenantID,
+		UserIds: userIDs,
 	}
 
 	resp, err := c.client.BatchGetAccountLockouts(ctx, req)

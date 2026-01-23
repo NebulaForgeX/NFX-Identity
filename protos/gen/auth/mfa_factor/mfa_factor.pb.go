@@ -82,23 +82,23 @@ func (AuthMfaType) EnumDescriptor() ([]byte, []int) {
 }
 
 // MFA 因子信息
+// Note: No tenant_id because MFA factors are user-level, not tenant-level (user can belong to multiple tenants)
 type MfaFactor struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                 // 因子ID (UUID)
 	FactorId          string                 `protobuf:"bytes,2,opt,name=factor_id,json=factorId,proto3" json:"factor_id,omitempty"`                                     // 因子标识符 (varchar(255))
-	TenantId          string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                     // 租户ID (UUID)
-	UserId            string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                           // 用户ID (UUID)
-	Type              AuthMfaType            `protobuf:"varint,5,opt,name=type,proto3,enum=mfa_factor.AuthMfaType" json:"type,omitempty"`                                // MFA 类型：totp, sms, email, webauthn, backup_code
-	SecretEncrypted   *string                `protobuf:"bytes,6,opt,name=secret_encrypted,json=secretEncrypted,proto3,oneof" json:"secret_encrypted,omitempty"`          // 加密的密钥 (text)
-	Phone             *string                `protobuf:"bytes,7,opt,name=phone,proto3,oneof" json:"phone,omitempty"`                                                     // 手机号 (varchar(20))
-	Email             *string                `protobuf:"bytes,8,opt,name=email,proto3,oneof" json:"email,omitempty"`                                                     // 邮箱 (varchar(255))
-	Name              *string                `protobuf:"bytes,9,opt,name=name,proto3,oneof" json:"name,omitempty"`                                                       // 名称 (varchar(255))
-	Enabled           bool                   `protobuf:"varint,10,opt,name=enabled,proto3" json:"enabled,omitempty"`                                                     // 是否启用
-	CreatedAt         *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                 // 创建时间
-	LastUsedAt        *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=last_used_at,json=lastUsedAt,proto3,oneof" json:"last_used_at,omitempty"`                      // 最后使用时间
-	RecoveryCodesHash *string                `protobuf:"bytes,13,opt,name=recovery_codes_hash,json=recoveryCodesHash,proto3,oneof" json:"recovery_codes_hash,omitempty"` // 恢复码哈希 (text)
-	UpdatedAt         *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                 // 更新时间
-	DeletedAt         *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`                           // 软删除时间
+	UserId            string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                           // 用户ID (UUID)
+	Type              AuthMfaType            `protobuf:"varint,4,opt,name=type,proto3,enum=mfa_factor.AuthMfaType" json:"type,omitempty"`                                // MFA 类型：totp, sms, email, webauthn, backup_code
+	SecretEncrypted   *string                `protobuf:"bytes,5,opt,name=secret_encrypted,json=secretEncrypted,proto3,oneof" json:"secret_encrypted,omitempty"`          // 加密的密钥 (text)
+	Phone             *string                `protobuf:"bytes,6,opt,name=phone,proto3,oneof" json:"phone,omitempty"`                                                     // 手机号 (varchar(20))
+	Email             *string                `protobuf:"bytes,7,opt,name=email,proto3,oneof" json:"email,omitempty"`                                                     // 邮箱 (varchar(255))
+	Name              *string                `protobuf:"bytes,8,opt,name=name,proto3,oneof" json:"name,omitempty"`                                                       // 名称 (varchar(255))
+	Enabled           bool                   `protobuf:"varint,9,opt,name=enabled,proto3" json:"enabled,omitempty"`                                                      // 是否启用
+	CreatedAt         *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                 // 创建时间
+	LastUsedAt        *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=last_used_at,json=lastUsedAt,proto3,oneof" json:"last_used_at,omitempty"`                      // 最后使用时间
+	RecoveryCodesHash *string                `protobuf:"bytes,12,opt,name=recovery_codes_hash,json=recoveryCodesHash,proto3,oneof" json:"recovery_codes_hash,omitempty"` // 恢复码哈希 (text)
+	UpdatedAt         *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                 // 更新时间
+	DeletedAt         *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`                           // 软删除时间
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -143,13 +143,6 @@ func (x *MfaFactor) GetId() string {
 func (x *MfaFactor) GetFactorId() string {
 	if x != nil {
 		return x.FactorId
-	}
-	return ""
-}
-
-func (x *MfaFactor) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -418,8 +411,7 @@ func (x *GetMfaFactorByFactorIDResponse) GetMfaFactor() *MfaFactor {
 type GetMfaFactorsByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
-	EnabledOnly   *bool                  `protobuf:"varint,3,opt,name=enabled_only,json=enabledOnly,proto3,oneof" json:"enabled_only,omitempty"`
+	EnabledOnly   *bool                  `protobuf:"varint,2,opt,name=enabled_only,json=enabledOnly,proto3,oneof" json:"enabled_only,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -457,13 +449,6 @@ func (*GetMfaFactorsByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetMfaFactorsByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetMfaFactorsByUserIDRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -612,28 +597,27 @@ var File_auth_mfa_factor_proto protoreflect.FileDescriptor
 const file_auth_mfa_factor_proto_rawDesc = "" +
 	"\n" +
 	"\x15auth/mfa_factor.proto\x12\n" +
-	"mfa_factor\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcc\x05\n" +
+	"mfa_factor\x1a\x1fgoogle/protobuf/timestamp.proto\"\xaf\x05\n" +
 	"\tMfaFactor\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
-	"\tfactor_id\x18\x02 \x01(\tR\bfactorId\x12\x1b\n" +
-	"\ttenant_id\x18\x03 \x01(\tR\btenantId\x12\x17\n" +
-	"\auser_id\x18\x04 \x01(\tR\x06userId\x12+\n" +
-	"\x04type\x18\x05 \x01(\x0e2\x17.mfa_factor.AuthMfaTypeR\x04type\x12.\n" +
-	"\x10secret_encrypted\x18\x06 \x01(\tH\x00R\x0fsecretEncrypted\x88\x01\x01\x12\x19\n" +
-	"\x05phone\x18\a \x01(\tH\x01R\x05phone\x88\x01\x01\x12\x19\n" +
-	"\x05email\x18\b \x01(\tH\x02R\x05email\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\t \x01(\tH\x03R\x04name\x88\x01\x01\x12\x18\n" +
-	"\aenabled\x18\n" +
-	" \x01(\bR\aenabled\x129\n" +
+	"\tfactor_id\x18\x02 \x01(\tR\bfactorId\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12+\n" +
+	"\x04type\x18\x04 \x01(\x0e2\x17.mfa_factor.AuthMfaTypeR\x04type\x12.\n" +
+	"\x10secret_encrypted\x18\x05 \x01(\tH\x00R\x0fsecretEncrypted\x88\x01\x01\x12\x19\n" +
+	"\x05phone\x18\x06 \x01(\tH\x01R\x05phone\x88\x01\x01\x12\x19\n" +
+	"\x05email\x18\a \x01(\tH\x02R\x05email\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\b \x01(\tH\x03R\x04name\x88\x01\x01\x12\x18\n" +
+	"\aenabled\x18\t \x01(\bR\aenabled\x129\n" +
 	"\n" +
-	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12A\n" +
-	"\flast_used_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\x04R\n" +
+	"created_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12A\n" +
+	"\flast_used_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\x04R\n" +
 	"lastUsedAt\x88\x01\x01\x123\n" +
-	"\x13recovery_codes_hash\x18\r \x01(\tH\x05R\x11recoveryCodesHash\x88\x01\x01\x129\n" +
+	"\x13recovery_codes_hash\x18\f \x01(\tH\x05R\x11recoveryCodesHash\x88\x01\x01\x129\n" +
 	"\n" +
-	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tdeletedAt\x88\x01\x01B\x13\n" +
+	"deleted_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tdeletedAt\x88\x01\x01B\x13\n" +
 	"\x11_secret_encryptedB\b\n" +
 	"\x06_phoneB\b\n" +
 	"\x06_emailB\a\n" +
@@ -650,13 +634,10 @@ const file_auth_mfa_factor_proto_rawDesc = "" +
 	"\tfactor_id\x18\x01 \x01(\tR\bfactorId\"V\n" +
 	"\x1eGetMfaFactorByFactorIDResponse\x124\n" +
 	"\n" +
-	"mfa_factor\x18\x01 \x01(\v2\x15.mfa_factor.MfaFactorR\tmfaFactor\"\xa0\x01\n" +
+	"mfa_factor\x18\x01 \x01(\v2\x15.mfa_factor.MfaFactorR\tmfaFactor\"p\n" +
 	"\x1cGetMfaFactorsByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01\x12&\n" +
-	"\fenabled_only\x18\x03 \x01(\bH\x01R\venabledOnly\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_idB\x0f\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12&\n" +
+	"\fenabled_only\x18\x02 \x01(\bH\x00R\venabledOnly\x88\x01\x01B\x0f\n" +
 	"\r_enabled_only\"W\n" +
 	"\x1dGetMfaFactorsByUserIDResponse\x126\n" +
 	"\vmfa_factors\x18\x01 \x03(\v2\x15.mfa_factor.MfaFactorR\n" +

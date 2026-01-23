@@ -24,6 +24,12 @@ func NewRouter(app fiber.Router, tokenVerifier token.Verifier, handlers *Registr
 func (r *Router) RegisterRoutes() {
 	auth := r.app.Group("/auth")
 
+	// 公开路由（不需要认证）：登录、刷新 Token
+	if r.handlers.Auth != nil {
+		auth.Post("/login", r.handlers.Auth.Login)
+		auth.Post("/refresh", r.handlers.Auth.Refresh)
+	}
+
 	// 需要认证的路由（需要token）
 	authGroup := auth.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
 	{
@@ -68,9 +74,9 @@ func (r *Router) RegisterRoutes() {
 
 		// 账户锁定相关
 		authGroup.Post("/account-lockouts", r.handlers.AccountLockout.Create)
-		authGroup.Get("/account-lockouts/:id", r.handlers.AccountLockout.GetByID)
-		authGroup.Put("/account-lockouts/:id", r.handlers.AccountLockout.Update)
-		authGroup.Delete("/account-lockouts/:id", r.handlers.AccountLockout.Delete)
+		authGroup.Get("/account-lockouts/:user_id", r.handlers.AccountLockout.GetByUserID)
+		authGroup.Put("/account-lockouts/unlock", r.handlers.AccountLockout.Unlock)
+		authGroup.Delete("/account-lockouts/:user_id", r.handlers.AccountLockout.Delete)
 
 		// 受信任设备相关
 		authGroup.Post("/trusted-devices", r.handlers.TrustedDevice.Create)

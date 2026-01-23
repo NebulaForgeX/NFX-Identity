@@ -11,7 +11,6 @@ import (
 type SessionRO struct {
 	ID                uuid.UUID
 	SessionID         string
-	TenantID          uuid.UUID
 	UserID            uuid.UUID
 	AppID             *uuid.UUID
 	ClientID          *string
@@ -38,7 +37,6 @@ func SessionMapper(s *sessions.Session) SessionRO {
 	return SessionRO{
 		ID:                s.ID(),
 		SessionID:         s.SessionID(),
-		TenantID:          s.TenantID(),
 		UserID:            s.UserID(),
 		AppID:             s.AppID(),
 		ClientID:          s.ClientID(),

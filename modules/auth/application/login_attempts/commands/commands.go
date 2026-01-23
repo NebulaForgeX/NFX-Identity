@@ -8,7 +8,6 @@ import (
 
 // CreateLoginAttemptCmd 创建登录尝试命令
 type CreateLoginAttemptCmd struct {
-	TenantID          uuid.UUID
 	Identifier        string
 	UserID            *uuid.UUID
 	IP                *string

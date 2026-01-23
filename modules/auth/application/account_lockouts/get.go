@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 )
 
-// GetAccountLockout 根据UserID和TenantID获取账户锁定
-func (s *Service) GetAccountLockout(ctx context.Context, userID, tenantID uuid.UUID) (accountLockoutResult.AccountLockoutRO, error) {
-	domainEntity, err := s.accountLockoutRepo.Get.ByUserIDAndTenantID(ctx, userID, tenantID)
+// GetAccountLockout 根据UserID获取账户锁定
+func (s *Service) GetAccountLockout(ctx context.Context, userID uuid.UUID) (accountLockoutResult.AccountLockoutRO, error) {
+	domainEntity, err := s.accountLockoutRepo.Get.ByUserID(ctx, userID)
 	if err != nil {
 		return accountLockoutResult.AccountLockoutRO{}, err
 	}

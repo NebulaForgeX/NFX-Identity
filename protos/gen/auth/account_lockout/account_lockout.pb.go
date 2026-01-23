@@ -85,20 +85,20 @@ func (AuthLockReason) EnumDescriptor() ([]byte, []int) {
 }
 
 // 账户锁定信息
+// Note: No tenant_id because account lockout is user-level, not tenant-level (user can belong to multiple tenants)
 type AccountLockout struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                  // 用户ID (UUID) - 主键
-	TenantId      string                 `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                            // 租户ID (UUID)
-	LockedUntil   *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=locked_until,json=lockedUntil,proto3,oneof" json:"locked_until,omitempty"`                             // 锁定到期时间
-	LockReason    AuthLockReason         `protobuf:"varint,4,opt,name=lock_reason,json=lockReason,proto3,enum=account_lockout.AuthLockReason" json:"lock_reason,omitempty"` // 锁定原因：too_many_attempts, admin_lock, risk_detected, suspicious_activity, compliance, other
-	LockedAt      *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=locked_at,json=lockedAt,proto3" json:"locked_at,omitempty"`                                            // 锁定时间
-	LockedBy      *string                `protobuf:"bytes,6,opt,name=locked_by,json=lockedBy,proto3,oneof" json:"locked_by,omitempty"`                                      // 锁定者 (varchar(255))
-	ActorId       *string                `protobuf:"bytes,7,opt,name=actor_id,json=actorId,proto3,oneof" json:"actor_id,omitempty"`                                         // 操作者ID (UUID)
-	UnlockedAt    *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=unlocked_at,json=unlockedAt,proto3,oneof" json:"unlocked_at,omitempty"`                                // 解锁时间
-	UnlockedBy    *string                `protobuf:"bytes,9,opt,name=unlocked_by,json=unlockedBy,proto3,oneof" json:"unlocked_by,omitempty"`                                // 解锁者 (varchar(255))
-	UnlockActorId *string                `protobuf:"bytes,10,opt,name=unlock_actor_id,json=unlockActorId,proto3,oneof" json:"unlock_actor_id,omitempty"`                    // 解锁操作者ID (UUID)
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                        // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                        // 更新时间
+	LockedUntil   *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=locked_until,json=lockedUntil,proto3,oneof" json:"locked_until,omitempty"`                             // 锁定到期时间
+	LockReason    AuthLockReason         `protobuf:"varint,3,opt,name=lock_reason,json=lockReason,proto3,enum=account_lockout.AuthLockReason" json:"lock_reason,omitempty"` // 锁定原因：too_many_attempts, admin_lock, risk_detected, suspicious_activity, compliance, other
+	LockedAt      *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=locked_at,json=lockedAt,proto3" json:"locked_at,omitempty"`                                            // 锁定时间
+	LockedBy      *string                `protobuf:"bytes,5,opt,name=locked_by,json=lockedBy,proto3,oneof" json:"locked_by,omitempty"`                                      // 锁定者 (varchar(255))
+	ActorId       *string                `protobuf:"bytes,6,opt,name=actor_id,json=actorId,proto3,oneof" json:"actor_id,omitempty"`                                         // 操作者ID (UUID)
+	UnlockedAt    *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=unlocked_at,json=unlockedAt,proto3,oneof" json:"unlocked_at,omitempty"`                                // 解锁时间
+	UnlockedBy    *string                `protobuf:"bytes,8,opt,name=unlocked_by,json=unlockedBy,proto3,oneof" json:"unlocked_by,omitempty"`                                // 解锁者 (varchar(255))
+	UnlockActorId *string                `protobuf:"bytes,9,opt,name=unlock_actor_id,json=unlockActorId,proto3,oneof" json:"unlock_actor_id,omitempty"`                     // 解锁操作者ID (UUID)
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                        // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                        // 更新时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -136,13 +136,6 @@ func (*AccountLockout) Descriptor() ([]byte, []int) {
 func (x *AccountLockout) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *AccountLockout) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -221,7 +214,6 @@ func (x *AccountLockout) GetUpdatedAt() *timestamppb.Timestamp {
 type GetAccountLockoutByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -259,13 +251,6 @@ func (*GetAccountLockoutByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetAccountLockoutByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetAccountLockoutByUserIDRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -317,7 +302,6 @@ func (x *GetAccountLockoutByUserIDResponse) GetAccountLockout() *AccountLockout 
 type BatchGetAccountLockoutsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserIds       []string               `protobuf:"bytes,1,rep,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -357,13 +341,6 @@ func (x *BatchGetAccountLockoutsRequest) GetUserIds() []string {
 		return x.UserIds
 	}
 	return nil
-}
-
-func (x *BatchGetAccountLockoutsRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
-	}
-	return ""
 }
 
 type BatchGetAccountLockoutsResponse struct {
@@ -414,45 +391,38 @@ var File_auth_account_lockout_proto protoreflect.FileDescriptor
 
 const file_auth_account_lockout_proto_rawDesc = "" +
 	"\n" +
-	"\x1aauth/account_lockout.proto\x12\x0faccount_lockout\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb2\x05\n" +
+	"\x1aauth/account_lockout.proto\x12\x0faccount_lockout\x1a\x1fgoogle/protobuf/timestamp.proto\"\x95\x05\n" +
 	"\x0eAccountLockout\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12B\n" +
-	"\flocked_until\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vlockedUntil\x88\x01\x01\x12@\n" +
-	"\vlock_reason\x18\x04 \x01(\x0e2\x1f.account_lockout.AuthLockReasonR\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12B\n" +
+	"\flocked_until\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vlockedUntil\x88\x01\x01\x12@\n" +
+	"\vlock_reason\x18\x03 \x01(\x0e2\x1f.account_lockout.AuthLockReasonR\n" +
 	"lockReason\x127\n" +
-	"\tlocked_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\blockedAt\x12 \n" +
-	"\tlocked_by\x18\x06 \x01(\tH\x01R\blockedBy\x88\x01\x01\x12\x1e\n" +
-	"\bactor_id\x18\a \x01(\tH\x02R\aactorId\x88\x01\x01\x12@\n" +
-	"\vunlocked_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x03R\n" +
+	"\tlocked_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\blockedAt\x12 \n" +
+	"\tlocked_by\x18\x05 \x01(\tH\x01R\blockedBy\x88\x01\x01\x12\x1e\n" +
+	"\bactor_id\x18\x06 \x01(\tH\x02R\aactorId\x88\x01\x01\x12@\n" +
+	"\vunlocked_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x03R\n" +
 	"unlockedAt\x88\x01\x01\x12$\n" +
-	"\vunlocked_by\x18\t \x01(\tH\x04R\n" +
+	"\vunlocked_by\x18\b \x01(\tH\x04R\n" +
 	"unlockedBy\x88\x01\x01\x12+\n" +
-	"\x0funlock_actor_id\x18\n" +
-	" \x01(\tH\x05R\runlockActorId\x88\x01\x01\x129\n" +
+	"\x0funlock_actor_id\x18\t \x01(\tH\x05R\runlockActorId\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x0f\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x0f\n" +
 	"\r_locked_untilB\f\n" +
 	"\n" +
 	"_locked_byB\v\n" +
 	"\t_actor_idB\x0e\n" +
 	"\f_unlocked_atB\x0e\n" +
 	"\f_unlocked_byB\x12\n" +
-	"\x10_unlock_actor_id\"k\n" +
+	"\x10_unlock_actor_id\";\n" +
 	" GetAccountLockoutByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\"m\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"m\n" +
 	"!GetAccountLockoutByUserIDResponse\x12H\n" +
-	"\x0faccount_lockout\x18\x01 \x01(\v2\x1f.account_lockout.AccountLockoutR\x0eaccountLockout\"k\n" +
+	"\x0faccount_lockout\x18\x01 \x01(\v2\x1f.account_lockout.AccountLockoutR\x0eaccountLockout\";\n" +
 	"\x1eBatchGetAccountLockoutsRequest\x12\x19\n" +
-	"\buser_ids\x18\x01 \x03(\tR\auserIds\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\"m\n" +
+	"\buser_ids\x18\x01 \x03(\tR\auserIds\"m\n" +
 	"\x1fBatchGetAccountLockoutsResponse\x12J\n" +
 	"\x10account_lockouts\x18\x01 \x03(\v2\x1f.account_lockout.AccountLockoutR\x0faccountLockouts*\x86\x02\n" +
 	"\x0eAuthLockReason\x12 \n" +
@@ -516,8 +486,6 @@ func file_auth_account_lockout_proto_init() {
 		return
 	}
 	file_auth_account_lockout_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_account_lockout_proto_msgTypes[1].OneofWrappers = []any{}
-	file_auth_account_lockout_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

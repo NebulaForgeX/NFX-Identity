@@ -32,11 +32,10 @@ func (c *LoginAttemptClient) GetLoginAttemptByID(ctx context.Context, id string)
 }
 
 // GetLoginAttemptsByUserID 根据用户ID获取登录尝试列表
-func (c *LoginAttemptClient) GetLoginAttemptsByUserID(ctx context.Context, userID *string, tenantID string, limit *int32) ([]*loginattemptpb.LoginAttempt, error) {
+func (c *LoginAttemptClient) GetLoginAttemptsByUserID(ctx context.Context, userID string, limit *int32) ([]*loginattemptpb.LoginAttempt, error) {
 	req := &loginattemptpb.GetLoginAttemptsByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
-		Limit:    limit,
+		UserId: userID,
+		Limit:  limit,
 	}
 
 	resp, err := c.client.GetLoginAttemptsByUserID(ctx, req)
@@ -47,10 +46,9 @@ func (c *LoginAttemptClient) GetLoginAttemptsByUserID(ctx context.Context, userI
 	return resp.LoginAttempts, nil
 }
 
-// GetLoginAttemptsByIdentifier 根据租户ID和标识符获取登录尝试列表
-func (c *LoginAttemptClient) GetLoginAttemptsByIdentifier(ctx context.Context, tenantID, identifier string, limit *int32) ([]*loginattemptpb.LoginAttempt, error) {
+// GetLoginAttemptsByIdentifier 根据标识符获取登录尝试列表
+func (c *LoginAttemptClient) GetLoginAttemptsByIdentifier(ctx context.Context, identifier string, limit *int32) ([]*loginattemptpb.LoginAttempt, error) {
 	req := &loginattemptpb.GetLoginAttemptsByIdentifierRequest{
-		TenantId:   tenantID,
 		Identifier: identifier,
 		Limit:      limit,
 	}

@@ -7,7 +7,6 @@ import (
 )
 
 type NewLoginAttemptParams struct {
-	TenantID          uuid.UUID
 	Identifier        string
 	UserID            *uuid.UUID
 	IP                *string
@@ -32,7 +31,6 @@ func NewLoginAttempt(p NewLoginAttemptParams) (*LoginAttempt, error) {
 	now := time.Now().UTC()
 	return NewLoginAttemptFromState(LoginAttemptState{
 		ID:                id,
-		TenantID:          p.TenantID,
 		Identifier:        p.Identifier,
 		UserID:            p.UserID,
 		IP:                p.IP,
@@ -51,9 +49,6 @@ func NewLoginAttemptFromState(st LoginAttemptState) *LoginAttempt {
 }
 
 func validateLoginAttemptParams(p NewLoginAttemptParams) error {
-	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
-	}
 	if p.Identifier == "" {
 		return ErrIdentifierRequired
 	}

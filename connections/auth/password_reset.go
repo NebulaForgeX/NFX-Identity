@@ -46,10 +46,9 @@ func (c *PasswordResetClient) GetPasswordResetByResetID(ctx context.Context, res
 }
 
 // GetPasswordResetsByUserID 根据用户ID获取密码重置列表
-func (c *PasswordResetClient) GetPasswordResetsByUserID(ctx context.Context, userID string, tenantID *string) ([]*passwordresetpb.PasswordReset, error) {
+func (c *PasswordResetClient) GetPasswordResetsByUserID(ctx context.Context, userID string) ([]*passwordresetpb.PasswordReset, error) {
 	req := &passwordresetpb.GetPasswordResetsByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
+		UserId: userID,
 	}
 
 	resp, err := c.client.GetPasswordResetsByUserID(ctx, req)

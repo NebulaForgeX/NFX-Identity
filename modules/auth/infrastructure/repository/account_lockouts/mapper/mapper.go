@@ -14,7 +14,6 @@ func AccountLockoutDomainToModel(al *account_lockouts.AccountLockout) *models.Ac
 
 	return &models.AccountLockout{
 		UserID:        al.UserID(),
-		TenantID:      al.TenantID(),
 		LockedUntil:   al.LockedUntil(),
 		LockReason:    lockReasonDomainToEnum(al.LockReason()),
 		LockedAt:      al.LockedAt(),
@@ -36,7 +35,6 @@ func AccountLockoutModelToDomain(m *models.AccountLockout) *account_lockouts.Acc
 
 	state := account_lockouts.AccountLockoutState{
 		UserID:        m.UserID,
-		TenantID:      m.TenantID,
 		LockedUntil:   m.LockedUntil,
 		LockReason:    lockReasonEnumToDomain(m.LockReason),
 		LockedAt:      m.LockedAt,

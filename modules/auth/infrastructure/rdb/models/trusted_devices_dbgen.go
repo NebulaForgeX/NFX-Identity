@@ -10,9 +10,8 @@ import (
 
 type TrustedDevice struct {
 	ID                    uuid.UUID `gorm:"type:uuid;primaryKey"`
-	DeviceID              string    `gorm:"type:varchar(255);index:idx_trusted_devices_device_id;uniqueIndex:trusted_devices_user_id_device_id_tenant_id_key,priority:2"`
-	UserID                uuid.UUID `gorm:"type:uuid;index:idx_trusted_devices_user_id;index:idx_trusted_devices_user_tenant,priority:1;uniqueIndex:trusted_devices_user_id_device_id_tenant_id_key,priority:1"`
-	TenantID              uuid.UUID `gorm:"type:uuid;index:idx_trusted_devices_tenant_id;index:idx_trusted_devices_user_tenant,priority:2;uniqueIndex:trusted_devices_user_id_device_id_tenant_id_key,priority:3"`
+	DeviceID              string    `gorm:"type:varchar(255);index:idx_trusted_devices_device_id;uniqueIndex:trusted_devices_user_id_device_id_key,priority:2"`
+	UserID                uuid.UUID `gorm:"type:uuid;index:idx_trusted_devices_user_id;uniqueIndex:trusted_devices_user_id_device_id_key,priority:1"`
 	DeviceFingerprintHash string    `gorm:"type:varchar(255)"`
 	DeviceName            *string   `gorm:"type:varchar(255)"`
 	TrustedUntil          time.Time `gorm:"type:timestamp;index:idx_trusted_devices_trusted_until"`
@@ -33,13 +32,12 @@ func (m *TrustedDevice) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var TrustedDeviceCols = struct {
-	ID, DeviceID, UserID, TenantID, DeviceFingerprintHash, DeviceName, TrustedUntil,
-	LastUsedAt, IP, UaHash, CreatedAt, UpdatedAt string
+	ID, DeviceID, UserID, DeviceFingerprintHash, DeviceName, TrustedUntil, LastUsedAt,
+	IP, UaHash, CreatedAt, UpdatedAt string
 }{
 	ID:                    "id",
 	DeviceID:              "device_id",
 	UserID:                "user_id",
-	TenantID:              "tenant_id",
 	DeviceFingerprintHash: "device_fingerprint_hash",
 	DeviceName:            "device_name",
 	TrustedUntil:          "trusted_until",
@@ -51,6 +49,6 @@ var TrustedDeviceCols = struct {
 }
 
 const (
-	TrustedDevicePk                          = "trusted_devices_pkey"
-	TrustedDeviceUkUserIdDeviceIdTenantIdKey = "trusted_devices_user_id_device_id_tenant_id_key"
+	TrustedDevicePk                  = "trusted_devices_pkey"
+	TrustedDeviceUkUserIdDeviceIdKey = "trusted_devices_user_id_device_id_key"
 )

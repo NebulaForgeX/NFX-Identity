@@ -10,7 +10,6 @@ import (
 
 type AccountLockout struct {
 	UserID        uuid.UUID            `gorm:"type:uuid;primaryKey"`
-	TenantID      uuid.UUID            `gorm:"type:uuid;index:idx_account_lockouts_tenant_id"`
 	LockedUntil   *time.Time           `gorm:"type:timestamp;index:idx_account_lockouts_locked_until"`
 	LockReason    enums.AuthLockReason `gorm:"type:lock_reason"`
 	LockedAt      time.Time            `gorm:"type:timestamp;index:idx_account_lockouts_locked_at"`
@@ -26,11 +25,10 @@ type AccountLockout struct {
 func (AccountLockout) TableName() string { return "auth.account_lockouts" }
 
 var AccountLockoutCols = struct {
-	UserID, TenantID, LockedUntil, LockReason, LockedAt, LockedBy, ActorID,
-	UnlockedAt, UnlockedBy, UnlockActorID, CreatedAt, UpdatedAt string
+	UserID, LockedUntil, LockReason, LockedAt, LockedBy, ActorID, UnlockedAt,
+	UnlockedBy, UnlockActorID, CreatedAt, UpdatedAt string
 }{
 	UserID:        "user_id",
-	TenantID:      "tenant_id",
 	LockedUntil:   "locked_until",
 	LockReason:    "lock_reason",
 	LockedAt:      "locked_at",

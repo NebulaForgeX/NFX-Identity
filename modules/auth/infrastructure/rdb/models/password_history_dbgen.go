@@ -11,7 +11,6 @@ import (
 type PasswordHistory struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
 	UserID       uuid.UUID `gorm:"type:uuid;index:idx_password_history_user_id,priority:1"`
-	TenantID     uuid.UUID `gorm:"type:uuid;index:idx_password_history_tenant_id"`
 	PasswordHash string    `gorm:"type:varchar(255)"`
 	HashAlg      *string   `gorm:"type:varchar(50)"`
 	CreatedAt    time.Time `gorm:"autoCreateTime"`
@@ -27,11 +26,10 @@ func (m *PasswordHistory) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var PasswordHistoryCols = struct {
-	ID, UserID, TenantID, PasswordHash, HashAlg, CreatedAt string
+	ID, UserID, PasswordHash, HashAlg, CreatedAt string
 }{
 	ID:           "id",
 	UserID:       "user_id",
-	TenantID:     "tenant_id",
 	PasswordHash: "password_hash",
 	HashAlg:      "hash_alg",
 	CreatedAt:    "created_at",

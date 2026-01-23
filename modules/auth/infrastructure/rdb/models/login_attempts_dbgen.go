@@ -11,10 +11,9 @@ import (
 
 type LoginAttempt struct {
 	ID                uuid.UUID              `gorm:"type:uuid;primaryKey"`
-	TenantID          uuid.UUID              `gorm:"type:uuid;index:idx_login_attempts_tenant_identifier,priority:1;index:idx_login_attempts_tenant_ip,priority:1"`
-	Identifier        string                 `gorm:"type:varchar(255);index:idx_login_attempts_tenant_identifier,priority:2"`
+	Identifier        string                 `gorm:"type:varchar(255);index:idx_login_attempts_identifier,priority:1"`
 	UserID            *uuid.UUID             `gorm:"type:uuid;index:idx_login_attempts_user_id,priority:1"`
-	IP                *string                `gorm:"type:inet;index:idx_login_attempts_tenant_ip,priority:2"`
+	IP                *string                `gorm:"type:inet;index:idx_login_attempts_ip,priority:1"`
 	UaHash            *string                `gorm:"type:varchar(64)"`
 	DeviceFingerprint *string                `gorm:"type:varchar(255)"`
 	Success           bool                   `gorm:"type:boolean;index:idx_login_attempts_success,priority:1"`
@@ -34,11 +33,10 @@ func (m *LoginAttempt) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var LoginAttemptCols = struct {
-	ID, TenantID, Identifier, UserID, IP, UaHash, DeviceFingerprint,
-	Success, FailureCode, MfaRequired, MfaVerified, CreatedAt string
+	ID, Identifier, UserID, IP, UaHash, DeviceFingerprint, Success,
+	FailureCode, MfaRequired, MfaVerified, CreatedAt string
 }{
 	ID:                "id",
-	TenantID:          "tenant_id",
 	Identifier:        "identifier",
 	UserID:            "user_id",
 	IP:                "ip",

@@ -10,7 +10,7 @@ import (
 // CreateAccountLockout 创建账户锁定
 func (s *Service) CreateAccountLockout(ctx context.Context, cmd accountLockoutCommands.CreateAccountLockoutCmd) error {
 	// Check if account is already locked
-	if exists, _ := s.accountLockoutRepo.Check.ByUserIDAndTenantID(ctx, cmd.UserID, cmd.TenantID); exists {
+	if exists, _ := s.accountLockoutRepo.Check.ByUserID(ctx, cmd.UserID); exists {
 		return accountLockoutDomain.ErrAccountAlreadyLocked
 	}
 
@@ -26,7 +26,6 @@ func (s *Service) CreateAccountLockout(ctx context.Context, cmd accountLockoutCo
 	// Create domain entity
 	accountLockout, err := accountLockoutDomain.NewAccountLockout(accountLockoutDomain.NewAccountLockoutParams{
 		UserID:      cmd.UserID,
-		TenantID:    cmd.TenantID,
 		LockedUntil: lockedUntil,
 		LockReason:  cmd.LockReason,
 		LockedBy:    cmd.LockedBy,

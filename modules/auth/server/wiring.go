@@ -6,6 +6,7 @@ import (
 	"time"
 
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
+	authApp "nfxid/modules/auth/application/auth"
 	resourceApp "nfxid/modules/auth/application/resource"
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
@@ -16,6 +17,8 @@ import (
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
 	userCredentialApp "nfxid/modules/auth/application/user_credentials"
 	"nfxid/modules/auth/config"
+	authInfra "nfxid/modules/auth/infrastructure/auth"
+	authGrpc "nfxid/modules/auth/infrastructure/grpc"
 	accountLockoutRepo "nfxid/modules/auth/infrastructure/repository/account_lockouts"
 	loginAttemptRepo "nfxid/modules/auth/infrastructure/repository/login_attempts"
 	mfaFactorRepo "nfxid/modules/auth/infrastructure/repository/mfa_factors"
@@ -54,8 +57,10 @@ type Dependencies struct {
 	trustedDeviceAppSvc    *trustedDeviceApp.Service
 	userTokenVerifier      token.Verifier // 用于 HTTP 中间件（用户 token）
 	serverTokenVerifier    token.Verifier // 用于 gRPC 拦截器（服务间通信）
-	resourceSvc         *resourceApp.Service
+	resourceSvc            *resourceApp.Service
 	tokenxInstance         *tokenx.Tokenx
+	authAppSvc             *authApp.Service
+	grpcClients            *authGrpc.GRPCClients
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -127,6 +132,31 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
+	//! === gRPC Clients ===
+	grpcClientsInstance, err := authGrpc.NewGRPCClients(ctx, &cfg.GRPCClient, &cfg.Server, &cfg.Token)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
+	}
+
+	// Auth 应用服务（登录/刷新）：注入 infra 实现的 UserResolver、TokenIssuer
+	var authAppSvc *authApp.Service
+	if grpcClientsInstance.DirectoryClient != nil {
+		userResolver := authInfra.NewUserResolver(grpcClientsInstance.DirectoryClient)
+		tokenIssuer := authInfra.NewTokenIssuer(tokenxInstance)
+		expiresInSec := int64(cfg.Token.AccessTokenTTL.Seconds())
+		if expiresInSec <= 0 {
+			expiresInSec = 900
+		}
+		authAppSvc = authApp.NewService(
+			userCredentialRepoInstance,
+			loginAttemptRepoInstance,
+			accountLockoutRepoInstance,
+			userResolver,
+			tokenIssuer,
+			expiresInSec,
+		)
+	}
+
 	return &Dependencies{
 		healthMgr:             healthMgr,
 		postgres:              postgres,
@@ -146,7 +176,9 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier:     userTokenVerifier,
 		serverTokenVerifier:    serverTokenVerifier,
 		resourceSvc:         resourceSvc,
-		tokenxInstance:        tokenxInstance,
+		tokenxInstance:      tokenxInstance,
+		authAppSvc:          authAppSvc,
+		grpcClients:         grpcClientsInstance,
 	}, nil
 }
 
@@ -154,6 +186,9 @@ func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()
 	d.postgres.Close()
 	d.cache.Close()
+	if d.grpcClients != nil {
+		_ = d.grpcClients.Close()
+	}
 }
 
 // Getter methods for interfaces
@@ -174,6 +209,7 @@ func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return 
 func (d *Dependencies) KafkaConfig() *kafkax.Config                       { return d.kafkaConfig }
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher             { return d.busPublisher }
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config                { return d.rabbitMQConfig }
+func (d *Dependencies) AuthAppSvc() *authApp.Service                     { return d.authAppSvc }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

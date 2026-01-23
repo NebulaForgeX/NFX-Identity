@@ -6,9 +6,6 @@ func (al *AccountLockout) Validate() error {
 	if al.UserID() == uuid.Nil {
 		return ErrUserIDRequired
 	}
-	if al.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
-	}
 	if al.LockReason() == "" {
 		return ErrLockReasonRequired
 	}

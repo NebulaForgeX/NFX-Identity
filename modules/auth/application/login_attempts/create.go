@@ -12,7 +12,6 @@ import (
 func (s *Service) CreateLoginAttempt(ctx context.Context, cmd loginAttemptCommands.CreateLoginAttemptCmd) (uuid.UUID, error) {
 	// Create domain entity
 	loginAttempt, err := loginAttemptDomain.NewLoginAttempt(loginAttemptDomain.NewLoginAttemptParams{
-		TenantID:          cmd.TenantID,
 		Identifier:        cmd.Identifier,
 		UserID:            cmd.UserID,
 		IP:                cmd.IP,

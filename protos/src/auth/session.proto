@@ -19,25 +19,25 @@ enum AuthSessionRevokeReason {
 }
 
 // 会话信息
+// Note: No tenant_id because sessions are user-level, not tenant-level (user can belong to multiple tenants)
 message Session {
   string id = 1;                           // 会话ID (UUID)
   string session_id = 2;                   // 会话标识符 (varchar(255))
-  string tenant_id = 3;                    // 租户ID (UUID)
-  string user_id = 4;                      // 用户ID (UUID)
-  optional string app_id = 5;              // 应用ID (UUID)
-  optional string client_id = 6;           // 客户端ID (varchar(255))
-  google.protobuf.Timestamp created_at = 7;             // 创建时间
-  google.protobuf.Timestamp last_seen_at = 8;           // 最后活跃时间
-  google.protobuf.Timestamp expires_at = 9;             // 过期时间
-  optional string ip = 10;                 // IP地址 (inet)
-  optional string ua_hash = 11;            // User-Agent 哈希 (varchar(64))
-  optional string device_id = 12;          // 设备ID (varchar(255))
-  optional string device_fingerprint = 13; // 设备指纹 (varchar(255))
-  optional string device_name = 14;        // 设备名称 (varchar(255))
-  optional google.protobuf.Timestamp revoked_at = 15;   // 撤销时间
-  optional AuthSessionRevokeReason revoke_reason = 16;  // 撤销原因
-  optional string revoked_by = 17;         // 撤销者 (varchar(255))
-  google.protobuf.Timestamp updated_at = 18;            // 更新时间
+  string user_id = 3;                      // 用户ID (UUID)
+  optional string app_id = 4;              // 应用ID (UUID)
+  optional string client_id = 5;           // 客户端ID (varchar(255))
+  google.protobuf.Timestamp created_at = 6;             // 创建时间
+  google.protobuf.Timestamp last_seen_at = 7;           // 最后活跃时间
+  google.protobuf.Timestamp expires_at = 8;             // 过期时间
+  optional string ip = 9;                 // IP地址 (inet)
+  optional string ua_hash = 10;            // User-Agent 哈希 (varchar(64))
+  optional string device_id = 11;          // 设备ID (varchar(255))
+  optional string device_fingerprint = 12; // 设备指纹 (varchar(255))
+  optional string device_name = 13;        // 设备名称 (varchar(255))
+  optional google.protobuf.Timestamp revoked_at = 14;   // 撤销时间
+  optional AuthSessionRevokeReason revoke_reason = 15;  // 撤销原因
+  optional string revoked_by = 16;         // 撤销者 (varchar(255))
+  google.protobuf.Timestamp updated_at = 17;            // 更新时间
 }
 
 // Session 服务 - 供其他服务通过 gRPC 管理会话
@@ -74,7 +74,6 @@ message GetSessionBySessionIDResponse {
 
 message GetSessionsByUserIDRequest {
   string user_id = 1;
-  optional string tenant_id = 2;
 }
 
 message GetSessionsByUserIDResponse {

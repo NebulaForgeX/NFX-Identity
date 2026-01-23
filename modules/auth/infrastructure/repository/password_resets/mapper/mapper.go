@@ -15,7 +15,6 @@ func PasswordResetDomainToModel(pr *password_resets.PasswordReset) *models.Passw
 	return &models.PasswordReset{
 		ID:           pr.ID(),
 		ResetID:      pr.ResetID(),
-		TenantID:     pr.TenantID(),
 		UserID:       pr.UserID(),
 		Delivery:     resetDeliveryDomainToEnum(pr.Delivery()),
 		CodeHash:     pr.CodeHash(),
@@ -39,7 +38,6 @@ func PasswordResetModelToDomain(m *models.PasswordReset) *password_resets.Passwo
 	state := password_resets.PasswordResetState{
 		ID:           m.ID,
 		ResetID:      m.ResetID,
-		TenantID:     m.TenantID,
 		UserID:       m.UserID,
 		Delivery:     resetDeliveryEnumToDomain(m.Delivery),
 		CodeHash:     m.CodeHash,
@@ -59,7 +57,6 @@ func PasswordResetModelToDomain(m *models.PasswordReset) *password_resets.Passwo
 // PasswordResetModelToUpdates 将 Model PasswordReset 转换为更新字段映射
 func PasswordResetModelToUpdates(m *models.PasswordReset) map[string]any {
 	return map[string]any{
-		models.PasswordResetCols.TenantID:     m.TenantID,
 		models.PasswordResetCols.UserID:      m.UserID,
 		models.PasswordResetCols.Delivery:    m.Delivery,
 		models.PasswordResetCols.CodeHash:    m.CodeHash,

@@ -46,10 +46,9 @@ func (c *SessionClient) GetSessionBySessionID(ctx context.Context, sessionID str
 }
 
 // GetSessionsByUserID 根据用户ID获取会话列表
-func (c *SessionClient) GetSessionsByUserID(ctx context.Context, userID string, tenantID *string) ([]*sessionpb.Session, error) {
+func (c *SessionClient) GetSessionsByUserID(ctx context.Context, userID string) ([]*sessionpb.Session, error) {
 	req := &sessionpb.GetSessionsByUserIDRequest{
 		UserId: userID,
-		TenantId: tenantID,
 	}
 
 	resp, err := c.client.GetSessionsByUserID(ctx, req)

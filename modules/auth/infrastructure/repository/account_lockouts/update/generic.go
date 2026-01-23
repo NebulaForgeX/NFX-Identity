@@ -13,6 +13,6 @@ func (h *Handler) Generic(ctx context.Context, al *account_lockouts.AccountLocko
 	updates := mapper.AccountLockoutModelToUpdates(m)
 	return h.db.WithContext(ctx).
 		Model(&models.AccountLockout{}).
-		Where("user_id = ? AND tenant_id = ?", al.UserID(), al.TenantID()).
+		Where("user_id = ?", al.UserID()).
 		Updates(updates).Error
 }

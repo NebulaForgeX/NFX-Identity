@@ -21,7 +21,6 @@ func SessionDomainToModel(s *sessions.Session) *models.Session {
 	return &models.Session{
 		ID:                s.ID(),
 		SessionID:         s.SessionID(),
-		TenantID:          s.TenantID(),
 		UserID:            s.UserID(),
 		AppID:             s.AppID(),
 		ClientID:          s.ClientID(),
@@ -55,7 +54,6 @@ func SessionModelToDomain(m *models.Session) *sessions.Session {
 	state := sessions.SessionState{
 		ID:                m.ID,
 		SessionID:         m.SessionID,
-		TenantID:          m.TenantID,
 		UserID:            m.UserID,
 		AppID:             m.AppID,
 		ClientID:          m.ClientID,
@@ -79,7 +77,6 @@ func SessionModelToDomain(m *models.Session) *sessions.Session {
 // SessionModelToUpdates 将 Model Session 转换为更新字段映射
 func SessionModelToUpdates(m *models.Session) map[string]any {
 	return map[string]any{
-		models.SessionCols.TenantID:          m.TenantID,
 		models.SessionCols.UserID:            m.UserID,
 		models.SessionCols.AppID:             m.AppID,
 		models.SessionCols.ClientID:          m.ClientID,

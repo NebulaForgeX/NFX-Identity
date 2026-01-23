@@ -14,7 +14,6 @@ func PasswordHistoryDomainToModel(ph *password_history.PasswordHistory) *models.
 	return &models.PasswordHistory{
 		ID:           ph.ID(),
 		UserID:       ph.UserID(),
-		TenantID:     ph.TenantID(),
 		PasswordHash: ph.PasswordHash(),
 		HashAlg:      ph.HashAlg(),
 		CreatedAt:    ph.CreatedAt(),
@@ -30,7 +29,6 @@ func PasswordHistoryModelToDomain(m *models.PasswordHistory) *password_history.P
 	state := password_history.PasswordHistoryState{
 		ID:           m.ID,
 		UserID:       m.UserID,
-		TenantID:     m.TenantID,
 		PasswordHash: m.PasswordHash,
 		HashAlg:      m.HashAlg,
 		CreatedAt:    m.CreatedAt,
@@ -43,7 +41,6 @@ func PasswordHistoryModelToDomain(m *models.PasswordHistory) *password_history.P
 func PasswordHistoryModelToUpdates(m *models.PasswordHistory) map[string]any {
 	return map[string]any{
 		models.PasswordHistoryCols.UserID:       m.UserID,
-		models.PasswordHistoryCols.TenantID:     m.TenantID,
 		models.PasswordHistoryCols.PasswordHash: m.PasswordHash,
 		models.PasswordHistoryCols.HashAlg:      m.HashAlg,
 	}

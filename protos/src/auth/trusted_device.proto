@@ -6,19 +6,19 @@ option go_package = "nfxid/protos/gen/auth/trusted_device;trusteddevicepb";
 import "google/protobuf/timestamp.proto";
 
 // 信任设备信息
+// Note: No tenant_id because trusted devices are user-level, not tenant-level (user can belong to multiple tenants)
 message TrustedDevice {
   string id = 1;                        // 设备ID (UUID)
   string device_id = 2;                 // 设备标识符 (varchar(255))
   string user_id = 3;                   // 用户ID (UUID)
-  string tenant_id = 4;                 // 租户ID (UUID)
-  string device_fingerprint_hash = 5;   // 设备指纹哈希 (varchar(255))
-  optional string device_name = 6;      // 设备名称 (varchar(255))
-  google.protobuf.Timestamp trusted_until = 7; // 信任到期时间
-  google.protobuf.Timestamp last_used_at = 8;  // 最后使用时间
-  optional string ip = 9;               // IP地址 (inet)
-  optional string ua_hash = 10;         // User-Agent 哈希 (varchar(64))
-  google.protobuf.Timestamp created_at = 11;   // 创建时间
-  google.protobuf.Timestamp updated_at = 12;   // 更新时间
+  string device_fingerprint_hash = 4;   // 设备指纹哈希 (varchar(255))
+  optional string device_name = 5;      // 设备名称 (varchar(255))
+  google.protobuf.Timestamp trusted_until = 6; // 信任到期时间
+  google.protobuf.Timestamp last_used_at = 7;  // 最后使用时间
+  optional string ip = 8;               // IP地址 (inet)
+  optional string ua_hash = 9;         // User-Agent 哈希 (varchar(64))
+  google.protobuf.Timestamp created_at = 10;   // 创建时间
+  google.protobuf.Timestamp updated_at = 11;   // 更新时间
 }
 
 // TrustedDevice 服务 - 供其他服务通过 gRPC 管理信任设备
@@ -45,7 +45,6 @@ message GetTrustedDeviceByIDResponse {
 message GetTrustedDeviceByDeviceIDRequest {
   string device_id = 1;
   string user_id = 2;
-  string tenant_id = 3;
 }
 
 message GetTrustedDeviceByDeviceIDResponse {
@@ -54,7 +53,6 @@ message GetTrustedDeviceByDeviceIDResponse {
 
 message GetTrustedDevicesByUserIDRequest {
   string user_id = 1;
-  string tenant_id = 2;
 }
 
 message GetTrustedDevicesByUserIDResponse {

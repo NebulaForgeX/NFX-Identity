@@ -91,25 +91,25 @@ func (AuthRevokeReason) EnumDescriptor() ([]byte, []int) {
 }
 
 // 刷新令牌信息
+// Note: No tenant_id because refresh tokens are user-level, not tenant-level (user can belong to multiple tenants)
 type RefreshToken struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                     // 令牌ID (UUID)
 	TokenId       string                 `protobuf:"bytes,2,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`                                                            // 令牌标识符 (varchar(255))
 	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                               // 用户ID (UUID)
-	TenantId      string                 `protobuf:"bytes,4,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                                                         // 租户ID (UUID)
-	AppId         *string                `protobuf:"bytes,5,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                            // 应用ID (UUID)
-	ClientId      *string                `protobuf:"bytes,6,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`                                                   // 客户端ID (varchar(255))
-	SessionId     *string                `protobuf:"bytes,7,opt,name=session_id,json=sessionId,proto3,oneof" json:"session_id,omitempty"`                                                // 会话ID (UUID)
-	IssuedAt      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=issued_at,json=issuedAt,proto3" json:"issued_at,omitempty"`                                                         // 签发时间
-	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`                                                      // 过期时间
-	RevokedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=revoked_at,json=revokedAt,proto3,oneof" json:"revoked_at,omitempty"`                                               // 撤销时间
-	RevokeReason  *AuthRevokeReason      `protobuf:"varint,11,opt,name=revoke_reason,json=revokeReason,proto3,enum=refresh_token.AuthRevokeReason,oneof" json:"revoke_reason,omitempty"` // 撤销原因
-	RotatedFrom   *string                `protobuf:"bytes,12,opt,name=rotated_from,json=rotatedFrom,proto3,oneof" json:"rotated_from,omitempty"`                                         // 轮换自的令牌ID (UUID)
-	DeviceId      *string                `protobuf:"bytes,13,opt,name=device_id,json=deviceId,proto3,oneof" json:"device_id,omitempty"`                                                  // 设备ID (varchar(255))
-	Ip            *string                `protobuf:"bytes,14,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                              // IP地址 (inet)
-	UaHash        *string                `protobuf:"bytes,15,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                                        // User-Agent 哈希 (varchar(64))
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                     // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                     // 更新时间
+	AppId         *string                `protobuf:"bytes,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                            // 应用ID (UUID)
+	ClientId      *string                `protobuf:"bytes,5,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`                                                   // 客户端ID (varchar(255))
+	SessionId     *string                `protobuf:"bytes,6,opt,name=session_id,json=sessionId,proto3,oneof" json:"session_id,omitempty"`                                                // 会话ID (UUID)
+	IssuedAt      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=issued_at,json=issuedAt,proto3" json:"issued_at,omitempty"`                                                         // 签发时间
+	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`                                                      // 过期时间
+	RevokedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=revoked_at,json=revokedAt,proto3,oneof" json:"revoked_at,omitempty"`                                                // 撤销时间
+	RevokeReason  *AuthRevokeReason      `protobuf:"varint,10,opt,name=revoke_reason,json=revokeReason,proto3,enum=refresh_token.AuthRevokeReason,oneof" json:"revoke_reason,omitempty"` // 撤销原因
+	RotatedFrom   *string                `protobuf:"bytes,11,opt,name=rotated_from,json=rotatedFrom,proto3,oneof" json:"rotated_from,omitempty"`                                         // 轮换自的令牌ID (UUID)
+	DeviceId      *string                `protobuf:"bytes,12,opt,name=device_id,json=deviceId,proto3,oneof" json:"device_id,omitempty"`                                                  // 设备ID (varchar(255))
+	Ip            *string                `protobuf:"bytes,13,opt,name=ip,proto3,oneof" json:"ip,omitempty"`                                                                              // IP地址 (inet)
+	UaHash        *string                `protobuf:"bytes,14,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                                                        // User-Agent 哈希 (varchar(64))
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                     // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                     // 更新时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -161,13 +161,6 @@ func (x *RefreshToken) GetTokenId() string {
 func (x *RefreshToken) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *RefreshToken) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -443,7 +436,6 @@ func (x *GetRefreshTokenByTokenIDResponse) GetRefreshToken() *RefreshToken {
 type GetRefreshTokensByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -481,13 +473,6 @@ func (*GetRefreshTokensByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetRefreshTokensByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetRefreshTokensByUserIDRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -540,31 +525,30 @@ var File_auth_refresh_token_proto protoreflect.FileDescriptor
 
 const file_auth_refresh_token_proto_rawDesc = "" +
 	"\n" +
-	"\x18auth/refresh_token.proto\x12\rrefresh_token\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x06\n" +
+	"\x18auth/refresh_token.proto\x12\rrefresh_token\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa1\x06\n" +
 	"\fRefreshToken\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\btoken_id\x18\x02 \x01(\tR\atokenId\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x04 \x01(\tR\btenantId\x12\x1a\n" +
-	"\x06app_id\x18\x05 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
-	"\tclient_id\x18\x06 \x01(\tH\x01R\bclientId\x88\x01\x01\x12\"\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1a\n" +
+	"\x06app_id\x18\x04 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
+	"\tclient_id\x18\x05 \x01(\tH\x01R\bclientId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"session_id\x18\a \x01(\tH\x02R\tsessionId\x88\x01\x01\x127\n" +
-	"\tissued_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\bissuedAt\x129\n" +
+	"session_id\x18\x06 \x01(\tH\x02R\tsessionId\x88\x01\x01\x127\n" +
+	"\tissued_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\bissuedAt\x129\n" +
 	"\n" +
-	"expires_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12>\n" +
+	"expires_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12>\n" +
 	"\n" +
-	"revoked_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampH\x03R\trevokedAt\x88\x01\x01\x12I\n" +
-	"\rrevoke_reason\x18\v \x01(\x0e2\x1f.refresh_token.AuthRevokeReasonH\x04R\frevokeReason\x88\x01\x01\x12&\n" +
-	"\frotated_from\x18\f \x01(\tH\x05R\vrotatedFrom\x88\x01\x01\x12 \n" +
-	"\tdevice_id\x18\r \x01(\tH\x06R\bdeviceId\x88\x01\x01\x12\x13\n" +
-	"\x02ip\x18\x0e \x01(\tH\aR\x02ip\x88\x01\x01\x12\x1c\n" +
-	"\aua_hash\x18\x0f \x01(\tH\bR\x06uaHash\x88\x01\x01\x129\n" +
+	"revoked_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\x03R\trevokedAt\x88\x01\x01\x12I\n" +
+	"\rrevoke_reason\x18\n" +
+	" \x01(\x0e2\x1f.refresh_token.AuthRevokeReasonH\x04R\frevokeReason\x88\x01\x01\x12&\n" +
+	"\frotated_from\x18\v \x01(\tH\x05R\vrotatedFrom\x88\x01\x01\x12 \n" +
+	"\tdevice_id\x18\f \x01(\tH\x06R\bdeviceId\x88\x01\x01\x12\x13\n" +
+	"\x02ip\x18\r \x01(\tH\aR\x02ip\x88\x01\x01\x12\x1c\n" +
+	"\aua_hash\x18\x0e \x01(\tH\bR\x06uaHash\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\t\n" +
+	"updated_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\t\n" +
 	"\a_app_idB\f\n" +
 	"\n" +
 	"_client_idB\r\n" +
@@ -584,12 +568,9 @@ const file_auth_refresh_token_proto_rawDesc = "" +
 	"\x1fGetRefreshTokenByTokenIDRequest\x12\x19\n" +
 	"\btoken_id\x18\x01 \x01(\tR\atokenId\"d\n" +
 	" GetRefreshTokenByTokenIDResponse\x12@\n" +
-	"\rrefresh_token\x18\x01 \x01(\v2\x1b.refresh_token.RefreshTokenR\frefreshToken\"j\n" +
+	"\rrefresh_token\x18\x01 \x01(\v2\x1b.refresh_token.RefreshTokenR\frefreshToken\":\n" +
 	"\x1fGetRefreshTokensByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\"f\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"f\n" +
 	" GetRefreshTokensByUserIDResponse\x12B\n" +
 	"\x0erefresh_tokens\x18\x01 \x03(\v2\x1b.refresh_token.RefreshTokenR\rrefreshTokens*\xe1\x02\n" +
 	"\x10AuthRevokeReason\x12\"\n" +
@@ -661,7 +642,6 @@ func file_auth_refresh_token_proto_init() {
 		return
 	}
 	file_auth_refresh_token_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_refresh_token_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

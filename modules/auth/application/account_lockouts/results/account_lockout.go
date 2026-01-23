@@ -10,7 +10,6 @@ import (
 
 type AccountLockoutRO struct {
 	UserID        uuid.UUID
-	TenantID      uuid.UUID
 	LockedUntil   *time.Time
 	LockReason    account_lockouts.LockReason
 	LockedAt      time.Time
@@ -31,7 +30,6 @@ func AccountLockoutMapper(al *account_lockouts.AccountLockout) AccountLockoutRO 
 
 	return AccountLockoutRO{
 		UserID:        al.UserID(),
-		TenantID:      al.TenantID(),
 		LockedUntil:   al.LockedUntil(),
 		LockReason:    al.LockReason(),
 		LockedAt:      al.LockedAt(),

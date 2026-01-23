@@ -23,14 +23,14 @@ const (
 )
 
 // 密码历史信息
+// Note: No tenant_id because password history is user-level, not tenant-level (user can belong to multiple tenants)
 type PasswordHistory struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                         // 历史ID (UUID)
 	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                   // 用户ID (UUID)
-	TenantId      string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`             // 租户ID (UUID)
-	PasswordHash  string                 `protobuf:"bytes,4,opt,name=password_hash,json=passwordHash,proto3" json:"password_hash,omitempty"` // 密码哈希 (varchar(255))
-	HashAlg       *string                `protobuf:"bytes,5,opt,name=hash_alg,json=hashAlg,proto3,oneof" json:"hash_alg,omitempty"`          // 哈希算法 (varchar(50))
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`          // 创建时间
+	PasswordHash  string                 `protobuf:"bytes,3,opt,name=password_hash,json=passwordHash,proto3" json:"password_hash,omitempty"` // 密码哈希 (varchar(255))
+	HashAlg       *string                `protobuf:"bytes,4,opt,name=hash_alg,json=hashAlg,proto3,oneof" json:"hash_alg,omitempty"`          // 哈希算法 (varchar(50))
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`          // 创建时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,13 +75,6 @@ func (x *PasswordHistory) GetId() string {
 func (x *PasswordHistory) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *PasswordHistory) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -199,7 +192,6 @@ func (x *GetPasswordHistoryByIDResponse) GetPasswordHistory() *PasswordHistory {
 type GetPasswordHistoriesByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -237,13 +229,6 @@ func (*GetPasswordHistoriesByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetPasswordHistoriesByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetPasswordHistoriesByUserIDRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -296,25 +281,21 @@ var File_auth_password_history_proto protoreflect.FileDescriptor
 
 const file_auth_password_history_proto_rawDesc = "" +
 	"\n" +
-	"\x1bauth/password_history.proto\x12\x10password_history\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe4\x01\n" +
+	"\x1bauth/password_history.proto\x12\x10password_history\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc7\x01\n" +
 	"\x0fPasswordHistory\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n" +
-	"\ttenant_id\x18\x03 \x01(\tR\btenantId\x12#\n" +
-	"\rpassword_hash\x18\x04 \x01(\tR\fpasswordHash\x12\x1e\n" +
-	"\bhash_alg\x18\x05 \x01(\tH\x00R\ahashAlg\x88\x01\x01\x129\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12#\n" +
+	"\rpassword_hash\x18\x03 \x01(\tR\fpasswordHash\x12\x1e\n" +
+	"\bhash_alg\x18\x04 \x01(\tH\x00R\ahashAlg\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\v\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\v\n" +
 	"\t_hash_alg\"/\n" +
 	"\x1dGetPasswordHistoryByIDRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"n\n" +
 	"\x1eGetPasswordHistoryByIDResponse\x12L\n" +
-	"\x10password_history\x18\x01 \x01(\v2!.password_history.PasswordHistoryR\x0fpasswordHistory\"n\n" +
+	"\x10password_history\x18\x01 \x01(\v2!.password_history.PasswordHistoryR\x0fpasswordHistory\">\n" +
 	"#GetPasswordHistoriesByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\"x\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"x\n" +
 	"$GetPasswordHistoriesByUserIDResponse\x12P\n" +
 	"\x12password_histories\x18\x01 \x03(\v2!.password_history.PasswordHistoryR\x11passwordHistories2\xa5\x02\n" +
 	"\x16PasswordHistoryService\x12{\n" +
@@ -363,7 +344,6 @@ func file_auth_password_history_proto_init() {
 		return
 	}
 	file_auth_password_history_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_password_history_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

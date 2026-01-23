@@ -32,11 +32,10 @@ func (c *TrustedDeviceClient) GetTrustedDeviceByID(ctx context.Context, id strin
 }
 
 // GetTrustedDeviceByDeviceID 根据设备ID获取信任设备
-func (c *TrustedDeviceClient) GetTrustedDeviceByDeviceID(ctx context.Context, deviceID, userID, tenantID string) (*trusteddevicepb.TrustedDevice, error) {
+func (c *TrustedDeviceClient) GetTrustedDeviceByDeviceID(ctx context.Context, deviceID, userID string) (*trusteddevicepb.TrustedDevice, error) {
 	req := &trusteddevicepb.GetTrustedDeviceByDeviceIDRequest{
 		DeviceId: deviceID,
 		UserId:   userID,
-		TenantId: tenantID,
 	}
 
 	resp, err := c.client.GetTrustedDeviceByDeviceID(ctx, req)
@@ -48,10 +47,9 @@ func (c *TrustedDeviceClient) GetTrustedDeviceByDeviceID(ctx context.Context, de
 }
 
 // GetTrustedDevicesByUserID 根据用户ID获取信任设备列表
-func (c *TrustedDeviceClient) GetTrustedDevicesByUserID(ctx context.Context, userID, tenantID string) ([]*trusteddevicepb.TrustedDevice, error) {
+func (c *TrustedDeviceClient) GetTrustedDevicesByUserID(ctx context.Context, userID string) ([]*trusteddevicepb.TrustedDevice, error) {
 	req := &trusteddevicepb.GetTrustedDevicesByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
+		UserId: userID,
 	}
 
 	resp, err := c.client.GetTrustedDevicesByUserID(ctx, req)

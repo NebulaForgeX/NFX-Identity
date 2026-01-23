@@ -16,7 +16,6 @@ func MFAFactorDomainToModel(mf *mfa_factors.MFAFactor) *models.MfaFactor {
 	return &models.MfaFactor{
 		ID:                mf.ID(),
 		FactorID:          mf.FactorID(),
-		TenantID:          mf.TenantID(),
 		UserID:            mf.UserID(),
 		Type:              mfaTypeDomainToEnum(mf.Type()),
 		SecretEncrypted:   mf.SecretEncrypted(),
@@ -41,7 +40,6 @@ func MFAFactorModelToDomain(m *models.MfaFactor) *mfa_factors.MFAFactor {
 	state := mfa_factors.MFAFactorState{
 		ID:                m.ID,
 		FactorID:          m.FactorID,
-		TenantID:          m.TenantID,
 		UserID:            m.UserID,
 		Type:              mfaTypeEnumToDomain(m.Type),
 		SecretEncrypted:   m.SecretEncrypted,
@@ -62,7 +60,6 @@ func MFAFactorModelToDomain(m *models.MfaFactor) *mfa_factors.MFAFactor {
 // MFAFactorModelToUpdates 将 Model MfaFactor 转换为更新字段映射
 func MFAFactorModelToUpdates(m *models.MfaFactor) map[string]any {
 	return map[string]any{
-		models.MfaFactorCols.TenantID:          m.TenantID,
 		models.MfaFactorCols.UserID:            m.UserID,
 		models.MfaFactorCols.Type:              m.Type,
 		models.MfaFactorCols.SecretEncrypted:   m.SecretEncrypted,

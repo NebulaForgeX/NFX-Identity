@@ -12,7 +12,6 @@ import (
 type PasswordReset struct {
 	ID           uuid.UUID               `gorm:"type:uuid;primaryKey"`
 	ResetID      string                  `gorm:"type:varchar(255);index:idx_password_resets_reset_id;uniqueIndex:password_resets_reset_id_key"`
-	TenantID     uuid.UUID               `gorm:"type:uuid;index:idx_password_resets_tenant_id"`
 	UserID       uuid.UUID               `gorm:"type:uuid;index:idx_password_resets_user_id"`
 	Delivery     enums.AuthResetDelivery `gorm:"type:reset_delivery"`
 	CodeHash     string                  `gorm:"type:varchar(255)"`
@@ -36,12 +35,11 @@ func (m *PasswordReset) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var PasswordResetCols = struct {
-	ID, ResetID, TenantID, UserID, Delivery, CodeHash, ExpiresAt,
-	UsedAt, RequestedIP, UaHash, AttemptCount, Status, CreatedAt, UpdatedAt string
+	ID, ResetID, UserID, Delivery, CodeHash, ExpiresAt, UsedAt,
+	RequestedIP, UaHash, AttemptCount, Status, CreatedAt, UpdatedAt string
 }{
 	ID:           "id",
 	ResetID:      "reset_id",
-	TenantID:     "tenant_id",
 	UserID:       "user_id",
 	Delivery:     "delivery",
 	CodeHash:     "code_hash",

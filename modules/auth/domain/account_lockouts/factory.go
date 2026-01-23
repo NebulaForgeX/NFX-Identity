@@ -8,7 +8,6 @@ import (
 
 type NewAccountLockoutParams struct {
 	UserID      uuid.UUID
-	TenantID    uuid.UUID
 	LockedUntil *time.Time
 	LockReason  LockReason
 	LockedBy    *string
@@ -23,7 +22,6 @@ func NewAccountLockout(p NewAccountLockoutParams) (*AccountLockout, error) {
 	now := time.Now().UTC()
 	return NewAccountLockoutFromState(AccountLockoutState{
 		UserID:      p.UserID,
-		TenantID:    p.TenantID,
 		LockedUntil: p.LockedUntil,
 		LockReason:  p.LockReason,
 		LockedAt:    now,
@@ -41,9 +39,6 @@ func NewAccountLockoutFromState(st AccountLockoutState) *AccountLockout {
 func validateAccountLockoutParams(p NewAccountLockoutParams) error {
 	if p.UserID == uuid.Nil {
 		return ErrUserIDRequired
-	}
-	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
 	}
 	if p.LockReason == "" {
 		return ErrLockReasonRequired

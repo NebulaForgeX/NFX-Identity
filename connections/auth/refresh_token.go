@@ -46,10 +46,9 @@ func (c *RefreshTokenClient) GetRefreshTokenByTokenID(ctx context.Context, token
 }
 
 // GetRefreshTokensByUserID 根据用户ID获取刷新令牌列表
-func (c *RefreshTokenClient) GetRefreshTokensByUserID(ctx context.Context, userID string, tenantID *string) ([]*refreshtokenpb.RefreshToken, error) {
+func (c *RefreshTokenClient) GetRefreshTokensByUserID(ctx context.Context, userID string) ([]*refreshtokenpb.RefreshToken, error) {
 	req := &refreshtokenpb.GetRefreshTokensByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
+		UserId: userID,
 	}
 
 	resp, err := c.client.GetRefreshTokensByUserID(ctx, req)

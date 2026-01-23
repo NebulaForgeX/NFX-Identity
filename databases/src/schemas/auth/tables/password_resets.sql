@@ -1,12 +1,12 @@
 -- Password Resets table for secure password recovery flow
 -- Supports audit, abuse prevention, and secure token management
+-- Note: No tenant_id because password reset is user-level, not tenant-level (user can belong to multiple tenants)
 CREATE TYPE "auth".reset_delivery AS ENUM ('email', 'sms');
 CREATE TYPE "auth".reset_status AS ENUM ('issued', 'used', 'expired', 'revoked');
 
 CREATE TABLE IF NOT EXISTS "auth"."password_resets" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "reset_id" VARCHAR(255) NOT NULL UNIQUE, -- Random reset identifier
-  "tenant_id" UUID NOT NULL,
   "user_id" UUID NOT NULL, -- References directory.users.id (application-level consistency)
   "delivery" "auth".reset_delivery NOT NULL,
   "code_hash" VARCHAR(255) NOT NULL, -- Hashed reset code/token (never store plaintext)
@@ -22,8 +22,6 @@ CREATE TABLE IF NOT EXISTS "auth"."password_resets" (
 
 CREATE INDEX IF NOT EXISTS "idx_password_resets_reset_id" ON "auth"."password_resets"("reset_id");
 CREATE INDEX IF NOT EXISTS "idx_password_resets_user_id" ON "auth"."password_resets"("user_id");
-CREATE INDEX IF NOT EXISTS "idx_password_resets_tenant_id" ON "auth"."password_resets"("tenant_id");
 CREATE INDEX IF NOT EXISTS "idx_password_resets_status" ON "auth"."password_resets"("status");
 CREATE INDEX IF NOT EXISTS "idx_password_resets_expires_at" ON "auth"."password_resets"("expires_at");
 CREATE INDEX IF NOT EXISTS "idx_password_resets_created_at" ON "auth"."password_resets"("created_at");
-

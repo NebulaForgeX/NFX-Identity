@@ -23,7 +23,6 @@ type AccountLockout struct {
 
 type AccountLockoutState struct {
 	UserID        uuid.UUID
-	TenantID      uuid.UUID
 	LockedUntil   *time.Time
 	LockReason    LockReason
 	LockedAt      time.Time
@@ -37,7 +36,6 @@ type AccountLockoutState struct {
 }
 
 func (al *AccountLockout) UserID() uuid.UUID      { return al.state.UserID }
-func (al *AccountLockout) TenantID() uuid.UUID    { return al.state.TenantID }
 func (al *AccountLockout) LockedUntil() *time.Time { return al.state.LockedUntil }
 func (al *AccountLockout) LockReason() LockReason { return al.state.LockReason }
 func (al *AccountLockout) LockedAt() time.Time    { return al.state.LockedAt }

@@ -12,8 +12,7 @@ import (
 type RefreshToken struct {
 	ID           uuid.UUID               `gorm:"type:uuid;primaryKey"`
 	TokenID      string                  `gorm:"type:varchar(255);index:idx_refresh_tokens_token_id;uniqueIndex:refresh_tokens_token_id_key"`
-	UserID       uuid.UUID               `gorm:"type:uuid;index:idx_refresh_tokens_user_id;index:idx_refresh_tokens_user_tenant,priority:1"`
-	TenantID     uuid.UUID               `gorm:"type:uuid;index:idx_refresh_tokens_tenant_id;index:idx_refresh_tokens_user_tenant,priority:2"`
+	UserID       uuid.UUID               `gorm:"type:uuid;index:idx_refresh_tokens_user_id"`
 	AppID        *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_app_id"`
 	ClientID     *string                 `gorm:"type:varchar(255)"`
 	SessionID    *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_session_id"`
@@ -39,14 +38,13 @@ func (m *RefreshToken) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var RefreshTokenCols = struct {
-	ID, TokenID, UserID, TenantID, AppID, ClientID, SessionID,
-	IssuedAt, ExpiresAt, RevokedAt, RevokeReason, RotatedFrom, DeviceID, IP,
-	UaHash, CreatedAt, UpdatedAt string
+	ID, TokenID, UserID, AppID, ClientID, SessionID, IssuedAt,
+	ExpiresAt, RevokedAt, RevokeReason, RotatedFrom, DeviceID, IP, UaHash,
+	CreatedAt, UpdatedAt string
 }{
 	ID:           "id",
 	TokenID:      "token_id",
 	UserID:       "user_id",
-	TenantID:     "tenant_id",
 	AppID:        "app_id",
 	ClientID:     "client_id",
 	SessionID:    "session_id",

@@ -32,10 +32,9 @@ func (c *PasswordHistoryClient) GetPasswordHistoryByID(ctx context.Context, id s
 }
 
 // GetPasswordHistoriesByUserID 根据用户ID获取密码历史列表
-func (c *PasswordHistoryClient) GetPasswordHistoriesByUserID(ctx context.Context, userID string, tenantID *string) ([]*passwordhistorypb.PasswordHistory, error) {
+func (c *PasswordHistoryClient) GetPasswordHistoriesByUserID(ctx context.Context, userID string) ([]*passwordhistorypb.PasswordHistory, error) {
 	req := &passwordhistorypb.GetPasswordHistoriesByUserIDRequest{
-		UserId:   userID,
-		TenantId: tenantID,
+		UserId: userID,
 	}
 
 	resp, err := c.client.GetPasswordHistoriesByUserID(ctx, req)

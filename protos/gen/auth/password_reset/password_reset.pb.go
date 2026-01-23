@@ -129,22 +129,22 @@ func (AuthResetStatus) EnumDescriptor() ([]byte, []int) {
 }
 
 // 密码重置信息
+// Note: No tenant_id because password reset is user-level, not tenant-level (user can belong to multiple tenants)
 type PasswordReset struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                    // 重置ID (UUID)
 	ResetId       string                 `protobuf:"bytes,2,opt,name=reset_id,json=resetId,proto3" json:"reset_id,omitempty"`                           // 重置标识符 (varchar(255))
-	TenantId      string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`                        // 租户ID (UUID)
-	UserId        string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                              // 用户ID (UUID)
-	Delivery      AuthResetDelivery      `protobuf:"varint,5,opt,name=delivery,proto3,enum=password_reset.AuthResetDelivery" json:"delivery,omitempty"` // 交付方式：email, sms
-	CodeHash      string                 `protobuf:"bytes,6,opt,name=code_hash,json=codeHash,proto3" json:"code_hash,omitempty"`                        // 验证码哈希 (varchar(255))
-	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`                     // 过期时间
-	UsedAt        *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=used_at,json=usedAt,proto3,oneof" json:"used_at,omitempty"`                        // 使用时间
-	RequestedIp   *string                `protobuf:"bytes,9,opt,name=requested_ip,json=requestedIp,proto3,oneof" json:"requested_ip,omitempty"`         // 请求IP (inet)
-	UaHash        *string                `protobuf:"bytes,10,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                       // User-Agent 哈希 (varchar(64))
-	AttemptCount  int32                  `protobuf:"varint,11,opt,name=attempt_count,json=attemptCount,proto3" json:"attempt_count,omitempty"`          // 尝试次数
-	Status        AuthResetStatus        `protobuf:"varint,12,opt,name=status,proto3,enum=password_reset.AuthResetStatus" json:"status,omitempty"`      // 状态：issued, used, expired, revoked
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                    // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                    // 更新时间
+	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                              // 用户ID (UUID)
+	Delivery      AuthResetDelivery      `protobuf:"varint,4,opt,name=delivery,proto3,enum=password_reset.AuthResetDelivery" json:"delivery,omitempty"` // 交付方式：email, sms
+	CodeHash      string                 `protobuf:"bytes,5,opt,name=code_hash,json=codeHash,proto3" json:"code_hash,omitempty"`                        // 验证码哈希 (varchar(255))
+	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`                     // 过期时间
+	UsedAt        *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=used_at,json=usedAt,proto3,oneof" json:"used_at,omitempty"`                        // 使用时间
+	RequestedIp   *string                `protobuf:"bytes,8,opt,name=requested_ip,json=requestedIp,proto3,oneof" json:"requested_ip,omitempty"`         // 请求IP (inet)
+	UaHash        *string                `protobuf:"bytes,9,opt,name=ua_hash,json=uaHash,proto3,oneof" json:"ua_hash,omitempty"`                        // User-Agent 哈希 (varchar(64))
+	AttemptCount  int32                  `protobuf:"varint,10,opt,name=attempt_count,json=attemptCount,proto3" json:"attempt_count,omitempty"`          // 尝试次数
+	Status        AuthResetStatus        `protobuf:"varint,11,opt,name=status,proto3,enum=password_reset.AuthResetStatus" json:"status,omitempty"`      // 状态：issued, used, expired, revoked
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                    // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                    // 更新时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -189,13 +189,6 @@ func (x *PasswordReset) GetId() string {
 func (x *PasswordReset) GetResetId() string {
 	if x != nil {
 		return x.ResetId
-	}
-	return ""
-}
-
-func (x *PasswordReset) GetTenantId() string {
-	if x != nil {
-		return x.TenantId
 	}
 	return ""
 }
@@ -457,7 +450,6 @@ func (x *GetPasswordResetByResetIDResponse) GetPasswordReset() *PasswordReset {
 type GetPasswordResetsByUserIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TenantId      *string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -495,13 +487,6 @@ func (*GetPasswordResetsByUserIDRequest) Descriptor() ([]byte, []int) {
 func (x *GetPasswordResetsByUserIDRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
-	}
-	return ""
-}
-
-func (x *GetPasswordResetsByUserIDRequest) GetTenantId() string {
-	if x != nil && x.TenantId != nil {
-		return *x.TenantId
 	}
 	return ""
 }
@@ -554,26 +539,25 @@ var File_auth_password_reset_proto protoreflect.FileDescriptor
 
 const file_auth_password_reset_proto_rawDesc = "" +
 	"\n" +
-	"\x19auth/password_reset.proto\x12\x0epassword_reset\x1a\x1fgoogle/protobuf/timestamp.proto\"\x84\x05\n" +
+	"\x19auth/password_reset.proto\x12\x0epassword_reset\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe7\x04\n" +
 	"\rPasswordReset\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
-	"\breset_id\x18\x02 \x01(\tR\aresetId\x12\x1b\n" +
-	"\ttenant_id\x18\x03 \x01(\tR\btenantId\x12\x17\n" +
-	"\auser_id\x18\x04 \x01(\tR\x06userId\x12=\n" +
-	"\bdelivery\x18\x05 \x01(\x0e2!.password_reset.AuthResetDeliveryR\bdelivery\x12\x1b\n" +
-	"\tcode_hash\x18\x06 \x01(\tR\bcodeHash\x129\n" +
+	"\breset_id\x18\x02 \x01(\tR\aresetId\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12=\n" +
+	"\bdelivery\x18\x04 \x01(\x0e2!.password_reset.AuthResetDeliveryR\bdelivery\x12\x1b\n" +
+	"\tcode_hash\x18\x05 \x01(\tR\bcodeHash\x129\n" +
 	"\n" +
-	"expires_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x128\n" +
-	"\aused_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x00R\x06usedAt\x88\x01\x01\x12&\n" +
-	"\frequested_ip\x18\t \x01(\tH\x01R\vrequestedIp\x88\x01\x01\x12\x1c\n" +
-	"\aua_hash\x18\n" +
-	" \x01(\tH\x02R\x06uaHash\x88\x01\x01\x12#\n" +
-	"\rattempt_count\x18\v \x01(\x05R\fattemptCount\x127\n" +
-	"\x06status\x18\f \x01(\x0e2\x1f.password_reset.AuthResetStatusR\x06status\x129\n" +
+	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x128\n" +
+	"\aused_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x00R\x06usedAt\x88\x01\x01\x12&\n" +
+	"\frequested_ip\x18\b \x01(\tH\x01R\vrequestedIp\x88\x01\x01\x12\x1c\n" +
+	"\aua_hash\x18\t \x01(\tH\x02R\x06uaHash\x88\x01\x01\x12#\n" +
+	"\rattempt_count\x18\n" +
+	" \x01(\x05R\fattemptCount\x127\n" +
+	"\x06status\x18\v \x01(\x0e2\x1f.password_reset.AuthResetStatusR\x06status\x129\n" +
 	"\n" +
-	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\n" +
+	"updated_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\n" +
 	"\n" +
 	"\b_used_atB\x0f\n" +
 	"\r_requested_ipB\n" +
@@ -586,12 +570,9 @@ const file_auth_password_reset_proto_rawDesc = "" +
 	" GetPasswordResetByResetIDRequest\x12\x19\n" +
 	"\breset_id\x18\x01 \x01(\tR\aresetId\"i\n" +
 	"!GetPasswordResetByResetIDResponse\x12D\n" +
-	"\x0epassword_reset\x18\x01 \x01(\v2\x1d.password_reset.PasswordResetR\rpasswordReset\"k\n" +
+	"\x0epassword_reset\x18\x01 \x01(\v2\x1d.password_reset.PasswordResetR\rpasswordReset\";\n" +
 	" GetPasswordResetsByUserIDRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12 \n" +
-	"\ttenant_id\x18\x02 \x01(\tH\x00R\btenantId\x88\x01\x01B\f\n" +
-	"\n" +
-	"_tenant_id\"k\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"k\n" +
 	"!GetPasswordResetsByUserIDResponse\x12F\n" +
 	"\x0fpassword_resets\x18\x01 \x03(\v2\x1d.password_reset.PasswordResetR\x0epasswordResets*t\n" +
 	"\x11AuthResetDelivery\x12#\n" +
@@ -664,7 +645,6 @@ func file_auth_password_reset_proto_init() {
 		return
 	}
 	file_auth_password_reset_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_password_reset_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

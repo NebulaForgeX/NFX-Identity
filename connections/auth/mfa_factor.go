@@ -46,10 +46,9 @@ func (c *MfaFactorClient) GetMfaFactorByFactorID(ctx context.Context, factorID s
 }
 
 // GetMfaFactorsByUserID 根据用户ID获取MFA因子列表
-func (c *MfaFactorClient) GetMfaFactorsByUserID(ctx context.Context, userID string, tenantID *string, enabledOnly *bool) ([]*mfafactorpb.MfaFactor, error) {
+func (c *MfaFactorClient) GetMfaFactorsByUserID(ctx context.Context, userID string, enabledOnly *bool) ([]*mfafactorpb.MfaFactor, error) {
 	req := &mfafactorpb.GetMfaFactorsByUserIDRequest{
 		UserId:      userID,
-		TenantId:    tenantID,
 		EnabledOnly: enabledOnly,
 	}
 

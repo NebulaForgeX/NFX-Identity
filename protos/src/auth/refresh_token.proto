@@ -19,24 +19,24 @@ enum AuthRevokeReason {
 }
 
 // 刷新令牌信息
+// Note: No tenant_id because refresh tokens are user-level, not tenant-level (user can belong to multiple tenants)
 message RefreshToken {
   string id = 1;                          // 令牌ID (UUID)
   string token_id = 2;                    // 令牌标识符 (varchar(255))
   string user_id = 3;                     // 用户ID (UUID)
-  string tenant_id = 4;                   // 租户ID (UUID)
-  optional string app_id = 5;             // 应用ID (UUID)
-  optional string client_id = 6;          // 客户端ID (varchar(255))
-  optional string session_id = 7;         // 会话ID (UUID)
-  google.protobuf.Timestamp issued_at = 8;     // 签发时间
-  google.protobuf.Timestamp expires_at = 9;    // 过期时间
-  optional google.protobuf.Timestamp revoked_at = 10; // 撤销时间
-  optional AuthRevokeReason revoke_reason = 11;       // 撤销原因
-  optional string rotated_from = 12;      // 轮换自的令牌ID (UUID)
-  optional string device_id = 13;         // 设备ID (varchar(255))
-  optional string ip = 14;                // IP地址 (inet)
-  optional string ua_hash = 15;           // User-Agent 哈希 (varchar(64))
-  google.protobuf.Timestamp created_at = 16;          // 创建时间
-  google.protobuf.Timestamp updated_at = 17;          // 更新时间
+  optional string app_id = 4;             // 应用ID (UUID)
+  optional string client_id = 5;          // 客户端ID (varchar(255))
+  optional string session_id = 6;         // 会话ID (UUID)
+  google.protobuf.Timestamp issued_at = 7;     // 签发时间
+  google.protobuf.Timestamp expires_at = 8;    // 过期时间
+  optional google.protobuf.Timestamp revoked_at = 9; // 撤销时间
+  optional AuthRevokeReason revoke_reason = 10;       // 撤销原因
+  optional string rotated_from = 11;      // 轮换自的令牌ID (UUID)
+  optional string device_id = 12;         // 设备ID (varchar(255))
+  optional string ip = 13;                // IP地址 (inet)
+  optional string ua_hash = 14;           // User-Agent 哈希 (varchar(64))
+  google.protobuf.Timestamp created_at = 15;          // 创建时间
+  google.protobuf.Timestamp updated_at = 16;          // 更新时间
 }
 
 // RefreshToken 服务 - 供其他服务通过 gRPC 管理刷新令牌
@@ -70,7 +70,6 @@ message GetRefreshTokenByTokenIDResponse {
 
 message GetRefreshTokensByUserIDRequest {
   string user_id = 1;
-  optional string tenant_id = 2;
 }
 
 message GetRefreshTokensByUserIDResponse {
