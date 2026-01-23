@@ -94,6 +94,8 @@ const BootstrapContent = memo(({ children }: { children: ReactNode }) => {
   const systemState = useSystemInit();
   const methods = useInitBootstrapForm();
 
+  console.log("🔍 System state:", systemState.data);
+
   if (!systemState.data.initialized) {
     return (
       <FormProvider {...methods}>

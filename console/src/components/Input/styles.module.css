@@ -40,6 +40,47 @@
   outline: none;
 }
 
+/* 隐藏浏览器默认的密码可见性切换图标 */
+/* Chrome/Edge/Safari: 隐藏密码可见性切换按钮 */
+.input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+.input[type="password"]::-webkit-strong-password-toggle-button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* Edge 浏览器额外处理 */
+.input[type="password"]::-ms-reveal,
+.input[type="password"]::-ms-clear {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
 .input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 102, 126, 234), 0.1);

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 
 import { InitializeSystemState } from "@/apis/system.api";
-import { routerEventEmitter } from "@/events/router";
 import { hideLoading, showError, showLoading, showSuccess } from "@/stores/modalStore";
 
 export const useSubmitBootstrap = () => {
@@ -33,7 +32,9 @@ export const useSubmitBootstrap = () => {
       showSuccess({
         title: t("messages.init_success_title"),
         message: t("messages.init_success_message"),
-        onClick: () => routerEventEmitter.navigateToLogin(),
+        onClick: () => {
+          window.location.reload();
+        },
       });
     },
     onError: (error: Error) => {
