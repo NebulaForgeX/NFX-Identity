@@ -27,7 +27,6 @@ type RefreshTokenState struct {
 	ID          uuid.UUID
 	TokenID     string
 	UserID      uuid.UUID
-	TenantID    uuid.UUID
 	AppID       *uuid.UUID
 	ClientID    *string
 	SessionID   *uuid.UUID
@@ -46,7 +45,6 @@ type RefreshTokenState struct {
 func (rt *RefreshToken) ID() uuid.UUID            { return rt.state.ID }
 func (rt *RefreshToken) TokenID() string          { return rt.state.TokenID }
 func (rt *RefreshToken) UserID() uuid.UUID        { return rt.state.UserID }
-func (rt *RefreshToken) TenantID() uuid.UUID      { return rt.state.TenantID }
 func (rt *RefreshToken) AppID() *uuid.UUID        { return rt.state.AppID }
 func (rt *RefreshToken) ClientID() *string        { return rt.state.ClientID }
 func (rt *RefreshToken) SessionID() *uuid.UUID    { return rt.state.SessionID }

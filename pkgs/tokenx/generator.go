@@ -29,6 +29,12 @@ func (g *Generator) GenerateRefreshToken(userID, username, email, phone, roleID 
 	return g.signToken(claims)
 }
 
+// GenerateRefreshTokenWithID 生成 Refresh Token（带 token_id/jti）
+func (g *Generator) GenerateRefreshTokenWithID(userID, username, email, phone, roleID, tokenID string) (string, error) {
+	claims := NewRefreshTokenClaimsWithID(userID, username, email, phone, roleID, g.cfg.Issuer, g.cfg.RefreshTokenTTL, tokenID)
+	return g.signToken(claims)
+}
+
 // GenerateTokenPair 生成 Token 对（Access + Refresh）
 func (g *Generator) GenerateTokenPair(userID, username, email, phone, roleID string) (accessToken, refreshToken string, err error) {
 	accessToken, err = g.GenerateAccessToken(userID, username, email, phone, roleID)
@@ -37,6 +43,21 @@ func (g *Generator) GenerateTokenPair(userID, username, email, phone, roleID str
 	}
 
 	refreshToken, err = g.GenerateRefreshToken(userID, username, email, phone, roleID)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to generate refresh token: %w", err)
+	}
+
+	return accessToken, refreshToken, nil
+}
+
+// GenerateTokenPairWithRefreshID 生成 Token 对（Access + Refresh，refresh token 带 token_id/jti）
+func (g *Generator) GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID string) (accessToken, refreshToken string, err error) {
+	accessToken, err = g.GenerateAccessToken(userID, username, email, phone, roleID)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to generate access token: %w", err)
+	}
+
+	refreshToken, err = g.GenerateRefreshTokenWithID(userID, username, email, phone, roleID, refreshTokenID)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to generate refresh token: %w", err)
 	}

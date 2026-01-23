@@ -9,6 +9,7 @@ import (
 	authResults "nfxid/modules/auth/application/auth/results"
 	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
 	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
+	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
 	"nfxid/constants"
 
 	"github.com/google/uuid"
@@ -164,9 +165,29 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 		username = "user"
 	}
 
-	access, refresh, err := s.tokenIssuer.IssuePair(info.UserID, username, info.Email, info.Phone, "")
+	// 生成 refresh token ID（用于 refresh_tokens 表）
+	refreshTokenID, err := uuid.NewV7()
 	if err != nil {
 		return authResults.LoginResult{}, err
+	}
+	refreshTokenIDStr := refreshTokenID.String()
+
+	// 生成 Token 对（refresh token 包含 token_id/jti）
+	access, refresh, err := s.tokenIssuer.IssuePairWithRefreshID(info.UserID, username, info.Email, info.Phone, "", refreshTokenIDStr)
+	if err != nil {
+		return authResults.LoginResult{}, err
+	}
+
+	// 创建 refresh_tokens 表记录
+	expiresAt := time.Now().Add(time.Duration(s.refreshTokenTTL) * time.Second)
+	refreshTokenEntity, err := refreshTokenDomain.NewRefreshToken(refreshTokenDomain.NewRefreshTokenParams{
+		TokenID:   refreshTokenIDStr,
+		UserID:    uid,
+		ExpiresAt: expiresAt,
+		IP:        cmd.IP,
+	})
+	if err == nil {
+		_ = s.refreshTokenRepo.Create.New(ctx, refreshTokenEntity)
 	}
 
 	return authResults.LoginResult{

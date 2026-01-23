@@ -20,9 +20,36 @@ func (t *TokenIssuer) IssuePair(userID, username, email, phone, roleID string) (
 	return t.tx.GenerateTokenPair(userID, username, email, phone, roleID)
 }
 
+// IssuePairWithRefreshID 实现 TokenIssuer（带 refresh token ID）
+func (t *TokenIssuer) IssuePairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID string) (access, refresh string, err error) {
+	return t.tx.GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID)
+}
+
 // RefreshPair 实现 TokenIssuer
 func (t *TokenIssuer) RefreshPair(refreshToken string) (access, refresh string, err error) {
 	return t.tx.RefreshTokenPair(refreshToken)
+}
+
+// VerifyRefreshToken 验证 refresh token 并返回 claims
+func (t *TokenIssuer) VerifyRefreshToken(refreshToken string) (*authApp.TokenClaims, error) {
+	claims, err := t.tx.VerifyRefreshToken(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+	
+	tokenID := ""
+	if claims.ID != "" {
+		tokenID = claims.ID
+	}
+	
+	return &authApp.TokenClaims{
+		TokenID:  tokenID,
+		UserID:   claims.UserID,
+		Username: claims.Username,
+		Email:    claims.Email,
+		Phone:    claims.Phone,
+		RoleID:   claims.RoleID,
+	}, nil
 }
 
 var _ authApp.TokenIssuer = (*TokenIssuer)(nil)

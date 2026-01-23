@@ -47,8 +47,13 @@ func NewAccessTokenClaims(userID, username, email, phone, roleID, issuer string,
 
 // NewRefreshTokenClaims 创建 Refresh Token Claims
 func NewRefreshTokenClaims(userID, username, email, phone, roleID, issuer string, ttl time.Duration) *TokenClaims {
+	return NewRefreshTokenClaimsWithID(userID, username, email, phone, roleID, issuer, ttl, "")
+}
+
+// NewRefreshTokenClaimsWithID 创建 Refresh Token Claims（带 token_id/jti）
+func NewRefreshTokenClaimsWithID(userID, username, email, phone, roleID, issuer string, ttl time.Duration, tokenID string) *TokenClaims {
 	now := time.Now()
-	return &TokenClaims{
+	claims := &TokenClaims{
 		UserID:   userID,
 		Username: username,
 		Email:    email,
@@ -63,4 +68,9 @@ func NewRefreshTokenClaims(userID, username, email, phone, roleID, issuer string
 			NotBefore: jwt.NewNumericDate(now),
 		},
 	}
+	// 如果提供了 tokenID，设置到 JWT 的 jti claim
+	if tokenID != "" {
+		claims.ID = tokenID
+	}
+	return claims
 }

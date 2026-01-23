@@ -147,13 +147,19 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		if expiresInSec <= 0 {
 			expiresInSec = 900
 		}
+		refreshTokenTTL := int64(cfg.Token.RefreshTokenTTL.Seconds())
+		if refreshTokenTTL <= 0 {
+			refreshTokenTTL = 7 * 24 * 3600 // 7 天
+		}
 		authAppSvc = authApp.NewService(
 			userCredentialRepoInstance,
 			loginAttemptRepoInstance,
 			accountLockoutRepoInstance,
+			refreshTokenRepoInstance,
 			userResolver,
 			tokenIssuer,
 			expiresInSec,
+			refreshTokenTTL,
 		)
 	}
 

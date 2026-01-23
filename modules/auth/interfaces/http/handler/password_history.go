@@ -2,7 +2,6 @@ package handler
 
 import (
 	passwordHistoryApp "nfxid/modules/auth/application/password_history"
-	passwordHistoryAppCommands "nfxid/modules/auth/application/password_history/commands"
 	"nfxid/modules/auth/interfaces/http/dto/reqdto"
 	"nfxid/modules/auth/interfaces/http/dto/respdto"
 	"nfxid/pkgs/netx/httpresp"

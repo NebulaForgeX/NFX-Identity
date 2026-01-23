@@ -25,7 +25,6 @@ type Get interface {
 	ByID(ctx context.Context, id uuid.UUID) (*RefreshToken, error)
 	ByTokenID(ctx context.Context, tokenID string) (*RefreshToken, error)
 	ByUserID(ctx context.Context, userID uuid.UUID) ([]*RefreshToken, error)
-	ByUserIDAndTenantID(ctx context.Context, userID, tenantID uuid.UUID) ([]*RefreshToken, error)
 }
 
 // Check 定义检查相关的方法

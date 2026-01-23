@@ -10,7 +10,6 @@ import (
 type RefreshTokenCreateRequestDTO struct {
 	TokenID   string     `json:"token_id" validate:"required"`
 	UserID    uuid.UUID  `json:"user_id" validate:"required"`
-	TenantID  uuid.UUID  `json:"tenant_id" validate:"required"`
 	AppID     *uuid.UUID `json:"app_id,omitempty"`
 	ClientID  *string    `json:"client_id,omitempty"`
 	SessionID *uuid.UUID `json:"session_id,omitempty"`
@@ -32,7 +31,6 @@ func (r *RefreshTokenCreateRequestDTO) ToCreateCmd() refreshTokenAppCommands.Cre
 	return refreshTokenAppCommands.CreateRefreshTokenCmd{
 		TokenID:   r.TokenID,
 		UserID:    r.UserID,
-		TenantID:  r.TenantID,
 		AppID:     r.AppID,
 		ClientID:  r.ClientID,
 		SessionID: r.SessionID,

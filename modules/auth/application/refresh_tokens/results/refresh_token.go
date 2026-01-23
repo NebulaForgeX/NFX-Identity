@@ -12,7 +12,6 @@ type RefreshTokenRO struct {
 	ID           uuid.UUID
 	TokenID      string
 	UserID       uuid.UUID
-	TenantID     uuid.UUID
 	AppID        *uuid.UUID
 	ClientID     *string
 	SessionID    *uuid.UUID
@@ -38,7 +37,6 @@ func RefreshTokenMapper(rt *refresh_tokens.RefreshToken) RefreshTokenRO {
 		ID:           rt.ID(),
 		TokenID:      rt.TokenID(),
 		UserID:       rt.UserID(),
-		TenantID:     rt.TenantID(),
 		AppID:        rt.AppID(),
 		ClientID:     rt.ClientID(),
 		SessionID:    rt.SessionID(),

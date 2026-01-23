@@ -10,7 +10,6 @@ import (
 type CreateRefreshTokenCmd struct {
 	TokenID   string
 	UserID    uuid.UUID
-	TenantID  uuid.UUID
 	AppID     *uuid.UUID
 	ClientID  *string
 	SessionID *uuid.UUID

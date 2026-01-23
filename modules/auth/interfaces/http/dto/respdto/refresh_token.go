@@ -12,7 +12,6 @@ type RefreshTokenDTO struct {
 	ID           uuid.UUID  `json:"id"`
 	TokenID      string     `json:"token_id"`
 	UserID       uuid.UUID  `json:"user_id"`
-	TenantID     uuid.UUID  `json:"tenant_id"`
 	AppID        *uuid.UUID `json:"app_id,omitempty"`
 	ClientID     *string    `json:"client_id,omitempty"`
 	SessionID    *uuid.UUID `json:"session_id,omitempty"`
@@ -38,7 +37,6 @@ func RefreshTokenROToDTO(v *refreshTokenAppResult.RefreshTokenRO) *RefreshTokenD
 		ID:          v.ID,
 		TokenID:     v.TokenID,
 		UserID:      v.UserID,
-		TenantID:    v.TenantID,
 		AppID:       v.AppID,
 		ClientID:    v.ClientID,
 		SessionID:   v.SessionID,

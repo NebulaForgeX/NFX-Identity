@@ -31,6 +31,11 @@ func (t *Tokenx) GenerateTokenPair(userID, username, email, phone, roleID string
 	return t.generator.GenerateTokenPair(userID, username, email, phone, roleID)
 }
 
+// GenerateTokenPairWithRefreshID 生成 Token 对（refresh token 带 token_id/jti）
+func (t *Tokenx) GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID string) (accessToken, refreshToken string, err error) {
+	return t.generator.GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID)
+}
+
 // VerifyAccessToken 验证 Access Token
 func (t *Tokenx) VerifyAccessToken(tokenString string) (*TokenClaims, error) {
 	return t.verifier.VerifyAccessToken(tokenString)

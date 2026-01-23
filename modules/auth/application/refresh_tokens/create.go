@@ -21,7 +21,6 @@ func (s *Service) CreateRefreshToken(ctx context.Context, cmd refreshTokenComman
 	refreshToken, err := refreshTokenDomain.NewRefreshToken(refreshTokenDomain.NewRefreshTokenParams{
 		TokenID:   cmd.TokenID,
 		UserID:    cmd.UserID,
-		TenantID:  cmd.TenantID,
 		AppID:     cmd.AppID,
 		ClientID:  cmd.ClientID,
 		SessionID: cmd.SessionID,

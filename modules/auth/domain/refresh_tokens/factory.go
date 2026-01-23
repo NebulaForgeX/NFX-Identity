@@ -9,7 +9,6 @@ import (
 type NewRefreshTokenParams struct {
 	TokenID     string
 	UserID      uuid.UUID
-	TenantID    uuid.UUID
 	AppID       *uuid.UUID
 	ClientID    *string
 	SessionID   *uuid.UUID
@@ -35,7 +34,6 @@ func NewRefreshToken(p NewRefreshTokenParams) (*RefreshToken, error) {
 		ID:          id,
 		TokenID:     p.TokenID,
 		UserID:      p.UserID,
-		TenantID:    p.TenantID,
 		AppID:       p.AppID,
 		ClientID:    p.ClientID,
 		SessionID:   p.SessionID,
@@ -60,9 +58,6 @@ func validateRefreshTokenParams(p NewRefreshTokenParams) error {
 	}
 	if p.UserID == uuid.Nil {
 		return ErrUserIDRequired
-	}
-	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
 	}
 	if p.ExpiresAt.IsZero() {
 		return ErrExpiresAtRequired

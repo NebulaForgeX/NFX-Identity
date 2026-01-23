@@ -9,9 +9,6 @@ func (rt *RefreshToken) Validate() error {
 	if rt.UserID() == uuid.Nil {
 		return ErrUserIDRequired
 	}
-	if rt.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
-	}
 	if rt.ExpiresAt().IsZero() {
 		return ErrExpiresAtRequired
 	}
