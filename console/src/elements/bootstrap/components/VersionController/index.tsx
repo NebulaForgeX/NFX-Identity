@@ -4,7 +4,7 @@ import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 
-import styles from "./styles.module.css";
+import { Input } from "@/components";
 
 const VersionController = memo(() => {
   const { t } = useTranslation("elements.bootstrap");
@@ -14,18 +14,14 @@ const VersionController = memo(() => {
   } = useFormContext<BootstrapFormValues>();
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>
-        {t("version.label")} <span className={styles.required}>{t("required")}</span>
-      </label>
-      <input
-        {...register("Version")}
-        type="text"
-        placeholder={t("version.placeholder")}
-        className={`${styles.input} ${errors.Version ? styles.inputError : ""}`}
-      />
-      {errors.Version && <p className={styles.errorMessage}>{errors.Version.message}</p>}
-    </div>
+    <Input
+      label={t("version.label")}
+      placeholder={t("version.placeholder")}
+      error={errors.Version?.message as string | undefined}
+      fullWidth
+      required
+      {...register("Version")}
+    />
   );
 });
 

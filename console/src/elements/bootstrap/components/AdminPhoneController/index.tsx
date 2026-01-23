@@ -2,13 +2,16 @@ import type { BootstrapFormValues } from "../../controllers/bootstrapSchema";
 
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+
+import { Input } from "@/components";
 
 import styles from "./styles.module.css";
 
 const AdminPhoneController = memo(() => {
   const { t } = useTranslation("elements.bootstrap");
   const {
+    control,
     register,
     formState: { errors },
   } = useFormContext<BootstrapFormValues>();
@@ -17,23 +20,35 @@ const AdminPhoneController = memo(() => {
     <div className={styles.formControl}>
       <label className={styles.label}>{t("admin_phone.label")}</label>
       <div className={styles.phoneWrapper}>
-        <input
-          {...register("AdminCountryCode")}
-          type="text"
-          placeholder={t("admin_phone.country_code_placeholder")}
-          className={`${styles.countryCode} ${errors.AdminCountryCode ? styles.inputError : ""}`}
-          maxLength={5}
+        <Controller
+          name="AdminCountryCode"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\+/g, "").replace(/[^\d]/g, "");
+                field.onChange(value);
+              }}
+              leftIcon={<span className={styles.plusSign}>+</span>}
+              placeholder={t("admin_phone.country_code_placeholder")}
+              error={errors.AdminCountryCode?.message as string | undefined}
+              maxLength={5}
+              inputMode="numeric"
+              className={styles.countryCodeInput}
+            />
+          )}
         />
-        <input
-          {...register("AdminPhone")}
-          type="tel"
+        <Input
           placeholder={t("admin_phone.placeholder")}
-          className={`${styles.phone} ${errors.AdminPhone ? styles.inputError : ""}`}
+          type="tel"
+          error={errors.AdminPhone?.message as string | undefined}
           autoComplete="tel"
+          inputMode="numeric"
+          fullWidth
+          {...register("AdminPhone")}
         />
       </div>
-      {errors.AdminPhone && <p className={styles.errorMessage}>{errors.AdminPhone.message}</p>}
-      {errors.AdminCountryCode && <p className={styles.errorMessage}>{errors.AdminCountryCode.message}</p>}
     </div>
   );
 });

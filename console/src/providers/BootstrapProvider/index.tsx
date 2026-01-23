@@ -1,9 +1,22 @@
+import type { BootstrapFormValues } from "@/elements/bootstrap";
 import type { ReactNode } from "react";
 
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { FormProvider, useFormContext } from "react-hook-form";
+
 import Suspense from "@/components/Suspense";
-import { BounceLoading } from "@/animations";
-import { TruckLoading } from "@/animations";
-import { ECGLoading } from "@/animations";
+import { Button, LanguageSwitcher, ThemeSwitcher } from "@/components";
+import {
+  useInitBootstrapForm,
+  useSubmitBootstrap,
+  VersionController,
+  AdminUsernameController,
+  AdminPasswordController,
+  AdminPasswordConfirmController,
+  AdminEmailController,
+  AdminPhoneController,
+} from "@/elements/bootstrap";
 
 import { useSystemInit } from "@/hooks/useSystem";
 
@@ -14,36 +27,96 @@ interface BootstrapProviderProps {
 }
 
 /**
- * BootstrapProvider - 系统初始化 Provider
- * 检查系统是否已初始化，如果未初始化则显示引导页面
+ * BootstrapFormContent - 系统初始化表单内容
  */
-function BootstrapContent({ children }: { children: ReactNode }) {
-  const systemState = useSystemInit();
+const BootstrapFormContent = memo(() => {
+  const { t } = useTranslation("BootstrapProvider");
+  const methods = useFormContext<BootstrapFormValues>();
+  const { onSubmit, onSubmitError, isPending } = useSubmitBootstrap();
 
-  // 如果系统未初始化，显示引导页面
+  return (
+    <div className={styles.container}>
+      {/* 左上角语言和主题切换按钮 */}
+      <div className={styles.topControls}>
+        <LanguageSwitcher status="default" />
+        <ThemeSwitcher status="default" />
+      </div>
+
+      <div className={styles.formCard}>
+        <h2 className={styles.formTitle}>{t("title")}</h2>
+        <p className={styles.formDescription}>{t("description")}</p>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+          className={styles.form}
+        >
+          {/* 版本信息 */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>{t("version_section")}</h3>
+            <VersionController />
+          </div>
+
+          {/* 管理员账户信息 */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>{t("admin_section")}</h3>
+            <AdminUsernameController />
+            <AdminPasswordController />
+            <AdminPasswordConfirmController />
+          </div>
+
+          {/* 可选信息 */}
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>{t("optional_section")}</h3>
+            <AdminEmailController />
+            <AdminPhoneController />
+          </div>
+
+          <div className={styles.actions}>
+            <Button
+              type="button"
+              variant="primary"
+              size="medium"
+              loading={isPending}
+              disabled={isPending}
+              onClick={methods.handleSubmit(onSubmit, onSubmitError)}
+            >
+              {isPending ? t("initializing") : t("start_initialization")}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+});
+
+BootstrapFormContent.displayName = "BootstrapFormContent";
+
+/**
+ * BootstrapContent - 系统初始化内容（必须在 Suspense 内，useSystemInit 为 suspense 模式会 throw）
+ * 检查系统是否已初始化，如果未初始化则显示初始化表单
+ */
+const BootstrapContent = memo(({ children }: { children: ReactNode }) => {
+  const systemState = useSystemInit();
+  const methods = useInitBootstrapForm();
+
   if (!systemState.data.initialized) {
     return (
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <BounceLoading size="large" shape="square" />
-          <TruckLoading size="medium" />
-          <ECGLoading size="medium" />
-          <h1 className={styles.title}>欢迎使用 NFX-Identity</h1>
-          <p className={styles.description}>
-            系统正在初始化，请稍候...
-          </p>
-          <p className={styles.hint}>
-            首次使用需要创建系统管理员账户
-          </p>
-        </div>
-      </div>
+      <FormProvider {...methods}>
+        <BootstrapFormContent />
+      </FormProvider>
     );
   }
 
-  // 系统已初始化，渲染子组件
   return <>{children}</>;
-}
+});
+BootstrapContent.displayName = "BootstrapContent";
 
+/**
+ * BootstrapProvider - 系统初始化 Provider
+ * 检查系统是否已初始化，如果未初始化则显示初始化表单
+ */
 export function BootstrapProvider({ children }: BootstrapProviderProps) {
   return (
     <Suspense

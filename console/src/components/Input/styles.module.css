@@ -1,0 +1,173 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wrapper.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fg-heading);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--color-border-4);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-fg-text);
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 102, 126, 234), 0.1);
+}
+
+.input::placeholder {
+  color: var(--color-fg-muted, var(--color-fg-text));
+  opacity: 0.5;
+}
+
+/* Size variants */
+.input.small {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.input.medium {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.input.large {
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+/* Variant styles */
+.input.default {
+  background: var(--color-bg);
+  border-color: var(--color-border-4);
+}
+
+.input.filled {
+  background: var(--color-bg-2);
+  border-color: var(--color-border-3);
+}
+
+/* With icons - handled via className in component */
+.inputContainer.withLeftIcon .input {
+  padding-left: 2.5rem;
+}
+
+.inputContainer.withRightIcon .input {
+  padding-right: 2.5rem;
+}
+
+.inputContainer.withLeftIcon .input.small {
+  padding-left: 2rem;
+}
+
+.inputContainer.withRightIcon .input.small {
+  padding-right: 2rem;
+}
+
+.inputContainer.withLeftIcon .input.large {
+  padding-left: 3rem;
+}
+
+.inputContainer.withRightIcon .input.large {
+  padding-right: 3rem;
+}
+
+.leftIcon,
+.rightIcon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg-muted, var(--color-fg-text));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.leftIcon {
+  left: 0.75rem;
+}
+
+.rightIcon {
+  right: 0.75rem;
+}
+
+.rightIcon.rightIconInteractive {
+  pointer-events: auto;
+}
+
+.inputContainer.containerSmall .leftIcon {
+  left: 0.5rem;
+}
+
+.inputContainer.containerSmall .rightIcon {
+  right: 0.5rem;
+}
+
+.inputContainer.containerLarge .leftIcon {
+  left: 1rem;
+}
+
+.inputContainer.containerLarge .rightIcon {
+  right: 1rem;
+}
+
+/* Error state */
+.input.error {
+  border-color: var(--color-danger);
+}
+
+.input.error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(var(--color-danger-rgb, 244, 67, 54), 0.1);
+}
+
+/* Disabled state */
+.input.disabled {
+  background: var(--color-bg-3);
+  border-color: var(--color-border-5);
+  color: var(--color-fg-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}

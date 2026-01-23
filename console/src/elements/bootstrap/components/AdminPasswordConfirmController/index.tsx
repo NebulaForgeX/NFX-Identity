@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 import { Eye, EyeOff } from "@/assets/icons/lucide";
 
-import styles from "./styles.module.css";
+import { Button, Input } from "@/components";
 
 const AdminPasswordConfirmController = memo(() => {
   const { t } = useTranslation("elements.bootstrap");
@@ -16,29 +16,30 @@ const AdminPasswordConfirmController = memo(() => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>
-        {t("admin_password_confirm.label")} <span className={styles.required}>{t("required")}</span>
-      </label>
-      <div className={styles.passwordWrapper}>
-        <input
-          {...register("AdminPasswordConfirm")}
-          type={showPassword ? "text" : "password"}
-          placeholder={t("admin_password_confirm.placeholder")}
-          className={`${styles.input} ${errors.AdminPasswordConfirm ? styles.inputError : ""}`}
-          autoComplete="new-password"
-        />
-        <button
+    <Input
+      label={t("admin_password_confirm.label")}
+      type={showPassword ? "text" : "password"}
+      placeholder={t("admin_password_confirm.placeholder")}
+      error={errors.AdminPasswordConfirm?.message as string | undefined}
+      fullWidth
+      required
+      autoComplete="new-password"
+      rightIconInteractive
+      rightIcon={
+        <Button
           type="button"
-          className={styles.toggleButton}
+          variant="ghost"
+          size="small"
+          aria-label={
+            showPassword ? t("admin_password_confirm.hide_password") : t("admin_password_confirm.show_password")
+          }
           onClick={() => setShowPassword(!showPassword)}
-          aria-label={showPassword ? t("admin_password_confirm.hide_password") : t("admin_password_confirm.show_password")}
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
-      </div>
-      {errors.AdminPasswordConfirm && <p className={styles.errorMessage}>{errors.AdminPasswordConfirm.message}</p>}
-    </div>
+        </Button>
+      }
+      {...register("AdminPasswordConfirm")}
+    />
   );
 });
 

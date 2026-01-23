@@ -1,9 +1,9 @@
 export { default as Header } from "./Header";
 export { default as ThemeSwitcher } from "./ThemeSwitcher";
+export { default as LanguageSwitcher } from "./LanguageSwitcher";
 export { default as LayoutSwitcher } from "./LayoutSwitcher";
 export { default as Footer } from "./Footer";
 export { default as Sidebar } from "./Sidebar";
-export { default as Button } from "./Button";
 export { default as Dropdown } from "./Dropdown";
 export { default as VirtualList } from "./VirtualList";
 export { default as VirtualWindowList } from "./VirtualWindowList";
@@ -12,3 +12,7 @@ export { default as Suspense } from "./Suspense";
 export { default as SearchInput } from "./SearchInput";
 export { default as ShowFilter } from "./ShowFilter";
 export type { ShowFilterValue } from "./ShowFilter";
+export { default as Input } from "./Input";
+export type { InputProps } from "./Input";
+export { default as Button } from "./Button";
+export type { ButtonProps } from "./Button";

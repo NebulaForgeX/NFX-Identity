@@ -1,31 +1,31 @@
 import type { ValueOf } from "@/utils/types";
 
-import en_BootstrapPage from "./en/BootstrapPage.json";
+import en_BootstrapProvider from "./en/BootstrapProvider.json";
 import en_elements_bootstrap from "./en/elements.bootstrap.json";
-import fr_BootstrapPage from "./fr/BootstrapPage.json";
+import fr_BootstrapProvider from "./fr/BootstrapProvider.json";
 import fr_elements_bootstrap from "./fr/elements.bootstrap.json";
-import zh_BootstrapPage from "./zh/BootstrapPage.json";
+import zh_BootstrapProvider from "./zh/BootstrapProvider.json";
 import zh_elements_bootstrap from "./zh/elements.bootstrap.json";
 
 // 所有语言包内容
 export const RESOURCES = {
   en: {
-    BootstrapPage: en_BootstrapPage,
+    BootstrapProvider: en_BootstrapProvider,
     "elements.bootstrap": en_elements_bootstrap,
   },
   zh: {
-    BootstrapPage: zh_BootstrapPage,
+    BootstrapProvider: zh_BootstrapProvider,
     "elements.bootstrap": zh_elements_bootstrap,
   },
   fr: {
-    BootstrapPage: fr_BootstrapPage,
+    BootstrapProvider: fr_BootstrapProvider,
     "elements.bootstrap": fr_elements_bootstrap,
   },
 };
 
 // 所有命名空间
 export const NAME_SPACES_MAP = {
-  BootstrapPage: "BootstrapPage",
+  BootstrapProvider: "BootstrapProvider",
   "elements.bootstrap": "elements.bootstrap",
 };
 

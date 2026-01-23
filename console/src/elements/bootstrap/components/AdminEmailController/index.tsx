@@ -4,7 +4,7 @@ import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 
-import styles from "./styles.module.css";
+import { Input } from "@/components";
 
 const AdminEmailController = memo(() => {
   const { t } = useTranslation("elements.bootstrap");
@@ -14,17 +14,15 @@ const AdminEmailController = memo(() => {
   } = useFormContext<BootstrapFormValues>();
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>{t("admin_email.label")}</label>
-      <input
-        {...register("AdminEmail")}
-        type="email"
-        placeholder={t("admin_email.placeholder")}
-        className={`${styles.input} ${errors.AdminEmail ? styles.inputError : ""}`}
-        autoComplete="email"
-      />
-      {errors.AdminEmail && <p className={styles.errorMessage}>{errors.AdminEmail.message}</p>}
-    </div>
+    <Input
+      label={t("admin_email.label")}
+      type="email"
+      placeholder={t("admin_email.placeholder")}
+      error={errors.AdminEmail?.message as string | undefined}
+      fullWidth
+      autoComplete="email"
+      {...register("AdminEmail")}
+    />
   );
 });
 

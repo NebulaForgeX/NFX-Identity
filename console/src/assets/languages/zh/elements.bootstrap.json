@@ -36,7 +36,7 @@
   "admin_phone": {
     "label": "管理员手机号（可选）",
     "placeholder": "请输入手机号",
-    "country_code_placeholder": "+86"
+    "country_code_placeholder": "86"
   },
   "required": "*",
   "validation": {

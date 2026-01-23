@@ -36,7 +36,7 @@
   "admin_phone": {
     "label": "Téléphone administrateur (Optionnel)",
     "placeholder": "Veuillez entrer le numéro de téléphone",
-    "country_code_placeholder": "+33"
+    "country_code_placeholder": "33"
   },
   "required": "*",
   "validation": {

@@ -15,39 +15,73 @@
 
 .container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  background: var(--color-bg);
   padding: 2rem;
+  position: relative;
 }
 
-.content {
+.topControls {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.formCard {
+  max-width: 600px;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.formTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin-bottom: 0.5rem;
+}
+
+.formDescription {
+  font-size: 0.875rem;
+  color: var(--color-fg-text);
+  margin-bottom: 2rem;
+}
+
+.form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  color: var(--color-fg-heading);
-  max-width: 500px;
-  gap: 1rem;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 2rem 0 1rem;
-  color: var(--color-fg-heading);
+.section {
+  margin-bottom: 2rem;
 }
 
-.description {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  opacity: 0.9;
-  color: var(--color-fg-text);
+.section:last-of-type {
+  margin-bottom: 1.5rem;
 }
 
-.hint {
-  font-size: 0.9rem;
-  opacity: 0.7;
+.section > * + * {
   margin-top: 1rem;
-  color: var(--color-fg-text);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-fg-heading);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border-4);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-4);
 }

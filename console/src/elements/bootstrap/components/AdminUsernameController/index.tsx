@@ -4,7 +4,7 @@ import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 
-import styles from "./styles.module.css";
+import { Input } from "@/components";
 
 const AdminUsernameController = memo(() => {
   const { t } = useTranslation("elements.bootstrap");
@@ -14,19 +14,15 @@ const AdminUsernameController = memo(() => {
   } = useFormContext<BootstrapFormValues>();
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>
-        {t("admin_username.label")} <span className={styles.required}>{t("required")}</span>
-      </label>
-      <input
-        {...register("AdminUsername")}
-        type="text"
-        placeholder={t("admin_username.placeholder")}
-        className={`${styles.input} ${errors.AdminUsername ? styles.inputError : ""}`}
-        autoComplete="username"
-      />
-      {errors.AdminUsername && <p className={styles.errorMessage}>{errors.AdminUsername.message}</p>}
-    </div>
+    <Input
+      label={t("admin_username.label")}
+      placeholder={t("admin_username.placeholder")}
+      error={errors.AdminUsername?.message as string | undefined}
+      fullWidth
+      required
+      autoComplete="username"
+      {...register("AdminUsername")}
+    />
   );
 });
 
