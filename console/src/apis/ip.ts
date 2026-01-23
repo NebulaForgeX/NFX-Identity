@@ -225,9 +225,10 @@ export const URL_PATHS = {
   SYSTEM: {
     // 系统状态相关 - 公开接口（不需要认证）
     GET_SYSTEM_STATE_LATEST: "/system/system-state/latest",
+    INITIALIZE_SYSTEM_STATE: "/system/system-state/initialize",
     // 系统状态相关 - 需要认证
     GET_SYSTEM_STATE: "/system/auth/system-state/:id",
-    INITIALIZE_SYSTEM_STATE: "/system/auth/system-state/initialize",
+    RE_INITIALIZE_SYSTEM_STATE: "/system/auth/system-state/initialize",
     RESET_SYSTEM_STATE: "/system/auth/system-state/reset",
     DELETE_SYSTEM_STATE: "/system/auth/system-state/:id",
   },

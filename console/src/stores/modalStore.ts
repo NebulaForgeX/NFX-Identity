@@ -37,6 +37,7 @@ interface YearSelectModalProps {
 interface LoadingModalProps {
   isOpen: boolean;
   message?: string;
+  canClose?: boolean;
 }
 
 interface ModalState {
@@ -91,6 +92,7 @@ const defaultYearSelectModalProps: YearSelectModalProps = {
 const defaultLoadingModalProps: LoadingModalProps = {
   isOpen: false,
   message: undefined,
+  canClose: false,
 };
 
 export const ModalStore = createStore<ModalState & ModalActions>()(
@@ -285,12 +287,14 @@ export const showYearSelect = (props: ShowYearSelectProps) => {
 
 export interface ShowLoadingProps {
   message?: string;
+  canClose?: boolean;
 }
 
 export const showLoading = (props?: ShowLoadingProps) => {
   ModalStore.getState().showModal("loading", {
     isOpen: true,
     message: props?.message,
+    canClose: props?.canClose ?? false,
   });
 };
 

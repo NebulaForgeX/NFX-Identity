@@ -68,28 +68,28 @@ const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) =>
         </svg>
       </button>
 
-      {isOpen && (
-        <div className={`${styles.optionsPanel} ${styles[status]}`}>
-          <ul className={styles.optionsList} role="listbox">
-            {availableLanguages.map((lang) => (
-              <li
-                key={lang}
-                className={`${styles.option} ${lang === currentLanguage ? styles.selected : ""}`}
-                onClick={() => handleLanguageChange(lang)}
-                role="option"
-                aria-selected={lang === currentLanguage}
-              >
-                <span>{languageDisplayNames[lang] || lang}</span>
-                {lang === currentLanguage && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div
+        className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
+      >
+        <ul className={styles.optionsList} role="listbox">
+          {availableLanguages.map((lang) => (
+            <li
+              key={lang}
+              className={`${styles.option} ${lang === currentLanguage ? styles.selected : ""}`}
+              onClick={() => handleLanguageChange(lang)}
+              role="option"
+              aria-selected={lang === currentLanguage}
+            >
+              <span>{languageDisplayNames[lang] || lang}</span>
+              {lang === currentLanguage && (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 });

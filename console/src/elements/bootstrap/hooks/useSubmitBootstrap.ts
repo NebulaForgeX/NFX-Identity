@@ -26,7 +26,7 @@ export const useSubmitBootstrap = () => {
       return await InitializeSystemState(params);
     },
     onMutate: () => {
-      showLoading({ message: t("messages.initializing") });
+      showLoading({ message: t("messages.initializing"), canClose: false });
     },
     onSuccess: () => {
       hideLoading();

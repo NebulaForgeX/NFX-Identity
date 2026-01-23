@@ -32,11 +32,14 @@ export const GetSystemState = async (id: string): Promise<SystemState> => {
   return data.data;
 };
 
-// 初始化系统状态
+// 初始化系统状态（公开接口，不需要认证；超时 2 分钟，初始化耗时长）
+const INITIALIZE_TIMEOUT_MS = 240_000;
+
 export const InitializeSystemState = async (params?: InitializeSystemStateRequest): Promise<SystemState> => {
-  const { data } = await protectedClient.post<DataResponse<SystemState>>(
+  const { data } = await publicClient.post<DataResponse<SystemState>>(
     URL_PATHS.SYSTEM.INITIALIZE_SYSTEM_STATE,
     params,
+    { timeout: INITIALIZE_TIMEOUT_MS },
   );
   return data.data;
 };

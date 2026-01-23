@@ -1,4 +1,4 @@
-/* ===== Nebular Select 样式模仿 ===== */
+/* ===== Nebular Select 样式模仿（与 LanguageSwitcher 一致） ===== */
 
 .nbSelect {
     display: inline-block;
@@ -28,6 +28,9 @@
     font-size: inherit;
     font-weight: inherit;
     line-height: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Primary 状态按钮 */
@@ -73,8 +76,7 @@
     opacity: 0.6;
 }
 
-/* 选择标签 */
-.selectLabel {
+.buttonText {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -82,7 +84,7 @@
 }
 
 /* 下拉图标 */
-.selectIcon {
+.chevronIcon {
     position: absolute;
     right: 0.41rem;
     width: 1.5rem;
@@ -91,15 +93,15 @@
     flex-shrink: 0;
 }
 
-.selectButton.primary .selectIcon {
+.selectButton.primary .chevronIcon {
     color: #ffffff;
 }
 
-.selectButton.default .selectIcon {
+.selectButton.default .chevronIcon {
     color: var(--color-fg);
 }
 
-.selectButton.open .selectIcon {
+.chevronIcon.open {
     transform: rotate(180deg);
 }
 
@@ -116,18 +118,44 @@
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     z-index: 1000;
     overflow: hidden;
-    animation: slideDown 0.15s ease-out;
+    transform-origin: top;
+    visibility: hidden;
+    pointer-events: none;
 }
 
-@keyframes slideDown {
+.optionsPanel.open {
+    visibility: visible;
+    pointer-events: auto;
+    animation: expandDown 0.25s ease-out;
+}
+
+.optionsPanel.closed {
+    visibility: hidden;
+    pointer-events: none;
+    animation: collapseUp 0.25s ease-out;
+}
+
+@keyframes expandDown {
     from {
         opacity: 0;
-        transform: translateY(-0.5rem);
+        transform: scaleY(0);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scaleY(1);
+    }
+}
+
+@keyframes collapseUp {
+    from {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scaleY(0);
     }
 }
 
@@ -165,21 +193,6 @@
     background-color: var(--color-primary);
     color: var(--color-primary-fg);
     font-weight: 700;
-}
-
-/* 选中图标 */
-.checkIcon {
-    flex-shrink: 0;
-    margin-left: 0.5rem;
-    color: var(--color-primary-fg);
-}
-
-
-/* ===== 响应式 ===== */
-@media (max-width: 767px) {
-    .nbSelect {
-        display: none;
-    }
 }
 
 /* Dark 主题适配 */

@@ -65,28 +65,28 @@ const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
         </svg>
       </button>
 
-      {isOpen && (
-        <div className={`${styles.optionsPanel} ${styles[status]}`}>
-          <ul className={styles.optionsList} role="listbox">
-            {availableThemes.map((theme) => (
-              <li
-                key={theme}
-                className={`${styles.option} ${theme === themeName ? styles.selected : ""}`}
-                onClick={() => handleThemeChange(theme)}
-                role="option"
-                aria-selected={theme === themeName}
-              >
-                <span>{themeDisplayNames[theme] || theme}</span>
-                {theme === themeName && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div
+        className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
+      >
+        <ul className={styles.optionsList} role="listbox">
+          {availableThemes.map((theme) => (
+            <li
+              key={theme}
+              className={`${styles.option} ${theme === themeName ? styles.selected : ""}`}
+              onClick={() => handleThemeChange(theme)}
+              role="option"
+              aria-selected={theme === themeName}
+            >
+              <span>{themeDisplayNames[theme] || theme}</span>
+              {theme === themeName && (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 });
