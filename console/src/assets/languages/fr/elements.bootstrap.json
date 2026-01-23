@@ -1,0 +1,51 @@
+{
+  "version": {
+    "label": "Version",
+    "placeholder": "par ex. 1.0.0",
+    "required": "Veuillez entrer le numéro de version",
+    "min_length": "Le numéro de version ne peut pas être vide"
+  },
+  "admin_username": {
+    "label": "Nom d'utilisateur administrateur",
+    "placeholder": "Veuillez entrer le nom d'utilisateur administrateur (au moins 3 caractères)",
+    "required": "Veuillez entrer le nom d'utilisateur administrateur",
+    "min_length": "Le nom d'utilisateur doit contenir au moins 3 caractères"
+  },
+  "admin_password": {
+    "label": "Mot de passe administrateur",
+    "placeholder": "Veuillez entrer le mot de passe (au moins 8 caractères)",
+    "required": "Veuillez entrer le mot de passe",
+    "min_length": "Le mot de passe doit contenir au moins 8 caractères",
+    "show_password": "Afficher le mot de passe",
+    "hide_password": "Masquer le mot de passe"
+  },
+  "admin_password_confirm": {
+    "label": "Confirmer le mot de passe",
+    "placeholder": "Veuillez entrer le mot de passe à nouveau",
+    "required": "Veuillez confirmer le mot de passe",
+    "min_length": "Veuillez confirmer le mot de passe",
+    "mismatch": "Les mots de passe ne correspondent pas",
+    "show_password": "Afficher le mot de passe",
+    "hide_password": "Masquer le mot de passe"
+  },
+  "admin_email": {
+    "label": "Email administrateur (Optionnel)",
+    "placeholder": "par ex. admin@example.com",
+    "invalid": "Veuillez entrer une adresse email valide"
+  },
+  "admin_phone": {
+    "label": "Téléphone administrateur (Optionnel)",
+    "placeholder": "Veuillez entrer le numéro de téléphone",
+    "country_code_placeholder": "+33"
+  },
+  "required": "*",
+  "validation": {
+    "form_validation_failed": "Échec de la validation du formulaire"
+  },
+  "messages": {
+    "init_success_title": "Initialisation du système réussie !",
+    "init_success_message": "Le système a été initialisé avec succès, redirection vers la page de connexion...",
+    "init_failed_title": "Échec de l'initialisation du système",
+    "init_failed_unknown": "Erreur inconnue"
+  }
+}

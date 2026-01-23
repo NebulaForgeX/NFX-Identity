@@ -1,12 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import "@/assets/themes/global.css";
 import "@/assets/languages/i18n";
 
-import { BootstrapProvider, ModalProvider, QueryProvider, ThemeProvider, LenisProvider } from "@/providers";  
+import { BootstrapProvider, BrowserRouterProvider, ModalProvider, QueryProvider, ThemeProvider, LenisProvider } from "@/providers";  
 
 import App from "./App.tsx";
 
@@ -14,7 +13,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryProvider>
       <ThemeProvider>
-        <BrowserRouter>
+        <BrowserRouterProvider>
           <LenisProvider>
             <ModalProvider>
               <BootstrapProvider>
@@ -22,7 +21,7 @@ createRoot(document.getElementById("root")!).render(
               </BootstrapProvider>
             </ModalProvider>
           </LenisProvider>
-        </BrowserRouter>
+        </BrowserRouterProvider>
       </ThemeProvider>
     </QueryProvider>
   </StrictMode>,

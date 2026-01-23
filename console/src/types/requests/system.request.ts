@@ -4,6 +4,11 @@
 
 export interface InitializeSystemStateRequest {
   version?: string;
+  admin_username: string;
+  admin_password: string;
+  admin_email?: string;
+  admin_phone?: string;
+  admin_country_code?: string;
   metadata?: Record<string, unknown>;
 }
 

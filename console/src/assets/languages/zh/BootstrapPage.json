@@ -1,0 +1,9 @@
+{
+  "title": "系统初始化",
+  "description": "请填写以下信息以初始化系统并创建管理员账户",
+  "version_section": "版本信息",
+  "admin_section": "管理员账户",
+  "optional_section": "可选信息",
+  "initializing": "初始化中...",
+  "start_initialization": "开始初始化"
+}

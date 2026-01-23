@@ -3,15 +3,9 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   DASHBOARD: "/dashboard",
-  // Permission routes
-  PERMISSION_LIST: "/permissions",
-  PERMISSION_DETAIL: "/permissions/:id",
-  PERMISSION_EDIT: "/permissions/:id/edit",
-  // User Permission routes
-  USER_PERMISSIONS: "/users/:userId/permissions",
-  // Authorization Code routes
-  AUTHORIZATION_CODE_LIST: "/authorization-codes",
-  AUTHORIZATION_CODE_DETAIL: "/authorization-codes/:id",
+  PROFILE: "/profile",
+  EDIT_PROFILE: "/profile/edit",
+  ACCOUNT_SECURITY: "/profile/security",
 } as const;
 
 // 路由类型

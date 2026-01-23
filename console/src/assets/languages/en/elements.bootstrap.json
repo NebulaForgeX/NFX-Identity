@@ -1,0 +1,51 @@
+{
+  "version": {
+    "label": "Version",
+    "placeholder": "e.g., 1.0.0",
+    "required": "Please enter version number",
+    "min_length": "Version number cannot be empty"
+  },
+  "admin_username": {
+    "label": "Administrator Username",
+    "placeholder": "Please enter administrator username (at least 3 characters)",
+    "required": "Please enter administrator username",
+    "min_length": "Username must be at least 3 characters"
+  },
+  "admin_password": {
+    "label": "Administrator Password",
+    "placeholder": "Please enter password (at least 8 characters)",
+    "required": "Please enter password",
+    "min_length": "Password must be at least 8 characters",
+    "show_password": "Show password",
+    "hide_password": "Hide password"
+  },
+  "admin_password_confirm": {
+    "label": "Confirm Password",
+    "placeholder": "Please enter password again",
+    "required": "Please confirm password",
+    "min_length": "Please confirm password",
+    "mismatch": "Passwords do not match",
+    "show_password": "Show password",
+    "hide_password": "Hide password"
+  },
+  "admin_email": {
+    "label": "Administrator Email (Optional)",
+    "placeholder": "e.g., admin@example.com",
+    "invalid": "Please enter a valid email address"
+  },
+  "admin_phone": {
+    "label": "Administrator Phone (Optional)",
+    "placeholder": "Please enter phone number",
+    "country_code_placeholder": "+1"
+  },
+  "required": "*",
+  "validation": {
+    "form_validation_failed": "Form validation failed"
+  },
+  "messages": {
+    "init_success_title": "System Initialization Successful!",
+    "init_success_message": "System has been successfully initialized, redirecting to login page...",
+    "init_failed_title": "System Initialization Failed",
+    "init_failed_unknown": "Unknown error"
+  }
+}

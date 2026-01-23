@@ -1,0 +1,9 @@
+{
+  "title": "System Initialization",
+  "description": "Please fill in the following information to initialize the system and create an administrator account",
+  "version_section": "Version Information",
+  "admin_section": "Administrator Account",
+  "optional_section": "Optional Information",
+  "initializing": "Initializing...",
+  "start_initialization": "Start Initialization"
+}

@@ -1,7 +1,6 @@
 // 只导出实际使用的 hooks
 export * from "./useAuth";
 export * from "./useResendTimer";
-export * from "./useRouter";
 export * from "./useAccess";
 export * from "./useAudit";
 export * from "./useClients";

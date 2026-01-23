@@ -1,0 +1,47 @@
+import type { BootstrapFormValues } from "../../controllers/bootstrapSchema";
+
+import { memo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useFormContext } from "react-hook-form";
+import { Eye, EyeOff } from "@/assets/icons/lucide";
+
+import styles from "./styles.module.css";
+
+const AdminPasswordController = memo(() => {
+  const { t } = useTranslation("elements.bootstrap");
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<BootstrapFormValues>();
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <div className={styles.formControl}>
+      <label className={styles.label}>
+        {t("admin_password.label")} <span className={styles.required}>{t("required")}</span>
+      </label>
+      <div className={styles.passwordWrapper}>
+        <input
+          {...register("AdminPassword")}
+          type={showPassword ? "text" : "password"}
+          placeholder={t("admin_password.placeholder")}
+          className={`${styles.input} ${errors.AdminPassword ? styles.inputError : ""}`}
+          autoComplete="new-password"
+        />
+        <button
+          type="button"
+          className={styles.toggleButton}
+          onClick={() => setShowPassword(!showPassword)}
+          aria-label={showPassword ? t("admin_password.hide_password") : t("admin_password.show_password")}
+        >
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
+      {errors.AdminPassword && <p className={styles.errorMessage}>{errors.AdminPassword.message}</p>}
+    </div>
+  );
+});
+
+AdminPasswordController.displayName = "AdminPasswordController";
+
+export default AdminPasswordController;

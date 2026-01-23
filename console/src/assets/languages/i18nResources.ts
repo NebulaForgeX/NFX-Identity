@@ -1,25 +1,32 @@
 import type { ValueOf } from "@/utils/types";
 
-import en_category from "./en/category.json";
-import fr_category from "./fr/category.json";
-import zh_category from "./zh/category.json";
+import en_BootstrapPage from "./en/BootstrapPage.json";
+import en_elements_bootstrap from "./en/elements.bootstrap.json";
+import fr_BootstrapPage from "./fr/BootstrapPage.json";
+import fr_elements_bootstrap from "./fr/elements.bootstrap.json";
+import zh_BootstrapPage from "./zh/BootstrapPage.json";
+import zh_elements_bootstrap from "./zh/elements.bootstrap.json";
 
 // 所有语言包内容
 export const RESOURCES = {
   en: {
-    category: en_category,
+    BootstrapPage: en_BootstrapPage,
+    "elements.bootstrap": en_elements_bootstrap,
   },
   zh: {
-    category: zh_category,
+    BootstrapPage: zh_BootstrapPage,
+    "elements.bootstrap": zh_elements_bootstrap,
   },
   fr: {
-    category: fr_category,
+    BootstrapPage: fr_BootstrapPage,
+    "elements.bootstrap": fr_elements_bootstrap,
   },
 };
 
 // 所有命名空间
 export const NAME_SPACES_MAP = {
-  category: "category",
+  BootstrapPage: "BootstrapPage",
+  "elements.bootstrap": "elements.bootstrap",
 };
 
 export const NAME_SPACES = Object.values(NAME_SPACES_MAP);

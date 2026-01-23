@@ -6,11 +6,9 @@ import { ROUTES } from "@/types/navigation";
 
 import "./App.module.css";
 
-import { useRouter } from "./hooks/useRouter";
 import { useAuthStore } from "./stores/authStore";
 
 function App() {
-  useRouter();
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
 
   if (!isAuthValid) {
