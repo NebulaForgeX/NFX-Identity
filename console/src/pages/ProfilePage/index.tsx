@@ -10,6 +10,8 @@ import {
   AccountInfoCard,
   BasicInfoCard,
   ProfileCard,
+  SkillsCard,
+  SocialLinksCard,
   UserEducationsCard,
   UserEmailsCard,
   UserOccupationsCard,
@@ -76,8 +78,19 @@ const ProfilePage = memo(() => {
 
         {/* User Data Cards */}
         <div className={styles.userDataSection}>
-          <UserEmailsCard userId={currentUserId} />
-          <UserPhonesCard userId={currentUserId} />
+          {/* Social Links and Skills Section */}
+          <div className={styles.socialSkillsSection}>
+            <SocialLinksCard userId={currentUserId} />
+            <SkillsCard userId={currentUserId} />
+          </div>
+
+          {/* Contact Section - Email and Phone side by side */}
+          <div className={styles.contactSection}>
+            <UserEmailsCard userId={currentUserId} />
+            <UserPhonesCard userId={currentUserId} />
+          </div>
+
+          {/* Education and Occupation */}
           <UserEducationsCard userId={currentUserId} />
           <UserOccupationsCard userId={currentUserId} />
         </div>
