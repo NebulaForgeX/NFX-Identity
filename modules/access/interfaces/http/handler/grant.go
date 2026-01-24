@@ -107,3 +107,24 @@ func (h *GrantHandler) Delete(c *fiber.Ctx) error {
 
 	return httpresp.Success(c, fiber.StatusOK, "Grant deleted successfully")
 }
+
+// GetBySubject 根据主体获取授权列表
+func (h *GrantHandler) GetBySubject(c *fiber.Ctx) error {
+	var req reqdto.GrantBySubjectRequestDTO
+	if err := c.QueryParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request query: "+err.Error())
+	}
+
+	// 使用 application 层的方法，避免 handler 直接依赖 domain 层
+	grants, err := h.appSvc.GetGrantsBySubjectString(c.Context(), req.SubjectType, req.SubjectID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Failed to get grants: "+err.Error())
+	}
+
+	dtos := make([]*respdto.GrantDTO, len(grants))
+	for i, g := range grants {
+		dtos[i] = respdto.GrantROToDTO(&g)
+	}
+
+	return httpresp.Success(c, fiber.StatusOK, "Grants retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+}

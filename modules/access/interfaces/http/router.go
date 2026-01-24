@@ -49,6 +49,7 @@ func (r *Router) RegisterRoutes() {
 
 		// 授权相关
 		auth.Post("/grants", r.handlers.Grant.Create)
+		auth.Get("/grants", r.handlers.Grant.GetBySubject)
 		auth.Get("/grants/:id", r.handlers.Grant.GetByID)
 		auth.Put("/grants/:id", r.handlers.Grant.Update)
 		auth.Delete("/grants/:id", r.handlers.Grant.Delete)

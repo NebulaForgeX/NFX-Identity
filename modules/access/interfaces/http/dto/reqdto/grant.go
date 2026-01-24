@@ -35,6 +35,18 @@ type GrantByIDRequestDTO struct {
 	ID uuid.UUID `params:"id" validate:"required,uuid"`
 }
 
+type GrantBySubjectRequestDTO struct {
+	SubjectType string    `query:"subject_type" validate:"required"`
+	SubjectID   uuid.UUID `query:"subject_id" validate:"required"`
+	TenantID    *uuid.UUID `query:"tenant_id,omitempty"`
+}
+
+// ToQueryCmd 转换为查询命令（用于 GetGrantsBySubject）
+// 返回 subjectType 字符串和 subjectID，由 application 层处理类型转换
+func (r *GrantBySubjectRequestDTO) ToQueryParams() (string, uuid.UUID, *uuid.UUID) {
+	return r.SubjectType, r.SubjectID, r.TenantID
+}
+
 func (r *GrantCreateRequestDTO) ToCreateCmd() grantAppCommands.CreateGrantCmd {
 	cmd := grantAppCommands.CreateGrantCmd{
 		SubjectID:    r.SubjectID,
