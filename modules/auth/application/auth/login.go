@@ -159,6 +159,9 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 	// 记录成功登录
 	s.recordSuccessfulLogin(ctx, identifier, &uid, cmd.IP)
 
+	// 更新最后成功登录时间
+	_ = s.credRepo.Update.UpdateLastSuccessLogin(ctx, uid)
+
 	// 签发 Token
 	username := info.Username
 	if username == "" {

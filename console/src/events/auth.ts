@@ -34,6 +34,9 @@ export const authEvents = {
   // TrustedDevice 相关
   INVALIDATE_TRUSTED_DEVICE: "AUTH:INVALIDATE_TRUSTED_DEVICE",
   INVALIDATE_TRUSTED_DEVICES: "AUTH:INVALIDATE_TRUSTED_DEVICES",
+
+  // 登录相关
+  LOGIN_SUCCESS: "AUTH:LOGIN_SUCCESS",
 } as const;
 
 type AuthEvent = (typeof authEvents)[keyof typeof authEvents];
@@ -58,6 +61,7 @@ class AuthEventEmitter {
     [authEvents.INVALIDATE_ACCOUNT_LOCKOUTS]: new Set<Function>(),
     [authEvents.INVALIDATE_TRUSTED_DEVICE]: new Set<Function>(),
     [authEvents.INVALIDATE_TRUSTED_DEVICES]: new Set<Function>(),
+    [authEvents.LOGIN_SUCCESS]: new Set<Function>(),
   };
 
   on(event: AuthEvent, callback: Function) {

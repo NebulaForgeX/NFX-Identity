@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { SidebarProps as ProSidebarProps } from "react-pro-sidebar";
 
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, Sidebar as ProSidebar } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
@@ -20,6 +21,7 @@ interface SidebarProps extends ProSidebarProps {
 
 const Sidebar = memo(
   ({ children, collapsed = false, toggled = false, onBackdropClick, breakPoint = "all", className }: SidebarProps) => {
+    const { t } = useTranslation("components");
     const location = useLocation();
 
     return (
@@ -75,7 +77,7 @@ const Sidebar = memo(
                   isActiveRoute(location.pathname, ROUTES.DASHBOARD) || isActiveRoute(location.pathname, ROUTES.HOME)
                 }
               >
-                仪表盘
+                {t("sidebar.dashboard")}
               </MenuItem>
             </Menu>
           )}

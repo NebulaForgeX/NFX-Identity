@@ -58,20 +58,30 @@
     position: relative;
     display: flex;
     align-items: center;
+    gap: 0.5rem;
 }
 
-.countryCode {
-    position: absolute;
-    left: 1rem;
+.countryCodeInput {
+    width: 4rem;
+    background-color: var(--color-bg-2);
+    border: 1px solid var(--color-border-4);
+    outline: none;
     color: var(--color-fg-text);
+    padding: 0.75rem 0.5rem;
     font-size: 0.875rem;
-    font-weight: 500;
-    pointer-events: none;
-    z-index: 1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.countryCodeInput:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 3px rgba(143, 155, 179, 0.1);
 }
 
 .phoneInputWrapper .input {
-    padding-left: 3rem;
+    flex: 1;
 }
 
 /* Input */
@@ -108,7 +118,7 @@
 }
 
 .phoneInputWrapper .label {
-    left: 3rem;
+    left: 5rem;
 }
 
 .input:focus+.label,
@@ -122,7 +132,7 @@
 
 .phoneInputWrapper .input:focus+.label,
 .phoneInputWrapper .input:valid+.label {
-    left: 2.75rem;
+    left: 4.75rem;
 }
 
 /* Send code button */

@@ -1,0 +1,21 @@
+{
+  "title": "Welcome Back",
+  "subtitle": "Sign in to your account to continue",
+  "login": "Sign In",
+  "register": "Sign Up",
+  "email": "Email",
+  "phone": "Phone",
+  "password": "Password",
+  "loginType": {
+    "email": "Email",
+    "phone": "Phone"
+  },
+  "noAccount": "Don't have an account?",
+  "registerNow": "Register Now",
+  "hasAccount": "Already have an account?",
+  "signInNow": "Sign In Now",
+  "loggingIn": "Signing in...",
+  "loginFailed": "Login failed, please try again",
+  "invalidCredentials": "Invalid email or password",
+  "accountLocked": "Account is locked due to too many failed login attempts"
+}

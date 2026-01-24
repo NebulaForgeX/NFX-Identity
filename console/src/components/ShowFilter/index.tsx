@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Eye, EyeOff, Filter } from "@/assets/icons/lucide";
 
@@ -15,6 +16,8 @@ interface ShowFilterProps {
 }
 
 const ShowFilter = memo(({ value, onChange }: ShowFilterProps) => {
+  const { t } = useTranslation("components");
+  
   const handleToggleEnabled = () => {
     onChange({ ...value, enabled: !value.enabled });
   };
@@ -31,10 +34,10 @@ const ShowFilter = memo(({ value, onChange }: ShowFilterProps) => {
           type="button"
           className={`${styles.toggleButton} ${value.enabled ? styles.enabled : ""}`}
           onClick={handleToggleEnabled}
-          aria-label={value.enabled ? "禁用显示过滤" : "启用显示过滤"}
+          aria-label={value.enabled ? t("showFilter.disableFilter") : t("showFilter.enableFilter")}
         >
           <Filter size={16} />
-          <span>{value.enabled ? "显示过滤已启用" : "显示过滤已禁用"}</span>
+          <span>{value.enabled ? t("showFilter.filterEnabled") : t("showFilter.filterDisabled")}</span>
         </button>
       </div>
 
@@ -46,7 +49,7 @@ const ShowFilter = memo(({ value, onChange }: ShowFilterProps) => {
             className={`${styles.option} ${value.value === null ? styles.active : ""}`}
             onClick={() => handleSelectShow(null)}
           >
-            全部
+            {t("showFilter.all")}
           </button>
           <button
             type="button"
@@ -54,7 +57,7 @@ const ShowFilter = memo(({ value, onChange }: ShowFilterProps) => {
             onClick={() => handleSelectShow(true)}
           >
             <Eye size={16} />
-            <span>显示</span>
+            <span>{t("showFilter.show")}</span>
           </button>
           <button
             type="button"
@@ -62,7 +65,7 @@ const ShowFilter = memo(({ value, onChange }: ShowFilterProps) => {
             onClick={() => handleSelectShow(false)}
           >
             <EyeOff size={16} />
-            <span>隐藏</span>
+            <span>{t("showFilter.hide")}</span>
           </button>
         </div>
       )}

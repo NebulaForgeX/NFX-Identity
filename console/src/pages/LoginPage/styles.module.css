@@ -2,10 +2,22 @@
 .loginPage {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: var(--color-bg-2);
     padding: 2rem;
+    position: relative;
+}
+
+/* 顶部控制栏 */
+.topControls {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 10;
 }
 
 /* 加载状态 */

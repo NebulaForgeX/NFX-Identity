@@ -9,17 +9,18 @@ import (
 
 // Service 认证应用服务（登录、刷新 Token）
 type Service struct {
-	credRepo          *userCredentialDomain.Repo
-	loginAttemptRepo  *loginAttemptDomain.Repo
+	credRepo           *userCredentialDomain.Repo
+	loginAttemptRepo   *loginAttemptDomain.Repo
 	accountLockoutRepo *accountLockoutDomain.Repo
-	refreshTokenRepo  *refreshTokenDomain.Repo
-	userResolver      UserResolver
-	tokenIssuer       TokenIssuer
-	expiresInSec      int64
-	refreshTokenTTL   int64 // refresh token 有效期（秒）
+	refreshTokenRepo   *refreshTokenDomain.Repo
+	userResolver       UserResolver
+	tokenIssuer        TokenIssuer
+	expiresInSec       int64
+	refreshTokenTTL    int64 // refresh token 有效期（秒）
 }
 
-// NewService 创建认证应用服务；注入 domain 仓库与 infra 实现的端口。expiresInSec 为 access token 有效期（秒），如 900。
+// NewService 创建认证应用服务；注入 domain 仓库与 infra 实现的端口。
+// expiresInSec、refreshTokenTTL 由 wiring 从配置解析，若配置缺失则使用 constants 默认值，此处不再做默认值兜底。
 func NewService(
 	credRepo *userCredentialDomain.Repo,
 	loginAttemptRepo *loginAttemptDomain.Repo,
@@ -30,20 +31,14 @@ func NewService(
 	expiresInSec int64,
 	refreshTokenTTL int64,
 ) *Service {
-	if expiresInSec <= 0 {
-		expiresInSec = 900
-	}
-	if refreshTokenTTL <= 0 {
-		refreshTokenTTL = 7 * 24 * 3600 // 7 天
-	}
 	return &Service{
-		credRepo:          credRepo,
-		loginAttemptRepo:  loginAttemptRepo,
+		credRepo:           credRepo,
+		loginAttemptRepo:   loginAttemptRepo,
 		accountLockoutRepo: accountLockoutRepo,
 		refreshTokenRepo:   refreshTokenRepo,
-		userResolver:      userResolver,
-		tokenIssuer:       tokenIssuer,
-		expiresInSec:      expiresInSec,
-		refreshTokenTTL:   refreshTokenTTL,
+		userResolver:       userResolver,
+		tokenIssuer:        tokenIssuer,
+		expiresInSec:       expiresInSec,
+		refreshTokenTTL:    refreshTokenTTL,
 	}
 }

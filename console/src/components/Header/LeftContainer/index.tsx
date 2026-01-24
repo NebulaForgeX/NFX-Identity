@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Menu } from "@/assets/icons/lucide";
 import { LayoutSwitcher, ThemeSwitcher } from "@/components";
@@ -11,6 +12,8 @@ interface LeftContainerProps {
 }
 
 const LeftContainer = memo(({ onToggleSidebar, onNavigateHome }: LeftContainerProps) => {
+  const { t } = useTranslation("components");
+  
   return (
     <div className={styles.headerContainer}>
       {/* 侧边栏切换按钮 */}
@@ -32,7 +35,7 @@ const LeftContainer = memo(({ onToggleSidebar, onNavigateHome }: LeftContainerPr
           onNavigateHome?.();
         }}
       >
-        双江古寨茶业管理平台
+        {t("header.platformName")}
       </button>
 
       {/* 主题/布局 切换器 */}

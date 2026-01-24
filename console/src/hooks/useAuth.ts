@@ -600,14 +600,39 @@ export const useDeleteTrustedDevice = () => {
 export const useLoginByEmail = () => {
   return useMutation({
     mutationFn: async (params: { email: string; password: string }) => {
-      // TODO: 实现邮箱登录逻辑
-      // 1. 验证用户凭证
-      // 2. 创建会话
-      // 3. 设置 token
-      throw new Error("邮箱登录功能尚未实现");
+      const { Login } = await import("@/apis/auth.api");
+      const response = await Login({
+        loginType: "email",
+        email: params.email,
+        password: params.password,
+      });
+      
+      // 设置tokens
+      AuthStore.getState().setTokens({
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      });
+      
+      // 设置用户ID和认证状态
+      AuthStore.getState().setCurrentUserId(response.userId);
+      AuthStore.getState().setIsAuthValid(true);
+      
+      return response;
+    },
+    onSuccess: () => {
+      showSuccess("登录成功！");
+      // 触发登录成功事件，由App.tsx监听并跳转
+      authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
     },
     onError: (error: AxiosError) => {
-      showError("登录失败，请稍后重试。" + error.message);
+      const errorMessage = (error.response?.data as { message?: string })?.message;
+      if (errorMessage?.includes("locked")) {
+        showError("账户已被锁定，请联系管理员");
+      } else if (errorMessage?.includes("invalid")) {
+        showError("邮箱或密码错误");
+      } else {
+        showError("登录失败，请稍后重试");
+      }
     },
   });
 };
@@ -615,15 +640,41 @@ export const useLoginByEmail = () => {
 // 通过手机号登录
 export const useLoginByPhone = () => {
   return useMutation({
-    mutationFn: async (params: { phone: string; password: string }) => {
-      // TODO: 实现手机号登录逻辑
-      // 1. 验证用户凭证
-      // 2. 创建会话
-      // 3. 设置 token
-      throw new Error("手机号登录功能尚未实现");
+    mutationFn: async (params: { phone: string; password: string; countryCode?: string }) => {
+      const { Login } = await import("@/apis/auth.api");
+      const response = await Login({
+        loginType: "phone",
+        phone: params.phone,
+        countryCode: params.countryCode,
+        password: params.password,
+      });
+      
+      // 设置tokens
+      AuthStore.getState().setTokens({
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      });
+      
+      // 设置用户ID和认证状态
+      AuthStore.getState().setCurrentUserId(response.userId);
+      AuthStore.getState().setIsAuthValid(true);
+      
+      return response;
+    },
+    onSuccess: () => {
+      showSuccess("登录成功！");
+      // 触发登录成功事件，由App.tsx监听并跳转
+      authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
     },
     onError: (error: AxiosError) => {
-      showError("登录失败，请稍后重试。" + error.message);
+      const errorMessage = (error.response?.data as { message?: string })?.message;
+      if (errorMessage?.includes("locked")) {
+        showError("账户已被锁定，请联系管理员");
+      } else if (errorMessage?.includes("invalid")) {
+        showError("手机号或密码错误");
+      } else {
+        showError("登录失败，请稍后重试");
+      }
     },
   });
 };

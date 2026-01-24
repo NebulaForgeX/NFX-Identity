@@ -91,28 +91,61 @@ protectedClient.interceptors.response.use(
 
     if (error.response?.status === 401 && error.config && !error.config._retry) {
       error.config._retry = true;
-      // 401 错误：token 无效，清除认证信息
-      AuthStore.getState().clearAuth();
-      await refreshTokens();
+      
+      try {
+        // 尝试刷新token
+        await refreshTokens();
+        
+        // 刷新成功，更新请求头并重试原请求
+        const newAccessToken = AuthStore.getState().accessToken;
+        if (newAccessToken && error.config.headers) {
+          error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
+        
+        // 重试原请求
+        return protectedClient.request(error.config);
+      } catch (refreshError) {
+        // 刷新失败，清除认证信息并跳转到登录页
+        AuthStore.getState().clearAuth();
+        // 触发路由跳转到登录页（如果需要）
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+        return Promise.reject(refreshError);
+      }
     }
 
     return Promise.reject(error);
   },
 );
 
-// 5) 刷新 token（防重入）- 暂时禁用，新后端可能没有 refresh token 功能
+// 5) 刷新 token（防重入）- 企业级最佳实践实现
 export const refreshTokens = onceAsync(async () => {
   try {
-    // TODO: 实现 refresh token 功能（如果后端支持）
-    // const { refreshToken, currentSessionId } = AuthStore.getState();
-    // if (!refreshToken || !currentSessionId) {
-    //   throw new Error("refreshToken or currentSessionId not found");
-    // }
-    // const tokens = await authApi.RefreshTokens({ refreshToken, sessionId: currentSessionId });
-    // setTokensAndActivateAuth(tokens);
-    throw new Error("Refresh token not implemented yet");
+    const { refreshToken } = AuthStore.getState();
+    if (!refreshToken) {
+      throw new Error("Refresh token not found");
+    }
+
+    // 导入登录API（避免循环依赖）
+    const { RefreshToken } = await import("./auth.api");
+    
+    // 调用刷新token API
+    const response = await RefreshToken({ refreshToken });
+    
+    // 更新tokens
+    AuthStore.getState().setTokens({
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+    });
+    
+    // 设置认证状态
+    AuthStore.getState().setIsAuthValid(true);
+    
+    return response;
   } catch (error) {
-    AuthStore.getState().clearAuth(); // Ensure all authentication information is cleared
+    // 刷新失败，清除所有认证信息
+    AuthStore.getState().clearAuth();
     throw error;
   }
 });

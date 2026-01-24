@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Search, X } from "@/assets/icons/lucide";
 
@@ -10,7 +11,10 @@ interface SearchInputProps {
   placeholder?: string;
 }
 
-const SearchInput = memo(({ value, onChange, placeholder = "搜索..." }: SearchInputProps) => {
+const SearchInput = memo(({ value, onChange, placeholder }: SearchInputProps) => {
+  const { t } = useTranslation("components");
+  const defaultPlaceholder = placeholder ?? t("searchInput.placeholder");
+  
   const handleClear = () => {
     onChange("");
   };
@@ -22,11 +26,11 @@ const SearchInput = memo(({ value, onChange, placeholder = "搜索..." }: Search
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={defaultPlaceholder}
         className={styles.searchInput}
       />
       {value && (
-        <button onClick={handleClear} className={styles.clearBtn} aria-label="清除搜索">
+        <button onClick={handleClear} className={styles.clearBtn} aria-label={t("searchInput.clearSearch")}>
           <X size={16} />
         </button>
       )}

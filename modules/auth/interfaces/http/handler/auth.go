@@ -101,10 +101,19 @@ func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
 		return httpresp.Error(c, fiber.StatusBadRequest, "refresh_token is required")
 	}
 
-	res, err := h.authSvc.Refresh(c.Context(), req.RefreshToken)
+	// 获取客户端 IP
+	clientIP := c.IP()
+	if forwardedIP := c.Get("X-Forwarded-For"); forwardedIP != "" {
+		clientIP = forwardedIP
+	}
+
+	res, err := h.authSvc.Refresh(c.Context(), req.RefreshToken, &clientIP)
 	if err != nil {
 		if errors.Is(err, authApp.ErrInvalidRefreshToken) {
 			return httpresp.Error(c, fiber.StatusUnauthorized, "invalid or expired refresh token")
+		}
+		if errors.Is(err, authApp.ErrAccountLocked) {
+			return httpresp.Error(c, fiber.StatusForbidden, "account is locked")
 		}
 		return httpresp.Error(c, fiber.StatusInternalServerError, "refresh failed")
 	}

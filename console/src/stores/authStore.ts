@@ -6,9 +6,11 @@ import { persist, subscribeWithSelector } from "zustand/middleware";
 interface AuthState {
   isAuthValid: boolean;
   accessToken: string | null;
+  refreshToken: string | null;
   currentUserId: string | null;
   setIsAuthValid: (isAuthValid: boolean) => void;
   setTokens: (tokens: Tokens) => void;
+  setRefreshToken: (refreshToken: string) => void;
   setCurrentUserId: (userId: string) => void;
   getCurrentUserId: () => string | null;
   clearAuth: () => void;
@@ -20,6 +22,7 @@ export const AuthStore = createStore<AuthState>()(
       (set, get) => ({
         isAuthValid: false,
         accessToken: null,
+        refreshToken: null,
         currentUserId: null,
 
         setIsAuthValid: (isAuthValid) => set({ isAuthValid }),
@@ -27,7 +30,10 @@ export const AuthStore = createStore<AuthState>()(
         setTokens: (tokens) =>
           set({
             accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken || null,
           }),
+
+        setRefreshToken: (refreshToken) => set({ refreshToken }),
 
         setCurrentUserId: (userId) => set({ currentUserId: userId }),
 
@@ -37,6 +43,7 @@ export const AuthStore = createStore<AuthState>()(
           set({
             isAuthValid: false,
             accessToken: null,
+            refreshToken: null,
             currentUserId: null,
           }),
       }),

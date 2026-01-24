@@ -1,0 +1,21 @@
+{
+  "title": "Bon retour",
+  "subtitle": "Connectez-vous à votre compte pour continuer",
+  "login": "Se connecter",
+  "register": "S'inscrire",
+  "email": "Email",
+  "phone": "Téléphone",
+  "password": "Mot de passe",
+  "loginType": {
+    "email": "Email",
+    "phone": "Téléphone"
+  },
+  "noAccount": "Vous n'avez pas de compte ?",
+  "registerNow": "S'inscrire maintenant",
+  "hasAccount": "Vous avez déjà un compte ?",
+  "signInNow": "Se connecter maintenant",
+  "loggingIn": "Connexion en cours...",
+  "loginFailed": "Échec de la connexion, veuillez réessayer",
+  "invalidCredentials": "Email ou mot de passe invalide",
+  "accountLocked": "Le compte est verrouillé en raison de trop nombreuses tentatives de connexion échouées"
+}

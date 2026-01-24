@@ -2,6 +2,7 @@ import type { VirtualizerOptions } from "@tanstack/react-virtual";
 import type { ReactNode } from "react";
 
 import { memo, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
 import styles from "./styles.module.css";
@@ -82,6 +83,8 @@ function VirtualWindowListComponent<T>({
     }
   }, [items, hasNextPage, isFetchingNextPage, fetchNextPage, data.length]);
 
+  const { t } = useTranslation("components");
+
   /* ✅ renderEmptyState — 保持原 VirtualList 一致 */
   const renderEmptyState = useCallback(() => {
     return (
@@ -93,34 +96,34 @@ function VirtualWindowListComponent<T>({
       >
         {emptyState ?? (
           <div className={styles.emptyContainer}>
-            <span>暂无数据</span>
+            <span>{t("virtualList.noData")}</span>
           </div>
         )}
       </div>
     );
-  }, [emptyState, height]);
+  }, [emptyState, height, t]);
 
   /* ✅ renderLoadingIndicator */
   const renderLoadingIndicator = useCallback(() => {
     return (
       loadingIndicator ?? (
         <div className={styles.loadingMore}>
-          <span>Loading more...</span>
+          <span>{t("virtualList.loadingMore")}</span>
         </div>
       )
     );
-  }, [loadingIndicator]);
+  }, [loadingIndicator, t]);
 
   /* ✅ renderEndOfListIndicator */
   const renderEndOfListIndicator = useCallback(() => {
     return (
       endOfListIndicator ?? (
         <div className={styles.endOfList}>
-          <span>No more items to load</span>
+          <span>{t("virtualList.noMoreItems")}</span>
         </div>
       )
     );
-  }, [endOfListIndicator]);
+  }, [endOfListIndicator, t]);
 
   /* ✅ 无数据情况 */
   if (data.length === 0) return renderEmptyState();

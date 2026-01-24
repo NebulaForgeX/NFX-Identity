@@ -1,4 +1,5 @@
 import { memo, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +44,7 @@ RightContainer.displayName = "RightContainer";
 export default RightContainer;
 
 const UserEmail = memo(() => {
+  const { t } = useTranslation("components");
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const { data: userEmail } = useQuery({
     queryKey: ["user-email", currentUserId],
@@ -53,13 +55,14 @@ const UserEmail = memo(() => {
   return (
     <div className={styles.contactInfo}>
       <Mail size={16} />
-      <span className={styles.email}>{userEmail || "未设置"}</span>
+      <span className={styles.email}>{userEmail || t("header.notSet")}</span>
     </div>
   );
 });
 UserEmail.displayName = "UserEmail";
 
 const UserMenu = memo(() => {
+  const { t } = useTranslation("components");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const clearAuth = useAuthStore((state) => state.clearAuth);
@@ -86,15 +89,15 @@ const UserMenu = memo(() => {
       clearAuth();
       navigate(ROUTES.LOGIN);
     } catch (error) {
-      showError("退出登录失败: " + error);
+      showError(t("header.logoutFailed") + error);
     }
-  }, [clearAuth, navigate]);
+  }, [clearAuth, navigate, t]);
 
   const userMenu: Array<{ title: string; action: () => void; disabled?: boolean }> = useMemo(
     () => [
-      { title: "退出登录", action: handleLogout },
+      { title: t("header.logout"), action: handleLogout },
     ],
-    [handleLogout],
+    [handleLogout, t],
   );
 
   return (
@@ -102,10 +105,10 @@ const UserMenu = memo(() => {
       <button className={styles.user} onClick={() => setUserMenuOpen(!userMenuOpen)}>
         <img
           src={buildImageUrl(userProfile?.avatarId, "avatar") || "/default-avatar.png"}
-          alt={user?.username || "用户"}
+          alt={user?.username || t("header.user")}
           className={styles.userPicture}
         />
-        <span className={styles.userName}>{user?.username || userEmail || "用户"}</span>
+        <span className={styles.userName}>{user?.username || userEmail || t("header.user")}</span>
       </button>
 
       {userMenuOpen && (
@@ -121,7 +124,7 @@ const UserMenu = memo(() => {
               disabled={item.disabled}
             >
               {item.title}
-              {item.disabled && " (正在退出...)"}
+              {item.disabled && t("header.loggingOut")}
             </button>
           ))}
         </div>

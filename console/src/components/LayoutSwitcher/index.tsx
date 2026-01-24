@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
 
@@ -9,14 +10,14 @@ interface LayoutSwitcherProps {
 }
 
 const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
+  const { t } = useTranslation("components");
   const layoutMode = useLayoutStore((s) => s.layoutMode);
   const setLayoutMode = LayoutStore.getState().setLayoutMode;
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const displayNames: Record<string, string> = {
-    show: "显示侧边栏",
-    hide: "隐藏侧边栏",
+  const getDisplayName = (mode: "show" | "hide"): string => {
+    return mode === "show" ? t("layoutSwitcher.showSidebar") : t("layoutSwitcher.hideSidebar");
   };
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className={styles.buttonText}>{displayNames[layoutMode] || layoutMode}</span>
+        <span className={styles.buttonText}>{getDisplayName(layoutMode)}</span>
         <svg
           className={`${styles.chevronIcon} ${isOpen ? styles.open : ""}`}
           width="16"
@@ -67,7 +68,7 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
                 role="option"
                 aria-selected={m === layoutMode}
               >
-                <span>{displayNames[m]}</span>
+                <span>{getDisplayName(m)}</span>
                 {m === layoutMode && (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />

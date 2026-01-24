@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "./styles.module.css";
 
@@ -7,21 +8,22 @@ interface FooterProps {
 }
 
 const Footer = memo(({ className }: FooterProps) => {
+  const { t } = useTranslation("components");
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className={`${styles.footer} ${className || ""}`}>
       <div className={styles.footerContent}>
-        <span className={styles.copyright}>© {currentYear} 双江古寨茶业管理系统. 保留所有权利.</span>
+        <span className={styles.copyright}>© {currentYear} NebulaForgeX Identity System. {t("footer.allRightsReserved")}</span>
         <div className={styles.links}>
           <a href="#" className={styles.link}>
-            关于我们
+            {t("footer.aboutUs")}
           </a>
           <a href="#" className={styles.link}>
-            隐私政策
+            {t("footer.privacyPolicy")}
           </a>
           <a href="#" className={styles.link}>
-            使用条款
+            {t("footer.termsOfService")}
           </a>
         </div>
       </div>

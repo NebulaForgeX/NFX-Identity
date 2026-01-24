@@ -28,6 +28,7 @@ import (
 	sessionRepo "nfxid/modules/auth/infrastructure/repository/sessions"
 	trustedDeviceRepo "nfxid/modules/auth/infrastructure/repository/trusted_devices"
 	userCredentialRepo "nfxid/modules/auth/infrastructure/repository/user_credentials"
+	"nfxid/constants"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -145,11 +146,11 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		tokenIssuer := authInfra.NewTokenIssuer(tokenxInstance)
 		expiresInSec := int64(cfg.Token.AccessTokenTTL.Seconds())
 		if expiresInSec <= 0 {
-			expiresInSec = 900
+			expiresInSec = constants.DefaultAccessTokenTTLSeconds
 		}
 		refreshTokenTTL := int64(cfg.Token.RefreshTokenTTL.Seconds())
 		if refreshTokenTTL <= 0 {
-			refreshTokenTTL = 7 * 24 * 3600 // 7 天
+			refreshTokenTTL = constants.DefaultRefreshTokenTTLSeconds
 		}
 		authAppSvc = authApp.NewService(
 			userCredentialRepoInstance,

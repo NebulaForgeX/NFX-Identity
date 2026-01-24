@@ -279,3 +279,46 @@ export const DeleteTrustedDevice = async (id: string): Promise<BaseResponse> => 
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };
+
+// ========== 登录和刷新 Token 相关 ==========
+
+// 登录请求类型
+export interface LoginRequest {
+  loginType: "email" | "phone";
+  email?: string;
+  phone?: string;
+  countryCode?: string;
+  password: string;
+}
+
+// 登录响应类型
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  userId: string;
+}
+
+// 刷新 Token 请求类型
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+// 刷新 Token 响应类型
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
+// 登录（使用 publicClient，不需要认证）
+export const Login = async (params: LoginRequest): Promise<LoginResponse> => {
+  const { data } = await publicClient.post<DataResponse<LoginResponse>>("/auth/login", params);
+  return data.data;
+};
+
+// 刷新 Token（使用 publicClient，不需要认证）
+export const RefreshToken = async (params: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+  const { data } = await publicClient.post<DataResponse<RefreshTokenResponse>>("/auth/refresh", params);
+  return data.data;
+};

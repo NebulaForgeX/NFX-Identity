@@ -1,6 +1,7 @@
 import type { ThemeName } from "@/assets/themes/types";
 
 import { memo, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useTheme } from "@/hooks";
 
@@ -11,17 +12,14 @@ interface ThemeSwitcherProps {
 }
 
 const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
+  const { t } = useTranslation("components");
   const { themeName, setTheme, availableThemes } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // 主题显示名称映射
-  const themeDisplayNames: Record<string, string> = {
-    default: "默认",
-    light: "浅色",
-    dark: "深色",
-    cosmic: "宇宙",
-    corporate: "企业",
+  // 主题显示名称映射（使用国际化）
+  const getThemeDisplayName = (theme: ThemeName): string => {
+    return t(`themeSwitcher.${theme}`, { defaultValue: theme });
   };
 
   // 点击外部关闭下拉菜单
@@ -51,7 +49,7 @@ const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className={styles.buttonText}>{themeDisplayNames[themeName] || themeName}</span>
+        <span className={styles.buttonText}>{getThemeDisplayName(themeName)}</span>
         <svg
           className={`${styles.chevronIcon} ${isOpen ? styles.open : ""}`}
           width="16"
@@ -77,7 +75,7 @@ const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
               role="option"
               aria-selected={theme === themeName}
             >
-              <span>{themeDisplayNames[theme] || theme}</span>
+              <span>{getThemeDisplayName(theme)}</span>
               {theme === themeName && (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />

@@ -1,0 +1,59 @@
+{
+  "themeSwitcher": {
+    "default": "Default",
+    "light": "Light",
+    "dark": "Dark",
+    "cosmic": "Cosmic",
+    "corporate": "Corporate"
+  },
+  "languageSwitcher": {
+    "english": "English",
+    "chinese": "Chinese",
+    "french": "French"
+  },
+  "header": {
+    "platformName": "NebulaForgeX Identity Platform",
+    "user": "User",
+    "notSet": "Not Set",
+    "logout": "Logout",
+    "loggingOut": " (Logging out...)",
+    "logoutFailed": "Logout failed: "
+  },
+  "footer": {
+    "allRightsReserved": "All rights reserved.",
+    "aboutUs": "About Us",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard"
+  },
+  "searchInput": {
+    "placeholder": "Search...",
+    "clearSearch": "Clear search"
+  },
+  "showFilter": {
+    "disableFilter": "Disable show filter",
+    "enableFilter": "Enable show filter",
+    "filterEnabled": "Show filter enabled",
+    "filterDisabled": "Show filter disabled",
+    "all": "All",
+    "show": "Show",
+    "hide": "Hide"
+  },
+  "layoutSwitcher": {
+    "showSidebar": "Show Sidebar",
+    "hideSidebar": "Hide Sidebar"
+  },
+  "virtualList": {
+    "noData": "No data",
+    "loadingMore": "Loading more...",
+    "noMoreItems": "No more items to load"
+  },
+  "suspense": {
+    "loading": "Loading...",
+    "errorTitle": "Failed to Load",
+    "errorDescription": "Please check your network connection or try again later.",
+    "retry": "Retry"
+  }
+}

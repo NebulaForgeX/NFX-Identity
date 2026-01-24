@@ -13,15 +13,18 @@ interface LanguageSwitcherProps {
 }
 
 const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation("components");
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // 语言显示名称映射
-  const languageDisplayNames: Record<Language, string> = {
-    [LANGUAGE.EN]: "English",
-    [LANGUAGE.ZH]: "中文",
-    [LANGUAGE.FR]: "Français",
+  // 语言显示名称映射（使用国际化）
+  const getLanguageDisplayName = (lang: Language): string => {
+    const keyMap: Record<Language, string> = {
+      [LANGUAGE.EN]: "languageSwitcher.english",
+      [LANGUAGE.ZH]: "languageSwitcher.chinese",
+      [LANGUAGE.FR]: "languageSwitcher.french",
+    };
+    return t(keyMap[lang], { defaultValue: lang });
   };
 
   const currentLanguage = (i18n.language as Language) || LANGUAGE.EN;
@@ -54,7 +57,7 @@ const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) =>
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className={styles.buttonText}>{languageDisplayNames[currentLanguage] || currentLanguage}</span>
+        <span className={styles.buttonText}>{getLanguageDisplayName(currentLanguage)}</span>
         <svg
           className={`${styles.chevronIcon} ${isOpen ? styles.open : ""}`}
           width="16"
@@ -80,7 +83,7 @@ const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) =>
               role="option"
               aria-selected={lang === currentLanguage}
             >
-              <span>{languageDisplayNames[lang] || lang}</span>
+              <span>{getLanguageDisplayName(lang)}</span>
               {lang === currentLanguage && (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />

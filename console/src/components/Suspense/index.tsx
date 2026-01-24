@@ -2,6 +2,7 @@ import type { QueryErrorResetBoundaryProps } from "@tanstack/react-query";
 import type { ReactNode, SuspenseProps as ReactSuspenseProps } from "react";
 
 import { memo, Suspense as ReactSuspense, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
 import { BounceLoading, ECGLoading, TruckLoading } from "@/animations";
@@ -29,6 +30,7 @@ interface SuspenseProps extends Omit<ReactSuspenseProps, "fallback">, Omit<Query
 }
 
 const Suspense = memo((props: SuspenseProps) => {
+  const { t } = useTranslation("components");
   const {
     fallback,
     test,
@@ -41,14 +43,20 @@ const Suspense = memo((props: SuspenseProps) => {
     loadingTextClassName,
     children,
     errorFallback,
-    errorTitle = "加载失败",
-    errorDescription = "请检查网络连接或稍后重试。",
-    retryText = "重试",
+    errorTitle,
+    errorDescription,
+    retryText,
     errorContainerClassName,
     errorDetailsClassName,
     showErrorDetails = import.meta.env.DEV,
     ...restProps
   } = props;
+
+  // 使用国际化文本作为默认值
+  const defaultErrorTitle = errorTitle ?? t("suspense.errorTitle");
+  const defaultErrorDescription = errorDescription ?? t("suspense.errorDescription");
+  const defaultRetryText = retryText ?? t("suspense.retry");
+  const defaultLoadingText = loadingText ?? t("suspense.loading");
   const renderLoading = useCallback(() => {
     switch (loadingType) {
       case "ecg":
@@ -69,10 +77,10 @@ const Suspense = memo((props: SuspenseProps) => {
     return (
       <div className={`${styles.loadingContainer} ${loadingContainerClassName || ""}`}>
         {renderLoading()}
-        <p className={`${styles.loadingText} ${loadingTextClassName || ""}`}>{loadingText || "Loading..."}</p>
+        <p className={`${styles.loadingText} ${loadingTextClassName || ""}`}>{defaultLoadingText}</p>
       </div>
     );
-  }, [fallback, loadingContainerClassName, loadingText, loadingTextClassName, renderLoading]);
+  }, [fallback, loadingContainerClassName, defaultLoadingText, loadingTextClassName, renderLoading]);
 
   const renderErrorFallback = useCallback(
     (error: Error | null, retry: () => void) => {
@@ -80,13 +88,13 @@ const Suspense = memo((props: SuspenseProps) => {
 
       return (
         <div className={`${styles.errorContainer} ${errorContainerClassName || ""}`}>
-          <h3 className={styles.errorTitle}>{errorTitle}</h3>
-          <p className={styles.errorDescription}>{errorDescription}</p>
+          <h3 className={styles.errorTitle}>{defaultErrorTitle}</h3>
+          <p className={styles.errorDescription}>{defaultErrorDescription}</p>
           {showErrorDetails && error && (
             <pre className={`${styles.errorDetails} ${errorDetailsClassName || ""}`}>{error.message}</pre>
           )}
           <button type="button" className={styles.retryButton} onClick={retry}>
-            {retryText}
+            {defaultRetryText}
           </button>
         </div>
       );
@@ -94,9 +102,9 @@ const Suspense = memo((props: SuspenseProps) => {
     [
       errorFallback,
       errorContainerClassName,
-      errorDescription,
-      errorTitle,
-      retryText,
+      defaultErrorDescription,
+      defaultErrorTitle,
+      defaultRetryText,
       showErrorDetails,
       errorDetailsClassName,
     ],

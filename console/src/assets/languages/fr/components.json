@@ -1,0 +1,59 @@
+{
+  "themeSwitcher": {
+    "default": "Par défaut",
+    "light": "Clair",
+    "dark": "Sombre",
+    "cosmic": "Cosmique",
+    "corporate": "Entreprise"
+  },
+  "languageSwitcher": {
+    "english": "Anglais",
+    "chinese": "Chinois",
+    "french": "Français"
+  },
+  "header": {
+    "platformName": "Plateforme d'identité NebulaForgeX",
+    "user": "Utilisateur",
+    "notSet": "Non défini",
+    "logout": "Déconnexion",
+    "loggingOut": " (Déconnexion en cours...)",
+    "logoutFailed": "Échec de la déconnexion: "
+  },
+  "footer": {
+    "allRightsReserved": "Tous droits réservés.",
+    "aboutUs": "À propos de nous",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation"
+  },
+  "sidebar": {
+    "dashboard": "Tableau de bord"
+  },
+  "searchInput": {
+    "placeholder": "Rechercher...",
+    "clearSearch": "Effacer la recherche"
+  },
+  "showFilter": {
+    "disableFilter": "Désactiver le filtre d'affichage",
+    "enableFilter": "Activer le filtre d'affichage",
+    "filterEnabled": "Filtre d'affichage activé",
+    "filterDisabled": "Filtre d'affichage désactivé",
+    "all": "Tous",
+    "show": "Afficher",
+    "hide": "Masquer"
+  },
+  "layoutSwitcher": {
+    "showSidebar": "Afficher la barre latérale",
+    "hideSidebar": "Masquer la barre latérale"
+  },
+  "virtualList": {
+    "noData": "Aucune donnée",
+    "loadingMore": "Chargement en cours...",
+    "noMoreItems": "Aucun autre élément à charger"
+  },
+  "suspense": {
+    "loading": "Chargement...",
+    "errorTitle": "Échec du chargement",
+    "errorDescription": "Veuillez vérifier votre connexion réseau ou réessayer plus tard.",
+    "retry": "Réessayer"
+  }
+}

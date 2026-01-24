@@ -11,7 +11,7 @@ import (
 )
 
 // Refresh 使用 refresh_token 换取新的 access + refresh（带 token rotation）
-func (s *Service) Refresh(ctx context.Context, refreshToken string) (authResults.RefreshResult, error) {
+func (s *Service) Refresh(ctx context.Context, refreshToken string, ip *string) (authResults.RefreshResult, error) {
 	if refreshToken == "" {
 		return authResults.RefreshResult{}, ErrInvalidRefreshToken
 	}
@@ -52,6 +52,20 @@ func (s *Service) Refresh(ctx context.Context, refreshToken string) (authResults
 		return authResults.RefreshResult{}, ErrInvalidRefreshToken
 	}
 
+	// 解析用户ID
+	userID, err := uuid.Parse(claims.UserID)
+	if err != nil {
+		return authResults.RefreshResult{}, ErrInvalidRefreshToken
+	}
+
+	// 检查账户是否被锁定
+	locked, err := s.accountLockoutRepo.Check.IsLocked(ctx, userID)
+	if err == nil && locked {
+		// 账户被锁定，撤销所有refresh token
+		_ = s.refreshTokenRepo.Update.Revoke(ctx, claims.TokenID, refreshTokenDomain.RevokeReasonAccountLocked)
+		return authResults.RefreshResult{}, ErrAccountLocked
+	}
+
 	// 生成新的 refresh token ID（用于 rotation）
 	newRefreshTokenID, err := uuid.NewV7()
 	if err != nil {
@@ -76,19 +90,17 @@ func (s *Service) Refresh(ctx context.Context, refreshToken string) (authResults
 	_ = s.refreshTokenRepo.Update.Revoke(ctx, claims.TokenID, refreshTokenDomain.RevokeReasonRotation)
 
 	// 创建新的 refresh_tokens 记录
-	userID, err := uuid.Parse(claims.UserID)
+	expiresAt := time.Now().Add(time.Duration(s.refreshTokenTTL) * time.Second)
+	oldTokenID := rt.ID()
+	newRefreshTokenEntity, err := refreshTokenDomain.NewRefreshToken(refreshTokenDomain.NewRefreshTokenParams{
+		TokenID:     newRefreshTokenIDStr,
+		UserID:      userID,
+		ExpiresAt:   expiresAt,
+		RotatedFrom: &oldTokenID,
+		IP:          ip,
+	})
 	if err == nil {
-		expiresAt := time.Now().Add(time.Duration(s.refreshTokenTTL) * time.Second)
-		oldTokenID := rt.ID()
-		newRefreshTokenEntity, err := refreshTokenDomain.NewRefreshToken(refreshTokenDomain.NewRefreshTokenParams{
-			TokenID:     newRefreshTokenIDStr,
-			UserID:      userID,
-			ExpiresAt:   expiresAt,
-			RotatedFrom: &oldTokenID,
-		})
-		if err == nil {
-			_ = s.refreshTokenRepo.Create.New(ctx, newRefreshTokenEntity)
-		}
+		_ = s.refreshTokenRepo.Create.New(ctx, newRefreshTokenEntity)
 	}
 
 	return authResults.RefreshResult{
