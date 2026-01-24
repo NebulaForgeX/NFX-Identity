@@ -3,16 +3,13 @@ import { useTranslation } from "react-i18next";
 
 import { Menu } from "@/assets/icons/lucide";
 import { LayoutSwitcher, ThemeSwitcher } from "@/components";
-
+ import { routerEventEmitter } from "@/events/router";
+import LayoutStore from "@/stores/layoutStore";
 import styles from "./styles.module.css";
 
-interface LeftContainerProps {
-  onToggleSidebar?: () => void;
-  onNavigateHome?: () => void;
-}
-
-const LeftContainer = memo(({ onToggleSidebar, onNavigateHome }: LeftContainerProps) => {
+const LeftContainer = memo(() => {
   const { t } = useTranslation("components");
+  const toggleSidebar = LayoutStore.getState().toggleSidebar;
   
   return (
     <div className={styles.headerContainer}>
@@ -20,9 +17,7 @@ const LeftContainer = memo(({ onToggleSidebar, onNavigateHome }: LeftContainerPr
       <button
         type="button"
         className={styles.sidebarToggle}
-        onClick={() => {
-          onToggleSidebar?.();
-        }}
+        onClick={toggleSidebar}
       >
         <Menu size={28} />
       </button>
@@ -32,7 +27,7 @@ const LeftContainer = memo(({ onToggleSidebar, onNavigateHome }: LeftContainerPr
         type="button"
         className={styles.logo}
         onClick={() => {
-          onNavigateHome?.();
+          routerEventEmitter.navigateToDashboard();
         }}
       >
         {t("header.platformName")}

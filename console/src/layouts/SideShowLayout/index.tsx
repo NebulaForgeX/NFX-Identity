@@ -1,42 +1,16 @@
 import type { ReactNode } from "react";
 
 import { memo, useCallback, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { Footer, Header, Sidebar } from "@/components";
+import { Sidebar } from "@/components";
 import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
-import { ROUTES } from "@/types/navigation";
   
 import styles from "./styles.module.css";
 
 interface SideShowLayoutProps {
   children: ReactNode;
-}
-
-function useElementHeight<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [height, setHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const observer = new ResizeObserver(([entry]) => {
-      const nextHeight = entry?.contentRect.height ?? 0;
-      setHeight((prev) => (prev !== nextHeight ? nextHeight : prev));
-    });
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  const callbackRef = useCallback((instance: T | null) => {
-    if (instance) {
-      ref.current = instance;
-    }
-  }, []);
-
-  return [callbackRef, height] as const;
+  headerHeight: number;
+  footerHeight: number;
 }
 
 function useElementWidth<T extends HTMLElement>() {
@@ -65,29 +39,18 @@ function useElementWidth<T extends HTMLElement>() {
   return [callbackRef, width] as const;
 }
 
-const SideShowLayout = memo(({ children }: SideShowLayoutProps) => {
-  const navigate = useNavigate();
+const SideShowLayout = memo(({ children, headerHeight, footerHeight }: SideShowLayoutProps) => {
   const sidebarOpen = useLayoutStore((state) => state.sidebarOpen);
-  const toggleSidebar = LayoutStore.getState().toggleSidebar;
   const closeSidebar = LayoutStore.getState().closeSidebar;
-  const [footerRef, footerHeight] = useElementHeight<HTMLDivElement>();
-  const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const [sidebarRef, sidebarWidth] = useElementWidth<HTMLDivElement>();
-  const handleNavigateHome = () => {
-    navigate(ROUTES.DASHBOARD);
-  };
 
   const handleBackdropClick = () => {
     closeSidebar();
   };
 
   return (
-    <div className={styles.layout}>
-      {/* Header */}
-      <header ref={headerRef} className={styles.header}>
-        <Header onToggleSidebar={toggleSidebar} onNavigateHome={handleNavigateHome} />
-      </header>
-      {/* Sidebar */}
+<>
+
       <div
         ref={sidebarRef}
         className={styles.sidebarContainer}
@@ -121,12 +84,7 @@ const SideShowLayout = memo(({ children }: SideShowLayoutProps) => {
         </div>
       </main>
 
-      {/* Footer */}
-      {/* Footer */}
-      <footer ref={footerRef} className={styles.footer}>
-        <Footer />
-      </footer>
-    </div>
+      </>
   );
 });
 

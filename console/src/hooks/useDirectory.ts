@@ -768,7 +768,8 @@ export const useCreateUserPreference = () => {
 };
 
 // 更新用户偏好
-export const useUpdateUserPreference = () => {
+export const useUpdateUserPreference = (options?: { silent?: boolean }) => {
+  const silent = options?.silent ?? false;
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateUserPreferenceRequest }) => {
       return await UpdateUserPreference(params.id, params.data);
@@ -776,10 +777,14 @@ export const useUpdateUserPreference = () => {
     onSuccess: (_, variables) => {
       directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_PREFERENCES);
       directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_PREFERENCE, variables.id);
-      showSuccess("用户偏好更新成功！");
+      if (!silent) {
+        showSuccess("用户偏好更新成功！");
+      }
     },
     onError: (error: AxiosError) => {
-      showError("更新用户偏好失败，请稍后重试。" + error.message);
+      if (!silent) {
+        showError("更新用户偏好失败，请稍后重试。" + error.message);
+      }
     },
   });
 };

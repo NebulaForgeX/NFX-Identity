@@ -15,7 +15,8 @@ export const useUserPreferenceSync = () => {
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
   const { themeName, setTheme } = useTheme();
-  const updatePreference = useUpdateUserPreference();
+  // Use silent mode for preference sync (no success/error toasts)
+  const updatePreference = useUpdateUserPreference({ silent: true });
   
   // Get user preference when authenticated
   // Only fetch when user is logged in
@@ -32,25 +33,32 @@ export const useUserPreferenceSync = () => {
   // Track if we've already applied preferences to prevent loops
   const hasAppliedPreferences = useRef(false);
   const lastPreferenceId = useRef<string | null>(null);
+  // Track if preferences have been initialized (only apply on first load/login)
+  const isInitialized = useRef(false);
 
-  // Apply preferences on login or when preference data changes
+  // Apply preferences ONLY on initial load/login, not on every preference change
+  // This prevents backend data from overriding local state changes
   useEffect(() => {
     if (!shouldFetch || !preference || !isAuthValid || !currentUserId) {
       hasAppliedPreferences.current = false;
+      isInitialized.current = false;
+      lastPreferenceId.current = null;
       return;
     }
 
-    // Only apply if this is a new preference (different ID) or first time
-    if (lastPreferenceId.current === preference.id && hasAppliedPreferences.current) {
+    // Only apply preferences on initial load (when preference ID changes or first time)
+    // Don't re-apply if we've already initialized and preference ID hasn't changed
+    // This ensures we only apply preferences once on login, not on every preference update
+    if (lastPreferenceId.current === preference.id && isInitialized.current) {
       return;
     }
 
-    // Apply theme
+    // Apply theme (only if different)
     if (preference.theme && preference.theme !== themeName) {
       setTheme(preference.theme as any);
     }
 
-    // Apply language
+    // Apply language (only if different)
     if (preference.language) {
       const langMap: Record<string, Language> = {
         en: LANGUAGE.EN,
@@ -66,16 +74,25 @@ export const useUserPreferenceSync = () => {
       }
     }
 
-    // Apply layout mode (store in display.other or use a specific field)
-    // For now, we'll store layout in the display field
+    // Apply layout mode ONLY on initial load (first time we get preference data)
+    // After initialization, NEVER override local state from backend
+    // User's local changes take precedence - backend sync is just for persistence
     if (preference.display && typeof preference.display === "object") {
       const display = preference.display as Record<string, unknown>;
       if (display.layoutMode && (display.layoutMode === "show" || display.layoutMode === "hide")) {
-        LayoutStore.getState().setLayoutMode(display.layoutMode);
+        // ONLY apply on initial load (when isInitialized is false)
+        // After initialization, we NEVER touch layoutMode from backend
+        // This ensures user's click actions immediately update UI without backend interference
+        if (!isInitialized.current) {
+          LayoutStore.getState().setLayoutMode(display.layoutMode);
+        }
+        // If already initialized, completely ignore backend layoutMode changes
       }
     }
 
+    // Mark as initialized after first application
     hasAppliedPreferences.current = true;
+    isInitialized.current = true;
     lastPreferenceId.current = preference.id;
   }, [preference, isAuthValid, currentUserId, themeName, setTheme, shouldFetch]);
 
@@ -113,26 +130,28 @@ export const useUserPreferenceSync = () => {
     [currentUserId, isAuthValid, updatePreference]
   );
 
-  // Sync layout changes to backend
+  // Sync layout changes to backend (silent, fire-and-forget, failure doesn't matter)
+  // This is called AFTER local state is already updated, just for persistence
   const syncLayout = useCallback(
     async (layoutMode: "show" | "hide") => {
       if (!currentUserId || !isAuthValid) return;
       
-      try {
-        // Store layout in display field
-        const currentDisplay = preference?.display as Record<string, unknown> | undefined;
-        await updatePreference.mutateAsync({
-          id: currentUserId,
-          data: {
-            display: {
-              ...currentDisplay,
-              layoutMode,
-            },
+      // Fire and forget - don't wait for response, failure is OK
+      // Local state is already updated, this is just for backend persistence
+      const currentDisplay = preference?.display as Record<string, unknown> | undefined;
+      updatePreference.mutateAsync({
+        id: currentUserId,
+        data: {
+          display: {
+            ...currentDisplay,
+            layoutMode,
           },
-        });
-      } catch (error) {
-        console.error("Failed to sync layout preference:", error);
-      }
+        },
+      }).catch((error) => {
+        // Silent error - only log to console, don't show error toast
+        // Failure doesn't matter, local state is already updated
+        console.error("Failed to sync layout preference (non-critical):", error);
+      });
     },
     [currentUserId, isAuthValid, updatePreference, preference]
   );

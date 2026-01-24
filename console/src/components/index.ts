@@ -1,8 +1,7 @@
-export { default as Header } from "./Header";
+
 export { default as ThemeSwitcher } from "./ThemeSwitcher";
 export { default as LanguageSwitcher } from "./LanguageSwitcher";
 export { default as LayoutSwitcher } from "./LayoutSwitcher";
-export { default as Footer } from "./Footer";
 export { default as Sidebar } from "./Sidebar";
 export { default as Dropdown } from "./Dropdown";
 export { default as VirtualList } from "./VirtualList";

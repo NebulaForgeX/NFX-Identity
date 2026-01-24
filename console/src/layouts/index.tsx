@@ -4,6 +4,7 @@ import { useLayoutStore } from "@/stores/layoutStore";
 
 import SideHideLayout from "./SideHideLayout";
 import SideShowLayout from "./SideShowLayout";
+import MainWrapper from "./MainWrapper";
 
 interface LayoutSwitcherProps {
   children: React.ReactNode;
@@ -11,11 +12,26 @@ interface LayoutSwitcherProps {
 
 export const LayoutSwitcher = memo(({ children }: LayoutSwitcherProps) => {
   const layoutMode = useLayoutStore((s) => s.layoutMode);
-  if (layoutMode === "hide") {
-    return <SideHideLayout>{children}</SideHideLayout>;
-  } else {
-    return <SideShowLayout>{children}</SideShowLayout>;
-  }
+  
+  return (
+    <MainWrapper>
+      {(headerHeight, footerHeight) => {
+        if (layoutMode === "hide") {
+          return (
+            <SideHideLayout headerHeight={headerHeight} footerHeight={footerHeight}>
+              {children}
+            </SideHideLayout>
+          );
+        } else {
+          return (
+            <SideShowLayout headerHeight={headerHeight} footerHeight={footerHeight}>
+              {children}
+            </SideShowLayout>
+          );
+        }
+      }}
+    </MainWrapper>
+  );
 });
 
 LayoutSwitcher.displayName = "LayoutSwitcher";
