@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { Suspense } from "@/components";
 import { useUser } from "@/hooks/useDirectory";
-import { useStatus, useVerification } from "@/hooks/useStyles";
+import { useUserStatus, useVerification } from "@/hooks/useStyles";
 
 import styles from "./styles.module.css";
 
@@ -32,7 +32,7 @@ const AccountInfoCardContent = memo(({ userId }: AccountInfoCardProps) => {
   const { t } = useTranslation("ProfilePage");
   const { data: user } = useUser({ id: userId });
 
-  const statusStyle = useStatus(user?.status);
+  const statusStyle = useUserStatus(user?.status);
   const verificationStyle = useVerification(user?.isVerified || false);
 
   return (

@@ -1,0 +1,67 @@
+{
+  "userStatus": {
+    "pending": "待激活",
+    "active": "活跃",
+    "deactive": "已停用"
+  },
+  "credentialStatus": {
+    "active": "活跃",
+    "disabled": "已禁用",
+    "expired": "已过期"
+  },
+  "credentialType": {
+    "password": "密码",
+    "passkey": "通行密钥",
+    "oauth_link": "OAuth 链接",
+    "saml": "SAML",
+    "ldap": "LDAP"
+  },
+  "mfaType": {
+    "totp": "TOTP",
+    "sms": "短信",
+    "email": "邮箱",
+    "webauthn": "WebAuthn",
+    "backup_code": "备份代码"
+  },
+  "tenantStatus": {
+    "ACTIVE": "活跃",
+    "SUSPENDED": "已暂停",
+    "CLOSED": "已关闭",
+    "PENDING": "待处理"
+  },
+  "memberStatus": {
+    "INVITED": "已邀请",
+    "ACTIVE": "活跃",
+    "SUSPENDED": "已暂停",
+    "REMOVED": "已移除"
+  },
+  "appStatus": {
+    "active": "活跃",
+    "disabled": "已禁用",
+    "suspended": "已暂停",
+    "pending": "待处理"
+  },
+  "apiKeyStatus": {
+    "active": "活跃",
+    "revoked": "已撤销",
+    "expired": "已过期"
+  },
+  "verificationStatus": {
+    "PENDING": "待验证",
+    "VERIFIED": "已验证",
+    "FAILED": "验证失败",
+    "EXPIRED": "已过期"
+  },
+  "invitationStatus": {
+    "PENDING": "待处理",
+    "ACCEPTED": "已接受",
+    "EXPIRED": "已过期",
+    "REVOKED": "已撤销"
+  },
+  "boolean": {
+    "primary": "主",
+    "current": "当前",
+    "verified": "已验证",
+    "unverified": "未验证"
+  }
+}

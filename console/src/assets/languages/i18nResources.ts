@@ -13,6 +13,7 @@ import en_hooks_directory from "./en/hooks/directory.json";
 import en_hooks_image from "./en/hooks/image.json";
 import en_hooks_system from "./en/hooks/system.json";
 import en_hooks_tenants from "./en/hooks/tenants.json";
+import en_hooks_styles from "./en/hooks/styles.json";
 import en_EditEducationPage from "./en/EditEducationPage.json";
 import en_EditOccupationPage from "./en/EditOccupationPage.json";
 import en_EditPreferencePage from "./en/EditPreferencePage.json";
@@ -34,6 +35,7 @@ import fr_hooks_directory from "./fr/hooks/directory.json";
 import fr_hooks_image from "./fr/hooks/image.json";
 import fr_hooks_system from "./fr/hooks/system.json";
 import fr_hooks_tenants from "./fr/hooks/tenants.json";
+import fr_hooks_styles from "./fr/hooks/styles.json";
 import fr_EditEducationPage from "./fr/EditEducationPage.json";
 import fr_EditOccupationPage from "./fr/EditOccupationPage.json";
 import fr_EditPreferencePage from "./fr/EditPreferencePage.json";
@@ -55,6 +57,7 @@ import zh_hooks_directory from "./zh/hooks/directory.json";
 import zh_hooks_image from "./zh/hooks/image.json";
 import zh_hooks_system from "./zh/hooks/system.json";
 import zh_hooks_tenants from "./zh/hooks/tenants.json";
+import zh_hooks_styles from "./zh/hooks/styles.json";
 import zh_EditEducationPage from "./zh/EditEducationPage.json";
 import zh_EditOccupationPage from "./zh/EditOccupationPage.json";
 import zh_EditPreferencePage from "./zh/EditPreferencePage.json";
@@ -78,6 +81,7 @@ export const RESOURCES = {
     "hooks.image": en_hooks_image,
     "hooks.system": en_hooks_system,
     "hooks.tenants": en_hooks_tenants,
+    "hooks.styles": en_hooks_styles,
     LoginPage: en_LoginPage,
     ProfilePage: en_ProfilePage,
     UserSecurityPage: en_UserSecurityPage,
@@ -101,6 +105,7 @@ export const RESOURCES = {
     "hooks.image": zh_hooks_image,
     "hooks.system": zh_hooks_system,
     "hooks.tenants": zh_hooks_tenants,
+    "hooks.styles": zh_hooks_styles,
     LoginPage: zh_LoginPage,
     ProfilePage: zh_ProfilePage,
     UserSecurityPage: zh_UserSecurityPage,
@@ -124,6 +129,7 @@ export const RESOURCES = {
     "hooks.image": fr_hooks_image,
     "hooks.system": fr_hooks_system,
     "hooks.tenants": fr_hooks_tenants,
+    "hooks.styles": fr_hooks_styles,
     LoginPage: fr_LoginPage,
     ProfilePage: fr_ProfilePage,
     UserSecurityPage: fr_UserSecurityPage,
@@ -150,6 +156,7 @@ export const NAME_SPACES_MAP = {
   "hooks.image": "hooks.image",
   "hooks.system": "hooks.system",
   "hooks.tenants": "hooks.tenants",
+  "hooks.styles": "hooks.styles",
   LoginPage: "LoginPage",
   ProfilePage: "ProfilePage",
   UserSecurityPage: "UserSecurityPage",

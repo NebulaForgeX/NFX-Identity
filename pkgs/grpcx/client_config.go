@@ -39,7 +39,7 @@ func DefaultClientOptions(provider servertoken.TokenProvider) []grpc.DialOption 
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithPerRPCCredentials(servertoken.PerRPCCreds{Provider: provider, InsecureOK: true}),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
-			Time:                5 * time.Minute,  // 5分钟发送一次 keepalive
+			Time:                10 * time.Minute, // 10分钟发送一次 keepalive（减少 ping 频率，避免 too_many_pings 错误）
 			Timeout:             20 * time.Second, // 20秒超时
 			PermitWithoutStream: true,             // 允许无流时发送
 		}),

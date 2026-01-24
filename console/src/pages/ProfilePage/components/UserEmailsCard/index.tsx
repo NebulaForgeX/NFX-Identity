@@ -47,7 +47,7 @@ const UserEmailsCardContent = memo(({ userId }: UserEmailsCardProps) => {
           return (
             <div key={email.id} className={styles.item}>
               <span className={styles.email}>{email.email}</span>
-              {email.isPrimary && (
+              {primaryStyle && (
                 <span
                   style={{
                     padding: "0.25rem 0.5rem",
@@ -58,10 +58,10 @@ const UserEmailsCardContent = memo(({ userId }: UserEmailsCardProps) => {
                     color: primaryStyle.color,
                   }}
                 >
-                  {t("primary")}
+                  {primaryStyle.label}
                 </span>
               )}
-              {email.isVerified && (
+              {verifiedStyle && (
                 <span
                   style={{
                     padding: "0.25rem 0.5rem",
@@ -72,7 +72,7 @@ const UserEmailsCardContent = memo(({ userId }: UserEmailsCardProps) => {
                     color: verifiedStyle.color,
                   }}
                 >
-                  {t("verified")}
+                  {verifiedStyle.label}
                 </span>
               )}
             </div>

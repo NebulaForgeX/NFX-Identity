@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"strings"
 	"time"
 
@@ -17,10 +16,6 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 // Signup 用户注册（邮箱+密码+验证码）
 func (s *Service) Signup(ctx context.Context, cmd authCommands.SignupCmd) (authResults.SignupResult, error) {
@@ -81,14 +76,12 @@ func (s *Service) Signup(ctx context.Context, cmd authCommands.SignupCmd) (authR
 		// 验证码已经验证了邮箱的所有权，所以我们可以继续流程
 	} else {
 		// 邮箱不存在，创建新用户
-		// 生成用户名（从邮箱提取，如果冲突则添加随机后缀）
-		username = extractUsernameFromEmail(email)
-		// 检查用户名是否已存在，如果存在则添加随机后缀
-		_, err = s.grpcClients.DirectoryClient.User.GetUserByUsername(ctx, username)
-		if err == nil {
-			// 用户名已存在，添加随机后缀
-			username = fmt.Sprintf("%s_%s", username, generateRandomSuffix(4))
+		// 生成唯一用户名（使用 nfxid-<uuid> 格式避免邮箱前缀重复）
+		userUUID, err := uuid.NewV7()
+		if err != nil {
+			return authResults.SignupResult{}, fmt.Errorf("failed to generate user UUID: %w", err)
 		}
+		username = fmt.Sprintf("nfxid-%s", userUUID.String())
 
 		// 1. 创建用户（新用户，状态为 active，已验证）
 		userIDStr, err = s.grpcClients.DirectoryClient.User.CreateUser(ctx, username, "active", true)
@@ -192,21 +185,3 @@ func (s *Service) Signup(ctx context.Context, cmd authCommands.SignupCmd) (authR
 	}, nil
 }
 
-// extractUsernameFromEmail 从邮箱地址提取用户名（@ 之前的部分）
-func extractUsernameFromEmail(email string) string {
-	parts := strings.Split(email, "@")
-	if len(parts) > 0 {
-		return parts[0]
-	}
-	return "user"
-}
-
-// generateRandomSuffix 生成随机后缀
-func generateRandomSuffix(length int) string {
-	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(b)
-}

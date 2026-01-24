@@ -49,9 +49,9 @@ const UserEducationsCardContent = memo(({ userId }: UserEducationsCardProps) => 
             <div className={styles.header}>
               <span className={styles.school}>{education.school}</span>
               <div className={styles.headerRight}>
-                {education.isCurrent && (() => {
+                {(() => {
                   const currentStyle = useIsCurrent(education.isCurrent);
-                  return (
+                  return currentStyle ? (
                     <span
                       style={{
                         padding: "0.25rem 0.5rem",
@@ -62,9 +62,9 @@ const UserEducationsCardContent = memo(({ userId }: UserEducationsCardProps) => 
                         color: currentStyle.color,
                       }}
                     >
-                      {t("current")}
+                      {currentStyle.label}
                     </span>
-                  );
+                  ) : null;
                 })()}
                 <button
                   className={styles.editButton}

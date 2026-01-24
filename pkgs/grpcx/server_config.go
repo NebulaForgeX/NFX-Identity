@@ -25,10 +25,11 @@ func DefaultServerOptions(verifier token.Verifier) []grpc.ServerOption {
 	return []grpc.ServerOption{
 		grpc.StatsHandler(otelgrpc.NewServerHandler()), // TODO: Add OpenTelemetry on client side to inherit parent traceID
 		// 配置 keepalive enforcement policy，允许客户端每 5 分钟发送一次 ping
-		// MinTime 设置为 1 分钟，确保不会因为 ping 太频繁而拒绝连接
-		// 客户端配置是 5 分钟发送一次，所以 1 分钟足够宽松，可以容忍网络延迟和抖动
+		// MinTime 设置为 30 秒，确保不会因为 ping 太频繁而拒绝连接
+		// 客户端配置是 5 分钟发送一次，但如果有多个客户端连接，总的 ping 频率可能会更高
+		// 设置为 30 秒可以更好地容忍多个客户端连接的情况
 		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
-			MinTime:             1 * time.Minute, // 允许客户端每 1 分钟发送一次 ping（客户端配置是 5 分钟，所以这个值足够宽松）
+			MinTime:             30 * time.Second, // 允许客户端每 30 秒发送一次 ping（更宽松，避免 too_many_pings 错误）
 			PermitWithoutStream: true,              // 允许无流时发送 ping
 		}),
 		grpc.ChainUnaryInterceptor(

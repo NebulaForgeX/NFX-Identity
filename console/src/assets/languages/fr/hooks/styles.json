@@ -1,0 +1,67 @@
+{
+  "userStatus": {
+    "pending": "En attente",
+    "active": "Actif",
+    "deactive": "Désactivé"
+  },
+  "credentialStatus": {
+    "active": "Actif",
+    "disabled": "Désactivé",
+    "expired": "Expiré"
+  },
+  "credentialType": {
+    "password": "Mot de passe",
+    "passkey": "Clé d'accès",
+    "oauth_link": "Lien OAuth",
+    "saml": "SAML",
+    "ldap": "LDAP"
+  },
+  "mfaType": {
+    "totp": "TOTP",
+    "sms": "SMS",
+    "email": "E-mail",
+    "webauthn": "WebAuthn",
+    "backup_code": "Code de sauvegarde"
+  },
+  "tenantStatus": {
+    "ACTIVE": "Actif",
+    "SUSPENDED": "Suspendu",
+    "CLOSED": "Fermé",
+    "PENDING": "En attente"
+  },
+  "memberStatus": {
+    "INVITED": "Invité",
+    "ACTIVE": "Actif",
+    "SUSPENDED": "Suspendu",
+    "REMOVED": "Retiré"
+  },
+  "appStatus": {
+    "active": "Actif",
+    "disabled": "Désactivé",
+    "suspended": "Suspendu",
+    "pending": "En attente"
+  },
+  "apiKeyStatus": {
+    "active": "Actif",
+    "revoked": "Révoqué",
+    "expired": "Expiré"
+  },
+  "verificationStatus": {
+    "PENDING": "En attente",
+    "VERIFIED": "Vérifié",
+    "FAILED": "Échoué",
+    "EXPIRED": "Expiré"
+  },
+  "invitationStatus": {
+    "PENDING": "En attente",
+    "ACCEPTED": "Accepté",
+    "EXPIRED": "Expiré",
+    "REVOKED": "Révoqué"
+  },
+  "boolean": {
+    "primary": "Principal",
+    "current": "Actuel",
+    "verified": "Vérifié",
+    "unverified": "Non vérifié"
+  }
+}

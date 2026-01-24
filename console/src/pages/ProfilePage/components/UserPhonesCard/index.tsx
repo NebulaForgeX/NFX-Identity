@@ -50,7 +50,7 @@ const UserPhonesCardContent = memo(({ userId }: UserPhonesCardProps) => {
                 {phone.countryCode && <span className={styles.countryCode}>+{phone.countryCode}</span>}
                 {phone.phone}
               </span>
-              {phone.isPrimary && (
+              {primaryStyle && (
                 <span
                   style={{
                     padding: "0.25rem 0.5rem",
@@ -61,10 +61,10 @@ const UserPhonesCardContent = memo(({ userId }: UserPhonesCardProps) => {
                     color: primaryStyle.color,
                   }}
                 >
-                  {t("primary")}
+                  {primaryStyle.label}
                 </span>
               )}
-              {phone.isVerified && (
+              {verifiedStyle && (
                 <span
                   style={{
                     padding: "0.25rem 0.5rem",
@@ -75,7 +75,7 @@ const UserPhonesCardContent = memo(({ userId }: UserPhonesCardProps) => {
                     color: verifiedStyle.color,
                   }}
                 >
-                  {t("verified")}
+                  {verifiedStyle.label}
                 </span>
               )}
             </div>
