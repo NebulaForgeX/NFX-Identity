@@ -7,6 +7,8 @@ import { Footer, Header, Sidebar } from "@/components";
 import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
 import { ROUTES } from "@/types/navigation";
 
+
+
 import styles from "./styles.module.css";
 
 interface SideHideLayoutProps {

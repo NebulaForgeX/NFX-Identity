@@ -80,10 +80,10 @@ function VirtualListComponent<T>({
       return;
     }
 
-    if (lastItem.index >= data.length - 1 && hasNextPage && !isFetchingNextPage && fetchNextPage) {
+    if (lastItem.index >= dataLength - 1 && hasNextPage && !isFetchingNextPage && fetchNextPage) {
       fetchNextPage();
     }
-  }, [hasNextPage, fetchNextPage, data.length, isFetchingNextPage, items]);
+  }, [hasNextPage, fetchNextPage, dataLength, isFetchingNextPage, items]);
 
   const { t } = useTranslation("components");
 

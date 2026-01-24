@@ -66,8 +66,8 @@ const UserEmail = memo(() => {
     userId: currentUserId,
   });
   
-  const userEmails = userEmailsList && userEmailsList.length > 0
-    ? (userEmailsList.find((email) => email.isPrimary)?.email || userEmailsList[0]?.email || null)
+  const userEmails = Array.isArray(userEmailsList) && userEmailsList.length > 0
+    ? (userEmailsList.find((email) => email?.isPrimary)?.email || userEmailsList[0]?.email || null)
     : null;
   
   return (
@@ -98,8 +98,8 @@ const UserMenu = memo(() => {
     userId: currentUserId,
   });
   
-  const userEmails = userEmailsList && userEmailsList.length > 0
-    ? (userEmailsList.find((email) => email.isPrimary)?.email || userEmailsList[0]?.email || null)
+  const userEmails = Array.isArray(userEmailsList) && userEmailsList.length > 0
+    ? (userEmailsList.find((email) => email?.isPrimary)?.email || userEmailsList[0]?.email || null)
     : null;
   
   const handleLogout = useCallback(() => {
