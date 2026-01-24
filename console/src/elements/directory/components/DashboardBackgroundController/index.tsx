@@ -1,12 +1,12 @@
 import type { PreferenceFormValues } from "../../schemas/preferenceSchema";
+import type { DashboardBackgroundType } from "@/types";
+import { DASHBOARD_BACKGROUND_VALUES } from "@/types";
 
 import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { Dropdown } from "@/components";
-
-export type DashboardBackgroundType = "waves" | "squares" | "letterGlitch" | "none";
 
 const DashboardBackgroundController = memo(() => {
   const { t } = useTranslation("elements.directory");
@@ -16,13 +16,10 @@ const DashboardBackgroundController = memo(() => {
   } = useFormContext<PreferenceFormValues>();
 
   const backgroundOptions = useMemo(() => {
-    return [
-      { value: "waves", label: t("preference.dashboardBackground.waves") },
-      { value: "squares", label: t("preference.dashboardBackground.squares") },
-      { value: "letterGlitch", label: t("preference.dashboardBackground.letterGlitch") },
-      { value: "pixelBlast", label: t("preference.dashboardBackground.pixelBlast") },
-      { value: "none", label: t("preference.dashboardBackground.none") },
-    ];
+    return DASHBOARD_BACKGROUND_VALUES.map((value) => ({
+      value,
+      label: t(`preference.dashboardBackground.${value}`),
+    }));
   }, [t]);
 
   return (

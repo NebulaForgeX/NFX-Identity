@@ -9,6 +9,8 @@ import { useInitPreferenceForm, useSubmitPreference } from "@/elements/directory
 import { ThemeController, LanguageController, TimezoneController, DashboardBackgroundController } from "@/elements/directory";
 import { useUserPreference } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
+import type { DashboardBackgroundType } from "@/types";
+import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
 import { ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";
@@ -62,7 +64,7 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
           theme: preference.theme,
           language: preference.language,
           timezone: preference.timezone,
-          dashboardBackground: (preference.other as Record<string, unknown>)?.dashboardBackground as string || "none",
+          dashboardBackground: ((preference.other as Record<string, unknown>)?.dashboardBackground as DashboardBackgroundType | undefined) || DEFAULT_DASHBOARD_BACKGROUND,
           notifications: preference.notifications,
           privacy: preference.privacy,
           display: preference.display,

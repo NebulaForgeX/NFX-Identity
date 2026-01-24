@@ -1,4 +1,5 @@
 export { ThemeProvider } from "./ThemeProvider";
+export { LayoutProvider } from "./LayoutProvider";
 export { QueryProvider } from "./QueryProvider";
 export { LenisProvider } from "./LenisProvider";
 export { BootstrapProvider } from "./BootstrapProvider";

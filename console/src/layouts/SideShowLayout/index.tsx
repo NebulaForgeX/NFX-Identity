@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import { memo, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import { Sidebar } from "@/components";
-import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
-  
+import { useLayout } from "@/hooks/useLayout";
+
 import styles from "./styles.module.css";
 
 interface SideShowLayoutProps {
@@ -40,8 +40,7 @@ function useElementWidth<T extends HTMLElement>() {
 }
 
 const SideShowLayout = memo(({ children, headerHeight, footerHeight }: SideShowLayoutProps) => {
-  const sidebarOpen = useLayoutStore((state) => state.sidebarOpen);
-  const closeSidebar = LayoutStore.getState().closeSidebar;
+  const { sidebarOpen, closeSidebar } = useLayout();
   const [sidebarRef, sidebarWidth] = useElementWidth<HTMLDivElement>();
 
   const handleBackdropClick = () => {

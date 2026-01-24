@@ -105,7 +105,7 @@ export interface UserPreference {
   theme?: string;
   language?: string;
   timezone?: string;
-  dashboardBackground?: string;
+  dashboardBackground?: DashboardBackgroundType;
   notifications?: Record<string, unknown>;
   privacy?: Record<string, unknown>;
   display?: Record<string, unknown>;

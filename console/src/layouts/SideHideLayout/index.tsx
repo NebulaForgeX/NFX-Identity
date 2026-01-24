@@ -3,9 +3,7 @@ import type { ReactNode } from "react";
 import { memo, useCallback } from "react";
 
 import { Sidebar } from "@/components";
-import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
-
-
+import { useLayout } from "@/hooks/useLayout";
 
 import styles from "./styles.module.css";
 
@@ -17,16 +15,11 @@ interface SideHideLayoutProps {
 
 
 const SideHideLayout = memo(({ children, headerHeight, footerHeight }: SideHideLayoutProps) => {
-  const sidebarOpen = useLayoutStore((state) => state.sidebarOpen);
-  const closeSidebar = LayoutStore.getState().closeSidebar;
-
+  const { sidebarOpen, closeSidebar } = useLayout();
 
   const handleBackdropClick = useCallback(() => {
     closeSidebar();
   }, [closeSidebar]);
-
-  console.log("headerHeight", headerHeight);
-  console.log("footerHeight", footerHeight);
 
   return (
 

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { ChangeLanguage } from "@/assets/languages/i18n";
 import { LANGUAGE } from "@/assets/languages/i18nResources";
-import { useUserPreferenceSync } from "@/hooks/useUserPreferenceSync";
+import { useLanguageSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";
 
@@ -15,7 +15,7 @@ interface LanguageSwitcherProps {
 
 const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) => {
   const { i18n, t } = useTranslation("components");
-  const { syncLanguage } = useUserPreferenceSync();
+  const { syncLanguage } = useLanguageSync();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 

@@ -5,6 +5,8 @@ import { memo, useMemo } from "react";
 import { WaveBackground, SquareBackground, LetterGlitchBackground, PixelBlastBackground } from "@/animations";
 import { useUserPreferenceNormal } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
+import type { DashboardBackgroundType } from "@/types";
+import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
 
 import styles from "./styles.module.css";
 
@@ -26,10 +28,10 @@ const Background = memo(({ children }: BackgroundProps) => {
   });
 
   // Determine which background to show (从 other 字段中读取)
-  const dashboardBackground = useMemo(() => {
-    if (!preference?.other) return "none";
+  const dashboardBackground = useMemo((): DashboardBackgroundType => {
+    if (!preference?.other) return DEFAULT_DASHBOARD_BACKGROUND;
     const other = preference.other as Record<string, unknown>;
-    return (other.dashboardBackground as string) || "none";
+    return (other.dashboardBackground as DashboardBackgroundType) || DEFAULT_DASHBOARD_BACKGROUND;
   }, [preference]);
 
   // Render background component based on preference

@@ -8,6 +8,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { ROUTES } from "@/types/navigation";
 import { showError } from "@/stores/modalStore";
 import type { UserPreference } from "@/types";
+import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
 
 import { type PreferenceFormValues } from "../schemas/preferenceSchema";
 
@@ -31,7 +32,7 @@ export const useSubmitPreference = (preference?: UserPreference) => {
         const otherData = {
           ...existingOther,
           ...values.other,
-          dashboardBackground: values.dashboardBackground || "none",
+          dashboardBackground: values.dashboardBackground || DEFAULT_DASHBOARD_BACKGROUND,
         };
 
         if (preference) {

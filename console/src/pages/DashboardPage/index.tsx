@@ -2,7 +2,6 @@ import { memo } from "react";
 
 import { Edit } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
-import { useUserPreferenceSync } from "@/hooks/useUserPreferenceSync";
 import Background from "@/layouts/Background";
 import QuickStore, { useQuickStore } from "@/stores/quickStore";
 
@@ -11,7 +10,6 @@ import styles from "./styles.module.css";
 
 const DashboardPage = memo(() => {
   // Sync and apply user preferences on dashboard load (after login)
-  useUserPreferenceSync();
   const isEditMode = useQuickStore((state) => state.isEditMode);
   const toggleEditMode = QuickStore.getState().toggleEditMode;
 

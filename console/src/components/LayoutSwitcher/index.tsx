@@ -1,8 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
-import { useUserPreferenceSync } from "@/hooks/useUserPreferenceSync";
+import { useLayout } from "@/hooks/useLayout";
+import { useLayoutSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";
 
@@ -12,9 +12,8 @@ interface LayoutSwitcherProps {
 
 const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
   const { t } = useTranslation("components");
-  const layoutMode = useLayoutStore((s) => s.layoutMode);
-  const setLayoutMode = LayoutStore.getState().setLayoutMode;
-  const { syncLayout } = useUserPreferenceSync();
+  const { layoutMode, setLayoutMode } = useLayout();
+  const { syncLayout } = useLayoutSync();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 

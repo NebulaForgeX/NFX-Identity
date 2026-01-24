@@ -1,4 +1,4 @@
-/* Match ThemeSwitcher sizing and typography */
+/* ===== Nebular Select 样式模仿（与 ThemeSwitcher 一致） ===== */
 
 .nbSelect {
     display: inline-block;
@@ -9,6 +9,7 @@
     font-weight: 600;
 }
 
+/* ===== 选择按钮 ===== */
 .selectButton {
     position: relative;
     width: 100%;
@@ -27,8 +28,12 @@
     font-size: inherit;
     font-weight: inherit;
     line-height: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
+/* Primary 状态按钮 */
 .selectButton.primary {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
@@ -47,6 +52,7 @@
     box-shadow: 0 0 0 0.125rem rgba(143, 155, 179, 0.25);
 }
 
+/* Default 状态按钮 */
 .selectButton.default {
     background-color: var(--color-bg);
     border-color: var(--color-border-4);
@@ -65,8 +71,19 @@
     box-shadow: 0 0 0 0.125rem rgba(143, 155, 179, 0.25);
 }
 
-.buttonText { /* same font-size via inherit */ }
+.selectButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
 
+.buttonText {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 下拉图标 */
 .chevronIcon {
     position: absolute;
     right: 0.41rem;
@@ -76,10 +93,19 @@
     flex-shrink: 0;
 }
 
-.selectButton.primary .chevronIcon { color: #ffffff; }
-.selectButton.default .chevronIcon { color: var(--color-fg); }
-.selectButton.open .chevronIcon { transform: rotate(180deg); }
+.selectButton.primary .chevronIcon {
+    color: #ffffff;
+}
 
+.selectButton.default .chevronIcon {
+    color: var(--color-fg);
+}
+
+.chevronIcon.open {
+    transform: rotate(180deg);
+}
+
+/* ===== 下拉选项面板 ===== */
 .optionsPanel {
     position: absolute;
     top: calc(100% + 0.5rem);
@@ -141,12 +167,14 @@
     border-color: var(--color-border-4);
 }
 
+/* 选项列表 */
 .optionsList {
     list-style: none;
     margin: 0;
     padding: 0.5rem 0;
 }
 
+/* 单个选项 */
 .option {
     padding: 0.75rem 1.125rem;
     cursor: pointer;
@@ -157,11 +185,19 @@
     color: var(--color-fg-text);
 }
 
-.option:hover { background-color: var(--color-bg-2); }
+.option:hover {
+    background-color: var(--color-bg-2);
+}
+
 .option.selected {
     background-color: var(--color-primary);
     color: var(--color-primary-fg);
     font-weight: 700;
 }
 
-
+/* Dark 主题适配 */
+@media (prefers-color-scheme: dark) {
+    .optionsPanel {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    }
+}

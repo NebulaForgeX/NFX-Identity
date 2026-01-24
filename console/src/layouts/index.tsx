@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { useLayoutStore } from "@/stores/layoutStore";
+import { useLayout } from "@/hooks/useLayout";
 
 import SideHideLayout from "./SideHideLayout";
 import SideShowLayout from "./SideShowLayout";
@@ -11,8 +11,7 @@ interface LayoutSwitcherProps {
 }
 
 export const LayoutSwitcher = memo(({ children }: LayoutSwitcherProps) => {
-  const layoutMode = useLayoutStore((s) => s.layoutMode);
-  
+  const { layoutMode } = useLayout();
   return (
     <MainWrapper>
       {(headerHeight, footerHeight) => {
