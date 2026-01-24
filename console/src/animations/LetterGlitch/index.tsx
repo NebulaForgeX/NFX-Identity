@@ -15,11 +15,11 @@ interface LetterGlitchProps {
 
 const LetterGlitch = memo(({
   glitchColors = ['#2b4539', '#61dca3', '#61b3dc'],
-  glitchSpeed = 100, // 增加默认速度，减少更新频率
+  glitchSpeed = 500, // 增加默认速度，减少更新频率
   centerVignette = false,
   outerVignette = true,
   smooth = true,
-  characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789',
+  characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$&*()-_+=/[]{};:<>.,0123456789',
   className = '',
   style = {}
 }: LetterGlitchProps) => {
@@ -290,7 +290,7 @@ const LetterGlitchBackground: React.FC<Omit<LetterGlitchProps, 'glitchColors'>> 
   return (
     <LetterGlitch
       glitchColors={glitchColors}
-      glitchSpeed={100} // 增加默认速度，减少更新频率
+      glitchSpeed={300} // 增加默认速度，减少更新频率
       centerVignette={true}
       outerVignette={false}
       smooth={true}
