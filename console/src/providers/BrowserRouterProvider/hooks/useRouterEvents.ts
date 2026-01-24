@@ -11,7 +11,6 @@ import { ROUTES } from "@/types/navigation";
  */
 export function useRouterEvents() {
   const navigate = useNavigate();
-
   // 处理通用导航事件
   const handleNavigate = useCallback(
     (payload: { to: string; replace?: boolean; state?: unknown }) => {

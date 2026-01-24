@@ -1,15 +1,17 @@
 import { memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
-import { GetUser, GetUserEmailsByUserID, GetUserProfile } from "@/apis/directory.api";
 import { Bell, Mail, Search } from "@/assets/icons/lucide";
 import { LanguageSwitcher } from "@/components";
-import { useAuthStore } from "@/stores/authStore";
+import { authEventEmitter, authEvents } from "@/events/auth";
+import { routerEventEmitter, routerEvents } from "@/events/router";
+import { useUser, useUserEmailsByUserID, useUserProfile } from "@/hooks/useDirectory";
 import { useChatStore } from "@/stores/chatStore";
-import { showError, showSearch } from "@/stores/modalStore";
+import { showSearch } from "@/stores/modalStore";
+import { useAuthStore } from "@/stores/authStore";
 import { ROUTES } from "@/types/navigation";
+
+
 import { buildImageUrl } from "@/utils/image";
 
 import styles from "./styles.module.css";
@@ -50,17 +52,24 @@ export default RightContainer;
 const UserEmail = memo(() => {
   const { t } = useTranslation("components");
   const currentUserId = useAuthStore((state) => state.currentUserId);
-  const { data: userEmails } = useQuery({
-    queryKey: ["user-emails", currentUserId],
-    queryFn: () => (currentUserId ? GetUserEmailsByUserID(currentUserId) : null),
-    enabled: !!currentUserId,
-    select: (data) => {
-      // 优先返回主邮箱，否则返回第一个邮箱
-      if (!data || data.length === 0) return null;
-      const primaryEmail = data.find((email) => email.isPrimary);
-      return primaryEmail?.email || data[0]?.email || null;
-    },
+  
+  if (!currentUserId) {
+    return (
+      <div className={styles.contactInfo}>
+        <Mail size={16} />
+        <span className={styles.email}>{t("header.notSet")}</span>
+      </div>
+    );
+  }
+  
+  const { data: userEmailsList } = useUserEmailsByUserID({
+    userId: currentUserId,
   });
+  
+  const userEmails = userEmailsList && userEmailsList.length > 0
+    ? (userEmailsList.find((email) => email.isPrimary)?.email || userEmailsList[0]?.email || null)
+    : null;
+  
   return (
     <div className={styles.contactInfo}>
       <Mail size={16} />
@@ -74,43 +83,35 @@ const UserMenu = memo(() => {
   const { t } = useTranslation("components");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const currentUserId = useAuthStore((state) => state.currentUserId);
-  const clearAuth = useAuthStore((state) => state.clearAuth);
-  const { data: user } = useQuery({
-    queryKey: ["user", currentUserId],
-    queryFn: () => (currentUserId ? GetUser(currentUserId) : null),
-    enabled: !!currentUserId,
+  
+  if (!currentUserId) {
+    return null;
+  }
+  
+  const { data: user } = useUser({
+    id: currentUserId,
   });
-  const { data: userProfile } = useQuery({
-    queryKey: ["user-profile", currentUserId],
-    queryFn: () => (currentUserId ? GetUserProfile(currentUserId) : null),
-    enabled: !!currentUserId,
+  const { data: userProfile } = useUserProfile({
+    id: currentUserId,
   });
-  const { data: userEmails } = useQuery({
-    queryKey: ["user-emails", currentUserId],
-    queryFn: () => (currentUserId ? GetUserEmailsByUserID(currentUserId) : null),
-    enabled: !!currentUserId,
-    select: (data) => {
-      // 优先返回主邮箱，否则返回第一个邮箱
-      if (!data || data.length === 0) return null;
-      const primaryEmail = data.find((email) => email.isPrimary);
-      return primaryEmail?.email || data[0]?.email || null;
-    },
+  const { data: userEmailsList } = useUserEmailsByUserID({
+    userId: currentUserId,
   });
-  const navigate = useNavigate();
-
+  
+  const userEmails = userEmailsList && userEmailsList.length > 0
+    ? (userEmailsList.find((email) => email.isPrimary)?.email || userEmailsList[0]?.email || null)
+    : null;
+  
   const handleLogout = useCallback(() => {
-    try {
-      clearAuth();
-      navigate(ROUTES.LOGIN);
-    } catch (error) {
-      showError(t("header.logoutFailed") + error);
-    }
-  }, [clearAuth, navigate, t]);
+    // 同时发送 auth 事件（用于清理）和 router 事件（用于导航）
+    authEventEmitter.emit(authEvents.LOGOUT);
+    routerEventEmitter.emit(routerEvents.NAVIGATE_TO_LOGIN);
+  }, []);
 
   const handleNavigateProfile = useCallback(() => {
-    navigate(ROUTES.PROFILE);
+    routerEventEmitter.navigate({ to: ROUTES.PROFILE });
     setUserMenuOpen(false);
-  }, [navigate]);
+  }, []);
 
   const userMenu: Array<{ title: string; action: () => void; disabled?: boolean }> = useMemo(
     () => [

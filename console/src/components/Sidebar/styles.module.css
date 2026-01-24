@@ -8,6 +8,13 @@
 .sidebarContent {
     padding-top: 1rem;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.menuWrapper {
+    flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -112,4 +119,73 @@
 .sidebar :global(.ps-menu-button.ps-active .ps-menu-icon),
 .sidebar :global(.ps-menu-button.ps-active .ps-menu-label) {
     color: #ffffff !important;
+}
+
+/* 退出登录按钮容器 */
+.logoutContainer {
+    margin-top: auto;
+    padding: 0.5rem;
+    border-top: 1px solid var(--color-separator);
+    flex-shrink: 0;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+}
+
+.logoutButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.375rem;
+    color: var(--color-fg-text);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    direction: ltr;
+}
+
+.logoutButton span {
+    display: inline-block;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    direction: ltr !important;
+    transform: none !important;
+    transition: opacity 0.3s ease, max-width 0.3s ease;
+    max-width: 200px;
+    opacity: 1;
+}
+
+.logoutButton .hiddenText {
+    opacity: 0;
+    max-width: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.logoutButton .visibleText {
+    opacity: 1;
+    max-width: 200px;
+    width: auto;
+}
+
+.logoutButton:hover {
+    background-color: var(--color-bg-3);
+    color: var(--color-danger, #ef4444);
+}
+
+.logoutButton:active {
+    transform: scale(0.98);
+}
+
+.logoutButton svg {
+    flex-shrink: 0;
+    color: inherit;
 }

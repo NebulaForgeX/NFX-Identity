@@ -7,6 +7,7 @@ import { useAuditCacheInvalidation } from "./useAuditCacheInvalidation";
 import { useClientsCacheInvalidation } from "./useClientsCacheInvalidation";
 import { useDirectoryCacheInvalidation } from "./useDirectoryCacheInvalidation";
 import { useImageCacheInvalidation } from "./useImageCacheInvalidation";
+import { useLogoutCleanup } from "./useLogoutCleanup";
 import { useSystemCacheInvalidation } from "./useSystemCacheInvalidation";
 import { useTenantsCacheInvalidation } from "./useTenantsCacheInvalidation";
 

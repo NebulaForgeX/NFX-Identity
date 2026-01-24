@@ -1,6 +1,8 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { AUTH_QUERY_KEY_PREFIXES } from "@/constants";
+import { AuthStore } from "@/stores/authStore";
+import { ChatStore } from "@/stores/chatStore";
 
 /**
  * Auth 相关的缓存失效事件处理
@@ -24,6 +26,17 @@ export const useAuthCacheInvalidation = (queryClient: QueryClient) => {
   const handleInvalidateAccountLockout = (item: string) => queryClient.invalidateQueries({ queryKey: [...AUTH_QUERY_KEY_PREFIXES.ACCOUNT_LOCKOUT, item] });
   const handleInvalidateTrustedDevices = () => queryClient.invalidateQueries({ queryKey: AUTH_QUERY_KEY_PREFIXES.TRUSTED_DEVICES });
   const handleInvalidateTrustedDevice = (item: string) => queryClient.invalidateQueries({ queryKey: [...AUTH_QUERY_KEY_PREFIXES.TRUSTED_DEVICE, item] });
+  
+  // 处理退出登录事件 - 清理所有缓存和 stores
+  const handleLogout = () => {
+    // 清理认证状态
+    AuthStore.getState().clearAuth();
+    // 清理 React Query 缓存
+    queryClient.clear();
+    // 清理 ChatStore 状态
+    ChatStore.getState().clearUnreadCount();
+    ChatStore.getState().setTotalMessages(0);
+  };
 
   // 注册监听器
   authEventEmitter.on(authEvents.INVALIDATE_SESSIONS, handleInvalidateSessions);
@@ -42,9 +55,9 @@ export const useAuthCacheInvalidation = (queryClient: QueryClient) => {
   authEventEmitter.on(authEvents.INVALIDATE_LOGIN_ATTEMPT, handleInvalidateLoginAttempt);
   authEventEmitter.on(authEvents.INVALIDATE_ACCOUNT_LOCKOUTS, handleInvalidateAccountLockouts);
   authEventEmitter.on(authEvents.INVALIDATE_ACCOUNT_LOCKOUT, handleInvalidateAccountLockout);
-  authEventEmitter.on(authEvents.INVALIDATE_TRUSTED_DEVICES, handleInvalidateTrustedDevices);
-  authEventEmitter.on(authEvents.INVALIDATE_TRUSTED_DEVICE, handleInvalidateTrustedDevice);
-
+    authEventEmitter.on(authEvents.INVALIDATE_TRUSTED_DEVICES, handleInvalidateTrustedDevices);
+    authEventEmitter.on(authEvents.INVALIDATE_TRUSTED_DEVICE, handleInvalidateTrustedDevice);
+    authEventEmitter.on(authEvents.LOGOUT, handleLogout);
   // 清理监听器
   return () => {
     authEventEmitter.off(authEvents.INVALIDATE_SESSIONS, handleInvalidateSessions);
@@ -65,5 +78,6 @@ export const useAuthCacheInvalidation = (queryClient: QueryClient) => {
     authEventEmitter.off(authEvents.INVALIDATE_ACCOUNT_LOCKOUT, handleInvalidateAccountLockout);
     authEventEmitter.off(authEvents.INVALIDATE_TRUSTED_DEVICES, handleInvalidateTrustedDevices);
     authEventEmitter.off(authEvents.INVALIDATE_TRUSTED_DEVICE, handleInvalidateTrustedDevice);
+    authEventEmitter.off(authEvents.LOGOUT, handleLogout);
   };
 };

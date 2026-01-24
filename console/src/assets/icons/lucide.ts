@@ -36,6 +36,7 @@ export { default as Info } from "lucide-react/icons/info";
 export { default as Languages } from "lucide-react/icons/languages";
 export { default as LayoutGrid } from "lucide-react/icons/layout-grid";
 export { default as Leaf } from "lucide-react/icons/leaf";
+export { default as LogOut } from "lucide-react/icons/log-out";
 export { default as Layers } from "lucide-react/icons/layers";
 export { default as Loader } from "lucide-react/icons/loader";
 export { default as Loader2 } from "lucide-react/icons/loader-2";

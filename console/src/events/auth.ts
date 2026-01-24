@@ -37,6 +37,7 @@ export const authEvents = {
 
   // 登录相关
   LOGIN_SUCCESS: "AUTH:LOGIN_SUCCESS",
+  LOGOUT: "AUTH:LOGOUT",
 } as const;
 
 type AuthEvent = (typeof authEvents)[keyof typeof authEvents];
@@ -62,6 +63,7 @@ class AuthEventEmitter {
     [authEvents.INVALIDATE_TRUSTED_DEVICE]: new Set<Function>(),
     [authEvents.INVALIDATE_TRUSTED_DEVICES]: new Set<Function>(),
     [authEvents.LOGIN_SUCCESS]: new Set<Function>(),
+    [authEvents.LOGOUT]: new Set<Function>(),
   };
 
   on(event: AuthEvent, callback: Function) {

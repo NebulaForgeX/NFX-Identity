@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import type { SidebarProps as ProSidebarProps } from "react-pro-sidebar";
 
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, Sidebar as ProSidebar, SubMenu } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-import { Home, User, Plus, Settings, Eye } from "@/assets/icons/lucide";
+import { Home, User, Plus, Settings, Eye, LogOut } from "@/assets/icons/lucide";
+import { authEventEmitter, authEvents } from "@/events/auth";
 import { isActiveRoute, ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";
@@ -24,6 +25,10 @@ const Sidebar = memo(
     const { t } = useTranslation("components");
     const location = useLocation();
 
+    const handleLogout = useCallback(() => {
+      authEventEmitter.emit(authEvents.LOGOUT);
+    }, []);
+
     return (
       <ProSidebar
         collapsed={collapsed}
@@ -38,11 +43,12 @@ const Sidebar = memo(
         className={`${styles.sidebar} ${className || ""}`}
       >
         <div className={styles.sidebarContent}>
-          {children || (
-            <Menu
-              key={`${collapsed}-${toggled}`} //! Prevent re-rendering when collapsed/toggled changes; Do not remove this!
-              transitionDuration={300}
-              closeOnClick
+          <div className={styles.menuWrapper}>
+            {children || (
+              <Menu
+                key={`${collapsed}-${toggled}`} //! Prevent re-rendering when collapsed/toggled changes; Do not remove this!
+                transitionDuration={300}
+                closeOnClick
               menuItemStyles={{
                 button: {
                   color: "var(--color-fg-text)",
@@ -129,7 +135,21 @@ const Sidebar = memo(
                 </MenuItem>
               </SubMenu>
             </Menu>
-          )}
+            )}
+          </div>
+          {/* 退出登录按钮 - 固定在底部 */}
+          <div className={styles.logoutContainer}>
+            <button
+              className={styles.logoutButton}
+              onClick={handleLogout}
+              title={t("header.logout")}
+            >
+              <LogOut size={20} />
+              <span className={collapsed ? styles.hiddenText : styles.visibleText}>
+                {t("header.logout")}
+              </span>
+            </button>
+          </div>
         </div>
       </ProSidebar>
     );
