@@ -3,7 +3,7 @@ import type { LucideIcon } from "@/assets/icons/lucide";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Edit, Home, Search, Shield, User, X } from "@/assets/icons/lucide";
+import { Edit, Home, Search, Shield, User, X, Lock } from "@/assets/icons/lucide";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
 
@@ -56,6 +56,13 @@ const SearchModal = memo(() => {
         icon: Shield,
         route: ROUTES.ACCOUNT_SECURITY,
         keywords: ["security", "password", "account", "安全", "密码", "账户"],
+      },
+      {
+        title: "用户安全",
+        description: "查看角色和权限信息",
+        icon: Lock,
+        route: ROUTES.USER_SECURITY,
+        keywords: ["user security", "role", "permission", "grant", "用户安全", "角色", "权限", "授权"],
       },
     ],
     [],

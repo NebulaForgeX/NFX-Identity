@@ -34,6 +34,7 @@ export { default as Home } from "lucide-react/icons/home";
 export { default as Image } from "lucide-react/icons/image";
 export { default as Info } from "lucide-react/icons/info";
 export { default as Languages } from "lucide-react/icons/languages";
+export { default as Lock } from "lucide-react/icons/lock";
 export { default as LayoutGrid } from "lucide-react/icons/layout-grid";
 export { default as Leaf } from "lucide-react/icons/leaf";
 export { default as LogOut } from "lucide-react/icons/log-out";

@@ -34,6 +34,7 @@ export const URL_PATHS = {
     DELETE_SCOPE: "/access/auth/scopes/:scope",
     // 授权相关 - 需要认证
     CREATE_GRANT: "/access/auth/grants",
+    GET_GRANTS_BY_SUBJECT: "/access/auth/grants",
     GET_GRANT: "/access/auth/grants/:id",
     UPDATE_GRANT: "/access/auth/grants/:id",
     DELETE_GRANT: "/access/auth/grants/:id",

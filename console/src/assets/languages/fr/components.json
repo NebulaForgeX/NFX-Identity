@@ -32,7 +32,8 @@
     "editProfile": "Modifier le profil",
     "addEducation": "Ajouter une éducation",
     "addOccupation": "Ajouter une occupation",
-    "editPreference": "Modifier la préférence"
+    "editPreference": "Modifier la préférence",
+    "userSecurity": "Sécurité utilisateur"
   },
   "searchInput": {
     "placeholder": "Rechercher...",

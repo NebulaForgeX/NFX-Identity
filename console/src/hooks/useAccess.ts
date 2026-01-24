@@ -15,6 +15,7 @@ import {
   DeleteScope,
   DeleteScopePermission,
   GetGrant,
+  GetGrantsBySubject,
   GetPermission,
   GetPermissionByKey,
   GetRole,
@@ -299,6 +300,24 @@ export const useGrant = (params: UnifiedQueryParams<Grant> & { id: string }) => 
     postProcess,
   );
   return makeQuery(ACCESS_GRANT(id), { id }, options);
+};
+
+// 根据主体获取授权列表
+export const useGrantsBySubject = (params: UnifiedQueryParams<Grant[]> & {
+  subject_type: string;
+  subject_id: string;
+  tenant_id?: string;
+}) => {
+  const { subject_type, subject_id, tenant_id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { subject_type: string; subject_id: string; tenant_id?: string }) => {
+      return await GetGrantsBySubject(params);
+    },
+    "suspense",
+    postProcess,
+  );
+  const queryKey = `grants-by-subject-${subject_type}-${subject_id}${tenant_id ? `-${tenant_id}` : ""}`;
+  return makeQuery(queryKey, { subject_type, subject_id, tenant_id }, options);
 };
 
 // 创建授权

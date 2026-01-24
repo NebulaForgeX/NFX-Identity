@@ -33,7 +33,8 @@
     "editProfile": "编辑资料",
     "addEducation": "添加教育",
     "addOccupation": "添加工作",
-    "editPreference": "编辑偏好"
+    "editPreference": "编辑偏好",
+    "userSecurity": "用户安全"
   },
   "searchInput": {
     "placeholder": "搜索...",

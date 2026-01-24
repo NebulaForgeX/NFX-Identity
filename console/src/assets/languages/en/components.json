@@ -33,7 +33,8 @@
     "editProfile": "Edit Profile",
     "addEducation": "Add Education",
     "addOccupation": "Add Occupation",
-    "editPreference": "Edit Preference"
+    "editPreference": "Edit Preference",
+    "userSecurity": "User Security"
   },
   "searchInput": {
     "placeholder": "Search...",

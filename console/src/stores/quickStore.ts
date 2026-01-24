@@ -32,12 +32,12 @@ export const ALL_AVAILABLE_ITEMS: QuickNavItem[] = [
     color: "var(--color-success)",
   },
   {
-    id: "account-security",
-    title: "账户安全",
-    description: "管理密码和安全设置",
+    id: "user-security",
+    title: "用户安全",
+    description: "查看角色和权限信息",
     icon: "Shield",
-    route: ROUTES.ACCOUNT_SECURITY,
-    color: "var(--color-warning)",
+    route: ROUTES.USER_SECURITY,
+    color: "var(--color-info)",
   },
   // TODO: 后续需要时添加更多导航项
 ];

@@ -6,6 +6,7 @@ export const ROUTES = {
   PROFILE: "/profile",
   EDIT_PROFILE: "/profile/edit",
   ACCOUNT_SECURITY: "/profile/security",
+  USER_SECURITY: "/user-security",
   ADD_EDUCATION: "/profile/add-education",
   ADD_OCCUPATION: "/profile/add-occupation",
   EDIT_EDUCATION: "/profile/edit-education",

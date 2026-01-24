@@ -12,6 +12,7 @@ import {
   LoginPage,
   NotFoundPage,
   ProfilePage,
+  UserSecurityPage,
 } from "@/pages";
 import { ROUTES } from "@/types/navigation";
 
@@ -38,6 +39,7 @@ function App() {
         <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
         <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
         <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
+        <Route path={ROUTES.USER_SECURITY} element={<UserSecurityPage />} />
         <Route path={ROUTES.ADD_EDUCATION} element={<AddEducationPage />} />
         <Route path={ROUTES.ADD_OCCUPATION} element={<AddOccupationPage />} />
         <Route path={ROUTES.EDIT_EDUCATION} element={<EditEducationPage />} />

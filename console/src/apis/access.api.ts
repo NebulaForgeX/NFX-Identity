@@ -133,6 +133,18 @@ export const CreateGrant = async (params: CreateGrantRequest): Promise<Grant> =>
   return data.data;
 };
 
+// 根据主体获取授权列表
+export const GetGrantsBySubject = async (params: {
+  subject_type: string;
+  subject_id: string;
+  tenant_id?: string;
+}): Promise<Grant[]> => {
+  const { data } = await protectedClient.get<DataResponse<Grant[]>>(URL_PATHS.ACCESS.GET_GRANTS_BY_SUBJECT, {
+    params,
+  });
+  return data.data;
+};
+
 // 根据 ID 获取授权
 export const GetGrant = async (id: string): Promise<Grant> => {
   const url = URL_PATHS.ACCESS.GET_GRANT.replace(":id", id);

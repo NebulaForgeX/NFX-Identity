@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, Sidebar as ProSidebar, SubMenu } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-import { Home, User, Plus, Settings, Eye, LogOut } from "@/assets/icons/lucide";
+import { Home, User, Plus, Settings, Eye, LogOut, Shield } from "@/assets/icons/lucide";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { isActiveRoute, ROUTES } from "@/types/navigation";
 
@@ -85,6 +85,13 @@ const Sidebar = memo(
               >
                 {t("sidebar.dashboard")}
               </MenuItem>
+              <MenuItem
+                  icon={<Shield size={18} />}
+                  component={<Link to={ROUTES.USER_SECURITY} />}
+                  active={isActiveRoute(location.pathname, ROUTES.USER_SECURITY)}
+                >
+                  {t("sidebar.userSecurity")}
+                </MenuItem>
               <SubMenu
                 label={t("sidebar.profile")}
                 icon={<User size={20} />}
