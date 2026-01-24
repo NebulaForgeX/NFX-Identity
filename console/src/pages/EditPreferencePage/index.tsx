@@ -1,13 +1,14 @@
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { FormProvider } from "react-hook-form";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Button, IconButton, Suspense } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
 import { useInitPreferenceForm, useSubmitPreference } from "@/elements/directory";
-import { PreferenceKeyController, PreferenceValueController } from "@/elements/directory";
+import { ThemeController, LanguageController, TimezoneController } from "@/elements/directory";
 import { useUserPreference } from "@/hooks/useDirectory";
+import { useAuthStore } from "@/stores/authStore";
 import { ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";
@@ -15,8 +16,12 @@ import styles from "./styles.module.css";
 const EditPreferencePage = memo(() => {
   const { t } = useTranslation("EditPreferencePage");
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const preferenceId = searchParams.get("id");
+  const currentUserId = useAuthStore((state) => state.currentUserId);
+
+  if (!currentUserId) {
+    navigate(ROUTES.PROFILE);
+    return null;
+  }
 
   return (
     <div className={styles.container}>
@@ -29,41 +34,38 @@ const EditPreferencePage = memo(() => {
         >
           {t("back")}
         </IconButton>
-        <h1 className={styles.title}>
-          {preferenceId ? t("title") : t("addTitle")}
-        </h1>
-        <p className={styles.subtitle}>
-          {preferenceId ? t("subtitle") : t("addSubtitle")}
-        </p>
+        <h1 className={styles.title}>{t("title")}</h1>
+        <p className={styles.subtitle}>{t("subtitle")}</p>
       </div>
 
-      {preferenceId ? (
       <Suspense
         loadingType="ecg"
         loadingText={t("loading")}
         loadingSize="small"
         loadingContainerClassName={styles.loading}
       >
-          <EditPreferenceContent preferenceId={preferenceId} />
-        </Suspense>
-      ) : (
-        <AddPreferenceContent />
-      )}
+        <EditPreferenceContent userId={currentUserId} />
+      </Suspense>
     </div>
   );
 });
 
 EditPreferencePage.displayName = "EditPreferencePage";
 
-const EditPreferenceContent = memo(({ preferenceId }: { preferenceId: string }) => {
+const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
   const { t } = useTranslation("EditPreferencePage");
   const navigate = useNavigate();
-  const { data: preference } = useUserPreference({ id: preferenceId });
+  const { data: preference } = useUserPreference({ id: userId });
   const form = useInitPreferenceForm(
     preference
       ? {
-          key: preference.key,
-          value: preference.value,
+          theme: preference.theme,
+          language: preference.language,
+          timezone: preference.timezone,
+          notifications: preference.notifications,
+          privacy: preference.privacy,
+          display: preference.display,
+          other: preference.other,
         }
       : undefined,
   );
@@ -72,8 +74,9 @@ const EditPreferenceContent = memo(({ preferenceId }: { preferenceId: string }) 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className={styles.form}>
-        <PreferenceKeyController disabled={true} />
-        <PreferenceValueController />
+        <ThemeController />
+        <LanguageController />
+        <TimezoneController />
 
         <div className={styles.actions}>
           <Button
@@ -94,37 +97,5 @@ const EditPreferenceContent = memo(({ preferenceId }: { preferenceId: string }) 
 });
 
 EditPreferenceContent.displayName = "EditPreferenceContent";
-
-const AddPreferenceContent = memo(() => {
-  const { t } = useTranslation("EditPreferencePage");
-  const navigate = useNavigate();
-  const form = useInitPreferenceForm();
-  const { onSubmit, onSubmitError, isPending } = useSubmitPreference();
-
-  return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className={styles.form}>
-        <PreferenceKeyController disabled={false} />
-        <PreferenceValueController />
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate(ROUTES.PROFILE)}
-            disabled={isPending}
-          >
-            {t("cancel")}
-          </Button>
-          <Button type="submit" variant="primary" disabled={isPending}>
-            {isPending ? t("submitting") : t("submit")}
-          </Button>
-        </div>
-      </form>
-    </FormProvider>
-  );
-});
-
-AddPreferenceContent.displayName = "AddPreferenceContent";
 
 export default EditPreferencePage;

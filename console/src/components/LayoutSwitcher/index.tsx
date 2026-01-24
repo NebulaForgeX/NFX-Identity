@@ -2,6 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import LayoutStore, { useLayoutStore } from "@/stores/layoutStore";
+import { useUserPreferenceSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";
 
@@ -13,6 +14,7 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
   const { t } = useTranslation("components");
   const layoutMode = useLayoutStore((s) => s.layoutMode);
   const setLayoutMode = LayoutStore.getState().setLayoutMode;
+  const { syncLayout } = useUserPreferenceSync();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +34,7 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
 
   const handleChange = (mode: "show" | "hide") => {
     setLayoutMode(mode);
+    syncLayout(mode);
     setIsOpen(false);
   };
 

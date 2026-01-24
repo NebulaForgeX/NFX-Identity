@@ -31,15 +31,26 @@ export const useSubmitPreference = (preference?: UserPreference) => {
           await updatePreference.mutateAsync({
             id: preference.id,
             data: {
-              value: values.value,
+              theme: values.theme,
+              language: values.language,
+              timezone: values.timezone,
+              notifications: values.notifications,
+              privacy: values.privacy,
+              display: values.display,
+              other: values.other,
             },
           });
         } else {
           // 创建新偏好
           await createPreference.mutateAsync({
             userId: currentUserId,
-            key: values.key,
-            value: values.value,
+            theme: values.theme,
+            language: values.language,
+            timezone: values.timezone,
+            notifications: values.notifications,
+            privacy: values.privacy,
+            display: values.display,
+            other: values.other,
           });
         }
         navigate(ROUTES.PROFILE);

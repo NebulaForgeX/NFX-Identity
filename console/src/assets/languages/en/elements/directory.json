@@ -191,21 +191,22 @@
     "skills": {
       "label": "Skills",
       "keyPlaceholder": "Category (e.g., programming, design)",
-      "valuePlaceholder": "Skills separated by comma (e.g., JavaScript, TypeScript)"
-    },
-    "keyValueEditor": {
-      "add": "Add",
-      "remove": "Remove",
-      "key": {
-        "placeholder": "Key"
-      },
-      "value": {
-        "placeholder": "Value",
-        "arrayPlaceholder": "Values separated by comma"
-      }
-    },
-    "messages": {
-      "user_not_found": "User not found"
+      "valuePlaceholder": "Skills separated by comma (e.g., JavaScript, TypeScript)",
+      "namePlaceholder": "Skill name (e.g., JavaScript, React, TypeScript)"
     }
+  },
+  "keyValueEditor": {
+    "add": "Add",
+    "remove": "Remove",
+    "key": {
+      "placeholder": "Key"
+    },
+    "value": {
+      "placeholder": "Value",
+      "arrayPlaceholder": "Values separated by comma"
+    }
+  },
+  "messages": {
+    "user_not_found": "User not found"
   }
 }

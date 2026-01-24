@@ -22,3 +22,5 @@ export type { IconButtonProps } from "./IconButton";
 export type { ButtonProps } from "./Button";
 export { default as KeyValueEditor } from "./KeyValueEditor";
 export type { KeyValuePair } from "./KeyValueEditor";
+export { default as Slider } from "./Slider";
+export type { SliderProps } from "./Slider";

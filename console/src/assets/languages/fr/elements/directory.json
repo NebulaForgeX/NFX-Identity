@@ -191,21 +191,22 @@
     "skills": {
       "label": "Compétences",
       "keyPlaceholder": "Catégorie (ex: programming, design)",
-      "valuePlaceholder": "Compétences séparées par des virgules (ex: JavaScript, TypeScript)"
-    },
-    "keyValueEditor": {
-      "add": "Ajouter",
-      "remove": "Supprimer",
-      "key": {
-        "placeholder": "Clé"
-      },
-      "value": {
-        "placeholder": "Valeur",
-        "arrayPlaceholder": "Valeurs séparées par des virgules"
-      }
-    },
-    "messages": {
-      "user_not_found": "Utilisateur introuvable"
+      "valuePlaceholder": "Compétences séparées par des virgules (ex: JavaScript, TypeScript)",
+      "namePlaceholder": "Nom de la compétence (ex: JavaScript, React, TypeScript)"
     }
+  },
+  "keyValueEditor": {
+    "add": "Ajouter",
+    "remove": "Supprimer",
+    "key": {
+      "placeholder": "Clé"
+    },
+    "value": {
+      "placeholder": "Valeur",
+      "arrayPlaceholder": "Valeurs séparées par des virgules"
+    }
+  },
+  "messages": {
+    "user_not_found": "Utilisateur introuvable"
   }
 }

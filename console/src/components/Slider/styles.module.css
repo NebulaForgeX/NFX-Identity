@@ -1,0 +1,111 @@
+.sliderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sliderContainer.fullWidth {
+  width: 100%;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  min-height: 1.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fg-text);
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: 0.25rem;
+}
+
+.sliderWrapper {
+  display: flex;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.sliderRoot {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.sliderRoot:active {
+  cursor: grabbing;
+}
+
+.sliderTrackWrapper {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+}
+
+.sliderTrack {
+  position: relative;
+  height: 0.375rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: var(--color-bg-3);
+}
+
+.sliderRange {
+  position: absolute;
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: 9999px;
+}
+
+.valueIndicator {
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  min-width: 2rem;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-fg-muted);
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}

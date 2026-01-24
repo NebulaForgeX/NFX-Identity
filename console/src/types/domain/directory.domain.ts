@@ -102,10 +102,16 @@ export interface UserPhone {
 export interface UserPreference {
   id: string;
   userId: string;
-  key: string;
-  value: string;
+  theme?: string;
+  language?: string;
+  timezone?: string;
+  notifications?: Record<string, unknown>;
+  privacy?: Record<string, unknown>;
+  display?: Record<string, unknown>;
+  other?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface UserProfile {

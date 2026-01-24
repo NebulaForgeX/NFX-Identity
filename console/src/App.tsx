@@ -18,9 +18,13 @@ import { ROUTES } from "@/types/navigation";
 import "./App.module.css";
 
 import { useAuthStore } from "./stores/authStore";
+import { useUserPreferenceSync } from "./hooks/useUserPreferenceSync";
 
 function App() {
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
+  
+  // Sync and apply user preferences on login
+  useUserPreferenceSync();
 
   if (!isAuthValid) {
     return (

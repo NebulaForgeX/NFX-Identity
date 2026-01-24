@@ -38,9 +38,9 @@ export const useSubmitProfile = (profileId?: string) => {
 
         const skills =
           values.skills && values.skills.length > 0
-            ? values.skills.reduce((acc, pair) => {
-                if (pair.key.trim()) {
-                  acc[pair.key] = pair.value;
+            ? values.skills.reduce((acc, skill) => {
+                if (skill.name && skill.name.trim()) {
+                  acc[skill.name] = skill.score;
                 }
                 return acc;
               }, {} as Record<string, unknown>)

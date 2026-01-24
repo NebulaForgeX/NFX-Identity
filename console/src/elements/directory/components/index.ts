@@ -19,8 +19,9 @@ export { default as OccupationDescriptionController } from "./OccupationDescript
 export { default as ResponsibilitiesController } from "./ResponsibilitiesController";
 export { default as OccupationAchievementsController } from "./OccupationAchievementsController";
 export { default as IsCurrentOccupationController } from "./IsCurrentOccupationController";
-export { default as PreferenceKeyController } from "./PreferenceKeyController";
-export { default as PreferenceValueController } from "./PreferenceValueController";
+export { default as ThemeController } from "./ThemeController";
+export { default as LanguageController } from "./LanguageController";
+export { default as TimezoneController } from "./TimezoneController";
 export { default as FirstNameController } from "./FirstNameController";
 export { default as LastNameController } from "./LastNameController";
 export { default as NicknameController } from "./NicknameController";

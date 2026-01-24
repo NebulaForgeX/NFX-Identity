@@ -6,6 +6,12 @@ const KeyValuePairSchema = z.object({
   value: z.union([z.string(), z.array(z.string())]),
 });
 
+// Skill schema with name and score (0-10)
+const SkillSchema = z.object({
+  name: z.string().trim().min(1),
+  score: z.number().int().min(0).max(10),
+});
+
 // 基础 schema 用于类型推断（不包含翻译，仅用于类型）
 const BaseProfileFormSchema = z.object({
   role: z.string().trim().optional(),
@@ -21,7 +27,7 @@ const BaseProfileFormSchema = z.object({
   website: z.string().url().optional().or(z.literal("")),
   github: z.string().trim().optional(),
   socialLinks: z.array(KeyValuePairSchema).optional(),
-  skills: z.array(KeyValuePairSchema).optional(),
+  skills: z.array(SkillSchema).optional(),
 });
 
 export type ProfileFormValues = z.input<typeof BaseProfileFormSchema>;

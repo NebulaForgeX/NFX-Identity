@@ -16,6 +16,15 @@ const mapToKeyValuePairs = (map?: Record<string, unknown>): KeyValuePair[] => {
   }));
 };
 
+// Helper to convert skills map to skill items with scores
+const mapToSkills = (map?: Record<string, unknown>): Array<{ name: string; score: number }> => {
+  if (!map) return [];
+  return Object.entries(map).map(([name, score]) => ({
+    name,
+    score: typeof score === "number" ? Math.max(0, Math.min(10, score)) : 0,
+  }));
+};
+
 export const useInitProfileForm = (profile?: UserProfile) => {
   const { t } = useTranslation("elements.directory");
 
@@ -23,6 +32,11 @@ export const useInitProfileForm = (profile?: UserProfile) => {
   const KeyValuePairSchema = z.object({
     key: z.string().trim().min(1),
     value: z.union([z.string(), z.array(z.string())]),
+  });
+
+  const SkillSchema = z.object({
+    name: z.string().trim().min(1),
+    score: z.number().int().min(0).max(10),
   });
 
   const ProfileFormSchema = z.object({
@@ -39,7 +53,7 @@ export const useInitProfileForm = (profile?: UserProfile) => {
     website: z.string().url().optional().or(z.literal("")),
     github: z.string().trim().optional(),
     socialLinks: z.array(KeyValuePairSchema).optional(),
-    skills: z.array(KeyValuePairSchema).optional(),
+    skills: z.array(SkillSchema).optional(),
   });
 
   const form = useForm<ProfileFormValues>({
@@ -59,7 +73,7 @@ export const useInitProfileForm = (profile?: UserProfile) => {
       website: profile?.website || "",
       github: profile?.github || "",
       socialLinks: mapToKeyValuePairs(profile?.socialLinks as Record<string, unknown> | undefined),
-      skills: mapToKeyValuePairs(profile?.skills as Record<string, unknown> | undefined),
+      skills: mapToSkills(profile?.skills as Record<string, unknown> | undefined),
     },
   });
 

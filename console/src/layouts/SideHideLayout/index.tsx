@@ -83,7 +83,9 @@ const SideHideLayout = memo(({ children }: SideHideLayoutProps) => {
         />
 
         {/* Content */}
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content} data-lenis-prevent>
+          {children}
+        </div>
       </main>
 
       {/* Footer */}

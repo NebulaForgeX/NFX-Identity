@@ -144,12 +144,23 @@ export interface UpdateUserPhoneRequest {
 
 export interface CreateUserPreferenceRequest {
   userId: string;
-  key: string;
-  value: string;
+  theme?: string;
+  language?: string;
+  timezone?: string;
+  notifications?: Record<string, unknown>;
+  privacy?: Record<string, unknown>;
+  display?: Record<string, unknown>;
+  other?: Record<string, unknown>;
 }
 
 export interface UpdateUserPreferenceRequest {
-  value: string;
+  theme?: string;
+  language?: string;
+  timezone?: string;
+  notifications?: Record<string, unknown>;
+  privacy?: Record<string, unknown>;
+  display?: Record<string, unknown>;
+  other?: Record<string, unknown>;
 }
 
 // ========== 用户资料相关 ==========

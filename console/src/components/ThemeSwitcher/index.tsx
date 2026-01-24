@@ -4,6 +4,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useTheme } from "@/hooks";
+import { useUserPreferenceSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";
 
@@ -14,6 +15,7 @@ interface ThemeSwitcherProps {
 const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
   const { t } = useTranslation("components");
   const { themeName, setTheme, availableThemes } = useTheme();
+  const { syncTheme } = useUserPreferenceSync();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +40,7 @@ const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
 
   const handleThemeChange = (theme: ThemeName) => {
     setTheme(theme);
+    syncTheme(theme);
     setIsOpen(false);
   };
 
