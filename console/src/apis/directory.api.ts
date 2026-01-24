@@ -190,6 +190,13 @@ export const GetUserEmail = async (id: string): Promise<UserEmail> => {
   return data.data;
 };
 
+// 根据用户ID获取用户邮箱列表
+export const GetUserEmailsByUserID = async (userId: string): Promise<UserEmail[]> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER_EMAILS_BY_USER_ID.replace(":id", userId);
+  const { data } = await protectedClient.get<DataResponse<UserEmail[]>>(url);
+  return data.data;
+};
+
 // 更新用户邮箱
 export const UpdateUserEmail = async (id: string, params: UpdateUserEmailRequest): Promise<BaseResponse> => {
   const url = URL_PATHS.DIRECTORY.UPDATE_USER_EMAIL.replace(":id", id);

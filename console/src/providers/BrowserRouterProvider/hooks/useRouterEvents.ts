@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { authEventEmitter, authEvents } from "@/events/auth";
 import { routerEventEmitter, routerEvents } from "@/events/router";
 import { ROUTES } from "@/types/navigation";
 
@@ -56,6 +57,11 @@ export function useRouterEvents() {
     navigate(ROUTES.HOME, { replace: true });
   }, [navigate]);
 
+  // 处理登录成功事件
+  const handleLoginSuccess = useCallback(() => {
+    navigate(ROUTES.DASHBOARD, { replace: true });
+  }, [navigate]);
+
   // 注册所有路由事件监听器
   useEffect(() => {
     routerEventEmitter.on(routerEvents.NAVIGATE, handleNavigate);
@@ -65,6 +71,9 @@ export function useRouterEvents() {
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_LOGIN, handleNavigateToLogin);
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_DASHBOARD, handleNavigateToDashboard);
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_HOME, handleNavigateToHome);
+    
+    // 监听登录成功事件
+    authEventEmitter.on(authEvents.LOGIN_SUCCESS, handleLoginSuccess);
 
     return () => {
       routerEventEmitter.off(routerEvents.NAVIGATE, handleNavigate);
@@ -74,6 +83,9 @@ export function useRouterEvents() {
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_LOGIN, handleNavigateToLogin);
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_DASHBOARD, handleNavigateToDashboard);
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_HOME, handleNavigateToHome);
+      
+      // 移除登录成功事件监听
+      authEventEmitter.off(authEvents.LOGIN_SUCCESS, handleLoginSuccess);
     };
   }, [
     handleNavigate,
@@ -83,5 +95,6 @@ export function useRouterEvents() {
     handleNavigateToLogin,
     handleNavigateToDashboard,
     handleNavigateToHome,
+    handleLoginSuccess,
   ]);
 }

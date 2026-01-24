@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { GetUser, GetUserEmail, GetUserProfile } from "@/apis/directory.api";
+import { GetUser, GetUserEmailsByUserID, GetUserProfile } from "@/apis/directory.api";
 import { Bell, Mail, Search } from "@/assets/icons/lucide";
+import { LanguageSwitcher } from "@/components";
 import { useAuthStore } from "@/stores/authStore";
 import { useChatStore } from "@/stores/chatStore";
 import { showError, showSearch } from "@/stores/modalStore";
@@ -19,6 +20,9 @@ const RightContainer = memo(() => {
   return (
     <div className={styles.headerContainer}>
       <div className={styles.actions}>
+        {/* 语言切换器 */}
+        <LanguageSwitcher status="default" />
+        <div className={styles.separator}></div>
         {/* 邮箱信息 */}
         <UserEmail />
         <div className={styles.separator}></div>
@@ -46,16 +50,21 @@ export default RightContainer;
 const UserEmail = memo(() => {
   const { t } = useTranslation("components");
   const currentUserId = useAuthStore((state) => state.currentUserId);
-  const { data: userEmail } = useQuery({
-    queryKey: ["user-email", currentUserId],
-    queryFn: () => (currentUserId ? GetUserEmail(currentUserId) : null),
+  const { data: userEmails } = useQuery({
+    queryKey: ["user-emails", currentUserId],
+    queryFn: () => (currentUserId ? GetUserEmailsByUserID(currentUserId) : null),
     enabled: !!currentUserId,
-    select: (data) => data?.email || null,
+    select: (data) => {
+      // 优先返回主邮箱，否则返回第一个邮箱
+      if (!data || data.length === 0) return null;
+      const primaryEmail = data.find((email) => email.isPrimary);
+      return primaryEmail?.email || data[0]?.email || null;
+    },
   });
   return (
     <div className={styles.contactInfo}>
       <Mail size={16} />
-      <span className={styles.email}>{userEmail || t("header.notSet")}</span>
+      <span className={styles.email}>{userEmails || t("header.notSet")}</span>
     </div>
   );
 });
@@ -76,11 +85,16 @@ const UserMenu = memo(() => {
     queryFn: () => (currentUserId ? GetUserProfile(currentUserId) : null),
     enabled: !!currentUserId,
   });
-  const { data: userEmail } = useQuery({
-    queryKey: ["user-email", currentUserId],
-    queryFn: () => (currentUserId ? GetUserEmail(currentUserId) : null),
+  const { data: userEmails } = useQuery({
+    queryKey: ["user-emails", currentUserId],
+    queryFn: () => (currentUserId ? GetUserEmailsByUserID(currentUserId) : null),
     enabled: !!currentUserId,
-    select: (data) => data?.email || null,
+    select: (data) => {
+      // 优先返回主邮箱，否则返回第一个邮箱
+      if (!data || data.length === 0) return null;
+      const primaryEmail = data.find((email) => email.isPrimary);
+      return primaryEmail?.email || data[0]?.email || null;
+    },
   });
   const navigate = useNavigate();
 
@@ -108,7 +122,7 @@ const UserMenu = memo(() => {
           alt={user?.username || t("header.user")}
           className={styles.userPicture}
         />
-        <span className={styles.userName}>{user?.username || userEmail || t("header.user")}</span>
+        <span className={styles.userName}>{user?.username || userEmails || t("header.user")}</span>
       </button>
 
       {userMenuOpen && (

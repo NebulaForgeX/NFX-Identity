@@ -15,6 +15,11 @@
     gap: 0;
 }
 
+/* 语言切换器容器 */
+.actions > :first-child {
+    margin-right: 0.5rem;
+}
+
 /* Placeholder */
 .placeholder {
     color: var(--color-fg);

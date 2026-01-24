@@ -171,6 +171,7 @@ export const URL_PATHS = {
     // 用户邮箱相关 - 需要认证
     CREATE_USER_EMAIL: "/directory/auth/user-emails",
     GET_USER_EMAIL: "/directory/auth/user-emails/:id",
+    GET_USER_EMAILS_BY_USER_ID: "/directory/auth/users/:id/user-emails", // 根据用户ID获取用户邮箱列表
     UPDATE_USER_EMAIL: "/directory/auth/user-emails/:id",
     SET_PRIMARY_USER_EMAIL: "/directory/auth/user-emails/:id/set-primary",
     VERIFY_USER_EMAIL: "/directory/auth/user-emails/:id/verify",

@@ -57,28 +57,28 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
         </svg>
       </button>
 
-      {isOpen && (
-        <div className={`${styles.optionsPanel} ${styles[status]}`}>
-          <ul className={styles.optionsList} role="listbox">
-            {(["show", "hide"] as const).map((m) => (
-              <li
-                key={m}
-                className={`${styles.option} ${m === layoutMode ? styles.selected : ""}`}
-                onClick={() => handleChange(m)}
-                role="option"
-                aria-selected={m === layoutMode}
-              >
-                <span>{getDisplayName(m)}</span>
-                {m === layoutMode && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div
+        className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
+      >
+        <ul className={styles.optionsList} role="listbox">
+          {(["show", "hide"] as const).map((m) => (
+            <li
+              key={m}
+              className={`${styles.option} ${m === layoutMode ? styles.selected : ""}`}
+              onClick={() => handleChange(m)}
+              role="option"
+              aria-selected={m === layoutMode}
+            >
+              <span>{getDisplayName(m)}</span>
+              {m === layoutMode && (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 });

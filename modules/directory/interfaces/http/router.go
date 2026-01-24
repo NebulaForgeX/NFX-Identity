@@ -29,8 +29,9 @@ func (r *Router) RegisterRoutes() {
 	{
 		// 用户相关
 		auth.Post("/users", r.handlers.User.Create)
-		auth.Get("/users/:id", r.handlers.User.GetByID)
 		auth.Get("/users/username/:username", r.handlers.User.GetByUsername)
+		auth.Get("/users/:id/user-emails", r.handlers.UserEmail.GetByUserID) // 根据用户ID获取用户邮箱列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id", r.handlers.User.GetByID)
 		auth.Patch("/users/:id/status", r.handlers.User.UpdateStatus)
 		auth.Patch("/users/:id/username", r.handlers.User.UpdateUsername)
 		auth.Patch("/users/:id/verify", r.handlers.User.Verify)

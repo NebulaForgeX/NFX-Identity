@@ -112,3 +112,20 @@ func (h *UserEmailHandler) Verify(c *fiber.Ctx) error {
 
 	return httpresp.Success(c, fiber.StatusOK, "Email verified successfully")
 }
+
+// GetByUserID 根据用户ID获取用户邮箱列表
+func (h *UserEmailHandler) GetByUserID(c *fiber.Ctx) error {
+	var req reqdto.ByIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+
+	results, err := h.appSvc.GetUserEmailsByUserID(c.Context(), req.ID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user emails: "+err.Error())
+	}
+
+	dtos := respdto.UserEmailListROToDTO(results)
+
+	return httpresp.Success(c, fiber.StatusOK, "User emails retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+}
