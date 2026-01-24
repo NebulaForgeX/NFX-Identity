@@ -97,7 +97,7 @@ import {
   DIRECTORY_USER_PREFERENCE,
   DIRECTORY_USER_PROFILE,
 } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
+import type { UnifiedQueryParams, suspenseUnifiedQueryOptions } from "./core/type";
 
 // ========== User 相关 ==========
 
@@ -721,7 +721,7 @@ export const useDeleteUserPhone = () => {
 
 // ========== UserPreference 相关 ==========
 
-// 根据 ID 获取用户偏好
+// 根据 ID 获取用户偏好（Suspense 模式）
 export const useUserPreference = (params: UnifiedQueryParams<UserPreference> & { id: string }) => {
   const { id, options, postProcess } = params;
   const makeQuery = makeUnifiedQuery(
@@ -729,6 +729,23 @@ export const useUserPreference = (params: UnifiedQueryParams<UserPreference> & {
       return await GetUserPreference(params.id);
     },
     "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_PREFERENCE(id), { id }, options);
+};
+
+// 根据 ID 获取用户偏好（普通模式，支持 enabled 选项）
+export const useUserPreferenceNormal = (params: {
+  id: string;
+  options?: suspenseUnifiedQueryOptions<UserPreference>;
+  postProcess?: (data: UserPreference) => void;
+}) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserPreference(params.id);
+    },
+    "normal",
     postProcess,
   );
   return makeQuery(DIRECTORY_USER_PREFERENCE(id), { id }, options);

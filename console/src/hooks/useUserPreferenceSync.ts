@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useAuthStore } from "@/stores/authStore";
-import { useUpdateUserPreference, useUserPreference } from "@/hooks/useDirectory";
+import { useUpdateUserPreference, useUserPreferenceNormal } from "@/hooks/useDirectory";
 import { useTheme } from "@/hooks/useTheme";
 import { ChangeLanguage } from "@/assets/languages/i18n";
 import { LANGUAGE } from "@/assets/languages/i18nResources";
@@ -18,12 +18,15 @@ export const useUserPreferenceSync = () => {
   const updatePreference = useUpdateUserPreference();
   
   // Get user preference when authenticated
-  // Note: useUserPreference uses suspense mode
-  // We need to provide a valid ID, so we'll use currentUserId or a fallback
-  // The API will handle invalid IDs appropriately
+  // Only fetch when user is logged in
   const shouldFetch = !!currentUserId && isAuthValid;
-  const { data: preference } = useUserPreference({
-    id: shouldFetch ? currentUserId : "00000000-0000-0000-0000-000000000000",
+  
+  // Use normal mode (non-suspense) so we can use enabled option
+  const { data: preference } = useUserPreferenceNormal({
+    id: currentUserId || "00000000-0000-0000-0000-000000000000",
+    options: {
+      enabled: shouldFetch && !!currentUserId,
+    },
   });
 
   // Track if we've already applied preferences to prevent loops

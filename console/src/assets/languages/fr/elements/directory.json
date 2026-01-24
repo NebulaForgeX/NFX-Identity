@@ -111,27 +111,39 @@
     }
   },
   "preference": {
-    "addTitle": "Add Preference",
-    "addSubtitle": "Create a new user preference",
-    "editTitle": "Edit Preference",
-    "editSubtitle": "Modify user preference settings",
-    "back": "Back",
-    "cancel": "Cancel",
-    "submit": "Submit",
-    "submitting": "Submitting...",
-    "loading": "Loading preference...",
+    "addTitle": "Ajouter une préférence",
+    "addSubtitle": "Créer une nouvelle préférence utilisateur",
+    "editTitle": "Modifier la préférence",
+    "editSubtitle": "Modifier les paramètres de préférence utilisateur",
+    "back": "Retour",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "submitting": "Soumission...",
+    "loading": "Chargement de la préférence...",
+    "theme": {
+      "label": "Thème",
+      "placeholder": "Sélectionnez un thème"
+    },
+    "language": {
+      "label": "Langue",
+      "placeholder": "Sélectionnez une langue"
+    },
+    "timezone": {
+      "label": "Fuseau horaire",
+      "placeholder": "Sélectionnez un fuseau horaire"
+    },
     "key": {
-      "label": "Key",
-      "placeholder": "Enter key",
-      "required": "Key is required"
+      "label": "Clé",
+      "placeholder": "Entrez la clé",
+      "required": "La clé est requise"
     },
     "value": {
-      "label": "Value",
-      "placeholder": "Enter value",
-      "required": "Value is required"
+      "label": "Valeur",
+      "placeholder": "Entrez la valeur",
+      "required": "La valeur est requise"
     },
     "messages": {
-      "user_not_found": "User not found"
+      "user_not_found": "Utilisateur non trouvé"
     }
   },
   "profile": {

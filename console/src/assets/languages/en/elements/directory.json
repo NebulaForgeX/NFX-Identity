@@ -120,6 +120,18 @@
     "submit": "Submit",
     "submitting": "Submitting...",
     "loading": "Loading preference...",
+    "theme": {
+      "label": "Theme",
+      "placeholder": "Select a theme"
+    },
+    "language": {
+      "label": "Language",
+      "placeholder": "Select a language"
+    },
+    "timezone": {
+      "label": "Timezone",
+      "placeholder": "Select a timezone"
+    },
     "key": {
       "label": "Key",
       "placeholder": "Enter key",

@@ -93,6 +93,18 @@
     "submit": "提交",
     "submitting": "提交中...",
     "loading": "加载偏好中...",
+    "theme": {
+      "label": "主题",
+      "placeholder": "请选择主题"
+    },
+    "language": {
+      "label": "语言",
+      "placeholder": "请选择语言"
+    },
+    "timezone": {
+      "label": "时区",
+      "placeholder": "请选择时区"
+    },
     "key": {
       "label": "键",
       "placeholder": "请输入键名",
