@@ -1,4 +1,4 @@
-import type { BootstrapFormValues } from "../../controllers/bootstrapSchema";
+import type { BootstrapFormValues } from "../../schemas/bootstrapSchema";
 
 import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,128 +1,105 @@
-import { memo, useState } from "react";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useSendVerificationCode, useSignup } from "@/hooks/useAuth";
 import { useResendTimer } from "@/hooks/useResendTimer";
 import { showError, showSuccess } from "@/stores/modalStore";
 
+import { createRegisterSchema, type RegisterFormValues } from "../../schemas/registerSchema";
+import RegisterEmailController from "../RegisterEmailController";
+import RegisterPasswordController from "../RegisterPasswordController";
+import RegisterVerificationCodeController from "../RegisterVerificationCodeController";
 import styles from "./styles.module.css";
 
 const RegisterForm = memo(() => {
-  const [email, setEmail] = useState("");
-  const [inviteCode, setInviteCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-
+  const { t } = useTranslation("LoginPage");
   const { mutateAsync: signup, isPending: isSigningUp } = useSignup();
   const { mutateAsync: sendCode, isPending: isSendingCode } = useSendVerificationCode();
   const { timeLeft, canResend, startTimer } = useResendTimer();
 
+  // 创建带翻译的 schema
+  const registerSchema = createRegisterSchema((key: string) => t(key));
+
+  const methods = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      verificationCode: "",
+      password: "",
+    },
+  });
+
+  const { handleSubmit, watch } = methods;
+  const email = watch("email");
+
   const handleSendCode = async () => {
     if (!email || !canResend || isSendingCode) return;
-
     try {
       await sendCode({ email });
-      startTimer(60); // 60秒倒计时
-      showSuccess("验证码已发送到邮箱");
+      startTimer(60);
+      showSuccess(t("codeSentToEmail"));
     } catch (error) {
-      showError("发送验证码失败，请稍后重试");
+      showError(t("registerFailed"));
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: RegisterFormValues) => {
     try {
       await signup({
-        email,
-        inviteCode,
-        password,
-        verificationCode,
+        email: data.email,
+        password: data.password,
+        verificationCode: data.verificationCode,
       });
-      // 跳转由 App.tsx 中的事件监听器统一处理
     } catch (error) {
-      showError("注册失败，请稍后重试");
+      showError(t("registerFailed"));
     }
   };
 
+  const canSendCode = email && canResend && !isSendingCode;
+
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <span className={styles.title}>注册</span>
+    <div className={styles.formWrapper}>
+      <div className={styles.form}>
+        <span className={styles.title}>{t("register")}</span>
 
-      {/* Email with Send Code button */}
-      <div className={styles.formControl}>
-        <input
-          type="email"
-          className={styles.input}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="email"
-          required
-          disabled={isSendingCode}
-        />
-        <label className={styles.label}>Email</label>
-        <button
-          type="button"
-          className={styles.sendCodeBtn}
-          onClick={handleSendCode}
-          disabled={!email || !canResend || isSendingCode}
-        >
-          {canResend ? "获取验证码" : `${timeLeft}s`}
-        </button>
+        <FormProvider {...methods}>
+          <div className={styles.formContent}>
+            {/* Email with Send Code Button */}
+            <div className={styles.formControl}>
+              <RegisterEmailController />
+              <button
+                type="button"
+                className={styles.sendCodeBtn}
+                onClick={handleSendCode}
+                disabled={!canSendCode}
+              >
+                {canResend ? t("sendCode") : `${timeLeft}s`}
+              </button>
+            </div>
+
+            {/* Verification Code */}
+            <RegisterVerificationCodeController />
+
+            {/* Password */}
+            <RegisterPasswordController />
+
+            <button type="button" className={styles.submitBtn} onClick={handleSubmit(onSubmit)} disabled={isSigningUp}>
+              {isSigningUp ? t("registering") : t("register")}
+            </button>
+
+            <span className={styles.bottomText}>
+              {t("hasAccount")}{" "}
+              <label htmlFor="register_toggle" className={styles.switch}>
+                {t("signInNow")}
+              </label>
+            </span>
+          </div>
+        </FormProvider>
       </div>
-
-      {/* Verification Code (above License Code) */}
-      <div className={styles.formControl}>
-        <input
-          type="text"
-          className={styles.input}
-          value={verificationCode}
-          onChange={(e) => setVerificationCode(e.target.value)}
-          autoComplete="one-time-code"
-          required
-          maxLength={6}
-          placeholder="请输入6位验证码"
-        />
-        <label className={styles.label}>验证码</label>
-      </div>
-
-      {/* Invite Code */}
-      <div className={styles.formControl}>
-        <input
-          type="text"
-          className={styles.input}
-          value={inviteCode}
-          onChange={(e) => setInviteCode(e.target.value)}
-          autoComplete="off"
-          required
-        />
-        <label className={styles.label}>邀请代码</label>
-      </div>
-
-      {/* Password */}
-      <div className={styles.formControl}>
-        <input
-          type="password"
-          className={styles.input}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="new-password"
-          required
-          minLength={6}
-        />
-        <label className={styles.label}>密码</label>
-      </div>
-
-      <button type="submit" className={styles.submitBtn} disabled={isSigningUp}>
-        {isSigningUp ? "正在注册..." : "注册"}
-      </button>
-
-      <span className={styles.bottomText}>
-        已有账号？{" "}
-        <label htmlFor="register_toggle" className={styles.switch}>
-          立即登录
-        </label>
-      </span>
-    </form>
+    </div>
   );
 });
 

@@ -64,6 +64,7 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { showError, showSuccess } from "@/stores/modalStore";
+import AuthStore from "@/stores/authStore";
 import {
   AUTH_SESSION,
   AUTH_USER_CREDENTIAL,
@@ -701,7 +702,6 @@ export const useSignup = () => {
       email: string;
       password: string;
       verificationCode: string;
-      inviteCode: string;
     }) => {
       // TODO: 实现注册逻辑
       // 1. 验证验证码

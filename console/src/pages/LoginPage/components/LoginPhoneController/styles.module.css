@@ -1,0 +1,220 @@
+.formControl {
+    width: 100%;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.formControl:has(.errorText) {
+    margin-bottom: 2.5rem;
+}
+
+.phoneInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.plusSign {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--color-fg-text);
+    user-select: none;
+    height: 2.75rem;
+    flex-shrink: 0;
+    padding-right: 0.125rem;
+}
+
+.codeInputWrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 5rem;
+}
+
+.inputWrapper {
+    width: 100%;
+    position: relative;
+}
+
+.textWrapper {
+    width: 100%;
+    position: absolute;
+    bottom: -1.5rem;
+    left: 0;
+    display: none;
+}
+
+.textWrapper:has(.errorText) {
+    display: block;
+}
+
+.innerTextWrapper {
+    width: 100%;
+    position: relative;
+}
+
+.codeInputWrapper .textWrapper {
+    bottom: -1.5rem;
+    left: 0;
+}
+
+.codeInputWrapper .textWrapper .innerTextWrapper .errorText {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 0.8125rem;
+    color: var(--color-danger);
+    white-space: nowrap;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.codeInput {
+    width: 100%;
+    background-color: var(--color-bg-2);
+    border: 1px solid var(--color-border-4);
+    outline: none;
+    color: var(--color-fg-text);
+    padding: 0.875rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    height: 2.75rem;
+    box-sizing: border-box;
+}
+
+.codeInput:hover:not(:disabled) {
+    border-color: var(--color-border-3);
+}
+
+.codeInput:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 3px rgba(143, 155, 179, 0.1);
+}
+
+.codeInput.error {
+    border-color: var(--color-danger);
+}
+
+.codeInput.error:focus {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.codeLabel {
+    position: absolute;
+    top: 50%;
+    left: 0.5rem;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: var(--color-fg);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    background-color: var(--color-bg-2);
+    padding: 0 0.25rem;
+    z-index: 1;
+}
+
+.inputWrapper:has(.codeInput:focus) .codeLabel,
+.inputWrapper:has(.codeInput:not(:placeholder-shown)) .codeLabel {
+    top: 0;
+    left: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    background-color: var(--color-bg);
+    font-weight: 500;
+}
+
+.inputWrapper:has(.codeInput.error:focus) .codeLabel,
+.inputWrapper:has(.codeInput.error:not(:placeholder-shown)) .codeLabel {
+    color: var(--color-danger);
+}
+
+.phoneInputContainer {
+    position: relative;
+    flex: 1;
+}
+
+.phoneInputContainer .input {
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    background-color: var(--color-bg-2);
+    border: 1px solid var(--color-border-4);
+    outline: none;
+    color: var(--color-fg-text);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    height: 2.75rem;
+}
+
+.input:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg);
+    box-shadow: 0 0 0 3px rgba(143, 155, 179, 0.1);
+}
+
+.input.error {
+    border-color: var(--color-danger);
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: var(--color-fg);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    background-color: var(--color-bg-2);
+    padding: 0 0.25rem;
+    z-index: 1;
+}
+
+.phoneInputContainer .label {
+    left: 1rem;
+}
+
+.inputWrapper:has(.input:focus) .label,
+.inputWrapper:has(.input:not(:placeholder-shown)) .label {
+    top: 0;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    background-color: var(--color-bg);
+    font-weight: 500;
+}
+
+.inputWrapper:has(.input.error:focus) .label,
+.inputWrapper:has(.input.error:not(:placeholder-shown)) .label {
+    color: var(--color-danger);
+}
+
+.phoneInputContainer .inputWrapper:has(.input:focus) .label,
+.phoneInputContainer .inputWrapper:has(.input:not(:placeholder-shown)) .label {
+    left: 0.75rem;
+}
+
+.phoneInputContainer .textWrapper {
+    bottom: -1.5rem;
+    left: 0;
+}
+
+.phoneInputContainer .textWrapper .innerTextWrapper .errorText {
+    position: absolute;
+    bottom: 0;
+    left: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--color-danger);
+    line-height: 1.5;
+    font-weight: 400;
+}

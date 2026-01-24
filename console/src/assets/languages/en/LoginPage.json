@@ -5,6 +5,7 @@
   "register": "Sign Up",
   "email": "Email",
   "phone": "Phone",
+  "countryCode": "Country Code",
   "password": "Password",
   "loginType": {
     "email": "Email",
@@ -17,5 +18,35 @@
   "loggingIn": "Signing in...",
   "loginFailed": "Login failed, please try again",
   "invalidCredentials": "Invalid email or password",
-  "accountLocked": "Account is locked due to too many failed login attempts"
+  "accountLocked": "Account is locked due to too many failed login attempts",
+  "register": "Sign Up",
+  "registerType": {
+    "email": "Email",
+    "phone": "Phone"
+  },
+  "verificationCode": "Verification Code",
+  "inviteCode": "Invite Code",
+  "sendCode": "Send Code",
+  "resendCode": "Resend",
+  "codeSent": "Verification code sent",
+  "codeSentToEmail": "Verification code sent to email",
+  "codeSentToPhone": "Verification code sent to phone",
+  "registering": "Registering...",
+  "registerFailed": "Registration failed, please try again",
+  "hasAccount": "Already have an account?",
+  "signInNow": "Sign In Now",
+  "validation": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "phoneRequired": "Phone number is required",
+    "phoneNumeric": "Phone number can only contain numbers",
+    "phoneMinLength": "Phone number must be at least 6 digits",
+    "codeRequired": "Code is required",
+    "codeNumeric": "Code can only contain numbers",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "verificationCodeRequired": "Verification code is required",
+    "verificationCodeLength": "Verification code must be 6 digits",
+    "inviteCodeRequired": "Invite code is required"
+  }
 }

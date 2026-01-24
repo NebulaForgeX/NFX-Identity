@@ -128,10 +128,10 @@ export const refreshTokens = onceAsync(async () => {
     }
 
     // 导入登录API（避免循环依赖）
-    const { RefreshToken } = await import("./auth.api");
+    const { RefreshAccessToken } = await import("./auth.api");
     
     // 调用刷新token API
-    const response = await RefreshToken({ refreshToken });
+    const response = await RefreshAccessToken({ refreshToken });
     
     // 更新tokens
     AuthStore.getState().setTokens({

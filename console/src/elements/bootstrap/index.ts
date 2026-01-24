@@ -1,3 +1,3 @@
-export * from "./controllers/bootstrapSchema";
+export * from "./schemas/bootstrapSchema";
 export * from "./hooks";
 export * from "./components";

@@ -1,0 +1,35 @@
+.loginTypeSwitch {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background-color: var(--color-bg-2);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.loginTypeBtn {
+    flex: 1;
+    padding: 0.625rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: var(--color-fg);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.loginTypeBtn.active {
+    background-color: var(--color-primary);
+    color: white;
+    box-shadow: 0 2px 4px rgba(143, 155, 179, 0.2);
+}
+
+.loginTypeBtn:hover:not(.active) {
+    background-color: rgba(143, 155, 179, 0.1);
+}
+
+.loginTypeBtn:active:not(.active) {
+    transform: scale(0.98);
+}

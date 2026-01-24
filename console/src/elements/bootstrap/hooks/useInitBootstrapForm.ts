@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { type BootstrapFormValues } from "../controllers/bootstrapSchema";
+import { type BootstrapFormValues } from "../schemas/bootstrapSchema";
 
 export const useInitBootstrapForm = () => {
   const { t } = useTranslation("elements.bootstrap");

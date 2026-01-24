@@ -1,4 +1,4 @@
-import type { BootstrapFormValues } from "../controllers/bootstrapSchema";
+import type { BootstrapFormValues } from "../schemas/bootstrapSchema";
 import type { FieldErrors } from "react-hook-form";
 
 import { useCallback } from "react";

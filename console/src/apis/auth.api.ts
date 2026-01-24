@@ -29,7 +29,7 @@ import type {
   UserCredential,
 } from "@/types";
 
-import { protectedClient } from "./clients";
+import { protectedClient, publicClient } from "./clients";
 import { URL_PATHS } from "./ip";
 
 // ========== 会话相关 ==========
@@ -318,7 +318,7 @@ export const Login = async (params: LoginRequest): Promise<LoginResponse> => {
 };
 
 // 刷新 Token（使用 publicClient，不需要认证）
-export const RefreshToken = async (params: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+export const RefreshAccessToken = async (params: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
   const { data } = await publicClient.post<DataResponse<RefreshTokenResponse>>("/auth/refresh", params);
   return data.data;
 };
