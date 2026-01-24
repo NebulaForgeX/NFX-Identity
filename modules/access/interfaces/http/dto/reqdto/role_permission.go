@@ -21,6 +21,10 @@ type RolePermissionByRoleAndPermissionRequestDTO struct {
 	PermissionID uuid.UUID `json:"permission_id" validate:"required"`
 }
 
+type RolePermissionByRoleIDRequestDTO struct {
+	RoleID uuid.UUID `params:"role_id" validate:"required,uuid"`
+}
+
 func (r *RolePermissionCreateRequestDTO) ToCreateCmd() rolePermissionAppCommands.CreateRolePermissionCmd {
 	return rolePermissionAppCommands.CreateRolePermissionCmd{
 		RoleID:       r.RoleID,

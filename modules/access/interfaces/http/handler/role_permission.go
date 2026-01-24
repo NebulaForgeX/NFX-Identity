@@ -57,6 +57,26 @@ func (h *RolePermissionHandler) GetByID(c *fiber.Ctx) error {
 	return httpresp.Success(c, fiber.StatusOK, "Role permission retrieved successfully", httpresp.SuccessOptions{Data: respdto.RolePermissionROToDTO(&result)})
 }
 
+// GetByRoleID 根据角色ID获取角色权限列表
+func (h *RolePermissionHandler) GetByRoleID(c *fiber.Ctx) error {
+	var req reqdto.RolePermissionByRoleIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+
+	results, err := h.appSvc.GetRolePermissionsByRoleID(c.Context(), req.RoleID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusNotFound, "Role permissions not found: "+err.Error())
+	}
+
+	dtos := make([]*respdto.RolePermissionDTO, len(results))
+	for i, r := range results {
+		dtos[i] = respdto.RolePermissionROToDTO(&r)
+	}
+
+	return httpresp.Success(c, fiber.StatusOK, "Role permissions retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+}
+
 // Delete 删除角色权限关联
 func (h *RolePermissionHandler) Delete(c *fiber.Ctx) error {
 	var req reqdto.RolePermissionByIDRequestDTO

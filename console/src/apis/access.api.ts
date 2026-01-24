@@ -177,6 +177,13 @@ export const CreateRolePermission = async (params: CreateRolePermissionRequest):
   return data.data;
 };
 
+// 根据角色ID获取角色权限列表
+export const GetRolePermissionsByRole = async (roleId: string): Promise<RolePermission[]> => {
+  const url = URL_PATHS.ACCESS.GET_ROLE_PERMISSIONS_BY_ROLE.replace(":role_id", roleId);
+  const { data } = await protectedClient.get<DataResponse<RolePermission[]>>(url);
+  return data.data;
+};
+
 // 根据 ID 获取角色权限关联
 export const GetRolePermission = async (id: string): Promise<RolePermission> => {
   const url = URL_PATHS.ACCESS.GET_ROLE_PERMISSION.replace(":id", id);

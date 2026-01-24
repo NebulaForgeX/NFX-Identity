@@ -1,0 +1,22 @@
+{
+  "title": "用户安全",
+  "subtitle": "查看您的角色和权限信息",
+  "loading": "加载中...",
+  "userNotFound": "未找到用户信息",
+  "roles": "角色",
+  "permissions": "权限",
+  "noRoles": "暂无角色",
+  "noPermissions": "暂无权限",
+  "systemRole": "系统角色",
+  "systemPermission": "系统权限",
+  "directGrant": "直接授予",
+  "viaRole": "通过角色",
+  "permissionsFromRole": "来自角色的权限",
+  "rolePermissionsNote": "此角色的所有权限",
+  "key": "键",
+  "description": "描述",
+  "scopeType": "作用域类型",
+  "expiresAt": "过期时间",
+  "revokedAt": "撤销时间",
+  "note": "备注"
+}

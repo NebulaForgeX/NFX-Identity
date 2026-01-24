@@ -56,6 +56,7 @@ func (r *Router) RegisterRoutes() {
 
 		// 角色权限关联相关
 		auth.Post("/role-permissions", r.handlers.RolePermission.Create)
+		auth.Get("/role-permissions/role/:role_id", r.handlers.RolePermission.GetByRoleID)
 		auth.Get("/role-permissions/:id", r.handlers.RolePermission.GetByID)
 		auth.Delete("/role-permissions/:id", r.handlers.RolePermission.Delete)
 

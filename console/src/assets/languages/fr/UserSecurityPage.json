@@ -1,0 +1,22 @@
+{
+  "title": "Sécurité utilisateur",
+  "subtitle": "Consultez vos informations de rôles et d'autorisations",
+  "loading": "Chargement...",
+  "userNotFound": "Utilisateur introuvable",
+  "roles": "Rôles",
+  "permissions": "Autorisations",
+  "noRoles": "Aucun rôle",
+  "noPermissions": "Aucune autorisation",
+  "systemRole": "Rôle système",
+  "systemPermission": "Autorisation système",
+  "directGrant": "Octroi direct",
+  "viaRole": "Via le rôle",
+  "permissionsFromRole": "Autorisations du rôle",
+  "rolePermissionsNote": "Toutes les autorisations pour ce rôle",
+  "key": "Clé",
+  "description": "Description",
+  "scopeType": "Type de portée",
+  "expiresAt": "Expire le",
+  "revokedAt": "Révoqué le",
+  "note": "Remarque"
+}

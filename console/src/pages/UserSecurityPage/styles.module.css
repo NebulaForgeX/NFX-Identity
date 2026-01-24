@@ -142,6 +142,43 @@
   flex: 1;
 }
 
+.permissionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.permissionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--color-bg-tertiary);
+  border-radius: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.permissionName {
+  font-weight: 500;
+  color: var(--color-fg-text);
+}
+
+.permissionKey {
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+  font-family: monospace;
+}
+
+.badgeSmall {
+  padding: 0.125rem 0.5rem;
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .container {

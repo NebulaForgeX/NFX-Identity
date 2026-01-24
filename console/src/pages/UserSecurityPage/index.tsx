@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { Suspense } from "@/components";
 import { useAuthStore } from "@/stores/authStore";
-import { useGrantsBySubject, useRoleById, usePermission } from "@/hooks/useAccess";
-import type { Grant, Role, Permission } from "@/types";
+import { useGrantsBySubject, useRoleById, usePermission, useRolePermissionsByRole } from "@/hooks/useAccess";
+import type { Grant } from "@/types";
 
 import styles from "./styles.module.css";
 
@@ -44,7 +44,6 @@ const UserSecurityPage = memo(() => {
 UserSecurityPage.displayName = "UserSecurityPage";
 
 const UserSecurityContent = memo(({ userId }: { userId: string }) => {
-  const { t } = useTranslation("UserSecurityPage");
   const { data: grants } = useGrantsBySubject({
     subject_type: "USER",
     subject_id: userId,
@@ -52,11 +51,11 @@ const UserSecurityContent = memo(({ userId }: { userId: string }) => {
 
   // 分离角色授权和权限授权
   const roleGrants = useMemo(
-    () => grants?.filter((g) => g.grant_type === "ROLE") || [],
+    () => grants?.filter((g) => g.grantType === "ROLE") || [],
     [grants],
   );
   const permissionGrants = useMemo(
-    () => grants?.filter((g) => g.grant_type === "PERMISSION") || [],
+    () => grants?.filter((g) => g.grantType === "PERMISSION") || [],
     [grants],
   );
 
@@ -98,7 +97,7 @@ RolesCard.displayName = "RolesCard";
 // 角色项组件
 const RoleItem = memo(({ grant }: { grant: Grant }) => {
   const { t } = useTranslation("UserSecurityPage");
-  const { data: role } = useRoleById({ id: grant.grant_ref_id });
+  const { data: role } = useRoleById({ id: grant.grantRefId });
 
   if (!role) {
     return null;
@@ -108,7 +107,7 @@ const RoleItem = memo(({ grant }: { grant: Grant }) => {
     <div className={styles.item}>
       <div className={styles.itemHeader}>
         <span className={styles.itemName}>{role.name}</span>
-        {role.is_system && (
+        {role.isSystem && (
           <span className={styles.badge}>{t("systemRole")}</span>
         )}
       </div>
@@ -125,21 +124,21 @@ const RoleItem = memo(({ grant }: { grant: Grant }) => {
         )}
         <div className={styles.itemDetail}>
           <span className={styles.itemLabel}>{t("scopeType")}:</span>
-          <span className={styles.itemValue}>{role.scope_type}</span>
+          <span className={styles.itemValue}>{role.scopeType}</span>
         </div>
-        {grant.expires_at && (
+        {grant.expiresAt && (
           <div className={styles.itemDetail}>
             <span className={styles.itemLabel}>{t("expiresAt")}:</span>
             <span className={styles.itemValue}>
-              {new Date(grant.expires_at).toLocaleString()}
+              {new Date(grant.expiresAt).toLocaleString()}
             </span>
           </div>
         )}
-        {grant.revoked_at && (
+        {grant.revokedAt && (
           <div className={styles.itemDetail}>
             <span className={styles.itemLabel}>{t("revokedAt")}:</span>
             <span className={styles.itemValue}>
-              {new Date(grant.revoked_at).toLocaleString()}
+              {new Date(grant.revokedAt).toLocaleString()}
             </span>
           </div>
         )}
@@ -165,7 +164,7 @@ const PermissionsCard = memo(
     const rolePermissionIds = useMemo(() => {
       const ids = new Set<string>();
       roleGrants.forEach((grant) => {
-        ids.add(grant.grant_ref_id);
+        ids.add(grant.grantRefId);
       });
       return ids;
     }, [roleGrants]);
@@ -197,7 +196,7 @@ PermissionsCard.displayName = "PermissionsCard";
 // 权限项组件
 const PermissionItem = memo(({ grant }: { grant: Grant }) => {
   const { t } = useTranslation("UserSecurityPage");
-  const { data: permission } = usePermission({ id: grant.grant_ref_id });
+  const { data: permission } = usePermission({ id: grant.grantRefId });
 
   if (!permission) {
     return null;
@@ -207,7 +206,7 @@ const PermissionItem = memo(({ grant }: { grant: Grant }) => {
     <div className={styles.item}>
       <div className={styles.itemHeader}>
         <span className={styles.itemName}>{permission.name}</span>
-        {permission.is_system && (
+        {permission.isSystem && (
           <span className={styles.badge}>{t("systemPermission")}</span>
         )}
         <span className={styles.badgeSecondary}>{t("directGrant")}</span>
@@ -223,11 +222,11 @@ const PermissionItem = memo(({ grant }: { grant: Grant }) => {
             <span className={styles.itemValue}>{permission.description}</span>
           </div>
         )}
-        {grant.expires_at && (
+        {grant.expiresAt && (
           <div className={styles.itemDetail}>
             <span className={styles.itemLabel}>{t("expiresAt")}:</span>
             <span className={styles.itemValue}>
-              {new Date(grant.expires_at).toLocaleString()}
+              {new Date(grant.expiresAt).toLocaleString()}
             </span>
           </div>
         )}
@@ -242,13 +241,28 @@ PermissionItem.displayName = "PermissionItem";
 const RolePermissions = memo(({ roleId }: { roleId: string }) => {
   const { t } = useTranslation("UserSecurityPage");
   const { data: role } = useRoleById({ id: roleId });
-
-  // 注意：这里需要获取角色的权限列表，但当前 API 只支持通过 role_permission ID 获取
-  // 为了简化，我们只显示角色信息，实际的权限列表需要额外的 API 支持
-  // 或者可以通过 role_permissions 表查询，但需要新的 API 端点
+  const { data: rolePermissions } = useRolePermissionsByRole({ roleId });
 
   if (!role) {
     return null;
+  }
+
+  if (!rolePermissions || rolePermissions.length === 0) {
+    return (
+      <div className={styles.item}>
+        <div className={styles.itemHeader}>
+          <span className={styles.itemName}>
+            {t("permissionsFromRole")}: {role.name}
+          </span>
+          <span className={styles.badgeSecondary}>{t("viaRole")}</span>
+        </div>
+        <div className={styles.itemDetails}>
+          <div className={styles.itemDetail}>
+            <span className={styles.itemValue}>{t("noPermissions")}</span>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -261,15 +275,39 @@ const RolePermissions = memo(({ roleId }: { roleId: string }) => {
       </div>
       <div className={styles.itemDetails}>
         <div className={styles.itemDetail}>
-          <span className={styles.itemLabel}>{t("note")}:</span>
-          <span className={styles.itemValue}>
-            {t("rolePermissionsNote")}
-          </span>
+          <span className={styles.itemLabel}>{t("permissions")}:</span>
+          <div className={styles.permissionList}>
+            {rolePermissions.map((rp) => (
+              <RolePermissionItem key={rp.id} permissionId={rp.permissionId} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 });
+
+// 角色权限项组件
+const RolePermissionItem = memo(({ permissionId }: { permissionId: string }) => {
+  const { t } = useTranslation("UserSecurityPage");
+  const { data: permission } = usePermission({ id: permissionId });
+
+  if (!permission) {
+    return null;
+  }
+
+  return (
+    <div className={styles.permissionItem}>
+      <span className={styles.permissionName}>{permission.name}</span>
+      {permission.isSystem && (
+        <span className={styles.badgeSmall}>{t("systemPermission")}</span>
+      )}
+      <span className={styles.permissionKey}>({permission.key})</span>
+    </div>
+  );
+});
+
+RolePermissionItem.displayName = "RolePermissionItem";
 
 RolePermissions.displayName = "RolePermissions";
 

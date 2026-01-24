@@ -1,0 +1,22 @@
+{
+  "title": "User Security",
+  "subtitle": "View your roles and permissions information",
+  "loading": "Loading...",
+  "userNotFound": "User not found",
+  "roles": "Roles",
+  "permissions": "Permissions",
+  "noRoles": "No roles",
+  "noPermissions": "No permissions",
+  "systemRole": "System Role",
+  "systemPermission": "System Permission",
+  "directGrant": "Direct Grant",
+  "viaRole": "Via Role",
+  "permissionsFromRole": "Permissions from Role",
+  "rolePermissionsNote": "All permissions for this role",
+  "key": "Key",
+  "description": "Description",
+  "scopeType": "Scope Type",
+  "expiresAt": "Expires At",
+  "revokedAt": "Revoked At",
+  "note": "Note"
+}

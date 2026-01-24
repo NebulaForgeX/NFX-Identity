@@ -19,6 +19,7 @@ import en_EditPreferencePage from "./en/EditPreferencePage.json";
 import en_EditProfilePage from "./en/EditProfilePage.json";
 import en_LoginPage from "./en/LoginPage.json";
 import en_ProfilePage from "./en/ProfilePage.json";
+import en_UserSecurityPage from "./en/UserSecurityPage.json";
 import en_components from "./en/components.json";
 import fr_AddEducationPage from "./fr/AddEducationPage.json";
 import fr_AddOccupationPage from "./fr/AddOccupationPage.json";
@@ -39,6 +40,7 @@ import fr_EditPreferencePage from "./fr/EditPreferencePage.json";
 import fr_EditProfilePage from "./fr/EditProfilePage.json";
 import fr_LoginPage from "./fr/LoginPage.json";
 import fr_ProfilePage from "./fr/ProfilePage.json";
+import fr_UserSecurityPage from "./fr/UserSecurityPage.json";
 import fr_components from "./fr/components.json";
 import zh_AddEducationPage from "./zh/AddEducationPage.json";
 import zh_AddOccupationPage from "./zh/AddOccupationPage.json";
@@ -59,6 +61,7 @@ import zh_EditPreferencePage from "./zh/EditPreferencePage.json";
 import zh_EditProfilePage from "./zh/EditProfilePage.json";
 import zh_LoginPage from "./zh/LoginPage.json";
 import zh_ProfilePage from "./zh/ProfilePage.json";
+import zh_UserSecurityPage from "./zh/UserSecurityPage.json";
 import zh_components from "./zh/components.json";
 
 // 所有语言包内容
@@ -77,6 +80,7 @@ export const RESOURCES = {
     "hooks.tenants": en_hooks_tenants,
     LoginPage: en_LoginPage,
     ProfilePage: en_ProfilePage,
+    UserSecurityPage: en_UserSecurityPage,
     AddEducationPage: en_AddEducationPage,
     AddOccupationPage: en_AddOccupationPage,
     EditEducationPage: en_EditEducationPage,
@@ -99,6 +103,7 @@ export const RESOURCES = {
     "hooks.tenants": zh_hooks_tenants,
     LoginPage: zh_LoginPage,
     ProfilePage: zh_ProfilePage,
+    UserSecurityPage: zh_UserSecurityPage,
     AddEducationPage: zh_AddEducationPage,
     AddOccupationPage: zh_AddOccupationPage,
     EditEducationPage: zh_EditEducationPage,
@@ -121,6 +126,7 @@ export const RESOURCES = {
     "hooks.tenants": fr_hooks_tenants,
     LoginPage: fr_LoginPage,
     ProfilePage: fr_ProfilePage,
+    UserSecurityPage: fr_UserSecurityPage,
     AddEducationPage: fr_AddEducationPage,
     AddOccupationPage: fr_AddOccupationPage,
     EditEducationPage: fr_EditEducationPage,
@@ -146,6 +152,7 @@ export const NAME_SPACES_MAP = {
   "hooks.tenants": "hooks.tenants",
   LoginPage: "LoginPage",
   ProfilePage: "ProfilePage",
+  UserSecurityPage: "UserSecurityPage",
   AddEducationPage: "AddEducationPage",
   AddOccupationPage: "AddOccupationPage",
   EditEducationPage: "EditEducationPage",

@@ -40,6 +40,7 @@ export const URL_PATHS = {
     DELETE_GRANT: "/access/auth/grants/:id",
     // 角色权限关联相关 - 需要认证
     CREATE_ROLE_PERMISSION: "/access/auth/role-permissions",
+    GET_ROLE_PERMISSIONS_BY_ROLE: "/access/auth/role-permissions/role/:role_id",
     GET_ROLE_PERMISSION: "/access/auth/role-permissions/:id",
     DELETE_ROLE_PERMISSION: "/access/auth/role-permissions/:id",
     // 作用域权限关联相关 - 需要认证

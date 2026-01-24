@@ -21,6 +21,7 @@ import {
   GetRole,
   GetRoleByKey,
   GetRolePermission,
+  GetRolePermissionsByRole,
   GetScope,
   GetScopePermission,
   UpdateGrant,
@@ -389,6 +390,19 @@ export const useRolePermission = (params: UnifiedQueryParams<RolePermission> & {
     postProcess,
   );
   return makeQuery(ACCESS_ROLE_PERMISSION(id), { id }, options);
+};
+
+// 根据角色ID获取角色权限列表
+export const useRolePermissionsByRole = (params: UnifiedQueryParams<RolePermission[]> & { roleId: string }) => {
+  const { roleId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { roleId: string }) => {
+      return await GetRolePermissionsByRole(params.roleId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(`role-permissions-by-role-${roleId}`, { roleId }, options);
 };
 
 // 创建角色权限关联
