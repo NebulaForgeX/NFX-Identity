@@ -24,11 +24,13 @@ func NewRouter(app fiber.Router, tokenVerifier token.Verifier, handlers *Registr
 func (r *Router) RegisterRoutes() {
 	auth := r.app.Group("/auth")
 
-	// 公开路由（不需要认证）：登录、刷新 Token
+	// 公开路由（不需要认证）：登录、刷新 Token、注册
 	if r.handlers.Auth != nil {
 		auth.Post("/login/email", r.handlers.Auth.LoginByEmail)
 		auth.Post("/login/phone", r.handlers.Auth.LoginByPhone)
 		auth.Post("/refresh", r.handlers.Auth.Refresh)
+		auth.Post("/send-verification-code", r.handlers.Auth.SendVerificationCode)
+		auth.Post("/signup", r.handlers.Auth.Signup)
 	}
 
 	// 需要认证的路由（需要token）

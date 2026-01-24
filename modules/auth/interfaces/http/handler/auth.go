@@ -163,3 +163,80 @@ func (h *AuthHandler) Refresh(c *fiber.Ctx) error {
 		},
 	})
 }
+
+// SendVerificationCode 处理 POST /auth/send-verification-code
+func (h *AuthHandler) SendVerificationCode(c *fiber.Ctx) error {
+	if h.authSvc == nil {
+		return httpresp.Error(c, fiber.StatusServiceUnavailable, "verification code service not configured")
+	}
+	var req reqdto.SendVerificationCodeRequestDTO
+	if err := c.BodyParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	}
+	if req.Email == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "email is required")
+	}
+
+	cmd := authCommands.SendVerificationCodeCmd{
+		Email: strings.TrimSpace(req.Email),
+	}
+
+	err := h.authSvc.SendVerificationCode(c.Context(), cmd)
+	if err != nil {
+		if errors.Is(err, authApp.ErrEmailAlreadyVerified) {
+			return httpresp.Error(c, fiber.StatusConflict, "email already verified, please login")
+		}
+		return httpresp.Error(c, fiber.StatusInternalServerError, "failed to send verification code: "+err.Error())
+	}
+
+	return httpresp.Success(c, fiber.StatusOK, "Verification code sent successfully")
+}
+
+// Signup 处理 POST /auth/signup
+func (h *AuthHandler) Signup(c *fiber.Ctx) error {
+	if h.authSvc == nil {
+		return httpresp.Error(c, fiber.StatusServiceUnavailable, "signup not configured")
+	}
+	var req reqdto.SignupRequestDTO
+	if err := c.BodyParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	}
+	if req.Email == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "email is required")
+	}
+	if req.Password == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "password is required")
+	}
+	if req.VerificationCode == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "verification code is required")
+	}
+
+	cmd := authCommands.SignupCmd{
+		Email:           strings.TrimSpace(req.Email),
+		Password:        req.Password,
+		VerificationCode: strings.TrimSpace(req.VerificationCode),
+	}
+
+	res, err := h.authSvc.Signup(c.Context(), cmd)
+	if err != nil {
+		if errors.Is(err, authApp.ErrEmailAlreadyVerified) {
+			return httpresp.Error(c, fiber.StatusConflict, "email already verified, please login")
+		}
+		if errors.Is(err, authApp.ErrInvalidVerificationCode) {
+			return httpresp.Error(c, fiber.StatusBadRequest, "invalid or expired verification code")
+		}
+		if strings.Contains(err.Error(), "already has credentials") {
+			return httpresp.Error(c, fiber.StatusConflict, "user already has credentials, please login")
+		}
+		return httpresp.Error(c, fiber.StatusInternalServerError, "signup failed: "+err.Error())
+	}
+
+	return httpresp.Success(c, fiber.StatusCreated, "Signup successful", httpresp.SuccessOptions{
+		Data: respdto.SignupResponseDTO{
+			AccessToken:  res.AccessToken,
+			RefreshToken: res.RefreshToken,
+			ExpiresIn:    res.ExpiresIn,
+			UserID:       res.UserID,
+		},
+	})
+}

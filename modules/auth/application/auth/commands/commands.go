@@ -19,3 +19,15 @@ type LoginByPhoneCmd struct {
 type RefreshCmd struct {
 	RefreshToken string
 }
+
+// SendVerificationCodeCmd 发送验证码命令
+type SendVerificationCodeCmd struct {
+	Email string
+}
+
+// SignupCmd 注册命令
+type SignupCmd struct {
+	Email           string
+	Password        string
+	VerificationCode string
+}

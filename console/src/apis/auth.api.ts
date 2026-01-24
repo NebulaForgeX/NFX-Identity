@@ -332,3 +332,37 @@ export const RefreshAccessToken = async (params: RefreshTokenRequest): Promise<R
   const { data } = await publicClient.post<DataResponse<RefreshTokenResponse>>("/auth/refresh", params);
   return data.data;
 };
+
+// ========== 注册相关 ==========
+
+// 发送验证码请求类型
+export interface SendVerificationCodeRequest {
+  email: string;
+}
+
+// 注册请求类型
+export interface SignupRequest {
+  email: string;
+  password: string;
+  verificationCode: string;
+}
+
+// 注册响应类型
+export interface SignupResponse {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  userId: string;
+}
+
+// 发送验证码（使用 publicClient，不需要认证）
+export const SendVerificationCode = async (params: SendVerificationCodeRequest): Promise<BaseResponse> => {
+  const { data } = await publicClient.post<BaseResponse>("/auth/send-verification-code", params);
+  return data;
+};
+
+// 注册（使用 publicClient，不需要认证）
+export const Signup = async (params: SignupRequest): Promise<SignupResponse> => {
+  const { data } = await publicClient.post<DataResponse<SignupResponse>>("/auth/signup", params);
+  return data.data;
+};

@@ -14,3 +14,11 @@ type RefreshResult struct {
 	RefreshToken string
 	ExpiresIn    int64
 }
+
+// SignupResult 注册结果
+type SignupResult struct {
+	AccessToken  string
+	RefreshToken string
+	ExpiresIn    int64
+	UserID       string
+}

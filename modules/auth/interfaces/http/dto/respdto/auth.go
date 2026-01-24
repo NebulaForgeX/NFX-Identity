@@ -14,3 +14,11 @@ type RefreshResponseDTO struct {
 	RefreshToken string `json:"refresh_token"`
 	ExpiresIn    int64  `json:"expires_in"` // seconds
 }
+
+// SignupResponseDTO 注册响应
+type SignupResponseDTO struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int64  `json:"expires_in"` // seconds
+	UserID       string `json:"user_id"`
+}

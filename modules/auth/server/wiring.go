@@ -38,6 +38,7 @@ import (
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	"nfxid/pkgs/tokenx"
+	"nfxid/pkgs/email"
 )
 
 type Dependencies struct {
@@ -62,6 +63,7 @@ type Dependencies struct {
 	tokenxInstance         *tokenx.Tokenx
 	authAppSvc             *authApp.Service
 	grpcClients            *authGrpc.GRPCClients
+	emailService           *email.EmailService
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -96,6 +98,15 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 
 	//! === Tokenx ===
 	tokenxInstance := tokenx.New(cfg.Token)
+
+	//! === Email Service ===
+	emailService := email.NewEmailService(email.SMTPConfig{
+		Host:     cfg.Email.SMTPHost,
+		Port:     cfg.Email.SMTPPort,
+		Username: cfg.Email.SMTPUser,
+		Password: cfg.Email.SMTPPassword,
+		From:     cfg.Email.SMTPFrom,
+	})
 
 	//! === Token Verifiers ===
 	// User Token Verifier (用于 HTTP 中间件 - 验证用户 token)
@@ -160,6 +171,9 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 			tokenIssuer,
 			expiresInSec,
 			refreshTokenTTL,
+			emailService,
+			cacheConn,
+			userCredentialAppSvc,
 		)
 	}
 
@@ -185,6 +199,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		tokenxInstance:      tokenxInstance,
 		authAppSvc:          authAppSvc,
 		grpcClients:         grpcClientsInstance,
+		emailService:        emailService,
 	}, nil
 }
 
@@ -216,6 +231,8 @@ func (d *Dependencies) KafkaConfig() *kafkax.Config                       { retu
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher             { return d.busPublisher }
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config                { return d.rabbitMQConfig }
 func (d *Dependencies) AuthAppSvc() *authApp.Service                     { return d.authAppSvc }
+func (d *Dependencies) EmailService() *email.EmailService                { return d.emailService }
+func (d *Dependencies) Cache() *cache.Connection                         { return d.cache }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

@@ -30,7 +30,10 @@ import {
   GetUserCredential,
   LoginByEmail,
   LoginByPhone,
+  RefreshAccessToken,
   RevokeSession,
+  SendVerificationCode,
+  Signup,
   UpdateAccountLockout,
   UpdateMFAFactor,
   UpdatePasswordReset,
@@ -687,8 +690,10 @@ export const useLoginByPhone = () => {
 export const useSendVerificationCode = () => {
   return useMutation({
     mutationFn: async (params: { email: string }) => {
-      // TODO: 实现发送验证码逻辑
-      throw new Error("发送验证码功能尚未实现");
+      return await SendVerificationCode(params);
+    },
+    onSuccess: () => {
+      showSuccess("验证码已发送到您的邮箱");
     },
     onError: (error: AxiosError) => {
       showError("发送验证码失败，请稍后重试。" + error.message);
@@ -704,12 +709,20 @@ export const useSignup = () => {
       password: string;
       verificationCode: string;
     }) => {
-      // TODO: 实现注册逻辑
-      // 1. 验证验证码
-      // 2. 创建用户
-      // 3. 创建用户凭证
-      // 4. 创建会话
-      throw new Error("注册功能尚未实现");
+      return await Signup(params);
+    },
+    onSuccess: (data) => {
+      // 注册成功后，保存 token 到 store
+      AuthStore.getState().setTokens({
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      });
+      // 设置用户ID和认证状态
+      AuthStore.getState().setCurrentUserId(data.userId);
+      AuthStore.getState().setIsAuthValid(true);
+      showSuccess("注册成功！");
+      // 触发登录成功事件，由App.tsx监听并跳转
+      authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
     },
     onError: (error: AxiosError) => {
       showError("注册失败，请稍后重试。" + error.message);
