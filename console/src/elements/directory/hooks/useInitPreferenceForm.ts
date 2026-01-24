@@ -10,7 +10,7 @@ export const useInitPreferenceForm = (defaultValues?: Partial<PreferenceFormValu
     theme: z.string().optional(),
     language: z.string().optional(),
     timezone: z.string().optional(),
-    dashboardBackground: z.enum(["waves", "squares", "letterGlitch", "none"]).optional(),
+    dashboardBackground: z.enum(["waves", "squares", "letterGlitch", "pixelBlast", "none"]).optional(),
     notifications: z.record(z.string(), z.unknown()).optional(),
     privacy: z.record(z.string(), z.unknown()).optional(),
     display: z.record(z.string(), z.unknown()).optional(),

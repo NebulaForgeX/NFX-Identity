@@ -6,7 +6,7 @@ import { useUserPreferenceSync } from "@/hooks/useUserPreferenceSync";
 import { useUserPreferenceNormal } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
 import QuickStore, { useQuickStore } from "@/stores/quickStore";
-import { WaveBackground, SquareBackground, LetterGlitchBackground } from "@/animations";
+import { WaveBackground, SquareBackground, LetterGlitchBackground, PixelBlastBackground } from "@/animations";
 
 import { QuickNavigation, ResourceLinks, StatsCards } from "./components";
 import styles from "./styles.module.css";
@@ -54,6 +54,12 @@ const DashboardPage = memo(() => {
         return (
           <div className={styles.letterGlitchWrapper}>
             <LetterGlitchBackground />
+          </div>
+        );
+      case "pixelBlast":
+        return (
+          <div className={styles.pixelBlastWrapper}>
+            <PixelBlastBackground />
           </div>
         );
       case "none":

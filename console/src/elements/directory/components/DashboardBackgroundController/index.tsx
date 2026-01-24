@@ -20,6 +20,7 @@ const DashboardBackgroundController = memo(() => {
       { value: "waves", label: t("preference.dashboardBackground.waves") },
       { value: "squares", label: t("preference.dashboardBackground.squares") },
       { value: "letterGlitch", label: t("preference.dashboardBackground.letterGlitch") },
+      { value: "pixelBlast", label: t("preference.dashboardBackground.pixelBlast") },
       { value: "none", label: t("preference.dashboardBackground.none") },
     ];
   }, [t]);
