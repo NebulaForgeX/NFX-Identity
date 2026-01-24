@@ -61,6 +61,7 @@
     "loading": "Loading...",
     "errorTitle": "Failed to Load",
     "errorDescription": "Please check your network connection or try again later.",
+    "errorDetails": "Error Details",
     "retry": "Retry"
   }
 }

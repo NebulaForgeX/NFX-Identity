@@ -60,6 +60,7 @@
     "loading": "Chargement...",
     "errorTitle": "Échec du chargement",
     "errorDescription": "Veuillez vérifier votre connexion réseau ou réessayer plus tard.",
+    "errorDetails": "Détails de l'erreur",
     "retry": "Réessayer"
   }
 }

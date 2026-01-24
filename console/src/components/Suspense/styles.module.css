@@ -17,48 +17,170 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 40vh;
-  gap: 1rem;
-  padding: 2rem;
+  min-height: 60vh;
+  gap: 2rem;
+  padding: 3rem 2rem;
   text-align: center;
   color: var(--color-fg-text);
 }
 
+.errorIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(var(--color-error-rgb, 239, 68, 68), 0.1), rgba(var(--color-error-rgb, 239, 68, 68), 0.05));
+  border: 2px solid rgba(var(--color-error-rgb, 239, 68, 68), 0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.errorIcon {
+  color: var(--color-error, #ef4444);
+  stroke-width: 1.5;
+}
+
+.errorContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 600px;
+  width: 100%;
+}
+
 .errorTitle {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--color-fg-heading);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .errorDescription {
   margin: 0;
   color: var(--color-fg-muted);
   font-size: 1rem;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+.errorDetailsWrapper {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 0.5rem;
+}
+
+.errorDetailsContainer {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
+  border-radius: 0.75rem;
+  background: var(--color-bg-2, rgba(0, 0, 0, 0.02));
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.errorDetailsContainer:hover {
+  border-color: var(--color-border-hover, rgba(0, 0, 0, 0.15));
+  background: var(--color-bg-3, rgba(0, 0, 0, 0.03));
+}
+
+.errorDetailsSummary {
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fg-muted);
+  user-select: none;
+  list-style: none;
+  transition: color 0.2s ease;
+}
+
+.errorDetailsSummary:hover {
+  color: var(--color-fg-text);
+}
+
+.errorDetailsSummary::-webkit-details-marker {
+  display: none;
+}
+
+.errorDetailsSummary::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.errorDetailsContainer[open] .errorDetailsSummary::before {
+  transform: rotate(90deg);
 }
 
 .errorDetails {
-  max-width: 480px;
-  padding: 1rem;
+  max-width: 100%;
+  padding: 1rem 1.25rem;
   margin: 0;
-  background: var(--color-bg-3);
-  border-radius: 0.5rem;
+  background: var(--color-bg-3, rgba(0, 0, 0, 0.03));
+  border-top: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
   color: var(--color-fg-muted);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
+  line-height: 1.6;
   overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .retryButton {
-  padding: 0.6rem 1.5rem;
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
   background: var(--color-primary);
   color: var(--color-primary-fg);
   border: none;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .retryButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  background: var(--color-primary-hover, var(--color-primary));
+}
+
+.retryButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.retryButtonIcon {
+  display: inline-block;
+  font-size: 1.125rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.retryButton:hover .retryButtonIcon {
+  transform: rotate(180deg);
 }

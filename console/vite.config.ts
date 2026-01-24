@@ -1,7 +1,7 @@
 import path from "path";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 
 const PAGE_CHUNKS: Record<string, string> = {
   "/src/pages/LoginPage": "page-login",
@@ -53,7 +53,10 @@ const ELEMENT_CHUNKS: Record<string, string> = {
 };
 
 // https://vite.dev/config/
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const port = Number(env.VITE_PORT) || 5173;
+
   return {
     plugins: [
       react(),
@@ -78,7 +81,7 @@ export default defineConfig(() => {
       },
     },
     server: {
-      port: 5173,
+      port: port,
       host: "0.0.0.0", // 允许局域网访问
       open: true,
       watch: {
@@ -162,7 +165,7 @@ export default defineConfig(() => {
       exclude: ["templates"],
     },
     preview: {
-      port: 5173,
+      port: port,
       host: "0.0.0.0",
     },
   };
