@@ -16,18 +16,18 @@ func (s *Service) UpdateUserEducation(ctx context.Context, cmd userEducationComm
 
 	var startDate, endDate *time.Time
 	if cmd.StartDate != nil && *cmd.StartDate != "" {
-		parsed, err := time.Parse(time.RFC3339, *cmd.StartDate)
+		parsed, err := parseDateString(*cmd.StartDate)
 		if err != nil {
 			return err
 		}
-		startDate = &parsed
+		startDate = parsed
 	}
 	if cmd.EndDate != nil && *cmd.EndDate != "" {
-		parsed, err := time.Parse(time.RFC3339, *cmd.EndDate)
+		parsed, err := parseDateString(*cmd.EndDate)
 		if err != nil {
 			return err
 		}
-		endDate = &parsed
+		endDate = parsed
 	}
 
 	// Update domain entity

@@ -18,11 +18,11 @@ func (s *Service) CreateUserProfile(ctx context.Context, cmd userProfileCommands
 
 	var birthday *time.Time
 	if cmd.Birthday != nil && *cmd.Birthday != "" {
-		parsed, err := time.Parse(time.RFC3339, *cmd.Birthday)
+		parsed, err := parseDateString(*cmd.Birthday)
 		if err != nil {
 			return uuid.Nil, err
 		}
-		birthday = &parsed
+		birthday = parsed
 	}
 
 	// Create domain entity

@@ -12,19 +12,18 @@ import (
 // CreateUserEducation 创建用户教育经历
 func (s *Service) CreateUserEducation(ctx context.Context, cmd userEducationCommands.CreateUserEducationCmd) (uuid.UUID, error) {
 	var startDate, endDate *time.Time
+	var err error
 	if cmd.StartDate != nil && *cmd.StartDate != "" {
-		parsed, err := time.Parse(time.RFC3339, *cmd.StartDate)
+		startDate, err = parseDateString(*cmd.StartDate)
 		if err != nil {
 			return uuid.Nil, err
 		}
-		startDate = &parsed
 	}
 	if cmd.EndDate != nil && *cmd.EndDate != "" {
-		parsed, err := time.Parse(time.RFC3339, *cmd.EndDate)
+		endDate, err = parseDateString(*cmd.EndDate)
 		if err != nil {
 			return uuid.Nil, err
 		}
-		endDate = &parsed
 	}
 
 	// Create domain entity

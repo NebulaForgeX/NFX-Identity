@@ -119,7 +119,7 @@ const BasicInfoCardContent = memo(({ userId }: BasicInfoCardProps) => {
             <span className={styles.detailLabel}>{t("github")}:</span>
             <span className={styles.detailValue}>
               <a
-                href={`https://github.com/${userProfile.github}`}
+                href={userProfile.github}
                 target="_blank"
                 rel="noopener noreferrer"
               >

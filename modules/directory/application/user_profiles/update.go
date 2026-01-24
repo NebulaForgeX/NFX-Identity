@@ -16,11 +16,11 @@ func (s *Service) UpdateUserProfile(ctx context.Context, cmd userProfileCommands
 
 	var birthday *time.Time
 	if cmd.Birthday != nil && *cmd.Birthday != "" {
-		parsed, err := time.Parse(time.RFC3339, *cmd.Birthday)
+		parsed, err := parseDateString(*cmd.Birthday)
 		if err != nil {
 			return err
 		}
-		birthday = &parsed
+		birthday = parsed
 	}
 
 	// Update domain entity
