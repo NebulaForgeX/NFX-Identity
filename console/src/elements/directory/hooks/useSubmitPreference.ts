@@ -26,6 +26,14 @@ export const useSubmitPreference = (preference?: UserPreference) => {
       }
 
       try {
+        // 将 dashboardBackground 保存到 other 字段中，保留原有的 other 数据
+        const existingOther = preference?.other as Record<string, unknown> || {};
+        const otherData = {
+          ...existingOther,
+          ...values.other,
+          dashboardBackground: values.dashboardBackground || "none",
+        };
+
         if (preference) {
           // 更新现有偏好
           await updatePreference.mutateAsync({
@@ -37,7 +45,7 @@ export const useSubmitPreference = (preference?: UserPreference) => {
               notifications: values.notifications,
               privacy: values.privacy,
               display: values.display,
-              other: values.other,
+              other: otherData,
             },
           });
         } else {
@@ -50,7 +58,7 @@ export const useSubmitPreference = (preference?: UserPreference) => {
             notifications: values.notifications,
             privacy: values.privacy,
             display: values.display,
-            other: values.other,
+            other: otherData,
           });
         }
         navigate(ROUTES.PROFILE);

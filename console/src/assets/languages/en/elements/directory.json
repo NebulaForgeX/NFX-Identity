@@ -132,6 +132,14 @@
       "label": "Timezone",
       "placeholder": "Select a timezone"
     },
+    "dashboardBackground": {
+      "label": "Dashboard Background",
+      "placeholder": "Select a background animation",
+      "waves": "Waves",
+      "squares": "Squares",
+      "letterGlitch": "Letter Glitch",
+      "none": "None"
+    },
     "key": {
       "label": "Key",
       "placeholder": "Enter key",

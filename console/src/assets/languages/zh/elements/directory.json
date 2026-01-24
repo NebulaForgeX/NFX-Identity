@@ -105,6 +105,14 @@
       "label": "时区",
       "placeholder": "请选择时区"
     },
+    "dashboardBackground": {
+      "label": "仪表盘背景",
+      "placeholder": "选择背景动画",
+      "waves": "波浪",
+      "squares": "方块",
+      "letterGlitch": "文字故障",
+      "none": "无"
+    },
     "key": {
       "label": "键",
       "placeholder": "请输入键名",

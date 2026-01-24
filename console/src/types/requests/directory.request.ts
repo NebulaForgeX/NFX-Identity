@@ -147,6 +147,7 @@ export interface CreateUserPreferenceRequest {
   theme?: string;
   language?: string;
   timezone?: string;
+  dashboardBackground?: string;
   notifications?: Record<string, unknown>;
   privacy?: Record<string, unknown>;
   display?: Record<string, unknown>;
@@ -157,6 +158,7 @@ export interface UpdateUserPreferenceRequest {
   theme?: string;
   language?: string;
   timezone?: string;
+  dashboardBackground?: string;
   notifications?: Record<string, unknown>;
   privacy?: Record<string, unknown>;
   display?: Record<string, unknown>;

@@ -132,6 +132,14 @@
       "label": "Fuseau horaire",
       "placeholder": "Sélectionnez un fuseau horaire"
     },
+    "dashboardBackground": {
+      "label": "Arrière-plan du tableau de bord",
+      "placeholder": "Sélectionnez une animation d'arrière-plan",
+      "waves": "Vagues",
+      "squares": "Carrés",
+      "letterGlitch": "Glitch de lettres",
+      "none": "Aucun"
+    },
     "key": {
       "label": "Clé",
       "placeholder": "Entrez la clé",

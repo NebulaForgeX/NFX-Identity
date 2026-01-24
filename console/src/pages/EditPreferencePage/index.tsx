@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, IconButton, Suspense } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
 import { useInitPreferenceForm, useSubmitPreference } from "@/elements/directory";
-import { ThemeController, LanguageController, TimezoneController } from "@/elements/directory";
+import { ThemeController, LanguageController, TimezoneController, DashboardBackgroundController } from "@/elements/directory";
 import { useUserPreference } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
 import { ROUTES } from "@/types/navigation";
@@ -62,6 +62,7 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
           theme: preference.theme,
           language: preference.language,
           timezone: preference.timezone,
+          dashboardBackground: (preference.other as Record<string, unknown>)?.dashboardBackground as string || "none",
           notifications: preference.notifications,
           privacy: preference.privacy,
           display: preference.display,
@@ -77,6 +78,7 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
         <ThemeController />
         <LanguageController />
         <TimezoneController />
+        <DashboardBackgroundController />
 
         <div className={styles.actions}>
           <Button

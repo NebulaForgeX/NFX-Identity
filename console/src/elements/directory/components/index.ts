@@ -22,6 +22,7 @@ export { default as IsCurrentOccupationController } from "./IsCurrentOccupationC
 export { default as ThemeController } from "./ThemeController";
 export { default as LanguageController } from "./LanguageController";
 export { default as TimezoneController } from "./TimezoneController";
+export { default as DashboardBackgroundController } from "./DashboardBackgroundController";
 export { default as FirstNameController } from "./FirstNameController";
 export { default as LastNameController } from "./LastNameController";
 export { default as NicknameController } from "./NicknameController";
