@@ -18,7 +18,7 @@ const NotFoundPage = memo(() => {
   };
 
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       {/* 404文字动画 */}
       <div className={styles.errorContainer}>
         <div className={styles.errorCode}>
@@ -50,7 +50,7 @@ const NotFoundPage = memo(() => {
           </button>
         </div>
       </div>
-    </main>
+    </div>
   );
 });
 

@@ -17,14 +17,12 @@
     align-items: center;
     justify-content: center;
     margin: 2rem 0;
-    z-index: 100;
     transform: scale(1.2);
 }
 
 .errorContainer {
     text-align: center;
     color: var(--color-fg-text);
-    z-index: 1000;
     position: relative;
     max-width: 800px;
 }
