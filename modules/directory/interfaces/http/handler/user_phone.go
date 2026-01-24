@@ -143,3 +143,20 @@ func (h *UserPhoneHandler) Delete(c *fiber.Ctx) error {
 
 	return httpresp.Success(c, fiber.StatusOK, "User phone deleted successfully")
 }
+
+// GetByUserID 根据用户ID获取用户电话列表
+func (h *UserPhoneHandler) GetByUserID(c *fiber.Ctx) error {
+	var req reqdto.ByIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+
+	results, err := h.appSvc.GetUserPhonesByUserID(c.Context(), req.ID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user phones: "+err.Error())
+	}
+
+	dtos := respdto.UserPhoneListROToDTO(results)
+
+	return httpresp.Success(c, fiber.StatusOK, "User phones retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+}

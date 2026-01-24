@@ -1,0 +1,11 @@
+{
+  "title": "Modifier la préférence",
+  "subtitle": "Modifier les paramètres de préférence utilisateur",
+  "addTitle": "Ajouter une préférence",
+  "addSubtitle": "Créer une nouvelle préférence utilisateur",
+  "back": "Retour",
+  "cancel": "Annuler",
+  "submit": "Soumettre",
+  "submitting": "Soumission...",
+  "loading": "Chargement de la préférence..."
+}

@@ -26,9 +26,13 @@ import {
   GetUserBadge,
   GetUserByUsername,
   GetUserEducation,
+  GetUserEducationsByUserID,
   GetUserEmail,
+  GetUserEmailsByUserID,
   GetUserOccupation,
+  GetUserOccupationsByUserID,
   GetUserPhone,
+  GetUserPhonesByUserID,
   GetUserPreference,
   GetUserProfile,
   SetPrimaryUserEmail,
@@ -83,9 +87,13 @@ import {
   DIRECTORY_BADGE,
   DIRECTORY_USER_BADGE,
   DIRECTORY_USER_EDUCATION,
+  DIRECTORY_USER_EDUCATION_LIST,
   DIRECTORY_USER_EMAIL,
+  DIRECTORY_USER_EMAIL_LIST,
   DIRECTORY_USER_OCCUPATION,
+  DIRECTORY_USER_OCCUPATION_LIST,
   DIRECTORY_USER_PHONE,
+  DIRECTORY_USER_PHONE_LIST,
   DIRECTORY_USER_PREFERENCE,
   DIRECTORY_USER_PROFILE,
 } from "@/constants";
@@ -346,6 +354,19 @@ export const useUserEducation = (params: UnifiedQueryParams<UserEducation> & { i
   return makeQuery(DIRECTORY_USER_EDUCATION(id), { id }, options);
 };
 
+// 根据用户ID获取用户教育列表
+export const useUserEducationsByUserID = (params: UnifiedQueryParams<UserEducation[]> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      return await GetUserEducationsByUserID(params.userId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery([...DIRECTORY_USER_EDUCATION_LIST, userId], { userId }, options);
+};
+
 // 创建用户教育
 export const useCreateUserEducation = () => {
   return useMutation({
@@ -409,6 +430,19 @@ export const useUserEmail = (params: UnifiedQueryParams<UserEmail> & { id: strin
     postProcess,
   );
   return makeQuery(DIRECTORY_USER_EMAIL(id), { id }, options);
+};
+
+// 根据用户ID获取用户邮箱列表
+export const useUserEmailsByUserID = (params: UnifiedQueryParams<UserEmail[]> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      return await GetUserEmailsByUserID(params.userId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery([...DIRECTORY_USER_EMAIL_LIST, userId], { userId }, options);
 };
 
 // 创建用户邮箱
@@ -510,6 +544,19 @@ export const useUserOccupation = (params: UnifiedQueryParams<UserOccupation> & {
   return makeQuery(DIRECTORY_USER_OCCUPATION(id), { id }, options);
 };
 
+// 根据用户ID获取用户职业列表
+export const useUserOccupationsByUserID = (params: UnifiedQueryParams<UserOccupation[]> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      return await GetUserOccupationsByUserID(params.userId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery([...DIRECTORY_USER_OCCUPATION_LIST, userId], { userId }, options);
+};
+
 // 创建用户职业
 export const useCreateUserOccupation = () => {
   return useMutation({
@@ -573,6 +620,19 @@ export const useUserPhone = (params: UnifiedQueryParams<UserPhone> & { id: strin
     postProcess,
   );
   return makeQuery(DIRECTORY_USER_PHONE(id), { id }, options);
+};
+
+// 根据用户ID获取用户电话列表
+export const useUserPhonesByUserID = (params: UnifiedQueryParams<UserPhone[]> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      return await GetUserPhonesByUserID(params.userId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery([...DIRECTORY_USER_PHONE_LIST, userId], { userId }, options);
 };
 
 // 创建用户电话

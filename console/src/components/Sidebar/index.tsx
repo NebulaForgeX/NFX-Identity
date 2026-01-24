@@ -3,10 +3,10 @@ import type { SidebarProps as ProSidebarProps } from "react-pro-sidebar";
 
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import { Menu, MenuItem, Sidebar as ProSidebar } from "react-pro-sidebar";
+import { Menu, MenuItem, Sidebar as ProSidebar, SubMenu } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-import { Home } from "@/assets/icons/lucide";
+import { Home, User, Plus, Settings, Eye } from "@/assets/icons/lucide";
 import { isActiveRoute, ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";
@@ -79,6 +79,55 @@ const Sidebar = memo(
               >
                 {t("sidebar.dashboard")}
               </MenuItem>
+              <SubMenu
+                label={t("sidebar.profile")}
+                icon={<User size={20} />}
+                active={
+                  isActiveRoute(location.pathname, ROUTES.PROFILE) ||
+                  isActiveRoute(location.pathname, ROUTES.EDIT_PROFILE) ||
+                  isActiveRoute(location.pathname, ROUTES.ADD_EDUCATION) ||
+                  isActiveRoute(location.pathname, ROUTES.ADD_OCCUPATION) ||
+                  isActiveRoute(location.pathname, ROUTES.EDIT_EDUCATION) ||
+                  isActiveRoute(location.pathname, ROUTES.EDIT_OCCUPATION) ||
+                  isActiveRoute(location.pathname, ROUTES.EDIT_PREFERENCE)
+                }
+              >
+                <MenuItem
+                  icon={<Eye size={18} />}
+                  component={<Link to={ROUTES.PROFILE} />}
+                  active={isActiveRoute(location.pathname, ROUTES.PROFILE)}
+                >
+                  {t("sidebar.profileView")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Settings size={18} />}
+                  component={<Link to={ROUTES.EDIT_PROFILE} />}
+                  active={isActiveRoute(location.pathname, ROUTES.EDIT_PROFILE)}
+                >
+                  {t("sidebar.editProfile")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Plus size={18} />}
+                  component={<Link to={ROUTES.ADD_EDUCATION} />}
+                  active={isActiveRoute(location.pathname, ROUTES.ADD_EDUCATION)}
+                >
+                  {t("sidebar.addEducation")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Plus size={18} />}
+                  component={<Link to={ROUTES.ADD_OCCUPATION} />}
+                  active={isActiveRoute(location.pathname, ROUTES.ADD_OCCUPATION)}
+                >
+                  {t("sidebar.addOccupation")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Settings size={18} />}
+                  component={<Link to={ROUTES.EDIT_PREFERENCE} />}
+                  active={isActiveRoute(location.pathname, ROUTES.EDIT_PREFERENCE)}
+                >
+                  {t("sidebar.editPreference")}
+                </MenuItem>
+              </SubMenu>
             </Menu>
           )}
         </div>

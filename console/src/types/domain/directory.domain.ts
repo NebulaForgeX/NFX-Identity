@@ -38,12 +38,18 @@ export interface UserEducation {
   userId: string;
   school: string;
   degree?: string;
-  field?: string;
+  major?: string;
+  fieldOfStudy?: string;
   startDate?: string;
   endDate?: string;
+  isCurrent: boolean;
   description?: string;
+  grade?: string;
+  activities?: string;
+  achievements?: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface UserEmail {
@@ -61,23 +67,36 @@ export interface UserOccupation {
   id: string;
   userId: string;
   company: string;
-  position?: string;
+  position: string;
+  department?: string;
+  industry?: string;
+  location?: string;
+  employmentType?: string;
   startDate?: string;
   endDate?: string;
+  isCurrent: boolean;
   description?: string;
+  responsibilities?: string;
+  achievements?: string;
+  skillsUsed?: string[];
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface UserPhone {
   id: string;
   userId: string;
   phone: string;
+  countryCode?: string;
   isPrimary: boolean;
   isVerified: boolean;
   verifiedAt?: string;
+  verificationCode?: string;
+  verificationExpiresAt?: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }
 
 export interface UserPreference {
@@ -92,11 +111,24 @@ export interface UserPreference {
 export interface UserProfile {
   id: string;
   userId: string;
+  role?: string;
   firstName?: string;
   lastName?: string;
+  nickname?: string;
   displayName?: string;
-  bio?: string;
   avatarId?: string;
+  backgroundId?: string;
+  backgroundIds?: string[];
+  bio?: string;
+  birthday?: string;
+  age?: number;
+  gender?: string;
+  location?: string;
+  website?: string;
+  github?: string;
+  socialLinks?: Record<string, unknown>;
+  skills?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 }

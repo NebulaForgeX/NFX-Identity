@@ -50,19 +50,29 @@ export interface CreateUserEducationRequest {
   userId: string;
   school: string;
   degree?: string;
-  field?: string;
+  major?: string;
+  fieldOfStudy?: string; // 后端期望 field_of_study，前端使用 fieldOfStudy (会自动转换)
   startDate?: string;
   endDate?: string;
+  isCurrent?: boolean;
   description?: string;
+  grade?: string;
+  activities?: string;
+  achievements?: string;
 }
 
 export interface UpdateUserEducationRequest {
   school?: string;
   degree?: string;
-  field?: string;
+  major?: string;
+  fieldOfStudy?: string; // 后端期望 field_of_study，前端使用 fieldOfStudy (会自动转换)
   startDate?: string;
   endDate?: string;
+  isCurrent?: boolean;
   description?: string;
+  grade?: string;
+  activities?: string;
+  achievements?: string;
 }
 
 // ========== 用户邮箱相关 ==========
@@ -84,18 +94,34 @@ export interface UpdateUserEmailRequest {
 export interface CreateUserOccupationRequest {
   userId: string;
   company: string;
-  position?: string;
+  position: string;
+  department?: string;
+  industry?: string;
+  location?: string;
+  employmentType?: string;
   startDate?: string;
   endDate?: string;
+  isCurrent?: boolean;
   description?: string;
+  responsibilities?: string;
+  achievements?: string;
+  skillsUsed?: string[];
 }
 
 export interface UpdateUserOccupationRequest {
   company?: string;
   position?: string;
+  department?: string;
+  industry?: string;
+  location?: string;
+  employmentType?: string;
   startDate?: string;
   endDate?: string;
+  isCurrent?: boolean;
   description?: string;
+  responsibilities?: string;
+  achievements?: string;
+  skillsUsed?: string[];
 }
 
 // ========== 用户电话相关 ==========
@@ -130,17 +156,41 @@ export interface UpdateUserPreferenceRequest {
 
 export interface CreateUserProfileRequest {
   userId: string;
+  role?: string;
   firstName?: string;
   lastName?: string;
+  nickname?: string;
   displayName?: string;
-  bio?: string;
   avatarId?: string;
+  backgroundId?: string;
+  backgroundIds?: string[];
+  bio?: string;
+  birthday?: string;
+  age?: number;
+  gender?: string;
+  location?: string;
+  website?: string;
+  github?: string;
+  socialLinks?: Record<string, unknown>;
+  skills?: Record<string, unknown>;
 }
 
 export interface UpdateUserProfileRequest {
+  role?: string;
   firstName?: string;
   lastName?: string;
+  nickname?: string;
   displayName?: string;
-  bio?: string;
   avatarId?: string;
+  backgroundId?: string;
+  backgroundIds?: string[];
+  bio?: string;
+  birthday?: string;
+  age?: number;
+  gender?: string;
+  location?: string;
+  website?: string;
+  github?: string;
+  socialLinks?: Record<string, unknown>;
+  skills?: Record<string, unknown>;
 }

@@ -1,0 +1,59 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fg-text);
+}
+
+.error {
+  font-size: 0.875rem;
+  color: var(--color-error);
+}
+
+.pairs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.keyInput,
+.valueInput {
+  flex: 1;
+}
+
+.removeButton {
+  padding: 0.5rem;
+  min-width: auto;
+  color: var(--color-error);
+}
+
+.removeButton:hover {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.addButton {
+  align-self: flex-start;
+}
+
+@media (max-width: 768px) {
+  .pair {
+    grid-template-columns: 1fr;
+  }
+
+  .removeButton {
+    align-self: flex-end;
+  }
+}

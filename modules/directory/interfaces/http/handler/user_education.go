@@ -83,3 +83,20 @@ func (h *UserEducationHandler) Delete(c *fiber.Ctx) error {
 
 	return httpresp.Success(c, fiber.StatusOK, "User education deleted successfully")
 }
+
+// GetByUserID 根据用户ID获取用户教育列表
+func (h *UserEducationHandler) GetByUserID(c *fiber.Ctx) error {
+	var req reqdto.ByIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+
+	results, err := h.appSvc.GetUserEducationsByUserID(c.Context(), req.ID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user educations: "+err.Error())
+	}
+
+	dtos := respdto.UserEducationListROToDTO(results)
+
+	return httpresp.Success(c, fiber.StatusOK, "User educations retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+}

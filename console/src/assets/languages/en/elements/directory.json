@@ -1,0 +1,211 @@
+{
+  "education": {
+    "title": "Add Education",
+    "subtitle": "Fill in your educational background information",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "school": {
+      "label": "School",
+      "placeholder": "Enter school name",
+      "required": "School name is required"
+    },
+    "degree": {
+      "label": "Degree",
+      "placeholder": "Enter degree"
+    },
+    "major": {
+      "label": "Major",
+      "placeholder": "Enter major"
+    },
+    "fieldOfStudy": {
+      "label": "Field of Study",
+      "placeholder": "Enter field of study"
+    },
+    "startDate": {
+      "label": "Start Date"
+    },
+    "endDate": {
+      "label": "End Date"
+    },
+    "isCurrent": {
+      "label": "Currently Studying"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Enter description"
+    },
+    "grade": {
+      "label": "Grade",
+      "placeholder": "Enter grade"
+    },
+    "activities": {
+      "label": "Activities",
+      "placeholder": "Enter activities"
+    },
+    "achievements": {
+      "label": "Achievements",
+      "placeholder": "Enter achievements"
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  },
+  "occupation": {
+    "title": "Add Occupation",
+    "subtitle": "Fill in your work background information",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "company": {
+      "label": "Company",
+      "placeholder": "Enter company name",
+      "required": "Company name is required"
+    },
+    "position": {
+      "label": "Position",
+      "placeholder": "Enter position",
+      "required": "Position is required"
+    },
+    "department": {
+      "label": "Department",
+      "placeholder": "Enter department"
+    },
+    "industry": {
+      "label": "Industry",
+      "placeholder": "Enter industry"
+    },
+    "location": {
+      "label": "Location",
+      "placeholder": "Enter work location"
+    },
+    "employmentType": {
+      "label": "Employment Type",
+      "placeholder": "Enter employment type (e.g., Full-time, Part-time)"
+    },
+    "startDate": {
+      "label": "Start Date"
+    },
+    "endDate": {
+      "label": "End Date"
+    },
+    "isCurrent": {
+      "label": "Current Job"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Enter description"
+    },
+    "responsibilities": {
+      "label": "Responsibilities",
+      "placeholder": "Enter job responsibilities"
+    },
+    "achievements": {
+      "label": "Achievements",
+      "placeholder": "Enter job achievements"
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  },
+  "preference": {
+    "addTitle": "Add Preference",
+    "addSubtitle": "Create a new user preference",
+    "editTitle": "Edit Preference",
+    "editSubtitle": "Modify user preference settings",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "loading": "Loading preference...",
+    "key": {
+      "label": "Key",
+      "placeholder": "Enter key",
+      "required": "Key is required"
+    },
+    "value": {
+      "label": "Value",
+      "placeholder": "Enter value",
+      "required": "Value is required"
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  },
+  "profile": {
+    "role": {
+      "label": "Role",
+      "placeholder": "Enter role"
+    },
+    "firstName": {
+      "label": "First Name",
+      "placeholder": "Enter first name"
+    },
+    "lastName": {
+      "label": "Last Name",
+      "placeholder": "Enter last name"
+    },
+    "nickname": {
+      "label": "Nickname",
+      "placeholder": "Enter nickname"
+    },
+    "displayName": {
+      "label": "Display Name",
+      "placeholder": "Enter display name"
+    },
+    "bio": {
+      "label": "Bio",
+      "placeholder": "Enter your bio"
+    },
+    "birthday": {
+      "label": "Birthday",
+      "placeholder": "Select birthday"
+    },
+    "age": {
+      "label": "Age",
+      "placeholder": "Enter age"
+    },
+    "gender": {
+      "label": "Gender",
+      "placeholder": "Enter gender"
+    },
+    "location": {
+      "label": "Location",
+      "placeholder": "Enter location"
+    },
+    "website": {
+      "label": "Website",
+      "placeholder": "Enter website URL"
+    },
+    "github": {
+      "label": "GitHub",
+      "placeholder": "Enter GitHub username"
+    },
+    "socialLinks": {
+      "label": "Social Links",
+      "keyPlaceholder": "Platform (e.g., twitter, linkedin)",
+      "valuePlaceholder": "Username or URL"
+    },
+    "skills": {
+      "label": "Skills",
+      "keyPlaceholder": "Category (e.g., programming, design)",
+      "valuePlaceholder": "Skills separated by comma (e.g., JavaScript, TypeScript)"
+    },
+    "keyValueEditor": {
+      "add": "Add",
+      "remove": "Remove",
+      "key": {
+        "placeholder": "Key"
+      },
+      "value": {
+        "placeholder": "Value",
+        "arrayPlaceholder": "Values separated by comma"
+      }
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  }
+}

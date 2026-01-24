@@ -1,0 +1,184 @@
+{
+  "education": {
+    "title": "添加教育经历",
+    "subtitle": "填写您的教育背景信息",
+    "back": "返回",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitting": "提交中...",
+    "school": {
+      "label": "学校",
+      "placeholder": "请输入学校名称",
+      "required": "学校名称不能为空"
+    },
+    "degree": {
+      "label": "学位",
+      "placeholder": "请输入学位"
+    },
+    "major": {
+      "label": "专业",
+      "placeholder": "请输入专业"
+    },
+    "fieldOfStudy": {
+      "label": "研究领域",
+      "placeholder": "请输入研究领域"
+    },
+    "startDate": {
+      "label": "开始日期"
+    },
+    "endDate": {
+      "label": "结束日期"
+    },
+    "isCurrent": {
+      "label": "当前在读"
+    },
+    "description": {
+      "label": "描述",
+      "placeholder": "请输入描述"
+    },
+    "grade": {
+      "label": "成绩",
+      "placeholder": "请输入成绩"
+    },
+    "activities": {
+      "label": "活动",
+      "placeholder": "请输入参与的活动"
+    },
+    "achievements": {
+      "label": "成就",
+      "placeholder": "请输入获得的成就"
+    },
+    "messages": {
+      "user_not_found": "用户未找到"
+    }
+  },
+  "occupation": {
+    "title": "添加工作经历",
+    "subtitle": "填写您的工作背景信息",
+    "back": "返回",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitting": "提交中...",
+    "company": {
+      "label": "公司",
+      "placeholder": "请输入公司名称",
+      "required": "公司名称不能为空"
+    },
+    "position": {
+      "label": "职位",
+      "placeholder": "请输入职位",
+      "required": "职位不能为空"
+    },
+    "startDate": {
+      "label": "开始日期"
+    },
+    "endDate": {
+      "label": "结束日期"
+    },
+    "description": {
+      "label": "描述",
+      "placeholder": "请输入描述"
+    },
+    "messages": {
+      "user_not_found": "用户未找到"
+    }
+  },
+  "preference": {
+    "addTitle": "添加偏好",
+    "addSubtitle": "创建新的用户偏好设置",
+    "editTitle": "编辑偏好",
+    "editSubtitle": "修改用户偏好设置",
+    "back": "返回",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitting": "提交中...",
+    "loading": "加载偏好中...",
+    "key": {
+      "label": "键",
+      "placeholder": "请输入键名",
+      "required": "键不能为空"
+    },
+    "value": {
+      "label": "值",
+      "placeholder": "请输入值",
+      "required": "值不能为空"
+    },
+    "messages": {
+      "user_not_found": "用户未找到"
+    }
+  },
+  "profile": {
+    "role": {
+      "label": "角色",
+      "placeholder": "请输入角色"
+    },
+    "firstName": {
+      "label": "名",
+      "placeholder": "请输入名"
+    },
+    "lastName": {
+      "label": "姓",
+      "placeholder": "请输入姓"
+    },
+    "nickname": {
+      "label": "昵称",
+      "placeholder": "请输入昵称"
+    },
+    "displayName": {
+      "label": "显示名称",
+      "placeholder": "请输入显示名称"
+    },
+    "bio": {
+      "label": "简介",
+      "placeholder": "请输入个人简介"
+    },
+    "birthday": {
+      "label": "生日",
+      "placeholder": "请选择生日"
+    },
+    "age": {
+      "label": "年龄",
+      "placeholder": "请输入年龄"
+    },
+    "gender": {
+      "label": "性别",
+      "placeholder": "请输入性别"
+    },
+    "location": {
+      "label": "位置",
+      "placeholder": "请输入位置"
+    },
+    "website": {
+      "label": "网站",
+      "placeholder": "请输入网站URL"
+    },
+    "github": {
+      "label": "GitHub",
+      "placeholder": "请输入GitHub用户名"
+    },
+    "socialLinks": {
+      "label": "社交链接",
+      "keyPlaceholder": "平台 (例如: twitter, linkedin)",
+      "valuePlaceholder": "用户名或URL"
+    },
+    "skills": {
+      "label": "技能",
+      "keyPlaceholder": "类别 (例如: programming, design)",
+      "valuePlaceholder": "技能，用逗号分隔 (例如: JavaScript, TypeScript)"
+    },
+    "keyValueEditor": {
+      "add": "添加",
+      "remove": "删除",
+      "key": {
+        "placeholder": "键"
+      },
+      "value": {
+        "placeholder": "值",
+        "arrayPlaceholder": "值，用逗号分隔"
+      }
+    },
+    "messages": {
+      "user_not_found": "用户未找到"
+    }
+  }
+}

@@ -31,6 +31,9 @@ func (r *Router) RegisterRoutes() {
 		auth.Post("/users", r.handlers.User.Create)
 		auth.Get("/users/username/:username", r.handlers.User.GetByUsername)
 		auth.Get("/users/:id/user-emails", r.handlers.UserEmail.GetByUserID) // 根据用户ID获取用户邮箱列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id/user-phones", r.handlers.UserPhone.GetByUserID) // 根据用户ID获取用户电话列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id/user-educations", r.handlers.UserEducation.GetByUserID) // 根据用户ID获取用户教育列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id/user-occupations", r.handlers.UserOccupation.GetByUserID) // 根据用户ID获取用户职业列表（必须在 /users/:id 之前）
 		auth.Get("/users/:id", r.handlers.User.GetByID)
 		auth.Patch("/users/:id/status", r.handlers.User.UpdateStatus)
 		auth.Patch("/users/:id/username", r.handlers.User.UpdateUsername)

@@ -1,0 +1,11 @@
+{
+  "title": "Edit Preference",
+  "subtitle": "Modify user preference settings",
+  "addTitle": "Add Preference",
+  "addSubtitle": "Create a new user preference",
+  "back": "Back",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "submitting": "Submitting...",
+  "loading": "Loading preference..."
+}

@@ -1,0 +1,123 @@
+/* Icon-only button (square, centered icon) */
+.iconOnly {
+  aspect-ratio: 1;
+  padding: 0;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+
+.iconOnly.small {
+  min-width: 2rem;
+  min-height: 2rem;
+}
+
+.iconOnly.large {
+  min-width: 3rem;
+  min-height: 3rem;
+}
+
+.iconContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Full layout with icons and content */
+.iconButton {
+  position: relative;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Icon positioning */
+.topIcon,
+.rightIcon,
+.bottomIcon,
+.leftIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.topIcon {
+  order: 1;
+}
+
+.horizontal {
+  order: 2;
+}
+
+.bottomIcon {
+  order: 3;
+}
+
+.leftIcon {
+  margin-right: -0.25rem;
+}
+
+.rightIcon {
+  margin-left: -0.25rem;
+}
+
+/* Icon-only specific positioning */
+.iconOnly .iconContainer .topIcon {
+  position: absolute;
+  top: 0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.iconOnly .iconContainer .rightIcon {
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.iconOnly .iconContainer .bottomIcon {
+  position: absolute;
+  bottom: 0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.iconOnly .iconContainer .leftIcon {
+  position: absolute;
+  left: 0.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* When icon-only has multiple icons, center the main one */
+.iconOnly .iconContainer > *:not(.topIcon):not(.rightIcon):not(.bottomIcon):not(.leftIcon) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

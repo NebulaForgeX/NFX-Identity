@@ -1,7 +1,18 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { LayoutSwitcher } from "@/layouts";
-import { DashboardPage, LoginPage, NotFoundPage } from "@/pages";
+import {
+  AddEducationPage,
+  AddOccupationPage,
+  DashboardPage,
+  EditEducationPage,
+  EditOccupationPage,
+  EditPreferencePage,
+  EditProfilePage,
+  LoginPage,
+  NotFoundPage,
+  ProfilePage,
+} from "@/pages";
 import { ROUTES } from "@/types/navigation";
 
 import "./App.module.css";
@@ -25,6 +36,13 @@ function App() {
       <Routes>
         <Route path={ROUTES.HOME} element={<DashboardPage />} />
         <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+        <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+        <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
+        <Route path={ROUTES.ADD_EDUCATION} element={<AddEducationPage />} />
+        <Route path={ROUTES.ADD_OCCUPATION} element={<AddOccupationPage />} />
+        <Route path={ROUTES.EDIT_EDUCATION} element={<EditEducationPage />} />
+        <Route path={ROUTES.EDIT_OCCUPATION} element={<EditOccupationPage />} />
+        <Route path={ROUTES.EDIT_PREFERENCE} element={<EditPreferencePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </LayoutSwitcher>

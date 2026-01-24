@@ -172,6 +172,9 @@ export const URL_PATHS = {
     CREATE_USER_EMAIL: "/directory/auth/user-emails",
     GET_USER_EMAIL: "/directory/auth/user-emails/:id",
     GET_USER_EMAILS_BY_USER_ID: "/directory/auth/users/:id/user-emails", // 根据用户ID获取用户邮箱列表
+    GET_USER_PHONES_BY_USER_ID: "/directory/auth/users/:id/user-phones", // 根据用户ID获取用户电话列表
+    GET_USER_EDUCATIONS_BY_USER_ID: "/directory/auth/users/:id/user-educations", // 根据用户ID获取用户教育列表
+    GET_USER_OCCUPATIONS_BY_USER_ID: "/directory/auth/users/:id/user-occupations", // 根据用户ID获取用户职业列表
     UPDATE_USER_EMAIL: "/directory/auth/user-emails/:id",
     SET_PRIMARY_USER_EMAIL: "/directory/auth/user-emails/:id/set-primary",
     VERIFY_USER_EMAIL: "/directory/auth/user-emails/:id/verify",

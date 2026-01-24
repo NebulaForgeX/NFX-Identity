@@ -15,6 +15,7 @@
     "platformName": "NebulaForgeX Identity Platform",
     "user": "User",
     "notSet": "Not Set",
+    "profile": "Profile",
     "logout": "Logout",
     "loggingOut": " (Logging out...)",
     "logoutFailed": "Logout failed: "
@@ -26,7 +27,13 @@
     "termsOfService": "Terms of Service"
   },
   "sidebar": {
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "profileView": "View Profile",
+    "editProfile": "Edit Profile",
+    "addEducation": "Add Education",
+    "addOccupation": "Add Occupation",
+    "editPreference": "Edit Preference"
   },
   "searchInput": {
     "placeholder": "Search...",

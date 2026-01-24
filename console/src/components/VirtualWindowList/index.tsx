@@ -61,9 +61,13 @@ function VirtualWindowListComponent<T>({
   innerClass,
   ...virtualizerOptions
 }: VirtualWindowListProps<T>) {
+  /* ✅ 防御性检查：确保 data 是数组 */
+  const safeData = Array.isArray(data) ? data : [];
+  const dataLength = safeData.length;
+
   /* ✅ 真正的 window 虚拟滚动器 */
   const virtualizer = useWindowVirtualizer({
-    count: hasNextPage ? data.length + 1 : data.length,
+    count: hasNextPage ? dataLength + 1 : dataLength,
     estimateSize: typeof estimateSize === "number" ? () => estimateSize : estimateSize,
     overscan,
     ...virtualizerOptions,
@@ -76,12 +80,12 @@ function VirtualWindowListComponent<T>({
     const last = items[items.length - 1];
     if (!last) return;
 
-    const isLoaderRow = last.index >= data.length;
+    const isLoaderRow = last.index >= dataLength;
 
     if (isLoaderRow && hasNextPage && !isFetchingNextPage && fetchNextPage) {
       fetchNextPage();
     }
-  }, [items, hasNextPage, isFetchingNextPage, fetchNextPage, data.length]);
+  }, [items, hasNextPage, isFetchingNextPage, fetchNextPage, dataLength]);
 
   const { t } = useTranslation("components");
 
@@ -126,7 +130,7 @@ function VirtualWindowListComponent<T>({
   }, [endOfListIndicator, t]);
 
   /* ✅ 无数据情况 */
-  if (data.length === 0) return renderEmptyState();
+  if (dataLength === 0) return renderEmptyState();
 
   /* ✅ 正常渲染 */
   return (
@@ -144,8 +148,8 @@ function VirtualWindowListComponent<T>({
           }}
         >
           {items.map((row) => {
-            const isLoaderRow = row.index >= data.length;
-            const item = data[row.index];
+            const isLoaderRow = row.index >= dataLength;
+            const item = safeData[row.index];
 
             return (
               <div key={row.key} data-index={row.index} ref={virtualizer.measureElement}>

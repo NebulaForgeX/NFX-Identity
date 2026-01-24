@@ -161,6 +161,13 @@ export const GetUserEducation = async (id: string): Promise<UserEducation> => {
   return data.data;
 };
 
+// 根据用户ID获取用户教育列表
+export const GetUserEducationsByUserID = async (userId: string): Promise<UserEducation[]> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER_EDUCATIONS_BY_USER_ID.replace(":id", userId);
+  const { data } = await protectedClient.get<DataResponse<UserEducation[]>>(url);
+  return data.data;
+};
+
 // 更新用户教育
 export const UpdateUserEducation = async (id: string, params: UpdateUserEducationRequest): Promise<BaseResponse> => {
   const url = URL_PATHS.DIRECTORY.UPDATE_USER_EDUCATION.replace(":id", id);
@@ -243,6 +250,13 @@ export const GetUserOccupation = async (id: string): Promise<UserOccupation> => 
   return data.data;
 };
 
+// 根据用户ID获取用户职业列表
+export const GetUserOccupationsByUserID = async (userId: string): Promise<UserOccupation[]> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER_OCCUPATIONS_BY_USER_ID.replace(":id", userId);
+  const { data } = await protectedClient.get<DataResponse<UserOccupation[]>>(url);
+  return data.data;
+};
+
 // 更新用户职业
 export const UpdateUserOccupation = async (id: string, params: UpdateUserOccupationRequest): Promise<BaseResponse> => {
   const url = URL_PATHS.DIRECTORY.UPDATE_USER_OCCUPATION.replace(":id", id);
@@ -269,6 +283,13 @@ export const CreateUserPhone = async (params: CreateUserPhoneRequest): Promise<U
 export const GetUserPhone = async (id: string): Promise<UserPhone> => {
   const url = URL_PATHS.DIRECTORY.GET_USER_PHONE.replace(":id", id);
   const { data } = await protectedClient.get<DataResponse<UserPhone>>(url);
+  return data.data;
+};
+
+// 根据用户ID获取用户电话列表
+export const GetUserPhonesByUserID = async (userId: string): Promise<UserPhone[]> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER_PHONES_BY_USER_ID.replace(":id", userId);
+  const { data } = await protectedClient.get<DataResponse<UserPhone[]>>(url);
   return data.data;
 };
 

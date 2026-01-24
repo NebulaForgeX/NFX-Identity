@@ -6,6 +6,11 @@ export const ROUTES = {
   PROFILE: "/profile",
   EDIT_PROFILE: "/profile/edit",
   ACCOUNT_SECURITY: "/profile/security",
+  ADD_EDUCATION: "/profile/add-education",
+  ADD_OCCUPATION: "/profile/add-occupation",
+  EDIT_EDUCATION: "/profile/edit-education",
+  EDIT_OCCUPATION: "/profile/edit-occupation",
+  EDIT_PREFERENCE: "/profile/edit-preference",
 } as const;
 
 // 路由类型

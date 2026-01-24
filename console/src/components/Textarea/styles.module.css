@@ -1,0 +1,149 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wrapper.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fg-heading);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.textarea {
+  width: 100%;
+  border: 1px solid var(--color-border-4);
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  color: var(--color-fg-text);
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  outline: none;
+  resize: vertical;
+  min-height: 4rem;
+}
+
+.textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 102, 126, 234), 0.1);
+}
+
+.textarea::placeholder {
+  color: var(--color-fg-muted, var(--color-fg-text));
+  opacity: 0.5;
+}
+
+/* Size variants */
+.textarea.small {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  min-height: 3rem;
+}
+
+.textarea.medium {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  min-height: 4rem;
+}
+
+.textarea.large {
+  padding: 1rem;
+  font-size: 1rem;
+  min-height: 5rem;
+}
+
+/* Variant styles */
+.textarea.default {
+  background: var(--color-bg);
+  border-color: var(--color-border-4);
+}
+
+.textarea.filled {
+  background: var(--color-bg-2);
+  border-color: var(--color-border-3);
+}
+
+/* With icons */
+.inputContainer .leftIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg-muted, var(--color-fg-text));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.inputContainer .rightIcon {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg-muted, var(--color-fg-text));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.inputContainer .textarea.small + .leftIcon,
+.inputContainer .textarea.small + .rightIcon {
+  top: 0.5rem;
+}
+
+.inputContainer .textarea.large + .leftIcon,
+.inputContainer .textarea.large + .rightIcon {
+  top: 1rem;
+}
+
+/* Error state */
+.textarea.error {
+  border-color: var(--color-danger);
+}
+
+.textarea.error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(var(--color-danger-rgb, 244, 67, 54), 0.1);
+}
+
+/* Disabled state */
+.textarea.disabled {
+  background: var(--color-bg-3);
+  border-color: var(--color-border-5);
+  color: var(--color-fg-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}

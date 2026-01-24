@@ -83,3 +83,20 @@ func (h *UserOccupationHandler) Delete(c *fiber.Ctx) error {
 
 	return httpresp.Success(c, fiber.StatusOK, "User occupation deleted successfully")
 }
+
+// GetByUserID 根据用户ID获取用户职业列表
+func (h *UserOccupationHandler) GetByUserID(c *fiber.Ctx) error {
+	var req reqdto.ByIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+
+	results, err := h.appSvc.GetUserOccupationsByUserID(c.Context(), req.ID, nil)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user occupations: "+err.Error())
+	}
+
+	dtos := respdto.UserOccupationListROToDTO(results)
+
+	return httpresp.Success(c, fiber.StatusOK, "User occupations retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+}

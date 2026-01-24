@@ -26,7 +26,13 @@
     "termsOfService": "Conditions d'utilisation"
   },
   "sidebar": {
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "profile": "Profil",
+    "profileView": "Voir le profil",
+    "editProfile": "Modifier le profil",
+    "addEducation": "Ajouter une éducation",
+    "addOccupation": "Ajouter une occupation",
+    "editPreference": "Modifier la préférence"
   },
   "searchInput": {
     "placeholder": "Rechercher...",

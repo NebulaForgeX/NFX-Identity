@@ -107,16 +107,25 @@ const UserMenu = memo(() => {
     }
   }, [clearAuth, navigate, t]);
 
+  const handleNavigateProfile = useCallback(() => {
+    navigate(ROUTES.PROFILE);
+    setUserMenuOpen(false);
+  }, [navigate]);
+
   const userMenu: Array<{ title: string; action: () => void; disabled?: boolean }> = useMemo(
     () => [
+      { title: t("header.profile"), action: handleNavigateProfile },
       { title: t("header.logout"), action: handleLogout },
     ],
-    [handleLogout, t],
+    [handleNavigateProfile, handleLogout, t],
   );
 
   return (
     <div className={`${styles.userAction} ${styles.controlItem}`}>
-      <button className={styles.user} onClick={() => setUserMenuOpen(!userMenuOpen)}>
+      <button
+        className={styles.user}
+        onClick={() => setUserMenuOpen(!userMenuOpen)}
+      >
         <img
           src={buildImageUrl(userProfile?.avatarId, "avatar") || "/default-avatar.png"}
           alt={user?.username || t("header.user")}

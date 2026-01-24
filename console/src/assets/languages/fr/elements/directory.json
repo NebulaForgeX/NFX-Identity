@@ -1,0 +1,211 @@
+{
+  "education": {
+    "title": "Add Education",
+    "subtitle": "Fill in your educational background information",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "school": {
+      "label": "School",
+      "placeholder": "Enter school name",
+      "required": "School name is required"
+    },
+    "degree": {
+      "label": "Degree",
+      "placeholder": "Enter degree"
+    },
+    "major": {
+      "label": "Spécialité",
+      "placeholder": "Entrez la spécialité"
+    },
+    "fieldOfStudy": {
+      "label": "Domaine d'étude",
+      "placeholder": "Entrez le domaine d'étude"
+    },
+    "startDate": {
+      "label": "Date de début"
+    },
+    "endDate": {
+      "label": "Date de fin"
+    },
+    "isCurrent": {
+      "label": "Actuellement en cours"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Entrez la description"
+    },
+    "grade": {
+      "label": "Note",
+      "placeholder": "Entrez la note"
+    },
+    "activities": {
+      "label": "Activités",
+      "placeholder": "Entrez les activités"
+    },
+    "achievements": {
+      "label": "Réalisations",
+      "placeholder": "Entrez les réalisations"
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  },
+  "occupation": {
+    "title": "Add Occupation",
+    "subtitle": "Fill in your work background information",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "company": {
+      "label": "Company",
+      "placeholder": "Enter company name",
+      "required": "Company name is required"
+    },
+    "position": {
+      "label": "Poste",
+      "placeholder": "Entrez le poste",
+      "required": "Le poste est requis"
+    },
+    "department": {
+      "label": "Département",
+      "placeholder": "Entrez le département"
+    },
+    "industry": {
+      "label": "Industrie",
+      "placeholder": "Entrez l'industrie"
+    },
+    "location": {
+      "label": "Localisation",
+      "placeholder": "Entrez la localisation du travail"
+    },
+    "employmentType": {
+      "label": "Type d'emploi",
+      "placeholder": "Entrez le type d'emploi (ex: Temps plein, Temps partiel)"
+    },
+    "startDate": {
+      "label": "Date de début"
+    },
+    "endDate": {
+      "label": "Date de fin"
+    },
+    "isCurrent": {
+      "label": "Emploi actuel"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Entrez la description"
+    },
+    "responsibilities": {
+      "label": "Responsabilités",
+      "placeholder": "Entrez les responsabilités"
+    },
+    "achievements": {
+      "label": "Réalisations",
+      "placeholder": "Entrez les réalisations"
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  },
+  "preference": {
+    "addTitle": "Add Preference",
+    "addSubtitle": "Create a new user preference",
+    "editTitle": "Edit Preference",
+    "editSubtitle": "Modify user preference settings",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "loading": "Loading preference...",
+    "key": {
+      "label": "Key",
+      "placeholder": "Enter key",
+      "required": "Key is required"
+    },
+    "value": {
+      "label": "Value",
+      "placeholder": "Enter value",
+      "required": "Value is required"
+    },
+    "messages": {
+      "user_not_found": "User not found"
+    }
+  },
+  "profile": {
+    "role": {
+      "label": "Rôle",
+      "placeholder": "Entrez le rôle"
+    },
+    "firstName": {
+      "label": "Prénom",
+      "placeholder": "Entrez le prénom"
+    },
+    "lastName": {
+      "label": "Nom de famille",
+      "placeholder": "Entrez le nom de famille"
+    },
+    "nickname": {
+      "label": "Surnom",
+      "placeholder": "Entrez le surnom"
+    },
+    "displayName": {
+      "label": "Nom d'affichage",
+      "placeholder": "Entrez le nom d'affichage"
+    },
+    "bio": {
+      "label": "Biographie",
+      "placeholder": "Entrez votre biographie"
+    },
+    "birthday": {
+      "label": "Date de naissance",
+      "placeholder": "Sélectionnez la date de naissance"
+    },
+    "age": {
+      "label": "Âge",
+      "placeholder": "Entrez l'âge"
+    },
+    "gender": {
+      "label": "Genre",
+      "placeholder": "Entrez le genre"
+    },
+    "location": {
+      "label": "Localisation",
+      "placeholder": "Entrez la localisation"
+    },
+    "website": {
+      "label": "Site web",
+      "placeholder": "Entrez l'URL du site web"
+    },
+    "github": {
+      "label": "GitHub",
+      "placeholder": "Entrez le nom d'utilisateur GitHub"
+    },
+    "socialLinks": {
+      "label": "Liens sociaux",
+      "keyPlaceholder": "Plateforme (ex: twitter, linkedin)",
+      "valuePlaceholder": "Nom d'utilisateur ou URL"
+    },
+    "skills": {
+      "label": "Compétences",
+      "keyPlaceholder": "Catégorie (ex: programming, design)",
+      "valuePlaceholder": "Compétences séparées par des virgules (ex: JavaScript, TypeScript)"
+    },
+    "keyValueEditor": {
+      "add": "Ajouter",
+      "remove": "Supprimer",
+      "key": {
+        "placeholder": "Clé"
+      },
+      "value": {
+        "placeholder": "Valeur",
+        "arrayPlaceholder": "Valeurs séparées par des virgules"
+      }
+    },
+    "messages": {
+      "user_not_found": "Utilisateur introuvable"
+    }
+  }
+}

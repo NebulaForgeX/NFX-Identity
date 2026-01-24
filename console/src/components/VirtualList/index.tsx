@@ -56,10 +56,14 @@ function VirtualListComponent<T>({
 }: VirtualListProps<T>) {
   const parentRef = useRef<HTMLDivElement>(null);
 
+  // 防御性检查：确保 data 是数组
+  const safeData = Array.isArray(data) ? data : [];
+  const dataLength = safeData.length;
+
   // Setup virtualizer
   // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
-    count: hasNextPage ? data.length + 1 : data.length,
+    count: hasNextPage ? dataLength + 1 : dataLength,
     getScrollElement: () => parentRef.current,
     estimateSize: typeof estimateSize === "number" ? () => estimateSize : estimateSize,
     overscan,
@@ -119,7 +123,7 @@ function VirtualListComponent<T>({
   }, [endOfListIndicator, t]);
 
   // Show empty state if no data
-  if (data.length === 0) return renderEmptyState();
+  if (dataLength === 0) return renderEmptyState();
 
   return (
     <div
@@ -143,8 +147,8 @@ function VirtualListComponent<T>({
           }}
         >
           {items.map((virtualRow) => {
-            const isLoaderRow = virtualRow.index > data.length - 1;
-            const item = data[virtualRow.index];
+            const isLoaderRow = virtualRow.index > dataLength - 1;
+            const item = safeData[virtualRow.index];
 
             return (
               <div key={virtualRow.key} data-index={virtualRow.index} ref={rowVirtualizer.measureElement}>
