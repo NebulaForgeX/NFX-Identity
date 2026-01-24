@@ -1,14 +1,23 @@
 // Clients Domain Types - 基于 NFX-ID Backend
 
+import {
+  AppType,
+  AppStatus,
+  Environment,
+  ApiKeyStatus,
+  ClientCredentialStatus,
+  AllowlistStatus,
+} from "./enums";
+
 export interface App {
   id: string;
   appId: string;
   tenantId: string;
   name: string;
   description?: string;
-  type: string;
-  status: string;
-  environment: string;
+  type: AppType;
+  status: AppStatus;
+  environment: Environment;
   createdAt: string;
   updatedAt: string;
   createdBy?: string;
@@ -22,7 +31,7 @@ export interface APIKey {
   keyId: string;
   appId: string;
   name?: string;
-  status: string;
+  status: ApiKeyStatus;
   expiresAt?: string;
   lastUsedAt?: string;
   createdAt: string;
@@ -34,7 +43,7 @@ export interface ClientCredential {
   clientId: string;
   clientSecret: string;
   appId: string;
-  status: string;
+  status: ClientCredentialStatus;
   createdAt: string;
   revokedAt?: string;
 }
@@ -53,7 +62,7 @@ export interface IPAllowlist {
   appId: string;
   cidr: string;
   description?: string;
-  status: string;
+  status: AllowlistStatus;
   createdAt: string;
   createdBy?: string;
   updatedAt: string;

@@ -68,5 +68,15 @@
   "submitting": "提交中...",
   "edit": "编辑",
   "socialLinks": "社交链接",
-  "skills": "技能"
+  "skills": "技能",
+  "status": "状态",
+  "statusActive": "活跃",
+  "statusPending": "待激活",
+  "statusDeactive": "已停用",
+  "statusInactive": "未激活",
+  "statusSuspended": "已暂停",
+  "statusLocked": "已锁定",
+  "isVerified": "已验证",
+  "unverified": "未验证",
+  "lastLoginAt": "最后登录时间"
 }

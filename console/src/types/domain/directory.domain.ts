@@ -1,10 +1,14 @@
 // Directory Domain Types - 基于 NFX-ID Backend
 
+import type { DashboardBackgroundType } from "@/types";
+
+import { UserStatus } from "./enums";
+
 export interface User {
   id: string;
   tenantId: string;
   username: string;
-  status: string;
+  status: UserStatus;
   isVerified: boolean;
   lastLoginAt?: string;
   createdAt: string;

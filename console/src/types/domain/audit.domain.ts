@@ -1,5 +1,13 @@
 // Audit Domain Types - 基于 NFX-ID Backend
 
+import {
+  ActorType,
+  ResultType,
+  RiskLevel,
+  DataClassification,
+  RetentionAction,
+} from "./enums";
+
 export interface Event {
   id: string;
   eventId: string;
@@ -7,13 +15,13 @@ export interface Event {
   receivedAt: string;
   tenantId?: string;
   appId?: string;
-  actorType: string;
+  actorType: ActorType;
   actorId: string;
   actorTenantMemberId?: string;
   action: string;
   targetType?: string;
   targetId?: string;
-  result: string;
+  result: ResultType;
   failureReasonCode?: string;
   httpMethod?: string;
   httpPath?: string;
@@ -23,8 +31,8 @@ export interface Event {
   ip?: string;
   userAgent?: string;
   geoCountry?: string;
-  riskLevel: string;
-  dataClassification: string;
+  riskLevel: RiskLevel;
+  dataClassification: DataClassification;
   prevHash?: string;
   eventHash?: string;
   metadata?: Record<string, unknown>;
@@ -49,10 +57,10 @@ export interface EventRetentionPolicy {
   policyName: string;
   tenantId?: string;
   actionPattern?: string;
-  dataClassification?: string;
-  riskLevel?: string;
+  dataClassification?: DataClassification;
+  riskLevel?: RiskLevel;
   retentionDays: number;
-  retentionAction: string;
+  retentionAction: RetentionAction;
   archiveLocation?: string;
   status: string;
   createdAt: string;
@@ -65,12 +73,12 @@ export interface EventSearchIndex {
   eventId: string;
   tenantId?: string;
   appId?: string;
-  actorType: string;
+  actorType: ActorType;
   actorId: string;
   action: string;
   targetType?: string;
   targetId?: string;
-  result: string;
+  result: ResultType;
   occurredAt: string;
   ip?: string;
   createdAt: string;

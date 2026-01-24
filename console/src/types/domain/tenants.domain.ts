@@ -1,11 +1,22 @@
 // Tenants Domain Types - 基于 NFX-ID Backend
 
+import {
+  TenantStatus,
+  MemberStatus,
+  MemberSource,
+  TenantAppStatus,
+  VerificationStatus,
+  VerificationMethod,
+  InvitationStatus,
+  GroupType,
+} from "./enums";
+
 export interface Tenant {
   id: string;
   tenantId: string;
   name: string;
   displayName?: string;
-  status: string;
+  status: TenantStatus;
   primaryDomain?: string;
   createdAt: string;
   updatedAt: string;
@@ -18,7 +29,7 @@ export interface Group {
   groupId: string;
   tenantId: string;
   name: string;
-  type: string;
+  type: GroupType;
   parentGroupId?: string;
   description?: string;
   createdBy?: string;
@@ -33,7 +44,8 @@ export interface Member {
   tenantId: string;
   userId: string;
   role?: string;
-  status: string;
+  status: MemberStatus;
+  source?: MemberSource;
   joinedAt: string;
   createdAt: string;
   updatedAt: string;
@@ -45,7 +57,7 @@ export interface Invitation {
   tenantId: string;
   email: string;
   role?: string;
-  status: string;
+  status: InvitationStatus;
   expiresAt?: string;
   acceptedAt?: string;
   revokedAt?: string;
@@ -56,7 +68,7 @@ export interface TenantApp {
   id: string;
   tenantId: string;
   appId: string;
-  status: string;
+  status: TenantAppStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -74,8 +86,9 @@ export interface DomainVerification {
   id: string;
   tenantId: string;
   domain: string;
+  verificationMethod?: VerificationMethod;
   verificationToken: string;
-  status: string;
+  status: VerificationStatus;
   verifiedAt?: string;
   createdAt: string;
   updatedAt: string;

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { Suspense } from "@/components";
 import { useUserEmailsByUserID } from "@/hooks/useDirectory";
+import { useIsPrimary, useIsVerified } from "@/hooks/useStyles";
 
 import styles from "./styles.module.css";
 
@@ -39,13 +40,44 @@ const UserEmailsCardContent = memo(({ userId }: UserEmailsCardProps) => {
     <div className={styles.card}>
       <h3 className={styles.title}>{t("emails")}</h3>
       <div className={styles.list}>
-        {userEmails.map((email) => (
-          <div key={email.id} className={styles.item}>
-            <span className={styles.email}>{email.email}</span>
-            {email.isPrimary && <span className={styles.badge}>{t("primary")}</span>}
-            {email.isVerified && <span className={styles.verified}>{t("verified")}</span>}
-          </div>
-        ))}
+        {userEmails.map((email) => {
+          const primaryStyle = useIsPrimary(email.isPrimary);
+          const verifiedStyle = useIsVerified(email.isVerified);
+
+          return (
+            <div key={email.id} className={styles.item}>
+              <span className={styles.email}>{email.email}</span>
+              {email.isPrimary && (
+                <span
+                  style={{
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    backgroundColor: primaryStyle.bgColor,
+                    color: primaryStyle.color,
+                  }}
+                >
+                  {t("primary")}
+                </span>
+              )}
+              {email.isVerified && (
+                <span
+                  style={{
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                    backgroundColor: verifiedStyle.bgColor,
+                    color: verifiedStyle.color,
+                  }}
+                >
+                  {t("verified")}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

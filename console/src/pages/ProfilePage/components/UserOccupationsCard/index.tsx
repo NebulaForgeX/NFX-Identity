@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Edit } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
 import { useUserOccupationsByUserID } from "@/hooks/useDirectory";
+import { useIsCurrent } from "@/hooks/useStyles";
 import { ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";
@@ -51,7 +52,23 @@ const UserOccupationsCardContent = memo(({ userId }: UserOccupationsCardProps) =
                 <span className={styles.company}> @ {occupation.company}</span>
               </div>
               <div className={styles.headerRight}>
-                {occupation.isCurrent && <span className={styles.badge}>{t("current")}</span>}
+                {occupation.isCurrent && (() => {
+                  const currentStyle = useIsCurrent(occupation.isCurrent);
+                  return (
+                    <span
+                      style={{
+                        padding: "0.25rem 0.5rem",
+                        borderRadius: "0.25rem",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                        backgroundColor: currentStyle.bgColor,
+                        color: currentStyle.color,
+                      }}
+                    >
+                      {t("current")}
+                    </span>
+                  );
+                })()}
                 <button
                   className={styles.editButton}
                   onClick={() => navigate(`${ROUTES.EDIT_OCCUPATION}?id=${occupation.id}`)}

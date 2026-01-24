@@ -1,5 +1,17 @@
 // Auth Domain Types - 基于 NFX-ID Backend
 
+import {
+  CredentialType,
+  CredentialStatus,
+  MFAType,
+  RevokeReason,
+  SessionRevokeReason,
+  FailureCode,
+  LockReason,
+  ResetDelivery,
+  ResetStatus,
+} from "./enums";
+
 export interface Session {
   id: string;
   sessionId: string;
@@ -16,7 +28,7 @@ export interface Session {
   deviceFingerprint?: string;
   deviceName?: string;
   revokedAt?: string;
-  revokeReason?: string;
+  revokeReason?: SessionRevokeReason;
   revokedBy?: string;
   updatedAt: string;
 }
@@ -24,9 +36,9 @@ export interface Session {
 export interface UserCredential {
   id: string;
   userId: string;
-  credentialType: string;
+  credentialType: CredentialType;
   credentialValue: string;
-  status: string;
+  status: CredentialStatus;
   verifiedAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -35,7 +47,7 @@ export interface UserCredential {
 export interface MFAFactor {
   id: string;
   userId: string;
-  factorType: string;
+  factorType: MFAType;
   factorId: string;
   status: string;
   verifiedAt?: string;
@@ -52,6 +64,7 @@ export interface RefreshToken {
   status: string;
   expiresAt?: string;
   revokedAt?: string;
+  revokeReason?: RevokeReason;
   createdAt: string;
   updatedAt: string;
 }
@@ -60,7 +73,8 @@ export interface PasswordReset {
   id: string;
   resetToken: string;
   userId: string;
-  status: string;
+  delivery: ResetDelivery;
+  status: ResetStatus;
   expiresAt?: string;
   usedAt?: string;
   createdAt: string;
@@ -81,6 +95,7 @@ export interface LoginAttempt {
   ipAddress?: string;
   userAgent?: string;
   success: boolean;
+  failureCode?: FailureCode;
   attemptedAt: string;
   createdAt: string;
 }
@@ -88,9 +103,10 @@ export interface LoginAttempt {
 export interface AccountLockout {
   id: string;
   userId: string;
-  reason: string;
+  lockReason: LockReason;
   lockedUntil?: string;
-  status: string;
+  lockedAt: string;
+  unlockedAt?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -68,5 +68,15 @@
   "submitting": "Submitting...",
   "edit": "Edit",
   "socialLinks": "Social Links",
-  "skills": "Skills"
+  "skills": "Skills",
+  "status": "Status",
+  "statusActive": "Active",
+  "statusPending": "Pending",
+  "statusDeactive": "Deactive",
+  "statusInactive": "Inactive",
+  "statusSuspended": "Suspended",
+  "statusLocked": "Locked",
+  "isVerified": "Verified",
+  "unverified": "Unverified",
+  "lastLoginAt": "Last Login"
 }

@@ -48,5 +48,15 @@
   "skillsUsed": "Compétences utilisées",
   "edit": "Modifier",
   "socialLinks": "Liens sociaux",
-  "skills": "Compétences"
+  "skills": "Compétences",
+  "status": "Statut",
+  "statusActive": "Actif",
+  "statusPending": "En attente",
+  "statusDeactive": "Désactivé",
+  "statusInactive": "Inactif",
+  "statusSuspended": "Suspendu",
+  "statusLocked": "Verrouillé",
+  "isVerified": "Vérifié",
+  "unverified": "Non vérifié",
+  "lastLoginAt": "Dernière connexion"
 }

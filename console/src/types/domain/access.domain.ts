@@ -1,12 +1,14 @@
 // Access Domain Types - 基于 NFX-ID Backend
 // 注意：由于使用了 axios-case-converter，后端返回的 snake_case 会自动转换为 camelCase
 
+import { ScopeType, SubjectType, GrantType, GrantEffect } from "./enums";
+
 export interface Role {
   id: string;
   key: string;
   name: string;
   description?: string;
-  scopeType: string;
+  scopeType: ScopeType;
   isSystem: boolean;
   createdAt: string;
   updatedAt: string;
@@ -35,15 +37,15 @@ export interface Scope {
 
 export interface Grant {
   id: string;
-  subjectType: string;
+  subjectType: SubjectType;
   subjectId: string;
-  grantType: string;
+  grantType: GrantType;
   grantRefId: string;
   tenantId?: string;
   appId?: string;
   resourceType?: string;
   resourceId?: string;
-  effect: string;
+  effect: GrantEffect;
   expiresAt?: string;
   createdAt: string;
   createdBy?: string;

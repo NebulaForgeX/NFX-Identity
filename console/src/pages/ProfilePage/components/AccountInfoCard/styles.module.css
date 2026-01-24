@@ -46,3 +46,21 @@
   text-align: right;
   word-break: break-word;
 }
+
+.verifiedBadge {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-success);
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.unverifiedBadge {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-warning);
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

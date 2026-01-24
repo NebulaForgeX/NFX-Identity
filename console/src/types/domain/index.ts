@@ -1,5 +1,6 @@
 // Domain Types Exports
 
+export * from "./enums";
 export * from "./access.domain";
 export * from "./audit.domain";
 export * from "./auth.domain";
