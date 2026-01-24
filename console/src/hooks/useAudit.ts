@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import {
   CreateActorSnapshot,
@@ -61,26 +62,24 @@ export const useEvent = (params: UnifiedQueryParams<Event> & { id: string }) => 
 
 // 创建事件
 export const useCreateEvent = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (params: CreateEventRequest) => {
       return await CreateEvent(params);
     },
     onSuccess: () => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENTS);
-      showSuccess("事件创建成功！");
+      showSuccess(t("event.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建事件失败，请稍后重试。" + error.message);
+      showError(t("event.createError") + error.message);
     },
   });
 };
 
 // 删除事件
 export const useDeleteEvent = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteEvent(id);
@@ -88,10 +87,10 @@ export const useDeleteEvent = () => {
     onSuccess: (_, id) => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENTS);
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT, id);
-      showSuccess("事件删除成功！");
+      showSuccess(t("event.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除事件失败，请稍后重试。" + error.message);
+      showError(t("event.deleteError") + error.message);
     },
   });
 };
@@ -113,26 +112,24 @@ export const useActorSnapshot = (params: UnifiedQueryParams<ActorSnapshot> & { i
 
 // 创建 Actor Snapshot
 export const useCreateActorSnapshot = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (params: CreateActorSnapshotRequest) => {
       return await CreateActorSnapshot(params);
     },
     onSuccess: () => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_ACTOR_SNAPSHOTS);
-      showSuccess("Actor Snapshot 创建成功！");
+      showSuccess(t("actorSnapshot.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 Actor Snapshot 失败，请稍后重试。" + error.message);
+      showError(t("actorSnapshot.createError") + error.message);
     },
   });
 };
 
 // 删除 Actor Snapshot
 export const useDeleteActorSnapshot = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteActorSnapshot(id);
@@ -140,10 +137,10 @@ export const useDeleteActorSnapshot = () => {
     onSuccess: (_, id) => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_ACTOR_SNAPSHOTS);
       auditEventEmitter.emit(auditEvents.INVALIDATE_ACTOR_SNAPSHOT, id);
-      showSuccess("Actor Snapshot 删除成功！");
+      showSuccess(t("actorSnapshot.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Actor Snapshot 失败，请稍后重试。" + error.message);
+      showError(t("actorSnapshot.deleteError") + error.message);
     },
   });
 };
@@ -165,26 +162,24 @@ export const useEventRetentionPolicy = (params: UnifiedQueryParams<EventRetentio
 
 // 创建 Event Retention Policy
 export const useCreateEventRetentionPolicy = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (params: CreateEventRetentionPolicyRequest) => {
       return await CreateEventRetentionPolicy(params);
     },
     onSuccess: () => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_RETENTION_POLICIES);
-      showSuccess("Event Retention Policy 创建成功！");
+      showSuccess(t("eventRetentionPolicy.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 Event Retention Policy 失败，请稍后重试。" + error.message);
+      showError(t("eventRetentionPolicy.createError") + error.message);
     },
   });
 };
 
 // 更新 Event Retention Policy
 export const useUpdateEventRetentionPolicy = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateEventRetentionPolicyRequest }) => {
       return await UpdateEventRetentionPolicy(params.id, params.data);
@@ -192,18 +187,17 @@ export const useUpdateEventRetentionPolicy = () => {
     onSuccess: (_, variables) => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_RETENTION_POLICIES);
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_RETENTION_POLICY, variables.id);
-      showSuccess("Event Retention Policy 更新成功！");
+      showSuccess(t("eventRetentionPolicy.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("更新 Event Retention Policy 失败，请稍后重试。" + error.message);
+      showError(t("eventRetentionPolicy.updateError") + error.message);
     },
   });
 };
 
 // 删除 Event Retention Policy
 export const useDeleteEventRetentionPolicy = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteEventRetentionPolicy(id);
@@ -211,10 +205,10 @@ export const useDeleteEventRetentionPolicy = () => {
     onSuccess: (_, id) => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_RETENTION_POLICIES);
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_RETENTION_POLICY, id);
-      showSuccess("Event Retention Policy 删除成功！");
+      showSuccess(t("eventRetentionPolicy.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Event Retention Policy 失败，请稍后重试。" + error.message);
+      showError(t("eventRetentionPolicy.deleteError") + error.message);
     },
   });
 };
@@ -236,26 +230,24 @@ export const useEventSearchIndex = (params: UnifiedQueryParams<EventSearchIndex>
 
 // 创建 Event Search Index
 export const useCreateEventSearchIndex = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (params: CreateEventSearchIndexRequest) => {
       return await CreateEventSearchIndex(params);
     },
     onSuccess: () => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_SEARCH_INDICES);
-      showSuccess("Event Search Index 创建成功！");
+      showSuccess(t("eventSearchIndex.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 Event Search Index 失败，请稍后重试。" + error.message);
+      showError(t("eventSearchIndex.createError") + error.message);
     },
   });
 };
 
 // 删除 Event Search Index
 export const useDeleteEventSearchIndex = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteEventSearchIndex(id);
@@ -263,10 +255,10 @@ export const useDeleteEventSearchIndex = () => {
     onSuccess: (_, id) => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_SEARCH_INDICES);
       auditEventEmitter.emit(auditEvents.INVALIDATE_EVENT_SEARCH_INDEX, id);
-      showSuccess("Event Search Index 删除成功！");
+      showSuccess(t("eventSearchIndex.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Event Search Index 失败，请稍后重试。" + error.message);
+      showError(t("eventSearchIndex.deleteError") + error.message);
     },
   });
 };
@@ -288,26 +280,24 @@ export const useHashChainCheckpoint = (params: UnifiedQueryParams<HashChainCheck
 
 // 创建 Hash Chain Checkpoint
 export const useCreateHashChainCheckpoint = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (params: CreateHashChainCheckpointRequest) => {
       return await CreateHashChainCheckpoint(params);
     },
     onSuccess: () => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_HASH_CHAIN_CHECKPOINTS);
-      showSuccess("Hash Chain Checkpoint 创建成功！");
+      showSuccess(t("hashChainCheckpoint.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 Hash Chain Checkpoint 失败，请稍后重试。" + error.message);
+      showError(t("hashChainCheckpoint.createError") + error.message);
     },
   });
 };
 
 // 删除 Hash Chain Checkpoint
 export const useDeleteHashChainCheckpoint = () => {
-  
-
+  const { t } = useTranslation("hooks.audit");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteHashChainCheckpoint(id);
@@ -315,10 +305,10 @@ export const useDeleteHashChainCheckpoint = () => {
     onSuccess: (_, id) => {
       auditEventEmitter.emit(auditEvents.INVALIDATE_HASH_CHAIN_CHECKPOINTS);
       auditEventEmitter.emit(auditEvents.INVALIDATE_HASH_CHAIN_CHECKPOINT, id);
-      showSuccess("Hash Chain Checkpoint 删除成功！");
+      showSuccess(t("hashChainCheckpoint.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Hash Chain Checkpoint 失败，请稍后重试。" + error.message);
+      showError(t("hashChainCheckpoint.deleteError") + error.message);
     },
   });
 };

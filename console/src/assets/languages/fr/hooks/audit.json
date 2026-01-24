@@ -1,0 +1,34 @@
+{
+  "event": {
+    "createSuccess": "Événement créé avec succès !",
+    "createError": "Échec de la création de l'événement, veuillez réessayer plus tard.",
+    "deleteSuccess": "Événement supprimé avec succès !",
+    "deleteError": "Échec de la suppression de l'événement, veuillez réessayer plus tard."
+  },
+  "actorSnapshot": {
+    "createSuccess": "Instantané d'acteur créé avec succès !",
+    "createError": "Échec de la création de l'instantané d'acteur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Instantané d'acteur supprimé avec succès !",
+    "deleteError": "Échec de la suppression de l'instantané d'acteur, veuillez réessayer plus tard."
+  },
+  "eventRetentionPolicy": {
+    "createSuccess": "Politique de rétention d'événements créée avec succès !",
+    "createError": "Échec de la création de la politique de rétention d'événements, veuillez réessayer plus tard.",
+    "updateSuccess": "Politique de rétention d'événements mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la politique de rétention d'événements, veuillez réessayer plus tard.",
+    "deleteSuccess": "Politique de rétention d'événements supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la politique de rétention d'événements, veuillez réessayer plus tard."
+  },
+  "eventSearchIndex": {
+    "createSuccess": "Index de recherche d'événements créé avec succès !",
+    "createError": "Échec de la création de l'index de recherche d'événements, veuillez réessayer plus tard.",
+    "deleteSuccess": "Index de recherche d'événements supprimé avec succès !",
+    "deleteError": "Échec de la suppression de l'index de recherche d'événements, veuillez réessayer plus tard."
+  },
+  "hashChainCheckpoint": {
+    "createSuccess": "Point de contrôle de chaîne de hachage créé avec succès !",
+    "createError": "Échec de la création du point de contrôle de chaîne de hachage, veuillez réessayer plus tard.",
+    "deleteSuccess": "Point de contrôle de chaîne de hachage supprimé avec succès !",
+    "deleteError": "Échec de la suppression du point de contrôle de chaîne de hachage, veuillez réessayer plus tard."
+  }
+}

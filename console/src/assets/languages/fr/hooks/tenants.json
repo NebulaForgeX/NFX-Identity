@@ -1,0 +1,86 @@
+{
+  "tenant": {
+    "createSuccess": "Locataire créé avec succès !",
+    "createError": "Échec de la création du locataire, veuillez réessayer plus tard.",
+    "updateSuccess": "Locataire mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du locataire, veuillez réessayer plus tard.",
+    "updateStatusSuccess": "Statut du locataire mis à jour avec succès !",
+    "updateStatusError": "Échec de la mise à jour du statut du locataire, veuillez réessayer plus tard.",
+    "deleteSuccess": "Locataire supprimé avec succès !",
+    "deleteError": "Échec de la suppression du locataire, veuillez réessayer plus tard."
+  },
+  "group": {
+    "createSuccess": "Groupe créé avec succès !",
+    "createError": "Échec de la création du groupe, veuillez réessayer plus tard.",
+    "updateSuccess": "Groupe mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du groupe, veuillez réessayer plus tard.",
+    "deleteSuccess": "Groupe supprimé avec succès !",
+    "deleteError": "Échec de la suppression du groupe, veuillez réessayer plus tard."
+  },
+  "member": {
+    "createSuccess": "Membre créé avec succès !",
+    "createError": "Échec de la création du membre, veuillez réessayer plus tard.",
+    "updateSuccess": "Membre mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du membre, veuillez réessayer plus tard.",
+    "deleteSuccess": "Membre supprimé avec succès !",
+    "deleteError": "Échec de la suppression du membre, veuillez réessayer plus tard."
+  },
+  "invitation": {
+    "createSuccess": "Invitation créée avec succès !",
+    "createError": "Échec de la création de l'invitation, veuillez réessayer plus tard.",
+    "acceptSuccess": "Invitation acceptée avec succès !",
+    "acceptError": "Échec de l'acceptation de l'invitation, veuillez réessayer plus tard.",
+    "revokeSuccess": "Invitation révoquée avec succès !",
+    "revokeError": "Échec de la révocation de l'invitation, veuillez réessayer plus tard.",
+    "deleteSuccess": "Invitation supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'invitation, veuillez réessayer plus tard."
+  },
+  "tenantApp": {
+    "createSuccess": "Application locataire créée avec succès !",
+    "createError": "Échec de la création de l'application locataire, veuillez réessayer plus tard.",
+    "updateSuccess": "Application locataire mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'application locataire, veuillez réessayer plus tard.",
+    "deleteSuccess": "Application locataire supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'application locataire, veuillez réessayer plus tard."
+  },
+  "tenantSetting": {
+    "createSuccess": "Paramètre locataire créé avec succès !",
+    "createError": "Échec de la création du paramètre locataire, veuillez réessayer plus tard.",
+    "updateSuccess": "Paramètre locataire mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du paramètre locataire, veuillez réessayer plus tard.",
+    "deleteSuccess": "Paramètre locataire supprimé avec succès !",
+    "deleteError": "Échec de la suppression du paramètre locataire, veuillez réessayer plus tard."
+  },
+  "domainVerification": {
+    "createSuccess": "Vérification de domaine créée avec succès !",
+    "createError": "Échec de la création de la vérification de domaine, veuillez réessayer plus tard.",
+    "updateSuccess": "Vérification de domaine mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la vérification de domaine, veuillez réessayer plus tard.",
+    "deleteSuccess": "Vérification de domaine supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la vérification de domaine, veuillez réessayer plus tard."
+  },
+  "memberRole": {
+    "createSuccess": "Rôle de membre créé avec succès !",
+    "createError": "Échec de la création du rôle de membre, veuillez réessayer plus tard.",
+    "revokeSuccess": "Rôle de membre révoqué avec succès !",
+    "revokeError": "Échec de la révocation du rôle de membre, veuillez réessayer plus tard.",
+    "deleteSuccess": "Rôle de membre supprimé avec succès !",
+    "deleteError": "Échec de la suppression du rôle de membre, veuillez réessayer plus tard."
+  },
+  "memberGroup": {
+    "createSuccess": "Groupe de membres créé avec succès !",
+    "createError": "Échec de la création du groupe de membres, veuillez réessayer plus tard.",
+    "revokeSuccess": "Groupe de membres révoqué avec succès !",
+    "revokeError": "Échec de la révocation du groupe de membres, veuillez réessayer plus tard.",
+    "deleteSuccess": "Groupe de membres supprimé avec succès !",
+    "deleteError": "Échec de la suppression du groupe de membres, veuillez réessayer plus tard."
+  },
+  "memberAppRole": {
+    "createSuccess": "Rôle d'application de membre créé avec succès !",
+    "createError": "Échec de la création du rôle d'application de membre, veuillez réessayer plus tard.",
+    "revokeSuccess": "Rôle d'application de membre révoqué avec succès !",
+    "revokeError": "Échec de la révocation du rôle d'application de membre, veuillez réessayer plus tard.",
+    "deleteSuccess": "Rôle d'application de membre supprimé avec succès !",
+    "deleteError": "Échec de la suppression du rôle d'application de membre, veuillez réessayer plus tard."
+  }
+}

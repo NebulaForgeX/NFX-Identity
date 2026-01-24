@@ -1,0 +1,40 @@
+{
+  "app": {
+    "createSuccess": "应用创建成功！",
+    "createError": "创建应用失败，请稍后重试。",
+    "updateSuccess": "应用更新成功！",
+    "updateError": "更新应用失败，请稍后重试。",
+    "deleteSuccess": "应用删除成功！",
+    "deleteError": "删除应用失败，请稍后重试。"
+  },
+  "apiKey": {
+    "createSuccess": "API Key 创建成功！",
+    "createError": "创建 API Key 失败，请稍后重试。",
+    "deleteSuccess": "API Key 删除成功！",
+    "deleteError": "删除 API Key 失败，请稍后重试。"
+  },
+  "clientCredential": {
+    "createSuccess": "Client Credential 创建成功！",
+    "createError": "创建 Client Credential 失败，请稍后重试。",
+    "deleteSuccess": "Client Credential 删除成功！",
+    "deleteError": "删除 Client Credential 失败，请稍后重试。"
+  },
+  "clientScope": {
+    "createSuccess": "Client Scope 创建成功！",
+    "createError": "创建 Client Scope 失败，请稍后重试。",
+    "deleteSuccess": "Client Scope 删除成功！",
+    "deleteError": "删除 Client Scope 失败，请稍后重试。"
+  },
+  "ipAllowlist": {
+    "createSuccess": "IP Allowlist 创建成功！",
+    "createError": "创建 IP Allowlist 失败，请稍后重试。",
+    "deleteSuccess": "IP Allowlist 删除成功！",
+    "deleteError": "删除 IP Allowlist 失败，请稍后重试。"
+  },
+  "rateLimit": {
+    "createSuccess": "Rate Limit 创建成功！",
+    "createError": "创建 Rate Limit 失败，请稍后重试。",
+    "deleteSuccess": "Rate Limit 删除成功！",
+    "deleteError": "删除 Rate Limit 失败，请稍后重试。"
+  }
+}

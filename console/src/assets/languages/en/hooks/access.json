@@ -1,0 +1,46 @@
+{
+  "role": {
+    "createSuccess": "Role created successfully!",
+    "createError": "Failed to create role, please try again later.",
+    "updateSuccess": "Role updated successfully!",
+    "updateError": "Failed to update role, please try again later.",
+    "deleteSuccess": "Role deleted successfully!",
+    "deleteError": "Failed to delete role, please try again later."
+  },
+  "permission": {
+    "createSuccess": "Permission created successfully!",
+    "createError": "Failed to create permission, please try again later.",
+    "updateSuccess": "Permission updated successfully!",
+    "updateError": "Failed to update permission, please try again later.",
+    "deleteSuccess": "Permission deleted successfully!",
+    "deleteError": "Failed to delete permission, please try again later."
+  },
+  "scope": {
+    "createSuccess": "Scope created successfully!",
+    "createError": "Failed to create scope, please try again later.",
+    "updateSuccess": "Scope updated successfully!",
+    "updateError": "Failed to update scope, please try again later.",
+    "deleteSuccess": "Scope deleted successfully!",
+    "deleteError": "Failed to delete scope, please try again later."
+  },
+  "grant": {
+    "createSuccess": "Grant created successfully!",
+    "createError": "Failed to create grant, please try again later.",
+    "updateSuccess": "Grant updated successfully!",
+    "updateError": "Failed to update grant, please try again later.",
+    "deleteSuccess": "Grant deleted successfully!",
+    "deleteError": "Failed to delete grant, please try again later."
+  },
+  "rolePermission": {
+    "createSuccess": "Role permission association created successfully!",
+    "createError": "Failed to create role permission association, please try again later.",
+    "deleteSuccess": "Role permission association deleted successfully!",
+    "deleteError": "Failed to delete role permission association, please try again later."
+  },
+  "scopePermission": {
+    "createSuccess": "Scope permission association created successfully!",
+    "createError": "Failed to create scope permission association, please try again later.",
+    "deleteSuccess": "Scope permission association deleted successfully!",
+    "deleteError": "Failed to delete scope permission association, please try again later."
+  }
+}

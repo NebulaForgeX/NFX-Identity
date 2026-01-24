@@ -1,0 +1,86 @@
+{
+  "tenant": {
+    "createSuccess": "租户创建成功！",
+    "createError": "创建租户失败，请稍后重试。",
+    "updateSuccess": "租户更新成功！",
+    "updateError": "更新租户失败，请稍后重试。",
+    "updateStatusSuccess": "租户状态更新成功！",
+    "updateStatusError": "更新租户状态失败，请稍后重试。",
+    "deleteSuccess": "租户删除成功！",
+    "deleteError": "删除租户失败，请稍后重试。"
+  },
+  "group": {
+    "createSuccess": "组创建成功！",
+    "createError": "创建组失败，请稍后重试。",
+    "updateSuccess": "组更新成功！",
+    "updateError": "更新组失败，请稍后重试。",
+    "deleteSuccess": "组删除成功！",
+    "deleteError": "删除组失败，请稍后重试。"
+  },
+  "member": {
+    "createSuccess": "成员创建成功！",
+    "createError": "创建成员失败，请稍后重试。",
+    "updateSuccess": "成员更新成功！",
+    "updateError": "更新成员失败，请稍后重试。",
+    "deleteSuccess": "成员删除成功！",
+    "deleteError": "删除成员失败，请稍后重试。"
+  },
+  "invitation": {
+    "createSuccess": "邀请创建成功！",
+    "createError": "创建邀请失败，请稍后重试。",
+    "acceptSuccess": "邀请接受成功！",
+    "acceptError": "接受邀请失败，请稍后重试。",
+    "revokeSuccess": "邀请撤销成功！",
+    "revokeError": "撤销邀请失败，请稍后重试。",
+    "deleteSuccess": "邀请删除成功！",
+    "deleteError": "删除邀请失败，请稍后重试。"
+  },
+  "tenantApp": {
+    "createSuccess": "租户应用创建成功！",
+    "createError": "创建租户应用失败，请稍后重试。",
+    "updateSuccess": "租户应用更新成功！",
+    "updateError": "更新租户应用失败，请稍后重试。",
+    "deleteSuccess": "租户应用删除成功！",
+    "deleteError": "删除租户应用失败，请稍后重试。"
+  },
+  "tenantSetting": {
+    "createSuccess": "租户设置创建成功！",
+    "createError": "创建租户设置失败，请稍后重试。",
+    "updateSuccess": "租户设置更新成功！",
+    "updateError": "更新租户设置失败，请稍后重试。",
+    "deleteSuccess": "租户设置删除成功！",
+    "deleteError": "删除租户设置失败，请稍后重试。"
+  },
+  "domainVerification": {
+    "createSuccess": "域名验证创建成功！",
+    "createError": "创建域名验证失败，请稍后重试。",
+    "updateSuccess": "域名验证更新成功！",
+    "updateError": "更新域名验证失败，请稍后重试。",
+    "deleteSuccess": "域名验证删除成功！",
+    "deleteError": "删除域名验证失败，请稍后重试。"
+  },
+  "memberRole": {
+    "createSuccess": "成员角色创建成功！",
+    "createError": "创建成员角色失败，请稍后重试。",
+    "revokeSuccess": "成员角色撤销成功！",
+    "revokeError": "撤销成员角色失败，请稍后重试。",
+    "deleteSuccess": "成员角色删除成功！",
+    "deleteError": "删除成员角色失败，请稍后重试。"
+  },
+  "memberGroup": {
+    "createSuccess": "成员组创建成功！",
+    "createError": "创建成员组失败，请稍后重试。",
+    "revokeSuccess": "成员组撤销成功！",
+    "revokeError": "撤销成员组失败，请稍后重试。",
+    "deleteSuccess": "成员组删除成功！",
+    "deleteError": "删除成员组失败，请稍后重试。"
+  },
+  "memberAppRole": {
+    "createSuccess": "成员应用角色创建成功！",
+    "createError": "创建成员应用角色失败，请稍后重试。",
+    "revokeSuccess": "成员应用角色撤销成功！",
+    "revokeError": "撤销成员应用角色失败，请稍后重试。",
+    "deleteSuccess": "成员应用角色删除成功！",
+    "deleteError": "删除成员应用角色失败，请稍后重试。"
+  }
+}

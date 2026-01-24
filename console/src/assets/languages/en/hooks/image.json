@@ -1,0 +1,34 @@
+{
+  "image": {
+    "createSuccess": "Image created successfully!",
+    "createError": "Failed to create image, please try again later.",
+    "updateSuccess": "Image updated successfully!",
+    "updateError": "Failed to update image, please try again later.",
+    "deleteSuccess": "Image deleted successfully!",
+    "deleteError": "Failed to delete image, please try again later."
+  },
+  "imageType": {
+    "createSuccess": "Image type created successfully!",
+    "createError": "Failed to create image type, please try again later.",
+    "updateSuccess": "Image type updated successfully!",
+    "updateError": "Failed to update image type, please try again later.",
+    "deleteSuccess": "Image type deleted successfully!",
+    "deleteError": "Failed to delete image type, please try again later."
+  },
+  "imageVariant": {
+    "createSuccess": "Image variant created successfully!",
+    "createError": "Failed to create image variant, please try again later.",
+    "updateSuccess": "Image variant updated successfully!",
+    "updateError": "Failed to update image variant, please try again later.",
+    "deleteSuccess": "Image variant deleted successfully!",
+    "deleteError": "Failed to delete image variant, please try again later."
+  },
+  "imageTag": {
+    "createSuccess": "Image tag created successfully!",
+    "createError": "Failed to create image tag, please try again later.",
+    "updateSuccess": "Image tag updated successfully!",
+    "updateError": "Failed to update image tag, please try again later.",
+    "deleteSuccess": "Image tag deleted successfully!",
+    "deleteError": "Failed to delete image tag, please try again later."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "image": {
+    "createSuccess": "Image créée avec succès !",
+    "createError": "Échec de la création de l'image, veuillez réessayer plus tard.",
+    "updateSuccess": "Image mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'image, veuillez réessayer plus tard.",
+    "deleteSuccess": "Image supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'image, veuillez réessayer plus tard."
+  },
+  "imageType": {
+    "createSuccess": "Type d'image créé avec succès !",
+    "createError": "Échec de la création du type d'image, veuillez réessayer plus tard.",
+    "updateSuccess": "Type d'image mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du type d'image, veuillez réessayer plus tard.",
+    "deleteSuccess": "Type d'image supprimé avec succès !",
+    "deleteError": "Échec de la suppression du type d'image, veuillez réessayer plus tard."
+  },
+  "imageVariant": {
+    "createSuccess": "Variante d'image créée avec succès !",
+    "createError": "Échec de la création de la variante d'image, veuillez réessayer plus tard.",
+    "updateSuccess": "Variante d'image mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la variante d'image, veuillez réessayer plus tard.",
+    "deleteSuccess": "Variante d'image supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la variante d'image, veuillez réessayer plus tard."
+  },
+  "imageTag": {
+    "createSuccess": "Étiquette d'image créée avec succès !",
+    "createError": "Échec de la création de l'étiquette d'image, veuillez réessayer plus tard.",
+    "updateSuccess": "Étiquette d'image mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'étiquette d'image, veuillez réessayer plus tard.",
+    "deleteSuccess": "Étiquette d'image supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'étiquette d'image, veuillez réessayer plus tard."
+  }
+}

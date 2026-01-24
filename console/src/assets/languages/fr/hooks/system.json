@@ -1,0 +1,10 @@
+{
+  "systemState": {
+    "initializeSuccess": "État du système initialisé avec succès !",
+    "initializeError": "Échec de l'initialisation de l'état du système, veuillez réessayer plus tard.",
+    "resetSuccess": "État du système réinitialisé avec succès !",
+    "resetError": "Échec de la réinitialisation de l'état du système, veuillez réessayer plus tard.",
+    "deleteSuccess": "État du système supprimé avec succès !",
+    "deleteError": "Échec de la suppression de l'état du système, veuillez réessayer plus tard."
+  }
+}

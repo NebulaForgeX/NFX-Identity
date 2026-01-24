@@ -1,0 +1,46 @@
+{
+  "role": {
+    "createSuccess": "Rôle créé avec succès !",
+    "createError": "Échec de la création du rôle, veuillez réessayer plus tard.",
+    "updateSuccess": "Rôle mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du rôle, veuillez réessayer plus tard.",
+    "deleteSuccess": "Rôle supprimé avec succès !",
+    "deleteError": "Échec de la suppression du rôle, veuillez réessayer plus tard."
+  },
+  "permission": {
+    "createSuccess": "Permission créée avec succès !",
+    "createError": "Échec de la création de la permission, veuillez réessayer plus tard.",
+    "updateSuccess": "Permission mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la permission, veuillez réessayer plus tard.",
+    "deleteSuccess": "Permission supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la permission, veuillez réessayer plus tard."
+  },
+  "scope": {
+    "createSuccess": "Portée créée avec succès !",
+    "createError": "Échec de la création de la portée, veuillez réessayer plus tard.",
+    "updateSuccess": "Portée mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la portée, veuillez réessayer plus tard.",
+    "deleteSuccess": "Portée supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la portée, veuillez réessayer plus tard."
+  },
+  "grant": {
+    "createSuccess": "Autorisation créée avec succès !",
+    "createError": "Échec de la création de l'autorisation, veuillez réessayer plus tard.",
+    "updateSuccess": "Autorisation mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'autorisation, veuillez réessayer plus tard.",
+    "deleteSuccess": "Autorisation supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'autorisation, veuillez réessayer plus tard."
+  },
+  "rolePermission": {
+    "createSuccess": "Association rôle-permission créée avec succès !",
+    "createError": "Échec de la création de l'association rôle-permission, veuillez réessayer plus tard.",
+    "deleteSuccess": "Association rôle-permission supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'association rôle-permission, veuillez réessayer plus tard."
+  },
+  "scopePermission": {
+    "createSuccess": "Association portée-permission créée avec succès !",
+    "createError": "Échec de la création de l'association portée-permission, veuillez réessayer plus tard.",
+    "deleteSuccess": "Association portée-permission supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'association portée-permission, veuillez réessayer plus tard."
+  }
+}

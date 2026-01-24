@@ -1,0 +1,84 @@
+{
+  "user": {
+    "createSuccess": "Utilisateur créé avec succès !",
+    "createError": "Échec de la création de l'utilisateur, veuillez réessayer plus tard.",
+    "updateStatusSuccess": "Statut de l'utilisateur mis à jour avec succès !",
+    "updateStatusError": "Échec de la mise à jour du statut de l'utilisateur, veuillez réessayer plus tard.",
+    "updateUsernameSuccess": "Nom d'utilisateur mis à jour avec succès !",
+    "updateUsernameError": "Échec de la mise à jour du nom d'utilisateur, veuillez réessayer plus tard.",
+    "verifySuccess": "Utilisateur vérifié avec succès !",
+    "verifyError": "Échec de la vérification de l'utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Utilisateur supprimé avec succès !",
+    "deleteError": "Échec de la suppression de l'utilisateur, veuillez réessayer plus tard."
+  },
+  "badge": {
+    "createSuccess": "Badge créé avec succès !",
+    "createError": "Échec de la création du badge, veuillez réessayer plus tard.",
+    "updateSuccess": "Badge mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du badge, veuillez réessayer plus tard.",
+    "deleteSuccess": "Badge supprimé avec succès !",
+    "deleteError": "Échec de la suppression du badge, veuillez réessayer plus tard."
+  },
+  "userBadge": {
+    "createSuccess": "Badge utilisateur créé avec succès !",
+    "createError": "Échec de la création du badge utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Badge utilisateur supprimé avec succès !",
+    "deleteError": "Échec de la suppression du badge utilisateur, veuillez réessayer plus tard."
+  },
+  "userEducation": {
+    "createSuccess": "Éducation utilisateur créée avec succès !",
+    "createError": "Échec de la création de l'éducation utilisateur, veuillez réessayer plus tard.",
+    "updateSuccess": "Éducation utilisateur mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'éducation utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Éducation utilisateur supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'éducation utilisateur, veuillez réessayer plus tard."
+  },
+  "userEmail": {
+    "createSuccess": "Email utilisateur créé avec succès !",
+    "createError": "Échec de la création de l'email utilisateur, veuillez réessayer plus tard.",
+    "updateSuccess": "Email utilisateur mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'email utilisateur, veuillez réessayer plus tard.",
+    "setPrimarySuccess": "Email principal défini avec succès !",
+    "setPrimaryError": "Échec de la définition de l'email principal, veuillez réessayer plus tard.",
+    "verifySuccess": "Email utilisateur vérifié avec succès !",
+    "verifyError": "Échec de la vérification de l'email utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Email utilisateur supprimé avec succès !",
+    "deleteError": "Échec de la suppression de l'email utilisateur, veuillez réessayer plus tard."
+  },
+  "userOccupation": {
+    "createSuccess": "Profession utilisateur créée avec succès !",
+    "createError": "Échec de la création de la profession utilisateur, veuillez réessayer plus tard.",
+    "updateSuccess": "Profession utilisateur mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la profession utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Profession utilisateur supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la profession utilisateur, veuillez réessayer plus tard."
+  },
+  "userPhone": {
+    "createSuccess": "Téléphone utilisateur créé avec succès !",
+    "createError": "Échec de la création du téléphone utilisateur, veuillez réessayer plus tard.",
+    "updateSuccess": "Téléphone utilisateur mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du téléphone utilisateur, veuillez réessayer plus tard.",
+    "setPrimarySuccess": "Téléphone principal défini avec succès !",
+    "setPrimaryError": "Échec de la définition du téléphone principal, veuillez réessayer plus tard.",
+    "verifySuccess": "Téléphone utilisateur vérifié avec succès !",
+    "verifyError": "Échec de la vérification du téléphone utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Téléphone utilisateur supprimé avec succès !",
+    "deleteError": "Échec de la suppression du téléphone utilisateur, veuillez réessayer plus tard."
+  },
+  "userPreference": {
+    "createSuccess": "Préférence utilisateur créée avec succès !",
+    "createError": "Échec de la création de la préférence utilisateur, veuillez réessayer plus tard.",
+    "updateSuccess": "Préférence utilisateur mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de la préférence utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Préférence utilisateur supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la préférence utilisateur, veuillez réessayer plus tard."
+  },
+  "userProfile": {
+    "createSuccess": "Profil utilisateur créé avec succès !",
+    "createError": "Échec de la création du profil utilisateur, veuillez réessayer plus tard.",
+    "updateSuccess": "Profil utilisateur mis à jour avec succès !",
+    "updateError": "Échec de la mise à jour du profil utilisateur, veuillez réessayer plus tard.",
+    "deleteSuccess": "Profil utilisateur supprimé avec succès !",
+    "deleteError": "Échec de la suppression du profil utilisateur, veuillez réessayer plus tard."
+  }
+}

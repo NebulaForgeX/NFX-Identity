@@ -1,0 +1,10 @@
+{
+  "systemState": {
+    "initializeSuccess": "系统状态初始化成功！",
+    "initializeError": "初始化系统状态失败，请稍后重试。",
+    "resetSuccess": "系统状态重置成功！",
+    "resetError": "重置系统状态失败，请稍后重试。",
+    "deleteSuccess": "系统状态删除成功！",
+    "deleteError": "删除系统状态失败，请稍后重试。"
+  }
+}

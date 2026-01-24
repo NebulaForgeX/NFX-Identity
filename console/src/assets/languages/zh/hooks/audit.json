@@ -1,0 +1,34 @@
+{
+  "event": {
+    "createSuccess": "事件创建成功！",
+    "createError": "创建事件失败，请稍后重试。",
+    "deleteSuccess": "事件删除成功！",
+    "deleteError": "删除事件失败，请稍后重试。"
+  },
+  "actorSnapshot": {
+    "createSuccess": "Actor Snapshot 创建成功！",
+    "createError": "创建 Actor Snapshot 失败，请稍后重试。",
+    "deleteSuccess": "Actor Snapshot 删除成功！",
+    "deleteError": "删除 Actor Snapshot 失败，请稍后重试。"
+  },
+  "eventRetentionPolicy": {
+    "createSuccess": "Event Retention Policy 创建成功！",
+    "createError": "创建 Event Retention Policy 失败，请稍后重试。",
+    "updateSuccess": "Event Retention Policy 更新成功！",
+    "updateError": "更新 Event Retention Policy 失败，请稍后重试。",
+    "deleteSuccess": "Event Retention Policy 删除成功！",
+    "deleteError": "删除 Event Retention Policy 失败，请稍后重试。"
+  },
+  "eventSearchIndex": {
+    "createSuccess": "Event Search Index 创建成功！",
+    "createError": "创建 Event Search Index 失败，请稍后重试。",
+    "deleteSuccess": "Event Search Index 删除成功！",
+    "deleteError": "删除 Event Search Index 失败，请稍后重试。"
+  },
+  "hashChainCheckpoint": {
+    "createSuccess": "Hash Chain Checkpoint 创建成功！",
+    "createError": "创建 Hash Chain Checkpoint 失败，请稍后重试。",
+    "deleteSuccess": "Hash Chain Checkpoint 删除成功！",
+    "deleteError": "删除 Hash Chain Checkpoint 失败，请稍后重试。"
+  }
+}

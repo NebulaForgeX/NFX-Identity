@@ -1,0 +1,84 @@
+{
+  "user": {
+    "createSuccess": "用户创建成功！",
+    "createError": "创建用户失败，请稍后重试。",
+    "updateStatusSuccess": "用户状态更新成功！",
+    "updateStatusError": "更新用户状态失败，请稍后重试。",
+    "updateUsernameSuccess": "用户名更新成功！",
+    "updateUsernameError": "更新用户名失败，请稍后重试。",
+    "verifySuccess": "用户验证成功！",
+    "verifyError": "验证用户失败，请稍后重试。",
+    "deleteSuccess": "用户删除成功！",
+    "deleteError": "删除用户失败，请稍后重试。"
+  },
+  "badge": {
+    "createSuccess": "徽章创建成功！",
+    "createError": "创建徽章失败，请稍后重试。",
+    "updateSuccess": "徽章更新成功！",
+    "updateError": "更新徽章失败，请稍后重试。",
+    "deleteSuccess": "徽章删除成功！",
+    "deleteError": "删除徽章失败，请稍后重试。"
+  },
+  "userBadge": {
+    "createSuccess": "用户徽章创建成功！",
+    "createError": "创建用户徽章失败，请稍后重试。",
+    "deleteSuccess": "用户徽章删除成功！",
+    "deleteError": "删除用户徽章失败，请稍后重试。"
+  },
+  "userEducation": {
+    "createSuccess": "用户教育创建成功！",
+    "createError": "创建用户教育失败，请稍后重试。",
+    "updateSuccess": "用户教育更新成功！",
+    "updateError": "更新用户教育失败，请稍后重试。",
+    "deleteSuccess": "用户教育删除成功！",
+    "deleteError": "删除用户教育失败，请稍后重试。"
+  },
+  "userEmail": {
+    "createSuccess": "用户邮箱创建成功！",
+    "createError": "创建用户邮箱失败，请稍后重试。",
+    "updateSuccess": "用户邮箱更新成功！",
+    "updateError": "更新用户邮箱失败，请稍后重试。",
+    "setPrimarySuccess": "主邮箱设置成功！",
+    "setPrimaryError": "设置主邮箱失败，请稍后重试。",
+    "verifySuccess": "用户邮箱验证成功！",
+    "verifyError": "验证用户邮箱失败，请稍后重试。",
+    "deleteSuccess": "用户邮箱删除成功！",
+    "deleteError": "删除用户邮箱失败，请稍后重试。"
+  },
+  "userOccupation": {
+    "createSuccess": "用户职业创建成功！",
+    "createError": "创建用户职业失败，请稍后重试。",
+    "updateSuccess": "用户职业更新成功！",
+    "updateError": "更新用户职业失败，请稍后重试。",
+    "deleteSuccess": "用户职业删除成功！",
+    "deleteError": "删除用户职业失败，请稍后重试。"
+  },
+  "userPhone": {
+    "createSuccess": "用户电话创建成功！",
+    "createError": "创建用户电话失败，请稍后重试。",
+    "updateSuccess": "用户电话更新成功！",
+    "updateError": "更新用户电话失败，请稍后重试。",
+    "setPrimarySuccess": "主电话设置成功！",
+    "setPrimaryError": "设置主电话失败，请稍后重试。",
+    "verifySuccess": "用户电话验证成功！",
+    "verifyError": "验证用户电话失败，请稍后重试。",
+    "deleteSuccess": "用户电话删除成功！",
+    "deleteError": "删除用户电话失败，请稍后重试。"
+  },
+  "userPreference": {
+    "createSuccess": "用户偏好创建成功！",
+    "createError": "创建用户偏好失败，请稍后重试。",
+    "updateSuccess": "用户偏好更新成功！",
+    "updateError": "更新用户偏好失败，请稍后重试。",
+    "deleteSuccess": "用户偏好删除成功！",
+    "deleteError": "删除用户偏好失败，请稍后重试。"
+  },
+  "userProfile": {
+    "createSuccess": "用户资料创建成功！",
+    "createError": "创建用户资料失败，请稍后重试。",
+    "updateSuccess": "用户资料更新成功！",
+    "updateError": "更新用户资料失败，请稍后重试。",
+    "deleteSuccess": "用户资料删除成功！",
+    "deleteError": "删除用户资料失败，请稍后重试。"
+  }
+}

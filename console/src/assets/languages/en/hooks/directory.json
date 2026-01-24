@@ -1,0 +1,84 @@
+{
+  "user": {
+    "createSuccess": "User created successfully!",
+    "createError": "Failed to create user, please try again later.",
+    "updateStatusSuccess": "User status updated successfully!",
+    "updateStatusError": "Failed to update user status, please try again later.",
+    "updateUsernameSuccess": "Username updated successfully!",
+    "updateUsernameError": "Failed to update username, please try again later.",
+    "verifySuccess": "User verified successfully!",
+    "verifyError": "Failed to verify user, please try again later.",
+    "deleteSuccess": "User deleted successfully!",
+    "deleteError": "Failed to delete user, please try again later."
+  },
+  "badge": {
+    "createSuccess": "Badge created successfully!",
+    "createError": "Failed to create badge, please try again later.",
+    "updateSuccess": "Badge updated successfully!",
+    "updateError": "Failed to update badge, please try again later.",
+    "deleteSuccess": "Badge deleted successfully!",
+    "deleteError": "Failed to delete badge, please try again later."
+  },
+  "userBadge": {
+    "createSuccess": "User badge created successfully!",
+    "createError": "Failed to create user badge, please try again later.",
+    "deleteSuccess": "User badge deleted successfully!",
+    "deleteError": "Failed to delete user badge, please try again later."
+  },
+  "userEducation": {
+    "createSuccess": "User education created successfully!",
+    "createError": "Failed to create user education, please try again later.",
+    "updateSuccess": "User education updated successfully!",
+    "updateError": "Failed to update user education, please try again later.",
+    "deleteSuccess": "User education deleted successfully!",
+    "deleteError": "Failed to delete user education, please try again later."
+  },
+  "userEmail": {
+    "createSuccess": "User email created successfully!",
+    "createError": "Failed to create user email, please try again later.",
+    "updateSuccess": "User email updated successfully!",
+    "updateError": "Failed to update user email, please try again later.",
+    "setPrimarySuccess": "Primary email set successfully!",
+    "setPrimaryError": "Failed to set primary email, please try again later.",
+    "verifySuccess": "User email verified successfully!",
+    "verifyError": "Failed to verify user email, please try again later.",
+    "deleteSuccess": "User email deleted successfully!",
+    "deleteError": "Failed to delete user email, please try again later."
+  },
+  "userOccupation": {
+    "createSuccess": "User occupation created successfully!",
+    "createError": "Failed to create user occupation, please try again later.",
+    "updateSuccess": "User occupation updated successfully!",
+    "updateError": "Failed to update user occupation, please try again later.",
+    "deleteSuccess": "User occupation deleted successfully!",
+    "deleteError": "Failed to delete user occupation, please try again later."
+  },
+  "userPhone": {
+    "createSuccess": "User phone created successfully!",
+    "createError": "Failed to create user phone, please try again later.",
+    "updateSuccess": "User phone updated successfully!",
+    "updateError": "Failed to update user phone, please try again later.",
+    "setPrimarySuccess": "Primary phone set successfully!",
+    "setPrimaryError": "Failed to set primary phone, please try again later.",
+    "verifySuccess": "User phone verified successfully!",
+    "verifyError": "Failed to verify user phone, please try again later.",
+    "deleteSuccess": "User phone deleted successfully!",
+    "deleteError": "Failed to delete user phone, please try again later."
+  },
+  "userPreference": {
+    "createSuccess": "User preference created successfully!",
+    "createError": "Failed to create user preference, please try again later.",
+    "updateSuccess": "User preference updated successfully!",
+    "updateError": "Failed to update user preference, please try again later.",
+    "deleteSuccess": "User preference deleted successfully!",
+    "deleteError": "Failed to delete user preference, please try again later."
+  },
+  "userProfile": {
+    "createSuccess": "User profile created successfully!",
+    "createError": "Failed to create user profile, please try again later.",
+    "updateSuccess": "User profile updated successfully!",
+    "updateError": "Failed to update user profile, please try again later.",
+    "deleteSuccess": "User profile deleted successfully!",
+    "deleteError": "Failed to delete user profile, please try again later."
+  }
+}

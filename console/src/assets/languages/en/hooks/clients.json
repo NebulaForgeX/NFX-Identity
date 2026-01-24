@@ -1,0 +1,40 @@
+{
+  "app": {
+    "createSuccess": "App created successfully!",
+    "createError": "Failed to create app, please try again later.",
+    "updateSuccess": "App updated successfully!",
+    "updateError": "Failed to update app, please try again later.",
+    "deleteSuccess": "App deleted successfully!",
+    "deleteError": "Failed to delete app, please try again later."
+  },
+  "apiKey": {
+    "createSuccess": "API Key created successfully!",
+    "createError": "Failed to create API Key, please try again later.",
+    "deleteSuccess": "API Key deleted successfully!",
+    "deleteError": "Failed to delete API Key, please try again later."
+  },
+  "clientCredential": {
+    "createSuccess": "Client Credential created successfully!",
+    "createError": "Failed to create Client Credential, please try again later.",
+    "deleteSuccess": "Client Credential deleted successfully!",
+    "deleteError": "Failed to delete Client Credential, please try again later."
+  },
+  "clientScope": {
+    "createSuccess": "Client Scope created successfully!",
+    "createError": "Failed to create Client Scope, please try again later.",
+    "deleteSuccess": "Client Scope deleted successfully!",
+    "deleteError": "Failed to delete Client Scope, please try again later."
+  },
+  "ipAllowlist": {
+    "createSuccess": "IP Allowlist created successfully!",
+    "createError": "Failed to create IP Allowlist, please try again later.",
+    "deleteSuccess": "IP Allowlist deleted successfully!",
+    "deleteError": "Failed to delete IP Allowlist, please try again later."
+  },
+  "rateLimit": {
+    "createSuccess": "Rate Limit created successfully!",
+    "createError": "Failed to create Rate Limit, please try again later.",
+    "deleteSuccess": "Rate Limit deleted successfully!",
+    "deleteError": "Failed to delete Rate Limit, please try again later."
+  }
+}

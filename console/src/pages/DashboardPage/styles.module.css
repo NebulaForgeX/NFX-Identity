@@ -1,9 +1,12 @@
 .container {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   margin-bottom: 5rem;
+  z-index: 1;
 }
+
 
 .header {
   position: relative;
@@ -58,6 +61,7 @@
   font-size: 0.875rem;
   min-height: 10vh;
 }
+
 
 /* 响应式设计 */
 @media (max-width: 768px) {

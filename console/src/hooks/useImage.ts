@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import {
   CreateImage,
@@ -56,22 +57,24 @@ export const useImage = (params: UnifiedQueryParams<Image> & { id: string }) => 
 
 // 创建图片
 export const useCreateImage = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: CreateImageRequest) => {
       return await CreateImage(params);
     },
     onSuccess: () => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGES);
-      showSuccess("图片创建成功！");
+      showSuccess(t("image.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建图片失败，请稍后重试。" + error.message);
+      showError(t("image.createError") + error.message);
     },
   });
 };
 
 // 更新图片
 export const useUpdateImage = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateImageRequest }) => {
       return await UpdateImage(params.id, params.data);
@@ -79,16 +82,17 @@ export const useUpdateImage = () => {
     onSuccess: (_, variables) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGES);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE, variables.id);
-      showSuccess("图片更新成功！");
+      showSuccess(t("image.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("更新图片失败，请稍后重试。" + error.message);
+      showError(t("image.updateError") + error.message);
     },
   });
 };
 
 // 删除图片
 export const useDeleteImage = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteImage(id);
@@ -96,10 +100,10 @@ export const useDeleteImage = () => {
     onSuccess: (_, id) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGES);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE, id);
-      showSuccess("图片删除成功！");
+      showSuccess(t("image.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除图片失败，请稍后重试。" + error.message);
+      showError(t("image.deleteError") + error.message);
     },
   });
 };
@@ -121,22 +125,24 @@ export const useImageType = (params: UnifiedQueryParams<ImageType> & { id: strin
 
 // 创建图片类型
 export const useCreateImageType = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: CreateImageTypeRequest) => {
       return await CreateImageType(params);
     },
     onSuccess: () => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TYPES);
-      showSuccess("图片类型创建成功！");
+      showSuccess(t("imageType.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建图片类型失败，请稍后重试。" + error.message);
+      showError(t("imageType.createError") + error.message);
     },
   });
 };
 
 // 更新图片类型
 export const useUpdateImageType = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateImageTypeRequest }) => {
       return await UpdateImageType(params.id, params.data);
@@ -144,16 +150,17 @@ export const useUpdateImageType = () => {
     onSuccess: (_, variables) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TYPES);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TYPE, variables.id);
-      showSuccess("图片类型更新成功！");
+      showSuccess(t("imageType.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("更新图片类型失败，请稍后重试。" + error.message);
+      showError(t("imageType.updateError") + error.message);
     },
   });
 };
 
 // 删除图片类型
 export const useDeleteImageType = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteImageType(id);
@@ -161,10 +168,10 @@ export const useDeleteImageType = () => {
     onSuccess: (_, id) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TYPES);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TYPE, id);
-      showSuccess("图片类型删除成功！");
+      showSuccess(t("imageType.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除图片类型失败，请稍后重试。" + error.message);
+      showError(t("imageType.deleteError") + error.message);
     },
   });
 };
@@ -186,22 +193,24 @@ export const useImageVariant = (params: UnifiedQueryParams<ImageVariant> & { id:
 
 // 创建图片变体
 export const useCreateImageVariant = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: CreateImageVariantRequest) => {
       return await CreateImageVariant(params);
     },
     onSuccess: () => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_VARIANTS);
-      showSuccess("图片变体创建成功！");
+      showSuccess(t("imageVariant.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建图片变体失败，请稍后重试。" + error.message);
+      showError(t("imageVariant.createError") + error.message);
     },
   });
 };
 
 // 更新图片变体
 export const useUpdateImageVariant = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateImageVariantRequest }) => {
       return await UpdateImageVariant(params.id, params.data);
@@ -209,16 +218,17 @@ export const useUpdateImageVariant = () => {
     onSuccess: (_, variables) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_VARIANTS);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_VARIANT, variables.id);
-      showSuccess("图片变体更新成功！");
+      showSuccess(t("imageVariant.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("更新图片变体失败，请稍后重试。" + error.message);
+      showError(t("imageVariant.updateError") + error.message);
     },
   });
 };
 
 // 删除图片变体
 export const useDeleteImageVariant = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteImageVariant(id);
@@ -226,10 +236,10 @@ export const useDeleteImageVariant = () => {
     onSuccess: (_, id) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_VARIANTS);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_VARIANT, id);
-      showSuccess("图片变体删除成功！");
+      showSuccess(t("imageVariant.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除图片变体失败，请稍后重试。" + error.message);
+      showError(t("imageVariant.deleteError") + error.message);
     },
   });
 };
@@ -251,22 +261,24 @@ export const useImageTag = (params: UnifiedQueryParams<ImageTag> & { id: string 
 
 // 创建图片标签
 export const useCreateImageTag = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: CreateImageTagRequest) => {
       return await CreateImageTag(params);
     },
     onSuccess: () => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TAGS);
-      showSuccess("图片标签创建成功！");
+      showSuccess(t("imageTag.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建图片标签失败，请稍后重试。" + error.message);
+      showError(t("imageTag.createError") + error.message);
     },
   });
 };
 
 // 更新图片标签
 export const useUpdateImageTag = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateImageTagRequest }) => {
       return await UpdateImageTag(params.id, params.data);
@@ -274,16 +286,17 @@ export const useUpdateImageTag = () => {
     onSuccess: (_, variables) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TAGS);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TAG, variables.id);
-      showSuccess("图片标签更新成功！");
+      showSuccess(t("imageTag.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("更新图片标签失败，请稍后重试。" + error.message);
+      showError(t("imageTag.updateError") + error.message);
     },
   });
 };
 
 // 删除图片标签
 export const useDeleteImageTag = () => {
+  const { t } = useTranslation("hooks.image");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteImageTag(id);
@@ -291,10 +304,10 @@ export const useDeleteImageTag = () => {
     onSuccess: (_, id) => {
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TAGS);
       imageEventEmitter.emit(imageEvents.INVALIDATE_IMAGE_TAG, id);
-      showSuccess("图片标签删除成功！");
+      showSuccess(t("imageTag.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除图片标签失败，请稍后重试。" + error.message);
+      showError(t("imageTag.deleteError") + error.message);
     },
   });
 };

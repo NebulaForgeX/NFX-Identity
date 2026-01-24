@@ -1,0 +1,40 @@
+{
+  "app": {
+    "createSuccess": "Application créée avec succès !",
+    "createError": "Échec de la création de l'application, veuillez réessayer plus tard.",
+    "updateSuccess": "Application mise à jour avec succès !",
+    "updateError": "Échec de la mise à jour de l'application, veuillez réessayer plus tard.",
+    "deleteSuccess": "Application supprimée avec succès !",
+    "deleteError": "Échec de la suppression de l'application, veuillez réessayer plus tard."
+  },
+  "apiKey": {
+    "createSuccess": "Clé API créée avec succès !",
+    "createError": "Échec de la création de la clé API, veuillez réessayer plus tard.",
+    "deleteSuccess": "Clé API supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la clé API, veuillez réessayer plus tard."
+  },
+  "clientCredential": {
+    "createSuccess": "Identifiants client créés avec succès !",
+    "createError": "Échec de la création des identifiants client, veuillez réessayer plus tard.",
+    "deleteSuccess": "Identifiants client supprimés avec succès !",
+    "deleteError": "Échec de la suppression des identifiants client, veuillez réessayer plus tard."
+  },
+  "clientScope": {
+    "createSuccess": "Portée client créée avec succès !",
+    "createError": "Échec de la création de la portée client, veuillez réessayer plus tard.",
+    "deleteSuccess": "Portée client supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la portée client, veuillez réessayer plus tard."
+  },
+  "ipAllowlist": {
+    "createSuccess": "Liste blanche IP créée avec succès !",
+    "createError": "Échec de la création de la liste blanche IP, veuillez réessayer plus tard.",
+    "deleteSuccess": "Liste blanche IP supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la liste blanche IP, veuillez réessayer plus tard."
+  },
+  "rateLimit": {
+    "createSuccess": "Limite de débit créée avec succès !",
+    "createError": "Échec de la création de la limite de débit, veuillez réessayer plus tard.",
+    "deleteSuccess": "Limite de débit supprimée avec succès !",
+    "deleteError": "Échec de la suppression de la limite de débit, veuillez réessayer plus tard."
+  }
+}

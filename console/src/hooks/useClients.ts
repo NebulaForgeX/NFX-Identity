@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import {
   CreateAPIKey,
@@ -81,22 +82,24 @@ export const useAppByAppID = (params: UnifiedQueryParams<App> & { appId: string 
 
 // 创建应用
 export const useCreateApp = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (params: CreateAppRequest) => {
       return await CreateApp(params);
     },
     onSuccess: () => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_APPS);
-      showSuccess("应用创建成功！");
+      showSuccess(t("app.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建应用失败，请稍后重试。" + error.message);
+      showError(t("app.createError") + error.message);
     },
   });
 };
 
 // 更新应用
 export const useUpdateApp = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (params: { id: string; data: UpdateAppRequest }) => {
       return await UpdateApp(params.id, params.data);
@@ -104,16 +107,17 @@ export const useUpdateApp = () => {
     onSuccess: (_, variables) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_APPS);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_APP, variables.id);
-      showSuccess("应用更新成功！");
+      showSuccess(t("app.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("更新应用失败，请稍后重试。" + error.message);
+      showError(t("app.updateError") + error.message);
     },
   });
 };
 
 // 删除应用
 export const useDeleteApp = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteApp(id);
@@ -121,10 +125,10 @@ export const useDeleteApp = () => {
     onSuccess: (_, id) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_APPS);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_APP, id);
-      showSuccess("应用删除成功！");
+      showSuccess(t("app.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除应用失败，请稍后重试。" + error.message);
+      showError(t("app.deleteError") + error.message);
     },
   });
 };
@@ -146,22 +150,24 @@ export const useAPIKey = (params: UnifiedQueryParams<APIKey> & { id: string }) =
 
 // 创建 API Key
 export const useCreateAPIKey = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (params: CreateAPIKeyRequest) => {
       return await CreateAPIKey(params);
     },
     onSuccess: () => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_API_KEYS);
-      showSuccess("API Key 创建成功！");
+      showSuccess(t("apiKey.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 API Key 失败，请稍后重试。" + error.message);
+      showError(t("apiKey.createError") + error.message);
     },
   });
 };
 
 // 根据 Key ID 删除 API Key
 export const useDeleteAPIKeyByKeyID = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (keyId: string) => {
       return await DeleteAPIKeyByKeyID(keyId);
@@ -169,10 +175,10 @@ export const useDeleteAPIKeyByKeyID = () => {
     onSuccess: (_, keyId) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_API_KEYS);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_API_KEY, keyId);
-      showSuccess("API Key 删除成功！");
+      showSuccess(t("apiKey.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 API Key 失败，请稍后重试。" + error.message);
+      showError(t("apiKey.deleteError") + error.message);
     },
   });
 };
@@ -210,6 +216,7 @@ export const useCreateClientCredential = () => {
 
 // 根据 Client ID 删除 Client Credential
 export const useDeleteClientCredentialByClientID = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (clientId: string) => {
       return await DeleteClientCredentialByClientID(clientId);
@@ -217,10 +224,10 @@ export const useDeleteClientCredentialByClientID = () => {
     onSuccess: (_, clientId) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_CLIENT_CREDENTIALS);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_CLIENT_CREDENTIAL, clientId);
-      showSuccess("Client Credential 删除成功！");
+      showSuccess(t("clientCredential.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Client Credential 失败，请稍后重试。" + error.message);
+      showError(t("clientCredential.deleteError") + error.message);
     },
   });
 };
@@ -242,22 +249,24 @@ export const useClientScope = (params: UnifiedQueryParams<ClientScope> & { id: s
 
 // 创建 Client Scope
 export const useCreateClientScope = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (params: CreateClientScopeRequest) => {
       return await CreateClientScope(params);
     },
     onSuccess: () => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_CLIENT_SCOPES);
-      showSuccess("Client Scope 创建成功！");
+      showSuccess(t("clientScope.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 Client Scope 失败，请稍后重试。" + error.message);
+      showError(t("clientScope.createError") + error.message);
     },
   });
 };
 
 // 删除 Client Scope
 export const useDeleteClientScope = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteClientScope(id);
@@ -265,10 +274,10 @@ export const useDeleteClientScope = () => {
     onSuccess: (_, id) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_CLIENT_SCOPES);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_CLIENT_SCOPE, id);
-      showSuccess("Client Scope 删除成功！");
+      showSuccess(t("clientScope.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Client Scope 失败，请稍后重试。" + error.message);
+      showError(t("clientScope.deleteError") + error.message);
     },
   });
 };
@@ -290,22 +299,24 @@ export const useIPAllowlist = (params: UnifiedQueryParams<IPAllowlist> & { id: s
 
 // 创建 IP Allowlist
 export const useCreateIPAllowlist = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (params: CreateIPAllowlistRequest) => {
       return await CreateIPAllowlist(params);
     },
     onSuccess: () => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_IP_ALLOWLISTS);
-      showSuccess("IP Allowlist 创建成功！");
+      showSuccess(t("ipAllowlist.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 IP Allowlist 失败，请稍后重试。" + error.message);
+      showError(t("ipAllowlist.createError") + error.message);
     },
   });
 };
 
 // 根据 Rule ID 删除 IP Allowlist
 export const useDeleteIPAllowlistByRuleID = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (ruleId: string) => {
       return await DeleteIPAllowlistByRuleID(ruleId);
@@ -313,10 +324,10 @@ export const useDeleteIPAllowlistByRuleID = () => {
     onSuccess: (_, ruleId) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_IP_ALLOWLISTS);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_IP_ALLOWLIST, ruleId);
-      showSuccess("IP Allowlist 删除成功！");
+      showSuccess(t("ipAllowlist.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 IP Allowlist 失败，请稍后重试。" + error.message);
+      showError(t("ipAllowlist.deleteError") + error.message);
     },
   });
 };
@@ -338,22 +349,24 @@ export const useRateLimit = (params: UnifiedQueryParams<RateLimit> & { id: strin
 
 // 创建 Rate Limit
 export const useCreateRateLimit = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (params: CreateRateLimitRequest) => {
       return await CreateRateLimit(params);
     },
     onSuccess: () => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_RATE_LIMITS);
-      showSuccess("Rate Limit 创建成功！");
+      showSuccess(t("rateLimit.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("创建 Rate Limit 失败，请稍后重试。" + error.message);
+      showError(t("rateLimit.createError") + error.message);
     },
   });
 };
 
 // 删除 Rate Limit
 export const useDeleteRateLimit = () => {
+  const { t } = useTranslation("hooks.clients");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteRateLimit(id);
@@ -361,10 +374,10 @@ export const useDeleteRateLimit = () => {
     onSuccess: (_, id) => {
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_RATE_LIMITS);
       clientsEventEmitter.emit(clientsEvents.INVALIDATE_RATE_LIMIT, id);
-      showSuccess("Rate Limit 删除成功！");
+      showSuccess(t("rateLimit.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除 Rate Limit 失败，请稍后重试。" + error.message);
+      showError(t("rateLimit.deleteError") + error.message);
     },
   });
 };

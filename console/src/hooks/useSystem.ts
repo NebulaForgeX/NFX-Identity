@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import {
   DeleteSystemState,
@@ -59,38 +60,41 @@ export const useSystemState = (params: UnifiedQueryParams<SystemState> & { id: s
 
 // 初始化系统状态
 export const useInitializeSystemState = () => {
+  const { t } = useTranslation("hooks.system");
   return useMutation({
     mutationFn: async (params?: InitializeSystemStateRequest) => {
       return await InitializeSystemState(params);
     },
     onSuccess: () => {
       systemEventEmitter.emit(systemEvents.INVALIDATE_SYSTEM_STATES);
-      showSuccess("系统状态初始化成功！");
+      showSuccess(t("systemState.initializeSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("初始化系统状态失败，请稍后重试。" + error.message);
+      showError(t("systemState.initializeError") + error.message);
     },
   });
 };
 
 // 重置系统状态
 export const useResetSystemState = () => {
+  const { t } = useTranslation("hooks.system");
   return useMutation({
     mutationFn: async (params?: ResetSystemStateRequest) => {
       return await ResetSystemState(params);
     },
     onSuccess: () => {
       systemEventEmitter.emit(systemEvents.INVALIDATE_SYSTEM_STATES);
-      showSuccess("系统状态重置成功！");
+      showSuccess(t("systemState.resetSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("重置系统状态失败，请稍后重试。" + error.message);
+      showError(t("systemState.resetError") + error.message);
     },
   });
 };
 
 // 删除系统状态
 export const useDeleteSystemState = () => {
+  const { t } = useTranslation("hooks.system");
   return useMutation({
     mutationFn: async (id: string) => {
       return await DeleteSystemState(id);
@@ -98,10 +102,10 @@ export const useDeleteSystemState = () => {
     onSuccess: (_, id) => {
       systemEventEmitter.emit(systemEvents.INVALIDATE_SYSTEM_STATES);
       systemEventEmitter.emit(systemEvents.INVALIDATE_SYSTEM_STATE, id);
-      showSuccess("系统状态删除成功！");
+      showSuccess(t("systemState.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError("删除系统状态失败，请稍后重试。" + error.message);
+      showError(t("systemState.deleteError") + error.message);
     },
   });
 };

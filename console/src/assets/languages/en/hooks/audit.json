@@ -1,0 +1,34 @@
+{
+  "event": {
+    "createSuccess": "Event created successfully!",
+    "createError": "Failed to create event, please try again later.",
+    "deleteSuccess": "Event deleted successfully!",
+    "deleteError": "Failed to delete event, please try again later."
+  },
+  "actorSnapshot": {
+    "createSuccess": "Actor Snapshot created successfully!",
+    "createError": "Failed to create Actor Snapshot, please try again later.",
+    "deleteSuccess": "Actor Snapshot deleted successfully!",
+    "deleteError": "Failed to delete Actor Snapshot, please try again later."
+  },
+  "eventRetentionPolicy": {
+    "createSuccess": "Event Retention Policy created successfully!",
+    "createError": "Failed to create Event Retention Policy, please try again later.",
+    "updateSuccess": "Event Retention Policy updated successfully!",
+    "updateError": "Failed to update Event Retention Policy, please try again later.",
+    "deleteSuccess": "Event Retention Policy deleted successfully!",
+    "deleteError": "Failed to delete Event Retention Policy, please try again later."
+  },
+  "eventSearchIndex": {
+    "createSuccess": "Event Search Index created successfully!",
+    "createError": "Failed to create Event Search Index, please try again later.",
+    "deleteSuccess": "Event Search Index deleted successfully!",
+    "deleteError": "Failed to delete Event Search Index, please try again later."
+  },
+  "hashChainCheckpoint": {
+    "createSuccess": "Hash Chain Checkpoint created successfully!",
+    "createError": "Failed to create Hash Chain Checkpoint, please try again later.",
+    "deleteSuccess": "Hash Chain Checkpoint deleted successfully!",
+    "deleteError": "Failed to delete Hash Chain Checkpoint, please try again later."
+  }
+}

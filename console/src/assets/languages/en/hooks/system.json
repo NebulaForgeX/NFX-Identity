@@ -1,0 +1,10 @@
+{
+  "systemState": {
+    "initializeSuccess": "System state initialized successfully!",
+    "initializeError": "Failed to initialize system state, please try again later.",
+    "resetSuccess": "System state reset successfully!",
+    "resetError": "Failed to reset system state, please try again later.",
+    "deleteSuccess": "System state deleted successfully!",
+    "deleteError": "Failed to delete system state, please try again later."
+  }
+}

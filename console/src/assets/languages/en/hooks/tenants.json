@@ -1,0 +1,86 @@
+{
+  "tenant": {
+    "createSuccess": "Tenant created successfully!",
+    "createError": "Failed to create tenant, please try again later.",
+    "updateSuccess": "Tenant updated successfully!",
+    "updateError": "Failed to update tenant, please try again later.",
+    "updateStatusSuccess": "Tenant status updated successfully!",
+    "updateStatusError": "Failed to update tenant status, please try again later.",
+    "deleteSuccess": "Tenant deleted successfully!",
+    "deleteError": "Failed to delete tenant, please try again later."
+  },
+  "group": {
+    "createSuccess": "Group created successfully!",
+    "createError": "Failed to create group, please try again later.",
+    "updateSuccess": "Group updated successfully!",
+    "updateError": "Failed to update group, please try again later.",
+    "deleteSuccess": "Group deleted successfully!",
+    "deleteError": "Failed to delete group, please try again later."
+  },
+  "member": {
+    "createSuccess": "Member created successfully!",
+    "createError": "Failed to create member, please try again later.",
+    "updateSuccess": "Member updated successfully!",
+    "updateError": "Failed to update member, please try again later.",
+    "deleteSuccess": "Member deleted successfully!",
+    "deleteError": "Failed to delete member, please try again later."
+  },
+  "invitation": {
+    "createSuccess": "Invitation created successfully!",
+    "createError": "Failed to create invitation, please try again later.",
+    "acceptSuccess": "Invitation accepted successfully!",
+    "acceptError": "Failed to accept invitation, please try again later.",
+    "revokeSuccess": "Invitation revoked successfully!",
+    "revokeError": "Failed to revoke invitation, please try again later.",
+    "deleteSuccess": "Invitation deleted successfully!",
+    "deleteError": "Failed to delete invitation, please try again later."
+  },
+  "tenantApp": {
+    "createSuccess": "Tenant app created successfully!",
+    "createError": "Failed to create tenant app, please try again later.",
+    "updateSuccess": "Tenant app updated successfully!",
+    "updateError": "Failed to update tenant app, please try again later.",
+    "deleteSuccess": "Tenant app deleted successfully!",
+    "deleteError": "Failed to delete tenant app, please try again later."
+  },
+  "tenantSetting": {
+    "createSuccess": "Tenant setting created successfully!",
+    "createError": "Failed to create tenant setting, please try again later.",
+    "updateSuccess": "Tenant setting updated successfully!",
+    "updateError": "Failed to update tenant setting, please try again later.",
+    "deleteSuccess": "Tenant setting deleted successfully!",
+    "deleteError": "Failed to delete tenant setting, please try again later."
+  },
+  "domainVerification": {
+    "createSuccess": "Domain verification created successfully!",
+    "createError": "Failed to create domain verification, please try again later.",
+    "updateSuccess": "Domain verification updated successfully!",
+    "updateError": "Failed to update domain verification, please try again later.",
+    "deleteSuccess": "Domain verification deleted successfully!",
+    "deleteError": "Failed to delete domain verification, please try again later."
+  },
+  "memberRole": {
+    "createSuccess": "Member role created successfully!",
+    "createError": "Failed to create member role, please try again later.",
+    "revokeSuccess": "Member role revoked successfully!",
+    "revokeError": "Failed to revoke member role, please try again later.",
+    "deleteSuccess": "Member role deleted successfully!",
+    "deleteError": "Failed to delete member role, please try again later."
+  },
+  "memberGroup": {
+    "createSuccess": "Member group created successfully!",
+    "createError": "Failed to create member group, please try again later.",
+    "revokeSuccess": "Member group revoked successfully!",
+    "revokeError": "Failed to revoke member group, please try again later.",
+    "deleteSuccess": "Member group deleted successfully!",
+    "deleteError": "Failed to delete member group, please try again later."
+  },
+  "memberAppRole": {
+    "createSuccess": "Member app role created successfully!",
+    "createError": "Failed to create member app role, please try again later.",
+    "revokeSuccess": "Member app role revoked successfully!",
+    "revokeError": "Failed to revoke member app role, please try again later.",
+    "deleteSuccess": "Member app role deleted successfully!",
+    "deleteError": "Failed to delete member app role, please try again later."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "role": {
+    "createSuccess": "角色创建成功！",
+    "createError": "创建角色失败，请稍后重试。",
+    "updateSuccess": "角色更新成功！",
+    "updateError": "更新角色失败，请稍后重试。",
+    "deleteSuccess": "角色删除成功！",
+    "deleteError": "删除角色失败，请稍后重试。"
+  },
+  "permission": {
+    "createSuccess": "权限创建成功！",
+    "createError": "创建权限失败，请稍后重试。",
+    "updateSuccess": "权限更新成功！",
+    "updateError": "更新权限失败，请稍后重试。",
+    "deleteSuccess": "权限删除成功！",
+    "deleteError": "删除权限失败，请稍后重试。"
+  },
+  "scope": {
+    "createSuccess": "作用域创建成功！",
+    "createError": "创建作用域失败，请稍后重试。",
+    "updateSuccess": "作用域更新成功！",
+    "updateError": "更新作用域失败，请稍后重试。",
+    "deleteSuccess": "作用域删除成功！",
+    "deleteError": "删除作用域失败，请稍后重试。"
+  },
+  "grant": {
+    "createSuccess": "授权创建成功！",
+    "createError": "创建授权失败，请稍后重试。",
+    "updateSuccess": "授权更新成功！",
+    "updateError": "更新授权失败，请稍后重试。",
+    "deleteSuccess": "授权删除成功！",
+    "deleteError": "删除授权失败，请稍后重试。"
+  },
+  "rolePermission": {
+    "createSuccess": "角色权限关联创建成功！",
+    "createError": "创建角色权限关联失败，请稍后重试。",
+    "deleteSuccess": "角色权限关联删除成功！",
+    "deleteError": "删除角色权限关联失败，请稍后重试。"
+  },
+  "scopePermission": {
+    "createSuccess": "作用域权限关联创建成功！",
+    "createError": "创建作用域权限关联失败，请稍后重试。",
+    "deleteSuccess": "作用域权限关联删除成功！",
+    "deleteError": "删除作用域权限关联失败，请稍后重试。"
+  }
+}
