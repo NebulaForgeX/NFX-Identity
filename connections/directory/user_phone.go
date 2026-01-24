@@ -59,20 +59,6 @@ func (c *UserPhoneClient) GetUserPhoneByID(ctx context.Context, id string) (*use
 	return resp.UserPhone, nil
 }
 
-// GetUserPhoneByPhone 根据手机号获取用户手机
-func (c *UserPhoneClient) GetUserPhoneByPhone(ctx context.Context, phone string) (*userphonepb.UserPhone, error) {
-	req := &userphonepb.GetUserPhoneByPhoneRequest{
-		Phone: phone,
-	}
-
-	resp, err := c.client.GetUserPhoneByPhone(ctx, req)
-	if err != nil {
-		return nil, fmt.Errorf("gRPC call failed: %w", err)
-	}
-
-	return resp.UserPhone, nil
-}
-
 // GetUserPhonesByUserID 根据用户ID获取用户手机列表
 func (c *UserPhoneClient) GetUserPhonesByUserID(ctx context.Context, userID string) ([]*userphonepb.UserPhone, error) {
 	req := &userphonepb.GetUserPhonesByUserIDRequest{
@@ -85,4 +71,19 @@ func (c *UserPhoneClient) GetUserPhonesByUserID(ctx context.Context, userID stri
 	}
 
 	return resp.UserPhones, nil
+}
+
+// GetUserPhoneByCountryCodeAndPhone 根据国家代码和手机号获取用户手机
+func (c *UserPhoneClient) GetUserPhoneByCountryCodeAndPhone(ctx context.Context, countryCode, phone string) (*userphonepb.UserPhone, error) {
+	req := &userphonepb.GetUserPhoneByCountryCodeAndPhoneRequest{
+		CountryCode: countryCode,
+		Phone:       phone,
+	}
+
+	resp, err := c.client.GetUserPhoneByCountryCodeAndPhone(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.UserPhone, nil
 }

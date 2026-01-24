@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserPhoneService_CreateUserPhone_FullMethodName       = "/user_phone.UserPhoneService/CreateUserPhone"
-	UserPhoneService_GetUserPhoneByID_FullMethodName      = "/user_phone.UserPhoneService/GetUserPhoneByID"
-	UserPhoneService_GetUserPhoneByPhone_FullMethodName   = "/user_phone.UserPhoneService/GetUserPhoneByPhone"
-	UserPhoneService_GetUserPhonesByUserID_FullMethodName = "/user_phone.UserPhoneService/GetUserPhonesByUserID"
+	UserPhoneService_CreateUserPhone_FullMethodName                   = "/user_phone.UserPhoneService/CreateUserPhone"
+	UserPhoneService_GetUserPhoneByID_FullMethodName                  = "/user_phone.UserPhoneService/GetUserPhoneByID"
+	UserPhoneService_GetUserPhoneByCountryCodeAndPhone_FullMethodName = "/user_phone.UserPhoneService/GetUserPhoneByCountryCodeAndPhone"
+	UserPhoneService_GetUserPhonesByUserID_FullMethodName             = "/user_phone.UserPhoneService/GetUserPhonesByUserID"
 )
 
 // UserPhoneServiceClient is the client API for UserPhoneService service.
@@ -35,8 +35,8 @@ type UserPhoneServiceClient interface {
 	CreateUserPhone(ctx context.Context, in *CreateUserPhoneRequest, opts ...grpc.CallOption) (*CreateUserPhoneResponse, error)
 	// 根据ID获取用户手机
 	GetUserPhoneByID(ctx context.Context, in *GetUserPhoneByIDRequest, opts ...grpc.CallOption) (*GetUserPhoneByIDResponse, error)
-	// 根据手机号获取用户手机
-	GetUserPhoneByPhone(ctx context.Context, in *GetUserPhoneByPhoneRequest, opts ...grpc.CallOption) (*GetUserPhoneByPhoneResponse, error)
+	// 根据国家代码和手机号获取用户手机
+	GetUserPhoneByCountryCodeAndPhone(ctx context.Context, in *GetUserPhoneByCountryCodeAndPhoneRequest, opts ...grpc.CallOption) (*GetUserPhoneByCountryCodeAndPhoneResponse, error)
 	// 根据用户ID获取用户手机列表
 	GetUserPhonesByUserID(ctx context.Context, in *GetUserPhonesByUserIDRequest, opts ...grpc.CallOption) (*GetUserPhonesByUserIDResponse, error)
 }
@@ -69,10 +69,10 @@ func (c *userPhoneServiceClient) GetUserPhoneByID(ctx context.Context, in *GetUs
 	return out, nil
 }
 
-func (c *userPhoneServiceClient) GetUserPhoneByPhone(ctx context.Context, in *GetUserPhoneByPhoneRequest, opts ...grpc.CallOption) (*GetUserPhoneByPhoneResponse, error) {
+func (c *userPhoneServiceClient) GetUserPhoneByCountryCodeAndPhone(ctx context.Context, in *GetUserPhoneByCountryCodeAndPhoneRequest, opts ...grpc.CallOption) (*GetUserPhoneByCountryCodeAndPhoneResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserPhoneByPhoneResponse)
-	err := c.cc.Invoke(ctx, UserPhoneService_GetUserPhoneByPhone_FullMethodName, in, out, cOpts...)
+	out := new(GetUserPhoneByCountryCodeAndPhoneResponse)
+	err := c.cc.Invoke(ctx, UserPhoneService_GetUserPhoneByCountryCodeAndPhone_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,8 +99,8 @@ type UserPhoneServiceServer interface {
 	CreateUserPhone(context.Context, *CreateUserPhoneRequest) (*CreateUserPhoneResponse, error)
 	// 根据ID获取用户手机
 	GetUserPhoneByID(context.Context, *GetUserPhoneByIDRequest) (*GetUserPhoneByIDResponse, error)
-	// 根据手机号获取用户手机
-	GetUserPhoneByPhone(context.Context, *GetUserPhoneByPhoneRequest) (*GetUserPhoneByPhoneResponse, error)
+	// 根据国家代码和手机号获取用户手机
+	GetUserPhoneByCountryCodeAndPhone(context.Context, *GetUserPhoneByCountryCodeAndPhoneRequest) (*GetUserPhoneByCountryCodeAndPhoneResponse, error)
 	// 根据用户ID获取用户手机列表
 	GetUserPhonesByUserID(context.Context, *GetUserPhonesByUserIDRequest) (*GetUserPhonesByUserIDResponse, error)
 	mustEmbedUnimplementedUserPhoneServiceServer()
@@ -119,8 +119,8 @@ func (UnimplementedUserPhoneServiceServer) CreateUserPhone(context.Context, *Cre
 func (UnimplementedUserPhoneServiceServer) GetUserPhoneByID(context.Context, *GetUserPhoneByIDRequest) (*GetUserPhoneByIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserPhoneByID not implemented")
 }
-func (UnimplementedUserPhoneServiceServer) GetUserPhoneByPhone(context.Context, *GetUserPhoneByPhoneRequest) (*GetUserPhoneByPhoneResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserPhoneByPhone not implemented")
+func (UnimplementedUserPhoneServiceServer) GetUserPhoneByCountryCodeAndPhone(context.Context, *GetUserPhoneByCountryCodeAndPhoneRequest) (*GetUserPhoneByCountryCodeAndPhoneResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserPhoneByCountryCodeAndPhone not implemented")
 }
 func (UnimplementedUserPhoneServiceServer) GetUserPhonesByUserID(context.Context, *GetUserPhonesByUserIDRequest) (*GetUserPhonesByUserIDResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserPhonesByUserID not implemented")
@@ -182,20 +182,20 @@ func _UserPhoneService_GetUserPhoneByID_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserPhoneService_GetUserPhoneByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserPhoneByPhoneRequest)
+func _UserPhoneService_GetUserPhoneByCountryCodeAndPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserPhoneByCountryCodeAndPhoneRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserPhoneServiceServer).GetUserPhoneByPhone(ctx, in)
+		return srv.(UserPhoneServiceServer).GetUserPhoneByCountryCodeAndPhone(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserPhoneService_GetUserPhoneByPhone_FullMethodName,
+		FullMethod: UserPhoneService_GetUserPhoneByCountryCodeAndPhone_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserPhoneServiceServer).GetUserPhoneByPhone(ctx, req.(*GetUserPhoneByPhoneRequest))
+		return srv.(UserPhoneServiceServer).GetUserPhoneByCountryCodeAndPhone(ctx, req.(*GetUserPhoneByCountryCodeAndPhoneRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -234,8 +234,8 @@ var UserPhoneService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserPhoneService_GetUserPhoneByID_Handler,
 		},
 		{
-			MethodName: "GetUserPhoneByPhone",
-			Handler:    _UserPhoneService_GetUserPhoneByPhone_Handler,
+			MethodName: "GetUserPhoneByCountryCodeAndPhone",
+			Handler:    _UserPhoneService_GetUserPhoneByCountryCodeAndPhone_Handler,
 		},
 		{
 			MethodName: "GetUserPhonesByUserID",

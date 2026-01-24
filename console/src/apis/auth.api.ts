@@ -282,12 +282,16 @@ export const DeleteTrustedDevice = async (id: string): Promise<BaseResponse> => 
 
 // ========== 登录和刷新 Token 相关 ==========
 
-// 登录请求类型
-export interface LoginRequest {
-  loginType: "email" | "phone";
-  email?: string;
-  phone?: string;
-  countryCode?: string;
+// 邮箱登录请求类型
+export interface LoginByEmailRequest {
+  email: string;
+  password: string;
+}
+
+// 手机号登录请求类型
+export interface LoginByPhoneRequest {
+  countryCode: string;
+  phone: string;
   password: string;
 }
 
@@ -311,9 +315,15 @@ export interface RefreshTokenResponse {
   expiresIn: number;
 }
 
-// 登录（使用 publicClient，不需要认证）
-export const Login = async (params: LoginRequest): Promise<LoginResponse> => {
-  const { data } = await publicClient.post<DataResponse<LoginResponse>>("/auth/login", params);
+// 邮箱登录（使用 publicClient，不需要认证）
+export const LoginByEmail = async (params: LoginByEmailRequest): Promise<LoginResponse> => {
+  const { data } = await publicClient.post<DataResponse<LoginResponse>>("/auth/login/email", params);
+  return data.data;
+};
+
+// 手机号登录（使用 publicClient，不需要认证）
+export const LoginByPhone = async (params: LoginByPhoneRequest): Promise<LoginResponse> => {
+  const { data } = await publicClient.post<DataResponse<LoginResponse>>("/auth/login/phone", params);
   return data.data;
 };
 

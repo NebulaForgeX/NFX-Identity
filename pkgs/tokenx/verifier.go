@@ -97,6 +97,7 @@ func (v *Verifier) RefreshTokenPair(refreshToken string, generator *Generator) (
 		claims.Username,
 		claims.Email,
 		claims.Phone,
+		claims.CountryCode,
 		claims.RoleID,
 	)
 	if err != nil {

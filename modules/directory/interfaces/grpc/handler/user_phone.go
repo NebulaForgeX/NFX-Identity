@@ -88,16 +88,16 @@ func (h *UserPhoneHandler) GetUserPhoneByID(ctx context.Context, req *userphonep
 	return &userphonepb.GetUserPhoneByIDResponse{UserPhone: userPhone}, nil
 }
 
-// GetUserPhoneByPhone 根据手机号获取用户手机
-func (h *UserPhoneHandler) GetUserPhoneByPhone(ctx context.Context, req *userphonepb.GetUserPhoneByPhoneRequest) (*userphonepb.GetUserPhoneByPhoneResponse, error) {
-	userPhoneView, err := h.userPhoneAppSvc.GetUserPhoneByPhone(ctx, req.Phone)
+// GetUserPhoneByCountryCodeAndPhone 根据国家代码和手机号获取用户手机
+func (h *UserPhoneHandler) GetUserPhoneByCountryCodeAndPhone(ctx context.Context, req *userphonepb.GetUserPhoneByCountryCodeAndPhoneRequest) (*userphonepb.GetUserPhoneByCountryCodeAndPhoneResponse, error) {
+	userPhoneView, err := h.userPhoneAppSvc.GetUserPhoneByCountryCodeAndPhone(ctx, req.CountryCode, req.Phone)
 	if err != nil {
-		logx.S().Errorf("failed to get user phone by phone: %v", err)
+		logx.S().Errorf("failed to get user phone by country code and phone: %v", err)
 		return nil, status.Errorf(codes.NotFound, "user phone not found: %v", err)
 	}
 
 	userPhone := mapper.UserPhoneROToProto(&userPhoneView)
-	return &userphonepb.GetUserPhoneByPhoneResponse{UserPhone: userPhone}, nil
+	return &userphonepb.GetUserPhoneByCountryCodeAndPhoneResponse{UserPhone: userPhone}, nil
 }
 
 // GetUserPhonesByUserID 根据用户ID获取用户手机列表

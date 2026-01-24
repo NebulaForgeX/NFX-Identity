@@ -23,17 +23,17 @@ func NewAuthHandler(authSvc *authApp.Service) *AuthHandler {
 	return &AuthHandler{authSvc: authSvc}
 }
 
-// Login 处理 POST /auth/login
-func (h *AuthHandler) Login(c *fiber.Ctx) error {
+// LoginByEmail 处理 POST /auth/login/email
+func (h *AuthHandler) LoginByEmail(c *fiber.Ctx) error {
 	if h.authSvc == nil {
 		return httpresp.Error(c, fiber.StatusServiceUnavailable, "login not configured")
 	}
-	var req reqdto.LoginRequestDTO
+	var req reqdto.LoginByEmailRequestDTO
 	if err := c.BodyParser(&req); err != nil {
 		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
 	}
-	if req.LoginType != "email" && req.LoginType != "phone" {
-		return httpresp.Error(c, fiber.StatusBadRequest, "login_type must be email or phone")
+	if req.Email == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "email is required")
 	}
 	if req.Password == "" {
 		return httpresp.Error(c, fiber.StatusBadRequest, "password is required")
@@ -45,32 +45,69 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		clientIP = forwardedIP
 	}
 
-	cmd := authCommands.LoginCmd{
-		LoginType:   req.LoginType,
-		Email:       req.Email,
-		Phone:       req.Phone,
-		CountryCode: req.CountryCode,
-		Password:    req.Password,
-		IP:          &clientIP,
-	}
-	// 规范化可选字段
-	if cmd.Email != nil {
-		s := strings.TrimSpace(*cmd.Email)
-		cmd.Email = &s
-	}
-	if cmd.Phone != nil {
-		s := strings.TrimSpace(*cmd.Phone)
-		cmd.Phone = &s
-	}
-	if cmd.CountryCode != nil {
-		s := strings.TrimSpace(*cmd.CountryCode)
-		cmd.CountryCode = &s
+	cmd := authCommands.LoginByEmailCmd{
+		Email:    strings.TrimSpace(req.Email),
+		Password: req.Password,
+		IP:       &clientIP,
 	}
 
-	res, err := h.authSvc.Login(c.Context(), cmd)
+	res, err := h.authSvc.LoginByEmail(c.Context(), cmd)
 	if err != nil {
 		if errors.Is(err, authApp.ErrInvalidCredentials) {
 			return httpresp.Error(c, fiber.StatusUnauthorized, "invalid email or password")
+		}
+		if errors.Is(err, authApp.ErrAccountLocked) {
+			return httpresp.Error(c, fiber.StatusForbidden, "account is locked due to too many failed login attempts")
+		}
+		return httpresp.Error(c, fiber.StatusInternalServerError, "login failed")
+	}
+
+	return httpresp.Success(c, fiber.StatusOK, "Login successful", httpresp.SuccessOptions{
+		Data: respdto.LoginResponseDTO{
+			AccessToken:  res.AccessToken,
+			RefreshToken: res.RefreshToken,
+			ExpiresIn:    res.ExpiresIn,
+			UserID:       res.UserID,
+		},
+	})
+}
+
+// LoginByPhone 处理 POST /auth/login/phone
+func (h *AuthHandler) LoginByPhone(c *fiber.Ctx) error {
+	if h.authSvc == nil {
+		return httpresp.Error(c, fiber.StatusServiceUnavailable, "login not configured")
+	}
+	var req reqdto.LoginByPhoneRequestDTO
+	if err := c.BodyParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	}
+	if req.Phone == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "phone is required")
+	}
+	if req.CountryCode == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "country_code is required")
+	}
+	if req.Password == "" {
+		return httpresp.Error(c, fiber.StatusBadRequest, "password is required")
+	}
+
+	// 获取客户端 IP
+	clientIP := c.IP()
+	if forwardedIP := c.Get("X-Forwarded-For"); forwardedIP != "" {
+		clientIP = forwardedIP
+	}
+
+	cmd := authCommands.LoginByPhoneCmd{
+		CountryCode: strings.TrimSpace(req.CountryCode),
+		Phone:       strings.TrimSpace(req.Phone),
+		Password:    req.Password,
+		IP:          &clientIP,
+	}
+
+	res, err := h.authSvc.LoginByPhone(c.Context(), cmd)
+	if err != nil {
+		if errors.Is(err, authApp.ErrInvalidCredentials) {
+			return httpresp.Error(c, fiber.StatusUnauthorized, "invalid phone or password")
 		}
 		if errors.Is(err, authApp.ErrAccountLocked) {
 			return httpresp.Error(c, fiber.StatusForbidden, "account is locked due to too many failed login attempts")

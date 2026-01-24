@@ -24,7 +24,7 @@ type Create interface {
 // Get 定义获取数据相关的方法
 type Get interface {
 	ByID(ctx context.Context, id uuid.UUID) (*UserPhone, error)
-	ByPhone(ctx context.Context, phone string) (*UserPhone, error)
+	ByCountryCodeAndPhone(ctx context.Context, countryCode, phone string) (*UserPhone, error)
 	ByUserID(ctx context.Context, userID uuid.UUID) ([]*UserPhone, error)
 	PrimaryByUserID(ctx context.Context, userID uuid.UUID) (*UserPhone, error)
 }
@@ -32,7 +32,7 @@ type Get interface {
 // Check 定义检查相关的方法
 type Check interface {
 	ByID(ctx context.Context, id uuid.UUID) (bool, error)
-	ByPhone(ctx context.Context, phone string) (bool, error)
+	ByCountryCodeAndPhone(ctx context.Context, countryCode, phone string) (bool, error)
 }
 
 // Update 定义更新相关的方法
@@ -46,5 +46,5 @@ type Update interface {
 // Delete 定义删除相关的方法
 type Delete interface {
 	ByID(ctx context.Context, id uuid.UUID) error
-	ByPhone(ctx context.Context, phone string) error
+	ByCountryCodeAndPhone(ctx context.Context, countryCode, phone string) error
 }

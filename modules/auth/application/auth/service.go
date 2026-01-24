@@ -5,6 +5,7 @@ import (
 	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
 	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
 	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
+	grpcClients "nfxid/modules/auth/infrastructure/grpc"
 )
 
 // Service 认证应用服务（登录、刷新 Token）
@@ -13,7 +14,7 @@ type Service struct {
 	loginAttemptRepo   *loginAttemptDomain.Repo
 	accountLockoutRepo *accountLockoutDomain.Repo
 	refreshTokenRepo   *refreshTokenDomain.Repo
-	userResolver       UserResolver
+	grpcClients        *grpcClients.GRPCClients // gRPC 客户端（通过依赖注入）
 	tokenIssuer        TokenIssuer
 	expiresInSec       int64
 	refreshTokenTTL    int64 // refresh token 有效期（秒）
@@ -26,7 +27,7 @@ func NewService(
 	loginAttemptRepo *loginAttemptDomain.Repo,
 	accountLockoutRepo *accountLockoutDomain.Repo,
 	refreshTokenRepo *refreshTokenDomain.Repo,
-	userResolver UserResolver,
+	grpcClients *grpcClients.GRPCClients,
 	tokenIssuer TokenIssuer,
 	expiresInSec int64,
 	refreshTokenTTL int64,
@@ -36,7 +37,7 @@ func NewService(
 		loginAttemptRepo:   loginAttemptRepo,
 		accountLockoutRepo: accountLockoutRepo,
 		refreshTokenRepo:   refreshTokenRepo,
-		userResolver:       userResolver,
+		grpcClients:        grpcClients,
 		tokenIssuer:        tokenIssuer,
 		expiresInSec:       expiresInSec,
 		refreshTokenTTL:    refreshTokenTTL,

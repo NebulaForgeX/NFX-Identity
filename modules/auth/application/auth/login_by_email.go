@@ -5,74 +5,50 @@ import (
 	"strings"
 	"time"
 
+	"nfxid/constants"
 	authCommands "nfxid/modules/auth/application/auth/commands"
 	authResults "nfxid/modules/auth/application/auth/results"
 	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
 	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
 	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/constants"
+	grantpb "nfxid/protos/gen/access/grant"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Login 执行登录：检查锁定 → 解析用户 → 校验密码 → 记录尝试 → 签发 Token
-func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authResults.LoginResult, error) {
-	if cmd.LoginType != "email" && cmd.LoginType != "phone" {
-		return authResults.LoginResult{}, ErrInvalidCredentials
-	}
+// LoginByEmail 邮箱登录：解析用户 → 校验密码 → 记录尝试 → 签发 Token
+func (s *Service) LoginByEmail(ctx context.Context, cmd authCommands.LoginByEmailCmd) (authResults.LoginResult, error) {
 	if cmd.Password == "" {
 		return authResults.LoginResult{}, ErrInvalidCredentials
 	}
 
-	// 确定登录标识符（email 或 phone）
-	var identifier string
-	if cmd.LoginType == "email" {
-		if cmd.Email == nil || strings.TrimSpace(*cmd.Email) == "" {
-			return authResults.LoginResult{}, ErrInvalidCredentials
-		}
-		identifier = strings.TrimSpace(*cmd.Email)
-	} else {
-		if cmd.Phone == nil || strings.TrimSpace(*cmd.Phone) == "" {
-			return authResults.LoginResult{}, ErrInvalidCredentials
-		}
-		phone := strings.TrimSpace(*cmd.Phone)
-		cc := ""
-		if cmd.CountryCode != nil {
-			cc = strings.TrimSpace(*cmd.CountryCode)
-		}
-		identifier = phone
-		if cc != "" {
-			identifier = cc + phone
-		}
-	}
-
-	// 解析用户信息
-	var info UserInfo
-	var err error
-	if cmd.LoginType == "email" {
-		info, err = s.userResolver.ResolveByEmail(ctx, identifier)
-		if err != nil {
-			s.recordFailedLogin(ctx, identifier, nil, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
-			return authResults.LoginResult{}, ErrInvalidCredentials
-		}
-		info.Email = identifier
-	} else {
-		info, err = s.userResolver.ResolveByPhone(ctx, identifier)
-		if err != nil {
-			s.recordFailedLogin(ctx, identifier, nil, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
-			return authResults.LoginResult{}, ErrInvalidCredentials
-		}
-		info.Phone = identifier
-	}
-	if info.UserID == "" {
-		s.recordFailedLogin(ctx, identifier, nil, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
+	email := strings.TrimSpace(cmd.Email)
+	if email == "" {
 		return authResults.LoginResult{}, ErrInvalidCredentials
 	}
 
-	uid, err := uuid.Parse(info.UserID)
+	// 解析用户信息
+	ue, err := s.grpcClients.DirectoryClient.UserEmail.GetUserEmailByEmail(ctx, email)
 	if err != nil {
-		s.recordFailedLogin(ctx, identifier, &uid, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
+		s.recordFailedLoginByEmail(ctx, email, nil, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
+		return authResults.LoginResult{}, ErrInvalidCredentials
+	}
+	if ue == nil || ue.UserId == "" {
+		s.recordFailedLoginByEmail(ctx, email, nil, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
+		return authResults.LoginResult{}, ErrInvalidCredentials
+	}
+
+	// 获取 username
+	u, err := s.grpcClients.DirectoryClient.User.GetUserByID(ctx, ue.UserId)
+	username := ""
+	if err == nil && u != nil {
+		username = u.Username
+	}
+
+	uid, err := uuid.Parse(ue.UserId)
+	if err != nil {
+		s.recordFailedLoginByEmail(ctx, email, nil, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
 		return authResults.LoginResult{}, ErrInvalidCredentials
 	}
 
@@ -82,7 +58,7 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 		// 检查失败不影响登录流程，继续
 	}
 	if locked {
-		s.recordFailedLogin(ctx, identifier, &uid, loginAttemptDomain.FailureCodeLocked, cmd.IP)
+		s.recordFailedLoginByEmail(ctx, email, &uid, loginAttemptDomain.FailureCodeLocked, cmd.IP)
 		return authResults.LoginResult{}, ErrAccountLocked
 	}
 
@@ -108,7 +84,7 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 			if err == nil {
 				_ = s.accountLockoutRepo.Create.New(ctx, lockout)
 			}
-			s.recordFailedLogin(ctx, identifier, &uid, loginAttemptDomain.FailureCodeLocked, cmd.IP)
+			s.recordFailedLoginByEmail(ctx, email, &uid, loginAttemptDomain.FailureCodeLocked, cmd.IP)
 			return authResults.LoginResult{}, ErrAccountLocked
 		}
 	}
@@ -116,17 +92,17 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 	// 获取用户凭证
 	uc, err := s.credRepo.Get.ByUserID(ctx, uid)
 	if err != nil {
-		s.recordFailedLogin(ctx, identifier, &uid, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
+		s.recordFailedLoginByEmail(ctx, email, &uid, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
 		return authResults.LoginResult{}, ErrInvalidCredentials
 	}
 	if uc.PasswordHash() == nil || *uc.PasswordHash() == "" {
-		s.recordFailedLogin(ctx, identifier, &uid, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
+		s.recordFailedLoginByEmail(ctx, email, &uid, loginAttemptDomain.FailureCodeUserNotFound, cmd.IP)
 		return authResults.LoginResult{}, ErrInvalidCredentials
 	}
 
 	// 校验密码
 	if err := bcrypt.CompareHashAndPassword([]byte(*uc.PasswordHash()), []byte(cmd.Password)); err != nil {
-		s.recordFailedLogin(ctx, identifier, &uid, loginAttemptDomain.FailureCodeBadPassword, cmd.IP)
+		s.recordFailedLoginByEmail(ctx, email, &uid, loginAttemptDomain.FailureCodeBadPassword, cmd.IP)
 		// 检查是否达到最大失败次数
 		recentAttempts, err := s.loginAttemptRepo.Get.ByUserID(ctx, uid)
 		if err == nil {
@@ -154,18 +130,47 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 	}
 
 	// 登录成功：清空失败次数（删除最近的失败记录）
-	s.clearFailedAttempts(ctx, uid)
+	s.clearFailedAttemptsByEmail(ctx, uid)
 
 	// 记录成功登录
-	s.recordSuccessfulLogin(ctx, identifier, &uid, cmd.IP)
+	s.recordSuccessfulLoginByEmail(ctx, email, &uid, cmd.IP)
 
 	// 更新最后成功登录时间
 	_ = s.credRepo.Update.UpdateLastSuccessLogin(ctx, uid)
 
 	// 签发 Token
-	username := info.Username
 	if username == "" {
 		username = "user"
+	}
+
+	// 获取用户的手机号信息（如果有的话）
+	var phone string
+	var countryCode string
+	userPhones, err := s.grpcClients.DirectoryClient.UserPhone.GetUserPhonesByUserID(ctx, ue.UserId)
+	if err == nil && len(userPhones) > 0 {
+		// 使用第一个手机号（通常是主手机号）
+		up := userPhones[0]
+		if up.Phone != "" {
+			phone = up.Phone
+			if up.CountryCode != nil && *up.CountryCode != "" {
+				countryCode = *up.CountryCode
+			}
+		}
+	}
+
+	// 获取用户的角色信息（如果有的话）
+	var roleID string
+	if s.grpcClients.AccessClient != nil {
+		grants, err := s.grpcClients.AccessClient.Grant.GetGrantsBySubject(ctx, "user", ue.UserId, nil)
+		if err == nil {
+			// 查找第一个未撤销的角色授权
+			for _, grant := range grants {
+				if grant.GrantType == grantpb.AccessGrantType_ACCESS_GRANT_TYPE_ROLE && grant.RevokedAt == nil {
+					roleID = grant.GrantRefId
+					break // 使用第一个角色
+				}
+			}
+		}
 	}
 
 	// 生成 refresh token ID（用于 refresh_tokens 表）
@@ -176,7 +181,7 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 	refreshTokenIDStr := refreshTokenID.String()
 
 	// 生成 Token 对（refresh token 包含 token_id/jti）
-	access, refresh, err := s.tokenIssuer.IssuePairWithRefreshID(info.UserID, username, info.Email, info.Phone, "", refreshTokenIDStr)
+	access, refresh, err := s.tokenIssuer.IssuePairWithRefreshID(ue.UserId, username, email, phone, countryCode, roleID, refreshTokenIDStr)
 	if err != nil {
 		return authResults.LoginResult{}, err
 	}
@@ -197,12 +202,12 @@ func (s *Service) Login(ctx context.Context, cmd authCommands.LoginCmd) (authRes
 		AccessToken:  access,
 		RefreshToken: refresh,
 		ExpiresIn:    s.expiresInSec,
-		UserID:       info.UserID,
+		UserID:       ue.UserId,
 	}, nil
 }
 
-// recordFailedLogin 记录失败的登录尝试
-func (s *Service) recordFailedLogin(ctx context.Context, identifier string, userID *uuid.UUID, failureCode loginAttemptDomain.FailureCode, ip *string) {
+// recordFailedLoginByEmail 记录失败的登录尝试
+func (s *Service) recordFailedLoginByEmail(ctx context.Context, identifier string, userID *uuid.UUID, failureCode loginAttemptDomain.FailureCode, ip *string) {
 	attempt, err := loginAttemptDomain.NewLoginAttempt(loginAttemptDomain.NewLoginAttemptParams{
 		Identifier:  identifier,
 		UserID:      userID,
@@ -215,8 +220,8 @@ func (s *Service) recordFailedLogin(ctx context.Context, identifier string, user
 	}
 }
 
-// recordSuccessfulLogin 记录成功的登录尝试
-func (s *Service) recordSuccessfulLogin(ctx context.Context, identifier string, userID *uuid.UUID, ip *string) {
+// recordSuccessfulLoginByEmail 记录成功的登录尝试
+func (s *Service) recordSuccessfulLoginByEmail(ctx context.Context, identifier string, userID *uuid.UUID, ip *string) {
 	attempt, err := loginAttemptDomain.NewLoginAttempt(loginAttemptDomain.NewLoginAttemptParams{
 		Identifier: identifier,
 		UserID:     userID,
@@ -228,8 +233,8 @@ func (s *Service) recordSuccessfulLogin(ctx context.Context, identifier string, 
 	}
 }
 
-// clearFailedAttempts 清空用户的失败登录记录（删除最近的失败记录）
-func (s *Service) clearFailedAttempts(ctx context.Context, userID uuid.UUID) {
+// clearFailedAttemptsByEmail 清空用户的失败登录记录（删除最近的失败记录）
+func (s *Service) clearFailedAttemptsByEmail(ctx context.Context, userID uuid.UUID) {
 	attempts, err := s.loginAttemptRepo.Get.ByUserID(ctx, userID)
 	if err != nil {
 		return

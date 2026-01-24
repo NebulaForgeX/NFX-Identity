@@ -11,9 +11,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-// GRPCClients gRPC 客户端集合（仅 Directory，用于登录解析邮箱/手机 → user_id）
+// GRPCClients gRPC 客户端集合（Directory 和 Access，用于登录解析用户信息和角色）
 type GRPCClients struct {
 	DirectoryClient *DirectoryClient
+	AccessClient    *AccessClient
 
 	conns []*grpc.ClientConn
 	mu    sync.Mutex
@@ -27,16 +28,25 @@ func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg
 	tokenProvider := createTokenProvider(tokenCfg)
 	clients := &GRPCClients{conns: make([]*grpc.ClientConn, 0)}
 
-	if cfg.DirectoryAddr == "" {
-		return clients, nil
+	// 连接 Directory 服务
+	if cfg.DirectoryAddr != "" {
+		directoryConn, err := createConnection(cfg.DirectoryAddr, tokenProvider)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create directory connection: %w", err)
+		}
+		clients.conns = append(clients.conns, directoryConn)
+		clients.DirectoryClient = NewDirectoryClient(directoryConn)
 	}
 
-	directoryConn, err := createConnection(cfg.DirectoryAddr, tokenProvider)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create directory connection: %w", err)
+	// 连接 Access 服务
+	if cfg.AccessAddr != "" {
+		accessConn, err := createConnection(cfg.AccessAddr, tokenProvider)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create access connection: %w", err)
+		}
+		clients.conns = append(clients.conns, accessConn)
+		clients.AccessClient = NewAccessClient(accessConn)
 	}
-	clients.conns = append(clients.conns, directoryConn)
-	clients.DirectoryClient = NewDirectoryClient(directoryConn)
 
 	return clients, nil
 }

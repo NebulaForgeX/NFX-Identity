@@ -16,13 +16,13 @@ func NewTokenIssuer(tx *tokenx.Tokenx) *TokenIssuer {
 }
 
 // IssuePair 实现 TokenIssuer
-func (t *TokenIssuer) IssuePair(userID, username, email, phone, roleID string) (access, refresh string, err error) {
-	return t.tx.GenerateTokenPair(userID, username, email, phone, roleID)
+func (t *TokenIssuer) IssuePair(userID, username, email, phone, countryCode, roleID string) (access, refresh string, err error) {
+	return t.tx.GenerateTokenPair(userID, username, email, phone, countryCode, roleID)
 }
 
 // IssuePairWithRefreshID 实现 TokenIssuer（带 refresh token ID）
-func (t *TokenIssuer) IssuePairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID string) (access, refresh string, err error) {
-	return t.tx.GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID)
+func (t *TokenIssuer) IssuePairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID string) (access, refresh string, err error) {
+	return t.tx.GenerateTokenPairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID)
 }
 
 // RefreshPair 实现 TokenIssuer
@@ -43,12 +43,13 @@ func (t *TokenIssuer) VerifyRefreshToken(refreshToken string) (*authApp.TokenCla
 	}
 	
 	return &authApp.TokenClaims{
-		TokenID:  tokenID,
-		UserID:   claims.UserID,
-		Username: claims.Username,
-		Email:    claims.Email,
-		Phone:    claims.Phone,
-		RoleID:   claims.RoleID,
+		TokenID:     tokenID,
+		UserID:      claims.UserID,
+		Username:    claims.Username,
+		Email:       claims.Email,
+		Phone:       claims.Phone,
+		CountryCode: claims.CountryCode,
+		RoleID:      claims.RoleID,
 	}, nil
 }
 

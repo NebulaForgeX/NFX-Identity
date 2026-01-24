@@ -79,6 +79,7 @@ func (s *Service) Refresh(ctx context.Context, refreshToken string, ip *string) 
 		claims.Username,
 		claims.Email,
 		claims.Phone,
+		claims.CountryCode,
 		claims.RoleID,
 		newRefreshTokenIDStr,
 	)

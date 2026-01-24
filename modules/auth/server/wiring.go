@@ -139,10 +139,9 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
 	}
 
-	// Auth 应用服务（登录/刷新）：注入 infra 实现的 UserResolver、TokenIssuer
+	// Auth 应用服务（登录/刷新）：注入 gRPC 客户端和 TokenIssuer
 	var authAppSvc *authApp.Service
 	if grpcClientsInstance.DirectoryClient != nil {
-		userResolver := authInfra.NewUserResolver(grpcClientsInstance.DirectoryClient)
 		tokenIssuer := authInfra.NewTokenIssuer(tokenxInstance)
 		expiresInSec := int64(cfg.Token.AccessTokenTTL.Seconds())
 		if expiresInSec <= 0 {
@@ -157,7 +156,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 			loginAttemptRepoInstance,
 			accountLockoutRepoInstance,
 			refreshTokenRepoInstance,
-			userResolver,
+			grpcClientsInstance,
 			tokenIssuer,
 			expiresInSec,
 			refreshTokenTTL,
@@ -233,12 +232,13 @@ func (a *tokenxVerifierAdapter) Verify(ctx context.Context, tokenStr string) (*t
 	return &token.Claims{
 		Registered: claims.RegisteredClaims,
 		Raw: map[string]any{
-			"user_id":  claims.UserID,
-			"username": claims.Username,
-			"email":    claims.Email,
-			"phone":    claims.Phone,
-			"role_id":  claims.RoleID,
-			"type":     claims.Type,
+			"user_id":      claims.UserID,
+			"username":     claims.Username,
+			"email":        claims.Email,
+			"phone":        claims.Phone,
+			"country_code": claims.CountryCode,
+			"role_id":      claims.RoleID,
+			"type":         claims.Type,
 		},
 	}, nil
 }

@@ -380,27 +380,28 @@ func (x *GetUserPhoneByIDResponse) GetUserPhone() *UserPhone {
 	return nil
 }
 
-type GetUserPhoneByPhoneRequest struct {
+type GetUserPhoneByCountryCodeAndPhoneRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Phone         string                 `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+	CountryCode   string                 `protobuf:"bytes,1,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"` // 国家代码 (varchar(10))
+	Phone         string                 `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`                                // 手机号 (varchar(20))
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserPhoneByPhoneRequest) Reset() {
-	*x = GetUserPhoneByPhoneRequest{}
+func (x *GetUserPhoneByCountryCodeAndPhoneRequest) Reset() {
+	*x = GetUserPhoneByCountryCodeAndPhoneRequest{}
 	mi := &file_directory_user_phone_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserPhoneByPhoneRequest) String() string {
+func (x *GetUserPhoneByCountryCodeAndPhoneRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserPhoneByPhoneRequest) ProtoMessage() {}
+func (*GetUserPhoneByCountryCodeAndPhoneRequest) ProtoMessage() {}
 
-func (x *GetUserPhoneByPhoneRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserPhoneByCountryCodeAndPhoneRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_directory_user_phone_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -412,39 +413,46 @@ func (x *GetUserPhoneByPhoneRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserPhoneByPhoneRequest.ProtoReflect.Descriptor instead.
-func (*GetUserPhoneByPhoneRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserPhoneByCountryCodeAndPhoneRequest.ProtoReflect.Descriptor instead.
+func (*GetUserPhoneByCountryCodeAndPhoneRequest) Descriptor() ([]byte, []int) {
 	return file_directory_user_phone_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetUserPhoneByPhoneRequest) GetPhone() string {
+func (x *GetUserPhoneByCountryCodeAndPhoneRequest) GetCountryCode() string {
+	if x != nil {
+		return x.CountryCode
+	}
+	return ""
+}
+
+func (x *GetUserPhoneByCountryCodeAndPhoneRequest) GetPhone() string {
 	if x != nil {
 		return x.Phone
 	}
 	return ""
 }
 
-type GetUserPhoneByPhoneResponse struct {
+type GetUserPhoneByCountryCodeAndPhoneResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserPhone     *UserPhone             `protobuf:"bytes,1,opt,name=user_phone,json=userPhone,proto3" json:"user_phone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserPhoneByPhoneResponse) Reset() {
-	*x = GetUserPhoneByPhoneResponse{}
+func (x *GetUserPhoneByCountryCodeAndPhoneResponse) Reset() {
+	*x = GetUserPhoneByCountryCodeAndPhoneResponse{}
 	mi := &file_directory_user_phone_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserPhoneByPhoneResponse) String() string {
+func (x *GetUserPhoneByCountryCodeAndPhoneResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserPhoneByPhoneResponse) ProtoMessage() {}
+func (*GetUserPhoneByCountryCodeAndPhoneResponse) ProtoMessage() {}
 
-func (x *GetUserPhoneByPhoneResponse) ProtoReflect() protoreflect.Message {
+func (x *GetUserPhoneByCountryCodeAndPhoneResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_directory_user_phone_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -456,12 +464,12 @@ func (x *GetUserPhoneByPhoneResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserPhoneByPhoneResponse.ProtoReflect.Descriptor instead.
-func (*GetUserPhoneByPhoneResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserPhoneByCountryCodeAndPhoneResponse.ProtoReflect.Descriptor instead.
+func (*GetUserPhoneByCountryCodeAndPhoneResponse) Descriptor() ([]byte, []int) {
 	return file_directory_user_phone_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetUserPhoneByPhoneResponse) GetUserPhone() *UserPhone {
+func (x *GetUserPhoneByCountryCodeAndPhoneResponse) GetUserPhone() *UserPhone {
 	if x != nil {
 		return x.UserPhone
 	}
@@ -607,21 +615,22 @@ const file_directory_user_phone_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"P\n" +
 	"\x18GetUserPhoneByIDResponse\x124\n" +
 	"\n" +
-	"user_phone\x18\x01 \x01(\v2\x15.user_phone.UserPhoneR\tuserPhone\"2\n" +
-	"\x1aGetUserPhoneByPhoneRequest\x12\x14\n" +
-	"\x05phone\x18\x01 \x01(\tR\x05phone\"S\n" +
-	"\x1bGetUserPhoneByPhoneResponse\x124\n" +
+	"user_phone\x18\x01 \x01(\v2\x15.user_phone.UserPhoneR\tuserPhone\"c\n" +
+	"(GetUserPhoneByCountryCodeAndPhoneRequest\x12!\n" +
+	"\fcountry_code\x18\x01 \x01(\tR\vcountryCode\x12\x14\n" +
+	"\x05phone\x18\x02 \x01(\tR\x05phone\"a\n" +
+	")GetUserPhoneByCountryCodeAndPhoneResponse\x124\n" +
 	"\n" +
 	"user_phone\x18\x01 \x01(\v2\x15.user_phone.UserPhoneR\tuserPhone\"7\n" +
 	"\x1cGetUserPhonesByUserIDRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"W\n" +
 	"\x1dGetUserPhonesByUserIDResponse\x126\n" +
 	"\vuser_phones\x18\x01 \x03(\v2\x15.user_phone.UserPhoneR\n" +
-	"userPhones2\xa3\x03\n" +
+	"userPhones2\xce\x03\n" +
 	"\x10UserPhoneService\x12Z\n" +
 	"\x0fCreateUserPhone\x12\".user_phone.CreateUserPhoneRequest\x1a#.user_phone.CreateUserPhoneResponse\x12]\n" +
-	"\x10GetUserPhoneByID\x12#.user_phone.GetUserPhoneByIDRequest\x1a$.user_phone.GetUserPhoneByIDResponse\x12f\n" +
-	"\x13GetUserPhoneByPhone\x12&.user_phone.GetUserPhoneByPhoneRequest\x1a'.user_phone.GetUserPhoneByPhoneResponse\x12l\n" +
+	"\x10GetUserPhoneByID\x12#.user_phone.GetUserPhoneByIDRequest\x1a$.user_phone.GetUserPhoneByIDResponse\x12\x90\x01\n" +
+	"!GetUserPhoneByCountryCodeAndPhone\x124.user_phone.GetUserPhoneByCountryCodeAndPhoneRequest\x1a5.user_phone.GetUserPhoneByCountryCodeAndPhoneResponse\x12l\n" +
 	"\x15GetUserPhonesByUserID\x12(.user_phone.GetUserPhonesByUserIDRequest\x1a).user_phone.GetUserPhonesByUserIDResponseB3Z1nfxid/protos/gen/directory/user_phone;userphonepbb\x06proto3"
 
 var (
@@ -638,16 +647,16 @@ func file_directory_user_phone_proto_rawDescGZIP() []byte {
 
 var file_directory_user_phone_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_directory_user_phone_proto_goTypes = []any{
-	(*UserPhone)(nil),                     // 0: user_phone.UserPhone
-	(*CreateUserPhoneRequest)(nil),        // 1: user_phone.CreateUserPhoneRequest
-	(*CreateUserPhoneResponse)(nil),       // 2: user_phone.CreateUserPhoneResponse
-	(*GetUserPhoneByIDRequest)(nil),       // 3: user_phone.GetUserPhoneByIDRequest
-	(*GetUserPhoneByIDResponse)(nil),      // 4: user_phone.GetUserPhoneByIDResponse
-	(*GetUserPhoneByPhoneRequest)(nil),    // 5: user_phone.GetUserPhoneByPhoneRequest
-	(*GetUserPhoneByPhoneResponse)(nil),   // 6: user_phone.GetUserPhoneByPhoneResponse
-	(*GetUserPhonesByUserIDRequest)(nil),  // 7: user_phone.GetUserPhonesByUserIDRequest
-	(*GetUserPhonesByUserIDResponse)(nil), // 8: user_phone.GetUserPhonesByUserIDResponse
-	(*timestamppb.Timestamp)(nil),         // 9: google.protobuf.Timestamp
+	(*UserPhone)(nil),                                 // 0: user_phone.UserPhone
+	(*CreateUserPhoneRequest)(nil),                    // 1: user_phone.CreateUserPhoneRequest
+	(*CreateUserPhoneResponse)(nil),                   // 2: user_phone.CreateUserPhoneResponse
+	(*GetUserPhoneByIDRequest)(nil),                   // 3: user_phone.GetUserPhoneByIDRequest
+	(*GetUserPhoneByIDResponse)(nil),                  // 4: user_phone.GetUserPhoneByIDResponse
+	(*GetUserPhoneByCountryCodeAndPhoneRequest)(nil),  // 5: user_phone.GetUserPhoneByCountryCodeAndPhoneRequest
+	(*GetUserPhoneByCountryCodeAndPhoneResponse)(nil), // 6: user_phone.GetUserPhoneByCountryCodeAndPhoneResponse
+	(*GetUserPhonesByUserIDRequest)(nil),              // 7: user_phone.GetUserPhonesByUserIDRequest
+	(*GetUserPhonesByUserIDResponse)(nil),             // 8: user_phone.GetUserPhonesByUserIDResponse
+	(*timestamppb.Timestamp)(nil),                     // 9: google.protobuf.Timestamp
 }
 var file_directory_user_phone_proto_depIdxs = []int32{
 	9,  // 0: user_phone.UserPhone.verified_at:type_name -> google.protobuf.Timestamp
@@ -658,15 +667,15 @@ var file_directory_user_phone_proto_depIdxs = []int32{
 	9,  // 5: user_phone.CreateUserPhoneRequest.verification_expires_at:type_name -> google.protobuf.Timestamp
 	0,  // 6: user_phone.CreateUserPhoneResponse.user_phone:type_name -> user_phone.UserPhone
 	0,  // 7: user_phone.GetUserPhoneByIDResponse.user_phone:type_name -> user_phone.UserPhone
-	0,  // 8: user_phone.GetUserPhoneByPhoneResponse.user_phone:type_name -> user_phone.UserPhone
+	0,  // 8: user_phone.GetUserPhoneByCountryCodeAndPhoneResponse.user_phone:type_name -> user_phone.UserPhone
 	0,  // 9: user_phone.GetUserPhonesByUserIDResponse.user_phones:type_name -> user_phone.UserPhone
 	1,  // 10: user_phone.UserPhoneService.CreateUserPhone:input_type -> user_phone.CreateUserPhoneRequest
 	3,  // 11: user_phone.UserPhoneService.GetUserPhoneByID:input_type -> user_phone.GetUserPhoneByIDRequest
-	5,  // 12: user_phone.UserPhoneService.GetUserPhoneByPhone:input_type -> user_phone.GetUserPhoneByPhoneRequest
+	5,  // 12: user_phone.UserPhoneService.GetUserPhoneByCountryCodeAndPhone:input_type -> user_phone.GetUserPhoneByCountryCodeAndPhoneRequest
 	7,  // 13: user_phone.UserPhoneService.GetUserPhonesByUserID:input_type -> user_phone.GetUserPhonesByUserIDRequest
 	2,  // 14: user_phone.UserPhoneService.CreateUserPhone:output_type -> user_phone.CreateUserPhoneResponse
 	4,  // 15: user_phone.UserPhoneService.GetUserPhoneByID:output_type -> user_phone.GetUserPhoneByIDResponse
-	6,  // 16: user_phone.UserPhoneService.GetUserPhoneByPhone:output_type -> user_phone.GetUserPhoneByPhoneResponse
+	6,  // 16: user_phone.UserPhoneService.GetUserPhoneByCountryCodeAndPhone:output_type -> user_phone.GetUserPhoneByCountryCodeAndPhoneResponse
 	8,  // 17: user_phone.UserPhoneService.GetUserPhonesByUserID:output_type -> user_phone.GetUserPhonesByUserIDResponse
 	14, // [14:18] is the sub-list for method output_type
 	10, // [10:14] is the sub-list for method input_type

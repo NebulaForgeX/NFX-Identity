@@ -17,23 +17,23 @@ func New(cfg Config) *Tokenx {
 }
 
 // GenerateAccessToken 生成 Access Token
-func (t *Tokenx) GenerateAccessToken(userID, username, email, phone, roleID string) (string, error) {
-	return t.generator.GenerateAccessToken(userID, username, email, phone, roleID)
+func (t *Tokenx) GenerateAccessToken(userID, username, email, phone, countryCode, roleID string) (string, error) {
+	return t.generator.GenerateAccessToken(userID, username, email, phone, countryCode, roleID)
 }
 
 // GenerateRefreshToken 生成 Refresh Token
-func (t *Tokenx) GenerateRefreshToken(userID, username, email, phone, roleID string) (string, error) {
-	return t.generator.GenerateRefreshToken(userID, username, email, phone, roleID)
+func (t *Tokenx) GenerateRefreshToken(userID, username, email, phone, countryCode, roleID string) (string, error) {
+	return t.generator.GenerateRefreshToken(userID, username, email, phone, countryCode, roleID)
 }
 
 // GenerateTokenPair 生成 Token 对
-func (t *Tokenx) GenerateTokenPair(userID, username, email, phone, roleID string) (accessToken, refreshToken string, err error) {
-	return t.generator.GenerateTokenPair(userID, username, email, phone, roleID)
+func (t *Tokenx) GenerateTokenPair(userID, username, email, phone, countryCode, roleID string) (accessToken, refreshToken string, err error) {
+	return t.generator.GenerateTokenPair(userID, username, email, phone, countryCode, roleID)
 }
 
 // GenerateTokenPairWithRefreshID 生成 Token 对（refresh token 带 token_id/jti）
-func (t *Tokenx) GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID string) (accessToken, refreshToken string, err error) {
-	return t.generator.GenerateTokenPairWithRefreshID(userID, username, email, phone, roleID, refreshTokenID)
+func (t *Tokenx) GenerateTokenPairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID string) (accessToken, refreshToken string, err error) {
+	return t.generator.GenerateTokenPairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID)
 }
 
 // VerifyAccessToken 验证 Access Token

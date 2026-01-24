@@ -8,12 +8,13 @@ import (
 
 // TokenClaims JWT Token Claims
 type TokenClaims struct {
-	UserID   string   `json:"user_id"`   // 用户ID
-	Username string   `json:"username"`  // 用户名
-	Email    string   `json:"email"`     // 邮箱
-	Phone    string   `json:"phone"`     // 手机号
-	RoleID   string   `json:"role_id"`   // 角色ID
-	Type     TokenType `json:"type"`     // Token 类型：access 或 refresh
+	UserID      string   `json:"user_id"`       // 用户ID
+	Username    string   `json:"username"`      // 用户名
+	Email       string   `json:"email"`          // 邮箱
+	Phone       string   `json:"phone"`          // 手机号
+	CountryCode string   `json:"country_code"`   // 国家代码（手机号登录时使用）
+	RoleID      string   `json:"role_id"`       // 角色ID
+	Type        TokenType `json:"type"`         // Token 类型：access 或 refresh
 	jwt.RegisteredClaims
 }
 
@@ -26,15 +27,16 @@ const (
 )
 
 // NewAccessTokenClaims 创建 Access Token Claims
-func NewAccessTokenClaims(userID, username, email, phone, roleID, issuer string, ttl time.Duration) *TokenClaims {
+func NewAccessTokenClaims(userID, username, email, phone, countryCode, roleID, issuer string, ttl time.Duration) *TokenClaims {
 	now := time.Now()
 	return &TokenClaims{
-		UserID:   userID,
-		Username: username,
-		Email:    email,
-		Phone:    phone,
-		RoleID:   roleID,
-		Type:     TokenTypeAccess,
+		UserID:      userID,
+		Username:    username,
+		Email:       email,
+		Phone:       phone,
+		CountryCode: countryCode,
+		RoleID:      roleID,
+		Type:        TokenTypeAccess,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			Subject:   userID,
@@ -46,20 +48,21 @@ func NewAccessTokenClaims(userID, username, email, phone, roleID, issuer string,
 }
 
 // NewRefreshTokenClaims 创建 Refresh Token Claims
-func NewRefreshTokenClaims(userID, username, email, phone, roleID, issuer string, ttl time.Duration) *TokenClaims {
-	return NewRefreshTokenClaimsWithID(userID, username, email, phone, roleID, issuer, ttl, "")
+func NewRefreshTokenClaims(userID, username, email, phone, countryCode, roleID, issuer string, ttl time.Duration) *TokenClaims {
+	return NewRefreshTokenClaimsWithID(userID, username, email, phone, countryCode, roleID, issuer, ttl, "")
 }
 
 // NewRefreshTokenClaimsWithID 创建 Refresh Token Claims（带 token_id/jti）
-func NewRefreshTokenClaimsWithID(userID, username, email, phone, roleID, issuer string, ttl time.Duration, tokenID string) *TokenClaims {
+func NewRefreshTokenClaimsWithID(userID, username, email, phone, countryCode, roleID, issuer string, ttl time.Duration, tokenID string) *TokenClaims {
 	now := time.Now()
 	claims := &TokenClaims{
-		UserID:   userID,
-		Username: username,
-		Email:    email,
-		Phone:    phone,
-		RoleID:   roleID,
-		Type:     TokenTypeRefresh,
+		UserID:      userID,
+		Username:    username,
+		Email:       email,
+		Phone:       phone,
+		CountryCode: countryCode,
+		RoleID:      roleID,
+		Type:        TokenTypeRefresh,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			Subject:   userID,

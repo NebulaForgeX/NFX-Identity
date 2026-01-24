@@ -28,6 +28,8 @@ import {
   GetSession,
   GetTrustedDevice,
   GetUserCredential,
+  LoginByEmail,
+  LoginByPhone,
   RevokeSession,
   UpdateAccountLockout,
   UpdateMFAFactor,
@@ -601,9 +603,7 @@ export const useDeleteTrustedDevice = () => {
 export const useLoginByEmail = () => {
   return useMutation({
     mutationFn: async (params: { email: string; password: string }) => {
-      const { Login } = await import("@/apis/auth.api");
-      const response = await Login({
-        loginType: "email",
+      const response = await LoginByEmail({
         email: params.email,
         password: params.password,
       });
@@ -642,11 +642,12 @@ export const useLoginByEmail = () => {
 export const useLoginByPhone = () => {
   return useMutation({
     mutationFn: async (params: { phone: string; password: string; countryCode?: string }) => {
-      const { Login } = await import("@/apis/auth.api");
-      const response = await Login({
-        loginType: "phone",
-        phone: params.phone,
+      if (!params.countryCode) {
+        throw new Error("countryCode is required");
+      }
+      const response = await LoginByPhone({
         countryCode: params.countryCode,
+        phone: params.phone,
         password: params.password,
       });
       

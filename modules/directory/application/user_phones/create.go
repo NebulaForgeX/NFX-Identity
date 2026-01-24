@@ -11,9 +11,11 @@ import (
 
 // CreateUserPhone 创建用户手机号
 func (s *Service) CreateUserPhone(ctx context.Context, cmd userPhoneCommands.CreateUserPhoneCmd) (uuid.UUID, error) {
-	// Check if phone already exists
-	if exists, _ := s.userPhoneRepo.Check.ByPhone(ctx, cmd.Phone); exists {
-		return uuid.Nil, userPhoneDomain.ErrPhoneAlreadyExists
+	// Check if phone already exists (必须提供 countryCode)
+	if cmd.CountryCode != nil && *cmd.CountryCode != "" {
+		if exists, _ := s.userPhoneRepo.Check.ByCountryCodeAndPhone(ctx, *cmd.CountryCode, cmd.Phone); exists {
+			return uuid.Nil, userPhoneDomain.ErrPhoneAlreadyExists
+		}
 	}
 
 	var verificationExpiresAt *time.Time

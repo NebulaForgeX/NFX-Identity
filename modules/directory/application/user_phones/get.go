@@ -16,9 +16,9 @@ func (s *Service) GetUserPhone(ctx context.Context, userPhoneID uuid.UUID) (user
 	return userPhoneResult.UserPhoneMapper(domainEntity), nil
 }
 
-// GetUserPhoneByPhone 根据手机号获取用户手机
-func (s *Service) GetUserPhoneByPhone(ctx context.Context, phone string) (userPhoneResult.UserPhoneRO, error) {
-	domainEntity, err := s.userPhoneRepo.Get.ByPhone(ctx, phone)
+// GetUserPhoneByCountryCodeAndPhone 根据国家代码和手机号获取用户手机
+func (s *Service) GetUserPhoneByCountryCodeAndPhone(ctx context.Context, countryCode, phone string) (userPhoneResult.UserPhoneRO, error) {
+	domainEntity, err := s.userPhoneRepo.Get.ByCountryCodeAndPhone(ctx, countryCode, phone)
 	if err != nil {
 		return userPhoneResult.UserPhoneRO{}, err
 	}

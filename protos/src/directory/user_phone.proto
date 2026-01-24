@@ -29,8 +29,8 @@ service UserPhoneService {
   // 根据ID获取用户手机
   rpc GetUserPhoneByID (GetUserPhoneByIDRequest) returns (GetUserPhoneByIDResponse);
   
-  // 根据手机号获取用户手机
-  rpc GetUserPhoneByPhone (GetUserPhoneByPhoneRequest) returns (GetUserPhoneByPhoneResponse);
+  // 根据国家代码和手机号获取用户手机
+  rpc GetUserPhoneByCountryCodeAndPhone (GetUserPhoneByCountryCodeAndPhoneRequest) returns (GetUserPhoneByCountryCodeAndPhoneResponse);
   
   // 根据用户ID获取用户手机列表
   rpc GetUserPhonesByUserID (GetUserPhonesByUserIDRequest) returns (GetUserPhonesByUserIDResponse);
@@ -59,11 +59,12 @@ message GetUserPhoneByIDResponse {
   UserPhone user_phone = 1;
 }
 
-message GetUserPhoneByPhoneRequest {
-  string phone = 1;
+message GetUserPhoneByCountryCodeAndPhoneRequest {
+  string country_code = 1;  // 国家代码 (varchar(10))
+  string phone = 2;         // 手机号 (varchar(20))
 }
 
-message GetUserPhoneByPhoneResponse {
+message GetUserPhoneByCountryCodeAndPhoneResponse {
   UserPhone user_phone = 1;
 }
 

@@ -26,7 +26,8 @@ func (r *Router) RegisterRoutes() {
 
 	// 公开路由（不需要认证）：登录、刷新 Token
 	if r.handlers.Auth != nil {
-		auth.Post("/login", r.handlers.Auth.Login)
+		auth.Post("/login/email", r.handlers.Auth.LoginByEmail)
+		auth.Post("/login/phone", r.handlers.Auth.LoginByPhone)
 		auth.Post("/refresh", r.handlers.Auth.Refresh)
 	}
 
