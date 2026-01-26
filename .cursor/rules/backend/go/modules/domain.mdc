@@ -1,0 +1,295 @@
+---
+description: Modules Domain 层编码规范 - 领域层（业务逻辑）
+globs:
+  - '**/modules/**/domain/**/*.go'
+alwaysApply: false
+---
+
+# Modules Domain 层编码规范
+
+## 文件组织
+
+```
+modules/<module>/
+└── domain/
+    └── <entity>/
+        ├── entity.go        # 领域实体（核心业务对象）
+        ├── behavior.go      # 领域行为（业务规则）
+        ├── factory.go       # 实体工厂（确保有效创建）
+        ├── repo.go          # 仓库接口（CQRS Write Side）
+        ├── validation.go    # 领域验证规则
+        └── errors.go        # 领域特定错误
+```
+
+**示例**：
+- `domain/users/` - User 实体领域逻辑
+- `domain/badges/` - Badge 实体领域逻辑
+- 根据业务实体创建对应的领域目录
+
+## Entity（实体）
+
+```go
+// ✅ GOOD - 实体定义标准结构
+package <entity>
+
+import (
+    "time"
+    "github.com/google/uuid"
+)
+
+// <Entity>Status 状态枚举
+type <Entity>Status string
+
+const (
+    <Entity>StatusPending  <Entity>Status = "pending"
+    <Entity>StatusActive   <Entity>Status = "active"
+    <Entity>StatusDeactive <Entity>Status = "deactive"
+)
+
+// <Entity> 领域实体
+type <Entity> struct {
+    state <Entity>State
+}
+
+// <Entity>State 实体状态（不可变，通过方法访问）
+type <Entity>State struct {
+    ID        uuid.UUID
+    Name      string
+    Status    <Entity>Status
+    CreatedAt time.Time
+    UpdatedAt time.Time
+    DeletedAt *time.Time
+}
+
+// 访问器方法（只读）
+func (e *<Entity>) ID() uuid.UUID           { return e.state.ID }
+func (e *<Entity>) Name() string            { return e.state.Name }
+func (e *<Entity>) Status() <Entity>Status  { return e.state.Status }
+func (e *<Entity>) CreatedAt() time.Time    { return e.state.CreatedAt }
+func (e *<Entity>) UpdatedAt() time.Time    { return e.state.UpdatedAt }
+func (e *<Entity>) DeletedAt() *time.Time   { return e.state.DeletedAt }
+```
+
+## Factory（工厂）
+
+```go
+// ✅ GOOD - 工厂函数标准结构
+package <entity>
+
+import (
+    "time"
+    "github.com/google/uuid"
+)
+
+// New<Entity>Params 创建参数
+type New<Entity>Params struct {
+    Name   string
+    Status <Entity>Status
+}
+
+// New<Entity> 创建新实体（通过工厂确保有效性）
+func New<Entity>(p New<Entity>Params) (*<Entity>, error) {
+    if err := validate<Entity>Params(p); err != nil {
+        return nil, err
+    }
+
+    status := p.Status
+    if status == "" {
+        status = <Entity>StatusPending // 默认值
+    }
+
+    id, err := uuid.NewV7()
+    if err != nil {
+        return nil, err
+    }
+
+    now := time.Now().UTC()
+    return New<Entity>FromState(<Entity>State{
+        ID:        id,
+        Name:      p.Name,
+        Status:    status,
+        CreatedAt: now,
+        UpdatedAt: now,
+    }), nil
+}
+
+// New<Entity>FromState 从状态创建实体（用于从数据库恢复）
+func New<Entity>FromState(st <Entity>State) *<Entity> {
+    return &<Entity>{state: st}
+}
+
+// validate<Entity>Params 验证创建参数
+func validate<Entity>Params(p New<Entity>Params) error {
+    if p.Name == "" {
+        return Err<Entity>NameRequired
+    }
+    if p.Status != "" {
+        validStatuses := map[<Entity>Status]struct{}{
+            <Entity>StatusPending:  {},
+            <Entity>StatusActive:   {},
+            <Entity>StatusDeactive: {},
+        }
+        if _, ok := validStatuses[p.Status]; !ok {
+            return ErrInvalid<Entity>Status
+        }
+    }
+    return nil
+}
+```
+
+## Behavior（行为）
+
+```go
+// ✅ GOOD - 领域行为标准结构
+package <entity>
+
+import (
+    "time"
+)
+
+// UpdateStatus 更新状态（业务规则）
+func (e *<Entity>) UpdateStatus(status <Entity>Status) error {
+    if e.DeletedAt() != nil {
+        return Err<Entity>NotFound
+    }
+    
+    validStatuses := map[<Entity>Status]struct{}{
+        <Entity>StatusPending:  {},
+        <Entity>StatusActive:   {},
+        <Entity>StatusDeactive: {},
+    }
+    if _, ok := validStatuses[status]; !ok {
+        return ErrInvalid<Entity>Status
+    }
+
+    e.state.Status = status
+    e.state.UpdatedAt = time.Now().UTC()
+    return nil
+}
+
+// UpdateName 更新名称
+func (e *<Entity>) UpdateName(name string) error {
+    if e.DeletedAt() != nil {
+        return Err<Entity>NotFound
+    }
+    if name == "" {
+        return Err<Entity>NameRequired
+    }
+
+    e.state.Name = name
+    e.state.UpdatedAt = time.Now().UTC()
+    return nil
+}
+```
+
+## Repository Interface（仓库接口）
+
+```go
+// ✅ GOOD - 仓库接口标准结构（CQRS Write Side）
+package <entity>
+
+import (
+    "context"
+    "github.com/google/uuid"
+)
+
+// Repo 是 <Entity> 的仓库结构体，包含增删改查五个子接口
+type Repo struct {
+    Create Create
+    Get    Get
+    Check  Check
+    Update Update
+    Delete Delete
+}
+
+// Create 定义创建相关的方法
+type Create interface {
+    New(ctx context.Context, e *<Entity>) error
+}
+
+// Get 定义获取数据相关的方法
+type Get interface {
+    ByID(ctx context.Context, id uuid.UUID) (*<Entity>, error)
+    ByName(ctx context.Context, name string) (*<Entity>, error)
+}
+
+// Check 定义检查相关的方法
+type Check interface {
+    ByID(ctx context.Context, id uuid.UUID) (bool, error)
+    ByName(ctx context.Context, name string) (bool, error)
+}
+
+// Update 定义更新相关的方法
+type Update interface {
+    Generic(ctx context.Context, e *<Entity>) error
+    Status(ctx context.Context, id uuid.UUID, status <Entity>Status) error
+}
+
+// Delete 定义删除相关的方法
+type Delete interface {
+    ByID(ctx context.Context, id uuid.UUID) error
+}
+```
+
+## Validation（验证）
+
+```go
+// ✅ GOOD - 验证方法标准结构
+package <entity>
+
+// Validate 验证实体有效性
+func (e *<Entity>) Validate() error {
+    if e.Name() == "" {
+        return Err<Entity>NameRequired
+    }
+    validStatuses := map[<Entity>Status]struct{}{
+        <Entity>StatusPending:  {},
+        <Entity>StatusActive:   {},
+        <Entity>StatusDeactive: {},
+    }
+    if _, ok := validStatuses[e.Status()]; !ok {
+        return ErrInvalid<Entity>Status
+    }
+    return nil
+}
+```
+
+## Errors（错误）
+
+```go
+// ✅ GOOD - 错误定义标准结构
+package <entity>
+
+import "errors"
+
+var (
+    Err<Entity>NotFound         = errors.New("<entity> not found")
+    Err<Entity>NameRequired      = errors.New("<entity> name is required")
+    Err<Entity>NameAlreadyExists = errors.New("<entity> name already exists")
+    ErrInvalid<Entity>Status    = errors.New("invalid <entity> status")
+)
+```
+
+## 命名规范
+
+- **包名**：使用实体名称的复数形式: `users`, `badges`, `user_emails`
+- **实体类型**：使用 `PascalCase`: `User`, `Badge`, `UserEmail`
+- **状态类型**：使用 `<Entity>Status` 格式: `UserStatus`, `BadgeStatus`
+- **状态常量**：使用 `<Entity>Status<Value>` 格式: `UserStatusActive`, `BadgeStatusPending`
+- **工厂函数**：使用 `New<Entity>` 格式: `NewUser`, `NewBadge`
+- **参数结构**：使用 `New<Entity>Params` 格式: `NewUserParams`, `NewBadgeParams`
+- **错误变量**：使用 `Err<Description>` 格式: `ErrUserNotFound`, `ErrUsernameRequired`
+- **仓库接口**：使用 `Repo` 结构体包含子接口: `Create`, `Get`, `Check`, `Update`, `Delete`
+
+## 实现建议
+
+- **不可变状态**：实体状态通过 `state` 字段封装，只能通过方法修改
+- **访问器方法**：所有状态字段通过访问器方法访问，不直接暴露
+- **工厂模式**：使用工厂函数创建实体，确保有效性
+- **业务规则**：业务规则封装在行为方法中
+- **验证分离**：验证逻辑分离到 `validation.go` 和 `Validate()` 方法
+- **错误定义**：领域错误定义在 `errors.go` 中
+- **CQRS 分离**：仓库接口只包含写操作（Create, Get, Check, Update, Delete）
+- **软删除**：使用 `DeletedAt` 字段实现软删除
+- **时间戳**：使用 `CreatedAt`, `UpdatedAt` 字段记录时间
+- **UUID 主键**：使用 UUID v7 作为主键

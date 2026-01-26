@@ -1,0 +1,250 @@
+---
+description: Pkgs 编码规范 - 共享包和工具库
+globs:
+  - '**/pkgs/**/*.go'
+alwaysApply: false
+---
+
+# Pkgs 编码规范
+
+## 文件组织
+
+```
+pkgs/
+├── <package>/              # 各功能包（按功能划分）
+│   ├── <package>.go        # 包主文件
+│   ├── config.go           # 配置定义（如需要）
+│   ├── interface.go        # 接口定义（如需要）
+│   ├── errors.go           # 错误定义（如需要）
+│   └── <subpackage>/       # 子包（如需要）
+│       └── ...
+└── utils/                  # 通用工具包
+    ├── <util>/             # 各工具子包
+    └── ...
+```
+
+**示例**：
+- `cache/` - Redis 缓存层
+- `logx/` - 结构化日志
+- `postgresqlx/` - PostgreSQL 连接
+- `kafkax/` - Kafka 发布/订阅
+- `utils/ptr/` - 指针工具
+- 根据功能需求创建对应的包
+
+## 包分类
+
+### 核心基础设施
+
+- **`cache/`** - Redis 缓存层（实体缓存、列表缓存、计数器缓存）
+- **`configx/`** - 配置加载器（Koanf 封装）
+- **`env/`** - 环境变量工具
+- **`logx/`** - 结构化日志（Zap 封装）
+- **`health/`** - 健康检查管理器
+
+### 数据访问
+
+- **`postgresqlx/`** - PostgreSQL 连接和健康检查
+- **`mysqlx/`** - MySQL 连接（可选）
+- **`mongodbx/`** - MongoDB 连接（可选）
+- **`query/`** - 查询构建工具（GORM 辅助）
+  - `DomainPagination` - 分页支持
+  - `DomainSorts` - 排序支持
+  - `ExecuteQuery` - 查询执行辅助
+
+### 通信
+
+- **`grpcx/`** - gRPC 客户端/服务器配置
+- **`kafkax/`** - Kafka 发布/订阅（Sarama + Watermill）
+- **`rabbitmqx/`** - RabbitMQ 发布/订阅（AMQP）
+
+### 安全
+
+- **`security/token/`** - JWT 令牌管理
+  - `usertoken/` - 用户令牌验证
+  - `servertoken/` - 服务器间令牌
+- **`security/ratelimit/`** - 速率限制中间件
+- **`tokenx/`** - 令牌生成和验证工具
+
+### 工具
+
+- **`utils/`** - 通用工具
+  - `id/` - ID 转换工具
+  - `timex/` - 时间工具
+  - `ptr/` - 指针工具
+  - `slice/` - 切片工具
+  - `mapx/` - Map 工具
+  - `typeutil/` - 类型工具
+  - `file/` - 文件工具
+  - `filter/` - 过滤工具
+  - `contextx/` - Context 工具
+  - `cleanup/` - 清理工具
+- **`patch/`** - 字段补丁工具
+- **`circuitbreaker/`** - 熔断器模式
+- **`retry/`** - 重试工具
+- **`recover/`** - Panic 恢复中间件
+- **`safeexec/`** - 安全 goroutine 执行
+- **`cleanup/`** - 资源清理工具
+- **`email/`** - 邮件模板和 SMTP
+
+### 网络
+
+- **`netx/httpresp/`** - HTTP 响应工具
+- **`netx/ssh/`** - SSH 隧道工具
+
+## 包结构规范
+
+### 简单工具包
+
+```go
+// ✅ GOOD - 简单工具包结构
+package <package>
+
+// 导出的函数或类型
+func FunctionName() {
+    // 实现
+}
+```
+
+### 配置包
+
+```go
+// ✅ GOOD - 配置包结构
+package <package>
+
+// Config 配置结构
+type Config struct {
+    Field1 string `koanf:"field1"`
+    Field2 int    `koanf:"field2"`
+}
+
+// 初始化函数
+func Init(cfg Config) error {
+    // 初始化逻辑
+    return nil
+}
+```
+
+### 接口包
+
+```go
+// ✅ GOOD - 接口包结构
+package <package>
+
+// Interface 接口定义
+type Interface interface {
+    Method1() error
+    Method2() error
+}
+
+// 实现结构
+type impl struct {
+    // 字段
+}
+
+// New 创建新实例
+func New(cfg Config) Interface {
+    return &impl{
+        // 初始化
+    }
+}
+```
+
+### 带子包的包
+
+```go
+// ✅ GOOD - 主包文件
+package <package>
+
+// 主包导出
+func MainFunction() {
+    // 实现
+}
+```
+
+```go
+// ✅ GOOD - 子包文件
+package <subpackage>
+
+// 子包导出
+func SubFunction() {
+    // 实现
+}
+```
+
+## 命名规范
+
+- **包名**：使用 `snake_case` 或简短描述性名称: `cache`, `logx`, `postgresqlx`
+- **文件名**：使用 `snake_case`: `config.go`, `interface.go`, `errors.go`
+- **导出函数**：使用 `PascalCase`: `Init`, `New`, `Get`
+- **导出类型**：使用 `PascalCase`: `Config`, `Interface`, `Client`
+- **未导出函数**：使用 `camelCase`: `init`, `newClient`, `getValue`
+- **未导出类型**：使用 `camelCase`: `config`, `client`, `impl`
+
+## 文档规范
+
+### 函数文档
+
+```go
+// ✅ GOOD - 函数文档标准格式
+/**
+ ** FunctionName does something.
+ ** FunctionName 做某事。
+ *
+ * Type Parameters:
+ *   !- T: The type parameter description (类型参数描述)
+ *
+ * Parameters:
+ *   !- param1: Parameter description (参数描述)
+ *   !- param2: Parameter description (参数描述)
+ *
+ * Returns:
+ *   !- result: Return value description (返回值描述)
+ *   !- error: Error description (错误描述)
+ *
+ * Examples:
+ *
+ * 	result, err := FunctionName(param1, param2)
+ * 	if err != nil {
+ * 	    return err
+ * 	}
+ */
+func FunctionName[T any](param1 string, param2 int) (result T, error) {
+    // 实现
+}
+```
+
+### 类型文档
+
+```go
+// ✅ GOOD - 类型文档标准格式
+// Config defines the configuration for something.
+// Config 定义某物的配置。
+//
+// Fields:
+//   !- Field1: Field description (字段描述)
+//   !- Field2: Field description (字段描述)
+//
+// Examples:
+//
+// 	cfg := Config{
+// 	    Field1: "value1",
+// 	    Field2: 42,
+// 	}
+type Config struct {
+    Field1 string `koanf:"field1"`
+    Field2 int    `koanf:"field2"`
+}
+```
+
+## 实现建议
+
+- **单一职责**：每个包应该有明确的单一职责
+- **无业务逻辑**：pkgs 包应该是通用的，不包含业务逻辑
+- **可复用性**：设计时考虑跨模块复用
+- **接口抽象**：使用接口定义行为，便于测试和替换
+- **配置驱动**：使用配置结构体管理参数
+- **错误处理**：定义清晰的错误类型和错误处理
+- **文档完整**：为所有导出的函数和类型添加文档
+- **测试覆盖**：为关键功能编写单元测试
+- **依赖最小**：尽量减少外部依赖
+- **版本兼容**：保持向后兼容性，避免破坏性变更

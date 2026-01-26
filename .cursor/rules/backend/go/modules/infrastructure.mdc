@@ -1,0 +1,342 @@
+---
+description: Modules Infrastructure 层编码规范 - 基础设施层（技术实现）
+globs:
+  - '**/modules/**/infrastructure/**/*.go'
+alwaysApply: false
+---
+
+# Modules Infrastructure 层编码规范
+
+## 文件组织
+
+```
+modules/<module>/
+└── infrastructure/
+    ├── repository/          # 仓库实现（CQRS Write Side）
+    │   └── <entity>/
+    │       ├── repo.go      # 仓库工厂（创建 *domain.Repo）
+    │       ├── create/      # 创建处理器
+    │       │   ├── repo.go
+    │       │   └── new.go
+    │       ├── get/         # 获取处理器
+    │       │   ├── repo.go
+    │       │   ├── by_id.go
+    │       │   └── by_name.go
+    │       ├── check/       # 检查处理器
+    │       │   ├── repo.go
+    │       │   └── by_id.go
+    │       ├── update/      # 更新处理器
+    │       │   ├── repo.go
+    │       │   ├── generic.go
+    │       │   └── status.go
+    │       ├── delete/      # 删除处理器
+    │       │   ├── repo.go
+    │       │   └── by_id.go
+    │       └── mapper/      # 实体映射器（Entity ↔ Model）
+    │           └── mapper.go
+    └── rdb/                 # 数据库模型和视图
+        └── models/          # GORM 模型（写模型）
+            └── <entity>_dbgen.go
+```
+
+**示例**：
+- `infrastructure/repository/users/` - User 实体的仓库实现
+- `infrastructure/repository/badges/` - Badge 实体的仓库实现
+- 根据业务实体创建对应的仓库实现目录
+
+## Repository Factory（仓库工厂）
+
+```go
+// ✅ GOOD - 仓库工厂标准结构
+package <entity>
+
+import (
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/check"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/create"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/delete"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/get"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/update"
+    "gorm.io/gorm"
+)
+
+// NewRepo 创建一个新的 <Entity> repository
+func NewRepo(db *gorm.DB) *<entity>Domain.Repo {
+    return &<entity>Domain.Repo{
+        Create: create.NewHandler(db),
+        Get:    get.NewHandler(db),
+        Check:  check.NewHandler(db),
+        Update: update.NewHandler(db),
+        Delete: delete.NewHandler(db),
+    }
+}
+```
+
+## Handler Base（处理器基类）
+
+```go
+// ✅ GOOD - 处理器基类标准结构
+package create
+
+import (
+    "gorm.io/gorm"
+)
+
+// Handler 创建处理器
+type Handler struct {
+    db *gorm.DB
+}
+
+// NewHandler 创建新的处理器
+func NewHandler(db *gorm.DB) *Handler {
+    return &Handler{db: db}
+}
+```
+
+## Create Handler（创建处理器）
+
+```go
+// ✅ GOOD - 创建处理器标准结构
+package create
+
+import (
+    "context"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/mapper"
+)
+
+// New 创建新的 <Entity>，实现 <entity>Domain.Create 接口
+func (h *Handler) New(ctx context.Context, e *<entity>Domain.<Entity>) error {
+    m := mapper.<Entity>DomainToModel(e)
+    return h.db.WithContext(ctx).Create(&m).Error
+}
+```
+
+## Get Handler（获取处理器）
+
+```go
+// ✅ GOOD - 获取处理器标准结构
+package get
+
+import (
+    "context"
+    "errors"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/rdb/models"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/mapper"
+    "github.com/google/uuid"
+    "gorm.io/gorm"
+)
+
+// ByID 根据 ID 获取 <Entity>，实现 <entity>Domain.Get 接口
+func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*<entity>Domain.<Entity>, error) {
+    var m models.<Entity>
+    if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return nil, <entity>Domain.Err<Entity>NotFound
+        }
+        return nil, err
+    }
+    return mapper.<Entity>ModelToDomain(&m), nil
+}
+
+// ByName 根据名称获取 <Entity>
+func (h *Handler) ByName(ctx context.Context, name string) (*<entity>Domain.<Entity>, error) {
+    var m models.<Entity>
+    if err := h.db.WithContext(ctx).Where("name = ?", name).First(&m).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return nil, <entity>Domain.Err<Entity>NotFound
+        }
+        return nil, err
+    }
+    return mapper.<Entity>ModelToDomain(&m), nil
+}
+```
+
+## Check Handler（检查处理器）
+
+```go
+// ✅ GOOD - 检查处理器标准结构
+package check
+
+import (
+    "context"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/rdb/models"
+    "github.com/google/uuid"
+    "gorm.io/gorm"
+)
+
+// ByID 检查 <Entity> 是否存在，实现 <entity>Domain.Check 接口
+func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (bool, error) {
+    var count int64
+    if err := h.db.WithContext(ctx).Model(&models.<Entity>{}).Where("id = ?", id).Count(&count).Error; err != nil {
+        return false, err
+    }
+    return count > 0, nil
+}
+```
+
+## Update Handler（更新处理器）
+
+```go
+// ✅ GOOD - 更新处理器标准结构
+package update
+
+import (
+    "context"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/repository/<entity>/mapper"
+    "github.com/google/uuid"
+    "gorm.io/gorm"
+)
+
+// Generic 通用更新，实现 <entity>Domain.Update 接口
+func (h *Handler) Generic(ctx context.Context, e *<entity>Domain.<Entity>) error {
+    m := mapper.<Entity>DomainToModel(e)
+    updates := mapper.<Entity>ModelToUpdates(m)
+    return h.db.WithContext(ctx).Model(&models.<Entity>{}).Where("id = ?", e.ID()).Updates(updates).Error
+}
+
+// Status 更新状态
+func (h *Handler) Status(ctx context.Context, id uuid.UUID, status <entity>Domain.<Entity>Status) error {
+    updates := map[string]any{
+        "status":     mapper.<Entity>StatusDomainToEnum(status),
+        "updated_at": gorm.Expr("NOW()"),
+    }
+    return h.db.WithContext(ctx).Model(&models.<Entity>{}).Where("id = ?", id).Updates(updates).Error
+}
+```
+
+## Delete Handler（删除处理器）
+
+```go
+// ✅ GOOD - 删除处理器标准结构
+package delete
+
+import (
+    "context"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/rdb/models"
+    "github.com/google/uuid"
+    "gorm.io/gorm"
+)
+
+// ByID 根据 ID 删除 <Entity>，实现 <entity>Domain.Delete 接口（软删除）
+func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
+    return h.db.WithContext(ctx).Model(&models.<Entity>{}).Where("id = ?", id).Update("deleted_at", gorm.Expr("NOW()")).Error
+}
+```
+
+## Mapper（映射器）
+
+```go
+// ✅ GOOD - 映射器标准结构
+package mapper
+
+import (
+    "<project>/enums"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "<project>/modules/<module>/infrastructure/rdb/models"
+    "<project>/pkgs/utils/timex"
+)
+
+// <Entity>DomainToModel 将 Domain <Entity> 转换为 Model <Entity>
+func <Entity>DomainToModel(e *<entity>Domain.<Entity>) *models.<Entity> {
+    if e == nil {
+        return nil
+    }
+
+    return &models.<Entity>{
+        ID:        e.ID(),
+        Name:      e.Name(),
+        Status:    <entity>StatusDomainToEnum(e.Status()),
+        CreatedAt: e.CreatedAt(),
+        UpdatedAt: e.UpdatedAt(),
+        DeletedAt: timex.TimeToGormDeletedAt(e.DeletedAt()),
+    }
+}
+
+// <Entity>ModelToDomain 将 Model <Entity> 转换为 Domain <Entity>
+func <Entity>ModelToDomain(m *models.<Entity>) *<entity>Domain.<Entity> {
+    if m == nil {
+        return nil
+    }
+
+    state := <entity>Domain.<Entity>State{
+        ID:        m.ID,
+        Name:      m.Name,
+        Status:    <entity>StatusEnumToDomain(m.Status),
+        CreatedAt: m.CreatedAt,
+        UpdatedAt: m.UpdatedAt,
+        DeletedAt: timex.GormDeletedAtToTime(m.DeletedAt),
+    }
+
+    return <entity>Domain.New<Entity>FromState(state)
+}
+
+// <Entity>ModelToUpdates 将 Model <Entity> 转换为更新字段映射
+func <Entity>ModelToUpdates(m *models.<Entity>) map[string]any {
+    return map[string]any{
+        models.<Entity>Cols.Name:      m.Name,
+        models.<Entity>Cols.Status:     m.Status,
+        models.<Entity>Cols.UpdatedAt:  m.UpdatedAt,
+        models.<Entity>Cols.DeletedAt:  m.DeletedAt,
+    }
+}
+
+// 枚举转换辅助函数
+
+// <Entity>StatusDomainToEnum 将 Domain <Entity>Status 转换为 Enum <Entity>Status
+func <Entity>StatusDomainToEnum(es <entity>Domain.<Entity>Status) enums.<Module><Entity>Status {
+    return <entity>StatusDomainToEnum(es)
+}
+
+func <entity>StatusDomainToEnum(es <entity>Domain.<Entity>Status) enums.<Module><Entity>Status {
+    switch es {
+    case <entity>Domain.<Entity>StatusPending:
+        return enums.<MODULE>_<ENTITY>_STATUS_PENDING
+    case <entity>Domain.<Entity>StatusActive:
+        return enums.<MODULE>_<ENTITY>_STATUS_ACTIVE
+    case <entity>Domain.<Entity>StatusDeactive:
+        return enums.<MODULE>_<ENTITY>_STATUS_DEACTIVE
+    default:
+        return enums.<MODULE>_<ENTITY>_STATUS_PENDING
+    }
+}
+
+func <entity>StatusEnumToDomain(es enums.<Module><Entity>Status) <entity>Domain.<Entity>Status {
+    switch es {
+    case enums.<MODULE>_<ENTITY>_STATUS_PENDING:
+        return <entity>Domain.<Entity>StatusPending
+    case enums.<MODULE>_<ENTITY>_STATUS_ACTIVE:
+        return <entity>Domain.<Entity>StatusActive
+    case enums.<MODULE>_<ENTITY>_STATUS_DEACTIVE:
+        return <entity>Domain.<Entity>StatusDeactive
+    default:
+        return <entity>Domain.<Entity>StatusPending
+    }
+}
+```
+
+## 命名规范
+
+- **包名**：使用实体名称的复数形式: `users`, `badges`, `user_emails`
+- **子包名**：使用操作名称: `create`, `get`, `check`, `update`, `delete`, `mapper`
+- **工厂函数**：使用 `NewRepo` 格式: `NewRepo`
+- **处理器类型**：使用 `Handler` 格式: `Handler`
+- **处理器工厂**：使用 `NewHandler` 格式: `NewHandler`
+- **映射函数**：使用 `<Entity>DomainToModel`, `<Entity>ModelToDomain` 格式
+- **枚举转换**：使用 `<entity>StatusDomainToEnum`, `<entity>StatusEnumToDomain` 格式
+
+## 实现建议
+
+- **接口实现**：每个处理器实现对应的领域接口
+- **错误转换**：将 GORM 错误转换为领域错误（如 `gorm.ErrRecordNotFound` → `Err<Entity>NotFound`）
+- **上下文传递**：使用 `WithContext(ctx)` 传递上下文
+- **软删除**：删除操作使用软删除（更新 `deleted_at` 字段）
+- **映射分离**：映射逻辑分离到 `mapper` 子包
+- **枚举转换**：领域枚举和数据库枚举之间的转换封装在映射器中
+- **更新优化**：使用 `Updates` 方法只更新变化的字段
+- **事务管理**：事务在应用层管理，基础设施层不管理事务
+- **模型引用**：使用生成的模型文件（`*_dbgen.go`）

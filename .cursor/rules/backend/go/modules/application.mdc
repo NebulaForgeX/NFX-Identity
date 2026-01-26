@@ -1,0 +1,277 @@
+---
+description: Modules Application 层编码规范 - 应用层（用例）
+globs:
+  - '**/modules/**/application/**/*.go'
+alwaysApply: false
+---
+
+# Modules Application 层编码规范
+
+## 文件组织
+
+```
+modules/<module>/
+└── application/
+    └── <entity>/
+        ├── service.go       # 应用服务（编排领域）
+        ├── create.go        # 创建用例
+        ├── update.go        # 更新用例
+        ├── delete.go        # 删除用例
+        ├── get.go           # 获取用例
+        ├── list.go          # 列表用例（如需要）
+        ├── commands/        # 命令定义
+        │   └── commands.go
+        └── results/         # 结果定义
+            └── <entity>.go
+```
+
+**示例**：
+- `application/users/` - User 实体的应用逻辑
+- `application/badges/` - Badge 实体的应用逻辑
+- 根据业务实体创建对应的应用目录
+
+## Service（应用服务）
+
+```go
+// ✅ GOOD - 应用服务标准结构
+package <entity>
+
+import (
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+)
+
+// Service 应用服务（编排领域层）
+type Service struct {
+    <entity>Repo *<entity>Domain.Repo
+}
+
+// NewService 创建应用服务
+func NewService(
+    <entity>Repo *<entity>Domain.Repo,
+) *Service {
+    return &Service{
+        <entity>Repo: <entity>Repo,
+    }
+}
+```
+
+## Create（创建用例）
+
+```go
+// ✅ GOOD - 创建用例标准结构
+package <entity>
+
+import (
+    "context"
+    <entity>Commands "<project>/modules/<module>/application/<entity>/commands"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "github.com/google/uuid"
+)
+
+// Create<Entity> 创建 <Entity>
+func (s *Service) Create<Entity>(ctx context.Context, cmd <entity>Commands.Create<Entity>Cmd) (uuid.UUID, error) {
+    // 检查是否已存在
+    if exists, _ := s.<entity>Repo.Check.ByName(ctx, cmd.Name); exists {
+        return uuid.Nil, <entity>Domain.Err<Entity>NameAlreadyExists
+    }
+
+    // 创建领域实体
+    <entity>, err := <entity>Domain.New<Entity>(<entity>Domain.New<Entity>Params{
+        Name:   cmd.Name,
+        Status: cmd.Status,
+    })
+    if err != nil {
+        return uuid.Nil, err
+    }
+
+    // 保存到仓库
+    if err := s.<entity>Repo.Create.New(ctx, <entity>); err != nil {
+        return uuid.Nil, err
+    }
+
+    return <entity>.ID(), nil
+}
+```
+
+## Update（更新用例）
+
+```go
+// ✅ GOOD - 更新用例标准结构
+package <entity>
+
+import (
+    "context"
+    <entity>Commands "<project>/modules/<module>/application/<entity>/commands"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+)
+
+// Update<Entity>Status 更新 <Entity> 状态
+func (s *Service) Update<Entity>Status(ctx context.Context, cmd <entity>Commands.Update<Entity>StatusCmd) error {
+    // 获取领域实体
+    <entity>, err := s.<entity>Repo.Get.ByID(ctx, cmd.<Entity>ID)
+    if err != nil {
+        return err
+    }
+
+    // 调用领域行为
+    if err := <entity>.UpdateStatus(cmd.Status); err != nil {
+        return err
+    }
+
+    // 保存到仓库
+    return s.<entity>Repo.Update.Generic(ctx, <entity>)
+}
+```
+
+## Delete（删除用例）
+
+```go
+// ✅ GOOD - 删除用例标准结构
+package <entity>
+
+import (
+    "context"
+    <entity>Commands "<project>/modules/<module>/application/<entity>/commands"
+)
+
+// Delete<Entity> 删除 <Entity>
+func (s *Service) Delete<Entity>(ctx context.Context, cmd <entity>Commands.Delete<Entity>Cmd) error {
+    // 检查是否存在
+    exists, err := s.<entity>Repo.Check.ByID(ctx, cmd.<Entity>ID)
+    if err != nil {
+        return err
+    }
+    if !exists {
+        return <entity>Domain.Err<Entity>NotFound
+    }
+
+    // 删除
+    return s.<entity>Repo.Delete.ByID(ctx, cmd.<Entity>ID)
+}
+```
+
+## Get（获取用例）
+
+```go
+// ✅ GOOD - 获取用例标准结构
+package <entity>
+
+import (
+    "context"
+    <entity>Result "<project>/modules/<module>/application/<entity>/results"
+    "github.com/google/uuid"
+)
+
+// Get<Entity> 根据ID获取 <Entity>
+func (s *Service) Get<Entity>(ctx context.Context, <entity>ID uuid.UUID) (<entity>Result.<Entity>RO, error) {
+    domainEntity, err := s.<entity>Repo.Get.ByID(ctx, <entity>ID)
+    if err != nil {
+        return <entity>Result.<Entity>RO{}, err
+    }
+    return <entity>Result.<Entity>Mapper(domainEntity), nil
+}
+
+// Get<Entity>ByName 根据名称获取 <Entity>
+func (s *Service) Get<Entity>ByName(ctx context.Context, name string) (<entity>Result.<Entity>RO, error) {
+    domainEntity, err := s.<entity>Repo.Get.ByName(ctx, name)
+    if err != nil {
+        return <entity>Result.<Entity>RO{}, err
+    }
+    return <entity>Result.<Entity>Mapper(domainEntity), nil
+}
+```
+
+## Commands（命令）
+
+```go
+// ✅ GOOD - 命令定义标准结构
+package commands
+
+import (
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "github.com/google/uuid"
+)
+
+// Create<Entity>Cmd 创建 <Entity> 命令
+type Create<Entity>Cmd struct {
+    Name   string
+    Status <entity>Domain.<Entity>Status
+}
+
+// Update<Entity>StatusCmd 更新 <Entity> 状态命令
+type Update<Entity>StatusCmd struct {
+    <Entity>ID uuid.UUID
+    Status     <entity>Domain.<Entity>Status
+}
+
+// Update<Entity>NameCmd 更新 <Entity> 名称命令
+type Update<Entity>NameCmd struct {
+    <Entity>ID uuid.UUID
+    Name       string
+}
+
+// Delete<Entity>Cmd 删除 <Entity> 命令
+type Delete<Entity>Cmd struct {
+    <Entity>ID uuid.UUID
+}
+```
+
+## Results（结果）
+
+```go
+// ✅ GOOD - 结果定义标准结构
+package results
+
+import (
+    "time"
+    <entity>Domain "<project>/modules/<module>/domain/<entity>"
+    "github.com/google/uuid"
+)
+
+// <Entity>RO 只读结果对象（Read-Only）
+type <Entity>RO struct {
+    ID        uuid.UUID
+    Name      string
+    Status    <entity>Domain.<Entity>Status
+    CreatedAt time.Time
+    UpdatedAt time.Time
+    DeletedAt *time.Time
+}
+
+// <Entity>Mapper 将 Domain <Entity> 转换为 Application <Entity>RO
+func <Entity>Mapper(e *<entity>Domain.<Entity>) <Entity>RO {
+    if e == nil {
+        return <Entity>RO{}
+    }
+
+    return <Entity>RO{
+        ID:        e.ID(),
+        Name:      e.Name(),
+        Status:    e.Status(),
+        CreatedAt: e.CreatedAt(),
+        UpdatedAt: e.UpdatedAt(),
+        DeletedAt: e.DeletedAt(),
+    }
+}
+```
+
+## 命名规范
+
+- **包名**：使用实体名称的复数形式: `users`, `badges`, `user_emails`
+- **服务类型**：使用 `Service` 格式: `Service`
+- **用例函数**：使用 `PascalCase`，动词开头: `Create<Entity>`, `Update<Entity>Status`, `Delete<Entity>`, `Get<Entity>`
+- **命令类型**：使用 `<Action><Entity>Cmd` 格式: `CreateUserCmd`, `UpdateUserStatusCmd`
+- **结果类型**：使用 `<Entity>RO` 格式（RO = Read-Only）: `UserRO`, `BadgeRO`
+- **映射函数**：使用 `<Entity>Mapper` 格式: `UserMapper`, `BadgeMapper`
+
+## 实现建议
+
+- **用例编排**：应用层负责编排领域层，不包含业务逻辑
+- **命令模式**：使用命令对象封装用例输入参数
+- **结果对象**：使用只读结果对象（RO）封装用例输出
+- **映射函数**：使用映射函数将领域实体转换为结果对象
+- **错误传播**：直接传播领域层错误，不包装
+- **事务边界**：应用层方法通常是一个事务边界
+- **依赖注入**：通过构造函数注入领域仓库
+- **单一职责**：每个用例方法只做一件事
+- **验证前置**：在调用领域层之前进行必要的检查（如存在性检查）

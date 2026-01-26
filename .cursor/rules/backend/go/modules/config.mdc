@@ -1,0 +1,121 @@
+---
+description: Modules Config 编码规范 - 模块配置
+globs:
+  - '**/modules/**/config/**/*.go'
+alwaysApply: false
+---
+
+# Modules Config 编码规范
+
+## 文件组织
+
+```
+modules/<module>/
+└── config/
+    ├── config.go           # 配置加载器
+    └── types.go            # 配置类型定义
+```
+
+**示例**：
+- `config/config.go` - 配置加载逻辑
+- `config/types.go` - 配置结构体定义
+- 每个模块有独立的配置目录
+
+## Config Loader（配置加载器）
+
+```go
+// ✅ GOOD - 配置加载器标准结构
+package config
+
+import (
+    "context"
+    "fmt"
+    "os"
+    "path/filepath"
+    "<project>/pkgs/configx"
+    "<project>/pkgs/env"
+)
+
+const ServiceName = "<module>"
+
+// Load 加载配置
+func Load(ctx context.Context, env env.Env) (*Config, error) {
+    wd, err := os.Getwd()
+    if err != nil {
+        return nil, fmt.Errorf("failed to get working directory: %w", err)
+    }
+    configPath := filepath.Join(wd, "inputs", ServiceName, "configuration", fmt.Sprintf("%s.toml", env))
+
+    loader, err := configx.NewLoader[Config](ctx, configx.WithPath(configPath))
+    if err != nil {
+        return nil, err
+    }
+    cfg := loader.Config()
+    cfg.Env = env
+
+    // 验证配置
+    if err := cfg.KafkaConfig.Validate(); err != nil {
+        return nil, fmt.Errorf("invalid kafka configuration: %w", err)
+    }
+
+    return cfg, nil
+}
+```
+
+## Config Types（配置类型）
+
+```go
+// ✅ GOOD - 配置类型标准结构
+package config
+
+import (
+    "<project>/pkgs/cache"
+    "<project>/pkgs/env"
+    "<project>/pkgs/kafkax"
+    "<project>/pkgs/logx"
+    "<project>/pkgs/postgresqlx"
+    "<project>/pkgs/rabbitmqx"
+    "<project>/pkgs/tokenx"
+)
+
+type Config struct {
+    Env            env.Env
+    Server         ServerConfig       `koanf:"server"`
+    PostgreSQL     postgresqlx.Config `koanf:"postgresql"`
+    Cache          cache.ConnConfig   `koanf:"cache"`
+    Logger         logx.LoggerConfig  `koanf:"logger"`
+    KafkaConfig    kafkax.Config      `koanf:"kafka"`
+    RabbitMQConfig rabbitmqx.Config   `koanf:"rabbitmq"`
+    GRPCClient     GRPCClientConfig   `koanf:"grpc_client"`
+    Token          tokenx.Config      `koanf:"token"`
+}
+
+type ServerConfig struct {
+    Name     string `koanf:"name"`
+    Host     string `koanf:"host"`
+    HTTPPort int    `koanf:"http_port"`
+    GRPCPort int    `koanf:"grpc_port"`
+}
+
+type GRPCClientConfig struct {
+    <Module1>Addr string `koanf:"<module1>_addr"`
+    <Module2>Addr string `koanf:"<module2>_addr"`
+}
+```
+
+## 命名规范
+
+- **包名**：使用 `config`
+- **服务名称常量**：使用 `ServiceName` 格式，值为模块名称
+- **配置类型**：使用 `Config` 格式: `Config`
+- **加载函数**：使用 `Load` 格式: `Load`
+- **配置字段**：使用 `PascalCase`，并添加 `koanf` 标签
+
+## 实现建议
+
+- **配置路径**：配置文件位于 `inputs/<module>/configuration/<env>.toml`
+- **环境变量**：使用 `env.Env` 类型区分开发和生产环境
+- **配置验证**：在加载后验证关键配置（如 Kafka、RabbitMQ）
+- **类型安全**：使用强类型配置结构体
+- **默认值**：在配置文件中设置合理的默认值
+- **敏感信息**：敏感信息通过环境变量或密钥管理服务提供

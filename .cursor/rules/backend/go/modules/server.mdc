@@ -1,0 +1,278 @@
+---
+description: Modules Server 编码规范 - 服务器装配和依赖注入
+globs:
+  - '**/modules/**/server/**/*.go'
+alwaysApply: false
+---
+
+# Modules Server 编码规范
+
+## 文件组织
+
+```
+modules/<module>/
+└── server/
+    ├── server.go           # 服务器初始化（HTTP/gRPC/Pipeline）
+    └── wiring.go           # 依赖注入（DI 容器）
+```
+
+**示例**：
+- `server/server.go` - 服务器启动逻辑
+- `server/wiring.go` - 依赖注入和装配逻辑
+- 每个模块有独立的服务器目录
+
+## Server（服务器）
+
+```go
+// ✅ GOOD - 服务器标准结构
+package server
+
+import (
+    "context"
+    "errors"
+    "net"
+    "net/http"
+    "strconv"
+    "<project>/modules/<module>/config"
+    httpInterfaces "<project>/modules/<module>/interfaces/http"
+    grpcInterfaces "<project>/modules/<module>/interfaces/grpc"
+    eventbusInterfaces "<project>/modules/<module>/interfaces/pipeline"
+    "<project>/pkgs/logx"
+    "golang.org/x/sync/errgroup"
+    "google.golang.org/grpc"
+)
+
+// RunHTTP 运行 HTTP 服务器
+func RunHTTP(ctx context.Context, cfg *config.Config) error {
+    deps, err := NewDeps(ctx, cfg)
+    if err != nil {
+        return err
+    }
+    defer deps.Cleanup()
+
+    httpSrv := httpInterfaces.NewHTTPServer(deps)
+    httpAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.HTTPPort))
+
+    logx.S().Infof("✅ HTTP server listening on %s", httpAddr)
+    if err := httpSrv.Listen(httpAddr); err != nil && !errors.Is(err, http.ErrServerClosed) {
+        return err
+    }
+
+    return nil
+}
+
+// RunGRPC 运行 gRPC 服务器
+func RunGRPC(ctx context.Context, cfg *config.Config) error {
+    deps, err := NewDeps(ctx, cfg)
+    if err != nil {
+        return err
+    }
+    defer deps.Cleanup()
+
+    grpcSrv := grpcInterfaces.NewServer(deps)
+    grpcAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.GRPCPort))
+
+    grpcLis, err := net.Listen("tcp", grpcAddr)
+    if err != nil {
+        return err
+    }
+    defer grpcLis.Close()
+
+    logx.S().Infof("✅ gRPC server listening on %s", grpcAddr)
+    if err := grpcSrv.Serve(grpcLis); err != nil && !errors.Is(err, grpc.ErrServerStopped) {
+        return err
+    }
+
+    return nil
+}
+
+// RunPipeline 运行 Pipeline 服务器（Kafka 事件消费者）
+func RunPipeline(ctx context.Context, cfg *config.Config) error {
+    deps, err := NewDeps(ctx, cfg)
+    if err != nil {
+        return err
+    }
+    defer deps.Cleanup()
+
+    eventbusSrv, err := eventbusInterfaces.NewServer(deps)
+    if err != nil {
+        return err
+    }
+
+    logx.S().Infof("✅ Eventbus (Kafka) server listening on %v", cfg.KafkaConfig.Brokers)
+    return eventbusSrv.Run(ctx)
+}
+
+// RunServer 运行所有服务（HTTP + gRPC + Pipeline + Messaging）
+func RunServer(ctx context.Context, cfg *config.Config) error {
+    deps, err := NewDeps(ctx, cfg)
+    if err != nil {
+        return err
+    }
+    defer deps.Cleanup()
+
+    logx.S().Info("✅ All-in-One Server: All dependencies initialized successfully")
+
+    // 初始化服务器
+    httpSrv := httpInterfaces.NewHTTPServer(deps)
+    grpcSrv := grpcInterfaces.NewServer(deps)
+    eventbusSrv, err := eventbusInterfaces.NewServer(deps)
+    if err != nil {
+        return err
+    }
+
+    httpAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.HTTPPort))
+    grpcAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.GRPCPort))
+
+    grpcLis, err := net.Listen("tcp", grpcAddr)
+    if err != nil {
+        return err
+    }
+    defer grpcLis.Close()
+
+    g, gctx := errgroup.WithContext(ctx)
+
+    // HTTP Server
+    g.Go(func() error {
+        logx.S().Infof("✅ HTTP server listening on %s", httpAddr)
+        if err := httpSrv.Listen(httpAddr); err != nil && !errors.Is(err, http.ErrServerClosed) {
+            return err
+        }
+        return nil
+    })
+
+    // gRPC Server
+    g.Go(func() error {
+        logx.S().Infof("✅ gRPC server listening on %s", grpcAddr)
+        if err := grpcSrv.Serve(grpcLis); err != nil && !errors.Is(err, grpc.ErrServerStopped) {
+            return err
+        }
+        return nil
+    })
+
+    // Pipeline (Kafka Eventbus) Server
+    g.Go(func() error {
+        logx.S().Infof("✅ Eventbus (Kafka) server listening on %v", cfg.KafkaConfig.Brokers)
+        return eventbusSrv.Run(ctx)
+    })
+
+    // Graceful shutdown handler
+    g.Go(func() error {
+        <-gctx.Done()
+        logx.S().Info("🛑 Shutting down all services...")
+        _ = httpSrv.Shutdown()
+        grpcSrv.GracefulStop()
+        _ = eventbusSrv.Close()
+        return nil
+    })
+
+    return g.Wait()
+}
+```
+
+## Wiring（依赖注入）
+
+```go
+// ✅ GOOD - 依赖注入标准结构
+package server
+
+import (
+    "context"
+    "<project>/modules/<module>/application/<entity>"
+    "<project>/modules/<module>/config"
+    "<entity>Repo "<project>/modules/<module>/infrastructure/repository/<entity>"
+    "<project>/pkgs/cache"
+    "<project>/pkgs/health"
+    "<project>/pkgs/kafkax"
+    "<project>/pkgs/kafkax/eventbus"
+    "<project>/pkgs/postgresqlx"
+    "<project>/pkgs/rabbitmqx"
+    "gorm.io/gorm"
+)
+
+// Dependencies 依赖容器
+type Dependencies struct {
+    healthMgr    *health.Manager
+    cache        *cache.Connection
+    postgres     *postgresqlx.Connection
+    kafkaConfig  *kafkax.Config
+    busPublisher *eventbus.BusPublisher
+    <entity>AppSvc *<entity>.Service
+    // ... 其他依赖
+}
+
+// NewDeps 创建依赖容器
+func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
+    // 初始化数据库
+    postgres, err := postgresqlx.NewConnection(ctx, cfg.PostgreSQL)
+    if err != nil {
+        return nil, err
+    }
+
+    // 初始化缓存
+    cache, err := cache.NewConnection(ctx, cfg.Cache)
+    if err != nil {
+        return nil, err
+    }
+
+    // 初始化 Kafka 发布器
+    kafkaPublisher, err := kafkax.NewPublisher(cfg.KafkaConfig)
+    if err != nil {
+        return nil, err
+    }
+    topicResolver := kafkax.NewTopicResolver(cfg.KafkaConfig)
+    busPublisher := eventbus.NewBusPublisher(kafkaPublisher, topicResolver)
+
+    // 初始化仓库
+    <entity>Repo := <entity>Repo.NewRepo(postgres.DB())
+
+    // 初始化应用服务
+    <entity>AppSvc := <entity>.NewService(<entity>Repo)
+
+    // 初始化健康检查管理器
+    healthMgr := health.NewManager()
+    healthMgr.Register("postgresql", postgres)
+    healthMgr.Register("cache", cache)
+
+    return &Dependencies{
+        healthMgr:    healthMgr,
+        cache:        cache,
+        postgres:     postgres,
+        kafkaConfig:  &cfg.KafkaConfig,
+        busPublisher: busPublisher,
+        <entity>AppSvc: <entity>AppSvc,
+    }, nil
+}
+
+// Cleanup 清理资源
+func (d *Dependencies) Cleanup() {
+    if d.postgres != nil {
+        _ = d.postgres.Close()
+    }
+    if d.cache != nil {
+        _ = d.cache.Close()
+    }
+    if d.busPublisher != nil {
+        _ = d.busPublisher.Close()
+    }
+}
+```
+
+## 命名规范
+
+- **包名**：使用 `server`
+- **依赖容器**：使用 `Dependencies` 格式: `Dependencies`
+- **创建函数**：使用 `NewDeps` 格式: `NewDeps`
+- **清理方法**：使用 `Cleanup` 格式: `Cleanup`
+- **运行函数**：使用 `Run<Service>` 格式: `RunHTTP`, `RunGRPC`, `RunPipeline`, `RunServer`
+
+## 实现建议
+
+- **依赖注入**：使用构造函数注入所有依赖
+- **资源管理**：在 `Cleanup` 方法中释放所有资源
+- **错误处理**：初始化失败时返回错误，不继续执行
+- **优雅关闭**：使用 `errgroup` 和信号处理实现优雅关闭
+- **日志记录**：记录服务器启动和关闭信息
+- **健康检查**：注册所有关键依赖到健康检查管理器
+- **服务分离**：支持单独运行 HTTP、gRPC 或 Pipeline 服务
+- **组合服务**：`RunServer` 在 goroutines 中运行所有服务，适合开发环境
