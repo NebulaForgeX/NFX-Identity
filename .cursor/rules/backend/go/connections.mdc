@@ -1,5 +1,5 @@
 ---
-description: Connections 编码规范 - gRPC 客户端封装
+description: 后端配置文件规则 - Connections 编码规范 - gRPC 客户端封装
 globs:
   - '**/connections/**/*.go'
 alwaysApply: false

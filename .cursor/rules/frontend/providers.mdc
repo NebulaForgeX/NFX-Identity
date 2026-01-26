@@ -1,5 +1,5 @@
 ---
-description: Providers 文件夹编码规范 - Context Providers
+description: 前端配置文件规则 - Providers 文件夹编码规范 - Context Providers
 globs:
   - '**/src/providers/**/*.ts'
   - '**/src/providers/**/*.tsx'

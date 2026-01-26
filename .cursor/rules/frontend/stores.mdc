@@ -1,5 +1,5 @@
 ---
-description: Stores 文件夹编码规范 - 状态管理（Zustand）
+description: 前端配置文件规则 - Stores 文件夹编码规范 - 状态管理（Zustand）
 globs:
   - '**/src/stores/**/*.ts'
 alwaysApply: false

@@ -1,5 +1,5 @@
 ---
-description: Inputs Messaging 服务入口编码规范 - RabbitMQ 消息服务
+description: 后端配置文件规则 - Inputs Messaging 服务入口编码规范 - RabbitMQ 消息服务
 globs:
   - '**/inputs/**/messaging/**/*.go'
   - '**/inputs/**/messaging/Dockerfile'

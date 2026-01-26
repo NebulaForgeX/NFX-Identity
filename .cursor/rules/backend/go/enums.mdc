@@ -1,5 +1,5 @@
 ---
-description: Enums 编码规范 - 数据库枚举类型（自动生成）
+description: 后端配置文件规则 - Enums 编码规范 - 数据库枚举类型（自动生成）
 globs:
   - '**/enums/**/*.go'
 alwaysApply: false

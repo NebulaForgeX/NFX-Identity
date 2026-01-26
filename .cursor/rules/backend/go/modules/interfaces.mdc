@@ -1,5 +1,5 @@
 ---
-description: Modules Interfaces 层编码规范 - 接口层（表示层）
+description: 后端配置文件规则 - Modules Interfaces 层编码规范 - 接口层（表示层）
 globs:
   - '**/modules/**/interfaces/**/*.go'
 alwaysApply: false

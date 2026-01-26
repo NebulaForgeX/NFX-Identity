@@ -1,5 +1,5 @@
 ---
-description: Services 文件夹编码规范 - 业务服务
+description: 前端配置文件规则 - Services 文件夹编码规范 - 业务服务
 globs:
   - '**/src/services/**/*.ts'
 alwaysApply: false

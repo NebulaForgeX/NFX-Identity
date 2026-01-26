@@ -1,5 +1,5 @@
 ---
-description: Modules Config 编码规范 - 模块配置
+description: 后端配置文件规则 - Modules Config 编码规范 - 模块配置
 globs:
   - '**/modules/**/config/**/*.go'
 alwaysApply: false

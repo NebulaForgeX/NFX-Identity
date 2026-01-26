@@ -1,5 +1,5 @@
 ---
-description: Types 文件夹编码规范 - TypeScript 类型定义
+description: 前端配置文件规则 - Types 文件夹编码规范 - TypeScript 类型定义
 globs:
   - '**/src/types/**/*.ts'
 alwaysApply: false

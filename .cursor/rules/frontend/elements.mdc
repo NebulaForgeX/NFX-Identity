@@ -1,5 +1,5 @@
 ---
-description: Elements 文件夹编码规范 - 高级可复用业务组件
+description: 前端配置文件规则 - Elements 文件夹编码规范 - 高级可复用业务组件
 globs:
   - '**/src/elements/**/*.ts'
   - '**/src/elements/**/*.tsx'

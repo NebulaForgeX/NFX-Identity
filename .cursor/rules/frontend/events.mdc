@@ -1,5 +1,5 @@
 ---
-description: Events 文件夹编码规范 - 事件系统
+description: 前端配置文件规则 - Events 文件夹编码规范 - 事件系统
 globs:
   - '**/src/events/**/*.ts'
 alwaysApply: false

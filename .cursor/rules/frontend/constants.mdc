@@ -1,5 +1,5 @@
 ---
-description: Constants 文件夹编码规范 - 常量定义
+description: 前端配置文件规则 - Constants 文件夹编码规范 - 常量定义
 globs:
   - '**/src/constants/**/*.ts'
 alwaysApply: false

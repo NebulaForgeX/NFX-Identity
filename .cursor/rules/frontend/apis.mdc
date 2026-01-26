@@ -1,5 +1,5 @@
 ---
-description: APIs 文件夹编码规范 - API 接口定义和管理
+description: 前端配置文件规则 - APIs 文件夹编码规范 - API 接口定义和管理
 globs:
   - '**/src/apis/**/*.ts'
   - '**/src/apis/**/*.tsx'

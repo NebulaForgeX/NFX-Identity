@@ -1,5 +1,5 @@
 ---
-description: Migrations 编码规范 - 数据库迁移管理
+description: 后端配置文件规则 - Migrations 编码规范 - 数据库迁移管理
 globs:
   - '**/databases/migrations/**/*.sql'
 alwaysApply: false

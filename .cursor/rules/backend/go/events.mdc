@@ -1,5 +1,5 @@
 ---
-description: Events 编码规范 - 事件驱动架构定义
+description: 后端配置文件规则 - Events 编码规范 - 事件驱动架构定义
 globs:
   - '**/events/**/*.go'
 alwaysApply: false

@@ -1,5 +1,5 @@
 ---
-description: Inputs Connection 服务入口编码规范 - gRPC 服务
+description: 后端配置文件规则 - Inputs Connection 服务入口编码规范 - gRPC 服务
 globs:
   - '**/inputs/**/connection/**/*.go'
   - '**/inputs/**/connection/Dockerfile'

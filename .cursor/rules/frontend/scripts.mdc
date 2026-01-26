@@ -1,5 +1,5 @@
 ---
-description: Scripts 文件夹编码规范 - 脚本工具
+description: 前端配置文件规则 - Scripts 文件夹编码规范 - 脚本工具
 globs:
   - '**/src/scripts/**/*.ts'
 alwaysApply: false

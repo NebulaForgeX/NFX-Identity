@@ -1,5 +1,5 @@
 ---
-description: Components 文件夹编码规范 - 可复用组件
+description: 前端配置文件规则 - Components 文件夹编码规范 - 可复用组件
 globs:
   - '**/src/components/**/*.ts'
   - '**/src/components/**/*.tsx'

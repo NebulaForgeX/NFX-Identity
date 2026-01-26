@@ -1,5 +1,5 @@
 ---
-description: Modules Server 编码规范 - 服务器装配和依赖注入
+description: 后端配置文件规则 - Modules Server 编码规范 - 服务器装配和依赖注入
 globs:
   - '**/modules/**/server/**/*.go'
 alwaysApply: false

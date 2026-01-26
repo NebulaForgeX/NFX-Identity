@@ -1,5 +1,5 @@
 ---
-description: Protos 编码规范 - Protocol Buffers 定义和代码生成
+description: 后端配置文件规则 - Protos 编码规范 - Protocol Buffers 定义和代码生成
 globs:
   - '**/protos/**/*.proto'
   - '**/protos/buf.yaml'

@@ -1,0 +1,346 @@
+---
+description: 后端配置文件规则 - Inputs Configuration 配置文件编码规范 - TOML 配置文件和环境变量
+globs:
+  - '**/inputs/**/configuration/**/*.toml'
+  - '.env'
+  - '.example.env'
+alwaysApply: false
+---
+
+# Inputs Configuration 配置文件编码规范
+
+## 文件组织
+
+```
+inputs/
+└── <module>/
+    └── configuration/
+        ├── dev.toml      # 开发环境配置
+        └── prod.toml     # 生产环境配置
+```
+
+**实现建议**：
+- 每个模块都有独立的配置文件目录
+- 开发环境和生产环境使用不同的配置文件
+- 根据项目模块划分创建对应的配置文件
+
+## 环境变量命名规范
+
+### 变量命名原则
+- **服务特定前缀**：每个服务使用自己的前缀，避免混淆
+- **明确性**：变量名应该清晰表达其用途
+- **可扩展性**：考虑未来可能添加其他数据库类型（如 MySQL）
+
+### 环境变量分类
+
+#### 1. PostgreSQL 配置（使用 `POSTGRESQL_` 前缀）
+```bash
+POSTGRESQL_HOST=<host>
+POSTGRESQL_PORT=<port>
+POSTGRESQL_USER=<user>
+POSTGRESQL_PASSWORD=<password>
+POSTGRESQL_NAME_DEV=<dev_database_name>
+POSTGRESQL_NAME_PROD=<prod_database_name>
+```
+
+**重要**：使用 `POSTGRESQL_` 前缀而不是 `DB_`，因为未来可能支持 MySQL、MongoDB 等其他数据库。
+
+#### 2. Redis 配置（使用 `REDIS_` 前缀）
+```bash
+REDIS_HOST=<host>
+REDIS_PORT=<port>
+REDIS_PASSWORD=<password>
+```
+
+#### 3. Kafka 配置（使用 `KAFKA_` 前缀）
+```bash
+KAFKA_HOST=<host>
+KAFKA_PORT=<port>
+KAFKA_BROKERS=<host>:<port>
+```
+
+#### 4. RabbitMQ 配置（使用 `RABBITMQ_` 前缀）
+```bash
+RABBITMQ_HOST=<host>
+RABBITMQ_PORT=<port>
+RABBITMQ_USER=<user>
+RABBITMQ_PASSWORD=<password>
+RABBITMQ_VHOST=<vhost>
+```
+
+**重要**：RabbitMQ 必须使用 `RABBITMQ_HOST`，**绝对不能**使用 `POSTGRESQL_HOST` 或 `DB_HOST`。
+
+#### 5. gRPC 服务主机配置（使用 `GRPC_HOST`）
+```bash
+GRPC_HOST=<host>
+```
+
+**重要**：gRPC 客户端地址必须使用 `GRPC_HOST`，**绝对不能**使用 `POSTGRESQL_HOST` 或 `DB_HOST`。
+
+#### 6. Token 配置（使用 `TOKEN_` 前缀）
+```bash
+TOKEN_SECRET_KEY=<secret_key>
+TOKEN_ISSUER=<issuer>
+TOKEN_ACCESS_TTL=<ttl>
+TOKEN_REFRESH_TTL=<ttl>
+TOKEN_ALGORITHM=<algorithm>
+```
+
+#### 7. Email 配置（使用 `EMAIL_` 前缀）
+```bash
+EMAIL_SMTP_HOST=<smtp_host>
+EMAIL_SMTP_PORT=<smtp_port>
+EMAIL_SMTP_USER=<smtp_user>
+EMAIL_SMTP_PASSWORD=<smtp_password>
+EMAIL_SMTP_FROM=<from_address>
+```
+
+## TOML 配置文件结构
+
+### 基本结构
+
+```toml
+# <Project> <Module> Service <Environment> Configuration
+# Environment: <Development/Production>
+
+[server]
+    name = "<Module> Service"
+    host = "0.0.0.0"
+    http_port = "${HTTP_PORT}"
+    grpc_port = "${GRPC_PORT_<MODULE>}"
+
+[postgresql]
+    host = "${POSTGRESQL_HOST}"
+    port = "${POSTGRESQL_PORT}"
+    user = "${POSTGRESQL_USER}"
+    password = "${POSTGRESQL_PASSWORD}"
+    dbname = "${POSTGRESQL_NAME_<ENV>}"
+    sslmode = "<disable/require>"
+    timezone = "UTC"
+    logger_level = "<warn/error>"
+    auto_migrate = false
+
+    [postgresql.connection]
+        timeout = "5s"
+        max_retries = 5
+        retry_interval = "2s"
+        max_idle_connections = 10
+        max_open_connections = 100
+        conn_max_idle_time = "15m"
+        conn_max_lifetime = "1h"
+
+[cache]
+    host = "${REDIS_HOST}"
+    port = "${REDIS_PORT}"
+    password = "${REDIS_PASSWORD}"
+
+    [cache.connection]
+        dial_timeout = "3s"
+        write_timeout = "3s"
+        read_timeout = "3s"
+        max_retries = 5
+        retry_interval = "2s"
+
+    [cache.tls]
+        enabled = false
+        server_name = ""
+
+[kafka]
+    brokers = ["${KAFKA_BROKERS}"]
+    client_id = "<project>-<module>-service"
+
+[rabbitmq]
+    host = "${RABBITMQ_HOST}"
+    port = "${RABBITMQ_PORT}"
+    user = "${RABBITMQ_USER}"
+    password = "${RABBITMQ_PASSWORD}"
+    vhost = "${RABBITMQ_VHOST}"
+    client_id = "<project>-<module>-service"
+
+[token]
+    secret_key = "${TOKEN_SECRET_KEY}"
+    issuer = "${TOKEN_ISSUER}"
+    access_token_ttl = "${TOKEN_ACCESS_TTL}"
+    refresh_token_ttl = "${TOKEN_REFRESH_TTL}"
+    algorithm = "${TOKEN_ALGORITHM}"
+
+[email]
+    smtp_host = "${EMAIL_SMTP_HOST}"
+    smtp_port = "${EMAIL_SMTP_PORT}"
+    smtp_user = "${EMAIL_SMTP_USER}"
+    smtp_password = "${EMAIL_SMTP_PASSWORD}"
+    smtp_from = "${EMAIL_SMTP_FROM}"
+
+[grpc_client]
+    <module1>_addr = "${GRPC_HOST}:${GRPC_PORT_<MODULE1>}"
+    <module2>_addr = "${GRPC_HOST}:${GRPC_PORT_<MODULE2>}"
+    # ... 其他服务
+```
+
+### 生产环境特殊配置
+
+在生产环境的 `prod.toml` 中，`grpc_client` 部分应使用 Docker Compose 服务名：
+
+```toml
+[grpc_client]
+    <module1>_addr = "<module1>-connection:${GRPC_PORT_<MODULE1>}"
+    <module2>_addr = "<module2>-connection:${GRPC_PORT_<MODULE2>}"
+    # ... 其他服务
+```
+
+## 环境变量占位符语法
+
+### TOML 语法要求
+- **必须使用引号**：所有占位符必须用引号包裹，例如 `"${VAR_NAME}"`
+- **原因**：TOML 不支持裸 `${VAR_NAME}` 语法，`$` 不是有效的 TOML 字符
+
+### 正确示例
+
+```toml
+# ✅ GOOD - 使用引号包裹占位符
+http_port = "${HTTP_PORT}"
+grpc_port = "${GRPC_PORT_ACCESS}"
+host = "${POSTGRESQL_HOST}"
+password = "${POSTGRESQL_PASSWORD}"
+```
+
+### 错误示例
+
+```toml
+# ❌ BAD - 缺少引号，TOML 解析会失败
+http_port = ${HTTP_PORT}
+grpc_port = ${GRPC_PORT_ACCESS}
+
+# ❌ BAD - 使用错误的变量名
+[rabbitmq]
+    host = "${POSTGRESQL_HOST}"  # 错误！应该使用 RABBITMQ_HOST
+
+[grpc_client]
+    auth_addr = "${POSTGRESQL_HOST}:${GRPC_PORT_AUTH}"  # 错误！应该使用 GRPC_HOST
+
+# ❌ BAD - 硬编码值
+[token]
+    secret_key = "hardcoded-secret-key"  # 错误！应该使用 ${TOKEN_SECRET_KEY}
+
+[email]
+    smtp_host = "smtp.example.com"  # 错误！应该使用 ${EMAIL_SMTP_HOST}
+```
+
+## 变量替换规则
+
+### 配置加载器行为
+- 配置加载器使用正则表达式 `\$\{([^}]+)\}` 匹配占位符
+- 无论占位符是否在引号内，都能正确匹配和替换
+- 如果变量缺失，应用会直接退出，不使用默认值
+
+### 替换流程
+1. 读取 `.env` 文件，加载环境变量到 `os.Getenv`
+2. 读取 TOML 文件内容（字符串级别）
+3. 使用正则表达式查找所有 `${VAR_NAME}` 占位符
+4. 从环境变量获取值并替换
+5. 如果变量缺失，返回错误并退出
+
+## .env 文件组织规范
+
+### 文件结构
+`.env` 和 `.example.env` 文件应按以下顺序组织：
+
+```bash
+# ============================================
+# Traefik 配置 / Traefik Configuration
+# ============================================
+TRAEFIK_API_HOST=<host>
+TRAEFIK_HTTP_PORT=<port>
+# ... 其他 Traefik 配置
+
+# ============================================
+# 服务端口配置 / Service Ports Configuration
+# ============================================
+HTTP_PORT=<port>
+
+# ============================================
+# gRPC 端口配置 / gRPC Ports Configuration
+# ============================================
+GRPC_PORT_<MODULE1>=<port>
+GRPC_PORT_<MODULE2>=<port>
+# ... 其他模块端口
+
+# ============================================
+# gRPC 服务主机配置 / gRPC Service Host Configuration
+# ============================================
+GRPC_HOST=<host>
+
+# ============================================
+# API 路径前缀 / API Path Prefixes
+# ============================================
+API_PREFIX_PATH_<MODULE1>=<path>
+API_PREFIX_PATH_<MODULE2>=<path>
+# ... 其他模块路径
+
+# ============================================
+# PostgreSQL 配置 / PostgreSQL Configuration
+# ============================================
+POSTGRESQL_HOST=<host>
+POSTGRESQL_PORT=<port>
+POSTGRESQL_USER=<user>
+POSTGRESQL_PASSWORD=<password>
+POSTGRESQL_NAME_DEV=<dev_database_name>
+POSTGRESQL_NAME_PROD=<prod_database_name>
+
+# ============================================
+# Redis 配置 / Redis Configuration
+# ============================================
+REDIS_HOST=<host>
+REDIS_PORT=<port>
+REDIS_PASSWORD=<password>
+
+# ============================================
+# Kafka 配置 / Kafka Configuration
+# ============================================
+KAFKA_HOST=<host>
+KAFKA_PORT=<port>
+KAFKA_BROKERS=<host>:<port>
+
+# ============================================
+# RabbitMQ 配置 / RabbitMQ Configuration
+# ============================================
+RABBITMQ_HOST=<host>
+RABBITMQ_PORT=<port>
+RABBITMQ_USER=<user>
+RABBITMQ_PASSWORD=<password>
+RABBITMQ_VHOST=<vhost>
+
+# ============================================
+# Token 配置 / Token Configuration
+# ============================================
+TOKEN_SECRET_KEY=<secret_key>
+TOKEN_ISSUER=<issuer>
+TOKEN_ACCESS_TTL=<ttl>
+TOKEN_REFRESH_TTL=<ttl>
+TOKEN_ALGORITHM=<algorithm>
+
+# ============================================
+# Email 配置 / Email Configuration
+# ============================================
+EMAIL_SMTP_HOST=<smtp_host>
+EMAIL_SMTP_PORT=<smtp_port>
+EMAIL_SMTP_USER=<smtp_user>
+EMAIL_SMTP_PASSWORD=<smtp_password>
+EMAIL_SMTP_FROM=<from_address>
+
+# ============================================
+# 证书配置 / Certificate Configuration
+# ============================================
+CERTS_DIR=<path>
+```
+
+## 实现建议
+
+- **变量命名**：每个服务使用自己的前缀（POSTGRESQL_, REDIS_, KAFKA_, RABBITMQ_, GRPC_, TOKEN_, EMAIL_）
+- **不要混用**：绝对不要在不同服务的配置中使用其他服务的变量（如 RabbitMQ 使用 POSTGRESQL_HOST）
+- **环境区分**：dev.toml 和 prod.toml 使用不同的数据库名称变量（POSTGRESQL_NAME_DEV vs POSTGRESQL_NAME_PROD）
+- **gRPC 地址**：dev 环境使用 IP 地址，prod 环境使用 Docker Compose 服务名
+- **占位符语法**：所有占位符必须用引号包裹
+- **变量排序**：.env 文件按逻辑分组，使用分隔线清晰组织
+- **敏感信息**：所有敏感信息（密码、密钥、邮箱等）必须使用环境变量，不能硬编码
+- **Kafka brokers**：使用 `${KAFKA_BROKERS}` 而不是拼接 `${KAFKA_HOST}:${KAFKA_PORT}`

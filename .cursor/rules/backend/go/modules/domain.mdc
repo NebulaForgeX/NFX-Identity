@@ -1,5 +1,5 @@
 ---
-description: Modules Domain 层编码规范 - 领域层（业务逻辑）
+description: 后端配置文件规则 - Modules Domain 层编码规范 - 领域层（业务逻辑）
 globs:
   - '**/modules/**/domain/**/*.go'
 alwaysApply: false

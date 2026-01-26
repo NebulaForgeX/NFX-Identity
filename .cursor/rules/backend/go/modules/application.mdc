@@ -1,5 +1,5 @@
 ---
-description: Modules Application 层编码规范 - 应用层（用例）
+description: 后端配置文件规则 - Modules Application 层编码规范 - 应用层（用例）
 globs:
   - '**/modules/**/application/**/*.go'
 alwaysApply: false

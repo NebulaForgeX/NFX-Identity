@@ -1,5 +1,5 @@
 ---
-description: Scripts 编码规范 - 代码生成脚本
+description: 后端配置文件规则 - Scripts 编码规范 - 代码生成脚本
 globs:
   - '**/databases/scripts/**/*.{sh,ps1}'
 alwaysApply: false

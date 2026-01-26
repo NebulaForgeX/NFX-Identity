@@ -1,5 +1,5 @@
 ---
-description: Animations 文件夹编码规范 - 动画组件
+description: 前端配置文件规则 - Animations 文件夹编码规范 - 动画组件
 globs:
   - '**/src/animations/**/*.ts'
   - '**/src/animations/**/*.tsx'

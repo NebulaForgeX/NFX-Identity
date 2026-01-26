@@ -1,5 +1,5 @@
 ---
-description: Layouts 文件夹编码规范 - 布局组件
+description: 前端配置文件规则 - Layouts 文件夹编码规范 - 布局组件
 globs:
   - '**/src/layouts/**/*.ts'
   - '**/src/layouts/**/*.tsx'

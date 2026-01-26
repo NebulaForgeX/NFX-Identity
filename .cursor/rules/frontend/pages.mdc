@@ -1,5 +1,5 @@
 ---
-description: Pages 文件夹编码规范 - 页面组件
+description: 前端配置文件规则 - Pages 文件夹编码规范 - 页面组件
 globs:
   - '**/src/pages/**/*.ts'
   - '**/src/pages/**/*.tsx'

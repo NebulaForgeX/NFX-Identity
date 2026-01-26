@@ -1,5 +1,5 @@
 ---
-description: Constants 编码规范 - 业务常量定义
+description: 后端配置文件规则 - Constants 编码规范 - 业务常量定义
 globs:
   - '**/constants/**/*.go'
 alwaysApply: false

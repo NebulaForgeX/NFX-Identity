@@ -1,5 +1,5 @@
 ---
-description: Schemas 编码规范 - 数据库 Schema 定义
+description: 后端配置文件规则 - Schemas 编码规范 - 数据库 Schema 定义
 globs:
   - '**/databases/src/**/*.sql'
 alwaysApply: false

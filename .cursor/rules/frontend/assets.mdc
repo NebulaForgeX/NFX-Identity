@@ -1,5 +1,5 @@
 ---
-description: Assets 文件夹编码规范 - 静态资源管理
+description: 前端配置文件规则 - Assets 文件夹编码规范 - 静态资源管理
 globs:
   - '**/src/assets/**/*.ts'
   - '**/src/assets/**/*.tsx'

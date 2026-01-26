@@ -1,0 +1,280 @@
+---
+description: 后端配置文件规则 - Modules 通用编码规范 - DDD 架构基本原则和模块组织
+globs:
+  - '**/modules/**/*.go'
+alwaysApply: false
+---
+
+# Modules 通用编码规范
+
+## 架构原则
+
+本项目遵循 **Clean Architecture（清洁架构）** 和 **Domain-Driven Design (DDD)** 原则，采用 **CQRS（命令查询职责分离）** 模式。
+
+## 模块组织
+
+### 模块数量
+
+**一般情况下，`modules/` 目录中的模块数量与 `inputs/` 目录中的模块数量相同。**
+
+每个业务模块在 `modules/` 中都有对应的实现，在 `inputs/` 中都有对应的服务入口。
+
+**示例**：
+- `modules/auth/` ↔ `inputs/auth/`
+- `modules/directory/` ↔ `inputs/directory/`
+- `modules/access/` ↔ `inputs/access/`
+
+## 层级依赖规则
+
+### 依赖方向（单向依赖）
+
+```
+Interfaces (接口层)
+    ↓ 依赖
+Application (应用层)
+    ↓ 依赖
+Domain (领域层)
+    ↑ 实现
+Infrastructure (基础设施层)
+```
+
+**关键原则**：
+- **Interfaces 层** 只能依赖 **Application 层**，不能直接依赖 Domain 或 Infrastructure
+- **Application 层** 只能依赖 **Domain 层**，不能直接依赖 Infrastructure
+- **Domain 层** 不依赖任何其他层（最内层，纯业务逻辑）
+- **Infrastructure 层** 实现 Domain 层定义的接口
+
+### 禁止的依赖
+
+```go
+// ❌ BAD - Interfaces 层直接操作数据库
+package handler
+
+import (
+    "gorm.io/gorm"
+)
+
+func (h *UserHandler) Create(c *fiber.Ctx) error {
+    var user models.User
+    // 直接操作数据库 - 违反架构原则
+    h.db.Create(&user) // ❌ 错误！
+    return nil
+}
+```
+
+```go
+// ❌ BAD - Interfaces 层直接使用 Domain 仓库
+package handler
+
+import (
+    userDomain "nfxid/modules/directory/domain/users"
+)
+
+func (h *UserHandler) Create(c *fiber.Ctx) error {
+    // 直接使用 Domain 仓库 - 违反架构原则
+    h.userRepo.Create.New(ctx, user) // ❌ 错误！
+    return nil
+}
+```
+
+```go
+// ❌ BAD - Application 层直接操作数据库
+package users
+
+import (
+    "gorm.io/gorm"
+)
+
+func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) error {
+    // 直接操作数据库 - 违反架构原则
+    s.db.Create(&model) // ❌ 错误！
+    return nil
+}
+```
+
+### 正确的依赖
+
+```go
+// ✅ GOOD - Interfaces 层依赖 Application 层
+package handler
+
+import (
+    userApp "nfxid/modules/directory/application/users"
+)
+
+type UserHandler struct {
+    appSvc *userApp.Service // ✅ 正确：依赖 Application 层
+}
+
+func (h *UserHandler) Create(c *fiber.Ctx) error {
+    cmd := req.ToCreateCmd()
+    userID, err := h.appSvc.CreateUser(c.Context(), cmd) // ✅ 正确：调用 Application 层
+    return nil
+}
+```
+
+```go
+// ✅ GOOD - Application 层依赖 Domain 层
+package users
+
+import (
+    userDomain "nfxid/modules/directory/domain/users"
+)
+
+type Service struct {
+    userRepo *userDomain.Repo // ✅ 正确：依赖 Domain 层接口
+}
+
+func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) error {
+    // 使用 Domain 层工厂创建实体
+    user, err := userDomain.NewUser(userDomain.NewUserParams{
+        Username: cmd.Username,
+    })
+    if err != nil {
+        return err
+    }
+
+    // 调用 Domain 层仓库接口
+    return s.userRepo.Create.New(ctx, user) // ✅ 正确：使用 Domain 层接口
+}
+```
+
+```go
+// ✅ GOOD - Infrastructure 层实现 Domain 层接口
+package repository
+
+import (
+    userDomain "nfxid/modules/directory/domain/users"
+    "gorm.io/gorm"
+)
+
+// NewRepo 实现 Domain 层定义的 Repo 接口
+func NewRepo(db *gorm.DB) *userDomain.Repo {
+    return &userDomain.Repo{
+        Create: create.NewHandler(db), // ✅ 正确：实现 Domain 层接口
+        Get:    get.NewHandler(db),
+        // ...
+    }
+}
+```
+
+## 各层职责
+
+### Domain 层（领域层）
+
+**职责**：
+- 定义业务实体和业务规则
+- 定义仓库接口（Repository Interface）
+- 定义领域错误
+- 不依赖任何外部技术
+
+**禁止**：
+- ❌ 不能依赖数据库、缓存、消息队列等基础设施
+- ❌ 不能依赖 Application 层或 Interfaces 层
+- ❌ 不能包含具体的技术实现
+
+**允许**：
+- ✅ 定义接口（Repository、Query 等）
+- ✅ 实现业务逻辑和业务规则
+- ✅ 定义领域实体和值对象
+
+### Application 层（应用层）
+
+**职责**：
+- 编排领域层，实现用例（Use Cases）
+- 协调多个领域实体的交互
+- 处理事务边界
+- 不包含业务逻辑，只包含用例编排
+
+**禁止**：
+- ❌ 不能直接操作数据库
+- ❌ 不能直接使用 Infrastructure 层的具体实现
+- ❌ 不能包含业务规则（业务规则在 Domain 层）
+
+**允许**：
+- ✅ 依赖 Domain 层的接口和实体
+- ✅ 调用 Domain 层的方法和工厂
+- ✅ 使用 Domain 层的仓库接口
+
+### Infrastructure 层（基础设施层）
+
+**职责**：
+- 实现 Domain 层定义的接口
+- 提供数据库访问、缓存、消息队列等技术实现
+- 处理技术细节（GORM、Redis、Kafka 等）
+
+**禁止**：
+- ❌ 不能定义业务逻辑
+- ❌ 不能修改 Domain 层的接口定义
+
+**允许**：
+- ✅ 实现 Domain 层的 Repository 接口
+- ✅ 实现 Domain 层的 Query 接口（如果使用 CQRS）
+- ✅ 使用 GORM、Redis 等技术框架
+
+### Interfaces 层（接口层）
+
+**职责**：
+- 处理 HTTP 请求/响应
+- 处理 gRPC 请求/响应
+- 处理事件订阅
+- 进行 DTO 转换
+
+**禁止**：
+- ❌ 不能直接操作数据库
+- ❌ 不能直接使用 Domain 层的仓库
+- ❌ 不能包含业务逻辑
+- ❌ 不能直接依赖 Infrastructure 层
+
+**允许**：
+- ✅ 依赖 Application 层的 Service
+- ✅ 进行请求/响应的 DTO 转换
+- ✅ 调用 Application 层的方法
+
+## 数据流
+
+### 创建流程
+
+```
+HTTP Request
+    ↓
+Interfaces (DTO 转换)
+    ↓
+Application (用例编排)
+    ↓
+Domain (创建实体，业务规则)
+    ↓
+Infrastructure (保存到数据库)
+```
+
+### 查询流程
+
+```
+HTTP Request
+    ↓
+Interfaces (DTO 转换)
+    ↓
+Application (用例编排)
+    ↓
+Domain (Repository 接口)
+    ↓
+Infrastructure (从数据库查询)
+    ↓
+Domain (返回实体)
+    ↓
+Application (转换为结果对象)
+    ↓
+Interfaces (转换为 DTO)
+    ↓
+HTTP Response
+```
+
+## 实现建议
+
+- **依赖倒置**：Domain 层定义接口，Infrastructure 层实现接口
+- **单一职责**：每层只负责自己的职责
+- **接口隔离**：使用接口而非具体实现
+- **依赖注入**：通过构造函数注入依赖
+- **错误传播**：Domain 层错误直接传播，不包装
+- **事务管理**：事务边界在 Application 层
+- **测试友好**：通过接口可以轻松进行单元测试和集成测试

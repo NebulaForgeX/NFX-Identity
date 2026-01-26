@@ -1,5 +1,5 @@
 ---
-description: Utils 文件夹编码规范 - 工具函数
+description: 前端配置文件规则 - Utils 文件夹编码规范 - 工具函数
 globs:
   - '**/src/utils/**/*.ts'
 alwaysApply: false

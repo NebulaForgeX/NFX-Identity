@@ -1,5 +1,5 @@
 ---
-description: Hooks 文件夹编码规范 - 自定义 Hooks
+description: 前端配置文件规则 - Hooks 文件夹编码规范 - 自定义 Hooks
 globs:
   - '**/src/hooks/**/*.ts'
   - '**/src/hooks/**/*.tsx'
