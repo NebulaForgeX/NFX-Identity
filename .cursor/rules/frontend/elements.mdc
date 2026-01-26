@@ -1,0 +1,405 @@
+---
+description: Elements 文件夹编码规范 - 高级可复用业务组件
+globs:
+  - '**/src/elements/**/*.ts'
+  - '**/src/elements/**/*.tsx'
+alwaysApply: false
+---
+
+# Elements 编码规范
+
+## 与 Components 的区别
+
+- **Components**: 通用基础组件（Button, Input, Dropdown）- 无业务逻辑，纯 UI
+- **Elements**: 高级可复用业务组件（Controller, Form Hooks, Schemas）- 包含业务逻辑、表单集成、数据验证
+
+## 文件组织
+
+```
+elements/
+├── <module>/              # 各业务领域模块（按需创建）
+│   ├── components/        # Controller 组件
+│   │   ├── <Feature>Controller/
+│   │   └── index.ts
+│   ├── hooks/            # 表单 Hooks
+│   │   ├── useInit<Module>Form.ts
+│   │   ├── useSubmit<Module>.ts
+│   │   └── index.ts
+│   ├── schemas/          # Zod Schemas
+│   │   ├── <module>Schema.ts
+│   │   └── index.ts
+│   └── index.ts
+└── ...
+```
+
+**示例**：
+- `user/` - 用户业务领域
+- `product/` - 产品业务领域
+- 根据项目业务模块创建对应的 Elements 模块
+
+## Controller 组件
+
+### 简单 Controller（使用 register）
+
+```tsx
+// ✅ GOOD - 简单字段 Controller
+import type { ProfileFormValues } from "../../schemas/profileSchema";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { useFormContext } from "react-hook-form";
+import { Input } from "@/components";
+
+const FirstNameController = memo(() => {
+  const { t } = useTranslation("elements.directory");
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ProfileFormValues>();
+
+  return (
+    <Input
+      label={t("profile.firstName.label")}
+      placeholder={t("profile.firstName.placeholder")}
+      error={errors.firstName?.message as string | undefined}
+      fullWidth
+      {...register("firstName")}
+    />
+  );
+});
+
+FirstNameController.displayName = "FirstNameController";
+
+export default FirstNameController;
+```
+
+### 复杂 Controller（使用 Controller）
+
+```tsx
+// ✅ GOOD - 需要自定义逻辑的 Controller
+import { memo, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Controller, useFormContext } from "react-hook-form";
+import { Dropdown } from "@/components";
+import { useTheme } from "@/hooks";
+
+const ThemeController = memo(() => {
+  const { t } = useTranslation("elements.directory");
+  const { availableThemes } = useTheme();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<PreferenceFormValues>();
+
+  const themeOptions = useMemo(() => {
+    return availableThemes.map((theme) => ({
+      value: theme,
+      label: t(`themeSwitcher.${theme}`, { defaultValue: theme }),
+    }));
+  }, [availableThemes, t]);
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      <label>{t("preference.theme.label")}</label>
+      <Controller
+        control={control}
+        name="theme"
+        render={({ field }) => (
+          <Dropdown
+            options={themeOptions}
+            value={field.value || ""}
+            onChange={field.onChange}
+            placeholder={t("preference.theme.placeholder")}
+            error={!!errors.theme}
+          />
+        )}
+      />
+      {errors.theme && (
+        <p style={{ fontSize: "0.75rem", color: "var(--color-danger)" }}>
+          {errors.theme.message as string}
+        </p>
+      )}
+    </div>
+  );
+});
+```
+
+### 数组字段 Controller（使用 useFieldArray）
+
+```tsx
+// ✅ GOOD - 数组字段 Controller
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { useFormContext, useFieldArray, Controller } from "react-hook-form";
+import { Button, Input, Slider } from "@/components";
+import { Plus, Trash2 } from "@/assets/icons/lucide";
+import styles from "./styles.module.css";
+
+const SkillsController = memo(() => {
+  const { t } = useTranslation("elements.directory");
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<ProfileFormValues>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "skills",
+  });
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <label>{t("profile.skills.label")}</label>
+        <Button type="button" onClick={() => append({ name: "", score: 0 })}>
+          <Plus size={16} />
+          {t("keyValueEditor.add")}
+        </Button>
+      </div>
+      {fields.map((field, index) => (
+        <div key={field.id} className={styles.skillItem}>
+          <Controller
+            control={control}
+            name={`skills.${index}.name` as const}
+            render={({ field: nameField }) => (
+              <Input
+                placeholder={t("profile.skills.namePlaceholder")}
+                value={nameField.value || ""}
+                onChange={nameField.onChange}
+                onBlur={nameField.onBlur}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name={`skills.${index}.score` as const}
+            render={({ field: scoreField }) => (
+              <Slider
+                value={typeof scoreField.value === "number" ? scoreField.value : 0}
+                onChange={scoreField.onChange}
+                min={0}
+                max={10}
+              />
+            )}
+          />
+          <Button type="button" onClick={() => remove(index)}>
+            <Trash2 size={16} />
+          </Button>
+        </div>
+      ))}
+    </div>
+  );
+});
+```
+
+### Controller 组件特点
+
+- 使用 `useFormContext` 获取表单上下文
+- 使用 `register` 或 `Controller` 注册字段
+- 使用国际化 `useTranslation("elements.domain")`
+- 封装业务逻辑（如密码显示/隐藏、数据转换）
+- 使用基础组件（Input, Dropdown, Slider 等）
+- 支持复杂字段（数组字段使用 `useFieldArray`）
+
+## Hooks
+
+### 表单初始化 Hook
+
+```typescript
+// ✅ GOOD - 表单初始化 Hook
+// hooks/useInitProfileForm.ts
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useTranslation } from "react-i18next";
+import type { ProfileFormValues } from "../schemas/profileSchema";
+
+export const useInitProfileForm = (profile?: UserProfile) => {
+  const { t } = useTranslation("elements.directory");
+
+  // 动态创建 schema，使用翻译
+  const ProfileFormSchema = z.object({
+    firstName: z.string().trim().optional(),
+    lastName: z.string().trim().optional(),
+    bio: z.string().trim().optional(),
+    // ...
+  });
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(ProfileFormSchema),
+    mode: "onChange",
+    defaultValues: {
+      firstName: profile?.firstName || "",
+      lastName: profile?.lastName || "",
+      // ...
+    },
+  });
+
+  return form;
+};
+```
+
+### 表单提交 Hook
+
+```typescript
+// ✅ GOOD - 表单提交 Hook
+// hooks/useSubmitProfile.ts
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useUpdateUserProfile } from "@/hooks/useDirectory";
+import { showError } from "@/stores/modalStore";
+import type { ProfileFormValues } from "../schemas/profileSchema";
+
+export const useSubmitProfile = (profileId?: string) => {
+  const { t } = useTranslation("elements.directory");
+  const navigate = useNavigate();
+  const updateProfile = useUpdateUserProfile();
+
+  const onSubmit = useCallback(
+    async (values: ProfileFormValues) => {
+      try {
+        // 数据转换（如数组转对象）
+        const skills = values.skills?.reduce((acc, skill) => {
+          if (skill.name?.trim()) {
+            acc[skill.name] = skill.score;
+          }
+          return acc;
+        }, {} as Record<string, unknown>);
+
+        await updateProfile.mutateAsync({
+          id: profileId,
+          data: {
+            firstName: values.firstName || undefined,
+            skills,
+            // ...
+          },
+        });
+        navigate(ROUTES.PROFILE);
+      } catch (error) {
+        console.error("Failed to update profile:", error);
+      }
+    },
+    [profileId, updateProfile, navigate, t],
+  );
+
+  const onSubmitError = useCallback((errors: FieldErrors<ProfileFormValues>) => {
+    console.error("Form validation errors:", errors);
+  }, []);
+
+  return {
+    onSubmit,
+    onSubmitError,
+    isPending: updateProfile.isPending,
+  };
+};
+```
+
+## Schemas
+
+### Schema 定义
+
+```typescript
+// ✅ GOOD - Schema 定义（仅类型，不含翻译）
+// schemas/profileSchema.ts
+import { z } from "zod";
+
+const KeyValuePairSchema = z.object({
+  key: z.string().trim().min(1),
+  value: z.union([z.string(), z.array(z.string())]),
+});
+
+const SkillSchema = z.object({
+  name: z.string().trim().min(1),
+  score: z.number().int().min(0).max(10),
+});
+
+const BaseProfileFormSchema = z.object({
+  firstName: z.string().trim().optional(),
+  lastName: z.string().trim().optional(),
+  skills: z.array(SkillSchema).optional(),
+  socialLinks: z.array(KeyValuePairSchema).optional(),
+});
+
+export type ProfileFormValues = z.input<typeof BaseProfileFormSchema>;
+```
+
+### Schema 使用模式
+
+- **基础 Schema**：在 `schemas/` 中定义，仅用于类型推断
+- **动态 Schema**：在 `hooks/useInit*Form` 中动态创建，包含翻译信息
+- **类型导出**：使用 `z.input<typeof Schema>` 导出表单值类型
+
+## 命名规范
+
+- **业务领域文件夹**：使用 kebab-case: `bootstrap/`, `directory/`
+- **Controller 组件**：使用 PascalCase 并以 `Controller` 结尾: `FirstNameController/`, `SkillsController/`
+- **组件文件**：使用 `index.tsx`
+- **样式文件**：使用 `styles.module.css`（可选，简单 Controller 可能不需要）
+- **Hook 文件**：使用 camelCase: `useInitProfileForm.ts`, `useSubmitProfile.ts`
+- **Schema 文件**：使用 kebab-case: `profileSchema.ts`, `educationSchema.ts`
+
+## 国际化
+
+```tsx
+// ✅ GOOD - 使用业务领域命名空间
+const { t } = useTranslation("elements.directory");
+const label = t("profile.firstName.label");
+const placeholder = t("profile.firstName.placeholder");
+
+// ✅ GOOD - 多个命名空间
+const { t } = useTranslation("elements.directory");
+const { t: tComponents } = useTranslation("components");
+```
+
+## 导出规范
+
+```typescript
+// ✅ GOOD - 统一导出
+// elements/directory/index.ts
+export * from "./schemas";
+export * from "./hooks";
+export * from "./components";
+
+// ✅ GOOD - 组件统一导出
+// elements/directory/components/index.ts
+export { default as FirstNameController } from "./FirstNameController";
+export { default as SkillsController } from "./SkillsController";
+// ...
+
+// ✅ GOOD - Hooks 统一导出
+// elements/directory/hooks/index.ts
+export { useInitProfileForm } from "./useInitProfileForm";
+export { useSubmitProfile } from "./useSubmitProfile";
+// ...
+```
+
+## 使用示例
+
+```tsx
+// ✅ GOOD - 在页面中使用 Elements
+import { FormProvider } from "react-hook-form";
+import { useInitProfileForm, useSubmitProfile, FirstNameController, SkillsController } from "@/elements/directory";
+
+const ProfileEditPage = () => {
+  const form = useInitProfileForm(profile);
+  const { onSubmit, onSubmitError, isPending } = useSubmitProfile(profileId);
+
+  return (
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)}>
+        <FirstNameController />
+        <SkillsController />
+        <button type="submit" disabled={isPending}>
+          {isPending ? "Saving..." : "Save"}
+        </button>
+      </form>
+    </FormProvider>
+  );
+};
+```
+
+## 实现建议
+
+- 按功能模块组织 Elements，每个模块包含 components、hooks、schemas
+- 保持文件命名一致性：`<模块名>/components/<功能>Controller/`
+- 所有 Elements 通过 `index.ts` 统一导出，方便使用

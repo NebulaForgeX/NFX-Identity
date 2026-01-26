@@ -1,0 +1,194 @@
+---
+description: Inputs Connection 服务入口编码规范 - gRPC 服务
+globs:
+  - '**/inputs/**/connection/**/*.go'
+  - '**/inputs/**/connection/Dockerfile'
+  - '**/inputs/**/connection/.air.toml'
+alwaysApply: false
+---
+
+# Inputs Connection 服务入口编码规范
+
+## 文件组织
+
+```
+inputs/
+└── <module>/
+    └── connection/
+        ├── main.go          # gRPC 服务入口
+        ├── Dockerfile       # Docker 构建文件
+        └── .air.toml        # Air 热重载配置（开发环境）
+```
+
+**示例**：
+- `auth/connection/` - Auth 模块的 gRPC 服务
+- `directory/connection/` - Directory 模块的 gRPC 服务
+- 根据项目模块划分创建对应的 gRPC 服务入口
+
+## main.go 结构
+
+```go
+// ✅ GOOD - gRPC 服务入口标准结构
+package main
+
+import (
+    "context"
+    "errors"
+    "flag"
+    "log"
+    "os/signal"
+    "syscall"
+
+    "<project>/modules/<module>/config"
+    "<project>/modules/<module>/server"
+    "<project>/pkgs/env"
+    "<project>/pkgs/logx"
+
+    "go.uber.org/zap"
+)
+
+func main() {
+    envStr := flag.String("env", "prod", "Environment (dev/prod)")
+    flag.Parse()
+
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+    defer stop()
+
+    // === Load Config ===
+    cfg, err := config.Load(ctx, env.Env(*envStr))
+    if err != nil {
+        log.Fatalf("load config failed: %v", err)
+    }
+
+    // === Init Logger ===
+    if err := logx.Init(cfg.Logger, "<module>-connection-service", env.Env(*envStr)); err != nil {
+        log.Fatalf("logger init failed: %v", err)
+    }
+    defer logx.Sync()
+
+    // === Run gRPC Server ===
+    if err := server.RunGRPC(ctx, cfg); err != nil && !errors.Is(err, context.Canceled) {
+        logx.L().Fatal("gRPC server stopped with error", zap.Error(err))
+    }
+
+    logx.L().Info("gRPC server shutdown gracefully")
+}
+```
+
+## Dockerfile 结构
+
+```dockerfile
+# ✅ GOOD - Connection 服务 Dockerfile 标准结构
+# Base build stage (cache dependencies)
+FROM golang:1.24.4-alpine AS base-builder
+WORKDIR /src
+RUN apk add --no-cache git ca-certificates tzdata
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Production build stage (build binary for production)
+FROM base-builder AS prod-build
+COPY . ./
+# Inject version information
+ARG APP_VERSION=dev
+ENV CGO_ENABLED=0 GOOS=linux
+RUN --mount=type=cache,target=/go/pkg/mod \
+  --mount=type=cache,target=/root/.cache/go-build \
+  go build -trimpath -ldflags="-s -w -X main.version=${APP_VERSION}" \
+  -o /out/<module>-connection-service ./inputs/<module>/connection
+
+# Production runtime stage (minimal image)
+FROM alpine:latest AS prod
+WORKDIR /app
+RUN apk update && apk upgrade && apk add --no-cache ca-certificates tzdata
+# Copy only the binary (rely on prod-build)
+COPY --from=prod-build /out/<module>-connection-service /app/<module>-connection-service
+COPY inputs/<module>/configuration/prod.toml /app/config.toml
+# Environment variable control（can be replaced with CONFIG_FILE）
+ENV APP_ENV=prod
+ENV CONFIG_FILE=/app/config.toml
+EXPOSE <port>
+ENTRYPOINT ["/app/<module>-connection-service"]
+
+# Dev stage（air hot reload）
+FROM base-builder AS dev
+WORKDIR /app
+ENV PATH="/go/bin:$PATH"
+RUN go install github.com/air-verse/air@v1.61.7
+# Copy all source files for initial setup (will be synced/overridden by docker compose watch)
+COPY . ./
+CMD ["sh", "-c", "cd /app/inputs/<module>/connection && /app/inputs/<module>/air.sh"]
+```
+
+## .air.toml 结构
+
+```toml
+# ✅ GOOD - Air 热重载配置标准结构
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  args_bin = []
+  bin = "tmp/<module>-connection-service"
+  cmd = "go build -trimpath -buildvcs=false -ldflags='-s -w' -o ./tmp/<module>-connection-service ./inputs/<module>/connection"
+  delay = 500
+  exclude_file = []
+  exclude_unchanged = true
+  follow_symlink = true
+  include_dir = ["inputs/<module>/connection", "inputs/<module>/configuration", "modules/<module>", "models", "enums", "events", "pkgs", "protos"]
+  include_ext = ["go","mod","sum","toml"]
+  include_file = []
+  kill_delay = "0s"
+  log = "build-errors.log"
+  poll = false
+  poll_interval = 0
+  post_cmd = []
+  pre_cmd = []
+  rerun = false
+  rerun_delay = 500
+  send_interrupt = false
+  stop_on_error = false
+
+[color]
+  app = ""
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  main_only = true
+  silent = false
+  time = true
+
+[misc]
+  clean_on_exit = false
+
+[proxy]
+  app_port = 0
+  enabled = false
+  proxy_port = 0
+
+[screen]
+  clear_on_rebuild = false
+  keep_scroll = true
+```
+
+## 命名规范
+
+- **服务名称**：使用 `<module>-connection-service` 格式: `auth-connection-service`, `directory-connection-service`
+- **二进制文件**：使用 `<module>-connection-service` 格式
+- **日志标识**：使用 `<module>-connection-service` 格式
+- **端口配置**：在配置文件中定义，默认端口根据模块不同而变化
+
+## 实现建议
+
+- **信号处理**：使用 `signal.NotifyContext` 处理优雅关闭
+- **错误处理**：区分 `context.Canceled` 和其他错误
+- **日志初始化**：在配置加载后立即初始化日志
+- **环境变量**：使用 `-env` 标志控制环境（dev/prod）
+- **配置加载**：从模块的 `config` 包加载配置
+- **服务启动**：调用 `server.RunGRPC` 启动 gRPC 服务器
+- **Docker 构建**：使用多阶段构建，优化镜像大小
+- **热重载**：开发环境使用 Air 进行热重载
+- **gRPC 特性**：支持 OpenTelemetry 追踪、拦截器、服务间认证

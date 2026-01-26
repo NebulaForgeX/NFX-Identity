@@ -1,0 +1,68 @@
+---
+description: Scripts 文件夹编码规范 - 脚本工具
+globs:
+  - '**/src/scripts/**/*.ts'
+alwaysApply: false
+---
+
+# Scripts 编码规范
+
+## 脚本文件结构
+
+```typescript
+// ✅ GOOD - 脚本工具标准结构
+// scripts/createRandomCategories.ts
+import type { Category } from "@/types";
+
+export const createRandomCategories = (count: number): Category[] => {
+  const categories: Category[] = [];
+  
+  for (let i = 0; i < count; i++) {
+    categories.push({
+      id: `category-${i}`,
+      name: `Category ${i}`,
+      // ...
+    });
+  }
+  
+  return categories;
+};
+
+// 如果需要在开发时直接运行
+if (import.meta.env.DEV) {
+  console.log(createRandomCategories(10));
+}
+```
+
+## 命名规范
+
+- 脚本文件使用 camelCase: `createRandomCategories.ts`, `pickImages.ts`
+- 函数使用 camelCase: `createRandomCategories`, `generateTestData`
+- 使用描述性的函数名
+
+## 脚本用途
+
+- 生成测试数据
+- 数据转换工具
+- 开发辅助脚本
+- 一次性数据处理
+
+## 文件组织
+
+```
+scripts/
+├── <script-name>.ts    # 各脚本文件（按需创建）
+└── index.ts            # 统一导出
+```
+
+**示例**：
+- `createRandomData.ts` - 生成随机数据脚本
+- `migrateData.ts` - 数据迁移脚本
+- 根据项目需要创建对应的脚本文件
+
+## 最佳实践
+
+- 脚本应该是可执行的独立函数
+- 提供清晰的函数签名和返回值类型
+- 可以在开发环境中直接运行
+- 避免在生产代码中导入脚本

@@ -1,0 +1,304 @@
+---
+description: Types 文件夹编码规范 - TypeScript 类型定义
+globs:
+  - '**/src/types/**/*.ts'
+alwaysApply: false
+---
+
+# Types 编码规范
+
+## 文件组织
+
+```
+types/
+├── index.ts                    # 统一导出
+├── api.ts                      # API 响应类型
+├── navigation.ts               # 路由类型和常量
+├── env.d.ts                    # 环境变量类型
+├── domain/                     # 领域模型类型
+│   ├── index.ts
+│   ├── enums.ts                # 枚举类型
+│   ├── <module>.domain.ts      # 各模块领域类型（按需创建）
+│   └── ...
+└── requests/                   # 请求类型
+    ├── index.ts
+    ├── <module>.request.ts     # 各模块请求类型（按需创建）
+    └── ...
+```
+
+**示例**：
+- `domain/user.domain.ts` - 用户领域类型
+- `domain/product.domain.ts` - 产品领域类型
+- `requests/user.request.ts` - 用户请求类型
+- 根据项目模块划分创建对应的类型文件
+
+## 类型分类
+
+### 1. API 响应类型（api.ts）
+
+```typescript
+// ✅ GOOD - API 响应类型
+export interface BaseResponse {
+  status: string; // "success" | "error"
+  code: number;
+  message: string;
+  traceId?: string; // trace_id (axios-case-converter 会自动转换)
+}
+
+export interface DataResponse<T> extends BaseResponse {
+  data: T;
+  meta?: Record<string, unknown>; // 用于存储额外的元数据，如 total 等
+}
+
+export interface ListDTO<T> {
+  items: T[];
+  total: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+```
+
+### 2. 领域模型类型（domain/）
+
+```typescript
+// ✅ GOOD - 领域模型类型
+// domain/directory.domain.ts
+import { UserStatus } from "./enums";
+
+export interface User {
+  id: string;
+  tenantId: string;
+  username: string;
+  status: UserStatus;
+  isVerified: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface UserProfile {
+  id: string;
+  userId: string;
+  firstName?: string;
+  lastName?: string;
+  nickname?: string;
+  displayName?: string;
+  bio?: string;
+  birthday?: string;
+  age?: number;
+  gender?: string;
+  location?: string;
+  website?: string;
+  github?: string;
+  avatarId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### 3. 枚举类型（domain/enums.ts）
+
+```typescript
+// ✅ GOOD - 枚举类型（基于后端数据库定义）
+/**
+ * 用户状态
+ * directory.user_status
+ */
+export enum UserStatus {
+  PENDING = "pending",
+  ACTIVE = "active",
+  DEACTIVE = "deactive",
+}
+
+/**
+ * 凭证类型
+ * auth.credential_type
+ */
+export enum CredentialType {
+  PASSWORD = "password",
+  PASSKEY = "passkey",
+  OAUTH_LINK = "oauth_link",
+  SAML = "saml",
+  LDAP = "ldap",
+}
+```
+
+### 4. 请求类型（requests/）
+
+```typescript
+// ✅ GOOD - 请求类型
+// requests/directory.request.ts
+export interface CreateUserRequest {
+  tenantId: string;
+  username: string;
+  status?: string;
+  isVerified?: boolean;
+}
+
+export interface UpdateUserStatusRequest {
+  status: string;
+}
+
+export interface CreateUserEducationRequest {
+  userId: string;
+  school: string;
+  degree?: string;
+  major?: string;
+  fieldOfStudy?: string; // 后端期望 field_of_study，前端使用 fieldOfStudy (会自动转换)
+  startDate?: string;
+  endDate?: string;
+  isCurrent?: boolean;
+  description?: string;
+  grade?: string;
+  activities?: string;
+  achievements?: string;
+}
+```
+
+### 5. 路由类型（navigation.ts）
+
+```typescript
+// ✅ GOOD - 路由常量和类型
+export const ROUTES = {
+  HOME: "/",
+  LOGIN: "/login",
+  DASHBOARD: "/dashboard",
+  PROFILE: "/profile",
+  EDIT_PROFILE: "/profile/edit",
+  // ...
+} as const;
+
+// 路由类型
+export type RouteKey = keyof typeof ROUTES;
+export type RoutePath = (typeof ROUTES)[RouteKey];
+
+// 工具函数
+export const isActiveRoute = (currentPath: string, targetPath: RoutePath): boolean => {
+  return currentPath === targetPath;
+};
+
+export const getRouteByKey = (key: RouteKey): RoutePath => {
+  return ROUTES[key];
+};
+```
+
+### 6. 字面量类型
+
+```typescript
+// ✅ GOOD - 字面量类型
+export type DashboardBackgroundType = "waves" | "squares" | "letterGlitch" | "pixelBlast" | "none";
+
+export const DEFAULT_DASHBOARD_BACKGROUND: DashboardBackgroundType = "none";
+
+export const DASHBOARD_BACKGROUND_VALUES: readonly DashboardBackgroundType[] = [
+  "waves",
+  "squares",
+  "letterGlitch",
+  "pixelBlast",
+  "none",
+] as const;
+```
+
+## 命名规范
+
+- **类型文件**: kebab-case: `directory.domain.ts`, `auth.request.ts`, `preference.types.ts`
+- **接口**: PascalCase: `User`, `CreateUserRequest`, `DataResponse`
+- **类型别名**: PascalCase: `RoutePath`, `DashboardBackgroundType`
+- **枚举**: PascalCase: `UserStatus`, `CredentialType`
+- **常量对象**: UPPER_SNAKE_CASE: `ROUTES`, `DEFAULT_DASHBOARD_BACKGROUND`
+- **泛型参数**: 单个大写字母: `T`, `K`, `V`
+
+## 类型组织模式
+
+### 统一导出
+
+```typescript
+// ✅ GOOD - 统一导出
+// types/index.ts
+export * from "./info";
+export * from "./domain";
+export * from "./api";
+export * from "./requests";
+export * from "./navigation";
+export * from "./preference.types";
+
+// domain/index.ts
+export * from "./enums";
+export * from "./access.domain";
+export * from "./auth.domain";
+export * from "./directory.domain";
+// ...
+```
+
+### 按业务领域组织
+
+```typescript
+// ✅ GOOD - 按业务领域组织类型
+// domain/directory.domain.ts - 目录领域
+export interface User { /* ... */ }
+export interface UserProfile { /* ... */ }
+export interface UserEmail { /* ... */ }
+
+// domain/auth.domain.ts - 认证领域
+export interface Session { /* ... */ }
+export interface UserCredential { /* ... */ }
+```
+
+## 常用类型模式
+
+### 工具类型
+
+```typescript
+// ✅ GOOD - 工具类型
+export type UUID = string;
+export type Timestamp = string;
+
+export interface Tokens {
+  accessToken: string;
+  refreshToken?: string;
+}
+```
+
+### 联合类型
+
+```typescript
+// ✅ GOOD - 联合类型
+export type DashboardBackgroundType = "waves" | "squares" | "letterGlitch" | "pixelBlast" | "none";
+```
+
+### 从常量对象推导类型
+
+```typescript
+// ✅ GOOD - 从常量对象推导类型
+export const ProductStatus = {
+  Draft: "draft",
+  Published: "published",
+  Archived: "archived",
+} as const;
+
+export type ProductStatusEnum = ValueOf<typeof ProductStatus>;
+```
+
+## 最佳实践
+
+- 每个业务领域有独立的类型文件（domain/）
+- 请求类型单独组织（requests/）
+- 使用 `index.ts` 统一导出
+- 避免使用 `any`，使用 `unknown` 代替
+- 为 API 请求和响应定义明确的类型
+- 枚举类型基于后端数据库定义，添加注释说明来源
+- 使用 `as const` 创建字面量类型
+- 字段命名使用 camelCase（后端 snake_case 会自动转换）
+- 添加 JSDoc 注释说明类型用途和来源
+
+## 实现建议
+
+- 按模块组织领域类型和请求类型
+- 保持类型文件命名一致性：`<模块名>.domain.ts`、`<模块名>.request.ts`
+- 所有类型通过 `index.ts` 统一导出，方便使用

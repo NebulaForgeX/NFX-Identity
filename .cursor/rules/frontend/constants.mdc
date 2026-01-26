@@ -1,0 +1,214 @@
+---
+description: Constants 文件夹编码规范 - 常量定义
+globs:
+  - '**/src/constants/**/*.ts'
+alwaysApply: false
+---
+
+# Constants 编码规范
+
+## 文件组织
+
+```
+constants/
+├── domain.key.ts              # 领域常量定义（DOMAIN_*）
+├── cache.key.ts               # 缓存类型常量（CACHE_ITEM, CACHE_LIST）
+├── <module>.<type>.key.ts      # 各模块不同类型的 Key 常量（按需创建）
+└── index.ts                   # 统一导出
+```
+
+**示例**：
+- `auth.query.key.ts` - Auth 模块 Query Key 常量
+- `user.storage.key.ts` - User 模块 Storage Key 常量
+- `notification.event.key.ts` - Notification 模块 Event Key 常量
+- 根据项目需要创建对应类型和模块的 key 文件
+
+## 领域常量（domain.key.ts）
+
+```typescript
+// ✅ GOOD - 领域常量定义
+export const DOMAIN_ACCESS = "access";
+export const DOMAIN_AUTH = "auth";
+export const DOMAIN_DIRECTORY = "directory";
+export const DOMAIN_CLIENTS = "clients";
+
+// 子领域常量
+export const DOMAIN_AUTH_SESSION = "session";
+export const DOMAIN_AUTH_USER_CREDENTIAL = "userCredential";
+export const DOMAIN_DIRECTORY_USER = "user";
+export const DOMAIN_DIRECTORY_USER_EMAIL = "userEmail";
+```
+
+## 缓存常量（cache.key.ts）
+
+```typescript
+// ✅ GOOD - 缓存类型常量
+export const CACHE_ITEM = "item";
+export const CACHE_LIST = "list";
+```
+
+## React Query Key 常量
+
+### Query Key 文件结构
+
+```typescript
+// ✅ GOOD - Query Key 常量定义
+// constants/auth.query.key.ts
+import type { QueryKey } from "@tanstack/react-query";
+import { DOMAIN_AUTH, DOMAIN_AUTH_SESSION } from "./domain.key";
+import { CACHE_ITEM, CACHE_LIST } from "./cache.key";
+
+/**
+ * Auth 相关的 Query Key 常量
+ * 用于统一管理所有 auth 相关的 query keys，避免在 pages 中手写
+ */
+
+// ========== Session 相关 ==========
+// 列表 Query Key（常量）
+export const AUTH_SESSION_LIST: QueryKey = [
+  DOMAIN_AUTH,
+  CACHE_LIST,
+  DOMAIN_AUTH_SESSION,
+];
+
+// 单个 Item Query Key（函数）
+export const AUTH_SESSION = (item: string): QueryKey => [
+  DOMAIN_AUTH,
+  CACHE_ITEM,
+  DOMAIN_AUTH_SESSION,
+  item,
+];
+
+// 特殊 Query Key（常量）
+export const AUTH_SESSION_LATEST: QueryKey = [
+  DOMAIN_AUTH,
+  CACHE_ITEM,
+  DOMAIN_AUTH_SESSION,
+  "latest",
+];
+
+/**
+ * 用于 useCacheInvalidationEvents.ts 的 query key 前缀
+ */
+export const AUTH_QUERY_KEY_PREFIXES = {
+  SESSIONS: [DOMAIN_AUTH, CACHE_LIST, DOMAIN_AUTH_SESSION],
+  SESSION: [DOMAIN_AUTH, CACHE_ITEM, DOMAIN_AUTH_SESSION],
+} as const;
+```
+
+### Query Key 模式
+
+```typescript
+// ✅ GOOD - 列表 Query Key（数组常量）
+export const MODULE_ENTITY_LIST: QueryKey = [
+  DOMAIN_MODULE,
+  CACHE_LIST,
+  DOMAIN_MODULE_ENTITY,
+];
+
+// ✅ GOOD - 单个 Item Query Key（函数）
+export const MODULE_ENTITY = (item: string): QueryKey => [
+  DOMAIN_MODULE,
+  CACHE_ITEM,
+  DOMAIN_MODULE_ENTITY,
+  item,
+];
+
+// ✅ GOOD - 特殊 Query Key（常量）
+export const MODULE_ENTITY_LATEST: QueryKey = [
+  DOMAIN_MODULE,
+  CACHE_ITEM,
+  DOMAIN_MODULE_ENTITY,
+  "latest",
+];
+```
+
+### Query Key 前缀对象
+
+```typescript
+// ✅ GOOD - 用于缓存失效的前缀对象
+export const MODULE_QUERY_KEY_PREFIXES = {
+  ENTITIES: [DOMAIN_MODULE, CACHE_LIST, DOMAIN_MODULE_ENTITY],
+  ENTITY: [DOMAIN_MODULE, CACHE_ITEM, DOMAIN_MODULE_ENTITY],
+} as const;
+```
+
+## 命名规范
+
+- **领域常量**：使用 `DOMAIN_*` 前缀，UPPER_SNAKE_CASE: `DOMAIN_AUTH`, `DOMAIN_DIRECTORY_USER`
+- **缓存常量**：使用 `CACHE_*` 前缀: `CACHE_ITEM`, `CACHE_LIST`
+- **Query Key 常量**：
+  - 列表：`MODULE_ENTITY_LIST`（UPPER_SNAKE_CASE）
+  - 单个：`MODULE_ENTITY`（函数，接收 id 参数）
+  - 特殊：`MODULE_ENTITY_LATEST`（UPPER_SNAKE_CASE）
+  - 前缀对象：`MODULE_QUERY_KEY_PREFIXES`（UPPER_SNAKE_CASE）
+- **文件命名**：使用 kebab-case: `auth.query.key.ts`, `domain.key.ts`
+
+## 类型安全
+
+```typescript
+// ✅ GOOD - Query Key 使用 QueryKey 类型
+import type { QueryKey } from "@tanstack/react-query";
+
+export const AUTH_SESSION_LIST: QueryKey = [/* ... */];
+export const AUTH_SESSION = (item: string): QueryKey => [/* ... */];
+
+// ✅ GOOD - 前缀对象使用 as const
+export const AUTH_QUERY_KEY_PREFIXES = {
+  SESSIONS: [DOMAIN_AUTH, CACHE_LIST, DOMAIN_AUTH_SESSION],
+  SESSION: [DOMAIN_AUTH, CACHE_ITEM, DOMAIN_AUTH_SESSION],
+} as const;
+```
+
+## 文件注释
+
+```typescript
+// ✅ GOOD - 文件顶部说明用途
+/**
+ * Auth 相关的 Query Key 常量
+ * 用于统一管理所有 auth 相关的 query keys，避免在 pages 中手写
+ */
+
+// ✅ GOOD - 使用注释分隔模块
+// ========== Session 相关 ==========
+export const AUTH_SESSION_LIST = [/* ... */];
+
+// ========== UserCredential 相关 ==========
+export const AUTH_USER_CREDENTIAL_LIST = [/* ... */];
+```
+
+## 导出规范
+
+```typescript
+// ✅ GOOD - index.ts 统一导出
+export * from "./domain.key";
+export * from "./cache.key";
+export * from "./auth.query.key";
+export * from "./directory.query.key";
+// ...
+```
+
+## 使用示例
+
+```typescript
+// ✅ GOOD - 在 hooks 中使用 Query Key
+import { AUTH_SESSION_LIST, AUTH_SESSION } from "@/constants";
+
+const { data } = useQuery({
+  queryKey: AUTH_SESSION_LIST,
+  queryFn: () => GetSessions(),
+});
+
+const { data: session } = useQuery({
+  queryKey: AUTH_SESSION(sessionId),
+  queryFn: () => GetSession(sessionId),
+  enabled: !!sessionId,
+});
+```
+
+## 实现建议
+
+- 根据项目模块和常量类型创建对应的 `*.key.ts` 文件
+- 保持文件命名一致性：`<模块名>.<类型>.key.ts`（如 `auth.query.key.ts`、`user.storage.key.ts`）
+- 常见的 key 类型包括：`query`（React Query）、`storage`（LocalStorage/SessionStorage）、`event`（事件）等
+- 所有常量通过 `index.ts` 统一导出，方便使用

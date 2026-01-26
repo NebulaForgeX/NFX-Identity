@@ -1,0 +1,85 @@
+---
+description: Scripts 编码规范 - 代码生成脚本
+globs:
+  - '**/databases/scripts/**/*.{sh,ps1}'
+alwaysApply: false
+---
+
+# Scripts 编码规范
+
+## 文件组织
+
+```
+databases/scripts/
+├── gen_models.sh         # 模型生成脚本（Linux/Mac）
+├── gen_models.ps1        # 模型生成脚本（Windows）
+├── gen_views.sh          # 视图生成脚本（Linux/Mac）
+├── gen_views.ps1         # 视图生成脚本（Windows）
+├── gen_enums.sh          # 枚举生成脚本（Linux/Mac）
+└── gen_enums.ps1         # 枚举生成脚本（Windows）
+```
+
+## 脚本结构
+
+```bash
+#!/usr/bin/env bash
+# ✅ GOOD - 脚本标准结构
+set -euo pipefail
+export NO_COLOR=1 CLICOLOR=0 FORCE_COLOR=0 TERM=dumb
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ATLAS_DIR="${REPO_ROOT}/databases"
+GEN_DIR="${ATLAS_DIR}/gen/<type>"
+DEST_DIR="${REPO_ROOT}/<destination>"
+
+# 环境变量检查
+if [[ -z "${POSTGRES_USER}" ]]; then 
+  echo "Error: POSTGRES_USER environment variable is required"
+  exit 1
+fi
+
+# 清理生成目录
+if [ -d "$GEN_DIR" ]; then
+  rm -rf "${GEN_DIR:?}/"*
+else
+  mkdir -p "$GEN_DIR"
+fi
+
+# 运行 Atlas 生成
+cd "${ATLAS_DIR}" || exit 1
+if ! atlas schema inspect --env gen-<type>; then
+  echo "Error: Atlas schema inspect failed" >&2
+  exit 1
+fi
+
+# 移动生成的文件到目标目录
+mkdir -p "${DEST_DIR}"
+# ... 文件移动逻辑 ...
+
+# 格式化生成的代码
+if command -v goimports >/dev/null 2>&1; then
+  goimports -w "${DEST_DIR}" 2>&1 || true
+fi
+if command -v gofmt >/dev/null 2>&1; then
+  gofmt -s -w "${DEST_DIR}" 2>&1 || true
+fi
+
+echo "<Type> generated successfully."
+exit 0
+```
+
+## 命名规范
+
+- **脚本文件**：使用 `snake_case`，以 `.sh`（Linux/Mac）或 `.ps1`（Windows）结尾
+- **环境变量**：使用 `UPPER_SNAKE_CASE`: `POSTGRES_USER`, `POSTGRES_PASSWORD`
+- **目录变量**：使用 `PascalCase`: `GEN_DIR`, `DEST_DIR`
+
+## 实现建议
+
+- **跨平台支持**：提供 `.sh` 和 `.ps1` 两个版本的脚本
+- **错误处理**：使用 `set -euo pipefail` 确保脚本在错误时退出
+- **环境检查**：检查必需的环境变量
+- **清理机制**：生成前清理旧的生成文件
+- **格式化**：使用 `goimports` 和 `gofmt` 格式化生成的代码
+- **日志输出**：提供清晰的日志输出，便于调试

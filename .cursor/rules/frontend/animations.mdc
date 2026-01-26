@@ -1,0 +1,220 @@
+---
+description: Animations 文件夹编码规范 - 动画组件
+globs:
+  - '**/src/animations/**/*.ts'
+  - '**/src/animations/**/*.tsx'
+alwaysApply: false
+---
+
+# Animations 编码规范
+
+## 组件类型
+
+动画组件分为两类：
+
+### 1. 简单加载动画（CSS 动画）
+- `BounceLoading`, `ECGLoading`, `TruckLoading`
+- 使用纯 CSS 动画，性能最优
+- 样式文件统一使用 `styles.module.css`
+
+### 2. 复杂背景动画（Canvas/WebGL）
+- `LetterGlitch`, `PixelBlast`, `Squares`, `Waves`
+- 使用 Canvas 或 WebGL 渲染
+- 样式文件使用 `style.module.css`（单数形式）
+- 通常提供 Background 变体，自动集成主题
+
+## 组件结构
+
+### 简单动画组件
+
+```tsx
+// ✅ GOOD - 简单动画组件标准结构
+import { memo } from "react";
+import styles from "./styles.module.css";
+
+interface BounceLoadingProps {
+  size?: "small" | "medium" | "large";
+  shape?: "square" | "circle";
+  className?: string;
+}
+
+const BounceLoading = memo(({ size = "medium", shape = "square", className }: BounceLoadingProps) => {
+  const sizeMap = {
+    small: "32px",
+    medium: "48px",
+    large: "64px",
+  };
+
+  const loaderSize = sizeMap[size];
+
+  return (
+    <div
+      className={`${styles.loader} ${styles[shape]} ${className || ""}`}
+      style={{ width: loaderSize, height: loaderSize }}
+    />
+  );
+});
+
+BounceLoading.displayName = "BounceLoading";
+
+export default BounceLoading;
+```
+
+### 复杂动画组件（Canvas）
+
+```tsx
+// ✅ GOOD - Canvas 动画组件结构
+import { memo, useRef, useEffect, useCallback } from "react";
+import styles from "./style.module.css";
+
+interface ComplexAnimationProps {
+  speed?: number;
+  color?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+const ComplexAnimation = memo(({ speed = 1, color, className, style }: ComplexAnimationProps) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number | null>(null);
+
+  const animate = useCallback(() => {
+    // 动画逻辑
+    animationRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  useEffect(() => {
+    animate();
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [animate]);
+
+  return (
+    <div className={`${styles.container} ${className}`} style={style}>
+      <canvas ref={canvasRef} className={styles.canvas} />
+    </div>
+  );
+});
+
+ComplexAnimation.displayName = "ComplexAnimation";
+
+export default ComplexAnimation;
+```
+
+### Background 变体组件
+
+```tsx
+// ✅ GOOD - Background 变体自动集成主题
+import { memo, useMemo } from "react";
+import { useTheme } from "@/hooks/useTheme";
+import BaseAnimation from "./BaseAnimation";
+
+const AnimationBackground = memo((props) => {
+  const { currentTheme } = useTheme();
+
+  const color = useMemo(() => {
+    const primary = currentTheme.variables.primary || "#B19EEF";
+    // 颜色转换逻辑
+    return toHex(primary);
+  }, [currentTheme]);
+
+  return <BaseAnimation color={color} {...props} />;
+});
+
+AnimationBackground.displayName = "AnimationBackground";
+
+export default AnimationBackground;
+```
+
+## 命名规范
+
+- 组件文件夹使用 PascalCase: `BounceLoading/`, `ECGLoading/`
+- 组件文件使用 `index.tsx`
+- **样式文件命名**：
+  - 简单组件：`styles.module.css`（复数）
+  - 复杂组件：`style.module.css`（单数）
+- Background 变体命名：`ComponentNameBackground`
+- 根目录使用 `index.ts` 统一导出，可以重命名导出
+
+## 导出规范
+
+```typescript
+// ✅ GOOD - index.ts 统一导出
+export { default as BounceLoading } from "./BounceLoading";
+export { default as ECGLoading } from "./ECGLoading";
+// Background 变体可以重命名导出
+export { default as WaveBackground } from "./Waves";
+export { default as SquareBackground } from "./Squares";
+```
+
+## 性能优化
+
+### 简单组件
+- 使用 `memo()` 包装，避免不必要的重渲染
+- 使用 CSS 动画而非 JavaScript 动画
+- 动画关键帧定义在 CSS 文件中
+
+### 复杂组件（Canvas/WebGL）
+- 使用 `requestAnimationFrame` 进行动画循环
+- 实现帧率限制（如 30 FPS）以提高性能
+- 使用 `useRef` 存储动画引用，避免闭包问题
+- 在 `useEffect` 清理函数中取消动画帧
+- 实现 `autoPauseOffscreen` 功能，在不可见时暂停
+- 使用 `ResizeObserver` 处理尺寸变化
+- 对于 WebGL，限制像素比：`renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5))`
+
+```tsx
+// ✅ GOOD - 性能优化示例
+const animate = useCallback(() => {
+  if (autoPauseOffscreen && !visibilityRef.current.visible) {
+    raf = requestAnimationFrame(animate);
+    return;
+  }
+  
+  // 帧率限制
+  const elapsed = currentTime - lastFrameTime;
+  if (elapsed < frameInterval) {
+    raf = requestAnimationFrame(animate);
+    return;
+  }
+  
+  // 动画逻辑
+  raf = requestAnimationFrame(animate);
+}, []);
+```
+
+## Props 设计
+
+### 简单组件
+- 提供合理的默认值（size, shape 等）
+- 支持 `size` 变体（small, medium, large）
+- 支持 `className` 用于外部样式覆盖
+
+### 复杂组件
+- 提供丰富的配置选项（速度、颜色、方向等）
+- 使用合理的默认值
+- Background 变体通常省略颜色相关 props，自动从主题获取
+
+## 样式管理
+
+- 使用 CSS Modules 避免样式冲突
+- 简单组件：动画关键帧定义在 CSS 文件中
+- 复杂组件：样式主要用于容器和画布布局
+- 支持通过 `style` prop 动态设置样式
+
+## 主题集成
+
+Background 变体组件应该：
+- 使用 `useTheme` hook 获取当前主题
+- 从 `currentTheme.variables` 获取颜色值
+- 处理颜色格式转换（hex ↔ rgb）
+- 提供合理的颜色变体（如变浅、变深）
+
+## 实现建议
+
+- 每个动画组件使用独立的文件夹，包含 `index.tsx` 和样式文件
+- 保持文件命名一致性：`<动画名>/`
+- 所有动画组件通过 `index.ts` 统一导出，方便使用

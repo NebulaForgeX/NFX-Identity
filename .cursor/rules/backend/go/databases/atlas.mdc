@@ -1,0 +1,242 @@
+---
+description: Atlas 编码规范 - Atlas 配置文件
+globs:
+  - '**/databases/atlas.hcl'
+alwaysApply: false
+---
+
+# Atlas 编码规范
+
+## 文件组织
+
+```
+databases/
+└── atlas.hcl             # Atlas 配置文件
+```
+
+## 配置文件结构
+
+```hcl
+// ✅ GOOD - Atlas 配置文件
+// Atlas configuration for <project> service using PostgreSQL.
+
+// === Public variables ===
+variable "db_user" {
+  type    = string
+  default = getenv("POSTGRES_USER")
+}
+
+variable "db_password" {
+  type    = string
+  default = getenv("POSTGRES_PASSWORD")
+}
+
+variable "db_host" {
+  type    = string
+  default = getenv("POSTGRES_HOST")
+}
+
+variable "db_port" {
+  type    = string
+  default = getenv("POSTGRES_PORT")
+}
+
+variable "db_dev_name" {
+  type    = string
+  default = getenv("POSTGRES_DB_DEV")
+}
+
+variable "db_prod_name" {
+  type    = string
+  default = getenv("POSTGRES_DB_PROD")
+}
+
+variable "db_shadow_name" {
+  type    = string
+  default = getenv("POSTGRES_DB_SHADOW")
+}
+
+// === Local configuration ===
+locals {
+  query_params = "sslmode=disable&TimeZone=UTC"
+  src_file           = "file://src/main.sql"
+  migration_dir_dev  = "file://migrations/development"
+  migration_dir_prod = "file://migrations/production"
+  template_helpers = "templates/_helpers.tmpl"
+  template_models  = "templates/gen_models.tmpl"
+  template_views   = "templates/gen_views.tmpl"
+  template_enums   = "templates/gen_enums.tmpl"
+  
+  // Database connection URLs
+  db_url_base = "postgres://${var.db_user}:${urlescape(var.db_password)}@${var.db_host}:${var.db_port}"
+  dev_shadow  = "${local.db_url_base}/${var.db_shadow_name}?${local.query_params}"
+  dev_url     = "${local.db_url_base}/${var.db_dev_name}?${local.query_params}"
+  prod_url    = "${local.db_url_base}/${var.db_prod_name}?${local.query_params}"
+  
+  // Format configuration values
+  format_migrate_diff   = "{{ sql . \"  \"}}"
+  format_schema_inspect = "{{ sql . | split | write \"src\" }}"
+  
+  // Template content for code generation
+  template_helpers_content = file(local.template_helpers)
+  template_models_content  = "${local.template_helpers_content}${file(local.template_models)}"
+  template_views_content   = "${local.template_helpers_content}${file(local.template_views)}"
+  template_enums_content   = "${local.template_helpers_content}${file(local.template_enums)}"
+  
+  // Common exclude list for generation environments
+  exclude_public = ["public"]
+}
+
+// === Development environment ===
+env "dev" {
+  src = local.src_file
+  url = local.dev_url
+  dev = local.dev_shadow
+  migration {
+    dir = local.migration_dir_dev
+  }
+  format {
+    migrate {
+      diff = local.format_migrate_diff
+    }
+    schema {
+      inspect = local.format_schema_inspect
+    }
+  }
+  lint {
+    destructive {
+      error = true
+    }
+  }
+}
+
+// === Production environment ===
+env "prod" {
+  src = local.src_file
+  url = local.prod_url
+  dev = local.dev_shadow
+  migration {
+    dir = local.migration_dir_prod
+  }
+  format {
+    migrate {
+      diff = local.format_migrate_diff
+    }
+    schema {
+      inspect = local.format_schema_inspect
+    }
+  }
+  lint {
+    destructive {
+      error = true
+    }
+  }
+}
+
+// === Generate Go models ===
+env "gen-models" {
+  url     = local.src_file
+  dev     = local.dev_shadow
+  exclude = local.exclude_public
+  format {
+    schema {
+      inspect = local.template_models_content
+    }
+  }
+}
+
+// === Generate views ===
+env "gen-views" {
+  url     = local.src_file
+  dev     = local.dev_shadow
+  exclude = local.exclude_public
+  format {
+    schema {
+      inspect = local.template_views_content
+    }
+  }
+}
+
+// === Generate enums ===
+env "gen-enums" {
+  url  = local.src_file
+  dev  = local.dev_shadow
+  format {
+    schema {
+      inspect = local.template_enums_content
+    }
+  }
+}
+```
+
+## 环境配置
+
+### 开发环境（dev）
+
+```hcl
+env "dev" {
+  src = local.src_file          // Schema 源文件
+  url = local.dev_url           // 开发数据库连接
+  dev = local.dev_shadow        // Shadow 数据库（用于迁移验证）
+  migration {
+    dir = local.migration_dir_dev
+  }
+  format {
+    migrate {
+      diff = "{{ sql . \"  \"}}"  // 迁移文件格式
+    }
+    schema {
+      inspect = "{{ sql . | split | write \"src\" }}"  // Schema 导出格式
+    }
+  }
+  lint {
+    destructive {
+      error = true  // 禁止破坏性变更
+    }
+  }
+}
+```
+
+### 生产环境（prod）
+
+```hcl
+env "prod" {
+  src = local.src_file
+  url = local.prod_url
+  dev = local.dev_shadow
+  migration {
+    dir = local.migration_dir_prod
+  }
+  // ... 其他配置同 dev
+}
+```
+
+### 代码生成环境
+
+```hcl
+// ✅ GOOD - 枚举生成环境
+env "gen-enums" {
+  url  = local.src_file    // 从源文件读取
+  dev  = local.dev_shadow  // Shadow 数据库
+  format {
+    schema {
+      inspect = local.template_enums_content  // 使用模板生成
+    }
+  }
+}
+```
+
+## 命名规范
+
+- **环境名**：使用 `kebab-case`: `dev`, `prod`, `gen-models`, `gen-enums`
+- **变量名**：使用 `snake_case`: `db_user`, `db_password`
+- **本地变量**：使用 `snake_case`: `src_file`, `migration_dir_dev`
+
+## 实现建议
+
+- **环境变量**：使用环境变量配置数据库连接信息
+- **Shadow 数据库**：使用独立的 Shadow 数据库进行迁移验证
+- **环境分离**：开发和生产环境使用不同的迁移目录
+- **代码生成**：使用模板进行代码生成，支持模型、视图、枚举
+- **破坏性检查**：启用 `destructive.error = true` 防止意外删除数据
+- **格式化配置**：配置迁移和 Schema 导出的格式化选项

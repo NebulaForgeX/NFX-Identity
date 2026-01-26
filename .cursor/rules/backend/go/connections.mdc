@@ -1,0 +1,243 @@
+---
+description: Connections 编码规范 - gRPC 客户端封装
+globs:
+  - '**/connections/**/*.go'
+alwaysApply: false
+---
+
+# Connections 编码规范
+
+## 文件组织
+
+```
+connections/
+├── <module>/              # 各服务模块的 gRPC 客户端（按需创建）
+│   ├── client.go          # 模块主客户端（聚合所有实体客户端）
+│   ├── <entity>_client.go # 各实体的客户端（按需创建）
+│   └── dto/               # DTO 转换（可选）
+│       └── <entity>_dto.go
+├── common/                # 通用客户端
+│   ├── health.go          # 健康检查客户端
+│   └── schema.go          # Schema 客户端
+└── ...
+```
+
+**示例**：
+- `<module>/client.go` - 服务主客户端
+- `<module>/<entity>.go` - 实体客户端
+- `<module>/dto/<entity>_dto.go` - DTO 转换
+- 根据项目服务模块划分创建对应的客户端
+
+## 模块客户端结构
+
+```go
+// ✅ GOOD - 模块主客户端（聚合所有实体客户端）
+package <module>
+
+import (
+    <entity1>pb "<project>/protos/gen/<module>/<entity1>"
+    <entity2>pb "<project>/protos/gen/<module>/<entity2>"
+    // ... 其他 protobuf 导入
+)
+
+// Client <Module> 服务客户端
+type Client struct {
+    <Entity1> *<Entity1>Client
+    <Entity2> *<Entity2>Client
+    // ... 其他实体客户端
+}
+
+// NewClient 创建 <Module> 客户端
+func NewClient(
+    <entity1>Client <entity1>pb.<Entity1>ServiceClient,
+    <entity2>Client <entity2>pb.<Entity2>ServiceClient,
+    // ... 其他服务客户端
+) *Client {
+    return &Client{
+        <Entity1>: New<Entity1>Client(<entity1>Client),
+        <Entity2>: New<Entity2>Client(<entity2>Client),
+        // ... 其他客户端初始化
+    }
+}
+```
+
+## 实体客户端结构
+
+```go
+// ✅ GOOD - 实体客户端（封装单个实体的 gRPC 调用）
+package <module>
+
+import (
+    "context"
+    "fmt"
+
+    <entity>pb "<project>/protos/gen/<module>/<entity>"
+)
+
+// <Entity>Client <Entity> 客户端
+type <Entity>Client struct {
+    client <entity>pb.<Entity>ServiceClient
+}
+
+// New<Entity>Client 创建 <Entity> 客户端
+func New<Entity>Client(client <entity>pb.<Entity>ServiceClient) *<Entity>Client {
+    return &<Entity>Client{client: client}
+}
+
+// Create<Entity> 创建实体
+func (c *<Entity>Client) Create<Entity>(ctx context.Context, param1 string, param2 string) (string, error) {
+    // 转换状态枚举（如果需要）
+    var status <entity>pb.<Module><Entity>Status
+    switch param2 {
+    case "value1":
+        status = <entity>pb.<MODULE>_<ENTITY>_STATUS_VALUE1
+    case "value2":
+        status = <entity>pb.<MODULE>_<ENTITY>_STATUS_VALUE2
+    default:
+        status = <entity>pb.<MODULE>_<ENTITY>_STATUS_DEFAULT
+    }
+
+    req := &<entity>pb.Create<Entity>Request{
+        Param1: param1,
+        Status: status,
+    }
+
+    resp, err := c.client.Create<Entity>(ctx, req)
+    if err != nil {
+        return "", fmt.Errorf("gRPC call failed: %w", err)
+    }
+
+    return resp.<Entity>.Id, nil
+}
+
+// Get<Entity>ByID 根据ID获取实体
+func (c *<Entity>Client) Get<Entity>ByID(ctx context.Context, id string) (*<entity>pb.<Entity>, error) {
+    req := &<entity>pb.Get<Entity>ByIDRequest{
+        Id: id,
+    }
+
+    resp, err := c.client.Get<Entity>ByID(ctx, req)
+    if err != nil {
+        return nil, fmt.Errorf("gRPC call failed: %w", err)
+    }
+
+    return resp.<Entity>, nil
+}
+
+// BatchGet<Entity>s 批量获取实体
+func (c *<Entity>Client) BatchGet<Entity>s(ctx context.Context, ids []string) ([]*<entity>pb.<Entity>, error) {
+    req := &<entity>pb.BatchGet<Entity>sRequest{
+        Ids: ids,
+    }
+
+    resp, err := c.client.BatchGet<Entity>s(ctx, req)
+    if err != nil {
+        return nil, fmt.Errorf("gRPC call failed: %w", err)
+    }
+
+    return resp.<Entity>s, nil
+}
+```
+
+## DTO 转换
+
+```go
+// ✅ GOOD - 使用 DTO 进行请求/响应转换
+package dto
+
+import (
+    <entity>pb "<project>/protos/gen/<module>/<entity>"
+)
+
+// Create<Entity>DTO 创建实体 DTO
+type Create<Entity>DTO struct {
+    ID      string
+    Field1  *string
+    Field2  *string
+    // ... 其他字段
+}
+
+// ToCreate<Entity>Request 转换为 protobuf 请求
+func (d *Create<Entity>DTO) ToCreate<Entity>Request() (*<entity>pb.Create<Entity>Request, error) {
+    req := &<entity>pb.Create<Entity>Request{
+        Id: d.ID,
+    }
+    
+    if d.Field1 != nil {
+        req.Field1 = *d.Field1
+    }
+    if d.Field2 != nil {
+        req.Field2 = *d.Field2
+    }
+    
+    return req, nil
+}
+```
+
+```go
+// ✅ GOOD - 在客户端中使用 DTO
+func (c *<Entity>Client) Create<Entity>(ctx context.Context, createDTO *dto.Create<Entity>DTO) (string, error) {
+    req, err := createDTO.ToCreate<Entity>Request()
+    if err != nil {
+        return "", fmt.Errorf("failed to convert DTO to request: %w", err)
+    }
+
+    resp, err := c.client.Create<Entity>(ctx, req)
+    if err != nil {
+        return "", fmt.Errorf("gRPC call failed: %w", err)
+    }
+
+    return resp.<Entity>.Id, nil
+}
+```
+
+## 命名规范
+
+- **模块客户端**：使用 `PascalCase`，命名为 `Client`: `Client`
+- **实体客户端**：使用 `PascalCase`，以 `Client` 结尾: `<Entity>Client`
+- **客户端方法**：使用 `PascalCase`，动词开头: `Create<Entity>`, `Get<Entity>ByID`, `BatchGet<Entity>s`
+- **文件命名**：使用 `snake_case`:
+  - 模块主客户端: `client.go`
+  - 实体客户端: `<entity>_client.go` 或 `<entity>.go`
+  - DTO 文件: `dto/<entity>_dto.go`
+
+## 错误处理
+
+```go
+// ✅ GOOD - 统一错误处理格式
+resp, err := c.client.Create<Entity>(ctx, req)
+if err != nil {
+    return "", fmt.Errorf("gRPC call failed: %w", err)
+}
+
+// ✅ GOOD - DTO 转换错误处理
+req, err := createDTO.ToCreate<Entity>Request()
+if err != nil {
+    return "", fmt.Errorf("failed to convert DTO to request: %w", err)
+}
+```
+
+## 枚举转换
+
+```go
+// ✅ GOOD - 字符串到 protobuf 枚举转换
+var entityStatus <entity>pb.<Module><Entity>Status
+switch status {
+case "value1":
+    entityStatus = <entity>pb.<MODULE>_<ENTITY>_STATUS_VALUE1
+case "value2":
+    entityStatus = <entity>pb.<MODULE>_<ENTITY>_STATUS_VALUE2
+default:
+    entityStatus = <entity>pb.<MODULE>_<ENTITY>_STATUS_DEFAULT
+}
+```
+
+## 实现建议
+
+- **模块组织**：按服务模块组织客户端，每个模块有独立的目录
+- **实体分离**：每个实体使用独立的客户端文件
+- **DTO 使用**：复杂请求使用 DTO 进行转换，放在 `dto/` 子目录
+- **错误处理**：所有 gRPC 调用使用 `fmt.Errorf` 包装错误，提供上下文信息
+- **枚举转换**：字符串枚举值转换为 protobuf 枚举类型
+- **批量操作**：支持批量操作的方法（如 `BatchGet<Entity>s`）
+- **默认值方法**：提供使用默认值的便捷方法（如 `Create<Entity>Default`）

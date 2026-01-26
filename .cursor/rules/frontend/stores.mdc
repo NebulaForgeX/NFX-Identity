@@ -1,0 +1,298 @@
+---
+description: Stores 文件夹编码规范 - 状态管理（Zustand）
+globs:
+  - '**/src/stores/**/*.ts'
+alwaysApply: false
+---
+
+# Stores 编码规范
+
+## 文件组织
+
+```
+stores/
+├── <feature>Store.ts  # 各功能模块的 Store（按需创建）
+└── ...
+```
+
+**示例**：
+- `authStore.ts` - 认证状态
+- `modalStore.ts` - 模态框状态
+- `timerStore.ts` - 计时器状态
+- 根据项目功能模块创建对应的 Store 文件
+
+## Store 结构
+
+### 基础 Store
+
+```typescript
+// ✅ GOOD - 基础 Store 结构
+import { createStore, useStore } from "zustand";
+import { persist, subscribeWithSelector } from "zustand/middleware";
+
+interface AuthState {
+  isAuthValid: boolean;
+  accessToken: string | null;
+  refreshToken: string | null;
+  currentUserId: string | null;
+  setIsAuthValid: (isAuthValid: boolean) => void;
+  setTokens: (tokens: Tokens) => void;
+  setCurrentUserId: (userId: string) => void;
+  getCurrentUserId: () => string | null;
+  clearAuth: () => void;
+}
+
+export const AuthStore = createStore<AuthState>()(
+  subscribeWithSelector(
+    persist(
+      (set, get) => ({
+        isAuthValid: false,
+        accessToken: null,
+        refreshToken: null,
+        currentUserId: null,
+
+        setIsAuthValid: (isAuthValid) => set({ isAuthValid }),
+
+        setTokens: (tokens) =>
+          set({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken || null,
+          }),
+
+        setCurrentUserId: (userId) => set({ currentUserId: userId }),
+
+        getCurrentUserId: () => (get().isAuthValid ? get().currentUserId : null),
+
+        clearAuth: () =>
+          set({
+            isAuthValid: false,
+            accessToken: null,
+            refreshToken: null,
+            currentUserId: null,
+          }),
+      }),
+      {
+        name: "auth-storage",
+      },
+    ),
+  ),
+);
+
+export default AuthStore;
+export const useAuthStore = <T>(selector: (state: AuthState) => T) => useStore(AuthStore, selector);
+```
+
+### 分离 State 和 Actions
+
+```typescript
+// ✅ GOOD - 分离 State 和 Actions
+interface QuickState {
+  isEditMode: boolean;
+  items: QuickNavItem[];
+}
+
+interface QuickActions {
+  setEditMode: (editMode: boolean) => void;
+  toggleEditMode: () => void;
+  addItem: (item: QuickNavItem) => void;
+  removeItem: (id: string) => void;
+  updateItem: (id: string, item: Partial<QuickNavItem>) => void;
+  reorderItems: (items: QuickNavItem[]) => void;
+  resetItems: () => void;
+}
+
+export const QuickStore = createStore<QuickState & QuickActions>()(
+  subscribeWithSelector(
+    persist(
+      (set) => ({
+        ...defaultState,
+        setEditMode: (editMode) => set({ isEditMode: editMode }),
+        toggleEditMode: () => set((state) => ({ isEditMode: !state.isEditMode })),
+        // ...
+      }),
+      {
+        name: "quick-nav-storage",
+        version: 2,
+        partialize: (state) => ({ items: state.items }),
+        migrate: (persistedState: any, version: number) => {
+          if (version < 2) {
+            return { items: defaultItems };
+          }
+          return persistedState as QuickState;
+        },
+      },
+    ),
+  ),
+);
+```
+
+## 命名规范
+
+- **Store 文件**: camelCase，以 `Store` 结尾: `authStore.ts`, `modalStore.ts`
+- **Store 变量**: PascalCase: `AuthStore`, `ModalStore`
+- **Hook**: camelCase，以 `use` 开头，使用泛型 selector: `useAuthStore<T>(selector)`
+- **接口**: PascalCase，State 以 `State` 结尾，Actions 以 `Actions` 结尾
+
+## 中间件使用
+
+### subscribeWithSelector
+
+所有 Store 都应使用 `subscribeWithSelector` 中间件，支持选择器订阅。
+
+```typescript
+// ✅ GOOD - 使用 subscribeWithSelector
+export const AuthStore = createStore<AuthState>()(
+  subscribeWithSelector(
+    persist(/* ... */)
+  )
+);
+```
+
+### persist
+
+持久化状态到 localStorage。
+
+```typescript
+// ✅ GOOD - 使用 persist 持久化
+persist(
+  (set, get) => ({ /* ... */ }),
+  {
+    name: "auth-storage", // localStorage key
+    partialize: (state) => ({ // 选择持久化的字段
+      accessToken: state.accessToken,
+      refreshToken: state.refreshToken,
+      currentUserId: state.currentUserId,
+    }),
+    version: 2, // 版本号（可选）
+    migrate: (persistedState: any, version: number) => { // 版本迁移（可选）
+      if (version < 2) {
+        return defaultState;
+      }
+      return persistedState;
+    },
+  }
+)
+```
+
+## 状态设计模式
+
+### 计算属性
+
+```typescript
+// ✅ GOOD - 提供计算方法
+interface TimerState {
+  resendCodeExpiry: number | null;
+  canResendCode: () => boolean;
+  getTimeLeft: () => number;
+}
+
+export const TimerStore = createStore<TimerState>()(
+  persist(
+    (set, get) => ({
+      resendCodeExpiry: null,
+      canResendCode: () => {
+        const { resendCodeExpiry } = get();
+        if (!resendCodeExpiry) return true;
+        return Date.now() >= resendCodeExpiry;
+      },
+      getTimeLeft: () => {
+        const { resendCodeExpiry } = get();
+        if (!resendCodeExpiry) return 0;
+        const timeLeft = Math.ceil((resendCodeExpiry - Date.now()) / 1000);
+        return timeLeft > 0 ? timeLeft : 0;
+      },
+    })
+  )
+);
+```
+
+### 便捷函数
+
+```typescript
+// ✅ GOOD - 提供便捷函数
+export const showSuccess = (props: ShowSuccessProps | string) => {
+  // 兼容旧的字符串参数形式
+  if (typeof props === "string") {
+    ModalStore.getState().showModal("success", {
+      isOpen: true,
+      message: props,
+    });
+    return;
+  }
+
+  ModalStore.getState().showModal("success", {
+    isOpen: true,
+    message: props.message,
+    title: props.title,
+    onClick: props.onClick,
+  });
+};
+
+export const showError = (message: string, title?: string) => {
+  ModalStore.getState().showModal("error", {
+    isOpen: true,
+    message,
+    title,
+  });
+};
+```
+
+### 默认值
+
+```typescript
+// ✅ GOOD - 定义默认值
+const defaultState: QuickState = {
+  isEditMode: false,
+  items: defaultItems,
+};
+
+export const QuickStore = createStore<QuickState & QuickActions>()(
+  persist(
+    (set) => ({
+      ...defaultState,
+      // ...
+    })
+  )
+);
+```
+
+## Hook 使用模式
+
+### 类型安全的 Selector
+
+```typescript
+// ✅ GOOD - 使用泛型 selector
+export const useAuthStore = <T>(selector: (state: AuthState) => T) => useStore(AuthStore, selector);
+
+// 使用
+const currentUserId = useAuthStore((state) => state.currentUserId);
+const isAuthValid = useAuthStore((state) => state.isAuthValid);
+```
+
+### 直接访问 Store
+
+```typescript
+// ✅ GOOD - 在非 React 组件中直接访问
+AuthStore.getState().setTokens({ accessToken, refreshToken });
+ModalStore.getState().showModal("success", { isOpen: true, message: "Success!" });
+```
+
+## 最佳实践
+
+- 每个 Store 只管理一个领域的状态
+- 使用 TypeScript 接口定义状态类型
+- 分离 State 和 Actions 接口
+- 使用 `subscribeWithSelector` 中间件
+- 使用 `persist` 中间件持久化重要状态
+- 使用 `partialize` 选择持久化的字段
+- 使用 `version` 和 `migrate` 处理版本迁移
+- 提供类型安全的 selector hook
+- 提供便捷函数简化常用操作
+- 提供计算方法（如 `canResendCode`, `getTimeLeft`）
+- 定义默认值常量
+
+## 实现建议
+
+- 按功能模块组织 Store，每个 Store 负责一个功能域的状态管理
+- 保持文件命名一致性：`<功能名>Store.ts`
+- 使用 Zustand 的推荐模式，保持代码简洁和类型安全

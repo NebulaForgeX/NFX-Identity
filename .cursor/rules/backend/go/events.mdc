@@ -1,0 +1,200 @@
+---
+description: Events 编码规范 - 事件驱动架构定义
+globs:
+  - '**/events/**/*.go'
+alwaysApply: false
+---
+
+# Events 编码规范
+
+## 文件组织
+
+```
+events/
+├── topics.go            # Topic 定义和 TopicKey 常量
+└── <module>/            # 各模块事件定义（按需创建）
+    └── cache.go         # 缓存失效事件（或其他事件类型）
+```
+
+**示例**：
+- `auth/cache.go` - Auth 模块缓存失效事件
+- `directory/cache.go` - Directory 模块缓存失效事件
+- 根据项目模块划分创建对应的事件文件
+
+## Topic 定义（topics.go）
+
+```go
+// ✅ GOOD - Topic 定义和常量
+package events
+
+import "nfxid/pkgs/kafkax/eventbus"
+
+const (
+    // =============== <Module1> ===============
+    TK<Module1>    eventbus.TopicKey = "<module1>"
+    TK<Module1>DLQ eventbus.TopicKey = "<module1>_poison"
+
+    // =============== <Module2> ===============
+    TK<Module2>    eventbus.TopicKey = "<module2>"
+    TK<Module2>DLQ eventbus.TopicKey = "<module2>_poison"
+)
+
+// <Module1>Topic 提供 <Module1> 模块的 TopicKey
+// 嵌入此结构体后，事件自动实现 TopicKey() 方法
+type <Module1>Topic struct{}
+
+func (<Module1>Topic) TopicKey() eventbus.TopicKey { return TK<Module1> }
+
+// <Module2>Topic 提供 <Module2> 模块的 TopicKey
+type <Module2>Topic struct{}
+
+func (<Module2>Topic) TopicKey() eventbus.TopicKey { return TK<Module2> }
+```
+
+## 事件定义
+
+### 缓存失效事件
+
+```go
+// ✅ GOOD - 缓存失效事件定义
+package <module>
+
+import (
+    "nfxid/events"
+)
+
+// <Entity>InvalidateCacheEvent <Entity> 缓存清除事件
+// EventType 会自动从类型名生成，TopicKey 通过嵌入 events.<Module>Topic 自动提供
+// Cache key 格式: {prefix[:namespace]}:entity:{id}
+type <Entity>InvalidateCacheEvent struct {
+    events.<Module>Topic
+    ID        string `json:"id"`         // 要清除的 <Entity> ID
+    Prefix    string `json:"prefix"`     // Cache prefix，例如 "<entity>"
+    Namespace string `json:"namespace"` // Cache namespace，可选
+}
+```
+
+### 自定义事件
+
+```go
+// ✅ GOOD - 自定义事件（如果需要自定义 EventType）
+package <module>
+
+import (
+    "nfxid/events"
+    "nfxid/pkgs/kafkax/eventbus"
+)
+
+// <Entity>CreatedEvent <Entity> 创建事件
+type <Entity>CreatedEvent struct {
+    events.<Module>Topic
+    <Entity>ID string `json:"<entity>_id"`
+    Name     string `json:"name"`
+}
+
+// 自定义 EventType（可选，不实现则自动生成）
+func (<Entity>CreatedEvent) EventType() eventbus.EventType {
+    return "<module>.<entity>.created"
+}
+```
+
+## EventType 自动生成规则
+
+当事件没有实现 `EventType()` 方法时，会自动从类型名生成：
+
+1. 类型名: `<Entity>InvalidateCacheEvent`
+2. 去掉 "Event" 后缀: `<Entity>InvalidateCache`
+3. 转换为 snake_case: `<entity>_invalidate_cache`
+4. 加上 topicKey 前缀: `<module>.<entity>_invalidate_cache`
+
+最终 EventType: `"<module>.<entity>_invalidate_cache"`
+
+## 命名规范
+
+- **Topic 常量**：使用 `TK<Module>` 格式: `TKAuth`, `TKDirectory`
+- **Topic 结构体**：使用 `<Module>Topic` 格式: `AuthTopic`, `DirectoryTopic`
+- **事件类型**：使用 `PascalCase`，以 `Event` 结尾: `<Entity>InvalidateCacheEvent`, `<Entity>CreatedEvent`
+- **文件命名**：使用 `snake_case`: `cache.go`, `topics.go`
+
+## 事件发布
+
+```go
+// ✅ GOOD - 发布事件
+import (
+    "context"
+    "nfxid/pkgs/kafkax/eventbus"
+    "<project>/events/<module>"
+)
+
+// 创建事件
+event := <module>.<Entity>InvalidateCacheEvent{
+    ID:        "<entity-id>",
+    Prefix:    "<prefix>",
+    Namespace: "<namespace>", // 可选
+}
+
+// 发布事件
+err := eventbus.PublishEvent(ctx, publisher, event)
+if err != nil {
+    return fmt.Errorf("failed to publish event: %w", err)
+}
+
+// ✅ GOOD - 发布事件（带元数据）
+err := eventbus.PublishEvent(ctx, publisher, event,
+    eventbus.WithMetadata(map[string]string{
+        "trace_id": "abc123",
+        "user_id":  "user-456",
+    }),
+    eventbus.WithPartitionKey("tenant-123"),
+)
+```
+
+## 事件处理
+
+```go
+// ✅ GOOD - 注册事件处理器
+import (
+    "context"
+    "nfxid/pkgs/kafkax/eventbus"
+    "<project>/events/<module>"
+    "github.com/ThreeDotsLabs/watermill/message"
+)
+
+// 创建事件路由器
+router, err := eventbus.NewEventRouter(subscriber, eventbus.EventRouterConfig{
+    CloseTimeout: 30 * time.Second,
+    Logger:       logger,
+})
+if err != nil {
+    return err
+}
+
+// 注册处理器
+eventbus.RegisterHandler(router, func(
+    ctx context.Context,
+    evt <module>.<Entity>InvalidateCacheEvent,
+    msg *message.Message,
+) error {
+    // 处理事件逻辑
+    cacheKey := fmt.Sprintf("%s:%s:entity:%s", evt.Prefix, evt.Namespace, evt.ID)
+    return cache.Clear(ctx, cacheKey)
+})
+
+// 启动路由器
+go func() {
+    if err := router.Run(ctx); err != nil {
+        log.Fatal(err)
+    }
+}()
+```
+
+## 实现建议
+
+- **模块组织**：按业务模块组织事件，每个模块有独立的目录
+- **Topic 嵌入**：事件结构体嵌入对应的 Topic 结构体，自动提供 `TopicKey()` 方法
+- **自动生成**：优先使用自动生成的 EventType，减少代码量
+- **缓存事件**：缓存失效事件使用统一的命名格式：`<Entity>InvalidateCacheEvent`
+- **字段注释**：为事件字段添加 JSON 标签和注释说明
+- **事件发布**：使用 `eventbus.PublishEvent` 发布类型化事件
+- **事件处理**：使用 `eventbus.RegisterHandler` 注册类型化事件处理器
+- **错误处理**：事件处理器返回错误时，事件会被标记为失败

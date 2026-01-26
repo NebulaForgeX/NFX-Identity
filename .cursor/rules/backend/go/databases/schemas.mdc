@@ -1,0 +1,161 @@
+---
+description: Schemas 编码规范 - 数据库 Schema 定义
+globs:
+  - '**/databases/src/**/*.sql'
+alwaysApply: false
+---
+
+# Schemas 编码规范
+
+## 文件组织
+
+```
+databases/src/
+├── main.sql              # Schema 入口文件
+├── extensions/           # PostgreSQL 扩展
+│   └── <extension>.sql
+└── schemas/              # 各模块 Schema
+    ├── <module>/         # 模块 Schema（按需创建）
+    │   ├── main.sql      # 模块入口
+    │   ├── schema.sql    # Schema 定义（CREATE SCHEMA）
+    │   └── tables/       # 表定义
+    │       └── <table>.sql
+    └── ...
+```
+
+## 主入口文件（main.sql）
+
+```sql
+-- ✅ GOOD - 使用 atlas:import 指令引入各模块
+-- atlas:import extensions/pgcrypto.sql
+-- atlas:import extensions/btree_gist.sql
+-- atlas:import schemas/<module1>/main.sql
+-- atlas:import schemas/<module2>/main.sql
+-- ... 其他模块
+```
+
+## 模块入口文件（schemas/<module>/main.sql）
+
+```sql
+-- ✅ GOOD - 模块入口文件，按依赖顺序引入
+-- atlas:import schema.sql
+-- Import <table1> first because <table2> references it
+-- atlas:import tables/<table1>.sql
+-- atlas:import tables/<table2>.sql
+-- ... 其他表
+```
+
+## Schema 定义（schemas/<module>/schema.sql）
+
+```sql
+-- ✅ GOOD - Schema 定义
+CREATE SCHEMA IF NOT EXISTS "<module>";
+COMMENT ON SCHEMA "<module>" IS '<Description>';
+```
+
+## 表定义（schemas/<module>/tables/<table>.sql）
+
+```sql
+-- ✅ GOOD - 表定义文件
+-- <Table> table for <description>
+-- Note: <important notes>
+
+-- 创建枚举类型（如果需要）
+CREATE TYPE "<module>".<enum_name> AS ENUM ('value1', 'value2', 'value3');
+
+-- 创建表
+CREATE TABLE IF NOT EXISTS "<module>"."<table>" (
+  "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  "<field1>" VARCHAR(50) NOT NULL,
+  "<field2>" "<module>".<enum_name> NOT NULL DEFAULT 'value1',
+  "<field3>" BOOLEAN NOT NULL DEFAULT false,
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "deleted_at" TIMESTAMP
+);
+
+-- 创建索引
+CREATE INDEX IF NOT EXISTS "idx_<table>_<field1>" ON "<module>"."<table>"("<field1>");
+CREATE INDEX IF NOT EXISTS "idx_<table>_<field2>" ON "<module>"."<table>"("<field2>");
+CREATE INDEX IF NOT EXISTS "idx_<table>_deleted_at" ON "<module>"."<table>"("deleted_at");
+
+-- 创建唯一索引（带软删除条件）
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_<table>_<unique_field>" 
+  ON "<module>"."<table>"("<unique_field>") 
+  WHERE "deleted_at" IS NULL;
+```
+
+## 命名规范
+
+- **Schema 名**：使用 `snake_case`，小写，加双引号: `"directory"`, `"auth"`
+- **表名**：使用 `snake_case`，复数形式，加双引号: `"users"`, `"user_profiles"`
+- **字段名**：使用 `snake_case`，加双引号: `"user_id"`, `"created_at"`
+- **枚举类型**：使用 `snake_case`，加双引号: `"user_status"`, `"session_status"`
+- **索引名**：使用 `idx_<table>_<field>` 格式: `"idx_users_username"`
+
+## 表设计规范
+
+```sql
+-- ✅ GOOD - 标准表结构
+CREATE TABLE IF NOT EXISTS "<module>"."<table>" (
+  -- 主键
+  "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  -- 业务字段
+  "<field1>" VARCHAR(50) NOT NULL,
+  "<field2>" TEXT,
+  "<field3>" INTEGER NOT NULL DEFAULT 0,
+  
+  -- 枚举字段
+  "<status>" "<module>".<enum_name> NOT NULL DEFAULT 'default_value',
+  
+  -- 布尔字段
+  "is_<flag>" BOOLEAN NOT NULL DEFAULT false,
+  
+  -- 时间戳字段
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "deleted_at" TIMESTAMP,  -- 软删除
+  
+  -- 外键（如果需要，使用应用层一致性，不创建数据库外键）
+  -- "<foreign_key>" UUID REFERENCES "<module>"."<referenced_table>"("id")
+);
+
+-- ✅ GOOD - 创建必要的索引
+CREATE INDEX IF NOT EXISTS "idx_<table>_<field1>" ON "<module>"."<table>"("<field1>");
+CREATE INDEX IF NOT EXISTS "idx_<table>_deleted_at" ON "<module>"."<table>"("deleted_at");
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_<table>_<unique_field>" 
+  ON "<module>"."<table>"("<unique_field>") 
+  WHERE "deleted_at" IS NULL;
+```
+
+## 枚举类型
+
+```sql
+-- ✅ GOOD - 枚举类型定义（会在生成时自动转换为 Go 枚举）
+CREATE TYPE "<module>".<enum_name> AS ENUM ('value1', 'value2', 'value3');
+
+-- 注意：枚举值会在 gen-enums 时自动生成到 enums/ 目录
+-- 生成的文件格式：<module>_<enum_name>_enum_dbgen.go
+-- 不要手动创建或修改 enums/ 目录下的文件
+```
+
+## 注释规范
+
+```sql
+-- ✅ GOOD - 表注释
+COMMENT ON TABLE "<module>"."<table>" IS '<Description>';
+
+-- ✅ GOOD - 字段注释
+COMMENT ON COLUMN "<module>"."<table>"."<field>" IS '<Description>';
+```
+
+## 实现建议
+
+- **模块组织**：按业务模块组织 Schema，每个模块有独立的目录
+- **表设计**：使用 UUID 作为主键，包含 `created_at`, `updated_at`, `deleted_at` 时间戳
+- **索引优化**：为常用查询字段创建索引，为软删除字段创建索引
+- **唯一约束**：唯一索引使用 `WHERE deleted_at IS NULL` 条件，支持软删除
+- **枚举类型**：使用 PostgreSQL ENUM 类型，通过 Atlas 自动生成 Go 枚举
+- **外键约束**：优先使用应用层一致性，避免数据库外键约束
+- **注释说明**：为表和重要字段添加注释，说明用途和约束

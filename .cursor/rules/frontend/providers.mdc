@@ -1,0 +1,269 @@
+---
+description: Providers 文件夹编码规范 - Context Providers
+globs:
+  - '**/src/providers/**/*.ts'
+  - '**/src/providers/**/*.tsx'
+alwaysApply: false
+---
+
+# Providers 编码规范
+
+## 文件组织
+
+```
+providers/
+├── index.ts                    # 统一导出所有 Providers
+├── <Feature>Provider/           # 各功能模块的 Provider（按需创建）
+│   ├── index.tsx               # Provider 主文件
+│   ├── hooks/                  # Provider 相关的 Hooks（可选）
+│   │   └── use<Feature>.ts
+│   └── components/             # Provider 相关的组件（可选）
+│       └── ...
+└── ...
+```
+
+**示例**：
+- `ThemeProvider/` - 主题管理 Provider
+- `LayoutProvider/` - 布局管理 Provider
+- `QueryProvider/` - 数据查询 Provider
+- `ModalProvider/` - 模态框管理 Provider
+- 根据项目需要创建对应的 Provider
+
+## Provider 类型
+
+### 1. Context Provider（ThemeProvider, LayoutProvider）
+
+使用 Context API 管理全局状态。
+
+```typescript
+// ✅ GOOD - Context Provider
+import { createContext, useState, useEffect } from "react";
+
+export interface ThemeContextType {
+  currentTheme: Theme;
+  themeName: ThemeName;
+  setTheme: (themeName: ThemeName) => void;
+  availableThemes: ThemeName[];
+}
+
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export function ThemeProvider({ children, defaultTheme = "default" }: ThemeProviderProps) {
+  const [themeName, setThemeName] = useState<ThemeName>(() => {
+    const saved = localStorage.getItem("theme") as ThemeName | null;
+    return saved && saved in themes ? saved : defaultTheme;
+  });
+
+  const currentTheme = themes[themeName];
+  useThemeVariables(currentTheme, themeName); // 注入 CSS 变量
+
+  const setTheme = (newTheme: ThemeName) => {
+    setThemeName(newTheme);
+  };
+
+  return (
+    <ThemeContext.Provider value={{ currentTheme, themeName, setTheme, availableThemes }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+### 2. 第三方库 Provider（QueryProvider, BrowserRouterProvider, LenisProvider）
+
+包装第三方库的 Provider。
+
+```typescript
+// ✅ GOOD - QueryProvider
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+export function QueryProvider({ children }: QueryProviderProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 10,
+            gcTime: 1000 * 60 * 10,
+            retry: 1,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
+          },
+        },
+      }),
+  );
+
+  useCacheInvalidationEvents(queryClient); // 监听缓存失效事件
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
+  );
+}
+```
+
+```typescript
+// ✅ GOOD - BrowserRouterProvider
+import { BrowserRouter } from "react-router-dom";
+
+function RouterEventsHandler({ children }: { children: ReactNode }) {
+  useRouterEvents(); // 处理路由事件
+  return <>{children}</>;
+}
+
+export function BrowserRouterProvider({ children }: BrowserRouterProviderProps) {
+  return (
+    <BrowserRouter>
+      <RouterEventsHandler>{children}</RouterEventsHandler>
+    </BrowserRouter>
+  );
+}
+```
+
+### 3. 组件集合 Provider（ModalProvider）
+
+渲染多个全局组件。
+
+```typescript
+// ✅ GOOD - ModalProvider
+import { BaseModal, ConfirmModal, LoadingModal, SearchModal, YearSelectModal } from "./components";
+
+const ModalProvider = memo(({ children }: ModalProviderProps) => {
+  return (
+    <>
+      {children}
+      <BaseModal />
+      <ConfirmModal />
+      <LoadingModal />
+      <SearchModal />
+      <YearSelectModal />
+    </>
+  );
+});
+```
+
+### 4. 条件渲染 Provider（BootstrapProvider）
+
+根据条件渲染不同内容。
+
+```typescript
+// ✅ GOOD - BootstrapProvider
+export function BootstrapProvider({ children }: BootstrapProviderProps) {
+  return (
+    <Suspense loadingType="truck" loadingText={t("checking_system_status")}>
+      <BootstrapContent>{children}</BootstrapContent>
+    </Suspense>
+  );
+}
+
+const BootstrapContent = memo(({ children }: { children: ReactNode }) => {
+  const systemState = useSystemInit();
+
+  if (!systemState.data.initialized) {
+    return <InitForm />; // 显示初始化表单
+  }
+
+  return <>{children}</>; // 系统已初始化，渲染子组件
+});
+```
+
+## 命名规范
+
+- **Provider 组件**: PascalCase，以 `Provider` 结尾: `ThemeProvider`, `QueryProvider`
+- **Provider 文件夹**: PascalCase，以 `Provider` 结尾: `ThemeProvider/`, `QueryProvider/`
+- **Provider 文件**: `index.tsx`
+- **相关 Hooks**: 放在 `hooks/` 目录下，camelCase: `useRouterEvents.ts`, `useCacheInvalidationEvents.ts`
+
+## Context Provider 模式
+
+### 状态管理
+
+```typescript
+// ✅ GOOD - 从 localStorage 读取初始状态
+const [themeName, setThemeName] = useState<ThemeName>(() => {
+  const saved = localStorage.getItem("theme") as ThemeName | null;
+  return saved && saved in themes ? saved : defaultTheme;
+});
+
+// ✅ GOOD - 同步状态到 localStorage
+useEffect(() => {
+  localStorage.setItem("layout-storage", JSON.stringify({ state: { sidebarOpen, layoutMode } }));
+}, [sidebarOpen, layoutMode]);
+```
+
+### 自定义 Hooks
+
+```typescript
+// ✅ GOOD - 提供自定义 Hook 访问 Context
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};
+```
+
+## 事件监听模式
+
+### 缓存失效事件
+
+```typescript
+// ✅ GOOD - 监听缓存失效事件
+export const useCacheInvalidationEvents = (queryClient: QueryClient) => {
+  useEffect(() => {
+    const cleanupAccess = useAccessCacheInvalidation(queryClient);
+    const cleanupAuth = useAuthCacheInvalidation(queryClient);
+    // ...
+
+    return () => {
+      cleanupAccess();
+      cleanupAuth();
+      // ...
+    };
+  }, [queryClient]);
+};
+```
+
+### 路由事件
+
+```typescript
+// ✅ GOOD - 监听路由事件
+export function useRouterEvents() {
+  const navigate = useNavigate();
+
+  const handleNavigate = useCallback((payload: { to: string; replace?: boolean }) => {
+    navigate(payload.to, { replace: payload.replace });
+  }, [navigate]);
+
+  useEffect(() => {
+    routerEventEmitter.on(routerEvents.NAVIGATE, handleNavigate);
+    authEventEmitter.on(authEvents.LOGIN_SUCCESS, () => navigate(ROUTES.DASHBOARD));
+
+    return () => {
+      routerEventEmitter.off(routerEvents.NAVIGATE, handleNavigate);
+      authEventEmitter.off(authEvents.LOGIN_SUCCESS, handleNavigate);
+    };
+  }, [handleNavigate, navigate]);
+}
+```
+
+## 最佳实践
+
+- 每个 Provider 只负责一个功能领域
+- 提供自定义 hook 访问 context（如 `useTheme`, `useLayout`）
+- 在 hook 中检查 context 是否存在并抛出错误
+- 使用 `useState` 的初始化函数从 localStorage 读取初始值
+- 使用 `useEffect` 同步状态到 localStorage
+- 使用 `useCallback` 优化回调函数
+- 在 Provider 中监听事件并清理监听器
+- 条件渲染 Provider 使用 Suspense 包装异步检查
+
+## 实现建议
+
+- 每个 Provider 使用独立的文件夹，包含 `index.tsx` 和相关的 hooks/components
+- 保持文件命名一致性：`<功能名>Provider/`
+- 所有 Provider 通过 `index.ts` 统一导出，方便在应用入口使用

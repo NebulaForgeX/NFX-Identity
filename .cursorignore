@@ -1,0 +1,142 @@
+# Cursor ignore rules
+# 这些文件将被 Cursor AI 忽略，不会用于代码索引和搜索
+
+## Go build artifacts
+bin/
+dist/
+tmp/
+.buildcache/
+.cache/
+cache/
+coverage/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.prof
+*.pprof
+*.cover
+cover.out
+
+## Go module overrides
+vendor/
+go.work
+go.work.sum
+
+## Tooling & temporary files
+.air.toml.local
+.env
+.env.*
+.env.local
+.env.*.local
+*.env
+*.log
+logs/
+log/
+*.pid
+*.sock
+*.tmp
+*.temp
+*.cache
+*.orig
+*.rej
+*.bak
+*.backup
+
+## Atlas generated content
+databases/build/
+databases/gen/
+databases/debug.txt
+
+## Uploaded assets
+assets/**/*
+!assets/**/.gitkeep
+static/images/pictures/*
+!static/images/pictures/.gitkeep
+
+## Runtime data
+data/*
+data/postgresql/*
+data/redis/*
+data/kafka/*
+dump.rdb
+*.rdb
+*.sqlite
+*.db
+*.db-journal
+!data/**/.gitkeep
+
+## Secrets & certificates
+*.key
+*.pem
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+static/keys/*
+!static/keys/.gitkeep
+certificates/
+ssl/
+
+## Docker & local overrides
+docker-compose.override.yml
+.dockerignore.local
+
+## IDE, editor & OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Database dumps
+*.dump
+data/**/*.sql
+
+.task/*
+
+## Node.js dependencies (for console frontend)
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+## Frontend build outputs
+**/dist/
+**/build/
+**/.next/
+**/out/
+
+## Generated files
+**/*_gen.go
+**/*_generated.go
+**/*.pb.go
+**/*.pb.gw.go
+
+## Config files (use example files instead)
+dev.toml
+prod.toml
+inputs/**/config/*.toml
+inputs/**/config/*.yaml
+inputs/**/config/*.yml
+!inputs/**/config/example.toml
+!inputs/**/config/example.yaml
+!inputs/**/config/example.yml
+
+## Console build
+/console/dist/
+/console/node_modules/

@@ -1,0 +1,276 @@
+---
+description: Events 文件夹编码规范 - 事件系统
+globs:
+  - '**/src/events/**/*.ts'
+alwaysApply: false
+---
+
+# Events 编码规范
+
+## 事件系统架构
+
+使用自定义 EventEmitter 类实现类型安全的事件系统，每个业务模块有独立的事件发射器。
+
+## 文件组织
+
+```
+events/
+├── <module>.ts    # 各模块事件定义（按需创建）
+└── ...
+```
+
+**示例**：
+- `auth.ts` - 认证相关事件
+- `user.ts` - 用户相关事件
+- `router.ts` - 路由导航相关事件
+- 根据项目模块划分创建对应的事件文件
+
+## 事件定义模式
+
+### 标准事件文件结构
+
+```typescript
+// ✅ GOOD - 事件定义标准结构
+// events/auth.ts
+export const authEvents = {
+  // Session 相关
+  INVALIDATE_SESSION: "AUTH:INVALIDATE_SESSION",
+  INVALIDATE_SESSIONS: "AUTH:INVALIDATE_SESSIONS",
+  
+  // UserCredential 相关
+  INVALIDATE_USER_CREDENTIAL: "AUTH:INVALIDATE_USER_CREDENTIAL",
+  INVALIDATE_USER_CREDENTIALS: "AUTH:INVALIDATE_USER_CREDENTIALS",
+  
+  // 登录相关
+  LOGIN_SUCCESS: "AUTH:LOGIN_SUCCESS",
+  LOGOUT: "AUTH:LOGOUT",
+} as const;
+
+type AuthEvent = (typeof authEvents)[keyof typeof authEvents];
+
+class AuthEventEmitter {
+  private listeners: Record<AuthEvent, Set<Function>> = {
+    [authEvents.INVALIDATE_SESSION]: new Set<Function>(),
+    [authEvents.INVALIDATE_SESSIONS]: new Set<Function>(),
+    [authEvents.INVALIDATE_USER_CREDENTIAL]: new Set<Function>(),
+    [authEvents.INVALIDATE_USER_CREDENTIALS]: new Set<Function>(),
+    [authEvents.LOGIN_SUCCESS]: new Set<Function>(),
+    [authEvents.LOGOUT]: new Set<Function>(),
+  };
+
+  on(event: AuthEvent, callback: Function) {
+    this.listeners[event].add(callback);
+  }
+
+  off(event: AuthEvent, callback: Function) {
+    this.listeners[event].delete(callback);
+  }
+
+  emit(event: AuthEvent, ...args: unknown[]) {
+    this.listeners[event].forEach((callback) => {
+      callback(...args);
+    });
+  }
+}
+
+export const authEventEmitter = new AuthEventEmitter();
+```
+
+## 事件类型
+
+### 缓存失效事件
+
+```typescript
+// ✅ GOOD - 缓存失效事件命名模式
+export const directoryEvents = {
+  // 单个 Item 失效
+  INVALIDATE_USER: "DIRECTORY:INVALIDATE_USER",
+  INVALIDATE_USER_PROFILE: "DIRECTORY:INVALIDATE_USER_PROFILE",
+  
+  // 列表失效
+  INVALIDATE_USERS: "DIRECTORY:INVALIDATE_USERS",
+  INVALIDATE_USER_PROFILES: "DIRECTORY:INVALIDATE_USER_PROFILES",
+} as const;
+```
+
+### 业务事件
+
+```typescript
+// ✅ GOOD - 业务事件
+export const authEvents = {
+  LOGIN_SUCCESS: "AUTH:LOGIN_SUCCESS",
+  LOGOUT: "AUTH:LOGOUT",
+} as const;
+```
+
+### 路由事件
+
+```typescript
+// ✅ GOOD - 路由事件（带便捷方法）
+export const routerEvents = {
+  NAVIGATE: "ROUTER:NAVIGATE",
+  NAVIGATE_REPLACE: "ROUTER:NAVIGATE_REPLACE",
+  NAVIGATE_TO_LOGIN: "ROUTER:NAVIGATE_TO_LOGIN",
+  NAVIGATE_TO_DASHBOARD: "ROUTER:NAVIGATE_TO_DASHBOARD",
+} as const;
+
+interface NavigatePayload {
+  to: string;
+  replace?: boolean;
+  state?: unknown;
+}
+
+class RouterEventEmitter {
+  // ... 标准方法
+
+  // ✅ GOOD - 便捷方法封装常用操作
+  navigate(payload: NavigatePayload) {
+    this.emit(routerEvents.NAVIGATE, payload);
+  }
+
+  navigateToLogin() {
+    this.emit(routerEvents.NAVIGATE_TO_LOGIN);
+  }
+}
+```
+
+## 命名规范
+
+- **事件常量对象**：使用 camelCase 并以 `Events` 结尾: `authEvents`, `directoryEvents`
+- **事件类型**：使用 `MODULE:ACTION` 格式，UPPER_SNAKE_CASE: `AUTH:LOGIN_SUCCESS`, `DIRECTORY:INVALIDATE_USER`
+- **事件发射器类**：使用 PascalCase 并以 `EventEmitter` 结尾: `AuthEventEmitter`, `DirectoryEventEmitter`
+- **事件发射器实例**：使用 camelCase 并以 `EventEmitter` 结尾: `authEventEmitter`, `directoryEventEmitter`
+- **事件类型别名**：使用 PascalCase 并以 `Event` 结尾: `AuthEvent`, `DirectoryEvent`
+- **文件命名**：使用 kebab-case: `auth.ts`, `directory.ts`
+
+## EventEmitter 类结构
+
+```typescript
+// ✅ GOOD - EventEmitter 标准结构
+class ModuleEventEmitter {
+  // 使用 Set 存储监听器，避免重复
+  private listeners: Record<ModuleEvent, Set<Function>> = {
+    [moduleEvents.EVENT_1]: new Set<Function>(),
+    [moduleEvents.EVENT_2]: new Set<Function>(),
+    // ... 初始化所有事件
+  };
+
+  // 注册监听器
+  on(event: ModuleEvent, callback: Function) {
+    this.listeners[event].add(callback);
+  }
+
+  // 移除监听器
+  off(event: ModuleEvent, callback: Function) {
+    this.listeners[event].delete(callback);
+  }
+
+  // 触发事件
+  emit(event: ModuleEvent, ...args: unknown[]) {
+    this.listeners[event].forEach((callback) => {
+      callback(...args);
+    });
+  }
+}
+```
+
+## 使用示例
+
+### 触发事件
+
+```typescript
+// ✅ GOOD - 触发事件
+import { authEventEmitter, authEvents } from "@/events";
+
+// 触发登录成功事件
+authEventEmitter.emit(authEvents.LOGIN_SUCCESS, { userId: "123" });
+
+// 触发缓存失效事件
+directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER, userId);
+
+// 使用便捷方法
+routerEventEmitter.navigate({ to: "/dashboard" });
+routerEventEmitter.navigateToLogin();
+```
+
+### 监听事件
+
+```typescript
+// ✅ GOOD - 监听事件
+import { useEffect } from "react";
+import { authEventEmitter, authEvents } from "@/events";
+
+useEffect(() => {
+  const handleLoginSuccess = (payload: { userId: string }) => {
+    console.log("User logged in:", payload.userId);
+    // 处理登录成功逻辑
+  };
+
+  authEventEmitter.on(authEvents.LOGIN_SUCCESS, handleLoginSuccess);
+
+  return () => {
+    authEventEmitter.off(authEvents.LOGIN_SUCCESS, handleLoginSuccess);
+  };
+}, []);
+```
+
+## 事件命名模式
+
+### 缓存失效事件
+
+- **单个 Item**: `INVALIDATE_ENTITY` (如 `INVALIDATE_USER`)
+- **列表**: `INVALIDATE_ENTITIES` (如 `INVALIDATE_USERS`)
+
+### 业务事件
+
+- **操作成功**: `ACTION_SUCCESS` (如 `LOGIN_SUCCESS`)
+- **操作**: `ACTION` (如 `LOGOUT`)
+
+### 路由事件
+
+- **通用导航**: `NAVIGATE`, `NAVIGATE_REPLACE`
+- **特定路由**: `NAVIGATE_TO_*` (如 `NAVIGATE_TO_LOGIN`)
+
+## 类型安全
+
+```typescript
+// ✅ GOOD - 使用 as const 和类型推导
+export const authEvents = {
+  LOGIN_SUCCESS: "AUTH:LOGIN_SUCCESS",
+  LOGOUT: "AUTH:LOGOUT",
+} as const;
+
+type AuthEvent = (typeof authEvents)[keyof typeof authEvents];
+
+// ✅ GOOD - 类型安全的监听器
+const handleEvent = (event: AuthEvent, callback: Function) => {
+  // event 只能是 authEvents 中定义的值
+};
+```
+
+## 便捷方法
+
+```typescript
+// ✅ GOOD - 为常用操作提供便捷方法
+class RouterEventEmitter {
+  // ... 标准方法
+
+  navigate(payload: NavigatePayload) {
+    this.emit(routerEvents.NAVIGATE, payload);
+  }
+
+  navigateToLogin() {
+    this.emit(routerEvents.NAVIGATE_TO_LOGIN);
+  }
+
+  navigateBack() {
+    this.emit(routerEvents.NAVIGATE_BACK);
+  }
+}
+```
+
+## 实现建议
+
+- 按功能模块组织事件文件，使用 `<module>.ts` 命名
+- 保持文件命名一致性：`<模块名>.ts`
+- 所有事件通过 `index.ts` 统一导出，方便使用

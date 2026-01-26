@@ -1,0 +1,81 @@
+---
+description: Migrations 编码规范 - 数据库迁移管理
+globs:
+  - '**/databases/migrations/**/*.sql'
+alwaysApply: false
+---
+
+# Migrations 编码规范
+
+## 重要提示
+
+⚠️ **迁移文件由 Atlas 自动生成，不要手动创建或编辑**
+
+- 所有迁移文件（`<timestamp>_<name>.sql`）都由 Atlas 自动生成
+- 手动创建或修改的迁移文件可能导致迁移失败或数据不一致
+- 修改 Schema 应该修改 `databases/src/` 目录下的 SQL 文件，然后使用 `atlas migrate diff` 生成迁移
+
+## 文件组织
+
+```
+databases/migrations/
+├── development/          # 开发环境迁移（自动生成）
+│   ├── <timestamp>_<name>.sql
+│   └── atlas.sum        # Atlas 校验和文件
+└── production/           # 生产环境迁移（自动生成）
+    ├── <timestamp>_<name>.sql
+    └── atlas.sum
+```
+
+## 迁移生成流程
+
+```bash
+# ✅ GOOD - 生成迁移（基于 src/ 和当前数据库的差异）
+# 1. 修改 databases/src/ 目录下的 SQL Schema 文件
+# 2. 运行以下命令生成迁移文件
+atlas migrate diff --env dev
+
+# ✅ GOOD - 应用迁移
+atlas migrate apply --env dev
+
+# ✅ GOOD - 验证迁移
+atlas migrate validate --env dev
+```
+
+## 迁移文件格式
+
+```sql
+-- ✅ GOOD - 迁移文件由 Atlas 自动生成，包含完整的 SQL 语句
+-- Add new schema named "<module>"
+CREATE SCHEMA "<module>";
+COMMENT ON SCHEMA "<module>" IS '<Description>';
+
+-- Create enum type "<enum_name>"
+CREATE TYPE "<module>".<enum_name> AS ENUM ('value1', 'value2', 'value3');
+
+-- Create table "<table>"
+CREATE TABLE "<module>"."<table>" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  -- ... 字段定义
+  PRIMARY KEY ("id")
+);
+
+-- Create index
+CREATE INDEX "idx_<table>_<field>" ON "<module>"."<table>"("<field>");
+```
+
+## 命名规范
+
+- **迁移文件名**：由 Atlas 自动生成，格式为 `<timestamp>_<description>.sql`
+- **时间戳**：使用 `YYYYMMDDHHMMSS` 格式（14位数字），由 Atlas 自动生成
+- **描述**：由 Atlas 根据变更内容自动生成，使用 `snake_case`
+
+## 实现建议
+
+- **不要手动编辑**：迁移文件由 Atlas 自动生成，**永远不要手动创建或修改**
+- **修改 Schema**：要修改数据库结构，应该修改 `databases/src/` 目录下的 SQL 文件
+- **生成迁移**：使用 `atlas migrate diff` 命令自动生成迁移文件
+- **环境分离**：开发和生产环境使用不同的迁移目录
+- **版本控制**：所有迁移文件都应该提交到版本控制
+- **验证迁移**：在应用迁移前使用 `atlas migrate validate` 验证
+- **atlas.sum**：不要手动修改 `atlas.sum` 文件，它由 Atlas 自动维护

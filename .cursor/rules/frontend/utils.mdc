@@ -1,0 +1,256 @@
+---
+description: Utils 文件夹编码规范 - 工具函数
+globs:
+  - '**/src/utils/**/*.ts'
+alwaysApply: false
+---
+
+# Utils 编码规范
+
+## 文件组织
+
+```
+utils/
+├── <category>.ts   # 各分类工具函数（按需创建）
+└── index.ts        # 统一导出
+```
+
+**示例**：
+- `image.ts` - 图片处理工具
+- `promise.ts` - Promise 工具
+- `time.ts` - 时间格式化工具
+- `form.ts` - 表单值转换工具
+- `types.ts` - 工具类型
+- 根据项目功能分类创建对应的工具文件
+
+## 工具函数分类
+
+### 1. 图片处理工具（image.ts）
+
+```typescript
+// ✅ GOOD - 图片 URL 构建工具
+/**
+ * 构建图片的完整 URL
+ * 如果已经是完整 URL，直接返回
+ * 如果是相对路径，构建为完整 URL
+ * @param imagePath - 图片路径（可能是相对路径或完整 URL）
+ * @param type - 图片类型，默认为 "avatar"
+ * @param isTemp - 是否是临时图片
+ * @returns 完整的图片 URL
+ */
+export const buildImageUrl = (
+  imagePath: string | null | undefined,
+  type: "avatar" | "tea" | "category" | string = "avatar",
+  isTemp: boolean = false,
+): string => {
+  if (!imagePath) return "";
+
+  // 如果已经是完整 URL，直接返回
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+
+  // 构建完整 URL
+  const baseUrl = API_ENDPOINTS.PURE.replace(/\/$/, "");
+  const cleanPath = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath;
+  const prefix = isTemp ? `tmp/${type}` : type;
+
+  return `${baseUrl}/images/${prefix}/${cleanPath}`;
+};
+```
+
+### 2. Promise 工具（promise.ts）
+
+```typescript
+// ✅ GOOD - 防重入的异步函数包装器
+/**
+ * 防重入的异步函数包装器
+ * 确保同一个函数在同时被多次调用时，只会执行一次
+ */
+export function onceAsync<T extends (...args: unknown[]) => Promise<unknown>>(fn: T): T {
+  let promise: Promise<unknown> | null = null;
+
+  return ((...args: unknown[]) => {
+    if (promise) {
+      return promise;
+    }
+
+    promise = fn(...args).finally(() => {
+      promise = null;
+    });
+
+    return promise;
+  }) as T;
+}
+```
+
+### 3. 时间格式化工具（time.ts）
+
+```typescript
+// ✅ GOOD - 日期格式化工具
+/**
+ * 格式化日期为 YYYY/MM/DD 格式
+ * @param dateString - 日期字符串
+ * @returns 格式化后的日期字符串，如果无效则返回空字符串
+ */
+export const formatDisplayDate = (dateString: string | undefined | null): string => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}/${month}/${day}`;
+};
+
+/**
+ * 格式化日期为相对时间（如：2 days ago, 3 months ago）
+ * @param dateString - 日期字符串
+ * @returns 相对时间字符串
+ */
+export const formatRelativeTime = (dateString: string | undefined | null): string => {
+  if (!dateString) return "Unknown";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Invalid date";
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSeconds = Math.floor(diffMs / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  if (diffYears > 0) return `${diffYears} year${diffYears > 1 ? "s" : ""} ago`;
+  if (diffMonths > 0) return `${diffMonths} month${diffMonths > 1 ? "s" : ""} ago`;
+  if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+  if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  if (diffMinutes > 0) return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
+  return "Just now";
+};
+```
+
+### 4. 表单值转换工具（form.ts）
+
+```typescript
+// ✅ GOOD - 表单值转换工具
+export function toTextInputValue(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (value === null || value === undefined) return "";
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) return value.map((item) => String(item)).join(", ");
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
+}
+
+export function toNumberInputValue(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  if (typeof value === "number") return Number.isFinite(value) ? String(value) : "";
+  if (typeof value === "string") return value;
+  if (typeof value === "boolean") return value ? "1" : "0";
+  if (Array.isArray(value) && value.length > 0) return String(value[0]);
+  return "";
+}
+```
+
+### 5. 工具类型（types.ts）
+
+```typescript
+// ✅ GOOD - 工具类型
+export type ValueOf<T> = T[keyof T];
+```
+
+## 命名规范
+
+- **工具文件**: kebab-case: `image.ts`, `promise.ts`, `time.ts`, `form.ts`
+- **函数**: camelCase: `buildImageUrl`, `formatDisplayDate`, `toTextInputValue`
+- **类型**: PascalCase: `ValueOf`
+- 使用描述性的函数名，清晰表达功能
+
+## 函数特性
+
+### 纯函数
+
+```typescript
+// ✅ GOOD - 纯函数，无副作用
+export const formatDisplayDate = (dateString: string | undefined | null): string => {
+  if (!dateString) return "";
+  // 格式化逻辑
+  return formatted;
+};
+```
+
+### 类型安全
+
+```typescript
+// ✅ GOOD - 类型安全的工具函数
+export const buildImageUrl = (
+  imagePath: string | null | undefined,
+  type: "avatar" | "tea" | "category" | string = "avatar",
+  isTemp: boolean = false,
+): string => {
+  // 实现
+};
+```
+
+### 泛型工具函数
+
+```typescript
+// ✅ GOOD - 泛型工具函数
+export function onceAsync<T extends (...args: unknown[]) => Promise<unknown>>(fn: T): T {
+  // 实现
+}
+```
+
+## 常用工具模式
+
+### 防重入模式
+
+```typescript
+// ✅ GOOD - 防重入的异步函数包装器
+export function onceAsync<T extends (...args: unknown[]) => Promise<unknown>>(fn: T): T {
+  let promise: Promise<unknown> | null = null;
+  return ((...args: unknown[]) => {
+    if (promise) return promise;
+    promise = fn(...args).finally(() => { promise = null; });
+    return promise;
+  }) as T;
+}
+```
+
+### 值转换模式
+
+```typescript
+// ✅ GOOD - 值转换工具
+export function toTextInputValue(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (value === null || value === undefined) return "";
+  // 处理其他类型
+  return String(value);
+}
+```
+
+### 工具类型模式
+
+```typescript
+// ✅ GOOD - 工具类型
+export type ValueOf<T> = T[keyof T];
+```
+
+## 最佳实践
+
+- 工具函数应该是纯函数（无副作用）
+- 使用 TypeScript 提供类型安全
+- 每个函数只做一件事
+- 提供清晰的 JSDoc 注释
+- 处理边界情况（null, undefined, 无效值）
+- 使用描述性的函数名
+- 避免在工具函数中使用全局状态
+- 使用泛型提高复用性
+
+## 实现建议
+
+- 按功能分类组织工具函数到不同文件
+- 保持函数单一职责，便于测试和维护
+- 所有工具函数通过 `index.ts` 统一导出

@@ -1,0 +1,319 @@
+---
+description: Pages 文件夹编码规范 - 页面组件
+globs:
+  - '**/src/pages/**/*.ts'
+  - '**/src/pages/**/*.tsx'
+alwaysApply: false
+---
+
+# Pages 编码规范
+
+## 文件组织
+
+```
+pages/
+├── index.ts                    # 统一导出所有页面
+├── <PageName>Page/             # 各页面（按需创建）
+│   ├── index.tsx               # 页面主组件
+│   ├── components/             # 页面专用组件（可选）
+│   │   ├── index.ts
+│   │   └── ...
+│   ├── schemas/                # Zod 验证 Schema（可选）
+│   │   └── ...
+│   └── styles.module.css       # 页面样式（可选）
+└── ...
+```
+
+**示例**：
+- `DashboardPage/` - 仪表板页面
+- `LoginPage/` - 登录页面
+- `ProfilePage/` - 个人资料页面
+- 根据项目路由需求创建对应的页面
+└── EditProfilePage/
+    ├── index.tsx
+    └── styles.module.css
+```
+
+## 页面组件结构
+
+### 基础页面
+
+```typescript
+// ✅ GOOD - 基础页面结构
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import styles from "./styles.module.css";
+
+const DashboardPage = memo(() => {
+  const { t } = useTranslation("DashboardPage");
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>{t("title")}</h1>
+      {/* 页面内容 */}
+    </div>
+  );
+});
+
+DashboardPage.displayName = "DashboardPage";
+
+export default DashboardPage;
+```
+
+### 带 Suspense 的页面
+
+```typescript
+// ✅ GOOD - 使用 Suspense 处理异步数据
+import { memo } from "react";
+import { Suspense } from "@/components";
+import Background from "@/layouts/Background";
+import { StatsCards } from "./components";
+
+const DashboardPage = memo(() => {
+  return (
+    <Background>
+      <div className={styles.container}>
+        <Suspense
+          loadingType="ecg"
+          loadingText="加载统计数据..."
+          loadingSize="small"
+          loadingContainerClassName={styles.loading}
+        >
+          <StatsCards />
+        </Suspense>
+      </div>
+    </Background>
+  );
+});
+```
+
+### 表单页面
+
+```typescript
+// ✅ GOOD - 表单页面结构
+import { memo } from "react";
+import { FormProvider } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { Button, IconButton, Suspense } from "@/components";
+import { useInitProfileForm, useSubmitProfile } from "@/elements/directory";
+import { FirstNameController, LastNameController } from "@/elements/directory";
+import { useUserProfile } from "@/hooks/useDirectory";
+import { useAuthStore } from "@/stores/authStore";
+import { ROUTES } from "@/types/navigation";
+
+const EditProfilePage = memo(() => {
+  const { t } = useTranslation("EditProfilePage");
+  const navigate = useNavigate();
+  const currentUserId = useAuthStore((state) => state.currentUserId);
+
+  if (!currentUserId) {
+    navigate(ROUTES.PROFILE);
+    return null;
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <IconButton variant="ghost" leftIcon={<ArrowLeftIcon />} onClick={() => navigate(ROUTES.PROFILE)}>
+          {t("back")}
+        </IconButton>
+        <h1 className={styles.title}>{t("title")}</h1>
+      </div>
+
+      <Suspense loadingType="ecg" loadingText={t("loading")}>
+        <EditProfileContent userId={currentUserId} />
+      </Suspense>
+    </div>
+  );
+});
+
+const EditProfileContent = memo(({ userId }: { userId: string }) => {
+  const { data: profile } = useUserProfile({ id: userId });
+  const form = useInitProfileForm(profile);
+  const { onSubmit, onSubmitError, isPending } = useSubmitProfile(profile?.id || userId);
+
+  return (
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className={styles.form}>
+        <FirstNameController />
+        <LastNameController />
+        {/* ... */}
+        <div className={styles.actions}>
+          <Button type="button" variant="secondary" onClick={() => navigate(ROUTES.PROFILE)} disabled={isPending}>
+            {t("cancel")}
+          </Button>
+          <Button type="submit" variant="primary" disabled={isPending}>
+            {isPending ? t("submitting") : t("submit")}
+          </Button>
+        </div>
+      </form>
+    </FormProvider>
+  );
+});
+```
+
+### 展示页面
+
+```typescript
+// ✅ GOOD - 展示页面（使用页面专用组件）
+import { memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { ProfileCard, BasicInfoCard, AccountInfoCard } from "./components";
+import { useAuthStore } from "@/stores/authStore";
+
+const ProfilePage = memo(() => {
+  const { t } = useTranslation("ProfilePage");
+  const navigate = useNavigate();
+  const currentUserId = useAuthStore((state) => state.currentUserId);
+
+  if (!currentUserId) {
+    return <div className={styles.errorContainer}><p>{t("userNotFound")}</p></div>;
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{t("title")}</h1>
+      </div>
+      <div className={styles.content}>
+        <ProfileCard userId={currentUserId} />
+        <BasicInfoCard userId={currentUserId} />
+        <AccountInfoCard userId={currentUserId} />
+      </div>
+    </div>
+  );
+});
+```
+
+## 命名规范
+
+- **页面文件夹**: PascalCase，以 `Page` 结尾: `LoginPage/`, `ProfilePage/`, `EditProfilePage/`
+- **页面文件**: `index.tsx`
+- **样式文件**: `styles.module.css`
+- **子组件文件夹**: 放在 `components/` 目录下，PascalCase
+- **Schema 文件**: 放在 `schemas/` 目录下，camelCase: `loginSchema.ts`, `registerSchema.ts`
+
+## 数据获取模式
+
+### 使用自定义 Hooks
+
+```typescript
+// ✅ GOOD - 使用自定义 hooks 获取数据
+import { useUserProfile } from "@/hooks/useDirectory";
+
+const EditProfileContent = memo(({ userId }: { userId: string }) => {
+  const { data: profile } = useUserProfile({ id: userId });
+  // ...
+});
+```
+
+### 使用 Suspense
+
+```typescript
+// ✅ GOOD - 使用 Suspense 包装异步组件
+<Suspense loadingType="ecg" loadingText={t("loading")} loadingSize="small">
+  <StatsCards />
+</Suspense>
+```
+
+### 错误处理
+
+```typescript
+// ✅ GOOD - 在页面组件中处理错误状态
+if (!currentUserId) {
+  return <div className={styles.errorContainer}><p>{t("userNotFound")}</p></div>;
+}
+```
+
+## 表单页面模式
+
+### Schema 定义
+
+```typescript
+// ✅ GOOD - 使用工厂函数创建带翻译的 Schema
+// schemas/loginSchema.ts
+import { z } from "zod";
+
+export const createEmailLoginSchema = (t: (key: string) => string) => {
+  return z.object({
+    loginType: z.literal("email"),
+    email: z.email(t("validation.emailInvalid")),
+    password: z.string().min(1, t("validation.passwordRequired")).min(6, t("validation.passwordMinLength")),
+  });
+};
+
+// 基础 Schema（用于类型推断）
+const BaseEmailLoginSchema = z.object({
+  loginType: z.literal("email"),
+  email: z.email(),
+  password: z.string().min(1).min(6),
+});
+
+export type EmailLoginFormValues = z.infer<typeof BaseEmailLoginSchema>;
+```
+
+### 表单初始化
+
+```typescript
+// ✅ GOOD - 使用 Elements 中的 hooks
+import { useInitProfileForm, useSubmitProfile } from "@/elements/directory";
+
+const EditProfileContent = memo(({ userId }: { userId: string }) => {
+  const { data: profile } = useUserProfile({ id: userId });
+  const form = useInitProfileForm(profile);
+  const { onSubmit, onSubmitError, isPending } = useSubmitProfile(profile?.id || userId);
+
+  return (
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)}>
+        {/* Controller 组件 */}
+      </form>
+    </FormProvider>
+  );
+});
+```
+
+## 页面组件分类
+
+### 1. 展示页面（ProfilePage）
+
+- 使用页面专用组件（Card 组件）
+- 使用自定义 hooks 获取数据
+- 处理错误状态
+
+### 2. 表单页面（EditProfilePage, AddEducationPage）
+
+- 使用 `FormProvider` 和 `react-hook-form`
+- 使用 Elements 中的 Controller 组件
+- 使用自定义 hooks（`useInitXxxForm`, `useSubmitXxx`）
+- 使用 Suspense 包装异步数据加载
+
+### 3. 复合页面（DashboardPage）
+
+- 使用 Background 组件包装
+- 使用多个子组件
+- 使用 Suspense 包装异步组件
+
+### 4. 简单页面（LoginPage, NotFoundPage）
+
+- 直接渲染 UI
+- 使用状态管理（如 `useState`）
+- 使用动画组件
+
+## 最佳实践
+
+- 使用 `memo` 优化性能
+- 使用 `displayName` 设置组件名称
+- 使用 CSS Modules 管理样式
+- 使用 `useTranslation` 进行国际化
+- 使用 `useNavigate` 进行路由导航
+- 复杂逻辑提取到自定义 hooks
+- UI 组件提取到 `components/` 或 `elements/`
+- 使用 Suspense 处理异步数据加载
+- 在页面组件中处理错误状态
+
+## 实现建议
+
+- 每个页面使用独立的文件夹，包含 `index.tsx` 和相关的组件/schemas
+- 保持文件命名一致性：`<页面名>Page/`
+- 所有页面通过 `index.ts` 统一导出，方便路由配置

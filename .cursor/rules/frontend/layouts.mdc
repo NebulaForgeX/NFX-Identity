@@ -1,0 +1,320 @@
+---
+description: Layouts 文件夹编码规范 - 布局组件
+globs:
+  - '**/src/layouts/**/*.ts'
+  - '**/src/layouts/**/*.tsx'
+alwaysApply: false
+---
+
+# Layouts 编码规范
+
+## 文件组织
+
+```
+layouts/
+├── index.tsx                    # LayoutSwitcher - 根据 layoutMode 切换布局
+├── MainWrapper/                  # 主包装器（可选）
+│   ├── index.tsx
+│   └── styles.module.css
+├── <LayoutName>Layout/          # 各布局组件（按需创建）
+│   ├── index.tsx
+│   └── styles.module.css
+├── Header/                        # Header 组件（可选）
+│   ├── index.tsx
+│   └── ...
+├── Sidebar/                      # Sidebar 组件（可选）
+│   ├── index.tsx
+│   └── ...
+└── ...
+```
+
+**示例**：
+- `SideShowLayout/` - 显示侧边栏的布局
+- `SideHideLayout/` - 隐藏侧边栏的布局
+- `Header/` - 顶部导航栏
+- `Sidebar/` - 侧边栏
+- 根据项目布局需求创建对应的布局组件
+    ├── index.tsx               # 背景动画组件
+    └── styles.module.css
+```
+
+## 布局架构
+
+### LayoutSwitcher（根布局）
+
+根据 `layoutMode` 动态切换布局。
+
+```typescript
+// ✅ GOOD - LayoutSwitcher
+import { memo } from "react";
+import { useLayout } from "@/hooks/useLayout";
+import SideHideLayout from "./SideHideLayout";
+import SideShowLayout from "./SideShowLayout";
+import MainWrapper from "./MainWrapper";
+
+interface LayoutSwitcherProps {
+  children: React.ReactNode;
+}
+
+export const LayoutSwitcher = memo(({ children }: LayoutSwitcherProps) => {
+  const { layoutMode } = useLayout();
+  return (
+    <MainWrapper>
+      {(headerHeight, footerHeight) => {
+        if (layoutMode === "hide") {
+          return (
+            <SideHideLayout headerHeight={headerHeight} footerHeight={footerHeight}>
+              {children}
+            </SideHideLayout>
+          );
+        } else {
+          return (
+            <SideShowLayout headerHeight={headerHeight} footerHeight={footerHeight}>
+              {children}
+            </SideShowLayout>
+          );
+        }
+      }}
+    </MainWrapper>
+  );
+});
+```
+
+### MainWrapper（主包装器）
+
+使用 render props 模式，测量 Header 和 Footer 高度。
+
+```typescript
+// ✅ GOOD - MainWrapper（使用 ResizeObserver 测量高度）
+import { memo, useCallback, useLayoutEffect, useRef, useState } from "react";
+import Footer from "../Footer";
+import Header from "../Header";
+
+interface MainWrapperProps {
+  children: (headerHeight: number, footerHeight: number) => ReactNode;
+}
+
+function useElementHeight<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      const nextHeight = entry?.contentRect.height ?? 0;
+      setHeight((prev) => (prev !== nextHeight ? nextHeight : prev));
+    });
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const callbackRef = useCallback((instance: T | null) => {
+    if (instance) {
+      ref.current = instance;
+    }
+  }, []);
+
+  return [callbackRef, height] as const;
+}
+
+const MainWrapper = memo(({ children }: MainWrapperProps) => {
+  const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
+  const [footerRef, footerHeight] = useElementHeight<HTMLDivElement>();
+
+  return (
+    <div className={styles.layout}>
+      <header ref={headerRef} className={styles.header}>
+        <Header />
+      </header>
+      {children(headerHeight, footerHeight)}
+      <footer ref={footerRef} className={styles.footer}>
+        <Footer />
+      </footer>
+    </div>
+  );
+});
+```
+
+### SideShowLayout（显示侧边栏）
+
+显示侧边栏的布局，使用 `ResizeObserver` 测量侧边栏宽度（类似 `useElementHeight`，但测量宽度）。
+
+```typescript
+// ✅ GOOD - SideShowLayout
+const SideShowLayout = memo(({ children, headerHeight, footerHeight }: SideShowLayoutProps) => {
+  const { sidebarOpen, closeSidebar } = useLayout();
+  const [sidebarRef, sidebarWidth] = useElementWidth<HTMLDivElement>();
+
+  return (
+    <>
+      <div ref={sidebarRef} className={styles.sidebarContainer} style={{ top: `${headerHeight}px`, height: `calc(100vh - ${headerHeight + footerHeight}px)` }}>
+        <Sidebar collapsed={sidebarOpen} toggled={sidebarOpen} onBackdropClick={closeSidebar} breakPoint="xs" />
+      </div>
+      <main className={styles.mainWrapper} style={{ marginTop: `${headerHeight}px`, marginBottom: `${footerHeight}px`, marginLeft: `${sidebarWidth}px`, width: `calc(100% - ${sidebarWidth}px)` }}>
+        <div className={styles.content} data-lenis-prevent>{children}</div>
+      </main>
+    </>
+  );
+});
+```
+
+### SideHideLayout（隐藏侧边栏）
+
+隐藏侧边栏的布局（如登录页）。
+
+```typescript
+// ✅ GOOD - SideHideLayout
+import { memo, useCallback } from "react";
+import Sidebar from "../Sidebar";
+import { useLayout } from "@/hooks/useLayout";
+
+interface SideHideLayoutProps {
+  children: ReactNode;
+  headerHeight: number;
+  footerHeight: number;
+}
+
+const SideHideLayout = memo(({ children, headerHeight, footerHeight }: SideHideLayoutProps) => {
+  const { sidebarOpen, closeSidebar } = useLayout();
+
+  const handleBackdropClick = useCallback(() => {
+    closeSidebar();
+  }, [closeSidebar]);
+
+  return (
+    <main
+      className={styles.mainWrapper}
+      style={{
+        marginTop: `${headerHeight}px`,
+        marginBottom: `${footerHeight}px`,
+      }}
+    >
+      <Sidebar
+        toggled={sidebarOpen}
+        onBackdropClick={handleBackdropClick}
+        breakPoint="all"
+        className={styles.sidebar}
+      />
+      <div className={styles.content} data-lenis-prevent>
+        {children}
+      </div>
+    </main>
+  );
+});
+```
+
+## 子组件
+
+### Header
+
+包含 LeftContainer 和 RightContainer。
+
+```typescript
+// ✅ GOOD - Header
+import { memo } from "react";
+import LeftContainer from "./LeftContainer";
+import RightContainer from "./RightContainer";
+
+const Header = memo(() => {
+  return (
+    <div className={styles.header}>
+      <LeftContainer />
+      <RightContainer />
+    </div>
+  );
+});
+```
+
+### Sidebar
+
+使用 `react-pro-sidebar`，包含菜单和退出按钮。使用 `key` 属性防止 collapsed/toggled 变化时重新渲染。
+
+```typescript
+// ✅ GOOD - Sidebar
+const Sidebar = memo(({ collapsed, toggled, onBackdropClick, breakPoint, className }: SidebarProps) => {
+  const handleLogout = useCallback(() => {
+    authEventEmitter.emit(authEvents.LOGOUT);
+  }, []);
+
+  return (
+    <ProSidebar collapsed={collapsed} toggled={toggled} onBackdropClick={onBackdropClick} breakPoint={breakPoint}>
+      <Menu key={`${collapsed}-${toggled}`} transitionDuration={300} closeOnClick>
+        <MenuItem icon={<Home />} component={<Link to={ROUTES.DASHBOARD} />} active={isActiveRoute(location.pathname, ROUTES.DASHBOARD)}>
+          {t("sidebar.dashboard")}
+        </MenuItem>
+      </Menu>
+      <div className={styles.logoutContainer}>
+        <button onClick={handleLogout}><LogOut /> {!collapsed && t("header.logout")}</button>
+      </div>
+    </ProSidebar>
+  );
+});
+```
+
+### Background
+
+根据用户偏好显示不同的背景动画（从 `preference.other.dashboardBackground` 读取）。
+
+```typescript
+// ✅ GOOD - Background
+const Background = memo(({ children }: BackgroundProps) => {
+  const { data: preference } = useUserPreferenceNormal({ id: currentUserId, options: { enabled: shouldFetch } });
+  const dashboardBackground = useMemo(() => {
+    const other = preference?.other as Record<string, unknown>;
+    return (other?.dashboardBackground as DashboardBackgroundType) || DEFAULT_DASHBOARD_BACKGROUND;
+  }, [preference]);
+
+  return (
+    <>
+      {children}
+      {dashboardBackground === "waves" && <WaveBackground />}
+      {dashboardBackground === "squares" && <SquareBackground />}
+      {/* ... */}
+    </>
+  );
+});
+```
+
+## 命名规范
+
+- **布局组件**: PascalCase: `LayoutSwitcher`, `SideShowLayout`, `SideHideLayout`
+- **子组件**: PascalCase: `Header`, `Sidebar`, `Footer`, `Background`
+- **文件命名**: `index.tsx`（组件文件），`styles.module.css`（样式文件）
+- **子组件目录**: 与父组件同级或嵌套（如 `Header/LeftContainer/`）
+
+## 关键模式
+
+### 1. Render Props 模式
+
+MainWrapper 使用 render props 传递测量值：`children: (headerHeight: number, footerHeight: number) => ReactNode`
+
+### 2. ResizeObserver Hook
+
+使用 `useLayoutEffect` + `ResizeObserver` 测量元素尺寸，返回 `[callbackRef, dimension]` 元组。类似模式可用于测量宽度（`useElementWidth`）。
+
+### 3. 动态样式计算
+
+根据测量值动态计算样式：`style={{ marginTop: `${headerHeight}px`, marginLeft: `${sidebarWidth}px`, width: `calc(100% - ${sidebarWidth}px)` }}`
+
+### 4. 条件渲染
+
+根据 `layoutMode` 切换布局：`layoutMode === "hide" ? <SideHideLayout /> : <SideShowLayout />`
+
+## 最佳实践
+
+- 使用 `memo` 优化性能
+- 使用 `useLayoutEffect` + `ResizeObserver` 测量元素尺寸
+- 使用 render props 模式传递测量值
+- 使用 `useCallback` 优化回调函数
+- 使用 `data-lenis-prevent` 防止 Lenis 滚动冲突
+- 使用 `key` 防止不必要的重新渲染（如 Sidebar Menu）
+
+## 实现建议
+
+- 使用 LayoutSwitcher 根据配置动态切换布局
+- 每个布局组件使用独立的文件夹，包含 `index.tsx` 和样式文件
+- 保持文件命名一致性：`<布局名>Layout/`
+- 所有布局通过 `index.tsx` 统一导出

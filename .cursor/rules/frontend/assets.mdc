@@ -1,0 +1,257 @@
+---
+description: Assets 文件夹编码规范 - 静态资源管理
+globs:
+  - '**/src/assets/**/*.ts'
+  - '**/src/assets/**/*.tsx'
+  - '**/src/assets/**/*.json'
+  - '**/src/assets/**/*.svg'
+  - '**/src/assets/**/*.css'
+alwaysApply: false
+---
+
+# Assets 编码规范
+
+## 文件组织
+
+```
+assets/
+├── icons/              # 图标资源
+│   ├── index.ts        # 图标统一导出
+│   ├── <icon-library>.ts  # 图标库导出（如 lucide.ts）
+│   └── *.svg          # SVG 图标文件
+├── languages/          # 国际化资源
+│   ├── i18n.ts        # i18next 初始化配置
+│   ├── i18nResources.ts  # 翻译资源导入和组织
+│   ├── index.ts        # 统一导出
+│   ├── <lang>/        # 各语言翻译（如 zh/、en/、fr/）
+│   │   ├── *.json     # 页面翻译文件
+│   │   └── ...
+│   └── ...
+└── themes/            # 主题配置
+    ├── index.ts       # 主题和类型导出
+    ├── types.ts       # 主题类型定义
+    ├── global.css     # 全局样式
+    └── base/          # 基础主题实现
+        ├── index.ts   # 主题统一导出
+        ├── <theme-name>.ts  # 各主题文件（如 default.ts、dark.ts）
+        └── ...
+```
+
+**示例**：
+- `icons/lucide.ts` - Lucide 图标库导出
+- `languages/zh/` - 中文翻译
+- `themes/base/dark.ts` - 深色主题
+- 根据项目需要创建对应的资源文件
+
+## 图标管理
+
+### SVG 图标
+
+```typescript
+// ✅ GOOD - SVG 图标导出
+// assets/icons/index.ts
+export { default as RexIcon } from "./rex.svg";
+
+// ✅ GOOD - 使用 SVG 图标
+import { RexIcon } from "@/assets/icons";
+```
+
+### Lucide 图标库
+
+```typescript
+// ✅ GOOD - Lucide 图标统一导出
+// assets/icons/lucide.ts
+export type { LucideIcon } from "lucide-react";
+export { default as Search } from "lucide-react/icons/search";
+export { default as User } from "lucide-react/icons/user";
+export { default as Settings } from "lucide-react/icons/settings";
+
+// ✅ GOOD - 使用 Lucide 图标
+import { Search, User, Settings } from "@/assets/icons";
+```
+
+## 国际化资源
+
+### i18n 配置
+
+```typescript
+// ✅ GOOD - i18next 初始化
+// assets/languages/i18n.ts
+import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
+import { NAME_SPACES, RESOURCES } from "./i18nResources";
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources: RESOURCES,
+    lng: "en",
+    fallbackLng: "en",
+    ns: NAME_SPACES,
+    defaultNS: NAME_SPACES[0],
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
+export const ChangeLanguage = (lng: Language) => {
+  i18n.changeLanguage(lng);
+};
+```
+
+### 翻译资源组织
+
+```typescript
+// ✅ GOOD - 翻译资源导入和组织
+// assets/languages/i18nResources.ts
+import zh_LoginPage from "./zh/LoginPage.json";
+import en_LoginPage from "./en/LoginPage.json";
+import zh_hooks_auth from "./zh/hooks/auth.json";
+import en_hooks_auth from "./en/hooks/auth.json";
+
+export const RESOURCES = {
+  zh: {
+    LoginPage: zh_LoginPage,
+    "hooks.auth": zh_hooks_auth,
+    // ...
+  },
+  en: {
+    LoginPage: en_LoginPage,
+    "hooks.auth": en_hooks_auth,
+    // ...
+  },
+};
+
+export const NAME_SPACES = [
+  "LoginPage",
+  "hooks.auth",
+  // ...
+];
+```
+
+### 翻译文件结构
+
+```json
+// ✅ GOOD - 翻译文件结构
+// assets/languages/zh/LoginPage.json
+{
+  "title": "欢迎回来",
+  "subtitle": "登录您的账户以继续",
+  "login": "登录",
+  "email": "邮箱",
+  "password": "密码"
+}
+```
+
+### 命名空间
+
+- 页面翻译：直接使用页面名，如 `LoginPage`, `ProfilePage`
+- 模块翻译：使用点分隔，如 `hooks.auth`, `elements.bootstrap`
+- 组件翻译：使用 `components`
+
+## 主题管理
+
+### 主题类型定义
+
+```typescript
+// ✅ GOOD - 主题类型定义
+// assets/themes/types.ts
+export interface BaseThemeVariables {
+  primary: string;
+  primaryLight: string;
+  success: string;
+  bg: string;
+  bg2: string;
+  fg: string;
+  // ...
+}
+
+export interface ExtendedThemeVariables extends BaseThemeVariables {
+  temperature: { /* ... */ };
+  solar: { /* ... */ };
+  // ...
+}
+
+export interface Theme {
+  name: string;
+  displayName: string;
+  variables: ExtendedThemeVariables;
+}
+
+export type ThemeName = "default" | "light" | "dark" | "cosmic" | "corporate";
+```
+
+### 主题实现
+
+```typescript
+// ✅ GOOD - 主题实现
+// assets/themes/base/default.ts
+import type { Theme } from "../types";
+
+export const defaultTheme: Theme = {
+  name: "default",
+  displayName: "Default",
+  variables: {
+    primary: "rgb(250, 30, 22)",
+    primaryLight: "rgb(255, 120, 120)",
+    bg: "rgb(250, 250, 250)",
+    // ...
+  },
+};
+```
+
+### 主题导出
+
+```typescript
+// ✅ GOOD - 主题统一导出
+// assets/themes/base/index.ts
+import { defaultTheme } from "./default";
+import { darkTheme } from "./dark";
+// ...
+
+export const themes: Record<ThemeName, Theme> = {
+  default: defaultTheme,
+  dark: darkTheme,
+  // ...
+};
+
+export { defaultTheme, darkTheme, /* ... */ };
+
+// assets/themes/index.ts
+export { themes, defaultTheme, darkTheme } from "./base";
+export type { Theme, ThemeName } from "./types";
+```
+
+## 命名规范
+
+- **图标文件**：SVG 使用 kebab-case: `rex.svg`（导出时使用 PascalCase: `RexIcon`）
+- **翻译文件**：使用 PascalCase: `LoginPage.json`, `BootstrapProvider.json`
+- **翻译子文件夹**：使用 kebab-case: `elements/`, `hooks/`
+- **主题文件**：使用 kebab-case: `default.ts`, `dark.ts`, `light.ts`
+- **导出文件**：统一使用 `index.ts`
+
+## 资源导入
+
+```typescript
+// ✅ GOOD - 图标导入
+import { RexIcon, Search, User } from "@/assets/icons";
+
+// ✅ GOOD - 主题导入
+import { defaultTheme, darkTheme } from "@/assets/themes";
+import type { Theme } from "@/assets/themes";
+
+// ✅ GOOD - 国际化导入
+import { ChangeLanguage } from "@/assets/languages";
+import { useTranslation } from "react-i18next";
+
+const { t } = useTranslation("LoginPage");
+const title = t("title");
+```
+
+## 实现建议
+
+- 按资源类型组织文件（icons、languages、themes 等）
+- 保持文件命名一致性，便于管理和查找
+- 所有资源通过对应的 `index.ts` 统一导出，方便使用

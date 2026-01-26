@@ -1,0 +1,324 @@
+---
+description: APIs 文件夹编码规范 - API 接口定义和管理
+globs:
+  - '**/src/apis/**/*.ts'
+  - '**/src/apis/**/*.tsx'
+alwaysApply: false
+---
+
+# APIs 编码规范
+
+## 文件组织
+
+```
+apis/
+├── clients.ts          # HTTP 客户端配置（protectedClient, publicClient）
+├── ip.ts              # API 路径常量定义（URL_PATHS, API_ENDPOINTS）
+├── index.ts           # 统一导出所有 API 模块
+├── <module>.api.ts    # 各模块 API 函数（按需创建）
+└── ...
+```
+
+**示例**：
+- `auth.api.ts` - 认证相关 API
+- `user.api.ts` - 用户相关 API
+- `product.api.ts` - 产品相关 API
+- 根据项目模块划分创建对应的 API 文件
+
+## API 文件结构
+
+```typescript
+// ✅ GOOD - API 文件标准结构
+// Directory API - 基于 NFX-ID Backend
+
+import type {
+  User,
+  CreateUserRequest,
+  DataResponse,
+  BaseResponse,
+} from "@/types";
+
+import { protectedClient } from "./clients";
+import { URL_PATHS } from "./ip";
+
+// ========== 用户相关 ==========
+
+// 创建用户
+export const CreateUser = async (params: CreateUserRequest): Promise<User> => {
+  const { data } = await protectedClient.post<DataResponse<User>>(
+    URL_PATHS.DIRECTORY.CREATE_USER,
+    params
+  );
+  return data.data;
+};
+
+// 根据 ID 获取用户
+export const GetUser = async (id: string): Promise<User> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER.replace(":id", id);
+  const { data } = await protectedClient.get<DataResponse<User>>(url);
+  return data.data;
+};
+
+// 更新用户状态
+export const UpdateUserStatus = async (
+  id: string,
+  params: UpdateUserStatusRequest
+): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER_STATUS.replace(":id", id);
+  const { data } = await protectedClient.patch<BaseResponse>(url, params);
+  return data;
+};
+```
+
+## 命名规范
+
+- **API 函数**：使用 PascalCase，动词开头
+  - `CreateUser`, `GetUser`, `UpdateUser`, `DeleteUser`
+  - `GetUserByUsername`, `GetUserEmailsByUserID`
+  - `SetPrimaryUserEmail`, `VerifyUserEmail`
+- **文件名**：使用 kebab-case，以 `.api.ts` 结尾
+  - `directory.api.ts`, `auth.api.ts`, `clients.api.ts`
+- **路径常量**：使用 UPPER_SNAKE_CASE
+  - `CREATE_USER`, `GET_USER`, `UPDATE_USER_STATUS`
+
+## 类型定义
+
+```typescript
+// ✅ GOOD - 使用类型导入，避免运行时导入
+import type {
+  User,
+  CreateUserRequest,
+  UpdateUserStatusRequest,
+  DataResponse,
+  BaseResponse,
+} from "@/types";
+
+// ✅ GOOD - 明确的返回类型
+export const GetUser = async (id: string): Promise<User> => {
+  // ...
+};
+
+// ✅ GOOD - BaseResponse 用于不需要返回数据的操作
+export const DeleteUser = async (id: string): Promise<BaseResponse> => {
+  // ...
+};
+```
+
+## 客户端使用
+
+### protectedClient vs publicClient
+
+```typescript
+// ✅ GOOD - 需要认证的请求使用 protectedClient
+import { protectedClient } from "./clients";
+
+export const CreateUser = async (params: CreateUserRequest): Promise<User> => {
+  const { data } = await protectedClient.post<DataResponse<User>>(
+    URL_PATHS.DIRECTORY.CREATE_USER,
+    params
+  );
+  return data.data;
+};
+
+// ✅ GOOD - 公开接口使用 publicClient（如登录、注册）
+import { publicClient } from "./clients";
+
+export const LoginByEmail = async (
+  params: LoginByEmailRequest
+): Promise<LoginResponse> => {
+  const { data } = await publicClient.post<DataResponse<LoginResponse>>(
+    URL_PATHS.AUTH.LOGIN_BY_EMAIL,
+    params
+  );
+  return data.data;
+};
+```
+
+### 客户端特性
+
+- **自动 case 转换**：所有客户端已配置 `axios-case-converter`
+  - 请求数据：camelCase → snake_case
+  - 响应数据：snake_case → camelCase
+- **自动 token 注入**：`protectedClient` 自动添加 Authorization header
+- **自动 token 刷新**：401 错误时自动刷新 token 并重试请求
+
+## 路径管理
+
+### URL_PATHS 结构
+
+```typescript
+// ✅ GOOD - 路径按模块组织
+export const URL_PATHS = {
+  DIRECTORY: {
+    CREATE_USER: "/directory/auth/users",
+    GET_USER: "/directory/auth/users/:id",
+    UPDATE_USER_STATUS: "/directory/auth/users/:id/status",
+    // ...
+  },
+  AUTH: {
+    LOGIN_BY_EMAIL: "/auth/public/login/email",
+    REFRESH_ACCESS_TOKEN: "/auth/public/refresh",
+    // ...
+  },
+} as const;
+```
+
+### 路径参数处理
+
+```typescript
+// ✅ GOOD - 使用 .replace() 替换路径参数
+export const GetUser = async (id: string): Promise<User> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER.replace(":id", id);
+  const { data } = await protectedClient.get<DataResponse<User>>(url);
+  return data.data;
+};
+
+// ✅ GOOD - 多个路径参数
+export const RevokeSession = async (
+  sessionId: string,
+  params: RevokeSessionRequest
+): Promise<BaseResponse> => {
+  const url = URL_PATHS.AUTH.REVOKE_SESSION.replace(":session_id", sessionId);
+  const { data } = await protectedClient.put<BaseResponse>(url, params);
+  return data;
+};
+```
+
+## HTTP 方法使用
+
+```typescript
+// ✅ GOOD - 标准 CRUD 操作
+// CREATE
+export const CreateUser = async (params: CreateUserRequest): Promise<User> => {
+  const { data } = await protectedClient.post<DataResponse<User>>(
+    URL_PATHS.DIRECTORY.CREATE_USER,
+    params
+  );
+  return data.data;
+};
+
+// READ
+export const GetUser = async (id: string): Promise<User> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER.replace(":id", id);
+  const { data } = await protectedClient.get<DataResponse<User>>(url);
+  return data.data;
+};
+
+// UPDATE（完整更新）
+export const UpdateUser = async (
+  id: string,
+  params: UpdateUserRequest
+): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER.replace(":id", id);
+  const { data } = await protectedClient.put<BaseResponse>(url, params);
+  return data;
+};
+
+// UPDATE（部分更新）
+export const UpdateUserStatus = async (
+  id: string,
+  params: UpdateUserStatusRequest
+): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER_STATUS.replace(":id", id);
+  const { data } = await protectedClient.patch<BaseResponse>(url, params);
+  return data;
+};
+
+// DELETE
+export const DeleteUser = async (id: string): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.DELETE_USER.replace(":id", id);
+  const { data } = await protectedClient.delete<BaseResponse>(url);
+  return data;
+};
+```
+
+## 响应数据处理
+
+```typescript
+// ✅ GOOD - DataResponse 用于返回数据的接口
+export const GetUser = async (id: string): Promise<User> => {
+  const { data } = await protectedClient.get<DataResponse<User>>(url);
+  return data.data; // 提取 data 字段
+};
+
+// ✅ GOOD - BaseResponse 用于只返回成功/失败的操作
+export const DeleteUser = async (id: string): Promise<BaseResponse> => {
+  const { data } = await protectedClient.delete<BaseResponse>(url);
+  return data; // 直接返回
+};
+```
+
+## 错误处理
+
+```typescript
+// ✅ GOOD - API 函数不处理错误，让调用方处理
+// 错误处理由 React Query 或调用方负责
+export const CreateUser = async (params: CreateUserRequest): Promise<User> => {
+  const { data } = await protectedClient.post<DataResponse<User>>(
+    URL_PATHS.DIRECTORY.CREATE_USER,
+    params
+  );
+  return data.data;
+};
+
+// 客户端拦截器会自动处理：
+// - 401 错误：自动刷新 token 并重试
+// - 其他错误：直接抛出，由调用方处理
+```
+
+## 文件注释和组织
+
+```typescript
+// ✅ GOOD - 文件顶部注释说明模块
+// Directory API - 基于 NFX-ID Backend
+
+// ✅ GOOD - 使用注释分隔不同功能模块
+// ========== 用户相关 ==========
+export const CreateUser = async (...) => { ... };
+export const GetUser = async (...) => { ... };
+
+// ========== 用户邮箱相关 ==========
+export const CreateUserEmail = async (...) => { ... };
+export const GetUserEmail = async (...) => { ... };
+```
+
+## 导出规范
+
+```typescript
+// ✅ GOOD - index.ts 统一导出所有 API 模块
+// API exports - 基于 NFX-ID Backend
+
+export * from "./access.api";
+export * from "./audit.api";
+export * from "./auth.api";
+export * from "./clients.api";
+export * from "./directory.api";
+export * from "./image.api";
+export * from "./system.api";
+export * from "./tenants.api";
+```
+
+## 客户端配置（clients.ts）
+
+### 关键特性
+
+- **请求拦截器**：自动添加 Authorization token
+- **响应拦截器**：处理 401 错误，自动刷新 token
+- **防重复刷新**：使用 `onceAsync` 防止并发刷新
+- **Case 转换**：自动处理 snake_case ↔ camelCase
+
+### 使用模式
+
+```typescript
+// ✅ GOOD - 客户端已配置好，直接使用即可
+import { protectedClient, publicClient } from "./clients";
+
+// 不需要手动添加 token，拦截器会自动处理
+// 不需要手动转换 case，中间件会自动处理
+```
+
+## 实现建议
+
+- 根据项目模块划分创建对应的 `<module>.api.ts` 文件
+- 保持文件命名一致性：`<模块名>.api.ts`
+- 所有 API 函数通过 `index.ts` 统一导出，方便使用

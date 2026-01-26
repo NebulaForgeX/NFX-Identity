@@ -1,0 +1,232 @@
+---
+description: Protos 编码规范 - Protocol Buffers 定义和代码生成
+globs:
+  - '**/protos/**/*.proto'
+  - '**/protos/buf.yaml'
+  - '**/protos/buf.gen.yaml'
+alwaysApply: false
+---
+
+# Protos 编码规范
+
+## 文件组织
+
+```
+protos/
+├── buf.yaml              # Buf 配置文件（lint、breaking 规则）
+├── buf.gen.yaml          # Buf 代码生成配置
+├── buf.lock              # 依赖锁定文件（自动生成）
+├── src/                  # 源 .proto 文件
+│   ├── <module>/         # 各模块 proto 定义
+│   │   ├── <entity>.proto
+│   │   └── ...
+│   └── common/           # 通用 proto 定义
+│       ├── health.proto
+│       └── schema.proto
+└── gen/                  # 生成的 Go 代码（不要手动编辑）
+    ├── <module>/
+    └── common/
+```
+
+**示例**：
+- `src/auth/user_credential.proto` - Auth 模块的用户凭证定义
+- `src/directory/user.proto` - Directory 模块的用户定义
+- `src/common/health.proto` - 通用健康检查定义
+- 根据项目模块划分创建对应的 proto 文件
+
+## buf.yaml 配置
+
+```yaml
+# ✅ GOOD - Buf 配置文件标准结构
+# Buf 配置文件版本
+version: v2
+
+# 模块配置：定义 proto 文件的路径
+modules:
+  - path: src  # src 目录作为模块根路径
+
+# 依赖配置：声明需要的外部 proto 依赖
+deps:
+  - buf.build/bufbuild/protovalidate  # protovalidate：用于 proto 字段验证的依赖库
+
+# Lint 配置：代码检查规则
+lint:
+  use:
+    - STANDARD  # 使用标准的 lint 规则集（检查语法、命名规范等）
+  except:
+    - DIRECTORY_SAME_PACKAGE       # 允许同一目录下有多个不同的 package
+    - PACKAGE_DIRECTORY_MATCH      # 允许 package 名称与目录名称不匹配
+    - PACKAGE_VERSION_SUFFIX       # 允许 package 名称不带版本后缀
+    - PACKAGE_SAME_GO_PACKAGE      # 允许同一 package 有不同的 go_package
+
+# Breaking 配置：破坏性变更检测规则
+breaking:
+  use:
+    - FILE  # 基于文件的破坏性变更检测（检测字段删除、类型变更等）
+```
+
+## buf.gen.yaml 配置
+
+```yaml
+# ✅ GOOD - Buf 代码生成配置文件标准结构
+# Buf 代码生成配置文件版本
+version: v2
+
+# 插件配置：定义用于生成代码的插件
+plugins:
+  # Protobuf Go 插件：生成 Go 语言的 protobuf 消息代码
+  - remote: buf.build/protocolbuffers/go  # 使用 buf 官方提供的 protobuf Go 插件
+    out: ../
+    opt:
+      # paths=import：使用"导入路径"模式，根据 proto 文件中的 go_package 选项决定文件生成位置
+      # module=<project>：指定 Go 模块名，用于解析相对导入路径（必须与 go.mod 中的 module 名称一致）
+      - paths=import,module=<project>
+
+  # gRPC Go 插件：生成 Go 语言的 gRPC 服务代码
+  - remote: buf.build/grpc/go  # 使用 buf 官方提供的 gRPC Go 插件
+    out: ../
+    opt:
+      # paths=import：使用"导入路径"模式，根据 proto 文件中的 go_package 选项决定文件生成位置
+      # module=<project>：指定 Go 模块名，用于解析相对导入路径（必须与 go.mod 中的 module 名称一致）
+      - paths=import,module=<project>
+```
+
+## Proto 文件结构
+
+### 基本结构
+
+```protobuf
+// ✅ GOOD - Proto 文件标准结构
+syntax = "proto3";
+package <module>.<entity>;
+
+option go_package = "<project>/protos/gen/<module>/<entity>;<entity>pb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// <Entity> 信息
+message <Entity> {
+  string id = 1;                          // <Entity> ID (UUID)
+  // ... 其他字段
+  google.protobuf.Timestamp created_at = <n>;      // 创建时间
+  google.protobuf.Timestamp updated_at = <n+1>;     // 更新时间
+  optional google.protobuf.Timestamp deleted_at = <n+2>; // 软删除时间
+}
+
+// <Entity> 服务 - 供其他服务通过 gRPC 管理 <Entity>
+service <Entity>Service {
+  // 创建 <Entity>
+  rpc Create<Entity> (Create<Entity>Request) returns (Create<Entity>Response);
+  
+  // 根据ID获取 <Entity>
+  rpc Get<Entity>ByID (Get<Entity>ByIDRequest) returns (Get<Entity>ByIDResponse);
+  
+  // 批量获取 <Entity>
+  rpc BatchGet<Entity>s (BatchGet<Entity>sRequest) returns (BatchGet<Entity>sResponse);
+}
+
+// <Entity> Service Messages
+message Create<Entity>Request {
+  // 请求字段
+}
+
+message Create<Entity>Response {
+  <Entity> <entity> = 1;
+}
+
+message Get<Entity>ByIDRequest {
+  string id = 1;
+}
+
+message Get<Entity>ByIDResponse {
+  <Entity> <entity> = 1;
+}
+
+message BatchGet<Entity>sRequest {
+  repeated string ids = 1;
+}
+
+message BatchGet<Entity>sResponse {
+  repeated <Entity> <entity>s = 1;
+}
+```
+
+### 枚举定义
+
+```protobuf
+// ✅ GOOD - 枚举定义标准结构
+// <Entity> 状态枚举
+enum <Module><Entity>Status {
+  <MODULE>_<ENTITY>_STATUS_UNSPECIFIED = 0;
+  <MODULE>_<ENTITY>_STATUS_ACTIVE = 1;    // 激活
+  <MODULE>_<ENTITY>_STATUS_SUSPENDED = 2; // 暂停
+  <MODULE>_<ENTITY>_STATUS_CLOSED = 3;     // 关闭
+}
+
+message <Entity> {
+  <Module><Entity>Status status = <n>;  // 状态
+  // ... 其他字段
+}
+```
+
+### 字段类型
+
+```protobuf
+// ✅ GOOD - 字段类型使用规范
+message <Entity> {
+  // 必需字段（不使用 optional）
+  string id = 1;                          // UUID 字符串
+  string name = 2;                        // 文本字段
+  
+  // 可选字段（使用 optional）
+  optional string description = 3;       // 可选文本
+  optional string tenant_id = 4;          // 可选 UUID
+  optional int32 count = 5;              // 可选整数
+  
+  // 时间字段
+  google.protobuf.Timestamp created_at = 6;      // 必需时间
+  optional google.protobuf.Timestamp deleted_at = 7; // 可选时间（软删除）
+  
+  // JSON 元数据
+  optional google.protobuf.Struct metadata = 8;  // 可选 JSON 对象
+  
+  // 数组字段
+  repeated string tags = 9;              // 字符串数组
+  
+  // 映射字段
+  map<string, string> attributes = 10;   // 键值对映射
+}
+```
+
+## 命名规范
+
+- **Package 名称**：使用 `snake_case`，格式 `<module>.<entity>`: `auth.user_credential`, `directory.user`
+- **Go Package 选项**：使用 `<project>/protos/gen/<module>/<entity>;<entity>pb` 格式
+- **Message 名称**：使用 `PascalCase`: `User`, `UserCredential`, `CreateUserRequest`
+- **Service 名称**：使用 `PascalCase`，以 `Service` 结尾: `UserService`, `GrantService`
+- **RPC 方法名称**：使用 `PascalCase`: `CreateUser`, `GetUserByID`, `BatchGetUsers`
+- **枚举名称**：使用 `PascalCase`，格式 `<Module><Entity><Type>`: `DirectoryUserStatus`, `AccessGrantType`
+- **枚举值**：使用 `UPPER_SNAKE_CASE`，格式 `<MODULE>_<ENTITY>_<TYPE>_<VALUE>`: `DIRECTORY_USER_STATUS_ACTIVE`
+- **字段名称**：使用 `snake_case`: `user_id`, `created_at`, `tenant_id`
+- **文件名称**：使用 `snake_case`: `user.proto`, `user_credential.proto`
+
+## 字段编号规范
+
+- **字段编号**：从 1 开始，按顺序递增
+- **保留编号**：不要使用已废弃的字段编号
+- **向后兼容**：删除字段时标记为 `reserved`，不要重用字段编号
+
+## 实现建议
+
+- **Buf 工具**：使用 Buf 进行 proto 文件管理和代码生成
+- **代码生成**：生成的代码在 `gen/` 目录，不要手动编辑
+- **导入路径**：使用 `go_package` 选项指定生成的 Go 包路径
+- **时间字段**：使用 `google.protobuf.Timestamp` 表示时间
+- **JSON 字段**：使用 `google.protobuf.Struct` 表示 JSON 对象
+- **可选字段**：使用 `optional` 关键字标记可选字段（proto3）
+- **枚举默认值**：枚举第一个值必须是 `UNSPECIFIED = 0`
+- **服务定义**：每个实体通常有对应的 Service，提供 CRUD 操作
+- **批量操作**：提供 `BatchGet*` 方法支持批量查询
+- **字段注释**：为所有字段添加注释，说明字段用途和类型
+- **破坏性变更**：修改 proto 文件时注意向后兼容性，使用 Buf breaking 检测

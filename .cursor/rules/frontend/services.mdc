@@ -1,0 +1,94 @@
+---
+description: Services 文件夹编码规范 - 业务服务
+globs:
+  - '**/src/services/**/*.ts'
+alwaysApply: false
+---
+
+# Services 编码规范
+
+## 服务函数结构
+
+```typescript
+// ✅ GOOD - 服务函数标准结构
+// services/avatarUploadService.ts
+import { uploadImage } from "@/apis/image.api";
+
+export interface AvatarUploadOptions {
+  file: File;
+  userId: string;
+  onProgress?: (progress: number) => void;
+}
+
+export const uploadAvatar = async ({
+  file,
+  userId,
+  onProgress,
+}: AvatarUploadOptions): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("userId", userId);
+
+  const response = await uploadImage(formData, {
+    onUploadProgress: (progressEvent) => {
+      if (onProgress && progressEvent.total) {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onProgress(percentCompleted);
+      }
+    },
+  });
+
+  return response.url;
+};
+```
+
+## 命名规范
+
+- 服务文件使用 camelCase 并以 `Service` 结尾: `avatarUploadService.ts`
+- 服务函数使用 camelCase: `uploadAvatar`, `processPayment`
+- 使用描述性的函数名，清晰表达服务功能
+
+## 与 API 的区别
+
+- **APIs**: 直接调用后端接口，返回原始数据
+- **Services**: 封装业务逻辑，可能组合多个 API 调用，处理业务规则
+
+## 错误处理
+
+```typescript
+// ✅ GOOD - 服务层错误处理
+export const processOrder = async (orderData: OrderData): Promise<Order> => {
+  try {
+    // 验证订单数据
+    validateOrderData(orderData);
+    
+    // 创建订单
+    const order = await createOrder(orderData);
+    
+    // 发送通知
+    await sendOrderNotification(order.id);
+    
+    return order;
+  } catch (error) {
+    // 记录错误并重新抛出
+    console.error("Failed to process order:", error);
+    throw new Error("订单处理失败，请稍后重试");
+  }
+};
+```
+
+## 文件组织
+
+```
+services/
+├── <feature>Service.ts    # 各功能服务（按需创建）
+└── index.ts                # 统一导出
+```
+
+**示例**：
+- `uploadService.ts` - 文件上传服务
+- `paymentService.ts` - 支付服务
+- `notificationService.ts` - 通知服务
+- 根据项目功能模块创建对应的服务文件
