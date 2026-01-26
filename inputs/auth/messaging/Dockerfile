@@ -19,6 +19,8 @@ WORKDIR /app
 RUN apk update && apk upgrade && apk add --no-cache ca-certificates tzdata
 COPY --from=prod-build /out/auth-messaging-service /app/auth-messaging-service
 COPY inputs/auth/configuration/prod.toml /app/config.toml
+# Copy .env file for variable substitution
+COPY .env /app/.env
 ENV APP_ENV=prod
 ENV CONFIG_FILE=/app/config.toml
 ENTRYPOINT ["/app/auth-messaging-service"]

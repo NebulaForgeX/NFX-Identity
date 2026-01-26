@@ -19,6 +19,8 @@ WORKDIR /app
 RUN apk update && apk upgrade && apk add --no-cache ca-certificates tzdata
 COPY --from=prod-build /out/image-connection-service /app/image-connection-service
 COPY inputs/image/configuration/prod.toml /app/config.toml
+# Copy .env file for variable substitution
+COPY .env /app/.env
 ENV APP_ENV=prod
 ENV CONFIG_FILE=/app/config.toml
 EXPOSE 50051

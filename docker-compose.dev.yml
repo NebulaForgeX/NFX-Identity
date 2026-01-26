@@ -79,6 +79,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/auth/base/Dockerfile
     depends_on:
@@ -144,6 +147,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/image/base/Dockerfile
     depends_on:
@@ -209,6 +215,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/access/base/Dockerfile
     depends_on:
@@ -274,6 +283,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/audit/base/Dockerfile
     depends_on:
@@ -339,6 +351,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/clients/base/Dockerfile
     depends_on:
@@ -404,6 +419,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/directory/base/Dockerfile
     depends_on:
@@ -469,6 +487,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/system/base/Dockerfile
     depends_on:
@@ -534,6 +555,9 @@ services:
         - action: sync
           path: go.sum
           target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
         - action: rebuild
           path: inputs/tenants/base/Dockerfile
     depends_on:

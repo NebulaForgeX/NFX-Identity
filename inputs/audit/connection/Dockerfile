@@ -23,6 +23,8 @@ RUN apk update && apk upgrade && apk add --no-cache ca-certificates tzdata
 # Copy only the binary (rely on prod-build)
 COPY --from=prod-build /out/audit-connection-service /app/audit-connection-service
 COPY inputs/audit/configuration/prod.toml /app/config.toml
+# Copy .env file for variable substitution
+COPY .env /app/.env
 # Environment variable control（can be replaced with CONFIG_FILE）
 ENV APP_ENV=prod
 ENV CONFIG_FILE=/app/config.toml

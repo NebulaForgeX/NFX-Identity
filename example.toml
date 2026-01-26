@@ -9,6 +9,14 @@
 # Configuration structure matches modules/*/config/types.go
 # Each service may have different optional sections (token, email, storage)
 #
+# IMPORTANT: All values use environment variable placeholders in the format:
+#   "${VAR_NAME}"
+# 
+# These placeholders will be automatically replaced with values from the .env
+# file at runtime. If a variable is missing, the application will exit.
+#
+# See .example.env for all available environment variables.
+#
 # ============================================================================
 
 # ============================================================================
@@ -16,44 +24,48 @@
 # ============================================================================
 [server]
     # Service name (e.g., "Access Service", "Auth Service")
-    name = "service-name"
+    name = "<Service> Service"
     
     # Server host address (use "0.0.0.0" to listen on all interfaces)
     host = "0.0.0.0"
     
-    # HTTP REST API port
-    http_port = 8080
+    # HTTP REST API port (from .env: HTTP_PORT)
+    http_port = "${HTTP_PORT}"
     
-    # gRPC service port
-    grpc_port = 50051
+    # gRPC service port (from .env: GRPC_PORT_<MODULE>)
+    # Replace <MODULE> with: ACCESS, AUTH, AUDIT, CLIENTS, DIRECTORY, IMAGE, SYSTEM, TENANTS
+    grpc_port = "${GRPC_PORT_<MODULE>}"
 
 # ============================================================================
 # PostgreSQL Database Configuration
 # ============================================================================
 [postgresql]
-    # Database host address
-    host = "127.0.0.1"
+    # Database host address (from .env: POSTGRESQL_HOST)
+    host = "${POSTGRESQL_HOST}"
     
-    # Database port (default: 5432)
-    port = 10105
+    # Database port (from .env: POSTGRESQL_PORT)
+    port = "${POSTGRESQL_PORT}"
     
-    # Database user
-    user = "postgres"
+    # Database user (from .env: POSTGRESQL_USER)
+    user = "${POSTGRESQL_USER}"
     
-    # Database password
-    password = "your-password-here"
+    # Database password (from .env: POSTGRESQL_PASSWORD)
+    password = "${POSTGRESQL_PASSWORD}"
     
-    # Database name (use "nfxid_dev" for development, "nfxid" for production)
-    dbname = "nfxid_dev"
+    # Database name (from .env: POSTGRESQL_NAME_DEV or POSTGRESQL_NAME_PROD)
+    # Use POSTGRESQL_NAME_DEV for dev.toml, POSTGRESQL_NAME_PROD for prod.toml
+    dbname = "${POSTGRESQL_NAME_<ENV>}"
     
     # SSL mode: "disable" | "require" | "verify-ca" | "verify-full"
-    sslmode = "disable"
+    # Use "disable" for development, "require" for production
+    sslmode = "<disable|require>"
     
     # Timezone (use "UTC" for consistency)
     timezone = "UTC"
     
     # Logger level: "silent" | "error" | "warn" | "info"
-    logger_level = "warn"
+    # Use "warn" for development, "error" for production
+    logger_level = "<warn|error>"
     
     # Auto migrate database schema on startup (use false in production)
     auto_migrate = false
@@ -85,14 +97,14 @@
 # Redis Cache Configuration
 # ============================================================================
 [cache]
-    # Redis host address
-    host = "127.0.0.1"
+    # Redis host address (from .env: REDIS_HOST)
+    host = "${REDIS_HOST}"
     
-    # Redis port (default: 6379)
-    port = 6379
+    # Redis port (from .env: REDIS_PORT)
+    port = "${REDIS_PORT}"
     
-    # Redis password (leave empty if no password)
-    password = "your-password-here"
+    # Redis password (from .env: REDIS_PASSWORD)
+    password = "${REDIS_PASSWORD}"
 
     # Cache connection settings
     [cache.connection]
@@ -124,16 +136,18 @@
 # ============================================================================
 [logger]
     # Log level: "debug" | "info" | "warn" | "error"
-    level = "debug"
+    # Use "debug" for development, "info" for production
+    level = "<debug|info>"
     
     # Log format: "json" | "console"
-    format = "console"
+    # Use "console" for development, "json" for production
+    format = "<console|json>"
     
     # Output destination: "stdout" | "file"
     output = "stdout"
     
     # Log file path (used when output = "file")
-    file_path = "logs/service.log"
+    file_path = "logs/<service>.log"
     
     # Maximum log file size in MB before rotation
     max_size_mb = 100
@@ -151,39 +165,39 @@
 # Token Configuration (Required for: auth, clients services)
 # ============================================================================
 [token]
-    # Secret key for JWT token signing (CHANGE IN PRODUCTION!)
-    secret_key = "your-secret-key-here-change-in-production"
+    # Secret key for JWT token signing (from .env: TOKEN_SECRET_KEY)
+    secret_key = "${TOKEN_SECRET_KEY}"
     
-    # Token issuer name
-    issuer = "nfxid"
+    # Token issuer name (from .env: TOKEN_ISSUER)
+    issuer = "${TOKEN_ISSUER}"
     
-    # Access token time-to-live (e.g., "15m", "1h", "24h")
-    access_token_ttl = "24h"
+    # Access token time-to-live (from .env: TOKEN_ACCESS_TTL)
+    access_token_ttl = "${TOKEN_ACCESS_TTL}"
     
-    # Refresh token time-to-live (e.g., "7d", "168h")
-    refresh_token_ttl = "168h"
+    # Refresh token time-to-live (from .env: TOKEN_REFRESH_TTL)
+    refresh_token_ttl = "${TOKEN_REFRESH_TTL}"
     
-    # JWT signing algorithm: "HS256" | "HS384" | "HS512" | "RS256" | etc.
-    algorithm = "HS256"
+    # JWT signing algorithm (from .env: TOKEN_ALGORITHM)
+    algorithm = "${TOKEN_ALGORITHM}"
 
 # ============================================================================
 # Email Configuration (Required for: auth service)
 # ============================================================================
 [email]
-    # SMTP server host
-    smtp_host = "smtp.gmail.com"
+    # SMTP server host (from .env: EMAIL_SMTP_HOST)
+    smtp_host = "${EMAIL_SMTP_HOST}"
     
-    # SMTP server port (587 for TLS, 465 for SSL)
-    smtp_port = 587
+    # SMTP server port (from .env: EMAIL_SMTP_PORT)
+    smtp_port = "${EMAIL_SMTP_PORT}"
     
-    # SMTP username (usually your email address)
-    smtp_user = "your-email@gmail.com"
+    # SMTP username (from .env: EMAIL_SMTP_USER)
+    smtp_user = "${EMAIL_SMTP_USER}"
     
-    # SMTP password (use app-specific password for Gmail)
-    smtp_password = "your-app-password-here"
+    # SMTP password (from .env: EMAIL_SMTP_PASSWORD)
+    smtp_password = "${EMAIL_SMTP_PASSWORD}"
     
-    # From email address
-    smtp_from = "your-email@gmail.com"
+    # From email address (from .env: EMAIL_SMTP_FROM)
+    smtp_from = "${EMAIL_SMTP_FROM}"
 
 # ============================================================================
 # Storage Configuration (Required for: image service)
@@ -196,11 +210,12 @@
 # Kafka Message Broker Configuration
 # ============================================================================
 [kafka]
-    # Kafka broker addresses (format: "host:port")
-    brokers = ["localhost:9092"]
+    # Kafka broker addresses (from .env: KAFKA_BROKERS)
+    # Format: "host:port" (e.g., "192.168.1.64:10183")
+    brokers = ["${KAFKA_BROKERS}"]
     
     # Client ID for Kafka connections
-    client_id = "nfxid-service"
+    client_id = "nfxid-<module>-service"
 
     # Network configuration
     [kafka.network]
@@ -230,7 +245,7 @@
     # Consumer configuration
     [kafka.consumer]
         # Consumer group ID (must be unique per service)
-        group_id = "service-group"
+        group_id = "<module>-service-group"
         
         # Initial offset: "earliest" (from beginning) | "latest" (from end)
         initial_offset = "latest"
@@ -271,36 +286,30 @@
     # Format: message_key = "topic-name"
     [kafka.producer_topics]
         # Example:
-        # access = "nfxid.access"
-        # event = "nfxid.event"
-        # event_poison = "nfxid.event_poison"
+        # <module> = "nfxid.<module>"
+        # <module>_poison = "nfxid.<module>_poison"
 
     # Consumer topics: map message keys to topic names
     # Format: message_key = "topic-name"
     [kafka.consumer_topics]
         # Example:
-        # access = "nfxid.access"
-        # event = "nfxid.event"
-        # event_poison = "nfxid.event_poison"
+        # <module> = "nfxid.<module>"
+        # <module>_poison = "nfxid.<module>_poison"
 
 # ============================================================================
 # RabbitMQ Message Broker Configuration
 # ============================================================================
 [rabbitmq]
-    # Connection configuration - two ways to configure:
-    #
-    # Method 1: Direct URI (optional, if provided, other fields are ignored)
-    # uri = "amqp://user:password@host:port/vhost"
-    #
-    # Method 2: Separate fields (recommended, consistent with PostgreSQL config)
-    host = "localhost"
-    port = 5672
-    user = "guest"
-    password = "guest"
-    vhost = "/"
+    # Connection configuration
+    # All values from .env: RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_VHOST
+    host = "${RABBITMQ_HOST}"
+    port = "${RABBITMQ_PORT}"
+    user = "${RABBITMQ_USER}"
+    password = "${RABBITMQ_PASSWORD}"
+    vhost = "${RABBITMQ_VHOST}"
     
     # Client ID for RabbitMQ connections
-    client_id = "nfxid-service"
+    client_id = "nfxid-<module>-service"
 
     # Producer configuration
     [rabbitmq.producer]
@@ -334,7 +343,7 @@
         queue_name = ""
         
         # Consumer tag identifier
-        consumer_tag = "nfxid-consumer"
+        consumer_tag = "nfxid-<module>-consumer"
         
         # Automatically acknowledge messages (not recommended)
         auto_ack = false
@@ -401,8 +410,8 @@
 
         # AMQP protocol settings
         [rabbitmq.connection.amqp]
-            # Virtual host
-            vhost = "/"
+            # Virtual host (from .env: RABBITMQ_VHOST)
+            vhost = "${RABBITMQ_VHOST}"
             
             # Heartbeat interval in seconds (0 = disabled)
             heartbeat = 10
@@ -483,8 +492,8 @@
     # - If routing_key is empty, uses message key as routing_key
     [rabbitmq.producer_exchanges]
         # Example:
-        # event = {exchange = "", routing_key = "event"}
-        # event_poison = {exchange = "", routing_key = "event.poison"}
+        # event = {exchange = "", routing_key = "<module>.event"}
+        # event_poison = {exchange = "", routing_key = "<module>.event.poison"}
 
     # Consumer queues: map message keys to queue and binding key
     # Format: message_key = {queue = "queue_name", binding_key = "binding.key"}
@@ -492,40 +501,43 @@
     # - If binding_key is empty, uses message key as binding_key
     [rabbitmq.consumer_queues]
         # Example:
-        # event = {queue = "", binding_key = "event"}
-        # event_poison = {queue = "", binding_key = "event.poison"}
+        # event = {queue = "", binding_key = "<module>.event"}
+        # event_poison = {queue = "", binding_key = "<module>.event.poison"}
 
 # ============================================================================
 # gRPC Client Configuration
 # ============================================================================
 # Inter-service communication addresses
+# All addresses use environment variables from .env:
+#   GRPC_HOST_<MODULE>: Service host (IP address or Docker service name)
+#   GRPC_PORT_<MODULE>: Service port
 [grpc_client]
-    # Service addresses - update according to your deployment
-    # Format: "host:port" (e.g., "localhost:10000" or "service-name:50051")
+    # Service addresses - format: "${GRPC_HOST_<MODULE>}:${GRPC_PORT_<MODULE>}"
+    # Each service can be deployed on a different host (supports multi-host deployment)
     
     # Access service gRPC address
-    access_addr = "localhost:10155"
+    access_addr = "${GRPC_HOST_ACCESS}:${GRPC_PORT_ACCESS}"
     
     # Auth service gRPC address
-    auth_addr = "localhost:10156"
+    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
     
     # Audit service gRPC address
-    audit_addr = "localhost:10157"
+    audit_addr = "${GRPC_HOST_AUDIT}:${GRPC_PORT_AUDIT}"
     
     # Clients service gRPC address
-    clients_addr = "localhost:10158"
+    clients_addr = "${GRPC_HOST_CLIENTS}:${GRPC_PORT_CLIENTS}"
     
     # Directory service gRPC address
-    directory_addr = "localhost:10159"
+    directory_addr = "${GRPC_HOST_DIRECTORY}:${GRPC_PORT_DIRECTORY}"
     
     # Image service gRPC address
-    image_addr = "localhost:10160"
+    image_addr = "${GRPC_HOST_IMAGE}:${GRPC_PORT_IMAGE}"
     
     # System service gRPC address
-    system_addr = "localhost:10161"
+    system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
     
     # Tenants service gRPC address
-    tenants_addr = "localhost:10162"
+    tenants_addr = "${GRPC_HOST_TENANTS}:${GRPC_PORT_TENANTS}"
 
 # ============================================================================
 # Service-Specific Configuration Notes
@@ -544,25 +556,36 @@
 #    - [email]: Required for auth service
 #    - [storage]: Required for image service
 #
-# 3. Service port ranges (gRPC):
-#    - access:   10155
-#    - auth:     10156
-#    - audit:    10157
-#    - clients:  10158
-#    - directory: 10159
-#    - image:    10160
-#    - system:   10161
-#    - tenants:  10162
+# 3. Environment Variable Substitution:
+#    - All placeholders in the format "${VAR_NAME}" will be replaced at runtime
+#    - Values are loaded from the .env file in the project root
+#    - If a variable is missing, the application will exit with an error
+#    - See .example.env for all available environment variables
 #
-# 4. Kafka topics should be configured in [kafka.producer_topics] and
+# 4. Service port ranges (gRPC):
+#    - access:   10155 (GRPC_PORT_ACCESS)
+#    - auth:     10156 (GRPC_PORT_AUTH)
+#    - audit:    10157 (GRPC_PORT_AUDIT)
+#    - clients:  10158 (GRPC_PORT_CLIENTS)
+#    - directory: 10159 (GRPC_PORT_DIRECTORY)
+#    - image:    10160 (GRPC_PORT_IMAGE)
+#    - system:   10161 (GRPC_PORT_SYSTEM)
+#    - tenants:  10162 (GRPC_PORT_TENANTS)
+#
+# 5. Multi-host deployment support:
+#    - Each service can be configured with a different host IP using GRPC_HOST_<MODULE>
+#    - For single-host deployment, set all GRPC_HOST_* to the same IP
+#    - For multi-host deployment, set each GRPC_HOST_* to the respective host IP
+#
+# 6. Kafka topics should be configured in [kafka.producer_topics] and
 #    [kafka.consumer_topics] according to your service's event requirements.
 #
-# 5. RabbitMQ exchanges/queues should be configured in 
+# 7. RabbitMQ exchanges/queues should be configured in 
 #    [rabbitmq.producer_exchanges] and [rabbitmq.consumer_queues] according 
 #    to your service's event requirements.
 #
-# 6. For RabbitMQ, you can use either:
-#    - Direct URI: uri = "amqp://user:pass@host:port/vhost"
-#    - Separate fields: host, port, user, password, vhost (recommended)
+# 8. Development vs Production differences:
+#    - dev.toml: Use POSTGRESQL_NAME_DEV, sslmode="disable", logger_level="warn", compress=false
+#    - prod.toml: Use POSTGRESQL_NAME_PROD, sslmode="require", logger_level="error", compress=true
 #
 # ============================================================================

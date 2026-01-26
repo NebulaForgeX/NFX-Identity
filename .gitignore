@@ -122,15 +122,8 @@ data/**/*.sql
 !enums/**
 !inputs/
 !inputs/**
-# Ignore config files in inputs, use example.toml instead
-dev.toml
-prod.toml
-inputs/**/config/*.toml
-inputs/**/config/*.yaml
-inputs/**/config/*.yml
-!inputs/**/config/example.toml
-!inputs/**/config/example.yaml
-!inputs/**/config/example.yml
+# Configuration files now use environment variables, safe to commit
+# inputs/**/configuration/*.toml files are tracked
 !modules/
 !modules/**
 !protos/
@@ -156,3 +149,5 @@ inputs/**/config/*.yml
 /console/node_modules/
 !/console/.env.dev
 !/console/.env.prod
+
+!.example.env

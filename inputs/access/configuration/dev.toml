@@ -1,0 +1,194 @@
+# NFX-Identity Access Service Development Configuration
+# Environment: Development
+
+[server]
+    name = "Access Service"
+    host = "0.0.0.0"
+    http_port = "${HTTP_PORT}"
+    grpc_port = "${GRPC_PORT_ACCESS}"
+
+[postgresql]
+    host = "${POSTGRESQL_HOST}"
+    port = "${POSTGRESQL_PORT}"
+    user = "${POSTGRESQL_USER}"
+    password = "${POSTGRESQL_PASSWORD}"
+    dbname = "${POSTGRESQL_NAME_DEV}"
+    sslmode = "disable"
+    timezone = "UTC"
+    logger_level = "warn"
+    auto_migrate = false
+
+    [postgresql.connection]
+        timeout = "5s"
+        max_retries = 5
+        retry_interval = "2s"
+        max_idle_connections = 10
+        max_open_connections = 100
+        conn_max_idle_time = "15m"
+        conn_max_lifetime = "1h"
+
+[cache]
+    host = "${REDIS_HOST}"
+    port = "${REDIS_PORT}"
+    password = "${REDIS_PASSWORD}"
+
+    [cache.connection]
+        dial_timeout = "3s"
+        write_timeout = "3s"
+        read_timeout = "3s"
+        max_retries = 5
+        retry_interval = "2s"
+
+    [cache.tls]
+        enabled = false
+        server_name = ""
+
+[logger]
+    level = "debug"
+    format = "console"
+    output = "stdout"
+    file_path = "logs/access.log"
+    max_size_mb = 100
+    max_backups = 10
+    max_age_day = 30
+    compress = false
+
+[kafka]
+    brokers = ["${KAFKA_BROKERS}"]
+    client_id = "nfxid-access-service"
+
+    [kafka.network]
+        max_open_requests = 1
+
+    [kafka.producer]
+        acks = "all"
+        compression = "snappy"
+        retries = 3
+        batch_bytes = 1048576
+        linger_ms = 5
+        idempotent = true
+
+    [kafka.consumer]
+        group_id = "access-service-group"
+        initial_offset = "latest"
+        session_timeout_ms = 10000
+        heartbeat_interval_ms = 3000
+        fetch_min_bytes = 1
+        fetch_max_bytes = 5242880
+        return_errors = true
+
+    [kafka.producer_topics]
+        access = "nfxid.access"
+        access_poison = "nfxid.access_poison"
+
+    [kafka.consumer_topics]
+        access = "nfxid.access"
+        access_poison = "nfxid.access_poison"
+
+    [kafka.security]
+        enabled = false
+        mechanism = "PLAIN"
+        username = ""
+        password = ""
+        tls_insecure_skip_verify = false
+
+[rabbitmq]
+    host = "${RABBITMQ_HOST}"
+    port = "${RABBITMQ_PORT}"
+    user = "${RABBITMQ_USER}"
+    password = "${RABBITMQ_PASSWORD}"
+    vhost = "${RABBITMQ_VHOST}"
+    client_id = "nfxid-access-service"
+
+    [rabbitmq.producer]
+        mandatory = false
+        immediate = false
+        content_type = "application/json"
+        delivery_mode = 2
+        confirm_delivery = true
+        channel_pool_size = 10
+        transactional = false
+        default_priority = 0
+
+    [rabbitmq.consumer]
+        queue_name = ""
+        consumer_tag = "nfxid-access-consumer"
+        auto_ack = false
+        exclusive = false
+        no_local = false
+        no_wait = false
+        no_requeue_on_nack = false
+        prefetch_count = 10
+        prefetch_size = 0
+        qos_global = false
+
+    [rabbitmq.connection]
+        [rabbitmq.connection.tls]
+            enabled = false
+            insecure_skip_verify = false
+            cert_file = ""
+            key_file = ""
+            ca_file = ""
+            server_name = ""
+
+        [rabbitmq.connection.reconnect]
+            enabled = true
+            initial_interval = "1s"
+            randomization_factor = 0.5
+            multiplier = 1.5
+            max_interval = "30s"
+
+        [rabbitmq.connection.amqp]
+            vhost = "/"
+            heartbeat = 10
+            locale = "en_US"
+            channel_max = 0
+            frame_size = 0
+
+    [rabbitmq.exchange]
+        name = ""
+        type = "topic"
+        durable = true
+        auto_delete = false
+        internal = false
+        no_wait = false
+
+    [rabbitmq.queue]
+        durable = true
+        auto_delete = false
+        exclusive = false
+        no_wait = false
+        max_priority = 0
+        message_ttl = 0
+        max_length = 0
+        max_length_bytes = 0
+        dead_letter_exchange = ""
+        dead_letter_routing_key = ""
+
+    [rabbitmq.queue_bind]
+        routing_key = ""
+        no_wait = false
+
+    [rabbitmq.producer_exchanges]
+        event = {exchange = "", routing_key = "access.event"}
+        event_poison = {exchange = "", routing_key = "access.event.poison"}
+
+    [rabbitmq.consumer_queues]
+        event = {queue = "", binding_key = "access.event"}
+        event_poison = {queue = "", binding_key = "access.event.poison"}
+
+[token]
+    secret_key = "${TOKEN_SECRET_KEY}"
+    issuer = "${TOKEN_ISSUER}"
+    access_token_ttl = "${TOKEN_ACCESS_TTL}"
+    refresh_token_ttl = "${TOKEN_REFRESH_TTL}"
+    algorithm = "${TOKEN_ALGORITHM}"
+
+[grpc_client]
+    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
+    audit_addr = "${GRPC_HOST_AUDIT}:${GRPC_PORT_AUDIT}"
+    clients_addr = "${GRPC_HOST_CLIENTS}:${GRPC_PORT_CLIENTS}"
+    directory_addr = "${GRPC_HOST_DIRECTORY}:${GRPC_PORT_DIRECTORY}"
+    image_addr = "${GRPC_HOST_IMAGE}:${GRPC_PORT_IMAGE}"
+    system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
+    tenants_addr = "${GRPC_HOST_TENANTS}:${GRPC_PORT_TENANTS}"

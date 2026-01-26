@@ -2,13 +2,10 @@ package configx
 
 import (
 	"context"
-	"errors"
-	"flag"
 	"fmt"
+	"io"
 	"os"
 	"strings"
-
-	"nfxid/pkgs/utils/file"
 
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/confmap"
@@ -20,21 +17,6 @@ import (
 type Loader[T any] struct {
 	cfg *T
 	k   *koanf.Koanf
-}
-
-type options struct {
-	explicitPath string
-	envPrefix    string
-	watch        bool
-	defaults     map[string]any
-}
-
-type LoaderOption func(*options)
-
-func WithPath(p string) LoaderOption      { return func(o *options) { o.explicitPath = p } }
-func WithEnvPrefix(p string) LoaderOption { return func(o *options) { o.envPrefix = p } }
-func WithDefaults(m map[string]any) LoaderOption {
-	return func(o *options) { o.defaults = m }
 }
 
 func NewLoader[T any](ctx context.Context, opts ...LoaderOption) (*Loader[T], error) {
@@ -49,12 +31,40 @@ func NewLoader[T any](ctx context.Context, opts ...LoaderOption) (*Loader[T], er
 		k.Load(confmap.Provider(op.defaults, "."), nil)
 	}
 
-	// === TOML provider ===
+	// === Load .env file first ===
+	if err := loadEnvFile(); err != nil {
+		return nil, fmt.Errorf("load .env file failed: %w", err)
+	}
+
+	// === TOML provider with variable substitution ===
 	path, err := resolvePath(op.explicitPath)
 	if err != nil {
 		return nil, err
 	}
-	fProvider := fileProvider.Provider(path)
+
+	// Read and substitute variables in TOML content
+	tomlContent, err := readAndSubstituteToml(path)
+	if err != nil {
+		return nil, fmt.Errorf("read and substitute toml config failed: %w", err)
+	}
+
+	// Create a temporary file with substituted content
+	tmpFile, err := os.CreateTemp("", "config-*.toml")
+	if err != nil {
+		return nil, fmt.Errorf("failed to create temp file: %w", err)
+	}
+	defer os.Remove(tmpFile.Name()) // Clean up temp file
+	defer tmpFile.Close()
+
+	if _, err := io.WriteString(tmpFile, tomlContent); err != nil {
+		return nil, fmt.Errorf("failed to write temp file: %w", err)
+	}
+	if err := tmpFile.Close(); err != nil {
+		return nil, fmt.Errorf("failed to close temp file: %w", err)
+	}
+
+	// Load from temporary file
+	fProvider := fileProvider.Provider(tmpFile.Name())
 	if err := k.Load(fProvider, toml.Parser()); err != nil {
 		return nil, fmt.Errorf("load toml config failed: %w", err)
 	}
@@ -91,22 +101,4 @@ func (l *Loader[T]) PrintWithPrefix(prefix string) {
 			fmt.Printf("%s -> %v\n", key, l.k.Get(key))
 		}
 	}
-}
-
-func resolvePath(explicit string) (string, error) {
-	if explicit != "" && file.Exists(explicit) {
-		return explicit, nil
-	}
-
-	// --flag
-	if f := flag.Lookup("config"); f != nil && file.Exists(f.Value.String()) {
-		return f.Value.String(), nil
-	}
-
-	// ENV
-	if p := os.Getenv("CONFIG_FILE"); p != "" && file.Exists(p) {
-		return p, nil
-	}
-
-	return "", errors.New("config file not found")
 }

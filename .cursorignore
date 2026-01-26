@@ -127,16 +127,10 @@ data/**/*.sql
 **/*.pb.go
 **/*.pb.gw.go
 
-## Config files (use example files instead)
-dev.toml
-prod.toml
-inputs/**/config/*.toml
-inputs/**/config/*.yaml
-inputs/**/config/*.yml
-!inputs/**/config/example.toml
-!inputs/**/config/example.yaml
-!inputs/**/config/example.yml
-
 ## Console build
 /console/dist/
 /console/node_modules/
+
+!.env.example
+!.example.env
+!.env
