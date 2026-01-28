@@ -203,6 +203,19 @@ export const URL_PATHS = {
     GET_USER_PROFILE: "/directory/auth/user-profiles/:id",
     UPDATE_USER_PROFILE: "/directory/auth/user-profiles/:id",
     DELETE_USER_PROFILE: "/directory/auth/user-profiles/:id",
+    // 用户头像相关 - 需要认证
+    CREATE_OR_UPDATE_USER_AVATAR: "/directory/auth/user-avatars",
+    GET_USER_AVATAR: "/directory/auth/user-avatars/:id",
+    UPDATE_USER_AVATAR: "/directory/auth/user-avatars/:id",
+    DELETE_USER_AVATAR: "/directory/auth/user-avatars/:id",
+    // 用户图片相关 - 需要认证
+    CREATE_USER_IMAGE: "/directory/auth/user-images",
+    GET_USER_IMAGE: "/directory/auth/user-images/:id",
+    GET_USER_IMAGES_BY_USER_ID: "/directory/auth/users/:id/user-images",
+    GET_CURRENT_USER_IMAGE_BY_USER_ID: "/directory/auth/users/:id/user-images/current",
+    UPDATE_USER_IMAGE: "/directory/auth/user-images/:id",
+    UPDATE_USER_IMAGE_DISPLAY_ORDER: "/directory/auth/user-images/:id/display-order",
+    DELETE_USER_IMAGE: "/directory/auth/user-images/:id",
   },
   // Image 模块 - /image/auth
   IMAGE: {

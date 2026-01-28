@@ -174,9 +174,6 @@ export interface CreateUserProfileRequest {
   lastName?: string;
   nickname?: string;
   displayName?: string;
-  avatarId?: string;
-  backgroundId?: string;
-  backgroundIds?: string[];
   bio?: string;
   birthday?: string;
   age?: number;
@@ -194,9 +191,6 @@ export interface UpdateUserProfileRequest {
   lastName?: string;
   nickname?: string;
   displayName?: string;
-  avatarId?: string;
-  backgroundId?: string;
-  backgroundIds?: string[];
   bio?: string;
   birthday?: string;
   age?: number;
@@ -206,4 +200,31 @@ export interface UpdateUserProfileRequest {
   github?: string;
   socialLinks?: Record<string, unknown>;
   skills?: Record<string, unknown>;
+}
+
+// ========== 用户头像相关 ==========
+
+export interface CreateOrUpdateUserAvatarRequest {
+  userId: string;
+  imageId: string;
+}
+
+export interface UpdateUserAvatarImageIDRequest {
+  imageId: string;
+}
+
+// ========== 用户图片相关 ==========
+
+export interface CreateUserImageRequest {
+  userId: string;
+  imageId: string;
+  displayOrder?: number;
+}
+
+export interface UpdateUserImageDisplayOrderRequest {
+  displayOrder: number;
+}
+
+export interface UpdateUserImageImageIDRequest {
+  imageId: string;
 }

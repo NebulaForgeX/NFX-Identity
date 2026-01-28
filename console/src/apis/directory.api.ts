@@ -4,9 +4,11 @@ import type {
   Badge,
   BaseResponse,
   CreateBadgeRequest,
+  CreateOrUpdateUserAvatarRequest,
   CreateUserBadgeRequest,
   CreateUserEducationRequest,
   CreateUserEmailRequest,
+  CreateUserImageRequest,
   CreateUserOccupationRequest,
   CreateUserPhoneRequest,
   CreateUserPreferenceRequest,
@@ -16,16 +18,21 @@ import type {
   UpdateBadgeRequest,
   UpdateUserEducationRequest,
   UpdateUserEmailRequest,
+  UpdateUserImageDisplayOrderRequest,
+  UpdateUserImageImageIDRequest,
   UpdateUserOccupationRequest,
   UpdateUserPhoneRequest,
   UpdateUserPreferenceRequest,
   UpdateUserProfileRequest,
+  UpdateUserAvatarImageIDRequest,
   UpdateUserStatusRequest,
   UpdateUserUsernameRequest,
   User,
+  UserAvatar,
   UserBadge,
   UserEducation,
   UserEmail,
+  UserImage,
   UserOccupation,
   UserPhone,
   UserPreference,
@@ -381,6 +388,107 @@ export const UpdateUserProfile = async (id: string, params: UpdateUserProfileReq
 // 删除用户资料
 export const DeleteUserProfile = async (id: string): Promise<BaseResponse> => {
   const url = URL_PATHS.DIRECTORY.DELETE_USER_PROFILE.replace(":id", id);
+  const { data } = await protectedClient.delete<BaseResponse>(url);
+  return data;
+};
+
+// ========== 用户头像相关 ==========
+
+// 创建或更新用户头像
+export const CreateOrUpdateUserAvatar = async (params: CreateOrUpdateUserAvatarRequest): Promise<UserAvatar> => {
+  const { data } = await protectedClient.post<DataResponse<UserAvatar>>(
+    URL_PATHS.DIRECTORY.CREATE_OR_UPDATE_USER_AVATAR,
+    params,
+  );
+  return data.data;
+};
+
+// 根据用户ID获取用户头像
+export const GetUserAvatar = async (userId: string): Promise<UserAvatar | null> => {
+  try {
+    const url = URL_PATHS.DIRECTORY.GET_USER_AVATAR.replace(":id", userId);
+    const { data } = await protectedClient.get<DataResponse<UserAvatar>>(url);
+    return data.data;
+  } catch (error: any) {
+    // 如果返回 404，说明用户没有设置头像，返回 null
+    if (error?.response?.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+};
+
+// 更新用户头像
+export const UpdateUserAvatar = async (userId: string, params: UpdateUserAvatarImageIDRequest): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER_AVATAR.replace(":id", userId);
+  const { data } = await protectedClient.put<BaseResponse>(url, params);
+  return data;
+};
+
+// 删除用户头像
+export const DeleteUserAvatar = async (userId: string): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.DELETE_USER_AVATAR.replace(":id", userId);
+  const { data } = await protectedClient.delete<BaseResponse>(url);
+  return data;
+};
+
+// ========== 用户图片相关 ==========
+
+// 创建用户图片
+export const CreateUserImage = async (params: CreateUserImageRequest): Promise<UserImage> => {
+  const { data } = await protectedClient.post<DataResponse<UserImage>>(
+    URL_PATHS.DIRECTORY.CREATE_USER_IMAGE,
+    params,
+  );
+  return data.data;
+};
+
+// 根据ID获取用户图片
+export const GetUserImage = async (id: string): Promise<UserImage> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER_IMAGE.replace(":id", id);
+  const { data } = await protectedClient.get<DataResponse<UserImage>>(url);
+  return data.data;
+};
+
+// 根据用户ID获取用户图片列表
+export const GetUserImagesByUserID = async (userId: string): Promise<UserImage[]> => {
+  const url = URL_PATHS.DIRECTORY.GET_USER_IMAGES_BY_USER_ID.replace(":id", userId);
+  const { data } = await protectedClient.get<DataResponse<UserImage[]>>(url);
+  return data.data;
+};
+
+// 获取用户当前图片（display_order = 0）
+export const GetCurrentUserImageByUserID = async (userId: string): Promise<UserImage | null> => {
+  try {
+    const url = URL_PATHS.DIRECTORY.GET_CURRENT_USER_IMAGE_BY_USER_ID.replace(":id", userId);
+    const { data } = await protectedClient.get<DataResponse<UserImage>>(url);
+    return data.data;
+  } catch (error: any) {
+    // 如果返回 404，说明用户没有设置当前图片，返回 null
+    if (error?.response?.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+};
+
+// 更新用户图片
+export const UpdateUserImage = async (id: string, params: UpdateUserImageImageIDRequest): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER_IMAGE.replace(":id", id);
+  const { data } = await protectedClient.put<BaseResponse>(url, params);
+  return data;
+};
+
+// 更新用户图片显示顺序
+export const UpdateUserImageDisplayOrder = async (id: string, params: UpdateUserImageDisplayOrderRequest): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER_IMAGE_DISPLAY_ORDER.replace(":id", id);
+  const { data } = await protectedClient.patch<BaseResponse>(url, params);
+  return data;
+};
+
+// 删除用户图片
+export const DeleteUserImage = async (id: string): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.DELETE_USER_IMAGE.replace(":id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };

@@ -52,6 +52,8 @@ export const DOMAIN_DIRECTORY_USER_OCCUPATION = "userOccupation";
 export const DOMAIN_DIRECTORY_USER_PHONE = "userPhone";
 export const DOMAIN_DIRECTORY_USER_PREFERENCE = "userPreference";
 export const DOMAIN_DIRECTORY_USER_PROFILE = "userProfile";
+export const DOMAIN_DIRECTORY_USER_AVATAR = "userAvatar";
+export const DOMAIN_DIRECTORY_USER_IMAGE = "userImage";
 
 //! ================ Domain Image ================
 export const DOMAIN_IMAGE_IMAGE = "image";

@@ -34,6 +34,14 @@ export const directoryEvents = {
   // UserProfile 相关
   INVALIDATE_USER_PROFILE: "DIRECTORY:INVALIDATE_USER_PROFILE",
   INVALIDATE_USER_PROFILES: "DIRECTORY:INVALIDATE_USER_PROFILES",
+
+  // UserAvatar 相关
+  INVALIDATE_USER_AVATAR: "DIRECTORY:INVALIDATE_USER_AVATAR",
+  INVALIDATE_USER_AVATARS: "DIRECTORY:INVALIDATE_USER_AVATARS",
+
+  // UserImage 相关
+  INVALIDATE_USER_IMAGE: "DIRECTORY:INVALIDATE_USER_IMAGE",
+  INVALIDATE_USER_IMAGES: "DIRECTORY:INVALIDATE_USER_IMAGES",
 } as const;
 
 type DirectoryEvent = (typeof directoryEvents)[keyof typeof directoryEvents];
@@ -58,6 +66,10 @@ class DirectoryEventEmitter {
     [directoryEvents.INVALIDATE_USER_PREFERENCES]: new Set<Function>(),
     [directoryEvents.INVALIDATE_USER_PROFILE]: new Set<Function>(),
     [directoryEvents.INVALIDATE_USER_PROFILES]: new Set<Function>(),
+    [directoryEvents.INVALIDATE_USER_AVATAR]: new Set<Function>(),
+    [directoryEvents.INVALIDATE_USER_AVATARS]: new Set<Function>(),
+    [directoryEvents.INVALIDATE_USER_IMAGE]: new Set<Function>(),
+    [directoryEvents.INVALIDATE_USER_IMAGES]: new Set<Function>(),
   };
 
   on(event: DirectoryEvent, callback: Function) {

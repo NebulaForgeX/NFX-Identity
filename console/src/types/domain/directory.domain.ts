@@ -127,9 +127,6 @@ export interface UserProfile {
   lastName?: string;
   nickname?: string;
   displayName?: string;
-  avatarId?: string;
-  backgroundId?: string;
-  backgroundIds?: string[];
   bio?: string;
   birthday?: string;
   age?: number;
@@ -139,6 +136,23 @@ export interface UserProfile {
   github?: string;
   socialLinks?: Record<string, unknown>;
   skills?: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface UserAvatar {
+  userId: string;
+  imageId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserImage {
+  id: string;
+  userId: string;
+  imageId: string;
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;

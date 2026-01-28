@@ -5,11 +5,10 @@ import { Bell, Mail, Search } from "@/assets/icons/lucide";
 import { LanguageSwitcher } from "@/components";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { routerEventEmitter, routerEvents } from "@/events/router";
-import { useUser, useUserEmailsByUserID, useUserProfile } from "@/hooks/useDirectory";
+import { useUser, useUserEmailsByUserID, useUserAvatar } from "@/hooks/useDirectory";
 import { useChatStore } from "@/stores/chatStore";
 import { showSearch } from "@/stores/modalStore";
 import { useAuthStore } from "@/stores/authStore";
-import { ROUTES } from "@/types/navigation";
 
 
 import { buildImageUrl } from "@/utils/image";
@@ -84,17 +83,15 @@ const UserMenu = memo(() => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const currentUserId = useAuthStore((state) => state.currentUserId);
   
-  if (!currentUserId) {
-    return null;
-  }
+  if (!currentUserId) return null;
   
   const { data: user } = useUser({
     id: currentUserId,
   });
-  const { data: userProfile } = useUserProfile({
-    id: currentUserId,
-  });
   const { data: userEmailsList } = useUserEmailsByUserID({
+    userId: currentUserId,
+  });
+  const { data: userAvatar } = useUserAvatar({
     userId: currentUserId,
   });
   
@@ -128,7 +125,7 @@ const UserMenu = memo(() => {
         onClick={() => setUserMenuOpen(!userMenuOpen)}
       >
         <img
-          src={buildImageUrl(userProfile?.avatarId, "avatar") || "/default-avatar.png"}
+          src={userAvatar?.imageId ? buildImageUrl(userAvatar.imageId, "avatar") : "/default-avatar.png"}
           alt={user?.username || t("header.user")}
           className={styles.userPicture}
         />

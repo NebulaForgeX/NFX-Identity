@@ -9,26 +9,34 @@ import {
   CreateUserEmail,
   CreateUserOccupation,
   CreateUserPhone,
+  CreateOrUpdateUserAvatar,
+  CreateUserImage,
   CreateUserPreference,
   CreateUserProfile,
   DeleteBadge,
   DeleteUser,
+  DeleteUserAvatar,
   DeleteUserBadge,
   DeleteUserEducation,
   DeleteUserEmail,
+  DeleteUserImage,
   DeleteUserOccupation,
   DeleteUserPhone,
   DeleteUserPreference,
   DeleteUserProfile,
   GetBadge,
   GetBadgeByName,
+  GetCurrentUserImageByUserID,
   GetUser,
+  GetUserAvatar,
   GetUserBadge,
   GetUserByUsername,
   GetUserEducation,
   GetUserEducationsByUserID,
   GetUserEmail,
   GetUserEmailsByUserID,
+  GetUserImage,
+  GetUserImagesByUserID,
   GetUserOccupation,
   GetUserOccupationsByUserID,
   GetUserPhone,
@@ -38,8 +46,11 @@ import {
   SetPrimaryUserEmail,
   SetPrimaryUserPhone,
   UpdateBadge,
+  UpdateUserAvatar,
   UpdateUserEducation,
   UpdateUserEmail,
+  UpdateUserImage,
+  UpdateUserImageDisplayOrder,
   UpdateUserOccupation,
   UpdateUserPhone,
   UpdateUserPreference,
@@ -58,22 +69,29 @@ import type {
   CreateUserEmailRequest,
   CreateUserOccupationRequest,
   CreateUserPhoneRequest,
+  CreateOrUpdateUserAvatarRequest,
+  CreateUserImageRequest,
   CreateUserPreferenceRequest,
   CreateUserProfileRequest,
   CreateUserRequest,
   UpdateBadgeRequest,
   UpdateUserEducationRequest,
   UpdateUserEmailRequest,
+  UpdateUserImageDisplayOrderRequest,
+  UpdateUserImageImageIDRequest,
   UpdateUserOccupationRequest,
   UpdateUserPhoneRequest,
   UpdateUserPreferenceRequest,
   UpdateUserProfileRequest,
+  UpdateUserAvatarImageIDRequest,
   UpdateUserStatusRequest,
   UpdateUserUsernameRequest,
   User,
+  UserAvatar,
   UserBadge,
   UserEducation,
   UserEmail,
+  UserImage,
   UserOccupation,
   UserPhone,
   UserPreference,
@@ -96,8 +114,11 @@ import {
   DIRECTORY_USER_PHONE_LIST,
   DIRECTORY_USER_PREFERENCE,
   DIRECTORY_USER_PROFILE,
+  DIRECTORY_USER_AVATAR,
+  DIRECTORY_USER_IMAGE,
+  DIRECTORY_USER_IMAGE_LIST,
 } from "@/constants";
-import type { UnifiedQueryParams, suspenseUnifiedQueryOptions } from "./core/type";
+import type { UnifiedQueryParams, suspenseUnifiedQueryOptions, SuspenseUnifiedQueryOptions } from "./core/type";
 
 // ========== User 相关 ==========
 
@@ -867,6 +888,185 @@ export const useDeleteUserProfile = () => {
     },
     onError: (error: AxiosError) => {
       showError("删除用户资料失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== UserAvatar 相关 ==========
+
+// 根据用户ID获取用户头像
+export const useUserAvatar = (params: UnifiedQueryParams<UserAvatar> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      const avatar = await GetUserAvatar(params.userId);
+      // 如果返回 null，返回一个默认的空对象，避免 suspense 错误
+      return avatar || { userId: params.userId, imageId: "", createdAt: "", updatedAt: "" };
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_AVATAR(userId), { userId }, options);
+};
+
+// 创建或更新用户头像
+export const useCreateOrUpdateUserAvatar = () => {
+  return useMutation({
+    mutationFn: async (params: CreateOrUpdateUserAvatarRequest) => {
+      return await CreateOrUpdateUserAvatar(params);
+    },
+    onSuccess: (_, variables) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_AVATARS);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_AVATAR, variables.userId);
+      showSuccess("用户头像设置成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("设置用户头像失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新用户头像
+export const useUpdateUserAvatar = () => {
+  return useMutation({
+    mutationFn: async (params: { userId: string; data: UpdateUserAvatarImageIDRequest }) => {
+      return await UpdateUserAvatar(params.userId, params.data);
+    },
+    onSuccess: (_, variables) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_AVATARS);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_AVATAR, variables.userId);
+      showSuccess("用户头像更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新用户头像失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除用户头像
+export const useDeleteUserAvatar = () => {
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      return await DeleteUserAvatar(userId);
+    },
+    onSuccess: (_, userId) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_AVATARS);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_AVATAR, userId);
+      showSuccess("用户头像删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除用户头像失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== UserImage 相关 ==========
+
+// 根据ID获取用户图片
+export const useUserImage = (params: UnifiedQueryParams<UserImage> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => {
+      return await GetUserImage(params.id);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_IMAGE(id), { id }, options);
+};
+
+// 根据用户ID获取用户图片列表
+export const useUserImagesByUserID = (params: UnifiedQueryParams<UserImage[]> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      return await GetUserImagesByUserID(params.userId);
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_IMAGE_LIST, { userId }, options);
+};
+
+// 获取用户当前图片（display_order = 0）
+export const useCurrentUserImageByUserID = (params: UnifiedQueryParams<UserImage> & { userId: string }) => {
+  const { userId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { userId: string }) => {
+      const image = await GetCurrentUserImageByUserID(params.userId);
+      // 如果返回 null，返回一个默认的空对象，避免 suspense 错误
+      return image || { id: "", userId: params.userId, imageId: "", displayOrder: 0, createdAt: "", updatedAt: "" };
+    },
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(DIRECTORY_USER_IMAGE(`current-${userId}`), { userId }, options as SuspenseUnifiedQueryOptions<UserImage> | undefined);
+};
+
+// 创建用户图片
+export const useCreateUserImage = () => {
+  return useMutation({
+    mutationFn: async (params: CreateUserImageRequest) => {
+      return await CreateUserImage(params);
+    },
+    onSuccess: (_, variables) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGE, variables.userId);
+      showSuccess("用户图片创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建用户图片失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新用户图片
+export const useUpdateUserImage = () => {
+  return useMutation({
+    mutationFn: async (params: { id: string; data: UpdateUserImageImageIDRequest }) => {
+      return await UpdateUserImage(params.id, params.data);
+    },
+    onSuccess: (_, variables) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGE, variables.id);
+      showSuccess("用户图片更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新用户图片失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 更新用户图片显示顺序
+export const useUpdateUserImageDisplayOrder = () => {
+  return useMutation({
+    mutationFn: async (params: { id: string; data: UpdateUserImageDisplayOrderRequest }) => {
+      return await UpdateUserImageDisplayOrder(params.id, params.data);
+    },
+    onSuccess: (_, variables) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGE, variables.id);
+      showSuccess("用户图片顺序更新成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("更新用户图片顺序失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 删除用户图片
+export const useDeleteUserImage = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteUserImage(id);
+    },
+    onSuccess: (_, id) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGE, id);
+      showSuccess("用户图片删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除用户图片失败，请稍后重试。" + error.message);
     },
   });
 };

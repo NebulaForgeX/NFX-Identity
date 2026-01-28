@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Edit } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
-import { useUser, useUserProfile, useUserEmailsByUserID } from "@/hooks/useDirectory";
+import { useUser, useUserProfile, useUserEmailsByUserID, useUserAvatar } from "@/hooks/useDirectory";
 import { ROUTES } from "@/types/navigation";
 import { buildImageUrl } from "@/utils/image";
 
@@ -38,6 +38,7 @@ const ProfileCardContent = memo(({ userId }: ProfileCardProps) => {
   const { data: user } = useUser({ id: userId });
   const { data: userProfile } = useUserProfile({ id: userId });
   const { data: userEmailsList } = useUserEmailsByUserID({ userId });
+  const { data: userAvatar } = useUserAvatar({ userId });
 
   // 从邮箱列表中提取主邮箱或第一个邮箱
   const userEmails =
@@ -61,7 +62,7 @@ const ProfileCardContent = memo(({ userId }: ProfileCardProps) => {
       </button>
       <div className={styles.avatarSection}>
         <img
-          src={buildImageUrl(userProfile?.avatarId, "avatar") || "/default-avatar.png"}
+          src={userAvatar?.imageId ? buildImageUrl(userAvatar.imageId, "avatar") : "/default-avatar.png"}
           alt={displayName}
           className={styles.avatar}
         />
