@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -9,25 +10,32 @@ import type { UserOccupation } from "@/types";
 export const useInitOccupationForm = (occupation?: UserOccupation) => {
   const { t } = useTranslation("elements.directory");
 
-  // 动态创建 schema，使用翻译
-  const OccupationFormSchema = z.object({
-    company: z.string().trim().min(1, t("occupation.company.required")),
-    position: z.string().trim().min(1, t("occupation.position.required") || "Position is required"), // 后端要求 position 是必需的
-    department: z.string().trim().optional(),
-    industry: z.string().trim().optional(),
-    location: z.string().trim().optional(),
-    employmentType: z.string().trim().optional(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-    isCurrent: z.boolean().optional(),
-    description: z.string().trim().optional(),
-    responsibilities: z.string().trim().optional(),
-    achievements: z.string().trim().optional(),
-    skillsUsed: z.array(z.string()).optional(),
-  });
+  // 使用 useMemo 缓存 schema，避免每次渲染都创建新的 schema
+  const OccupationFormSchema = useMemo(
+    () =>
+      z.object({
+        company: z.string().trim().min(1, t("occupation.company.required")),
+        position: z.string().trim().min(1, t("occupation.position.required") || "Position is required"), // 后端要求 position 是必需的
+        department: z.string().trim().optional(),
+        industry: z.string().trim().optional(),
+        location: z.string().trim().optional(),
+        employmentType: z.string().trim().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        isCurrent: z.boolean().optional(),
+        description: z.string().trim().optional(),
+        responsibilities: z.string().trim().optional(),
+        achievements: z.string().trim().optional(),
+        skillsUsed: z.array(z.string()).optional(),
+      }),
+    [t]
+  );
+
+  // 缓存 resolver 以确保稳定性
+  const resolver = useMemo(() => zodResolver(OccupationFormSchema), [OccupationFormSchema]);
 
   const form = useForm<OccupationFormValues>({
-    resolver: zodResolver(OccupationFormSchema),
+    resolver,
     mode: "onChange",
     defaultValues: {
       company: occupation?.company || "",

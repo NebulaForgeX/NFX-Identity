@@ -109,7 +109,7 @@ const UserMenu = memo(() => {
   }, []);
 
   const handleNavigateProfile = useCallback(() => {
-    routerEventEmitter.navigate({ to: ROUTES.PROFILE });
+    routerEventEmitter.navigateToProfile();
     setUserMenuOpen(false);
   }, []);
 

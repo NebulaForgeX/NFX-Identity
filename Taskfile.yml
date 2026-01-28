@@ -176,19 +176,29 @@ tasks:
           nfx-identity
     silent: false
 
-  build:
-    desc: "Build all services"
-    cmds:
-      - go build -o bin/auth-api inputs/auth/api/main.go
-      - go build -o bin/auth-worker inputs/auth/worker/main.go
-
-  test:
-    desc: "Run tests"
-    cmds:
-      - go test ./...
-
   clean:
     desc: "Clean build artifacts"
     cmds:
       - rm -rf bin/
 
+  console:
+    desc: "Run console dev server"
+    dir: console
+    cmds:
+      - npm run dev
+
+  console:i:
+    desc: "Install console dependencies"
+    dir: console
+    cmds:
+      - npm install
+  
+  go:ub:
+    desc: "Up go dev server and build"
+    cmds:
+      - sudo docker compose -f docker-compose.dev.yml up --build
+
+  go:up:
+    desc: "Up go dev server"
+    cmds:
+      - sudo docker compose -f docker-compose.dev.yml up
