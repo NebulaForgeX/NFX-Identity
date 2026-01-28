@@ -10,8 +10,8 @@ import (
 
 type ImageVariant struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey"`
-	ImageID     uuid.UUID `gorm:"type:uuid;index:idx_image_variants_image_id;index:idx_image_variants_image_key,priority:1;uniqueIndex:image_variants_image_id_variant_key_key,priority:1"`
-	VariantKey  string    `gorm:"type:text;index:idx_image_variants_image_key,priority:2;index:idx_image_variants_variant_key;uniqueIndex:image_variants_image_id_variant_key_key,priority:2"`
+	ImageID     uuid.UUID `gorm:"type:uuid;index:idx_image_variants_image_id;uniqueIndex:image_variants_image_id_variant_key_key,priority:1"`
+	VariantKey  string    `gorm:"type:text;index:idx_image_variants_variant_key;uniqueIndex:image_variants_image_id_variant_key_key,priority:2"`
 	Width       *int      `gorm:"type:integer"`
 	Height      *int      `gorm:"type:integer"`
 	Size        *int64    `gorm:"type:bigint"`

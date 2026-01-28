@@ -2,11 +2,9 @@ package user_profiles
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
-func (up *UserProfile) Update(role, firstName, lastName, nickname, displayName *string, avatarID, backgroundID *uuid.UUID, backgroundIDs []uuid.UUID, bio, gender, location, website, github *string, birthday *time.Time, age *int, socialLinks, skills map[string]interface{}) error {
+func (up *UserProfile) Update(role, firstName, lastName, nickname, displayName *string, bio, gender, location, website, github *string, birthday *time.Time, age *int, socialLinks, skills map[string]interface{}) error {
 	if up.DeletedAt() != nil {
 		return ErrUserProfileNotFound
 	}
@@ -25,15 +23,6 @@ func (up *UserProfile) Update(role, firstName, lastName, nickname, displayName *
 	}
 	if displayName != nil {
 		up.state.DisplayName = displayName
-	}
-	if avatarID != nil {
-		up.state.AvatarID = avatarID
-	}
-	if backgroundID != nil {
-		up.state.BackgroundID = backgroundID
-	}
-	if backgroundIDs != nil {
-		up.state.BackgroundIDs = backgroundIDs
 	}
 	if bio != nil {
 		up.state.Bio = bio

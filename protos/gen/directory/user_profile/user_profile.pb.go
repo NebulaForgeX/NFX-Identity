@@ -27,27 +27,24 @@ const (
 // Note: id directly references users.id (one-to-one relationship)
 type UserProfile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                  // 资料ID (UUID) - 直接引用 users.id
-	Role          *string                `protobuf:"bytes,2,opt,name=role,proto3,oneof" json:"role,omitempty"`                                        // 角色 (varchar(100))
-	FirstName     *string                `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3,oneof" json:"first_name,omitempty"`             // 名 (varchar(100))
-	LastName      *string                `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3,oneof" json:"last_name,omitempty"`                // 姓 (varchar(100))
-	Nickname      *string                `protobuf:"bytes,5,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`                                // 昵称 (varchar(50))
-	DisplayName   *string                `protobuf:"bytes,6,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`       // 显示名称 (varchar(100))
-	AvatarId      *string                `protobuf:"bytes,7,opt,name=avatar_id,json=avatarId,proto3,oneof" json:"avatar_id,omitempty"`                // 头像ID (UUID)
-	BackgroundId  *string                `protobuf:"bytes,8,opt,name=background_id,json=backgroundId,proto3,oneof" json:"background_id,omitempty"`    // 背景ID (UUID)
-	BackgroundIds *string                `protobuf:"bytes,9,opt,name=background_ids,json=backgroundIds,proto3,oneof" json:"background_ids,omitempty"` // 背景ID数组 (uuid[])
-	Bio           *string                `protobuf:"bytes,10,opt,name=bio,proto3,oneof" json:"bio,omitempty"`                                         // 简介 (text)
-	Birthday      *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=birthday,proto3,oneof" json:"birthday,omitempty"`                               // 生日 (date)
-	Age           *int32                 `protobuf:"varint,12,opt,name=age,proto3,oneof" json:"age,omitempty"`                                        // 年龄 (integer)
-	Gender        *string                `protobuf:"bytes,13,opt,name=gender,proto3,oneof" json:"gender,omitempty"`                                   // 性别 (varchar(20))
-	Location      *string                `protobuf:"bytes,14,opt,name=location,proto3,oneof" json:"location,omitempty"`                               // 位置 (varchar(255))
-	Website       *string                `protobuf:"bytes,15,opt,name=website,proto3,oneof" json:"website,omitempty"`                                 // 网站 (varchar(255))
-	Github        *string                `protobuf:"bytes,16,opt,name=github,proto3,oneof" json:"github,omitempty"`                                   // GitHub (varchar(255))
-	SocialLinks   *structpb.Struct       `protobuf:"bytes,17,opt,name=social_links,json=socialLinks,proto3,oneof" json:"social_links,omitempty"`      // 社交链接 (JSONB)
-	Skills        *structpb.Struct       `protobuf:"bytes,18,opt,name=skills,proto3,oneof" json:"skills,omitempty"`                                   // 技能 (JSONB)
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                  // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                  // 更新时间
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`            // 软删除时间
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                             // 资料ID (UUID) - 直接引用 users.id
+	Role          *string                `protobuf:"bytes,2,opt,name=role,proto3,oneof" json:"role,omitempty"`                                   // 角色 (varchar(100))
+	FirstName     *string                `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3,oneof" json:"first_name,omitempty"`        // 名 (varchar(100))
+	LastName      *string                `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3,oneof" json:"last_name,omitempty"`           // 姓 (varchar(100))
+	Nickname      *string                `protobuf:"bytes,5,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`                           // 昵称 (varchar(50))
+	DisplayName   *string                `protobuf:"bytes,6,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`  // 显示名称 (varchar(100))
+	Bio           *string                `protobuf:"bytes,7,opt,name=bio,proto3,oneof" json:"bio,omitempty"`                                     // 简介 (text)
+	Birthday      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=birthday,proto3,oneof" json:"birthday,omitempty"`                           // 生日 (date)
+	Age           *int32                 `protobuf:"varint,9,opt,name=age,proto3,oneof" json:"age,omitempty"`                                    // 年龄 (integer)
+	Gender        *string                `protobuf:"bytes,10,opt,name=gender,proto3,oneof" json:"gender,omitempty"`                              // 性别 (varchar(20))
+	Location      *string                `protobuf:"bytes,11,opt,name=location,proto3,oneof" json:"location,omitempty"`                          // 位置 (varchar(255))
+	Website       *string                `protobuf:"bytes,12,opt,name=website,proto3,oneof" json:"website,omitempty"`                            // 网站 (varchar(255))
+	Github        *string                `protobuf:"bytes,13,opt,name=github,proto3,oneof" json:"github,omitempty"`                              // GitHub (varchar(255))
+	SocialLinks   *structpb.Struct       `protobuf:"bytes,14,opt,name=social_links,json=socialLinks,proto3,oneof" json:"social_links,omitempty"` // 社交链接 (JSONB)
+	Skills        *structpb.Struct       `protobuf:"bytes,15,opt,name=skills,proto3,oneof" json:"skills,omitempty"`                              // 技能 (JSONB)
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`             // 创建时间
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,17,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`             // 更新时间
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,18,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`       // 软删除时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -120,27 +117,6 @@ func (x *UserProfile) GetNickname() string {
 func (x *UserProfile) GetDisplayName() string {
 	if x != nil && x.DisplayName != nil {
 		return *x.DisplayName
-	}
-	return ""
-}
-
-func (x *UserProfile) GetAvatarId() string {
-	if x != nil && x.AvatarId != nil {
-		return *x.AvatarId
-	}
-	return ""
-}
-
-func (x *UserProfile) GetBackgroundId() string {
-	if x != nil && x.BackgroundId != nil {
-		return *x.BackgroundId
-	}
-	return ""
-}
-
-func (x *UserProfile) GetBackgroundIds() string {
-	if x != nil && x.BackgroundIds != nil {
-		return *x.BackgroundIds
 	}
 	return ""
 }
@@ -232,24 +208,21 @@ func (x *UserProfile) GetDeletedAt() *timestamppb.Timestamp {
 // UserProfile Service Messages
 type CreateUserProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                               // 用户ID (UUID) - 直接引用 users.id
-	Role          *string                `protobuf:"bytes,2,opt,name=role,proto3,oneof" json:"role,omitempty"`                                     // 角色 (varchar(100))
-	FirstName     *string                `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3,oneof" json:"first_name,omitempty"`          // 名 (varchar(100))
-	LastName      *string                `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3,oneof" json:"last_name,omitempty"`             // 姓 (varchar(100))
-	Nickname      *string                `protobuf:"bytes,5,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`                             // 昵称 (varchar(50))
-	DisplayName   *string                `protobuf:"bytes,6,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`    // 显示名称 (varchar(100))
-	AvatarId      *string                `protobuf:"bytes,7,opt,name=avatar_id,json=avatarId,proto3,oneof" json:"avatar_id,omitempty"`             // 头像ID (UUID)
-	BackgroundId  *string                `protobuf:"bytes,8,opt,name=background_id,json=backgroundId,proto3,oneof" json:"background_id,omitempty"` // 背景ID (UUID)
-	BackgroundIds []string               `protobuf:"bytes,9,rep,name=background_ids,json=backgroundIds,proto3" json:"background_ids,omitempty"`    // 背景ID数组 (uuid[])
-	Bio           *string                `protobuf:"bytes,10,opt,name=bio,proto3,oneof" json:"bio,omitempty"`                                      // 简介 (text)
-	Birthday      *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=birthday,proto3,oneof" json:"birthday,omitempty"`                            // 生日 (date)
-	Age           *int32                 `protobuf:"varint,12,opt,name=age,proto3,oneof" json:"age,omitempty"`                                     // 年龄 (integer)
-	Gender        *string                `protobuf:"bytes,13,opt,name=gender,proto3,oneof" json:"gender,omitempty"`                                // 性别 (varchar(20))
-	Location      *string                `protobuf:"bytes,14,opt,name=location,proto3,oneof" json:"location,omitempty"`                            // 位置 (varchar(255))
-	Website       *string                `protobuf:"bytes,15,opt,name=website,proto3,oneof" json:"website,omitempty"`                              // 网站 (varchar(255))
-	Github        *string                `protobuf:"bytes,16,opt,name=github,proto3,oneof" json:"github,omitempty"`                                // GitHub (varchar(255))
-	SocialLinks   *structpb.Struct       `protobuf:"bytes,17,opt,name=social_links,json=socialLinks,proto3,oneof" json:"social_links,omitempty"`   // 社交链接 (JSONB)
-	Skills        *structpb.Struct       `protobuf:"bytes,18,opt,name=skills,proto3,oneof" json:"skills,omitempty"`                                // 技能 (JSONB)
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                             // 用户ID (UUID) - 直接引用 users.id
+	Role          *string                `protobuf:"bytes,2,opt,name=role,proto3,oneof" json:"role,omitempty"`                                   // 角色 (varchar(100))
+	FirstName     *string                `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3,oneof" json:"first_name,omitempty"`        // 名 (varchar(100))
+	LastName      *string                `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3,oneof" json:"last_name,omitempty"`           // 姓 (varchar(100))
+	Nickname      *string                `protobuf:"bytes,5,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`                           // 昵称 (varchar(50))
+	DisplayName   *string                `protobuf:"bytes,6,opt,name=display_name,json=displayName,proto3,oneof" json:"display_name,omitempty"`  // 显示名称 (varchar(100))
+	Bio           *string                `protobuf:"bytes,7,opt,name=bio,proto3,oneof" json:"bio,omitempty"`                                     // 简介 (text)
+	Birthday      *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=birthday,proto3,oneof" json:"birthday,omitempty"`                           // 生日 (date)
+	Age           *int32                 `protobuf:"varint,9,opt,name=age,proto3,oneof" json:"age,omitempty"`                                    // 年龄 (integer)
+	Gender        *string                `protobuf:"bytes,10,opt,name=gender,proto3,oneof" json:"gender,omitempty"`                              // 性别 (varchar(20))
+	Location      *string                `protobuf:"bytes,11,opt,name=location,proto3,oneof" json:"location,omitempty"`                          // 位置 (varchar(255))
+	Website       *string                `protobuf:"bytes,12,opt,name=website,proto3,oneof" json:"website,omitempty"`                            // 网站 (varchar(255))
+	Github        *string                `protobuf:"bytes,13,opt,name=github,proto3,oneof" json:"github,omitempty"`                              // GitHub (varchar(255))
+	SocialLinks   *structpb.Struct       `protobuf:"bytes,14,opt,name=social_links,json=socialLinks,proto3,oneof" json:"social_links,omitempty"` // 社交链接 (JSONB)
+	Skills        *structpb.Struct       `protobuf:"bytes,15,opt,name=skills,proto3,oneof" json:"skills,omitempty"`                              // 技能 (JSONB)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -324,27 +297,6 @@ func (x *CreateUserProfileRequest) GetDisplayName() string {
 		return *x.DisplayName
 	}
 	return ""
-}
-
-func (x *CreateUserProfileRequest) GetAvatarId() string {
-	if x != nil && x.AvatarId != nil {
-		return *x.AvatarId
-	}
-	return ""
-}
-
-func (x *CreateUserProfileRequest) GetBackgroundId() string {
-	if x != nil && x.BackgroundId != nil {
-		return *x.BackgroundId
-	}
-	return ""
-}
-
-func (x *CreateUserProfileRequest) GetBackgroundIds() []string {
-	if x != nil {
-		return x.BackgroundIds
-	}
-	return nil
 }
 
 func (x *CreateUserProfileRequest) GetBio() string {
@@ -722,7 +674,7 @@ var File_directory_user_profile_proto protoreflect.FileDescriptor
 
 const file_directory_user_profile_proto_rawDesc = "" +
 	"\n" +
-	"\x1cdirectory/user_profile.proto\x12\fuser_profile\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xbd\b\n" +
+	"\x1cdirectory/user_profile.proto\x12\fuser_profile\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x92\a\n" +
 	"\vUserProfile\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\x04role\x18\x02 \x01(\tH\x00R\x04role\x88\x01\x01\x12\"\n" +
@@ -730,37 +682,30 @@ const file_directory_user_profile_proto_rawDesc = "" +
 	"first_name\x18\x03 \x01(\tH\x01R\tfirstName\x88\x01\x01\x12 \n" +
 	"\tlast_name\x18\x04 \x01(\tH\x02R\blastName\x88\x01\x01\x12\x1f\n" +
 	"\bnickname\x18\x05 \x01(\tH\x03R\bnickname\x88\x01\x01\x12&\n" +
-	"\fdisplay_name\x18\x06 \x01(\tH\x04R\vdisplayName\x88\x01\x01\x12 \n" +
-	"\tavatar_id\x18\a \x01(\tH\x05R\bavatarId\x88\x01\x01\x12(\n" +
-	"\rbackground_id\x18\b \x01(\tH\x06R\fbackgroundId\x88\x01\x01\x12*\n" +
-	"\x0ebackground_ids\x18\t \x01(\tH\aR\rbackgroundIds\x88\x01\x01\x12\x15\n" +
-	"\x03bio\x18\n" +
-	" \x01(\tH\bR\x03bio\x88\x01\x01\x12;\n" +
-	"\bbirthday\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\tR\bbirthday\x88\x01\x01\x12\x15\n" +
-	"\x03age\x18\f \x01(\x05H\n" +
-	"R\x03age\x88\x01\x01\x12\x1b\n" +
-	"\x06gender\x18\r \x01(\tH\vR\x06gender\x88\x01\x01\x12\x1f\n" +
-	"\blocation\x18\x0e \x01(\tH\fR\blocation\x88\x01\x01\x12\x1d\n" +
-	"\awebsite\x18\x0f \x01(\tH\rR\awebsite\x88\x01\x01\x12\x1b\n" +
-	"\x06github\x18\x10 \x01(\tH\x0eR\x06github\x88\x01\x01\x12?\n" +
-	"\fsocial_links\x18\x11 \x01(\v2\x17.google.protobuf.StructH\x0fR\vsocialLinks\x88\x01\x01\x124\n" +
-	"\x06skills\x18\x12 \x01(\v2\x17.google.protobuf.StructH\x10R\x06skills\x88\x01\x01\x129\n" +
+	"\fdisplay_name\x18\x06 \x01(\tH\x04R\vdisplayName\x88\x01\x01\x12\x15\n" +
+	"\x03bio\x18\a \x01(\tH\x05R\x03bio\x88\x01\x01\x12;\n" +
+	"\bbirthday\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x06R\bbirthday\x88\x01\x01\x12\x15\n" +
+	"\x03age\x18\t \x01(\x05H\aR\x03age\x88\x01\x01\x12\x1b\n" +
+	"\x06gender\x18\n" +
+	" \x01(\tH\bR\x06gender\x88\x01\x01\x12\x1f\n" +
+	"\blocation\x18\v \x01(\tH\tR\blocation\x88\x01\x01\x12\x1d\n" +
+	"\awebsite\x18\f \x01(\tH\n" +
+	"R\awebsite\x88\x01\x01\x12\x1b\n" +
+	"\x06github\x18\r \x01(\tH\vR\x06github\x88\x01\x01\x12?\n" +
+	"\fsocial_links\x18\x0e \x01(\v2\x17.google.protobuf.StructH\fR\vsocialLinks\x88\x01\x01\x124\n" +
+	"\x06skills\x18\x0f \x01(\v2\x17.google.protobuf.StructH\rR\x06skills\x88\x01\x01\x129\n" +
 	"\n" +
-	"created_at\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
+	"updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\n" +
-	"deleted_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tdeletedAt\x88\x01\x01B\a\n" +
+	"deleted_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\tdeletedAt\x88\x01\x01B\a\n" +
 	"\x05_roleB\r\n" +
 	"\v_first_nameB\f\n" +
 	"\n" +
 	"_last_nameB\v\n" +
 	"\t_nicknameB\x0f\n" +
-	"\r_display_nameB\f\n" +
-	"\n" +
-	"_avatar_idB\x10\n" +
-	"\x0e_background_idB\x11\n" +
-	"\x0f_background_idsB\x06\n" +
+	"\r_display_nameB\x06\n" +
 	"\x04_bioB\v\n" +
 	"\t_birthdayB\x06\n" +
 	"\x04_ageB\t\n" +
@@ -771,7 +716,7 @@ const file_directory_user_profile_proto_rawDesc = "" +
 	"\a_githubB\x0f\n" +
 	"\r_social_linksB\t\n" +
 	"\a_skillsB\r\n" +
-	"\v_deleted_at\"\xed\x06\n" +
+	"\v_deleted_at\"\xda\x05\n" +
 	"\x18CreateUserProfileRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\x04role\x18\x02 \x01(\tH\x00R\x04role\x88\x01\x01\x12\"\n" +
@@ -779,30 +724,24 @@ const file_directory_user_profile_proto_rawDesc = "" +
 	"first_name\x18\x03 \x01(\tH\x01R\tfirstName\x88\x01\x01\x12 \n" +
 	"\tlast_name\x18\x04 \x01(\tH\x02R\blastName\x88\x01\x01\x12\x1f\n" +
 	"\bnickname\x18\x05 \x01(\tH\x03R\bnickname\x88\x01\x01\x12&\n" +
-	"\fdisplay_name\x18\x06 \x01(\tH\x04R\vdisplayName\x88\x01\x01\x12 \n" +
-	"\tavatar_id\x18\a \x01(\tH\x05R\bavatarId\x88\x01\x01\x12(\n" +
-	"\rbackground_id\x18\b \x01(\tH\x06R\fbackgroundId\x88\x01\x01\x12%\n" +
-	"\x0ebackground_ids\x18\t \x03(\tR\rbackgroundIds\x12\x15\n" +
-	"\x03bio\x18\n" +
-	" \x01(\tH\aR\x03bio\x88\x01\x01\x12;\n" +
-	"\bbirthday\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\bR\bbirthday\x88\x01\x01\x12\x15\n" +
-	"\x03age\x18\f \x01(\x05H\tR\x03age\x88\x01\x01\x12\x1b\n" +
-	"\x06gender\x18\r \x01(\tH\n" +
-	"R\x06gender\x88\x01\x01\x12\x1f\n" +
-	"\blocation\x18\x0e \x01(\tH\vR\blocation\x88\x01\x01\x12\x1d\n" +
-	"\awebsite\x18\x0f \x01(\tH\fR\awebsite\x88\x01\x01\x12\x1b\n" +
-	"\x06github\x18\x10 \x01(\tH\rR\x06github\x88\x01\x01\x12?\n" +
-	"\fsocial_links\x18\x11 \x01(\v2\x17.google.protobuf.StructH\x0eR\vsocialLinks\x88\x01\x01\x124\n" +
-	"\x06skills\x18\x12 \x01(\v2\x17.google.protobuf.StructH\x0fR\x06skills\x88\x01\x01B\a\n" +
+	"\fdisplay_name\x18\x06 \x01(\tH\x04R\vdisplayName\x88\x01\x01\x12\x15\n" +
+	"\x03bio\x18\a \x01(\tH\x05R\x03bio\x88\x01\x01\x12;\n" +
+	"\bbirthday\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x06R\bbirthday\x88\x01\x01\x12\x15\n" +
+	"\x03age\x18\t \x01(\x05H\aR\x03age\x88\x01\x01\x12\x1b\n" +
+	"\x06gender\x18\n" +
+	" \x01(\tH\bR\x06gender\x88\x01\x01\x12\x1f\n" +
+	"\blocation\x18\v \x01(\tH\tR\blocation\x88\x01\x01\x12\x1d\n" +
+	"\awebsite\x18\f \x01(\tH\n" +
+	"R\awebsite\x88\x01\x01\x12\x1b\n" +
+	"\x06github\x18\r \x01(\tH\vR\x06github\x88\x01\x01\x12?\n" +
+	"\fsocial_links\x18\x0e \x01(\v2\x17.google.protobuf.StructH\fR\vsocialLinks\x88\x01\x01\x124\n" +
+	"\x06skills\x18\x0f \x01(\v2\x17.google.protobuf.StructH\rR\x06skills\x88\x01\x01B\a\n" +
 	"\x05_roleB\r\n" +
 	"\v_first_nameB\f\n" +
 	"\n" +
 	"_last_nameB\v\n" +
 	"\t_nicknameB\x0f\n" +
-	"\r_display_nameB\f\n" +
-	"\n" +
-	"_avatar_idB\x10\n" +
-	"\x0e_background_idB\x06\n" +
+	"\r_display_nameB\x06\n" +
 	"\x04_bioB\v\n" +
 	"\t_birthdayB\x06\n" +
 	"\x04_ageB\t\n" +

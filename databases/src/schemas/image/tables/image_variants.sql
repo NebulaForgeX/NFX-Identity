@@ -43,8 +43,7 @@ CREATE INDEX "idx_image_variants_image_id" ON "image"."image_variants"("image_id
 CREATE INDEX "idx_image_variants_variant_key" ON "image"."image_variants"("variant_key");
 CREATE INDEX "idx_image_variants_url" ON "image"."image_variants"("url") WHERE "url" IS NOT NULL;
 
--- Composite index for common query pattern (get all variants for an image)
-CREATE INDEX "idx_image_variants_image_key" ON "image"."image_variants"("image_id", "variant_key");
+-- Note: Composite index (image_id, variant_key) is already created by UNIQUE constraint above
 
 -- Table and column comments
 COMMENT ON TABLE "image"."image_variants" IS 'Stores derived versions of images: thumbnails, resized versions, format conversions';

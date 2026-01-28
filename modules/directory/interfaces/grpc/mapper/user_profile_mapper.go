@@ -40,23 +40,6 @@ func UserProfileROToProto(v *userProfileAppResult.UserProfileRO) *userprofilepb.
 		userProfile.DisplayName = v.DisplayName
 	}
 
-	if v.AvatarID != nil {
-		avatarID := v.AvatarID.String()
-		userProfile.AvatarId = &avatarID
-	}
-
-	if v.BackgroundID != nil {
-		backgroundID := v.BackgroundID.String()
-		userProfile.BackgroundId = &backgroundID
-	}
-
-	if len(v.BackgroundIDs) > 0 {
-		// proto定义background_ids是string，需要将UUID数组序列化为字符串
-		// 这里简单处理，将第一个ID作为字符串，或者可以序列化为JSON字符串
-		backgroundIDsStr := v.BackgroundIDs[0].String()
-		userProfile.BackgroundIds = &backgroundIDsStr
-	}
-
 	if v.Bio != nil {
 		userProfile.Bio = v.Bio
 	}

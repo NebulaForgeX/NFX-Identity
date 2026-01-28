@@ -1,0 +1,64 @@
+syntax = "proto3";
+package user_avatar;
+
+option go_package = "nfxid/protos/gen/directory/user_avatar;useravatarpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户头像信息
+// One user has one avatar (one-to-one relationship)
+message UserAvatar {
+  string user_id = 1;                      // 用户ID (UUID) - Primary key
+  string image_id = 2;                     // 图片ID (UUID) - References image.images.id
+  google.protobuf.Timestamp created_at = 3;      // 创建时间
+  google.protobuf.Timestamp updated_at = 4;      // 更新时间
+}
+
+// UserAvatar 服务 - 供其他服务通过 gRPC 管理用户头像
+service UserAvatarService {
+  // 创建或更新用户头像
+  rpc CreateOrUpdateUserAvatar (CreateOrUpdateUserAvatarRequest) returns (CreateOrUpdateUserAvatarResponse);
+  
+  // 根据用户ID获取用户头像
+  rpc GetUserAvatarByUserID (GetUserAvatarByUserIDRequest) returns (GetUserAvatarByUserIDResponse);
+  
+  // 根据图片ID获取用户头像
+  rpc GetUserAvatarByImageID (GetUserAvatarByImageIDRequest) returns (GetUserAvatarByImageIDResponse);
+  
+  // 删除用户头像
+  rpc DeleteUserAvatar (DeleteUserAvatarRequest) returns (DeleteUserAvatarResponse);
+}
+
+// UserAvatar Service Messages
+message CreateOrUpdateUserAvatarRequest {
+  string user_id = 1;                    // 用户ID (UUID)
+  string image_id = 2;                   // 图片ID (UUID)
+}
+
+message CreateOrUpdateUserAvatarResponse {
+  UserAvatar user_avatar = 1;
+}
+
+message GetUserAvatarByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserAvatarByUserIDResponse {
+  optional UserAvatar user_avatar = 1;
+}
+
+message GetUserAvatarByImageIDRequest {
+  string image_id = 1;
+}
+
+message GetUserAvatarByImageIDResponse {
+  optional UserAvatar user_avatar = 1;
+}
+
+message DeleteUserAvatarRequest {
+  string user_id = 1;
+}
+
+message DeleteUserAvatarResponse {
+  bool success = 1;
+}

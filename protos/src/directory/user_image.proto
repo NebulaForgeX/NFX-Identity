@@ -1,0 +1,115 @@
+syntax = "proto3";
+package user_image;
+
+option go_package = "nfxid/protos/gen/directory/user_image;userimagepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 用户图片信息
+// One user can have multiple images with ordering
+// display_order = 0 means the current/active image
+message UserImage {
+  string id = 1;                           // 图片关联ID (UUID)
+  string user_id = 2;                      // 用户ID (UUID)
+  string image_id = 3;                     // 图片ID (UUID) - References image.images.id
+  int32 display_order = 4;                // 显示顺序 (0 = current/active, higher = later)
+  google.protobuf.Timestamp created_at = 5;      // 创建时间
+  google.protobuf.Timestamp updated_at = 6;      // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 7; // 软删除时间
+}
+
+// UserImage 服务 - 供其他服务通过 gRPC 管理用户图片
+service UserImageService {
+  // 创建用户图片
+  rpc CreateUserImage (CreateUserImageRequest) returns (CreateUserImageResponse);
+  
+  // 根据ID获取用户图片
+  rpc GetUserImageByID (GetUserImageByIDRequest) returns (GetUserImageByIDResponse);
+  
+  // 根据用户ID获取用户图片列表
+  rpc GetUserImagesByUserID (GetUserImagesByUserIDRequest) returns (GetUserImagesByUserIDResponse);
+  
+  // 根据图片ID获取用户图片列表
+  rpc GetUserImagesByImageID (GetUserImagesByImageIDRequest) returns (GetUserImagesByImageIDResponse);
+  
+  // 获取用户当前图片（display_order = 0）
+  rpc GetCurrentUserImageByUserID (GetCurrentUserImageByUserIDRequest) returns (GetCurrentUserImageByUserIDResponse);
+  
+  // 更新用户图片显示顺序
+  rpc UpdateUserImageDisplayOrder (UpdateUserImageDisplayOrderRequest) returns (UpdateUserImageDisplayOrderResponse);
+  
+  // 更新用户图片ID
+  rpc UpdateUserImageImageID (UpdateUserImageImageIDRequest) returns (UpdateUserImageImageIDResponse);
+  
+  // 删除用户图片
+  rpc DeleteUserImage (DeleteUserImageRequest) returns (DeleteUserImageResponse);
+}
+
+// UserImage Service Messages
+message CreateUserImageRequest {
+  string user_id = 1;                    // 用户ID (UUID)
+  string image_id = 2;                    // 图片ID (UUID)
+  int32 display_order = 3;               // 显示顺序 (0 = current/active)
+}
+
+message CreateUserImageResponse {
+  UserImage user_image = 1;
+}
+
+message GetUserImageByIDRequest {
+  string id = 1;
+}
+
+message GetUserImageByIDResponse {
+  UserImage user_image = 1;
+}
+
+message GetUserImagesByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetUserImagesByUserIDResponse {
+  repeated UserImage user_images = 1;
+}
+
+message GetUserImagesByImageIDRequest {
+  string image_id = 1;
+}
+
+message GetUserImagesByImageIDResponse {
+  repeated UserImage user_images = 1;
+}
+
+message GetCurrentUserImageByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetCurrentUserImageByUserIDResponse {
+  optional UserImage user_image = 1;
+}
+
+message UpdateUserImageDisplayOrderRequest {
+  string id = 1;                         // 用户图片ID (UUID)
+  int32 display_order = 2;               // 新的显示顺序
+}
+
+message UpdateUserImageDisplayOrderResponse {
+  UserImage user_image = 1;
+}
+
+message UpdateUserImageImageIDRequest {
+  string id = 1;                         // 用户图片ID (UUID)
+  string image_id = 2;                    // 新的图片ID (UUID)
+}
+
+message UpdateUserImageImageIDResponse {
+  UserImage user_image = 1;
+}
+
+message DeleteUserImageRequest {
+  string id = 1;                         // 用户图片ID (UUID)
+}
+
+message DeleteUserImageResponse {
+  bool success = 1;
+}

@@ -5,9 +5,11 @@ import (
 
 	badgeApp "nfxid/modules/directory/application/badges"
 	userApp "nfxid/modules/directory/application/users"
+	userAvatarApp "nfxid/modules/directory/application/user_avatars"
 	userBadgeApp "nfxid/modules/directory/application/user_badges"
 	userEducationApp "nfxid/modules/directory/application/user_educations"
 	userEmailApp "nfxid/modules/directory/application/user_emails"
+	userImageApp "nfxid/modules/directory/application/user_images"
 	userOccupationApp "nfxid/modules/directory/application/user_occupations"
 	userPhoneApp "nfxid/modules/directory/application/user_phones"
 	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
@@ -31,6 +33,8 @@ type httpDeps interface {
 	UserPhoneAppSvc() *userPhoneApp.Service
 	UserPreferenceAppSvc() *userPreferenceApp.Service
 	UserProfileAppSvc() *userProfileApp.Service
+	UserAvatarAppSvc() *userAvatarApp.Service
+	UserImageAppSvc() *userImageApp.Service
 	UserTokenVerifier() token.Verifier
 }
 
@@ -62,6 +66,8 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 		UserPhone:      handler.NewUserPhoneHandler(d.UserPhoneAppSvc()),
 		UserPreference: handler.NewUserPreferenceHandler(d.UserPreferenceAppSvc()),
 		UserProfile:    handler.NewUserProfileHandler(d.UserProfileAppSvc()),
+		UserAvatar:     handler.NewUserAvatarHandler(d.UserAvatarAppSvc()),
+		UserImage:      handler.NewUserImageHandler(d.UserImageAppSvc()),
 	}
 
 	// 注册路由

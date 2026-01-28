@@ -91,5 +91,20 @@ func (r *Router) RegisterRoutes() {
 		auth.Get("/user-profiles/:id", r.handlers.UserProfile.GetByID)
 		auth.Put("/user-profiles/:id", r.handlers.UserProfile.Update)
 		auth.Delete("/user-profiles/:id", r.handlers.UserProfile.Delete)
+
+		// 用户头像相关
+		auth.Post("/user-avatars", r.handlers.UserAvatar.CreateOrUpdate)
+		auth.Get("/user-avatars/:id", r.handlers.UserAvatar.GetByUserID)
+		auth.Put("/user-avatars/:id", r.handlers.UserAvatar.Update)
+		auth.Delete("/user-avatars/:id", r.handlers.UserAvatar.Delete)
+
+		// 用户图片相关
+		auth.Post("/user-images", r.handlers.UserImage.Create)
+		auth.Get("/user-images/:id", r.handlers.UserImage.GetByID)
+		auth.Get("/users/:id/user-images", r.handlers.UserImage.GetByUserID)
+		auth.Get("/users/:id/user-images/current", r.handlers.UserImage.GetCurrent)
+		auth.Put("/user-images/:id", r.handlers.UserImage.Update)
+		auth.Patch("/user-images/:id/display-order", r.handlers.UserImage.UpdateDisplayOrder)
+		auth.Delete("/user-images/:id", r.handlers.UserImage.Delete)
 	}
 }

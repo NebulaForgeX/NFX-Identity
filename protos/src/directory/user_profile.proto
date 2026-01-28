@@ -15,21 +15,18 @@ message UserProfile {
   optional string last_name = 4;           // 姓 (varchar(100))
   optional string nickname = 5;            // 昵称 (varchar(50))
   optional string display_name = 6;        // 显示名称 (varchar(100))
-  optional string avatar_id = 7;           // 头像ID (UUID)
-  optional string background_id = 8;       // 背景ID (UUID)
-  optional string background_ids = 9;     // 背景ID数组 (uuid[])
-  optional string bio = 10;                // 简介 (text)
-  optional google.protobuf.Timestamp birthday = 11; // 生日 (date)
-  optional int32 age = 12;                 // 年龄 (integer)
-  optional string gender = 13;             // 性别 (varchar(20))
-  optional string location = 14;           // 位置 (varchar(255))
-  optional string website = 15;            // 网站 (varchar(255))
-  optional string github = 16;             // GitHub (varchar(255))
-  optional google.protobuf.Struct social_links = 17; // 社交链接 (JSONB)
-  optional google.protobuf.Struct skills = 18;      // 技能 (JSONB)
-  google.protobuf.Timestamp created_at = 19;        // 创建时间
-  google.protobuf.Timestamp updated_at = 20;        // 更新时间
-  optional google.protobuf.Timestamp deleted_at = 21; // 软删除时间
+  optional string bio = 7;                // 简介 (text)
+  optional google.protobuf.Timestamp birthday = 8; // 生日 (date)
+  optional int32 age = 9;                 // 年龄 (integer)
+  optional string gender = 10;             // 性别 (varchar(20))
+  optional string location = 11;           // 位置 (varchar(255))
+  optional string website = 12;            // 网站 (varchar(255))
+  optional string github = 13;             // GitHub (varchar(255))
+  optional google.protobuf.Struct social_links = 14; // 社交链接 (JSONB)
+  optional google.protobuf.Struct skills = 15;      // 技能 (JSONB)
+  google.protobuf.Timestamp created_at = 16;        // 创建时间
+  google.protobuf.Timestamp updated_at = 17;        // 更新时间
+  optional google.protobuf.Timestamp deleted_at = 18; // 软删除时间
 }
 
 // UserProfile 服务 - 供其他服务通过 gRPC 管理用户资料
@@ -55,18 +52,15 @@ message CreateUserProfileRequest {
   optional string last_name = 4;         // 姓 (varchar(100))
   optional string nickname = 5;          // 昵称 (varchar(50))
   optional string display_name = 6;      // 显示名称 (varchar(100))
-  optional string avatar_id = 7;         // 头像ID (UUID)
-  optional string background_id = 8;      // 背景ID (UUID)
-  repeated string background_ids = 9;    // 背景ID数组 (uuid[])
-  optional string bio = 10;              // 简介 (text)
-  optional google.protobuf.Timestamp birthday = 11; // 生日 (date)
-  optional int32 age = 12;               // 年龄 (integer)
-  optional string gender = 13;           // 性别 (varchar(20))
-  optional string location = 14;         // 位置 (varchar(255))
-  optional string website = 15;         // 网站 (varchar(255))
-  optional string github = 16;          // GitHub (varchar(255))
-  optional google.protobuf.Struct social_links = 17; // 社交链接 (JSONB)
-  optional google.protobuf.Struct skills = 18;       // 技能 (JSONB)
+  optional string bio = 7;              // 简介 (text)
+  optional google.protobuf.Timestamp birthday = 8; // 生日 (date)
+  optional int32 age = 9;               // 年龄 (integer)
+  optional string gender = 10;           // 性别 (varchar(20))
+  optional string location = 11;         // 位置 (varchar(255))
+  optional string website = 12;         // 网站 (varchar(255))
+  optional string github = 13;          // GitHub (varchar(255))
+  optional google.protobuf.Struct social_links = 14; // 社交链接 (JSONB)
+  optional google.protobuf.Struct skills = 15;       // 技能 (JSONB)
 }
 
 message CreateUserProfileResponse {

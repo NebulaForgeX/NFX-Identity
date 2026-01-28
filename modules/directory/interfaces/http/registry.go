@@ -14,4 +14,6 @@ type Registry struct {
 	UserPhone       *handler.UserPhoneHandler
 	UserPreference  *handler.UserPreferenceHandler
 	UserProfile     *handler.UserProfileHandler
+	UserAvatar      *handler.UserAvatarHandler
+	UserImage       *handler.UserImageHandler
 }

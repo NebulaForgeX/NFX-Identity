@@ -24,7 +24,7 @@ func (s *Service) UpdateUserProfile(ctx context.Context, cmd userProfileCommands
 	}
 
 	// Update domain entity
-	if err := userProfile.Update(cmd.Role, cmd.FirstName, cmd.LastName, cmd.Nickname, cmd.DisplayName, cmd.AvatarID, cmd.BackgroundID, cmd.BackgroundIDs, cmd.Bio, cmd.Gender, cmd.Location, cmd.Website, cmd.Github, birthday, cmd.Age, cmd.SocialLinks, cmd.Skills); err != nil {
+	if err := userProfile.Update(cmd.Role, cmd.FirstName, cmd.LastName, cmd.Nickname, cmd.DisplayName, cmd.Bio, cmd.Gender, cmd.Location, cmd.Website, cmd.Github, birthday, cmd.Age, cmd.SocialLinks, cmd.Skills); err != nil {
 		return err
 	}
 

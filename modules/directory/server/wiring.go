@@ -7,9 +7,11 @@ import (
 
 	badgeApp "nfxid/modules/directory/application/badges"
 	resourceApp "nfxid/modules/directory/application/resource"
+	userAvatarApp "nfxid/modules/directory/application/user_avatars"
 	userBadgeApp "nfxid/modules/directory/application/user_badges"
 	userEducationApp "nfxid/modules/directory/application/user_educations"
 	userEmailApp "nfxid/modules/directory/application/user_emails"
+	userImageApp "nfxid/modules/directory/application/user_images"
 	userOccupationApp "nfxid/modules/directory/application/user_occupations"
 	userPhoneApp "nfxid/modules/directory/application/user_phones"
 	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
@@ -17,9 +19,11 @@ import (
 	userApp "nfxid/modules/directory/application/users"
 	"nfxid/modules/directory/config"
 	badgeRepo "nfxid/modules/directory/infrastructure/repository/badges"
+	userAvatarRepo "nfxid/modules/directory/infrastructure/repository/user_avatars"
 	userBadgeRepo "nfxid/modules/directory/infrastructure/repository/user_badges"
 	userEducationRepo "nfxid/modules/directory/infrastructure/repository/user_educations"
 	userEmailRepo "nfxid/modules/directory/infrastructure/repository/user_emails"
+	userImageRepo "nfxid/modules/directory/infrastructure/repository/user_images"
 	userOccupationRepo "nfxid/modules/directory/infrastructure/repository/user_occupations"
 	userPhoneRepo "nfxid/modules/directory/infrastructure/repository/user_phones"
 	userPreferenceRepo "nfxid/modules/directory/infrastructure/repository/user_preferences"
@@ -52,6 +56,8 @@ type Dependencies struct {
 	userPhoneAppSvc      *userPhoneApp.Service
 	userPreferenceAppSvc *userPreferenceApp.Service
 	userProfileAppSvc    *userProfileApp.Service
+	userAvatarAppSvc     *userAvatarApp.Service
+	userImageAppSvc      *userImageApp.Service
 	userTokenVerifier    token.Verifier
 	serverTokenVerifier  token.Verifier
 	resourceSvc          *resourceApp.Service
@@ -114,6 +120,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	userPhoneRepoInstance := userPhoneRepo.NewRepo(postgres.DB())
 	userPreferenceRepoInstance := userPreferenceRepo.NewRepo(postgres.DB())
 	userProfileRepoInstance := userProfileRepo.NewRepo(postgres.DB())
+	userAvatarRepoInstance := userAvatarRepo.NewRepo(postgres.DB())
+	userImageRepoInstance := userImageRepo.NewRepo(postgres.DB())
 
 	//! === Application Services ===
 	userAppSvc := userApp.NewService(userRepoInstance)
@@ -125,6 +133,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	userPhoneAppSvc := userPhoneApp.NewService(userPhoneRepoInstance)
 	userPreferenceAppSvc := userPreferenceApp.NewService(userPreferenceRepoInstance)
 	userProfileAppSvc := userProfileApp.NewService(userProfileRepoInstance)
+	userAvatarAppSvc := userAvatarApp.NewService(userAvatarRepoInstance)
+	userImageAppSvc := userImageApp.NewService(userImageRepoInstance)
 
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
@@ -144,6 +154,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userPhoneAppSvc:      userPhoneAppSvc,
 		userPreferenceAppSvc: userPreferenceAppSvc,
 		userProfileAppSvc:    userProfileAppSvc,
+		userAvatarAppSvc:     userAvatarAppSvc,
+		userImageAppSvc:      userImageAppSvc,
 		userTokenVerifier:    userTokenVerifier,
 		serverTokenVerifier:  serverTokenVerifier,
 		resourceSvc:          resourceSvc,
@@ -173,12 +185,14 @@ func (d *Dependencies) UserPreferenceAppSvc() *userPreferenceApp.Service {
 	return d.userPreferenceAppSvc
 }
 func (d *Dependencies) UserProfileAppSvc() *userProfileApp.Service { return d.userProfileAppSvc }
+func (d *Dependencies) UserAvatarAppSvc() *userAvatarApp.Service   { return d.userAvatarAppSvc }
+func (d *Dependencies) UserImageAppSvc() *userImageApp.Service     { return d.userImageAppSvc }
 func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
-func (d *Dependencies) Postgres() *postgresqlx.Connection         { return d.postgres }
+func (d *Dependencies) Postgres() *postgresqlx.Connection          { return d.postgres }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

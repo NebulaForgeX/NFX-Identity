@@ -1,9 +1,11 @@
 -- atlas:import schema.sql
--- Import users first because user_emails references it
+-- Import users first because other tables reference it
 -- atlas:import tables/users.sql
 -- atlas:import tables/user_emails.sql
 -- atlas:import tables/user_phones.sql
 -- atlas:import tables/user_profiles.sql
+-- atlas:import tables/user_avatars.sql
+-- atlas:import tables/user_images.sql
 -- atlas:import tables/badges.sql
 -- atlas:import tables/user_badges.sql
 -- atlas:import tables/user_educations.sql

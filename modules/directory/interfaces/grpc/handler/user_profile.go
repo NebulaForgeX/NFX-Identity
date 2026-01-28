@@ -33,33 +33,6 @@ func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userpro
 		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
 	}
 
-	// 解析可选UUID字段
-	var avatarID, backgroundID *uuid.UUID
-	if req.AvatarId != nil && *req.AvatarId != "" {
-		id, err := uuid.Parse(*req.AvatarId)
-		if err != nil {
-			return nil, status.Errorf(codes.InvalidArgument, "invalid avatar_id: %v", err)
-		}
-		avatarID = &id
-	}
-	if req.BackgroundId != nil && *req.BackgroundId != "" {
-		id, err := uuid.Parse(*req.BackgroundId)
-		if err != nil {
-			return nil, status.Errorf(codes.InvalidArgument, "invalid background_id: %v", err)
-		}
-		backgroundID = &id
-	}
-
-	// 解析背景ID数组
-	backgroundIDs := make([]uuid.UUID, 0, len(req.BackgroundIds))
-	for _, idStr := range req.BackgroundIds {
-		id, err := uuid.Parse(idStr)
-		if err != nil {
-			continue
-		}
-		backgroundIDs = append(backgroundIDs, id)
-	}
-
 	// 转换 protobuf Struct 到 map[string]interface{}
 	var socialLinks map[string]interface{}
 	if req.SocialLinks != nil {
@@ -87,24 +60,21 @@ func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userpro
 
 	// 创建命令
 	cmd := userProfileAppCommands.CreateUserProfileCmd{
-		UserID:        userID,
-		Role:          req.Role,
-		FirstName:     req.FirstName,
-		LastName:      req.LastName,
-		Nickname:      req.Nickname,
-		DisplayName:   req.DisplayName,
-		AvatarID:      avatarID,
-		BackgroundID:  backgroundID,
-		BackgroundIDs: backgroundIDs,
-		Bio:           req.Bio,
-		Birthday:      birthday,
-		Age:           age,
-		Gender:        req.Gender,
-		Location:      req.Location,
-		Website:       req.Website,
-		Github:        req.Github,
-		SocialLinks:   socialLinks,
-		Skills:        skills,
+		UserID:      userID,
+		Role:        req.Role,
+		FirstName:   req.FirstName,
+		LastName:    req.LastName,
+		Nickname:    req.Nickname,
+		DisplayName: req.DisplayName,
+		Bio:         req.Bio,
+		Birthday:    birthday,
+		Age:         age,
+		Gender:      req.Gender,
+		Location:    req.Location,
+		Website:     req.Website,
+		Github:      req.Github,
+		SocialLinks: socialLinks,
+		Skills:      skills,
 	}
 
 	// 调用应用服务创建用户资料

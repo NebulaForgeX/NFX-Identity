@@ -10,27 +10,24 @@ import (
 )
 
 type UserProfile struct {
-	ID            uuid.UUID       `gorm:"type:uuid;primaryKey"`
-	Role          *string         `gorm:"type:varchar(100);index:idx_user_profiles_role"`
-	FirstName     *string         `gorm:"type:varchar(100);index:idx_user_profiles_first_and_last_name,priority:1"`
-	LastName      *string         `gorm:"type:varchar(100);index:idx_user_profiles_first_and_last_name,priority:2"`
-	Nickname      *string         `gorm:"type:varchar(50);index:idx_user_profiles_nickname;uniqueIndex:user_profiles_nickname_key"`
-	DisplayName   *string         `gorm:"type:varchar(100);index:idx_user_profiles_display_name"`
-	AvatarID      *uuid.UUID      `gorm:"type:uuid;index:idx_user_profiles_avatar_id"`
-	BackgroundID  *uuid.UUID      `gorm:"type:uuid;index:idx_user_profiles_background_id"`
-	BackgroundIds *string         `gorm:"type:uuid[]"`
-	Bio           *string         `gorm:"type:text"`
-	Birthday      *time.Time      `gorm:"type:date;index:idx_user_profiles_birthday"`
-	Age           *int            `gorm:"type:integer"`
-	Gender        *string         `gorm:"type:varchar(20);index:idx_user_profiles_gender"`
-	Location      *string         `gorm:"type:varchar(255);index:idx_user_profiles_location"`
-	Website       *string         `gorm:"type:varchar(255);index:idx_user_profiles_website"`
-	Github        *string         `gorm:"type:varchar(255);index:idx_user_profiles_github"`
-	SocialLinks   *datatypes.JSON `gorm:"type:jsonb"`
-	Skills        *datatypes.JSON `gorm:"type:jsonb"`
-	CreatedAt     time.Time       `gorm:"autoCreateTime"`
-	UpdatedAt     time.Time       `gorm:"autoUpdateTime"`
-	DeletedAt     gorm.DeletedAt  `gorm:"index"`
+	ID          uuid.UUID       `gorm:"type:uuid;primaryKey"`
+	Role        *string         `gorm:"type:varchar(100);index:idx_user_profiles_role"`
+	FirstName   *string         `gorm:"type:varchar(100);index:idx_user_profiles_first_and_last_name,priority:1"`
+	LastName    *string         `gorm:"type:varchar(100);index:idx_user_profiles_first_and_last_name,priority:2"`
+	Nickname    *string         `gorm:"type:varchar(50);index:idx_user_profiles_nickname;uniqueIndex:user_profiles_nickname_key"`
+	DisplayName *string         `gorm:"type:varchar(100);index:idx_user_profiles_display_name"`
+	Bio         *string         `gorm:"type:text"`
+	Birthday    *time.Time      `gorm:"type:date;index:idx_user_profiles_birthday"`
+	Age         *int            `gorm:"type:integer"`
+	Gender      *string         `gorm:"type:varchar(20);index:idx_user_profiles_gender"`
+	Location    *string         `gorm:"type:varchar(255);index:idx_user_profiles_location"`
+	Website     *string         `gorm:"type:varchar(255);index:idx_user_profiles_website"`
+	Github      *string         `gorm:"type:varchar(255);index:idx_user_profiles_github"`
+	SocialLinks *datatypes.JSON `gorm:"type:jsonb"`
+	Skills      *datatypes.JSON `gorm:"type:jsonb"`
+	CreatedAt   time.Time       `gorm:"autoCreateTime"`
+	UpdatedAt   time.Time       `gorm:"autoUpdateTime"`
+	DeletedAt   gorm.DeletedAt  `gorm:"index"`
 }
 
 func (UserProfile) TableName() string { return "directory.user_profiles" }
@@ -43,31 +40,28 @@ func (m *UserProfile) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var UserProfileCols = struct {
-	ID, Role, FirstName, LastName, Nickname, DisplayName, AvatarID,
-	BackgroundID, BackgroundIds, Bio, Birthday, Age, Gender, Location,
-	Website, Github, SocialLinks, Skills, CreatedAt, UpdatedAt, DeletedAt string
+	ID, Role, FirstName, LastName, Nickname, DisplayName, Bio,
+	Birthday, Age, Gender, Location, Website, Github, SocialLinks,
+	Skills, CreatedAt, UpdatedAt, DeletedAt string
 }{
-	ID:            "id",
-	Role:          "role",
-	FirstName:     "first_name",
-	LastName:      "last_name",
-	Nickname:      "nickname",
-	DisplayName:   "display_name",
-	AvatarID:      "avatar_id",
-	BackgroundID:  "background_id",
-	BackgroundIds: "background_ids",
-	Bio:           "bio",
-	Birthday:      "birthday",
-	Age:           "age",
-	Gender:        "gender",
-	Location:      "location",
-	Website:       "website",
-	Github:        "github",
-	SocialLinks:   "social_links",
-	Skills:        "skills",
-	CreatedAt:     "created_at",
-	UpdatedAt:     "updated_at",
-	DeletedAt:     "deleted_at",
+	ID:          "id",
+	Role:        "role",
+	FirstName:   "first_name",
+	LastName:    "last_name",
+	Nickname:    "nickname",
+	DisplayName: "display_name",
+	Bio:         "bio",
+	Birthday:    "birthday",
+	Age:         "age",
+	Gender:      "gender",
+	Location:    "location",
+	Website:     "website",
+	Github:      "github",
+	SocialLinks: "social_links",
+	Skills:      "skills",
+	CreatedAt:   "created_at",
+	UpdatedAt:   "updated_at",
+	DeletedAt:   "deleted_at",
 }
 
 const (
