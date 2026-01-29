@@ -47,6 +47,15 @@ export const URL_PATHS = {
     CREATE_SCOPE_PERMISSION: "/access/auth/scope-permissions",
     GET_SCOPE_PERMISSION: "/access/auth/scope-permissions/:id",
     DELETE_SCOPE_PERMISSION: "/access/auth/scope-permissions/:id",
+    // Action 相关 - 需要认证
+    CREATE_ACTION: "/access/auth/actions",
+    GET_ACTION: "/access/auth/actions/:id",
+    GET_ACTION_BY_KEY: "/access/auth/actions/key/:key",
+    // ActionRequirement 相关（Permission 关联的 Action）- 需要认证
+    CREATE_ACTION_REQUIREMENT: "/access/auth/action-requirements",
+    GET_ACTION_REQUIREMENT: "/access/auth/action-requirements/:id",
+    GET_ACTION_REQUIREMENTS_BY_PERMISSION: "/access/auth/action-requirements/permission/:permission_id",
+    DELETE_ACTION_REQUIREMENT: "/access/auth/action-requirements/:id",
   },
   // Audit 模块 - /audit/auth
   AUDIT: {

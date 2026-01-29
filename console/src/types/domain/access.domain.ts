@@ -67,3 +67,24 @@ export interface ScopePermission {
   permissionId: string;
   createdAt: string;
 }
+
+export interface Action {
+  id: string;
+  key: string;
+  service: string;
+  status: string;
+  name: string;
+  description?: string;
+  isSystem: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface ActionRequirement {
+  id: string;
+  actionId: string;
+  permissionId: string;
+  groupId: number;
+  createdAt: string;
+}

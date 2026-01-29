@@ -1,0 +1,10 @@
+{
+  "title": "Ajouter un rôle",
+  "subtitle": "Créer un nouveau rôle.",
+  "back": "Retour",
+  "createRole": "Créer un rôle",
+  "key": "Clé",
+  "name": "Nom",
+  "description": "Description",
+  "scopeType": "Type de portée"
+}

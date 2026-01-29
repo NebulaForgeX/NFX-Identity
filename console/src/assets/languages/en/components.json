@@ -36,7 +36,12 @@
     "addOccupation": "Add Occupation",
     "editOccupation": "Edit Occupation",
     "editPreference": "Edit Preference",
-    "userSecurity": "User Security"
+    "userSecurity": "User Security",
+    "permission": "Permission",
+    "permissionManagement": "Permission Management",
+    "addRole": "Add Role",
+    "addPermission": "Add Permission",
+    "addAction": "Add Action"
   },
   "searchInput": {
     "placeholder": "Search...",
@@ -65,6 +70,7 @@
     "errorTitle": "Failed to Load",
     "errorDescription": "Please check your network connection or try again later.",
     "errorDetails": "Error Details",
-    "retry": "Retry"
+    "retry": "Retry",
+    "clearLocalData": "Clear local data"
   }
 }

@@ -74,6 +74,25 @@ export interface CreateRolePermissionRequest {
   permissionId: string;
 }
 
+// ========== Action 相关 ==========
+
+export interface CreateActionRequest {
+  key: string;
+  service: string;
+  status: string;
+  name: string;
+  description?: string;
+  isSystem?: boolean;
+}
+
+// ========== ActionRequirement 相关（Permission 关联的 Action） ==========
+
+export interface CreateActionRequirementRequest {
+  actionId: string;
+  permissionId: string;
+  groupId?: number;
+}
+
 // ========== 作用域权限关联相关 ==========
 
 export interface CreateScopePermissionRequest {

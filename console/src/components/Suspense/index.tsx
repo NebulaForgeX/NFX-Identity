@@ -7,6 +7,7 @@ import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
 import { AlertCircle } from "@/assets/icons/lucide";
 import { BounceLoading, ECGLoading, TruckLoading } from "@/animations";
+import { clearLocalData } from "@/utils/clearLocalData";
 
 import styles from "./styles.module.css";
 import SuspenseErrorBoundary from "./SuspenseErrorBoundary";
@@ -114,6 +115,11 @@ const ErrorFallback = memo((props: ErrorFallbackProps) => {
   const defaultErrorDescription = errorDescription ?? t("suspense.errorDescription");
   const defaultRetryText = retryText ?? t("suspense.retry");
   const defaultErrorDetailsText = t("suspense.errorDetails");
+  const clearLocalDataText = t("suspense.clearLocalData");
+
+  const handleClearLocalData = () => {
+    clearLocalData({ navigateToLogin: true });
+  };
 
   if (errorFallback) {
     return <>{errorFallback({ error, retry })}</>;
@@ -135,10 +141,15 @@ const ErrorFallback = memo((props: ErrorFallbackProps) => {
             </details>
           </div>
         )}
-        <button type="button" className={styles.retryButton} onClick={retry}>
-          <span className={styles.retryButtonIcon}>↻</span>
-          <span>{defaultRetryText}</span>
-        </button>
+        <div className={styles.errorActions}>
+          <button type="button" className={styles.retryButton} onClick={retry}>
+            <span className={styles.retryButtonIcon}>↻</span>
+            <span>{defaultRetryText}</span>
+          </button>
+          <button type="button" className={styles.clearLocalDataButton} onClick={handleClearLocalData}>
+            <span>{clearLocalDataText}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ package http
 import (
 	"encoding/json"
 
+	actionApp "nfxid/modules/access/application/actions"
+	actionRequirementApp "nfxid/modules/access/application/action_requirements"
 	grantApp "nfxid/modules/access/application/grants"
 	permissionApp "nfxid/modules/access/application/permissions"
 	roleApp "nfxid/modules/access/application/roles"
@@ -19,6 +21,8 @@ import (
 )
 
 type httpDeps interface {
+	ActionAppSvc() *actionApp.Service
+	ActionRequirementAppSvc() *actionRequirementApp.Service
 	RoleAppSvc() *roleApp.Service
 	PermissionAppSvc() *permissionApp.Service
 	ScopeAppSvc() *scopeApp.Service
@@ -47,12 +51,14 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 
 	// 创建handlers
 	reg := &Registry{
-		Role:            handler.NewRoleHandler(d.RoleAppSvc()),
-		Permission:      handler.NewPermissionHandler(d.PermissionAppSvc()),
-		Scope:           handler.NewScopeHandler(d.ScopeAppSvc()),
-		Grant:           handler.NewGrantHandler(d.GrantAppSvc()),
-		RolePermission:  handler.NewRolePermissionHandler(d.RolePermissionAppSvc()),
-		ScopePermission: handler.NewScopePermissionHandler(d.ScopePermissionAppSvc()),
+		Role:              handler.NewRoleHandler(d.RoleAppSvc()),
+		Permission:        handler.NewPermissionHandler(d.PermissionAppSvc()),
+		Scope:             handler.NewScopeHandler(d.ScopeAppSvc()),
+		Grant:             handler.NewGrantHandler(d.GrantAppSvc()),
+		RolePermission:    handler.NewRolePermissionHandler(d.RolePermissionAppSvc()),
+		ScopePermission:   handler.NewScopePermissionHandler(d.ScopePermissionAppSvc()),
+		Action:            handler.NewActionHandler(d.ActionAppSvc()),
+		ActionRequirement: handler.NewActionRequirementHandler(d.ActionRequirementAppSvc()),
 	}
 
 	// 注册路由

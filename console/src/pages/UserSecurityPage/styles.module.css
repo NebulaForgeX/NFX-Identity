@@ -41,6 +41,36 @@
   gap: 2rem;
 }
 
+.mgmtHeader {
+  margin-bottom: 0.5rem;
+}
+
+.mgmtTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-fg-text);
+  margin: 0 0 0.25rem 0;
+}
+
+.mgmtSubtitle {
+  font-size: 0.9375rem;
+  color: var(--color-fg-muted);
+  margin: 0;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
+
 .card {
   background: var(--color-bg);
   border: 1px solid var(--color-border-4);

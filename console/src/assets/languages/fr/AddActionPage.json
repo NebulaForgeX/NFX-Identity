@@ -1,0 +1,15 @@
+{
+  "title": "Ajouter une action",
+  "subtitle": "Créer et rechercher des actions.",
+  "back": "Retour",
+  "createAction": "Créer une action",
+  "key": "Clé",
+  "name": "Nom",
+  "service": "Service",
+  "status": "Statut",
+  "description": "Description",
+  "lookupActionByKey": "Rechercher une action par clé",
+  "lookup": "Rechercher",
+  "loading": "Chargement...",
+  "systemAction": "Système"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Add Action",
+  "subtitle": "Create and lookup actions.",
+  "back": "Back",
+  "createAction": "Create Action",
+  "key": "Key",
+  "name": "Name",
+  "service": "Service",
+  "status": "Status",
+  "description": "Description",
+  "lookupActionByKey": "Lookup Action by Key",
+  "lookup": "Lookup",
+  "loading": "Loading...",
+  "systemAction": "System"
+}

@@ -28,7 +28,6 @@ const UserSecurityPage = memo(() => {
         <h1 className={styles.title}>{t("title")}</h1>
         <p className={styles.subtitle}>{t("subtitle")}</p>
       </div>
-
       <Suspense
         loadingType="ecg"
         loadingText={t("loading")}

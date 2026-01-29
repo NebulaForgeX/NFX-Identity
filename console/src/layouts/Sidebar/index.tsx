@@ -13,10 +13,12 @@ import {
   Globe,
   GraduationCap,
   Home,
+  Lock,
   LogOut,
   Pencil,
   Settings,
   Shield,
+  Tag,
   User,
 } from "@/assets/icons/lucide";
 import { authEventEmitter, authEvents } from "@/events/auth";
@@ -104,6 +106,45 @@ const Sidebar = memo(
                 >
                   {t("sidebar.userSecurity")}
                 </MenuItem>
+              <SubMenu
+                label={t("sidebar.permission")}
+                icon={<Lock size={20} />}
+                active={
+                  isActiveRoute(location.pathname, ROUTES.PERMISSION_MANAGEMENT) ||
+                  isActiveRoute(location.pathname, ROUTES.PERMISSION_ROLES) ||
+                  isActiveRoute(location.pathname, ROUTES.PERMISSION_PERMISSIONS) ||
+                  isActiveRoute(location.pathname, ROUTES.PERMISSION_ACTIONS)
+                }
+              >
+                <MenuItem
+                  icon={<Eye size={18} />}
+                  component={<Link to={ROUTES.PERMISSION_MANAGEMENT} />}
+                  active={isActiveRoute(location.pathname, ROUTES.PERMISSION_MANAGEMENT)}
+                >
+                  {t("sidebar.permissionManagement")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Settings size={18} />}
+                  component={<Link to={ROUTES.PERMISSION_ROLES} />}
+                  active={isActiveRoute(location.pathname, ROUTES.PERMISSION_ROLES)}
+                >
+                  {t("sidebar.addRole")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Lock size={18} />}
+                  component={<Link to={ROUTES.PERMISSION_PERMISSIONS} />}
+                  active={isActiveRoute(location.pathname, ROUTES.PERMISSION_PERMISSIONS)}
+                >
+                  {t("sidebar.addPermission")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Tag size={18} />}
+                  component={<Link to={ROUTES.PERMISSION_ACTIONS} />}
+                  active={isActiveRoute(location.pathname, ROUTES.PERMISSION_ACTIONS)}
+                >
+                  {t("sidebar.addAction")}
+                </MenuItem>
+              </SubMenu>
               <SubMenu
                 label={t("sidebar.profile")}
                 icon={<User size={20} />}

@@ -14,6 +14,8 @@ export const DOMAIN_ACCESS_SCOPE = "scope";
 export const DOMAIN_ACCESS_GRANT = "grant";
 export const DOMAIN_ACCESS_ROLE_PERMISSION = "rolePermission";
 export const DOMAIN_ACCESS_SCOPE_PERMISSION = "scopePermission";
+export const DOMAIN_ACCESS_ACTION = "action";
+export const DOMAIN_ACCESS_ACTION_REQUIREMENT = "actionRequirement";
 
 //! ================ Domain Audit ================
 export const DOMAIN_AUDIT_EVENT = "event";

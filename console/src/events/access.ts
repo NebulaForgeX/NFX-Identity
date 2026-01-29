@@ -22,6 +22,14 @@ export const accessEvents = {
   // ScopePermission 相关
   INVALIDATE_SCOPE_PERMISSION: "ACCESS:INVALIDATE_SCOPE_PERMISSION",
   INVALIDATE_SCOPE_PERMISSIONS: "ACCESS:INVALIDATE_SCOPE_PERMISSIONS",
+
+  // Action 相关
+  INVALIDATE_ACTION: "ACCESS:INVALIDATE_ACTION",
+  INVALIDATE_ACTIONS: "ACCESS:INVALIDATE_ACTIONS",
+
+  // ActionRequirement 相关
+  INVALIDATE_ACTION_REQUIREMENT: "ACCESS:INVALIDATE_ACTION_REQUIREMENT",
+  INVALIDATE_ACTION_REQUIREMENTS: "ACCESS:INVALIDATE_ACTION_REQUIREMENTS",
 } as const;
 
 type AccessEvent = (typeof accessEvents)[keyof typeof accessEvents];
@@ -40,6 +48,10 @@ class AccessEventEmitter {
     [accessEvents.INVALIDATE_ROLE_PERMISSIONS]: new Set<Function>(),
     [accessEvents.INVALIDATE_SCOPE_PERMISSION]: new Set<Function>(),
     [accessEvents.INVALIDATE_SCOPE_PERMISSIONS]: new Set<Function>(),
+    [accessEvents.INVALIDATE_ACTION]: new Set<Function>(),
+    [accessEvents.INVALIDATE_ACTIONS]: new Set<Function>(),
+    [accessEvents.INVALIDATE_ACTION_REQUIREMENT]: new Set<Function>(),
+    [accessEvents.INVALIDATE_ACTION_REQUIREMENTS]: new Set<Function>(),
   };
 
   on(event: AccessEvent, callback: Function) {

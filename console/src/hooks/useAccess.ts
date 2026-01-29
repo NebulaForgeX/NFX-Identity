@@ -2,18 +2,24 @@ import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 import {
+  CreateAction,
+  CreateActionRequirement,
   CreateGrant,
   CreatePermission,
   CreateRole,
   CreateRolePermission,
   CreateScope,
   CreateScopePermission,
+  DeleteActionRequirement,
   DeleteGrant,
   DeletePermission,
   DeleteRole,
   DeleteRolePermission,
   DeleteScope,
   DeleteScopePermission,
+  GetAction,
+  GetActionByKey,
+  GetActionRequirementsByPermission,
   GetGrant,
   GetGrantsBySubject,
   GetPermission,
@@ -30,6 +36,10 @@ import {
   UpdateScope,
 } from "@/apis";
 import type {
+  Action,
+  ActionRequirement,
+  CreateActionRequest,
+  CreateActionRequirementRequest,
   CreateGrantRequest,
   CreatePermissionRequest,
   CreateRolePermissionRequest,
@@ -52,11 +62,15 @@ import { accessEventEmitter, accessEvents } from "@/events/access";
 import { showError, showSuccess } from "@/stores/modalStore";
 
 import {
+  ACCESS_ACTION,
+  ACCESS_ACTION_REQUIREMENTS_BY_PERMISSION,
   ACCESS_ROLE,
   ACCESS_PERMISSION,
   ACCESS_SCOPE,
   ACCESS_GRANT,
+  ACCESS_GRANTS_BY_SUBJECT,
   ACCESS_ROLE_PERMISSION,
+  ACCESS_ROLE_PERMISSIONS_BY_ROLE,
   ACCESS_SCOPE_PERMISSION,
 } from "@/constants";
 import type { UnifiedQueryParams } from "./core/type";
@@ -317,8 +331,11 @@ export const useGrantsBySubject = (params: UnifiedQueryParams<Grant[]> & {
     "suspense",
     postProcess,
   );
-  const queryKey = `grants-by-subject-${subject_type}-${subject_id}${tenant_id ? `-${tenant_id}` : ""}`;
-  return makeQuery(queryKey, { subject_type, subject_id, tenant_id }, options);
+  return makeQuery(
+    ACCESS_GRANTS_BY_SUBJECT(subject_type, subject_id, tenant_id),
+    { subject_type, subject_id, tenant_id },
+    options,
+  );
 };
 
 // 创建授权
@@ -402,7 +419,7 @@ export const useRolePermissionsByRole = (params: UnifiedQueryParams<RolePermissi
     "suspense",
     postProcess,
   );
-  return makeQuery(`role-permissions-by-role-${roleId}`, { roleId }, options);
+  return makeQuery(ACCESS_ROLE_PERMISSIONS_BY_ROLE(roleId), { roleId }, options);
 };
 
 // 创建角色权限关联
@@ -494,6 +511,92 @@ export const useDeleteScopePermission = () => {
     },
     onError: (error: AxiosError) => {
       showError("删除作用域权限关联失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== Action 相关 ==========
+
+export const useAction = (params: UnifiedQueryParams<Action> & { id: string }) => {
+  const { id, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { id: string }) => await GetAction(params.id),
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_ACTION(id), { id }, options);
+};
+
+export const useActionByKey = (params: UnifiedQueryParams<Action> & { key: string }) => {
+  const { key, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { key: string }) => await GetActionByKey(params.key),
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_ACTION(key), { key }, options);
+};
+
+export const useCreateAction = () => {
+  return useMutation({
+    mutationFn: async (params: CreateActionRequest) => {
+      return await CreateAction(params);
+    },
+    onSuccess: () => {
+      accessEventEmitter.emit(accessEvents.INVALIDATE_ACTIONS);
+      showSuccess("Action 创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建 Action 失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// ========== ActionRequirement 相关（Permission 关联的 Action） ==========
+
+export const useActionRequirementsByPermission = (
+  params: UnifiedQueryParams<ActionRequirement[]> & { permissionId: string },
+) => {
+  const { permissionId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (params: { permissionId: string }) =>
+      await GetActionRequirementsByPermission(params.permissionId),
+    "suspense",
+    postProcess,
+  );
+  return makeQuery(ACCESS_ACTION_REQUIREMENTS_BY_PERMISSION(permissionId), { permissionId }, options);
+};
+
+export const useCreateActionRequirement = () => {
+  return useMutation({
+    mutationFn: async (params: CreateActionRequirementRequest) => {
+      return await CreateActionRequirement(params);
+    },
+    onSuccess: () => {
+      accessEventEmitter.emit(accessEvents.INVALIDATE_ACTION_REQUIREMENTS);
+      accessEventEmitter.emit(accessEvents.INVALIDATE_ACTIONS);
+      accessEventEmitter.emit(accessEvents.INVALIDATE_PERMISSIONS);
+      showSuccess("Action 关联权限创建成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("创建 Action 关联权限失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+export const useDeleteActionRequirement = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await DeleteActionRequirement(id);
+    },
+    onSuccess: (_, id) => {
+      accessEventEmitter.emit(accessEvents.INVALIDATE_ACTION_REQUIREMENTS);
+      accessEventEmitter.emit(accessEvents.INVALIDATE_ACTION_REQUIREMENT, id);
+      accessEventEmitter.emit(accessEvents.INVALIDATE_PERMISSIONS);
+      showSuccess("Action 关联权限删除成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("删除 Action 关联权限失败，请稍后重试。" + error.message);
     },
   });
 };

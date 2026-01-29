@@ -1,7 +1,11 @@
 // Access API - 基于 NFX-ID Backend
 
 import type {
+  Action,
+  ActionRequirement,
   BaseResponse,
+  CreateActionRequest,
+  CreateActionRequirementRequest,
   CreateGrantRequest,
   CreatePermissionRequest,
   CreateRolePermissionRequest,
@@ -219,6 +223,60 @@ export const GetScopePermission = async (id: string): Promise<ScopePermission> =
 // 删除作用域权限关联
 export const DeleteScopePermission = async (id: string): Promise<BaseResponse> => {
   const url = URL_PATHS.ACCESS.DELETE_SCOPE_PERMISSION.replace(":id", id);
+  const { data } = await protectedClient.delete<BaseResponse>(url);
+  return data;
+};
+
+// ========== Action 相关 ==========
+
+export const CreateAction = async (params: CreateActionRequest): Promise<Action> => {
+  const { data } = await protectedClient.post<DataResponse<Action>>(URL_PATHS.ACCESS.CREATE_ACTION, params);
+  return data.data;
+};
+
+export const GetAction = async (id: string): Promise<Action> => {
+  const url = URL_PATHS.ACCESS.GET_ACTION.replace(":id", id);
+  const { data } = await protectedClient.get<DataResponse<Action>>(url);
+  return data.data;
+};
+
+export const GetActionByKey = async (key: string): Promise<Action> => {
+  const url = URL_PATHS.ACCESS.GET_ACTION_BY_KEY.replace(":key", key);
+  const { data } = await protectedClient.get<DataResponse<Action>>(url);
+  return data.data;
+};
+
+// ========== ActionRequirement 相关（Permission 关联的 Action） ==========
+
+export const CreateActionRequirement = async (
+  params: CreateActionRequirementRequest,
+): Promise<ActionRequirement> => {
+  const { data } = await protectedClient.post<DataResponse<ActionRequirement>>(
+    URL_PATHS.ACCESS.CREATE_ACTION_REQUIREMENT,
+    params,
+  );
+  return data.data;
+};
+
+export const GetActionRequirementsByPermission = async (
+  permissionId: string,
+): Promise<ActionRequirement[]> => {
+  const url = URL_PATHS.ACCESS.GET_ACTION_REQUIREMENTS_BY_PERMISSION.replace(
+    ":permission_id",
+    permissionId,
+  );
+  const { data } = await protectedClient.get<DataResponse<ActionRequirement[]>>(url);
+  return data.data;
+};
+
+export const GetActionRequirement = async (id: string): Promise<ActionRequirement> => {
+  const url = URL_PATHS.ACCESS.GET_ACTION_REQUIREMENT.replace(":id", id);
+  const { data } = await protectedClient.get<DataResponse<ActionRequirement>>(url);
+  return data.data;
+};
+
+export const DeleteActionRequirement = async (id: string): Promise<BaseResponse> => {
+  const url = URL_PATHS.ACCESS.DELETE_ACTION_REQUIREMENT.replace(":id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };

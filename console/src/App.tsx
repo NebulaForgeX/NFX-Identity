@@ -12,6 +12,10 @@ import {
   ImagesPage,
   LoginPage,
   NotFoundPage,
+  AddRolePage,
+  AddPermissionPage,
+  AddActionPage,
+  PermissionManagementPage,
   ProfilePage,
   UserSecurityPage,
 } from "@/pages";
@@ -42,6 +46,10 @@ function App() {
         <Route path={ROUTES.IMAGES} element={<ImagesPage />} />
         <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
         <Route path={ROUTES.USER_SECURITY} element={<UserSecurityPage />} />
+        <Route path={ROUTES.PERMISSION_MANAGEMENT} element={<PermissionManagementPage />} />
+        <Route path={ROUTES.PERMISSION_ROLES} element={<AddRolePage />} />
+        <Route path={ROUTES.PERMISSION_PERMISSIONS} element={<AddPermissionPage />} />
+        <Route path={ROUTES.PERMISSION_ACTIONS} element={<AddActionPage />} />
         <Route path={ROUTES.ADD_EDUCATION} element={<AddEducationPage />} />
         <Route path={ROUTES.ADD_OCCUPATION} element={<AddOccupationPage />} />
         <Route path={ROUTES.EDIT_EDUCATION} element={<EditEducationPage />} />

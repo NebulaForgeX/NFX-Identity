@@ -1,0 +1,10 @@
+{
+  "title": "Add Role",
+  "subtitle": "Create a new role.",
+  "back": "Back",
+  "createRole": "Create Role",
+  "key": "Key",
+  "name": "Name",
+  "description": "Description",
+  "scopeType": "Scope Type"
+}

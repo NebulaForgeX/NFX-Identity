@@ -1,0 +1,15 @@
+{
+  "title": "添加 Action",
+  "subtitle": "创建与按 Key 查询 Action。",
+  "back": "返回",
+  "createAction": "创建 Action",
+  "key": "Key",
+  "name": "名称",
+  "service": "服务",
+  "status": "状态",
+  "description": "描述",
+  "lookupActionByKey": "按 Key 查询 Action",
+  "lookup": "查询",
+  "loading": "加载中...",
+  "systemAction": "系统"
+}

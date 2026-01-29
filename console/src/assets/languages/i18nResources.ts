@@ -21,6 +21,10 @@ import en_EditProfilePage from "./en/EditProfilePage.json";
 import en_LoginPage from "./en/LoginPage.json";
 import en_ProfilePage from "./en/ProfilePage.json";
 import en_UserSecurityPage from "./en/UserSecurityPage.json";
+import en_PermissionManagementPage from "./en/PermissionManagementPage.json";
+import en_AddRolePage from "./en/AddRolePage.json";
+import en_AddPermissionPage from "./en/AddPermissionPage.json";
+import en_AddActionPage from "./en/AddActionPage.json";
 import en_components from "./en/components.json";
 import fr_AddEducationPage from "./fr/AddEducationPage.json";
 import fr_AddOccupationPage from "./fr/AddOccupationPage.json";
@@ -43,6 +47,10 @@ import fr_EditProfilePage from "./fr/EditProfilePage.json";
 import fr_LoginPage from "./fr/LoginPage.json";
 import fr_ProfilePage from "./fr/ProfilePage.json";
 import fr_UserSecurityPage from "./fr/UserSecurityPage.json";
+import fr_PermissionManagementPage from "./fr/PermissionManagementPage.json";
+import fr_AddRolePage from "./fr/AddRolePage.json";
+import fr_AddPermissionPage from "./fr/AddPermissionPage.json";
+import fr_AddActionPage from "./fr/AddActionPage.json";
 import fr_components from "./fr/components.json";
 import zh_AddEducationPage from "./zh/AddEducationPage.json";
 import zh_AddOccupationPage from "./zh/AddOccupationPage.json";
@@ -65,6 +73,10 @@ import zh_EditProfilePage from "./zh/EditProfilePage.json";
 import zh_LoginPage from "./zh/LoginPage.json";
 import zh_ProfilePage from "./zh/ProfilePage.json";
 import zh_UserSecurityPage from "./zh/UserSecurityPage.json";
+import zh_PermissionManagementPage from "./zh/PermissionManagementPage.json";
+import zh_AddRolePage from "./zh/AddRolePage.json";
+import zh_AddPermissionPage from "./zh/AddPermissionPage.json";
+import zh_AddActionPage from "./zh/AddActionPage.json";
 import zh_components from "./zh/components.json";
 
 // 所有语言包内容
@@ -85,6 +97,10 @@ export const RESOURCES = {
     LoginPage: en_LoginPage,
     ProfilePage: en_ProfilePage,
     UserSecurityPage: en_UserSecurityPage,
+    PermissionManagementPage: en_PermissionManagementPage,
+    AddRolePage: en_AddRolePage,
+    AddPermissionPage: en_AddPermissionPage,
+    AddActionPage: en_AddActionPage,
     AddEducationPage: en_AddEducationPage,
     AddOccupationPage: en_AddOccupationPage,
     EditEducationPage: en_EditEducationPage,
@@ -109,6 +125,10 @@ export const RESOURCES = {
     LoginPage: zh_LoginPage,
     ProfilePage: zh_ProfilePage,
     UserSecurityPage: zh_UserSecurityPage,
+    PermissionManagementPage: zh_PermissionManagementPage,
+    AddRolePage: zh_AddRolePage,
+    AddPermissionPage: zh_AddPermissionPage,
+    AddActionPage: zh_AddActionPage,
     AddEducationPage: zh_AddEducationPage,
     AddOccupationPage: zh_AddOccupationPage,
     EditEducationPage: zh_EditEducationPage,
@@ -133,6 +153,10 @@ export const RESOURCES = {
     LoginPage: fr_LoginPage,
     ProfilePage: fr_ProfilePage,
     UserSecurityPage: fr_UserSecurityPage,
+    PermissionManagementPage: fr_PermissionManagementPage,
+    AddRolePage: fr_AddRolePage,
+    AddPermissionPage: fr_AddPermissionPage,
+    AddActionPage: fr_AddActionPage,
     AddEducationPage: fr_AddEducationPage,
     AddOccupationPage: fr_AddOccupationPage,
     EditEducationPage: fr_EditEducationPage,
@@ -160,6 +184,10 @@ export const NAME_SPACES_MAP = {
   LoginPage: "LoginPage",
   ProfilePage: "ProfilePage",
   UserSecurityPage: "UserSecurityPage",
+  PermissionManagementPage: "PermissionManagementPage",
+  AddRolePage: "AddRolePage",
+  AddPermissionPage: "AddPermissionPage",
+  AddActionPage: "AddActionPage",
   AddEducationPage: "AddEducationPage",
   AddOccupationPage: "AddOccupationPage",
   EditEducationPage: "EditEducationPage",

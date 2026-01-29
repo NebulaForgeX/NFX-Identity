@@ -1,0 +1,28 @@
+---
+description: 本仓库运行终端命令前必须加载多语言环境
+globs:
+  - '**/*'
+alwaysApply: true
+---
+
+# 终端命令必须 source use-menv.sh
+
+在本仓库中执行**任何**终端命令（如 `npm run build`、`go build`、`cargo build` 等）之前，**必须先执行**：
+
+```bash
+source /volume1/use-menv.sh
+```
+
+否则 Go / Node.js / Rust / Atlas / Buf 等环境可能不可用或版本不对。
+
+**正确写法**：同一条命令里先 source 再执行，例如：
+
+```bash
+source /volume1/use-menv.sh && npm run build
+```
+
+或先执行 `source /volume1/use-menv.sh`，再在**同一 shell 会话**中执行后续命令。
+
+**错误写法**：直接执行 `npm run build` 而不先 source（在未加载过 use-menv.sh 的 shell 里会出错）。
+
+提示：直接执行 `./use-menv.sh` 不会生效，必须使用 **source** 命令。

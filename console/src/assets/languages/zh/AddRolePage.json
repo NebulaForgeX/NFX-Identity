@@ -1,0 +1,10 @@
+{
+  "title": "添加角色",
+  "subtitle": "创建一个新角色。",
+  "back": "返回",
+  "createRole": "创建角色",
+  "key": "键",
+  "name": "名称",
+  "description": "描述",
+  "scopeType": "作用域类型"
+}

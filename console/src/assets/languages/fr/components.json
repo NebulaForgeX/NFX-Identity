@@ -35,7 +35,12 @@
     "addOccupation": "Ajouter une occupation",
     "editOccupation": "Modifier l'occupation",
     "editPreference": "Modifier la préférence",
-    "userSecurity": "Sécurité utilisateur"
+    "userSecurity": "Sécurité utilisateur",
+    "permission": "Permission",
+    "permissionManagement": "Gestion des permissions",
+    "addRole": "Ajouter un rôle",
+    "addPermission": "Ajouter une permission",
+    "addAction": "Ajouter une action"
   },
   "searchInput": {
     "placeholder": "Rechercher...",
@@ -64,6 +69,7 @@
     "errorTitle": "Échec du chargement",
     "errorDescription": "Veuillez vérifier votre connexion réseau ou réessayer plus tard.",
     "errorDetails": "Détails de l'erreur",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "clearLocalData": "Effacer les données locales"
   }
 }

@@ -29,6 +29,13 @@ pages/
 - 每页一个文件夹，以 `Page` 结尾便于识别
 - 页面专属组件放在该页下的 `components/`，不放入全局 `src/components`
 
+## 一页一 JSON（i18n）
+
+- **每个页面有且仅有一个 i18n 命名空间**，对应 `assets/languages/<lang>/<PageName>.json`（如 `PermissionManagementPage.json`）。
+- 在 **i18nResources.ts** 中为该页面注册该命名空间（`RESOURCES` 与 `NAME_SPACES_MAP`），并在各语言下导入对应的 JSON。
+- 页面入口及该页下所有子组件统一使用 **同一命名空间**：`useTranslation("<PageName>")`（如 `useTranslation("PermissionManagementPage")`），不在子组件里混用其他页面命名空间。
+- 不把多个页面的文案塞进一个 JSON；不把一个页面的文案拆到多个 JSON。一页一 JSON，便于维护和按页翻译。
+
 ## 页面组件结构
 
 ### 基础展示页

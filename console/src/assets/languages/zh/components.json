@@ -36,7 +36,12 @@
     "addOccupation": "添加工作",
     "editOccupation": "编辑职业",
     "editPreference": "编辑偏好",
-    "userSecurity": "用户安全"
+    "userSecurity": "用户安全",
+    "permission": "权限",
+    "permissionManagement": "权限管理",
+    "addRole": "添加角色",
+    "addPermission": "添加权限",
+    "addAction": "添加 Action"
   },
   "searchInput": {
     "placeholder": "搜索...",
@@ -65,6 +70,7 @@
     "errorTitle": "加载失败",
     "errorDescription": "请检查网络连接或稍后重试。",
     "errorDetails": "错误详情",
-    "retry": "重试"
+    "retry": "重试",
+    "clearLocalData": "清除本地数据"
   }
 }
