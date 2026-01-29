@@ -5,4 +5,6 @@
 -- atlas:import tables/scopes.sql
 -- atlas:import tables/scope_permissions.sql
 -- atlas:import tables/grants.sql
+-- atlas:import tables/actions.sql
+-- atlas:import tables/action_requirements.sql
 
