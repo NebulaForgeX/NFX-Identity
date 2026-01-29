@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Modules Config 编码规范 - 模块配置
+description: 后端 Go Modules Config 编码规范 - 模块配置加载
 globs:
   - '**/modules/**/config/**/*.go'
 alwaysApply: false
 ---
 
 # Modules Config 编码规范
+
+本规则说明如何组织与编写 **modules/<module>/config/** 下的代码，适用于按模块加载配置的 Go 后端项目。config 负责从文件/环境加载配置结构体，供 server 与各层使用，不包含业务逻辑。
 
 ## 文件组织
 

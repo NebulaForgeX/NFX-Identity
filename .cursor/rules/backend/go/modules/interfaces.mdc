@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Modules Interfaces 层编码规范 - 接口层（表示层）
+description: 后端 Go Modules Interfaces 层编码规范 - 接口层（HTTP/gRPC/事件）
 globs:
   - '**/modules/**/interfaces/**/*.go'
 alwaysApply: false
 ---
 
 # Modules Interfaces 层编码规范
+
+本规则说明如何组织与编写 **modules/<module>/interfaces/** 下的代码，适用于采用分层架构的 Go 后端项目。接口层只依赖 Application 层，负责 DTO 转换与协议适配（HTTP、gRPC、事件等），不包含业务逻辑。
 
 ## 文件组织
 

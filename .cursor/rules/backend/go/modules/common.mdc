@@ -1,5 +1,5 @@
 ---
-description: 后端配置文件规则 - Modules 通用编码规范 - DDD 架构基本原则和模块组织
+description: 后端 Go Modules 通用编码规范 - DDD 架构与模块组织
 globs:
   - '**/modules/**/*.go'
 alwaysApply: false
@@ -7,9 +7,13 @@ alwaysApply: false
 
 # Modules 通用编码规范
 
+本规则说明如何组织与编写 **modules/** 下的代码，适用于采用 **Clean Architecture（清洁架构）**、**DDD（领域驱动设计）** 与 **CQRS（命令查询职责分离）** 的 Go 后端项目。
+
 ## 架构原则
 
-本项目遵循 **Clean Architecture（清洁架构）** 和 **Domain-Driven Design (DDD)** 原则，采用 **CQRS（命令查询职责分离）** 模式。
+- **Clean Architecture**：依赖向内，Domain 最内层不依赖外层。
+- **DDD**：按领域划分模块与实体，领域层定义接口，基础设施层实现。
+- **CQRS**：读写职责分离，Command/Query 与 Repository 接口在领域层定义。
 
 ## 模块组织
 
@@ -19,10 +23,9 @@ alwaysApply: false
 
 每个业务模块在 `modules/` 中都有对应的实现，在 `inputs/` 中都有对应的服务入口。
 
-**示例**：
+**示例**（按项目替换模块名）：
 - `modules/auth/` ↔ `inputs/auth/`
-- `modules/directory/` ↔ `inputs/directory/`
-- `modules/access/` ↔ `inputs/access/`
+- `modules/<module>/` ↔ `inputs/<module>/`
 
 ## 层级依赖规则
 
@@ -67,7 +70,7 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 package handler
 
 import (
-    userDomain "nfxid/modules/directory/domain/users"
+    userDomain "<project>/modules/<module>/domain/<entity>"
 )
 
 func (h *UserHandler) Create(c *fiber.Ctx) error {
@@ -99,7 +102,7 @@ func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) error {
 package handler
 
 import (
-    userApp "nfxid/modules/directory/application/users"
+    userApp "<project>/modules/<module>/application/<entity>"
 )
 
 type UserHandler struct {
@@ -118,7 +121,7 @@ func (h *UserHandler) Create(c *fiber.Ctx) error {
 package users
 
 import (
-    userDomain "nfxid/modules/directory/domain/users"
+    userDomain "<project>/modules/<module>/domain/<entity>"
 )
 
 type Service struct {
@@ -144,7 +147,7 @@ func (s *Service) CreateUser(ctx context.Context, cmd CreateUserCmd) error {
 package repository
 
 import (
-    userDomain "nfxid/modules/directory/domain/users"
+    userDomain "<project>/modules/<module>/domain/<entity>"
     "gorm.io/gorm"
 )
 

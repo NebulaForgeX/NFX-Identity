@@ -1,5 +1,5 @@
 ---
-description: 后端配置文件规则 - Inputs Base 服务入口编码规范 - 全功能服务（所有服务组合）
+description: 后端 Go Inputs Base 服务入口编码规范 - 全功能服务入口
 globs:
   - '**/inputs/**/base/**/*.go'
   - '**/inputs/**/base/Dockerfile'
@@ -8,6 +8,8 @@ alwaysApply: false
 ---
 
 # Inputs Base 服务入口编码规范
+
+本规则说明如何组织与编写 **inputs/<module>/base/** 下的代码，适用于在同一进程中运行 HTTP + gRPC + Pipeline + Messaging 等全部服务的 Go 后端项目。main.go 负责加载配置、装配依赖并启动所有服务器。
 
 ## 文件组织
 

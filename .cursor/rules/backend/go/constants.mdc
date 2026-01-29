@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Constants 编码规范 - 业务常量定义
+description: 后端 Go Constants 编码规范 - 业务常量定义
 globs:
   - '**/constants/**/*.go'
 alwaysApply: false
 ---
 
 # Constants 编码规范
+
+本规则说明如何组织与编写 **constants/** 下的代码，适用于任意 Go 后端项目。业务常量（超时、重试、服务名等）放此处；数据库 ENUM 由 enums 包或代码生成维护，不在此处手写。
 
 ## 与 Enums 的区别
 

@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Modules Application 层编码规范 - 应用层（用例）
+description: 后端 Go Modules Application 层编码规范 - 应用层（用例编排）
 globs:
   - '**/modules/**/application/**/*.go'
 alwaysApply: false
 ---
 
 # Modules Application 层编码规范
+
+本规则说明如何组织与编写 **modules/<module>/application/** 下的代码，适用于采用 DDD + Clean Architecture 的 Go 后端项目。应用层负责用例编排，不包含业务规则，只调用领域层接口。
 
 ## 文件组织
 

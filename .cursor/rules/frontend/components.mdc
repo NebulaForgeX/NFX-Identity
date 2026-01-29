@@ -1,5 +1,5 @@
 ---
-description: 前端配置文件规则 - Components 文件夹编码规范 - 可复用组件
+description: 前端 Components 文件夹编码规范 - 可复用 UI 组件
 globs:
   - '**/src/components/**/*.ts'
   - '**/src/components/**/*.tsx'
@@ -8,424 +8,96 @@ alwaysApply: false
 
 # Components 编码规范
 
-## 组件结构
-
-### 基础表单组件
-
-```tsx
-// ✅ GOOD - 表单组件标准结构
-import type { InputHTMLAttributes, ReactNode } from "react";
-import { forwardRef } from "react";
-import styles from "./styles.module.css";
-
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
-  label?: string;
-  error?: string;
-  helperText?: string;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-  rightIconInteractive?: boolean;
-  size?: "small" | "medium" | "large";
-  variant?: "default" | "filled";
-  fullWidth?: boolean;
-}
-
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      label,
-      error,
-      helperText,
-      leftIcon,
-      rightIcon,
-      rightIconInteractive = false,
-      size = "medium",
-      variant = "default",
-      fullWidth = false,
-      className = "",
-      disabled,
-      ...props
-    },
-    ref,
-  ) => {
-    const inputClasses = [
-      styles.input,
-      styles[size],
-      styles[variant],
-      error && styles.error,
-      disabled && styles.disabled,
-      className,
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    const wrapperClasses = [styles.wrapper, fullWidth && styles.fullWidth]
-      .filter(Boolean)
-      .join(" ");
-
-    return (
-      <div className={wrapperClasses}>
-        {label && (
-          <label className={styles.label}>
-            {label}
-            {props.required && <span className={styles.required}>*</span>}
-          </label>
-        )}
-        <div className={styles.inputContainer}>
-          {leftIcon && <div className={styles.leftIcon}>{leftIcon}</div>}
-          <input ref={ref} className={inputClasses} disabled={disabled} {...props} />
-          {rightIcon && (
-            <div className={`${styles.rightIcon} ${rightIconInteractive ? styles.rightIconInteractive : ""}`}>
-              {rightIcon}
-            </div>
-          )}
-        </div>
-        {error && <p className={styles.errorMessage}>{error}</p>}
-        {helperText && !error && <p className={styles.helperText}>{helperText}</p>}
-      </div>
-    );
-  },
-);
-
-Input.displayName = "Input";
-
-export default Input;
-```
-
-### 简单展示组件
-
-```tsx
-// ✅ GOOD - 简单组件使用 memo
-import { memo } from "react";
-import { useTranslation } from "react-i18next";
-import { Search, X } from "@/assets/icons/lucide";
-import styles from "./styles.module.css";
-
-interface SearchInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}
-
-const SearchInput = memo(({ value, onChange, placeholder }: SearchInputProps) => {
-  const { t } = useTranslation("components");
-  const defaultPlaceholder = placeholder ?? t("searchInput.placeholder");
-  
-  const handleClear = () => {
-    onChange("");
-  };
-
-  return (
-    <div className={styles.searchContainer}>
-      <Search size={18} className={styles.searchIcon} />
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={defaultPlaceholder}
-        className={styles.searchInput}
-      />
-      {value && (
-        <button onClick={handleClear} className={styles.clearBtn} aria-label={t("searchInput.clearSearch")}>
-          <X size={16} />
-        </button>
-      )}
-    </div>
-  );
-});
-
-SearchInput.displayName = "SearchInput";
-
-export default SearchInput;
-```
-
-### 复杂组件（带状态）
-
-```tsx
-// ✅ GOOD - 带状态的组件
-import { memo, useEffect, useRef, useState } from "react";
-import { ChevronDown } from "@/assets/icons/lucide";
-import styles from "./Dropdown.module.css";
-
-export interface DropdownOption {
-  value: string;
-  label: string;
-}
-
-interface DropdownProps {
-  options: DropdownOption[];
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  error?: boolean;
-  className?: string;
-}
-
-const Dropdown = memo<DropdownProps>(({ options, value, onChange, placeholder, disabled, error, className }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // 点击外部关闭
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // ... 组件实现
-});
-
-Dropdown.displayName = "Dropdown";
-
-export default Dropdown;
-```
-
-## 命名规范
-
-- **组件文件夹**：使用 PascalCase: `Button/`, `Input/`, `SearchInput/`
-- **组件文件**：使用 `index.tsx`
-- **样式文件**：使用 `styles.module.css` 或 `ComponentName.module.css`（如 `Dropdown.module.css`）
-- **Props 接口**：使用 `ComponentNameProps` 格式
-- **导出类型**：在 `index.ts` 中同时导出组件和类型
-
-## Props 设计
-
-### 扩展原生 HTML 属性
-
-```tsx
-// ✅ GOOD - 使用 Omit 排除冲突属性
-export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "size"> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
-  size?: "small" | "medium" | "large";
-  loading?: boolean;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-}
-```
-
-### 表单组件通用 Props
-
-```tsx
-// ✅ GOOD - 表单组件通用模式
-export interface FormComponentProps {
-  label?: string;
-  error?: string;
-  helperText?: string;
-  size?: "small" | "medium" | "large";
-  variant?: "default" | "filled";
-  fullWidth?: boolean;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-}
-```
-
-### 使用 JSDoc 注释
-
-```tsx
-// ✅ GOOD - 使用 JSDoc 说明特殊 props
-export interface InputProps {
-  /** 为 true 时 rightIcon 可点击（如密码切换、清除按钮） */
-  rightIconInteractive?: boolean;
-}
-```
-
-## 样式管理
-
-```tsx
-// ✅ GOOD - 条件类名组合
-const inputClasses = [
-  styles.input,
-  styles[size],
-  styles[variant],
-  error && styles.error,
-  disabled && styles.disabled,
-  className,
-]
-  .filter(Boolean)
-  .join(" ");
-
-// ✅ GOOD - 多个类名组合
-const wrapperClasses = [styles.wrapper, fullWidth && styles.fullWidth]
-  .filter(Boolean)
-  .join(" ");
-```
-
-- 使用 CSS Modules 避免样式冲突
-- 类名使用 camelCase: `styles.inputContainer`
-- 支持通过 `className` prop 传递外部样式
-- 动态类名使用模板字符串或数组组合
-
-## 性能优化
-
-```tsx
-// ✅ GOOD - 使用 memo 包装纯展示组件
-const SearchInput = memo(({ value, onChange }: SearchInputProps) => {
-  // ...
-});
-
-// ✅ GOOD - 使用 forwardRef 支持 ref 传递
-const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  return <input ref={ref} {...props} />;
-});
-
-// ✅ GOOD - 组合使用
-const Button = memo(
-  forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-    // ...
-  })
-);
-```
-
-## 国际化
-
-```tsx
-// ✅ GOOD - 使用 useTranslation hook
-import { useTranslation } from "react-i18next";
-
-const SearchInput = memo(({ placeholder }: SearchInputProps) => {
-  const { t } = useTranslation("components");
-  const defaultPlaceholder = placeholder ?? t("searchInput.placeholder");
-  
-  return (
-    <button aria-label={t("searchInput.clearSearch")}>
-      {/* ... */}
-    </button>
-  );
-});
-```
-
-## 可访问性
-
-```tsx
-// ✅ GOOD - 提供 ARIA 属性
-<button
-  type="button"
-  aria-expanded={isOpen}
-  aria-haspopup="listbox"
-  aria-label={t("searchInput.clearSearch")}
->
-  {/* ... */}
-</button>
-
-<ul role="listbox">
-  <li role="option" aria-selected={option.value === value}>
-    {/* ... */}
-  </li>
-</ul>
-```
-
-- 使用语义化 HTML 元素
-- 提供 `aria-label`、`aria-expanded`、`aria-selected` 等属性
-- 支持键盘导航
-- 确保颜色对比度符合 WCAG 标准
-
-## 特殊组件模式
-
-### Icon 组件（动态加载）
-
-```tsx
-// ✅ GOOD - 动态图标组件
-import type { LucideProps } from "lucide-react";
-import { memo } from "react";
-import * as LucideIcons from "lucide-react";
-
-interface IconProps extends LucideProps {
-  name: keyof typeof LucideIcons;
-}
-
-const Icon = memo(({ name, ...props }: IconProps) => {
-  const LucideIcon = LucideIcons[name] as React.ComponentType<LucideProps>;
-  if (!LucideIcon) {
-    console.warn(`Icon "${name}" not found`);
-    return null;
-  }
-  return <LucideIcon {...props} />;
-});
-```
-
-### 组合组件（扩展其他组件）
-
-```tsx
-// ✅ GOOD - 扩展 Button 组件
-import type { ButtonProps } from "@/components/Button";
-import Button from "@/components/Button";
-
-export interface IconButtonProps extends Omit<ButtonProps, "leftIcon" | "rightIcon"> {
-  topIcon?: ReactNode;
-  rightIcon?: ReactNode;
-  bottomIcon?: ReactNode;
-  leftIcon?: ReactNode;
-  iconOnly?: boolean;
-}
-
-const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
-  return <Button ref={ref} {...props} />;
-});
-```
-
-### Suspense 组件（包装 React Suspense）
-
-```tsx
-// ✅ GOOD - 包装 Suspense 和错误边界
-import { Suspense as ReactSuspense } from "react";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import SuspenseErrorBoundary from "./SuspenseErrorBoundary";
-
-const Suspense = memo(({ children, fallback, ...props }: SuspenseProps) => {
-  return (
-    <QueryErrorResetBoundary {...props}>
-      {({ reset }) => (
-        <SuspenseErrorBoundary onReset={reset} fallbackRender={...}>
-          <ReactSuspense fallback={fallback}>
-            {children}
-          </ReactSuspense>
-        </SuspenseErrorBoundary>
-      )}
-    </QueryErrorResetBoundary>
-  );
-});
-```
+本规则说明如何组织与编写 **components/** 下的可复用 UI 组件，适用于任意 React 前端项目。
 
 ## 文件组织
 
 ```
 components/
-├── <ComponentName>/        # 各组件（按需创建）
+├── <ComponentName>/
 │   ├── index.tsx
-│   ├── styles.module.css   # 或 <ComponentName>.module.css
-│   └── ...                 # 辅助文件（可选）
-└── index.ts                # 统一导出组件和类型
+│   ├── styles.module.css   # 或 ComponentName.module.css
+│   └── ...
+├── index.ts                # 统一导出组件与类型
+└── ...
 ```
 
-**示例**：
-- `Button/` - 按钮组件
-- `Input/` - 输入框组件
-- `Dropdown/` - 下拉菜单组件
-- `Suspense/` - Suspense 包装组件
-- 根据项目需要创建对应的组件
+- 每个组件一个文件夹，PascalCase
+- 样式使用 CSS Modules，类名 camelCase
 
-## 导出规范
+## 组件结构
 
-```typescript
-// ✅ GOOD - index.ts 统一导出
-export { default as Button } from "./Button";
-export type { ButtonProps } from "./Button";
-export { default as Input } from "./Input";
-export type { InputProps } from "./Input";
-export { default as Dropdown } from "./Dropdown";
-export type { DropdownOption } from "./Dropdown";
+### 扩展原生 HTML 属性
+
+```tsx
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "size"> {
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  size?: "small" | "medium" | "large";
+  fullWidth?: boolean;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
+  loading?: boolean;
+}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = "primary", size = "medium", loading = false, children, className = "", ...props }, ref) => {
+    const classes = [
+      styles.button,
+      styles[variant],
+      styles[size],
+      loading && styles.loading,
+      className,
+    ].filter(Boolean).join(" ");
+
+    return (
+      <button ref={ref} className={classes} disabled={props.disabled || loading} {...props}>
+        {loading && <span className={styles.spinner} />}
+        {leftIcon && !loading && <span className={styles.leftIcon}>{leftIcon}</span>}
+        {children && <span className={styles.content}>{children}</span>}
+        {rightIcon && !loading && <span className={styles.rightIcon}>{rightIcon}</span>}
+      </button>
+    );
+  }
+);
+Button.displayName = "Button";
+export default Button;
 ```
 
-## 实现建议
+- 用 `Omit` 排除与自定义 props 冲突的 HTML 属性（如 `size`）
+- 支持 `className`、`disabled` 等透传，便于页面覆盖样式
+- 表单类或需 ref 的组件用 `forwardRef`；纯展示用 `memo`
 
-- 每个组件使用独立的文件夹，包含 `index.tsx` 和样式文件
-- 复杂组件可以包含辅助文件（如 ErrorBoundary、工具函数等）
-- 所有组件和类型通过 `index.ts` 统一导出
+### 表单类组件（如 Input）
+
+- 提供 `label`、`error`、`helperText`、`leftIcon`、`rightIcon` 等可选 props
+- 错误状态用 `error` 控制样式与错误文案展示
+- 若项目有设计系统，尺寸、variant 与设计 token 对齐
+
+### 纯展示组件
+
+- 用 `memo` 包裹，接收明确 props，无内部请求
+- 需要文案时用 `useTranslation` 或接收 `label`/`placeholder` 等 props
+
+## 命名规范
+
+- 组件文件夹与组件名：PascalCase（如 `Button`、`SearchInput`）
+- Props 接口：`ComponentNameProps`
+- 样式文件：`styles.module.css` 或 `ComponentName.module.css`
+- 类名：camelCase（`styles.inputContainer`）
+
+## 样式
+
+- 条件类名用数组 + `filter(Boolean).join(" ")` 或模板字符串
+- 支持通过 `className` 从外部覆盖，不强制覆盖所有状态
+- 若组件有多个「槽位」，用 BEM 风格或前缀避免与页面样式冲突
+
+## 使用建议
+
+- 页面内优先使用这些共享组件（如 `Button`、`Input`），而不是裸 `<button>`、`<input>`，以保证交互与无障碍一致
+- 图标从项目统一的图标入口按需导出（如 `@/assets/icons/lucide`），避免在组件内写死图标名
+- 复杂组合（如带搜索的列表、带分页的表格）可再拆成「组合组件」或放在页面下的 `components/`，视是否复用决定是否提升到 `src/components`
+
+## 导出
+
+- 组件 default export，类型单独 export
+- 在 `components/index.ts` 中统一导出，便于 `import { Button } from "@/components"`

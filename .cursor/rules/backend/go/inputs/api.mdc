@@ -1,5 +1,5 @@
 ---
-description: 后端配置文件规则 - Inputs API 服务入口编码规范 - HTTP REST API 服务
+description: 后端 Go Inputs API 服务入口编码规范 - HTTP REST API 入口
 globs:
   - '**/inputs/**/api/**/*.go'
   - '**/inputs/**/api/Dockerfile'
@@ -8,6 +8,8 @@ alwaysApply: false
 ---
 
 # Inputs API 服务入口编码规范
+
+本规则说明如何组织与编写 **inputs/<module>/api/** 下的代码，适用于按模块拆服务入口的 Go 后端项目。main.go 负责加载配置、初始化日志、启动 HTTP 服务器并注册模块路由。
 
 ## 文件组织
 

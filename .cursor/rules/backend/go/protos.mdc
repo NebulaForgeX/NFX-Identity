@@ -1,5 +1,5 @@
 ---
-description: 后端配置文件规则 - Protos 编码规范 - Protocol Buffers 定义和代码生成
+description: 后端 Go Protos 编码规范 - Protocol Buffers 与代码生成
 globs:
   - '**/protos/**/*.proto'
   - '**/protos/buf.yaml'
@@ -8,6 +8,8 @@ alwaysApply: false
 ---
 
 # Protos 编码规范
+
+本规则说明如何组织与编写 **protos/** 下的代码，适用于使用 Buf 管理 proto 并生成 Go 代码的后端项目。proto 源文件放在 src/，生成代码放在 gen/，gen/ 不可手动编辑。
 
 ## 文件组织
 

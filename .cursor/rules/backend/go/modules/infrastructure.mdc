@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Modules Infrastructure 层编码规范 - 基础设施层（技术实现）
+description: 后端 Go Modules Infrastructure 层编码规范 - 基础设施层（仓库与持久化）
 globs:
   - '**/modules/**/infrastructure/**/*.go'
 alwaysApply: false
 ---
 
 # Modules Infrastructure 层编码规范
+
+本规则说明如何组织与编写 **modules/<module>/infrastructure/** 下的代码，适用于采用 DDD 的 Go 后端项目。基础设施层实现领域层定义的仓库接口，提供数据库访问（如 GORM）、缓存等，不包含业务规则。
 
 ## 文件组织
 

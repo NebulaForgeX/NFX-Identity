@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Modules Domain 层编码规范 - 领域层（业务逻辑）
+description: 后端 Go Modules Domain 层编码规范 - 领域层（业务逻辑与接口）
 globs:
   - '**/modules/**/domain/**/*.go'
 alwaysApply: false
 ---
 
 # Modules Domain 层编码规范
+
+本规则说明如何组织与编写 **modules/<module>/domain/** 下的代码，适用于采用 DDD 的 Go 后端项目。领域层不依赖任何外层（数据库、HTTP、消息队列等），只定义实体、行为、仓库接口与领域错误。
 
 ## 文件组织
 

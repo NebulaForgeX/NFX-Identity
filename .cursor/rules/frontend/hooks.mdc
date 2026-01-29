@@ -1,5 +1,5 @@
 ---
-description: 前端配置文件规则 - Hooks 文件夹编码规范 - 自定义 Hooks
+description: 前端 Hooks 文件夹编码规范 - 数据查询与 Mutation
 globs:
   - '**/src/hooks/**/*.ts'
   - '**/src/hooks/**/*.tsx'
@@ -8,425 +8,133 @@ alwaysApply: false
 
 # Hooks 编码规范
 
+本规则说明如何组织与编写 **hooks/** 下的代码，适用于使用 React Query（或类似） + 事件驱动缓存失效的前端项目。
+
 ## 文件组织
 
 ```
 hooks/
-├── core/                    # 核心工具 hooks（可选）
-│   ├── makeUnifiedQuery.tsx          # 统一查询 Hook 工厂
-│   ├── makeUnifiedInfiniteQuery.tsx   # 无限查询 Hook 工厂
-│   └── ...
-├── use<Feature>.ts          # 各功能模块的 Hooks（按需创建）
-└── index.ts                # 统一导出
+├── core/              # 可选：统一 query 工厂、类型
+│   ├── makeUnifiedQuery.ts
+│   ├── makeUnifiedInfiniteQuery.ts
+│   └── type.ts
+├── use<Feature>.ts    # 按功能模块（如 useAuth.ts、useUser.ts）
+└── index.ts           # 统一导出
 ```
 
-**示例**：
-- `useAuth.ts` - 认证相关 hooks
-- `useUser.ts` - 用户相关 hooks
-- `useTheme.ts` - 主题 Context Hook
-- 根据项目功能模块创建对应的 Hook 文件
+## 查询类 Hooks
 
-## Hook 分类
-
-### 1. 数据查询 Hooks (CRUD)
-
-使用 `makeUnifiedQuery` 和 `useMutation` 封装 API 调用。
+### 使用统一 Query 工厂（若项目有）
 
 ```typescript
-// ✅ GOOD - 查询 Hook（使用 makeUnifiedQuery）
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
-import { GetUser } from "@/apis/directory.api";
-import { DIRECTORY_USER } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
+import { GetUser } from "@/apis/user.api";
+import { USER_QUERY_KEYS } from "@/constants";
 
 export const useUser = (params: UnifiedQueryParams<User> & { id: string }) => {
   const { id, options, postProcess } = params;
   const makeQuery = makeUnifiedQuery(
-    async (params: { id: string }) => {
-      return await GetUser(params.id);
-    },
-    "suspense",
-    postProcess,
+    async (p: { id: string }) => await GetUser(p.id),
+    "suspense", // 或 "normal" 以支持 enabled
+    postProcess
   );
-  return makeQuery(DIRECTORY_USER(id), { id }, options);
+  return makeQuery(USER_QUERY_KEYS.item(id), { id }, options);
+};
+
+export const useUsersByOrgId = (params: UnifiedQueryParams<User[]> & { orgId: string }) => {
+  const { orgId, options, postProcess } = params;
+  const makeQuery = makeUnifiedQuery(
+    async (p: { orgId: string }) => await GetUsersByOrgId(p.orgId),
+    "suspense",
+    postProcess
+  );
+  return makeQuery(USER_QUERY_KEYS.list, { orgId }, options);
 };
 ```
 
+- Query Key 与项目中的 constants 保持一致（如按 entity 分 list/item）
+- 需要 `enabled` 时用 `"normal"` 模式并传 `options`
+
+### 无统一工厂时
+
+- 直接用 `useQuery`，queryKey 集中定义在 constants 中，保持与缓存失效事件所用 key 一致
+
+## Mutation 类 Hooks
+
+### 标准模式
+
 ```typescript
-// ✅ GOOD - Mutation Hook（创建）
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import { CreateUser } from "@/apis/directory.api";
-import { directoryEventEmitter, directoryEvents } from "@/events/directory";
-import { showError, showSuccess } from "@/stores/modalStore";
+import { CreateUser } from "@/apis/user.api";
+import { userEventEmitter, userEvents } from "@/events/user";
+import { showError, showSuccess } from "@/stores/modalStore"; // 或项目中的提示方式
 
 export const useCreateUser = () => {
   return useMutation({
-    mutationFn: async (params: CreateUserRequest) => {
-      return await CreateUser(params);
-    },
-    onSuccess: () => {
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USERS);
-      showSuccess("用户创建成功！");
+    mutationFn: async (params: CreateUserRequest) => await CreateUser(params),
+    onSuccess: (_, variables) => {
+      userEventEmitter.emit(userEvents.INVALIDATE_USERS);
+      userEventEmitter.emit(userEvents.INVALIDATE_USER, variables.orgId); // 按需
+      showSuccess("创建成功");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户失败，请稍后重试。" + error.message);
+      showError("创建失败：" + (error.message || "请稍后重试"));
     },
   });
 };
-```
 
-```typescript
-// ✅ GOOD - Mutation Hook（更新）
 export const useUpdateUser = () => {
   return useMutation({
-    mutationFn: async (params: { id: string; data: UpdateUserRequest }) => {
-      return await UpdateUser(params.id, params.data);
-    },
+    mutationFn: async ({ id, data }: { id: string; data: UpdateUserRequest }) =>
+      await UpdateUser(id, data),
     onSuccess: (_, variables) => {
-      // 失效列表和单项缓存
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USERS);
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER, variables.id);
-      showSuccess("用户更新成功！");
+      userEventEmitter.emit(userEvents.INVALIDATE_USERS);
+      userEventEmitter.emit(userEvents.INVALIDATE_USER, variables.id);
+      showSuccess("更新成功");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户失败，请稍后重试。" + error.message);
+      showError("更新失败：" + error.message);
     },
   });
 };
-```
 
-```typescript
-// ✅ GOOD - Mutation Hook（删除）
 export const useDeleteUser = () => {
   return useMutation({
-    mutationFn: async (id: string) => {
-      return await DeleteUser(id);
-    },
+    mutationFn: async (id: string) => await DeleteUser(id),
     onSuccess: (_, id) => {
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USERS);
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER, id);
-      showSuccess("用户删除成功！");
+      userEventEmitter.emit(userEvents.INVALIDATE_USERS);
+      userEventEmitter.emit(userEvents.INVALIDATE_USER, id);
+      showSuccess("删除成功");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户失败，请稍后重试。" + error.message);
+      showError("删除失败：" + error.message);
     },
   });
 };
 ```
 
-### 2. Context Hooks
+### 约定
 
-简单的 Context 包装，提供类型安全和错误检查。
-
-```typescript
-// ✅ GOOD - Context Hook
-import { useContext } from "react";
-import { ThemeContext } from "@/providers/ThemeProvider";
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
-  }
-  return context;
-};
-```
-
-### 3. 工具 Hooks
-
-封装通用逻辑，如计时器、状态管理等。
-
-```typescript
-// ✅ GOOD - 计时器 Hook
-import { useCallback, useEffect, useState } from "react";
-import TimerStore, { useTimerStore } from "@/stores/timerStore";
-
-export const useResendTimer = () => {
-  const canResendFromStore = useTimerStore((state) => state.canResendCode());
-  const getTimeLeft = useTimerStore((state) => state.getTimeLeft);
-
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
-  const [canResend, setCanResend] = useState(canResendFromStore);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const remaining = getTimeLeft();
-      setTimeLeft(remaining);
-      setCanResend(remaining === 0);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [getTimeLeft]);
-
-  const startTimer = useCallback((seconds: number = 60) => {
-    const expiry = Date.now() + seconds * 1000;
-    TimerStore.getState().setResendCodeExpiry(expiry);
-    setTimeLeft(seconds);
-    setCanResend(false);
-  }, []);
-
-  return {
-    timeLeft,
-    canResend,
-    startTimer,
-  };
-};
-```
-
-### 4. 样式 Hooks
-
-返回状态样式信息（颜色、标签等），用于 UI 显示。
-
-```typescript
-// ✅ GOOD - 状态样式 Hook
-import { useTranslation } from "react-i18next";
-import { UserStatus } from "@/types/domain/enums";
-
-export interface StatusStyle {
-  label: string;
-  color: string;
-  bgColor: string;
-}
-
-export const useUserStatus = (status: UserStatus | undefined | null): StatusStyle => {
-  const { t } = useTranslation("hooks.styles");
-
-  const statusMap: Record<UserStatus, StatusStyle> = {
-    [UserStatus.ACTIVE]: {
-      label: t("userStatus.active"),
-      color: "var(--color-primary-fg)",
-      bgColor: "var(--color-success)",
-    },
-    [UserStatus.PENDING]: {
-      label: t("userStatus.pending"),
-      color: "white",
-      bgColor: "var(--color-warning)",
-    },
-    // ...
-  };
-
-  if (!status) {
-    return {
-      label: "",
-      color: "white",
-      bgColor: "var(--color-fg-muted)",
-    };
-  }
-
-  return statusMap[status] || {
-    label: status,
-    color: "white",
-    bgColor: "var(--color-fg-muted)",
-  };
-};
-```
-
-### 5. 同步 Hooks
-
-同步用户偏好到后端，只在初始加载时应用后端数据。
-
-```typescript
-// ✅ GOOD - 偏好同步 Hook
-import { useEffect, useCallback, useRef } from "react";
-import { useAuthStore } from "@/stores/authStore";
-import { useUpdateUserPreference, useUserPreferenceNormal } from "@/hooks/useDirectory";
-import { useTheme } from "@/hooks/useTheme";
-
-export const useThemeSync = () => {
-  const currentUserId = useAuthStore((state) => state.currentUserId);
-  const isAuthValid = useAuthStore((state) => state.isAuthValid);
-  const { themeName, setTheme } = useTheme();
-  const updatePreference = useUpdateUserPreference({ silent: true });
-
-  const shouldFetch = !!currentUserId && isAuthValid;
-
-  const { data: preference } = useUserPreferenceNormal({
-    id: currentUserId || "00000000-0000-0000-0000-000000000000",
-    options: {
-      enabled: shouldFetch && !!currentUserId,
-    },
-  });
-
-  const lastPreferenceId = useRef<string | null>(null);
-  const isInitialized = useRef(false);
-
-  // 只在初始加载时应用后端数据
-  useEffect(() => {
-    if (!shouldFetch || !preference || !isAuthValid || !currentUserId) {
-      isInitialized.current = false;
-      lastPreferenceId.current = null;
-      return;
-    }
-
-    // 只在 preference ID 变化或首次加载时应用
-    if (lastPreferenceId.current === preference.id && isInitialized.current) {
-      return;
-    }
-
-    if (preference.theme && preference.theme !== themeName) {
-      setTheme(preference.theme as any);
-    }
-
-    isInitialized.current = true;
-    lastPreferenceId.current = preference.id;
-  }, [preference, isAuthValid, currentUserId, themeName, setTheme, shouldFetch]);
-
-  // 同步本地变更到后端
-  const syncTheme = useCallback(
-    async (theme: string) => {
-      if (!currentUserId || !isAuthValid) return;
-
-      try {
-        await updatePreference.mutateAsync({
-          id: currentUserId,
-          data: { theme },
-        });
-      } catch (error) {
-        console.error("Failed to sync theme preference:", error);
-      }
-    },
-    [currentUserId, isAuthValid, updatePreference]
-  );
-
-  return { syncTheme };
-};
-```
-
-## 核心工具 Hooks
-
-### makeUnifiedQuery
-
-创建统一的查询 Hook，支持 Suspense 和普通模式。
-
-```typescript
-// ✅ GOOD - 使用 makeUnifiedQuery
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
-
-// Suspense 模式（默认）
-const makeQuery = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUser(params.id);
-  },
-  "suspense",
-  postProcess, // 可选的后处理函数
-);
-
-// 普通模式（支持 enabled）
-const makeQuery = makeUnifiedQuery(
-  async (params: { id: string }) => {
-    return await GetUser(params.id);
-  },
-  "normal",
-  postProcess,
-);
-```
-
-### makeUnifiedInfiniteQuery
-
-创建无限查询 Hook，支持分页加载。
-
-```typescript
-// ✅ GOOD - 使用 makeUnifiedInfiniteQuery
-import { makeUnifiedInfiniteQuery } from "@/hooks/core/makeUnifiedInfiniteQuery";
-
-const useUserList = makeUnifiedInfiniteQuery(
-  async (params: FetchNumberListParams<UserFilter>) => {
-    const { items, total } = await GetUsers(params);
-    return { items, total };
-  },
-  "suspense",
-  20, // pageSize
-  postProcess, // 可选的后处理函数
-);
-
-// 使用
-const { data, fetchNextPage, hasNextPage } = useUserList(
-  DIRECTORY_USERS,
-  { status: "active" },
-  { staleTime: 60000 }
-);
-```
+- **onSuccess**：必须触发与当前变更相关的缓存失效事件（列表 + 单条视业务需要），再统一提示成功
+- **onError**：统一提示失败，可根据 `AxiosError` 或后端错误码做分支提示（如「账户已锁定」）
+- 不在这里做路由跳转；页面层在 `mutate` 的 callback 或 `onSuccess` 里跳转
 
 ## 命名规范
 
-- **Hook 文件**: camelCase，以 `use` 开头: `useAuth.ts`, `useDirectory.ts`
-- **Hook 函数**: camelCase，以 `use` 开头: `useAuth`, `useCreateUser`
-- **查询 Hook**: `useEntity` 或 `useEntityByXxx` (如 `useUser`, `useUserByUsername`)
-- **Mutation Hook**: `useCreateEntity`, `useUpdateEntity`, `useDeleteEntity`
-- **列表查询 Hook**: `useEntitiesByXxx` (如 `useUserEmailsByUserID`)
-- **核心工具**: `makeXxx` (如 `makeUnifiedQuery`, `makeUnifiedInfiniteQuery`)
+- 文件：camelCase，`use<Feature>.ts`（如 `useUser.ts`、`useAuth.ts`）
+- 查询：`useEntity`、`useEntityByXxx`、`useEntitiesByXxx`
+- Mutation：`useCreateEntity`、`useUpdateEntity`、`useDeleteEntity`、`useSetPrimaryXxx` 等
+- 工具类：`makeUnifiedQuery`、`makeUnifiedInfiniteQuery` 等放在 `core/` 并统一导出
 
-## 事件和缓存失效
+## 其他类型 Hooks
 
-```typescript
-// ✅ GOOD - Mutation 成功后触发事件失效缓存
-onSuccess: (_, variables) => {
-  // 失效列表缓存
-  directoryEventEmitter.emit(directoryEvents.INVALIDATE_USERS);
-  // 失效单项缓存
-  directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER, variables.id);
-  showSuccess("用户更新成功！");
-},
-```
-
-## 错误处理
-
-```typescript
-// ✅ GOOD - 统一的错误处理
-onError: (error: AxiosError) => {
-  const errorMessage = (error.response?.data as { message?: string })?.message;
-  if (errorMessage?.includes("locked")) {
-    showError("账户已被锁定，请联系管理员");
-  } else if (errorMessage?.includes("invalid")) {
-    showError("邮箱或密码错误");
-  } else {
-    showError("操作失败，请稍后重试");
-  }
-},
-```
-
-## 静默更新
-
-```typescript
-// ✅ GOOD - 支持静默更新（不显示成功/错误消息）
-export const useUpdateUserPreference = (options?: { silent?: boolean }) => {
-  const silent = options?.silent ?? false;
-  return useMutation({
-    mutationFn: async (params: { id: string; data: UpdateUserPreferenceRequest }) => {
-      return await UpdateUserPreference(params.id, params.data);
-    },
-    onSuccess: (_, variables) => {
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_PREFERENCES);
-      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_PREFERENCE, variables.id);
-      if (!silent) {
-        showSuccess("用户偏好更新成功！");
-      }
-    },
-    onError: (error: AxiosError) => {
-      if (!silent) {
-        showError("更新用户偏好失败，请稍后重试。" + error.message);
-      }
-    },
-  });
-};
-```
-
-## 类型定义
-
-```typescript
-// ✅ GOOD - UnifiedQueryParams 类型
-import type { UnifiedQueryParams } from "./core/type";
-
-export const useUser = (params: UnifiedQueryParams<User> & { id: string }) => {
-  const { id, options, postProcess } = params;
-  // ...
-};
-```
+- **Context**：`useXxx` 内部 `useContext(XxxContext)`，未在 Provider 内时 throw Error
+- **计时/轮询**：用 `useState` + `useEffect` 或项目现有 store，保持单一数据源
+- **表单/同步**：若与后端同步（如主题、偏好），在 hook 内调用 API 或 mutation，避免在组件里散落逻辑
 
 ## 实现建议
 
-- 按功能分类组织 Hooks，使用 `use<Feature>` 命名
-- 核心工具函数放在 `core/` 目录下
-- 保持文件命名一致性：`use<功能名>.ts`
-- 所有 Hooks 通过 `index.ts` 统一导出，方便使用
+- 按功能模块拆分文件，避免单文件过大
+- 所有 hooks 通过 `index.ts` 导出，便于页面和组件从 `@/hooks` 引用
+- 缓存失效事件名与 Query Key 前缀要与 events、constants 中定义一致

@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Enums 编码规范 - 数据库枚举类型（自动生成）
+description: 后端 Go Enums 编码规范 - 数据库枚举（自动生成）
 globs:
   - '**/enums/**/*.go'
 alwaysApply: false
 ---
 
 # Enums 编码规范
+
+本规则说明 **enums/** 的用途与生成方式，适用于从数据库 Schema（如 PostgreSQL ENUM）生成 Go 枚举的项目。enums 目录下的文件由脚本/模板自动生成，**不可手动编辑**；业务常量放在 constants/。
 
 ## 与 Constants 的区别
 

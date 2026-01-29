@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Migrations 编码规范 - 数据库迁移管理
+description: 后端 Go Databases Migrations 编码规范 - 迁移文件管理
 globs:
   - '**/databases/migrations/**/*.sql'
 alwaysApply: false
 ---
 
 # Migrations 编码规范
+
+本规则说明 **databases/migrations/** 的用途与生成方式，适用于使用 Atlas 管理迁移的 Go 后端项目。迁移文件由 Atlas 自动生成，**不要手动创建或编辑**；Schema 变更在 databases/src/ 中修改后通过 `atlas migrate diff` 生成迁移。
 
 ## 重要提示
 

@@ -1,11 +1,13 @@
 ---
-description: 后端配置文件规则 - Pkgs 编码规范 - 共享包和工具库
+description: 后端 Go Pkgs 编码规范 - 共享包与工具库
 globs:
   - '**/pkgs/**/*.go'
 alwaysApply: false
 ---
 
 # Pkgs 编码规范
+
+本规则说明如何组织与编写 **pkgs/** 下的代码，适用于任意 Go 后端项目。pkgs 为跨模块共享的基础设施与工具（日志、配置、数据库连接、缓存、事件总线、HTTP 响应封装等），不包含业务逻辑。
 
 ## 文件组织
 
