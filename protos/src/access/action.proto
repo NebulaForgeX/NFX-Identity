@@ -1,0 +1,75 @@
+syntax = "proto3";
+package action;
+
+option go_package = "nfxid/protos/gen/access/action;actionpb";
+
+import "google/protobuf/timestamp.proto";
+
+message Action {
+  string id = 1;
+  string key = 2;
+  string service = 3;
+  string status = 4;
+  string name = 5;
+  optional string description = 6;
+  bool is_system = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  optional google.protobuf.Timestamp deleted_at = 10;
+}
+
+service ActionService {
+  rpc CreateAction (CreateActionRequest) returns (CreateActionResponse);
+  rpc GetActionByID (GetActionByIDRequest) returns (GetActionByIDResponse);
+  rpc GetActionByKey (GetActionByKeyRequest) returns (GetActionByKeyResponse);
+  rpc UpdateAction (UpdateActionRequest) returns (UpdateActionResponse);
+  rpc DeleteAction (DeleteActionRequest) returns (DeleteActionResponse);
+}
+
+message CreateActionRequest {
+  string key = 1;
+  string service = 2;
+  string status = 3;
+  string name = 4;
+  optional string description = 5;
+  bool is_system = 6;
+}
+
+message CreateActionResponse {
+  Action action = 1;
+}
+
+message GetActionByIDRequest {
+  string id = 1;
+}
+
+message GetActionByIDResponse {
+  Action action = 1;
+}
+
+message GetActionByKeyRequest {
+  string key = 1;
+}
+
+message GetActionByKeyResponse {
+  Action action = 1;
+}
+
+message UpdateActionRequest {
+  string id = 1;
+  string key = 2;
+  string service = 3;
+  string status = 4;
+  string name = 5;
+  optional string description = 6;
+}
+
+message UpdateActionResponse {
+  Action action = 1;
+}
+
+message DeleteActionRequest {
+  string id = 1;
+}
+
+message DeleteActionResponse {}

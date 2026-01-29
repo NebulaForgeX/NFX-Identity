@@ -1,6 +1,8 @@
 package access
 
 import (
+	actionpb "nfxid/protos/gen/access/action"
+	actionrequirementpb "nfxid/protos/gen/access/action_requirement"
 	grantpb "nfxid/protos/gen/access/grant"
 	permissionpb "nfxid/protos/gen/access/permission"
 	rolepb "nfxid/protos/gen/access/role"
@@ -11,16 +13,20 @@ import (
 
 // Client Access 服务客户端
 type Client struct {
-	Role            *RoleClient
-	Permission      *PermissionClient
-	Grant           *GrantClient
-	RolePermission  *RolePermissionClient
-	Scope           *ScopeClient
-	ScopePermission *ScopePermissionClient
+	Action            *ActionClient
+	ActionRequirement *ActionRequirementClient
+	Role              *RoleClient
+	Permission        *PermissionClient
+	Grant             *GrantClient
+	RolePermission    *RolePermissionClient
+	Scope             *ScopeClient
+	ScopePermission   *ScopePermissionClient
 }
 
 // NewClient 创建 Access 客户端
 func NewClient(
+	actionClient actionpb.ActionServiceClient,
+	actionRequirementClient actionrequirementpb.ActionRequirementServiceClient,
 	roleClient rolepb.RoleServiceClient,
 	permissionClient permissionpb.PermissionServiceClient,
 	grantClient grantpb.GrantServiceClient,
@@ -29,11 +35,13 @@ func NewClient(
 	scopePermissionClient scopepermissionpb.ScopePermissionServiceClient,
 ) *Client {
 	return &Client{
-		Role:            NewRoleClient(roleClient),
-		Permission:      NewPermissionClient(permissionClient),
-		Grant:           NewGrantClient(grantClient),
-		RolePermission:  NewRolePermissionClient(rolePermissionClient),
-		Scope:           NewScopeClient(scopeClient),
-		ScopePermission: NewScopePermissionClient(scopePermissionClient),
+		Action:            NewActionClient(actionClient),
+		ActionRequirement: NewActionRequirementClient(actionRequirementClient),
+		Role:              NewRoleClient(roleClient),
+		Permission:        NewPermissionClient(permissionClient),
+		Grant:             NewGrantClient(grantClient),
+		RolePermission:    NewRolePermissionClient(rolePermissionClient),
+		Scope:             NewScopeClient(scopeClient),
+		ScopePermission:   NewScopePermissionClient(scopePermissionClient),
 	}
 }

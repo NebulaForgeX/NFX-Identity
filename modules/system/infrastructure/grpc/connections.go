@@ -11,13 +11,15 @@ import (
 	"nfxid/pkgs/security/token/servertoken"
 	"nfxid/pkgs/tokenx"
 
+	actionpb "nfxid/protos/gen/access/action"
+	actionrequirementpb "nfxid/protos/gen/access/action_requirement"
 	grantpb "nfxid/protos/gen/access/grant"
 	permissionpb "nfxid/protos/gen/access/permission"
 	rolepb "nfxid/protos/gen/access/role"
 	rolepermissionpb "nfxid/protos/gen/access/role_permission"
 	usercredentialpb "nfxid/protos/gen/auth/user_credential"
-	useremailpb "nfxid/protos/gen/directory/user_email"
 	userpb "nfxid/protos/gen/directory/user"
+	useremailpb "nfxid/protos/gen/directory/user_email"
 	userphonepb "nfxid/protos/gen/directory/user_phone"
 	userpreferencepb "nfxid/protos/gen/directory/user_preference"
 	userprofilepb "nfxid/protos/gen/directory/user_profile"
@@ -28,39 +30,43 @@ import (
 
 // DirectoryClient Directory 服务客户端（只包含需要的服务）
 type DirectoryClient struct {
-	User          *directory.UserClient
-	UserEmail     *directory.UserEmailClient
-	UserPhone     *directory.UserPhoneClient
-	UserProfile   *directory.UserProfileClient
+	User           *directory.UserClient
+	UserEmail      *directory.UserEmailClient
+	UserPhone      *directory.UserPhoneClient
+	UserProfile    *directory.UserProfileClient
 	UserPreference *directory.UserPreferenceClient
 }
 
 // NewDirectoryClient 创建 Directory 客户端
 func NewDirectoryClient(conn *grpc.ClientConn) *DirectoryClient {
 	return &DirectoryClient{
-		User:          directory.NewUserClient(userpb.NewUserServiceClient(conn)),
-		UserEmail:     directory.NewUserEmailClient(useremailpb.NewUserEmailServiceClient(conn)),
-		UserPhone:     directory.NewUserPhoneClient(userphonepb.NewUserPhoneServiceClient(conn)),
-		UserProfile:   directory.NewUserProfileClient(userprofilepb.NewUserProfileServiceClient(conn)),
+		User:           directory.NewUserClient(userpb.NewUserServiceClient(conn)),
+		UserEmail:      directory.NewUserEmailClient(useremailpb.NewUserEmailServiceClient(conn)),
+		UserPhone:      directory.NewUserPhoneClient(userphonepb.NewUserPhoneServiceClient(conn)),
+		UserProfile:    directory.NewUserProfileClient(userprofilepb.NewUserProfileServiceClient(conn)),
 		UserPreference: directory.NewUserPreferenceClient(userpreferencepb.NewUserPreferenceServiceClient(conn)),
 	}
 }
 
 // AccessClient Access 服务客户端（只包含需要的服务）
 type AccessClient struct {
-	Role           *access.RoleClient
-	Permission     *access.PermissionClient
-	RolePermission *access.RolePermissionClient
-	Grant          *access.GrantClient
+	Action            *access.ActionClient
+	ActionRequirement *access.ActionRequirementClient
+	Role              *access.RoleClient
+	Permission        *access.PermissionClient
+	RolePermission    *access.RolePermissionClient
+	Grant             *access.GrantClient
 }
 
 // NewAccessClient 创建 Access 客户端
 func NewAccessClient(conn *grpc.ClientConn) *AccessClient {
 	return &AccessClient{
-		Role:           access.NewRoleClient(rolepb.NewRoleServiceClient(conn)),
-		Permission:     access.NewPermissionClient(permissionpb.NewPermissionServiceClient(conn)),
-		RolePermission: access.NewRolePermissionClient(rolepermissionpb.NewRolePermissionServiceClient(conn)),
-		Grant:          access.NewGrantClient(grantpb.NewGrantServiceClient(conn)),
+		Action:            access.NewActionClient(actionpb.NewActionServiceClient(conn)),
+		ActionRequirement: access.NewActionRequirementClient(actionrequirementpb.NewActionRequirementServiceClient(conn)),
+		Role:              access.NewRoleClient(rolepb.NewRoleServiceClient(conn)),
+		Permission:        access.NewPermissionClient(permissionpb.NewPermissionServiceClient(conn)),
+		RolePermission:    access.NewRolePermissionClient(rolepermissionpb.NewRolePermissionServiceClient(conn)),
+		Grant:             access.NewGrantClient(grantpb.NewGrantServiceClient(conn)),
 	}
 }
 

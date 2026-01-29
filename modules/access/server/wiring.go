@@ -5,20 +5,24 @@ import (
 	"fmt"
 	"time"
 
+	actionRequirementApp "nfxid/modules/access/application/action_requirements"
+	actionApp "nfxid/modules/access/application/actions"
 	grantApp "nfxid/modules/access/application/grants"
 	permissionApp "nfxid/modules/access/application/permissions"
 	resourceApp "nfxid/modules/access/application/resource"
-	roleApp "nfxid/modules/access/application/roles"
 	rolePermissionApp "nfxid/modules/access/application/role_permissions"
-	scopeApp "nfxid/modules/access/application/scopes"
+	roleApp "nfxid/modules/access/application/roles"
 	scopePermissionApp "nfxid/modules/access/application/scope_permissions"
+	scopeApp "nfxid/modules/access/application/scopes"
 	"nfxid/modules/access/config"
+	actionRequirementRepo "nfxid/modules/access/infrastructure/repository/action_requirements"
+	actionRepo "nfxid/modules/access/infrastructure/repository/actions"
 	grantRepo "nfxid/modules/access/infrastructure/repository/grants"
 	permissionRepo "nfxid/modules/access/infrastructure/repository/permissions"
-	roleRepo "nfxid/modules/access/infrastructure/repository/roles"
 	rolePermissionRepo "nfxid/modules/access/infrastructure/repository/role_permissions"
-	scopeRepo "nfxid/modules/access/infrastructure/repository/scopes"
+	roleRepo "nfxid/modules/access/infrastructure/repository/roles"
 	scopePermissionRepo "nfxid/modules/access/infrastructure/repository/scope_permissions"
+	scopeRepo "nfxid/modules/access/infrastructure/repository/scopes"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -31,22 +35,24 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr                *health.Manager
-	cache                    *cache.Connection
-	postgres                 *postgresqlx.Connection
-	kafkaConfig              *kafkax.Config
-	busPublisher             *eventbus.BusPublisher
-	rabbitMQConfig           *rabbitmqx.Config
-	roleAppSvc               *roleApp.Service
-	permissionAppSvc         *permissionApp.Service
-	scopeAppSvc              *scopeApp.Service
-	grantAppSvc              *grantApp.Service
-	rolePermissionAppSvc     *rolePermissionApp.Service
-	scopePermissionAppSvc    *scopePermissionApp.Service
-	resourceSvc              *resourceApp.Service
-	userTokenVerifier        token.Verifier
-	serverTokenVerifier      token.Verifier
-	tokenxInstance           *tokenx.Tokenx
+	healthMgr               *health.Manager
+	cache                   *cache.Connection
+	postgres                *postgresqlx.Connection
+	kafkaConfig             *kafkax.Config
+	busPublisher            *eventbus.BusPublisher
+	rabbitMQConfig          *rabbitmqx.Config
+	actionAppSvc            *actionApp.Service
+	actionRequirementAppSvc *actionRequirementApp.Service
+	roleAppSvc              *roleApp.Service
+	permissionAppSvc        *permissionApp.Service
+	scopeAppSvc             *scopeApp.Service
+	grantAppSvc             *grantApp.Service
+	rolePermissionAppSvc    *rolePermissionApp.Service
+	scopePermissionAppSvc   *scopePermissionApp.Service
+	resourceSvc             *resourceApp.Service
+	userTokenVerifier       token.Verifier
+	serverTokenVerifier     token.Verifier
+	tokenxInstance          *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -102,8 +108,12 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	grantRepoInstance := grantRepo.NewRepo(postgres.DB())
 	rolePermissionRepoInstance := rolePermissionRepo.NewRepo(postgres.DB())
 	scopePermissionRepoInstance := scopePermissionRepo.NewRepo(postgres.DB())
+	actionRepoInstance := actionRepo.NewRepo(postgres.DB())
+	actionRequirementRepoInstance := actionRequirementRepo.NewRepo(postgres.DB())
 
 	//! === Application Services ===
+	actionAppSvc := actionApp.NewService(actionRepoInstance)
+	actionRequirementAppSvc := actionRequirementApp.NewService(actionRequirementRepoInstance)
 	roleAppSvc := roleApp.NewService(roleRepoInstance)
 	permissionAppSvc := permissionApp.NewService(permissionRepoInstance)
 	scopeAppSvc := scopeApp.NewService(scopeRepoInstance)
@@ -113,27 +123,29 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
 	return &Dependencies{
-		healthMgr:             healthMgr,
-		postgres:              postgres,
-		cache:                 cacheConn,
-		kafkaConfig:           &kafkaConfig,
-		busPublisher:          busPublisher,
-		rabbitMQConfig:        &rabbitMQConfig,
-		roleAppSvc:            roleAppSvc,
-		permissionAppSvc:      permissionAppSvc,
-		scopeAppSvc:           scopeAppSvc,
-		grantAppSvc:           grantAppSvc,
-		rolePermissionAppSvc: rolePermissionAppSvc,
-		scopePermissionAppSvc: scopePermissionAppSvc,
-		resourceSvc:           resourceSvc,
-		userTokenVerifier:     userTokenVerifier,
-		serverTokenVerifier:   serverTokenVerifier,
-		tokenxInstance:        tokenxInstance,
+		healthMgr:               healthMgr,
+		postgres:                postgres,
+		cache:                   cacheConn,
+		kafkaConfig:             &kafkaConfig,
+		busPublisher:            busPublisher,
+		rabbitMQConfig:          &rabbitMQConfig,
+		actionAppSvc:            actionAppSvc,
+		actionRequirementAppSvc: actionRequirementAppSvc,
+		roleAppSvc:              roleAppSvc,
+		permissionAppSvc:        permissionAppSvc,
+		scopeAppSvc:             scopeAppSvc,
+		grantAppSvc:             grantAppSvc,
+		rolePermissionAppSvc:    rolePermissionAppSvc,
+		scopePermissionAppSvc:   scopePermissionAppSvc,
+		resourceSvc:             resourceSvc,
+		userTokenVerifier:       userTokenVerifier,
+		serverTokenVerifier:     serverTokenVerifier,
+		tokenxInstance:          tokenxInstance,
 	}, nil
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) HealthMgr() *health.Manager { return d.healthMgr }
+func (d *Dependencies) HealthMgr() *health.Manager        { return d.healthMgr }
 func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
 
 func (d *Dependencies) Cleanup() {
@@ -143,18 +155,26 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) RoleAppSvc() *roleApp.Service                    { return d.roleAppSvc }
-func (d *Dependencies) PermissionAppSvc() *permissionApp.Service        { return d.permissionAppSvc }
-func (d *Dependencies) ScopeAppSvc() *scopeApp.Service                  { return d.scopeAppSvc }
-func (d *Dependencies) GrantAppSvc() *grantApp.Service                 { return d.grantAppSvc }
-func (d *Dependencies) RolePermissionAppSvc() *rolePermissionApp.Service { return d.rolePermissionAppSvc }
-func (d *Dependencies) ScopePermissionAppSvc() *scopePermissionApp.Service { return d.scopePermissionAppSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection             { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier              { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                     { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher         { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config               { return d.rabbitMQConfig }
+func (d *Dependencies) ActionAppSvc() *actionApp.Service { return d.actionAppSvc }
+func (d *Dependencies) ActionRequirementAppSvc() *actionRequirementApp.Service {
+	return d.actionRequirementAppSvc
+}
+func (d *Dependencies) RoleAppSvc() *roleApp.Service             { return d.roleAppSvc }
+func (d *Dependencies) PermissionAppSvc() *permissionApp.Service { return d.permissionAppSvc }
+func (d *Dependencies) ScopeAppSvc() *scopeApp.Service           { return d.scopeAppSvc }
+func (d *Dependencies) GrantAppSvc() *grantApp.Service           { return d.grantAppSvc }
+func (d *Dependencies) RolePermissionAppSvc() *rolePermissionApp.Service {
+	return d.rolePermissionAppSvc
+}
+func (d *Dependencies) ScopePermissionAppSvc() *scopePermissionApp.Service {
+	return d.scopePermissionAppSvc
+}
+func (d *Dependencies) Postgres() *postgresqlx.Connection    { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config    { return d.rabbitMQConfig }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

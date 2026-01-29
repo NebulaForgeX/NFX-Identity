@@ -349,6 +349,14 @@ func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommand
 // initAccessService 初始化 Access 服务
 // 创建初始角色和权限（角色与权限定义见 constants/init.go）
 func (s *Service) initAccessService(ctx context.Context, adminUserID uuid.UUID) (uuid.UUID, error) {
+	// 0. 注册所有 action（来自 constants.InitActions），供 CheckAccess 按 key 查询
+	for _, a := range constants.InitActions {
+		_, err := s.grpcClients.AccessClient.Action.CreateAction(ctx, a.ActionKey, a.Service, "active", a.Name, nil, true)
+		if err != nil {
+			return uuid.Nil, fmt.Errorf("failed to create action %s: %w", a.ActionKey, err)
+		}
+	}
+
 	// 1. 创建系统管理员角色
 	adminRoleDesc := constants.InitAdminRoleDesc
 	adminRoleID, err := s.grpcClients.AccessClient.Role.CreateRole(ctx, constants.InitAdminRoleKey, constants.InitAdminRoleName, &adminRoleDesc, constants.InitAdminRoleScope, true)

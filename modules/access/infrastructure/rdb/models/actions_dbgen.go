@@ -11,6 +11,8 @@ import (
 type Action struct {
 	ID          uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	Key         string         `gorm:"type:varchar(255);uniqueIndex:actions_key_key;index:idx_actions_key"`
+	Service     string         `gorm:"type:varchar(255);index:idx_actions_service"`
+	Status      string         `gorm:"type:varchar(50);index:idx_actions_status"`
 	Name        string         `gorm:"type:varchar(255)"`
 	Description *string        `gorm:"type:text"`
 	IsSystem    bool           `gorm:"type:boolean;index:idx_actions_is_system"`
@@ -29,11 +31,13 @@ func (m *Action) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var ActionCols = struct {
-	ID, Key, Name, Description, IsSystem, CreatedAt, UpdatedAt,
-	DeletedAt string
+	ID, Key, Service, Status, Name, Description, IsSystem,
+	CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:          "id",
 	Key:         "key",
+	Service:     "service",
+	Status:      "status",
 	Name:        "name",
 	Description: "description",
 	IsSystem:    "is_system",
