@@ -17,6 +17,7 @@ type GRPCClients struct {
 	DirectoryClient *DirectoryClient
 	AccessClient    *AccessClient
 	AuthClient      *AuthClient
+	ImageClient     *ImageClient
 
 	healthChecker *HealthChecker // 健康检查客户端管理器
 	schemaChecker *SchemaChecker // schema 清空客户端管理器
@@ -58,6 +59,17 @@ func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg
 	}
 	grpcClients.conns = append(grpcClients.conns, authConn)
 	grpcClients.AuthClient = NewAuthClient(authConn)
+
+	// 连接 Image 服务（初始化时清空 data 图片等）
+	if cfg.ImageAddr != "" {
+		imageConn, err := createConnection(cfg.ImageAddr, tokenProvider)
+		if err != nil {
+			grpcClients.Close()
+			return nil, fmt.Errorf("failed to create image connection: %w", err)
+		}
+		grpcClients.conns = append(grpcClients.conns, imageConn)
+		grpcClients.ImageClient = NewImageClient(imageConn)
+	}
 
 	// 初始化健康检查客户端
 	if err := initHealthClients(grpcClients, cfg, serverCfg, tokenProvider); err != nil {

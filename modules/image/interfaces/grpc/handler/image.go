@@ -119,3 +119,12 @@ func (h *ImageHandler) DeleteImage(ctx context.Context, req *imagepb.DeleteImage
 
 	return &imagepb.DeleteImageResponse{}, nil
 }
+
+// ClearStorageData 清空存储：删除 data 目录下所有图片文件
+func (h *ImageHandler) ClearStorageData(ctx context.Context, req *imagepb.ClearStorageDataRequest) (*imagepb.ClearStorageDataResponse, error) {
+	if err := h.appSvc.ClearStorageData(ctx); err != nil {
+		msg := err.Error()
+		return &imagepb.ClearStorageDataResponse{Success: false, ErrorMessage: &msg}, nil
+	}
+	return &imagepb.ClearStorageDataResponse{Success: true}, nil
+}

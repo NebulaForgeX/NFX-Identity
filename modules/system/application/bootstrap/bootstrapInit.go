@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"nfxid/constants"
 	bootstrapCommands "nfxid/modules/system/application/bootstrap/commands"
 	systemStateDomain "nfxid/modules/system/domain/system_state"
 	"nfxid/pkgs/logx"
@@ -34,6 +35,10 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 	// 步骤 3: 清空所有服务的 schema（清空所有表数据，不删除表） 注意：这会清空 system_state 表，确保只有一条记录
 	schemaClearResults, err := s.clearAllSchemas(ctx)
 	if err != nil {
+		return err
+	}
+	// 步骤 3.1: 清空所有存储（如 Image 的 data 目录下所有图片）
+	if err := s.clearAllStorages(ctx); err != nil {
 		return err
 	}
 	// 步骤 4: 创建 system_state 记录（initialized = false），表示初始化开始
@@ -239,6 +244,24 @@ func (s *Service) clearAllSchemas(ctx context.Context) (map[string]int, error) {
 	return schemaClearResults, nil
 }
 
+// clearAllStorages 清空所有服务的存储（如 Image 的 data 目录下所有图片文件）
+func (s *Service) clearAllStorages(ctx context.Context) error {
+	logx.S().Info("🧹 Clearing all storages (e.g. image data files)...")
+	if s.grpcClients.ImageClient == nil {
+		logx.S().Info("ℹ️  No Image client, skip clearing image storage")
+		return nil
+	}
+	success, errMsg, err := s.grpcClients.ImageClient.Image.ClearStorageData(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to clear image storage: %w", err)
+	}
+	if !success {
+		return fmt.Errorf("image clear storage failed: %s", errMsg)
+	}
+	logx.S().Info("✅ All storages cleared (image data)")
+	return nil
+}
+
 // finalizeSystemState 更新 metadata 并标记系统为已初始化
 func (s *Service) finalizeSystemState(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string, schemaClearResults map[string]int, version string) error {
 	// 更新 metadata
@@ -324,33 +347,22 @@ func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommand
 }
 
 // initAccessService 初始化 Access 服务
-// 创建初始角色和权限
+// 创建初始角色和权限（角色与权限定义见 constants/init.go）
 func (s *Service) initAccessService(ctx context.Context, adminUserID uuid.UUID) (uuid.UUID, error) {
 	// 1. 创建系统管理员角色
-	adminRoleDesc := "系统管理员角色，拥有所有权限"
-	adminRoleID, err := s.grpcClients.AccessClient.Role.CreateRole(ctx, "system.admin", "系统管理员", &adminRoleDesc, "global", true)
+	adminRoleDesc := constants.InitAdminRoleDesc
+	adminRoleID, err := s.grpcClients.AccessClient.Role.CreateRole(ctx, constants.InitAdminRoleKey, constants.InitAdminRoleName, &adminRoleDesc, constants.InitAdminRoleScope, true)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("failed to create admin role: %w", err)
 	}
 
-	// 2. 创建基础权限
-	permissions := []struct {
-		key         string
-		name        string
-		description string
-	}{
-		{"system.*", "系统管理", "系统所有权限"},
-		{"user.*", "用户管理", "用户所有权限"},
-		{"role.*", "角色管理", "角色所有权限"},
-		{"permission.*", "权限管理", "权限所有权限"},
-	}
-
+	// 2. 创建基础权限（来自 constants.InitPermissions）
 	var permissionIDs []string
-	for _, perm := range permissions {
-		permDesc := perm.description
-		permID, err := s.grpcClients.AccessClient.Permission.CreatePermission(ctx, perm.key, perm.name, &permDesc, true)
+	for _, perm := range constants.InitPermissions {
+		permDesc := perm.Description
+		permID, err := s.grpcClients.AccessClient.Permission.CreatePermission(ctx, perm.Key, perm.Name, &permDesc, true)
 		if err != nil {
-			return uuid.Nil, fmt.Errorf("failed to create permission %s: %w", perm.key, err)
+			return uuid.Nil, fmt.Errorf("failed to create permission %s: %w", perm.Key, err)
 		}
 		permissionIDs = append(permissionIDs, permID)
 	}

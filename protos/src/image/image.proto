@@ -45,6 +45,9 @@ service ImageService {
 
   // 删除图片（如更换头像时删除旧头像文件）
   rpc DeleteImage (DeleteImageRequest) returns (DeleteImageResponse);
+
+  // 清空存储：删除 data 目录下所有图片文件（初始化时由 system 调用）
+  rpc ClearStorageData (ClearStorageDataRequest) returns (ClearStorageDataResponse);
 }
 
 // Image Service Messages
@@ -87,3 +90,10 @@ message DeleteImageRequest {
 }
 
 message DeleteImageResponse {}
+
+message ClearStorageDataRequest {}
+
+message ClearStorageDataResponse {
+  bool success = 1;
+  optional string error_message = 2;
+}

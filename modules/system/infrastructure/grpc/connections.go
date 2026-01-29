@@ -6,6 +6,7 @@ import (
 	"nfxid/connections/access"
 	"nfxid/connections/auth"
 	"nfxid/connections/directory"
+	"nfxid/connections/image"
 	"nfxid/pkgs/grpcx"
 	"nfxid/pkgs/security/token/servertoken"
 	"nfxid/pkgs/tokenx"
@@ -20,6 +21,7 @@ import (
 	userphonepb "nfxid/protos/gen/directory/user_phone"
 	userpreferencepb "nfxid/protos/gen/directory/user_preference"
 	userprofilepb "nfxid/protos/gen/directory/user_profile"
+	imagepb "nfxid/protos/gen/image/image"
 
 	"google.golang.org/grpc"
 )
@@ -71,6 +73,18 @@ type AuthClient struct {
 func NewAuthClient(conn *grpc.ClientConn) *AuthClient {
 	return &AuthClient{
 		UserCredential: auth.NewUserCredentialClient(usercredentialpb.NewUserCredentialServiceClient(conn)),
+	}
+}
+
+// ImageClient Image 服务客户端（初始化时清空存储等）
+type ImageClient struct {
+	Image *image.ImageClient
+}
+
+// NewImageClient 创建 Image 客户端
+func NewImageClient(conn *grpc.ClientConn) *ImageClient {
+	return &ImageClient{
+		Image: image.NewImageClient(imagepb.NewImageServiceClient(conn)),
 	}
 }
 

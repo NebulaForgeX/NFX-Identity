@@ -87,3 +87,15 @@ func (c *ImageClient) DeleteImage(ctx context.Context, id string) error {
 
 	return nil
 }
+
+// ClearStorageData 清空存储：删除 data 目录下所有图片文件（初始化时由 system 调用）
+func (c *ImageClient) ClearStorageData(ctx context.Context) (success bool, errMsg string, err error) {
+	resp, err := c.client.ClearStorageData(ctx, &imagepb.ClearStorageDataRequest{})
+	if err != nil {
+		return false, "", fmt.Errorf("gRPC call failed: %w", err)
+	}
+	if !resp.Success && resp.ErrorMessage != nil {
+		return false, *resp.ErrorMessage, nil
+	}
+	return resp.Success, "", nil
+}

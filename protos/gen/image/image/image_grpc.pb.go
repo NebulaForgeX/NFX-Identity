@@ -24,6 +24,7 @@ const (
 	ImageService_BatchGetImages_FullMethodName    = "/image.ImageService/BatchGetImages"
 	ImageService_MoveImage_FullMethodName         = "/image.ImageService/MoveImage"
 	ImageService_DeleteImage_FullMethodName       = "/image.ImageService/DeleteImage"
+	ImageService_ClearStorageData_FullMethodName  = "/image.ImageService/ClearStorageData"
 )
 
 // ImageServiceClient is the client API for ImageService service.
@@ -42,6 +43,8 @@ type ImageServiceClient interface {
 	MoveImage(ctx context.Context, in *MoveImageRequest, opts ...grpc.CallOption) (*MoveImageResponse, error)
 	// 删除图片（如更换头像时删除旧头像文件）
 	DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error)
+	// 清空存储：删除 data 目录下所有图片文件（初始化时由 system 调用）
+	ClearStorageData(ctx context.Context, in *ClearStorageDataRequest, opts ...grpc.CallOption) (*ClearStorageDataResponse, error)
 }
 
 type imageServiceClient struct {
@@ -102,6 +105,16 @@ func (c *imageServiceClient) DeleteImage(ctx context.Context, in *DeleteImageReq
 	return out, nil
 }
 
+func (c *imageServiceClient) ClearStorageData(ctx context.Context, in *ClearStorageDataRequest, opts ...grpc.CallOption) (*ClearStorageDataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClearStorageDataResponse)
+	err := c.cc.Invoke(ctx, ImageService_ClearStorageData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ImageServiceServer is the server API for ImageService service.
 // All implementations must embed UnimplementedImageServiceServer
 // for forward compatibility.
@@ -118,6 +131,8 @@ type ImageServiceServer interface {
 	MoveImage(context.Context, *MoveImageRequest) (*MoveImageResponse, error)
 	// 删除图片（如更换头像时删除旧头像文件）
 	DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error)
+	// 清空存储：删除 data 目录下所有图片文件（初始化时由 system 调用）
+	ClearStorageData(context.Context, *ClearStorageDataRequest) (*ClearStorageDataResponse, error)
 	mustEmbedUnimplementedImageServiceServer()
 }
 
@@ -142,6 +157,9 @@ func (UnimplementedImageServiceServer) MoveImage(context.Context, *MoveImageRequ
 }
 func (UnimplementedImageServiceServer) DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteImage not implemented")
+}
+func (UnimplementedImageServiceServer) ClearStorageData(context.Context, *ClearStorageDataRequest) (*ClearStorageDataResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearStorageData not implemented")
 }
 func (UnimplementedImageServiceServer) mustEmbedUnimplementedImageServiceServer() {}
 func (UnimplementedImageServiceServer) testEmbeddedByValue()                      {}
@@ -254,6 +272,24 @@ func _ImageService_DeleteImage_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ImageService_ClearStorageData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClearStorageDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageServiceServer).ClearStorageData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ImageService_ClearStorageData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageServiceServer).ClearStorageData(ctx, req.(*ClearStorageDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ImageService_ServiceDesc is the grpc.ServiceDesc for ImageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -280,6 +316,10 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteImage",
 			Handler:    _ImageService_DeleteImage_Handler,
+		},
+		{
+			MethodName: "ClearStorageData",
+			Handler:    _ImageService_ClearStorageData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -654,6 +654,94 @@ func (*DeleteImageResponse) Descriptor() ([]byte, []int) {
 	return file_image_image_proto_rawDescGZIP(), []int{10}
 }
 
+type ClearStorageDataRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClearStorageDataRequest) Reset() {
+	*x = ClearStorageDataRequest{}
+	mi := &file_image_image_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClearStorageDataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClearStorageDataRequest) ProtoMessage() {}
+
+func (x *ClearStorageDataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_image_image_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClearStorageDataRequest.ProtoReflect.Descriptor instead.
+func (*ClearStorageDataRequest) Descriptor() ([]byte, []int) {
+	return file_image_image_proto_rawDescGZIP(), []int{11}
+}
+
+type ClearStorageDataResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	ErrorMessage  *string                `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClearStorageDataResponse) Reset() {
+	*x = ClearStorageDataResponse{}
+	mi := &file_image_image_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClearStorageDataResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClearStorageDataResponse) ProtoMessage() {}
+
+func (x *ClearStorageDataResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_image_image_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClearStorageDataResponse.ProtoReflect.Descriptor instead.
+func (*ClearStorageDataResponse) Descriptor() ([]byte, []int) {
+	return file_image_image_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ClearStorageDataResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ClearStorageDataResponse) GetErrorMessage() string {
+	if x != nil && x.ErrorMessage != nil {
+		return *x.ErrorMessage
+	}
+	return ""
+}
+
 var File_image_image_proto protoreflect.FileDescriptor
 
 const file_image_image_proto_rawDesc = "" +
@@ -716,13 +804,19 @@ const file_image_image_proto_rawDesc = "" +
 	"\x05image\x18\x01 \x01(\v2\f.image.ImageR\x05image\"$\n" +
 	"\x12DeleteImageRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x15\n" +
-	"\x13DeleteImageResponse2\x84\x03\n" +
+	"\x13DeleteImageResponse\"\x19\n" +
+	"\x17ClearStorageDataRequest\"p\n" +
+	"\x18ClearStorageDataResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12(\n" +
+	"\rerror_message\x18\x02 \x01(\tH\x00R\ferrorMessage\x88\x01\x01B\x10\n" +
+	"\x0e_error_message2\xd9\x03\n" +
 	"\fImageService\x12G\n" +
 	"\fGetImageByID\x12\x1a.image.GetImageByIDRequest\x1a\x1b.image.GetImageByIDResponse\x12V\n" +
 	"\x11GetImageByImageID\x12\x1f.image.GetImageByImageIDRequest\x1a .image.GetImageByImageIDResponse\x12M\n" +
 	"\x0eBatchGetImages\x12\x1c.image.BatchGetImagesRequest\x1a\x1d.image.BatchGetImagesResponse\x12>\n" +
 	"\tMoveImage\x12\x17.image.MoveImageRequest\x1a\x18.image.MoveImageResponse\x12D\n" +
-	"\vDeleteImage\x12\x19.image.DeleteImageRequest\x1a\x1a.image.DeleteImageResponseB&Z$nfxid/protos/gen/image/image;imagepbb\x06proto3"
+	"\vDeleteImage\x12\x19.image.DeleteImageRequest\x1a\x1a.image.DeleteImageResponse\x12S\n" +
+	"\x10ClearStorageData\x12\x1e.image.ClearStorageDataRequest\x1a\x1f.image.ClearStorageDataResponseB&Z$nfxid/protos/gen/image/image;imagepbb\x06proto3"
 
 var (
 	file_image_image_proto_rawDescOnce sync.Once
@@ -736,7 +830,7 @@ func file_image_image_proto_rawDescGZIP() []byte {
 	return file_image_image_proto_rawDescData
 }
 
-var file_image_image_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_image_image_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_image_image_proto_goTypes = []any{
 	(*Image)(nil),                     // 0: image.Image
 	(*GetImageByIDRequest)(nil),       // 1: image.GetImageByIDRequest
@@ -749,14 +843,16 @@ var file_image_image_proto_goTypes = []any{
 	(*MoveImageResponse)(nil),         // 8: image.MoveImageResponse
 	(*DeleteImageRequest)(nil),        // 9: image.DeleteImageRequest
 	(*DeleteImageResponse)(nil),       // 10: image.DeleteImageResponse
-	(*structpb.Struct)(nil),           // 11: google.protobuf.Struct
-	(*timestamppb.Timestamp)(nil),     // 12: google.protobuf.Timestamp
+	(*ClearStorageDataRequest)(nil),   // 11: image.ClearStorageDataRequest
+	(*ClearStorageDataResponse)(nil),  // 12: image.ClearStorageDataResponse
+	(*structpb.Struct)(nil),           // 13: google.protobuf.Struct
+	(*timestamppb.Timestamp)(nil),     // 14: google.protobuf.Timestamp
 }
 var file_image_image_proto_depIdxs = []int32{
-	11, // 0: image.Image.metadata:type_name -> google.protobuf.Struct
-	12, // 1: image.Image.created_at:type_name -> google.protobuf.Timestamp
-	12, // 2: image.Image.updated_at:type_name -> google.protobuf.Timestamp
-	12, // 3: image.Image.deleted_at:type_name -> google.protobuf.Timestamp
+	13, // 0: image.Image.metadata:type_name -> google.protobuf.Struct
+	14, // 1: image.Image.created_at:type_name -> google.protobuf.Timestamp
+	14, // 2: image.Image.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 3: image.Image.deleted_at:type_name -> google.protobuf.Timestamp
 	0,  // 4: image.GetImageByIDResponse.image:type_name -> image.Image
 	0,  // 5: image.GetImageByImageIDResponse.image:type_name -> image.Image
 	0,  // 6: image.BatchGetImagesResponse.images:type_name -> image.Image
@@ -766,13 +862,15 @@ var file_image_image_proto_depIdxs = []int32{
 	5,  // 10: image.ImageService.BatchGetImages:input_type -> image.BatchGetImagesRequest
 	7,  // 11: image.ImageService.MoveImage:input_type -> image.MoveImageRequest
 	9,  // 12: image.ImageService.DeleteImage:input_type -> image.DeleteImageRequest
-	2,  // 13: image.ImageService.GetImageByID:output_type -> image.GetImageByIDResponse
-	4,  // 14: image.ImageService.GetImageByImageID:output_type -> image.GetImageByImageIDResponse
-	6,  // 15: image.ImageService.BatchGetImages:output_type -> image.BatchGetImagesResponse
-	8,  // 16: image.ImageService.MoveImage:output_type -> image.MoveImageResponse
-	10, // 17: image.ImageService.DeleteImage:output_type -> image.DeleteImageResponse
-	13, // [13:18] is the sub-list for method output_type
-	8,  // [8:13] is the sub-list for method input_type
+	11, // 13: image.ImageService.ClearStorageData:input_type -> image.ClearStorageDataRequest
+	2,  // 14: image.ImageService.GetImageByID:output_type -> image.GetImageByIDResponse
+	4,  // 15: image.ImageService.GetImageByImageID:output_type -> image.GetImageByImageIDResponse
+	6,  // 16: image.ImageService.BatchGetImages:output_type -> image.BatchGetImagesResponse
+	8,  // 17: image.ImageService.MoveImage:output_type -> image.MoveImageResponse
+	10, // 18: image.ImageService.DeleteImage:output_type -> image.DeleteImageResponse
+	12, // 19: image.ImageService.ClearStorageData:output_type -> image.ClearStorageDataResponse
+	14, // [14:20] is the sub-list for method output_type
+	8,  // [8:14] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name
 	8,  // [8:8] is the sub-list for extension extendee
 	0,  // [0:8] is the sub-list for field type_name
@@ -784,13 +882,14 @@ func file_image_image_proto_init() {
 		return
 	}
 	file_image_image_proto_msgTypes[0].OneofWrappers = []any{}
+	file_image_image_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_image_image_proto_rawDesc), len(file_image_image_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
