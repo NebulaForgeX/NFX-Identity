@@ -31,7 +31,9 @@
     "profileView": "Voir le profil",
     "editProfile": "Modifier le profil",
     "addEducation": "Ajouter une éducation",
+    "editEducation": "Modifier l'éducation",
     "addOccupation": "Ajouter une occupation",
+    "editOccupation": "Modifier l'occupation",
     "editPreference": "Modifier la préférence",
     "userSecurity": "Sécurité utilisateur"
   },

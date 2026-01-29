@@ -32,7 +32,9 @@
     "profileView": "View Profile",
     "editProfile": "Edit Profile",
     "addEducation": "Add Education",
+    "editEducation": "Edit Education",
     "addOccupation": "Add Occupation",
+    "editOccupation": "Edit Occupation",
     "editPreference": "Edit Preference",
     "userSecurity": "User Security"
   },

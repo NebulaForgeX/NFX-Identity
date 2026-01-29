@@ -6,7 +6,19 @@ import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, Sidebar as ProSidebar, SubMenu } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-import { Home, User, Plus, Settings, Eye, LogOut, Shield } from "@/assets/icons/lucide";
+import {
+  Briefcase,
+  Edit,
+  Eye,
+  Globe,
+  GraduationCap,
+  Home,
+  LogOut,
+  Pencil,
+  Settings,
+  Shield,
+  User,
+} from "@/assets/icons/lucide";
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { isActiveRoute, ROUTES } from "@/types/navigation";
 
@@ -120,21 +132,35 @@ const Sidebar = memo(
                   {t("sidebar.editProfile")}
                 </MenuItem>
                 <MenuItem
-                  icon={<Plus size={18} />}
+                  icon={<GraduationCap size={18} />}
                   component={<Link to={ROUTES.ADD_EDUCATION} />}
                   active={isActiveRoute(location.pathname, ROUTES.ADD_EDUCATION)}
                 >
                   {t("sidebar.addEducation")}
                 </MenuItem>
                 <MenuItem
-                  icon={<Plus size={18} />}
+                  icon={<Edit size={18} />}
+                  component={<Link to={ROUTES.EDIT_EDUCATION} />}
+                  active={isActiveRoute(location.pathname, ROUTES.EDIT_EDUCATION)}
+                >
+                  {t("sidebar.editEducation")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Briefcase size={18} />}
                   component={<Link to={ROUTES.ADD_OCCUPATION} />}
                   active={isActiveRoute(location.pathname, ROUTES.ADD_OCCUPATION)}
                 >
                   {t("sidebar.addOccupation")}
                 </MenuItem>
                 <MenuItem
-                  icon={<Settings size={18} />}
+                  icon={<Pencil size={18} />}
+                  component={<Link to={ROUTES.EDIT_OCCUPATION} />}
+                  active={isActiveRoute(location.pathname, ROUTES.EDIT_OCCUPATION)}
+                >
+                  {t("sidebar.editOccupation")}
+                </MenuItem>
+                <MenuItem
+                  icon={<Globe size={18} />}
                   component={<Link to={ROUTES.EDIT_PREFERENCE} />}
                   active={isActiveRoute(location.pathname, ROUTES.EDIT_PREFERENCE)}
                 >

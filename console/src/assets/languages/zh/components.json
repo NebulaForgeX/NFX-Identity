@@ -32,7 +32,9 @@
     "profileView": "查看资料",
     "editProfile": "编辑资料",
     "addEducation": "添加教育",
+    "editEducation": "编辑教育",
     "addOccupation": "添加工作",
+    "editOccupation": "编辑职业",
     "editPreference": "编辑偏好",
     "userSecurity": "用户安全"
   },
