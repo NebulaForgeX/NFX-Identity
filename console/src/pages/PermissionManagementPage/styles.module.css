@@ -201,3 +201,9 @@
   flex: 1;
   min-width: 0;
 }
+
+.formRow button {
+  white-space: nowrap;
+  min-width: 5.5rem;
+  flex-shrink: 0;
+}
