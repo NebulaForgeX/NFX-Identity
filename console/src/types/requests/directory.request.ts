@@ -228,3 +228,12 @@ export interface UpdateUserImageDisplayOrderRequest {
 export interface UpdateUserImageImageIDRequest {
   imageId: string;
 }
+
+export interface BatchUpdateUserImagesDisplayOrderItem {
+  id: string;
+  displayOrder: number;
+}
+
+export interface BatchUpdateUserImagesDisplayOrderRequest {
+  order: BatchUpdateUserImagesDisplayOrderItem[];
+}

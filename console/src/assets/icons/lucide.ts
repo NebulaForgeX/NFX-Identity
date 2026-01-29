@@ -52,6 +52,7 @@ export { default as Plus } from "lucide-react/icons/plus";
 export { default as Search } from "lucide-react/icons/search";
 export { default as Settings } from "lucide-react/icons/settings";
 export { default as Shield } from "lucide-react/icons/shield";
+export { default as Star } from "lucide-react/icons/star";
 export { default as Tag } from "lucide-react/icons/tag";
 export { default as Trash2 } from "lucide-react/icons/trash-2";
 export { default as TrendingUp } from "lucide-react/icons/trending-up";

@@ -20,6 +20,17 @@ type UserImageUpdateImageIDRequestDTO struct {
 	ImageID uuid.UUID `json:"image_id" validate:"required,uuid"`
 }
 
+// UserImagesDisplayOrderBatchItemRequestDTO 批量顺序项
+type UserImagesDisplayOrderBatchItemRequestDTO struct {
+	ID           uuid.UUID `json:"id" validate:"required,uuid"`
+	DisplayOrder int       `json:"display_order" validate:"required"`
+}
+
+// UserImagesDisplayOrderBatchRequestDTO 批量更新用户图片显示顺序请求
+type UserImagesDisplayOrderBatchRequestDTO struct {
+	Order []UserImagesDisplayOrderBatchItemRequestDTO `json:"order" validate:"required,dive"`
+}
+
 func (r *UserImageCreateRequestDTO) ToCreateCmd() userImageAppCommands.CreateUserImageCmd {
 	return userImageAppCommands.CreateUserImageCmd{
 		UserID:       r.UserID,
@@ -30,7 +41,7 @@ func (r *UserImageCreateRequestDTO) ToCreateCmd() userImageAppCommands.CreateUse
 
 func (r *UserImageUpdateDisplayOrderRequestDTO) ToUpdateDisplayOrderCmd(userImageID uuid.UUID) userImageAppCommands.UpdateUserImageDisplayOrderCmd {
 	return userImageAppCommands.UpdateUserImageDisplayOrderCmd{
-		UserImageID: userImageID,
+		UserImageID:  userImageID,
 		DisplayOrder: r.DisplayOrder,
 	}
 }
@@ -40,4 +51,15 @@ func (r *UserImageUpdateImageIDRequestDTO) ToUpdateImageIDCmd(userImageID uuid.U
 		UserImageID: userImageID,
 		ImageID:     r.ImageID,
 	}
+}
+
+func (r *UserImagesDisplayOrderBatchRequestDTO) ToBatchUpdateDisplayOrderCmd(userID uuid.UUID) userImageAppCommands.BatchUpdateDisplayOrderCmd {
+	order := make([]userImageAppCommands.BatchUpdateDisplayOrderItem, len(r.Order))
+	for i, item := range r.Order {
+		order[i] = userImageAppCommands.BatchUpdateDisplayOrderItem{
+			UserImageID:  item.ID,
+			DisplayOrder: item.DisplayOrder,
+		}
+	}
+	return userImageAppCommands.BatchUpdateDisplayOrderCmd{UserID: userID, Order: order}
 }

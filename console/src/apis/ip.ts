@@ -214,7 +214,9 @@ export const URL_PATHS = {
     GET_USER_IMAGES_BY_USER_ID: "/directory/auth/users/:id/user-images",
     GET_CURRENT_USER_IMAGE_BY_USER_ID: "/directory/auth/users/:id/user-images/current",
     UPDATE_USER_IMAGE: "/directory/auth/user-images/:id",
+    SET_PRIMARY_USER_IMAGE: "/directory/auth/user-images/:id/set-primary",
     UPDATE_USER_IMAGE_DISPLAY_ORDER: "/directory/auth/user-images/:id/display-order",
+    UPDATE_USER_IMAGES_DISPLAY_ORDER_BATCH: "/directory/auth/users/:id/user-images/display-order",
     DELETE_USER_IMAGE: "/directory/auth/user-images/:id",
   },
   // Image 模块 - /image/auth

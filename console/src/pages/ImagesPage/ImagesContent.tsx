@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 
 import {
   useCreateUserImage,
-  useDeleteUserImage,
   useUploadImage,
   useUserImagesByUserID,
 } from "@/hooks";
+import { directoryEventEmitter, directoryEvents } from "@/events/directory";
 import { showError } from "@/stores/modalStore";
 
 import {
@@ -30,7 +30,6 @@ export const ImagesContent = memo(function ImagesContent({ userId }: ImagesConte
   const { data: userImages = [] } = useUserImagesByUserID({ userId });
   const uploadMutation = useUploadImage();
   const confirmMutation = useCreateUserImage();
-  const deleteMutation = useDeleteUserImage();
 
   const handleFileSelect = useCallback(
     (file: File) => {
@@ -89,17 +88,14 @@ export const ImagesContent = memo(function ImagesContent({ userId }: ImagesConte
         displayOrder: userImages.length,
       },
       {
-        onSuccess: () => setUploadedImageId(null),
+        onSuccess: () => {
+          setUploadedImageId(null);
+          directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+          directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGE, userId);
+        },
       }
     );
   }, [uploadedImageId, userId, userImages.length, confirmMutation]);
-
-  const handleDelete = useCallback(
-    (userImageId: string) => {
-      deleteMutation.mutate(userImageId);
-    },
-    [deleteMutation]
-  );
 
   useEffect(() => {
     if (uploadMutation.isSuccess && uploadMutation.data?.id) {
@@ -127,7 +123,7 @@ export const ImagesContent = memo(function ImagesContent({ userId }: ImagesConte
         onConfirm={handleConfirm}
       />
       {userImages.length > 0 ? (
-        <ImagesGallery userImages={userImages} onDelete={handleDelete} />
+        <ImagesGallery userId={userId} userImages={userImages} />
       ) : (
         <ImagesEmptyState />
       )}

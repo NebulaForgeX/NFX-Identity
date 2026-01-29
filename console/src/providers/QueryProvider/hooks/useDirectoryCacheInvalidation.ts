@@ -24,6 +24,12 @@ export const useDirectoryCacheInvalidation = (queryClient: QueryClient) => {
   const handleInvalidateUserPreference = (item: string) => queryClient.invalidateQueries({ queryKey: [...DIRECTORY_QUERY_KEY_PREFIXES.USER_PREFERENCE, item] });
   const handleInvalidateUserProfiles = () => queryClient.invalidateQueries({ queryKey: DIRECTORY_QUERY_KEY_PREFIXES.USER_PROFILES });
   const handleInvalidateUserProfile = (item: string) => queryClient.invalidateQueries({ queryKey: [...DIRECTORY_QUERY_KEY_PREFIXES.USER_PROFILE, item] });
+  const handleInvalidateUserImages = () => {
+    queryClient.invalidateQueries({ queryKey: DIRECTORY_QUERY_KEY_PREFIXES.USER_IMAGES });
+    // 同时失效单条缓存（含 current-${userId}），保证设主图/排序后 Profile 背景图会刷新
+    queryClient.invalidateQueries({ queryKey: DIRECTORY_QUERY_KEY_PREFIXES.USER_IMAGE });
+  };
+  const handleInvalidateUserImage = (item: string) => queryClient.invalidateQueries({ queryKey: [...DIRECTORY_QUERY_KEY_PREFIXES.USER_IMAGE, item] });
 
   // 注册监听器
   directoryEventEmitter.on(directoryEvents.INVALIDATE_USERS, handleInvalidateUsers);
@@ -44,6 +50,8 @@ export const useDirectoryCacheInvalidation = (queryClient: QueryClient) => {
   directoryEventEmitter.on(directoryEvents.INVALIDATE_USER_PREFERENCE, handleInvalidateUserPreference);
   directoryEventEmitter.on(directoryEvents.INVALIDATE_USER_PROFILES, handleInvalidateUserProfiles);
   directoryEventEmitter.on(directoryEvents.INVALIDATE_USER_PROFILE, handleInvalidateUserProfile);
+  directoryEventEmitter.on(directoryEvents.INVALIDATE_USER_IMAGES, handleInvalidateUserImages);
+  directoryEventEmitter.on(directoryEvents.INVALIDATE_USER_IMAGE, handleInvalidateUserImage);
 
   // 清理监听器
   return () => {
@@ -65,5 +73,7 @@ export const useDirectoryCacheInvalidation = (queryClient: QueryClient) => {
     directoryEventEmitter.off(directoryEvents.INVALIDATE_USER_PREFERENCE, handleInvalidateUserPreference);
     directoryEventEmitter.off(directoryEvents.INVALIDATE_USER_PROFILES, handleInvalidateUserProfiles);
     directoryEventEmitter.off(directoryEvents.INVALIDATE_USER_PROFILE, handleInvalidateUserProfile);
+    directoryEventEmitter.off(directoryEvents.INVALIDATE_USER_IMAGES, handleInvalidateUserImages);
+    directoryEventEmitter.off(directoryEvents.INVALIDATE_USER_IMAGE, handleInvalidateUserImage);
   };
 };

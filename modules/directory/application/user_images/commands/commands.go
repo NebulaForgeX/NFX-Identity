@@ -13,7 +13,7 @@ type CreateUserImageCmd struct {
 
 // UpdateUserImageDisplayOrderCmd 更新用户图片显示顺序命令
 type UpdateUserImageDisplayOrderCmd struct {
-	UserImageID uuid.UUID
+	UserImageID  uuid.UUID
 	DisplayOrder int
 }
 
@@ -26,4 +26,21 @@ type UpdateUserImageImageIDCmd struct {
 // DeleteUserImageCmd 删除用户图片命令
 type DeleteUserImageCmd struct {
 	UserImageID uuid.UUID
+}
+
+// SetPrimaryUserImageCmd 设置主图（背景图）命令
+type SetPrimaryUserImageCmd struct {
+	UserImageID uuid.UUID
+}
+
+// BatchUpdateDisplayOrderItem 批量更新顺序项
+type BatchUpdateDisplayOrderItem struct {
+	UserImageID  uuid.UUID
+	DisplayOrder int
+}
+
+// BatchUpdateDisplayOrderCmd 批量更新用户图片显示顺序命令
+type BatchUpdateDisplayOrderCmd struct {
+	UserID uuid.UUID
+	Order  []BatchUpdateDisplayOrderItem
 }

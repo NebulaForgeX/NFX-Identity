@@ -171,6 +171,49 @@
   cursor: not-allowed;
 }
 
+/* Gallery section */
+.gallerySection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.saveOrderBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--color-primary-bg);
+  border: 1px solid var(--color-primary);
+  border-radius: 0.5rem;
+}
+
+.saveOrderText {
+  font-size: 0.9375rem;
+  color: var(--color-fg-text);
+}
+
+.saveOrderButton {
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.saveOrderButton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.saveOrderButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* Images Grid */
 .imagesGrid {
   display: grid;
@@ -179,6 +222,7 @@
 }
 
 .imageCard {
+  position: relative;
   background: var(--color-bg);
   border: 1px solid var(--color-border-4);
   border-radius: 0.75rem;
@@ -188,6 +232,36 @@
 
 .imageCard:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.imageCardDragging {
+  opacity: 0.9;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.sortableHandle {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  padding: 0.25rem;
+  cursor: grab;
+  color: var(--color-fg-muted);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sortableHandle:active {
+  cursor: grabbing;
+}
+
+.sortableHandle:hover {
+  color: var(--color-fg-text);
+  background: white;
 }
 
 .imageWrapper {
@@ -229,12 +303,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   opacity: 0;
   transition: opacity 0.2s;
 }
 
 .imageCard:hover .imageOverlay {
   opacity: 1;
+}
+
+.setPrimaryButton {
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.setPrimaryButton:hover {
+  transform: scale(1.1);
+  background: var(--color-primary-hover);
 }
 
 .deleteButton {
@@ -244,7 +340,9 @@
   border-radius: 50%;
   width: 44px;
   height: 44px;
-  display: flex;
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;

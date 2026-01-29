@@ -82,6 +82,24 @@ func (h *UserImageHandler) GetCurrent(c *fiber.Ctx) error {
 	return httpresp.Success(c, fiber.StatusOK, "Current user image retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&result)})
 }
 
+func (h *UserImageHandler) SetPrimary(c *fiber.Ctx) error {
+	var req reqdto.ByIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+
+	cmd := userImageAppCommands.SetPrimaryUserImageCmd{UserImageID: req.ID}
+	if err := h.appSvc.SetPrimaryUserImage(c.Context(), cmd); err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to set primary user image: "+err.Error())
+	}
+
+	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get updated user image: "+err.Error())
+	}
+	return httpresp.Success(c, fiber.StatusOK, "Primary user image set successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
+}
+
 func (h *UserImageHandler) UpdateDisplayOrder(c *fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
 	if err := c.ParamsParser(&req); err != nil {
@@ -105,6 +123,30 @@ func (h *UserImageHandler) UpdateDisplayOrder(c *fiber.Ctx) error {
 	}
 
 	return httpresp.Success(c, fiber.StatusOK, "User image display order updated successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
+}
+
+func (h *UserImageHandler) UpdateDisplayOrderBatch(c *fiber.Ctx) error {
+	var req reqdto.ByIDRequestDTO
+	if err := c.ParamsParser(&req); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	}
+	userID := req.ID
+
+	var body reqdto.UserImagesDisplayOrderBatchRequestDTO
+	if err := c.BodyParser(&body); err != nil {
+		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	}
+
+	cmd := body.ToBatchUpdateDisplayOrderCmd(userID)
+	if err := h.appSvc.UpdateUserImagesDisplayOrderBatch(c.Context(), cmd); err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user images display order: "+err.Error())
+	}
+
+	results, err := h.appSvc.GetUserImagesByUserID(c.Context(), userID)
+	if err != nil {
+		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user images: "+err.Error())
+	}
+	return httpresp.Success(c, fiber.StatusOK, "User images display order updated successfully", httpresp.SuccessOptions{Data: respdto.UserImageListROToDTO(results)})
 }
 
 func (h *UserImageHandler) Update(c *fiber.Ctx) error {

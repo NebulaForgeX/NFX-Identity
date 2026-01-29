@@ -44,6 +44,7 @@ import {
   GetUserPreference,
   GetUserProfile,
   SetPrimaryUserEmail,
+  SetPrimaryUserImage,
   SetPrimaryUserPhone,
   UpdateBadge,
   UpdateUserAvatar,
@@ -51,6 +52,7 @@ import {
   UpdateUserEmail,
   UpdateUserImage,
   UpdateUserImageDisplayOrder,
+  UpdateUserImagesDisplayOrderBatch,
   UpdateUserOccupation,
   UpdateUserPhone,
   UpdateUserPreference,
@@ -70,6 +72,7 @@ import type {
   CreateUserOccupationRequest,
   CreateUserPhoneRequest,
   CreateOrUpdateUserAvatarRequest,
+  BatchUpdateUserImagesDisplayOrderRequest,
   CreateUserImageRequest,
   CreateUserPreferenceRequest,
   CreateUserProfileRequest,
@@ -1037,6 +1040,23 @@ export const useUpdateUserImage = () => {
   });
 };
 
+// 设置主图（背景图）
+export const useSetPrimaryUserImage = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      return await SetPrimaryUserImage(id);
+    },
+    onSuccess: (_, id) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGE, id);
+      showSuccess("主图设置成功！");
+    },
+    onError: (error: AxiosError) => {
+      showError("设置主图失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
 // 更新用户图片显示顺序
 export const useUpdateUserImageDisplayOrder = () => {
   return useMutation({
@@ -1050,6 +1070,22 @@ export const useUpdateUserImageDisplayOrder = () => {
     },
     onError: (error: AxiosError) => {
       showError("更新用户图片顺序失败，请稍后重试。" + error.message);
+    },
+  });
+};
+
+// 批量更新用户图片显示顺序
+export const useUpdateUserImagesDisplayOrderBatch = () => {
+  return useMutation({
+    mutationFn: async (params: { userId: string; data: BatchUpdateUserImagesDisplayOrderRequest }) => {
+      return await UpdateUserImagesDisplayOrderBatch(params.userId, params.data);
+    },
+    onSuccess: (_, variables) => {
+      directoryEventEmitter.emit(directoryEvents.INVALIDATE_USER_IMAGES);
+      showSuccess("顺序已保存！");
+    },
+    onError: (error: AxiosError) => {
+      showError("保存顺序失败，请稍后重试。" + error.message);
     },
   });
 };

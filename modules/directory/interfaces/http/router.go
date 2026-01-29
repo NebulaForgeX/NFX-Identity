@@ -92,7 +92,9 @@ func (r *Router) RegisterRoutes() {
 		auth.Get("/users/:id/user-images", r.handlers.UserImage.GetByUserID)
 		auth.Get("/users/:id/user-images/current", r.handlers.UserImage.GetCurrent)
 		auth.Put("/user-images/:id", r.handlers.UserImage.Update)
+		auth.Patch("/user-images/:id/set-primary", r.handlers.UserImage.SetPrimary)
 		auth.Patch("/user-images/:id/display-order", r.handlers.UserImage.UpdateDisplayOrder)
+		auth.Patch("/users/:id/user-images/display-order", r.handlers.UserImage.UpdateDisplayOrderBatch)
 		auth.Delete("/user-images/:id", r.handlers.UserImage.Delete)
 	}
 }

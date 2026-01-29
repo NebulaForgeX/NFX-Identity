@@ -8,6 +8,7 @@ import type {
   CreateUserBadgeRequest,
   CreateUserEducationRequest,
   CreateUserEmailRequest,
+  BatchUpdateUserImagesDisplayOrderRequest,
   CreateUserImageRequest,
   CreateUserOccupationRequest,
   CreateUserPhoneRequest,
@@ -479,11 +480,25 @@ export const UpdateUserImage = async (id: string, params: UpdateUserImageImageID
   return data;
 };
 
+// 设置主图（背景图）
+export const SetPrimaryUserImage = async (id: string): Promise<BaseResponse> => {
+  const url = URL_PATHS.DIRECTORY.SET_PRIMARY_USER_IMAGE.replace(":id", id);
+  const { data } = await protectedClient.patch<BaseResponse>(url);
+  return data;
+};
+
 // 更新用户图片显示顺序
 export const UpdateUserImageDisplayOrder = async (id: string, params: UpdateUserImageDisplayOrderRequest): Promise<BaseResponse> => {
   const url = URL_PATHS.DIRECTORY.UPDATE_USER_IMAGE_DISPLAY_ORDER.replace(":id", id);
   const { data } = await protectedClient.patch<BaseResponse>(url, params);
   return data;
+};
+
+// 批量更新用户图片显示顺序
+export const UpdateUserImagesDisplayOrderBatch = async (userId: string, params: BatchUpdateUserImagesDisplayOrderRequest): Promise<UserImage[]> => {
+  const url = URL_PATHS.DIRECTORY.UPDATE_USER_IMAGES_DISPLAY_ORDER_BATCH.replace(":id", userId);
+  const { data } = await protectedClient.patch<DataResponse<UserImage[]>>(url, params);
+  return data.data;
 };
 
 // 删除用户图片

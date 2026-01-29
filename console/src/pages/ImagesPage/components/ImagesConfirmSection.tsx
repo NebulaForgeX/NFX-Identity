@@ -1,5 +1,8 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
+
+import Button from "@/components/Button";
+
 import styles from "../styles.module.css";
 
 interface ImagesConfirmSectionProps {
@@ -23,12 +26,12 @@ export const ImagesConfirmSection = memo(function ImagesConfirmSection({
         {t("confirmUpload", "Image uploaded to temporary storage. Click confirm to add to your images.")}
       </p>
       <div className={styles.confirmActions}>
-        <button className={styles.cancelButton} onClick={onCancel} disabled={isConfirming}>
+        <Button variant="outline" className={styles.cancelButton} onClick={onCancel} disabled={isConfirming}>
           {t("cancel", "Cancel")}
-        </button>
-        <button className={styles.confirmButton} onClick={onConfirm} disabled={isConfirming}>
+        </Button>
+        <Button variant="primary" className={styles.confirmButton} onClick={onConfirm} loading={isConfirming} disabled={isConfirming}>
           {isConfirming ? t("confirming", "Confirming...") : t("confirm", "Confirm")}
-        </button>
+        </Button>
       </div>
     </div>
   );
