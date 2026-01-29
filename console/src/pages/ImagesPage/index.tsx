@@ -5,7 +5,7 @@ import { Suspense } from "@/components";
 import { useAuthStore } from "@/stores/authStore";
 
 import { ImagesContent } from "./ImagesContent";
-import { ImagesHeader } from "./components";
+import { ImagesHeader } from "./components/ImagesHeader";
 import styles from "./styles.module.css";
 
 const ImagesPage = memo(function ImagesPage() {

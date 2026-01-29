@@ -20,5 +20,6 @@
   "systemPermission": "Permission système",
   "permissions": "Permissions",
   "noPermissions": "Aucune permission",
-  "remove": "Retirer"
+  "remove": "Retirer",
+  "notFound": "Aucun résultat pour cette clé."
 }

@@ -5,7 +5,9 @@ import { Suspense } from "@/components";
 import Background from "@/layouts/Background";
 import QuickStore, { useQuickStore } from "@/stores/quickStore";
 
-import { QuickNavigation, ResourceLinks, StatsCards } from "./components";
+import QuickNavigation from "./components/QuickNavigation";
+import ResourceLinks from "./components/ResourceLinks";
+import StatsCards from "./components/StatsCards";
 import styles from "./styles.module.css";
 
 const DashboardPage = memo(() => {

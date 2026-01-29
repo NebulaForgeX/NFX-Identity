@@ -11,5 +11,6 @@
   "lookupActionByKey": "Lookup Action by Key",
   "lookup": "Lookup",
   "loading": "Loading...",
-  "systemAction": "System"
+  "systemAction": "System",
+  "notFound": "No action found for this key."
 }

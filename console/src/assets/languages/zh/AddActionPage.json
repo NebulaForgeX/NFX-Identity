@@ -11,5 +11,6 @@
   "lookupActionByKey": "按 Key 查询 Action",
   "lookup": "查询",
   "loading": "加载中...",
-  "systemAction": "系统"
+  "systemAction": "系统",
+  "notFound": "未找到该 Key 对应的 Action。"
 }

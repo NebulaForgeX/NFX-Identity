@@ -6,7 +6,7 @@ import { IconButton } from "@/components";
 import { ArrowLeft } from "@/assets/icons/lucide";
 import { ROUTES } from "@/types/navigation";
 
-import { CreateRoleForm } from "./components";
+import CreateRoleForm from "./components/CreateRoleForm";
 import styles from "./styles.module.css";
 
 const AddRolePage = memo(() => {

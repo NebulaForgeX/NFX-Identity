@@ -8,7 +8,7 @@ import styles from "../styles.module.css";
 const PermissionByKeyContent = memo(({ permissionKey }: { permissionKey: string }) => {
   const { t } = useTranslation("PermissionManagementPage");
   const { data: permission } = usePermissionByKey({ key: permissionKey });
-  if (!permission) return null;
+  if (!permission) return <p className={styles.emptyText}>{t("notFound")}</p>;
   return (
     <div className={styles.item}>
       <div className={styles.itemHeader}>

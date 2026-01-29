@@ -11,5 +11,6 @@
   "lookupActionByKey": "Rechercher une action par clé",
   "lookup": "Rechercher",
   "loading": "Chargement...",
-  "systemAction": "Système"
+  "systemAction": "Système",
+  "notFound": "Aucune action trouvée pour cette clé."
 }

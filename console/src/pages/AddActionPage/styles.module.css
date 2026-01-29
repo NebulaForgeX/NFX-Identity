@@ -111,6 +111,13 @@
   flex: 1;
 }
 
+.emptyText {
+  color: var(--color-fg-muted);
+  text-align: center;
+  padding: 1rem;
+  margin: 0;
+}
+
 .loading {
   padding: 1rem 0;
 }

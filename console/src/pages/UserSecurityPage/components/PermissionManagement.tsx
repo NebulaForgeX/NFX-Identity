@@ -12,6 +12,7 @@ import {
   usePermission,
 } from "@/hooks/useAccess";
 import { GetPermissionByKey, GetRoleByKey } from "@/apis";
+import { showError } from "@/stores/modalStore";
 
 import styles from "../styles.module.css";
 
@@ -40,7 +41,15 @@ const PermissionManagement = memo(() => {
     if (!roleKey.trim() || !permissionKey.trim()) return;
     try {
       const roleRes = await GetRoleByKey(roleKey.trim());
+      if (!roleRes) {
+        showError(t("notFoundRole"));
+        return;
+      }
       const permRes = await GetPermissionByKey(permissionKey.trim());
+      if (!permRes) {
+        showError(t("notFoundPermission"));
+        return;
+      }
       await createRolePermission.mutateAsync({
         roleId: roleRes.id,
         permissionId: permRes.id,
@@ -215,18 +224,16 @@ const PermissionManagement = memo(() => {
 PermissionManagement.displayName = "PermissionManagement";
 
 /** 按 roleKey 查看角色及其权限，内部用 suspense hooks，需包在 Suspense 内 */
-const RolePermissionsLookupContent = memo(
+const RolePermissionsByRolePanel = memo(
   ({
-    roleKey,
+    role,
     deleteRolePermission,
   }: {
-    roleKey: string;
+    role: { id: string; name: string; key: string; isSystem?: boolean };
     deleteRolePermission: ReturnType<typeof useDeleteRolePermission>;
   }) => {
     const { t } = useTranslation("UserSecurityPage");
-    const { data: role } = useRoleByKey({ key: roleKey });
     const { data: rolePermissions } = useRolePermissionsByRole({ roleId: role.id });
-
     return (
       <div className={styles.item}>
         <div className={styles.itemHeader}>
@@ -258,6 +265,22 @@ const RolePermissionsLookupContent = memo(
         </div>
       </div>
     );
+  },
+);
+RolePermissionsByRolePanel.displayName = "RolePermissionsByRolePanel";
+
+const RolePermissionsLookupContent = memo(
+  ({
+    roleKey,
+    deleteRolePermission,
+  }: {
+    roleKey: string;
+    deleteRolePermission: ReturnType<typeof useDeleteRolePermission>;
+  }) => {
+    const { t } = useTranslation("UserSecurityPage");
+    const { data: role } = useRoleByKey({ key: roleKey });
+    if (!role) return <p className={styles.emptyText}>{t("notFoundRole")}</p>;
+    return <RolePermissionsByRolePanel role={role} deleteRolePermission={deleteRolePermission} />;
   },
 );
 RolePermissionsLookupContent.displayName = "RolePermissionsLookupContent";

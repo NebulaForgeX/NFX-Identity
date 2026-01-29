@@ -23,5 +23,8 @@
   "systemPermission": "System Permission",
   "permissions": "Permissions",
   "noPermissions": "No permissions",
-  "remove": "Remove"
+  "remove": "Remove",
+  "notFoundRole": "No role found for this key.",
+  "notFoundPermission": "No permission found for this key.",
+  "notFoundAction": "No action found for this key."
 }

@@ -12,7 +12,7 @@ interface ActionByKeyContentProps {
 const ActionByKeyContent = memo(({ actionKey }: ActionByKeyContentProps) => {
   const { t } = useTranslation("AddActionPage");
   const { data: action } = useActionByKey({ key: actionKey });
-  if (!action) return null;
+  if (!action) return <p className={styles.emptyText}>{t("notFound")}</p>;
   return (
     <div className={styles.item}>
       <div className={styles.itemHeader}>

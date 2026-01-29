@@ -23,5 +23,8 @@
   "systemPermission": "Permission système",
   "permissions": "Permissions",
   "noPermissions": "Aucune permission",
-  "remove": "Retirer"
+  "remove": "Retirer",
+  "notFoundRole": "Aucun rôle trouvé pour cette clé.",
+  "notFoundPermission": "Aucune permission trouvée pour cette clé.",
+  "notFoundAction": "Aucune action trouvée pour cette clé."
 }

@@ -33,5 +33,7 @@
   "lookup": "Rechercher",
   "addPermission": "Ajouter l'autorisation",
   "remove": "Retirer",
-  "isSystem": "Système"
+  "isSystem": "Système",
+  "notFoundRole": "Aucun rôle trouvé pour cette clé.",
+  "notFoundPermission": "Aucune permission trouvée pour cette clé."
 }

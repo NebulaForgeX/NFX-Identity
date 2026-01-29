@@ -8,7 +8,7 @@ import styles from "../styles.module.css";
 const RoleByKeyContent = memo(({ roleKey }: { roleKey: string }) => {
   const { t } = useTranslation("PermissionManagementPage");
   const { data: role } = useRoleByKey({ key: roleKey });
-  if (!role) return null;
+  if (!role) return <p className={styles.emptyText}>{t("notFound")}</p>;
   return (
     <div className={styles.item}>
       <div className={styles.itemHeader}>

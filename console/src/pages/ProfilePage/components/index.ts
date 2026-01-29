@@ -1,9 +1,0 @@
-export { default as ProfileCard } from "./ProfileCard";
-export { default as BasicInfoCard } from "./BasicInfoCard";
-export { default as AccountInfoCard } from "./AccountInfoCard";
-export { default as UserEmailsCard } from "./UserEmailsCard";
-export { default as UserPhonesCard } from "./UserPhonesCard";
-export { default as UserEducationsCard } from "./UserEducationsCard";
-export { default as UserOccupationsCard } from "./UserOccupationsCard";
-export { default as SocialLinksCard } from "./SocialLinksCard";
-export { default as SkillsCard } from "./SkillsCard";

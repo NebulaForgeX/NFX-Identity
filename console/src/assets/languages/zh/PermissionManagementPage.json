@@ -20,5 +20,6 @@
   "systemPermission": "系统权限",
   "permissions": "权限",
   "noPermissions": "暂无权限",
-  "remove": "移除"
+  "remove": "移除",
+  "notFound": "未找到该 Key 对应的数据。"
 }

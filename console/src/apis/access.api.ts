@@ -25,6 +25,8 @@ import type {
   UpdateScopeRequest,
 } from "@/types";
 
+import type { AxiosError } from "axios";
+
 import { protectedClient } from "./clients";
 import { URL_PATHS } from "./ip";
 
@@ -43,11 +45,17 @@ export const GetRole = async (id: string): Promise<Role> => {
   return data.data;
 };
 
-// 根据 Key 获取角色
-export const GetRoleByKey = async (key: string): Promise<Role> => {
+// 根据 Key 获取角色（404 视为未找到，返回 null，不抛错）
+export const GetRoleByKey = async (key: string): Promise<Role | null> => {
   const url = URL_PATHS.ACCESS.GET_ROLE_BY_KEY.replace(":key", key);
-  const { data } = await protectedClient.get<DataResponse<Role>>(url);
-  return data.data;
+  try {
+    const { data } = await protectedClient.get<DataResponse<Role>>(url);
+    return data.data;
+  } catch (e) {
+    const err = e as AxiosError & { response?: { status?: number } };
+    if (err.response?.status === 404) return null;
+    throw e;
+  }
 };
 
 // 更新角色
@@ -79,11 +87,17 @@ export const GetPermission = async (id: string): Promise<Permission> => {
   return data.data;
 };
 
-// 根据 Key 获取权限
-export const GetPermissionByKey = async (key: string): Promise<Permission> => {
+// 根据 Key 获取权限（404 视为未找到，返回 null，不抛错）
+export const GetPermissionByKey = async (key: string): Promise<Permission | null> => {
   const url = URL_PATHS.ACCESS.GET_PERMISSION_BY_KEY.replace(":key", key);
-  const { data } = await protectedClient.get<DataResponse<Permission>>(url);
-  return data.data;
+  try {
+    const { data } = await protectedClient.get<DataResponse<Permission>>(url);
+    return data.data;
+  } catch (e) {
+    const err = e as AxiosError & { response?: { status?: number } };
+    if (err.response?.status === 404) return null;
+    throw e;
+  }
 };
 
 // 更新权限
@@ -240,10 +254,17 @@ export const GetAction = async (id: string): Promise<Action> => {
   return data.data;
 };
 
-export const GetActionByKey = async (key: string): Promise<Action> => {
+// 根据 Key 获取 Action（404 视为未找到，返回 null，不抛错）
+export const GetActionByKey = async (key: string): Promise<Action | null> => {
   const url = URL_PATHS.ACCESS.GET_ACTION_BY_KEY.replace(":key", key);
-  const { data } = await protectedClient.get<DataResponse<Action>>(url);
-  return data.data;
+  try {
+    const { data } = await protectedClient.get<DataResponse<Action>>(url);
+    return data.data;
+  } catch (e) {
+    const err = e as AxiosError & { response?: { status?: number } };
+    if (err.response?.status === 404) return null;
+    throw e;
+  }
 };
 
 // ========== ActionRequirement 相关（Permission 关联的 Action） ==========

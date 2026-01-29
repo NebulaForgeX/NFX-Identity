@@ -23,5 +23,8 @@
   "systemPermission": "系统权限",
   "permissions": "权限",
   "noPermissions": "暂无权限",
-  "remove": "移除"
+  "remove": "移除",
+  "notFoundRole": "未找到该 Key 对应的角色。",
+  "notFoundPermission": "未找到该 Key 对应的权限。",
+  "notFoundAction": "未找到该 Key 对应的 Action。"
 }

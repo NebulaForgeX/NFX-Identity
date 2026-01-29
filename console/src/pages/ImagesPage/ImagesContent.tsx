@@ -9,12 +9,10 @@ import {
 import { directoryEventEmitter, directoryEvents } from "@/events/directory";
 import { showError } from "@/stores/modalStore";
 
-import {
-  ImagesConfirmSection,
-  ImagesEmptyState,
-  ImagesGallery,
-  ImagesUploadArea,
-} from "./components";
+import { ImagesConfirmSection } from "./components/ImagesConfirmSection";
+import { ImagesEmptyState } from "./components/ImagesEmptyState";
+import { ImagesGallery } from "./components/ImagesGallery";
+import { ImagesUploadArea } from "./components/ImagesUploadArea";
 import styles from "./styles.module.css";
 
 interface ImagesContentProps {

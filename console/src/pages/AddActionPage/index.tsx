@@ -6,7 +6,8 @@ import { Button, Input, IconButton, Suspense } from "@/components";
 import { ArrowLeft } from "@/assets/icons/lucide";
 import { ROUTES } from "@/types/navigation";
 
-import { CreateActionForm, ActionByKeyContent } from "./components";
+import CreateActionForm from "./components/CreateActionForm";
+import ActionByKeyContent from "./components/ActionByKeyContent";
 import styles from "./styles.module.css";
 
 const AddActionPage = memo(() => {

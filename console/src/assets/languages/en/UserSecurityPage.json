@@ -33,5 +33,7 @@
   "lookup": "Look Up",
   "addPermission": "Add Permission",
   "remove": "Remove",
-  "isSystem": "System"
+  "isSystem": "System",
+  "notFoundRole": "No role found for this key.",
+  "notFoundPermission": "No permission found for this key."
 }

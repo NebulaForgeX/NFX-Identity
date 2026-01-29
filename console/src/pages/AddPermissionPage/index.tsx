@@ -12,12 +12,11 @@ import {
   useDeleteActionRequirement,
 } from "@/hooks/useAccess";
 import { GetActionByKey, GetPermissionByKey, GetRoleByKey } from "@/apis";
+import { showError } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
 
-import {
-  RolePermissionsLookupContent,
-  ActionRequirementsConfigContent,
-} from "./components";
+import RolePermissionsLookupContent from "./components/RolePermissionsLookupContent";
+import ActionRequirementsConfigContent from "./components/ActionRequirementsConfigContent";
 import styles from "./styles.module.css";
 
 const AddPermissionPage = memo(() => {
@@ -44,7 +43,15 @@ const AddPermissionPage = memo(() => {
     if (!roleKey.trim() || !permissionKey.trim()) return;
     try {
       const roleRes = await GetRoleByKey(roleKey.trim());
+      if (!roleRes) {
+        showError(t("notFoundRole"));
+        return;
+      }
       const permRes = await GetPermissionByKey(permissionKey.trim());
+      if (!permRes) {
+        showError(t("notFoundPermission"));
+        return;
+      }
       await createRolePermission.mutateAsync({
         roleId: roleRes.id,
         permissionId: permRes.id,
@@ -80,7 +87,15 @@ const AddPermissionPage = memo(() => {
     if (!lookupActionConfigKey.trim() || !actionKeyToAdd.trim()) return;
     try {
       const permission = await GetPermissionByKey(lookupActionConfigKey.trim());
+      if (!permission) {
+        showError(t("notFoundPermission"));
+        return;
+      }
       const action = await GetActionByKey(actionKeyToAdd.trim());
+      if (!action) {
+        showError(t("notFoundAction"));
+        return;
+      }
       await createActionRequirement.mutateAsync({
         permissionId: permission.id,
         actionId: action.id,

@@ -9,17 +9,15 @@ import { useAuthStore } from "@/stores/authStore";
 import { ROUTES } from "@/types/navigation";
 import { buildImageUrl } from "@/utils/image";
 
-import {
-  AccountInfoCard,
-  BasicInfoCard,
-  ProfileCard,
-  SkillsCard,
-  SocialLinksCard,
-  UserEducationsCard,
-  UserEmailsCard,
-  UserOccupationsCard,
-  UserPhonesCard,
-} from "./components";
+import AccountInfoCard from "./components/AccountInfoCard";
+import BasicInfoCard from "./components/BasicInfoCard";
+import ProfileCard from "./components/ProfileCard";
+import SkillsCard from "./components/SkillsCard";
+import SocialLinksCard from "./components/SocialLinksCard";
+import UserEducationsCard from "./components/UserEducationsCard";
+import UserEmailsCard from "./components/UserEmailsCard";
+import UserOccupationsCard from "./components/UserOccupationsCard";
+import UserPhonesCard from "./components/UserPhonesCard";
 import styles from "./styles.module.css";
 
 const ProfilePage = memo(() => {

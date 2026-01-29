@@ -33,5 +33,7 @@
   "lookup": "查询",
   "addPermission": "添加权限",
   "remove": "移除",
-  "isSystem": "系统"
+  "isSystem": "系统",
+  "notFoundRole": "未找到该 Key 对应的角色。",
+  "notFoundPermission": "未找到该 Key 对应的权限。"
 }

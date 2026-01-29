@@ -5,11 +5,9 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Button, Input, Suspense } from "@/components";
 import { useDeleteRolePermission } from "@/hooks/useAccess";
 
-import {
-  RoleByKeyContent,
-  PermissionByKeyContent,
-  RolePermissionsLookupContent,
-} from "./components";
+import RoleByKeyContent from "./components/RoleByKeyContent";
+import PermissionByKeyContent from "./components/PermissionByKeyContent";
+import RolePermissionsLookupContent from "./components/RolePermissionsLookupContent";
 import styles from "./styles.module.css";
 
 const PermissionManagementPage = memo(() => {

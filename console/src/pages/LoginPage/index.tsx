@@ -5,7 +5,8 @@ import { TruckLoading } from "@/animations";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
-import { LoginForm, RegisterForm } from "./components";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 import styles from "./styles.module.css";
 
 export default function LoginPage() {
