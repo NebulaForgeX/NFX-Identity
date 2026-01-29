@@ -1,7 +1,7 @@
 import { createStore, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-type ModalType = "success" | "error" | "info" | "confirm" | "search" | "yearSelect" | "loading";
+type ModalType = "success" | "error" | "info" | "confirm" | "search" | "yearSelect" | "loading" | "avatarUpload";
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -40,6 +40,13 @@ interface LoadingModalProps {
   canClose?: boolean;
 }
 
+interface AvatarUploadModalProps {
+  isOpen: boolean;
+  userId?: string;
+  onSuccess?: (imageId: string) => void;
+  onCancel?: () => void;
+}
+
 interface ModalState {
   modalType: ModalType;
   baseModal: BaseModalProps;
@@ -47,6 +54,7 @@ interface ModalState {
   searchModal: SearchModalProps;
   yearSelectModal: YearSelectModalProps;
   loadingModal: LoadingModalProps;
+  avatarUploadModal: AvatarUploadModalProps;
 }
 
 interface ModalActions {
@@ -57,7 +65,8 @@ interface ModalActions {
       | ConfirmModalProps
       | SearchModalProps
       | YearSelectModalProps
-      | LoadingModalProps,
+      | LoadingModalProps
+      | AvatarUploadModalProps,
   ) => void;
   hideModal: (modalType?: ModalType) => void; // undefined 表示关闭所有模态框
 }
@@ -94,6 +103,12 @@ const defaultLoadingModalProps: LoadingModalProps = {
   message: undefined,
   canClose: false,
 };
+const defaultAvatarUploadModalProps: AvatarUploadModalProps = {
+  isOpen: false,
+  userId: undefined,
+  onSuccess: undefined,
+  onCancel: undefined,
+};
 
 export const ModalStore = createStore<ModalState & ModalActions>()(
   subscribeWithSelector((set) => ({
@@ -103,6 +118,7 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
     searchModal: defaultSearchModalProps,
     yearSelectModal: defaultYearSelectModalProps,
     loadingModal: defaultLoadingModalProps,
+    avatarUploadModal: defaultAvatarUploadModalProps,
 
     showModal: (modalType, props) => {
       // 根据 modalType 设置对应的模态框状态
@@ -151,6 +167,15 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
             ...restProps,
           },
         });
+      } else if (modalType === "avatarUpload") {
+        const { isOpen, ...restProps } = props as AvatarUploadModalProps;
+        set({
+          modalType,
+          avatarUploadModal: {
+            isOpen: true,
+            ...restProps,
+          },
+        });
       }
     },
 
@@ -164,6 +189,7 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
           searchModal: defaultSearchModalProps,
           yearSelectModal: defaultYearSelectModalProps,
           loadingModal: defaultLoadingModalProps,
+          avatarUploadModal: defaultAvatarUploadModalProps,
         });
         return;
       }
@@ -192,6 +218,11 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
         set({
           modalType: undefined,
           loadingModal: defaultLoadingModalProps,
+        });
+      } else if (modalType === "avatarUpload") {
+        set({
+          modalType: undefined,
+          avatarUploadModal: defaultAvatarUploadModalProps,
         });
       }
     },
@@ -300,4 +331,23 @@ export const showLoading = (props?: ShowLoadingProps) => {
 
 export const hideLoading = () => {
   ModalStore.getState().hideModal("loading");
+};
+
+export interface ShowAvatarUploadProps {
+  userId: string;
+  onSuccess?: (imageId: string) => void;
+  onCancel?: () => void;
+}
+
+export const showAvatarUpload = (props: ShowAvatarUploadProps) => {
+  ModalStore.getState().showModal("avatarUpload", {
+    isOpen: true,
+    userId: props.userId,
+    onSuccess: props.onSuccess,
+    onCancel: props.onCancel,
+  });
+};
+
+export const hideAvatarUpload = () => {
+  ModalStore.getState().hideModal("avatarUpload");
 };

@@ -22,6 +22,8 @@ const (
 	ImageService_GetImageByID_FullMethodName      = "/image.ImageService/GetImageByID"
 	ImageService_GetImageByImageID_FullMethodName = "/image.ImageService/GetImageByImageID"
 	ImageService_BatchGetImages_FullMethodName    = "/image.ImageService/BatchGetImages"
+	ImageService_MoveImage_FullMethodName         = "/image.ImageService/MoveImage"
+	ImageService_DeleteImage_FullMethodName       = "/image.ImageService/DeleteImage"
 )
 
 // ImageServiceClient is the client API for ImageService service.
@@ -36,6 +38,10 @@ type ImageServiceClient interface {
 	GetImageByImageID(ctx context.Context, in *GetImageByImageIDRequest, opts ...grpc.CallOption) (*GetImageByImageIDResponse, error)
 	// 批量获取图片
 	BatchGetImages(ctx context.Context, in *BatchGetImagesRequest, opts ...grpc.CallOption) (*BatchGetImagesResponse, error)
+	// 移动图片（从 tmp 移动到目标目录，如 avatar/background）
+	MoveImage(ctx context.Context, in *MoveImageRequest, opts ...grpc.CallOption) (*MoveImageResponse, error)
+	// 删除图片（如更换头像时删除旧头像文件）
+	DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error)
 }
 
 type imageServiceClient struct {
@@ -76,6 +82,26 @@ func (c *imageServiceClient) BatchGetImages(ctx context.Context, in *BatchGetIma
 	return out, nil
 }
 
+func (c *imageServiceClient) MoveImage(ctx context.Context, in *MoveImageRequest, opts ...grpc.CallOption) (*MoveImageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MoveImageResponse)
+	err := c.cc.Invoke(ctx, ImageService_MoveImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *imageServiceClient) DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteImageResponse)
+	err := c.cc.Invoke(ctx, ImageService_DeleteImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ImageServiceServer is the server API for ImageService service.
 // All implementations must embed UnimplementedImageServiceServer
 // for forward compatibility.
@@ -88,6 +114,10 @@ type ImageServiceServer interface {
 	GetImageByImageID(context.Context, *GetImageByImageIDRequest) (*GetImageByImageIDResponse, error)
 	// 批量获取图片
 	BatchGetImages(context.Context, *BatchGetImagesRequest) (*BatchGetImagesResponse, error)
+	// 移动图片（从 tmp 移动到目标目录，如 avatar/background）
+	MoveImage(context.Context, *MoveImageRequest) (*MoveImageResponse, error)
+	// 删除图片（如更换头像时删除旧头像文件）
+	DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error)
 	mustEmbedUnimplementedImageServiceServer()
 }
 
@@ -106,6 +136,12 @@ func (UnimplementedImageServiceServer) GetImageByImageID(context.Context, *GetIm
 }
 func (UnimplementedImageServiceServer) BatchGetImages(context.Context, *BatchGetImagesRequest) (*BatchGetImagesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method BatchGetImages not implemented")
+}
+func (UnimplementedImageServiceServer) MoveImage(context.Context, *MoveImageRequest) (*MoveImageResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method MoveImage not implemented")
+}
+func (UnimplementedImageServiceServer) DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteImage not implemented")
 }
 func (UnimplementedImageServiceServer) mustEmbedUnimplementedImageServiceServer() {}
 func (UnimplementedImageServiceServer) testEmbeddedByValue()                      {}
@@ -182,6 +218,42 @@ func _ImageService_BatchGetImages_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ImageService_MoveImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MoveImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageServiceServer).MoveImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ImageService_MoveImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageServiceServer).MoveImage(ctx, req.(*MoveImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ImageService_DeleteImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ImageServiceServer).DeleteImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ImageService_DeleteImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ImageServiceServer).DeleteImage(ctx, req.(*DeleteImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ImageService_ServiceDesc is the grpc.ServiceDesc for ImageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -200,6 +272,14 @@ var ImageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BatchGetImages",
 			Handler:    _ImageService_BatchGetImages_Handler,
+		},
+		{
+			MethodName: "MoveImage",
+			Handler:    _ImageService_MoveImage_Handler,
+		},
+		{
+			MethodName: "DeleteImage",
+			Handler:    _ImageService_DeleteImage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

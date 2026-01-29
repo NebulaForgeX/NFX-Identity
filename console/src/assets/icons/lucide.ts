@@ -32,6 +32,7 @@ export { default as Hash } from "lucide-react/icons/hash";
 export { default as History } from "lucide-react/icons/history";
 export { default as Home } from "lucide-react/icons/home";
 export { default as Image } from "lucide-react/icons/image";
+export { default as ImagePlus } from "lucide-react/icons/image-plus";
 export { default as Info } from "lucide-react/icons/info";
 export { default as Languages } from "lucide-react/icons/languages";
 export { default as Lock } from "lucide-react/icons/lock";

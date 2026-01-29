@@ -9,6 +9,7 @@ import {
   EditOccupationPage,
   EditPreferencePage,
   EditProfilePage,
+  ImagesPage,
   LoginPage,
   NotFoundPage,
   ProfilePage,
@@ -38,6 +39,7 @@ function App() {
         <Route path={ROUTES.HOME} element={<DashboardPage />} />
         <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
         <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+        <Route path={ROUTES.IMAGES} element={<ImagesPage />} />
         <Route path={ROUTES.EDIT_PROFILE} element={<EditProfilePage />} />
         <Route path={ROUTES.USER_SECURITY} element={<UserSecurityPage />} />
         <Route path={ROUTES.ADD_EDUCATION} element={<AddEducationPage />} />

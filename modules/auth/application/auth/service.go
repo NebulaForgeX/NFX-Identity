@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"nfxid/constants"
 	userCredentialApp "nfxid/modules/auth/application/user_credentials"
 	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
 	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
@@ -41,6 +42,12 @@ func NewService(
 	cache *cache.Connection,
 	userCredentialAppSvc *userCredentialApp.Service,
 ) *Service {
+	if expiresInSec <= 0 {
+		expiresInSec = constants.DefaultAccessTokenTTLSeconds
+	}
+	if refreshTokenTTL <= 0 {
+		refreshTokenTTL = constants.DefaultRefreshTokenTTLSeconds
+	}
 	return &Service{
 		credRepo:             credRepo,
 		loginAttemptRepo:     loginAttemptRepo,

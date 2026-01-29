@@ -125,7 +125,7 @@ const UserMenu = memo(() => {
         onClick={() => setUserMenuOpen(!userMenuOpen)}
       >
         <img
-          src={userAvatar?.imageId ? buildImageUrl(userAvatar.imageId, "avatar") : "/default-avatar.png"}
+          src={userAvatar?.imageId ? buildImageUrl(userAvatar.imageId) : "/default-avatar.png"}
           alt={user?.username || t("header.user")}
           className={styles.userPicture}
         />

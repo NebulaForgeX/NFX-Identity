@@ -87,6 +87,8 @@
     [kafka.consumer_topics]
         image = "nfxid.image"
         image_poison = "nfxid.image_poison"
+        directory = "nfxid.directory"
+        directory_poison = "nfxid.directory_poison"
 
     [kafka.security]
         enabled = false

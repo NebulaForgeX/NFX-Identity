@@ -77,3 +77,9 @@ type UsersInvalidateCacheEvent struct {
 	Prefix    string `json:"prefix"`     // Cache prefix，例如 "user"
 	Namespace string `json:"namespace"` // Cache namespace，可选
 }
+
+// UserAvatarReplacedEvent 用户头像被替换事件（由 Directory 发布，Image 监听并删除旧图片）
+type UserAvatarReplacedEvent struct {
+	events.DirectoryTopic
+	OldImageID string `json:"old_image_id"` // 被替换掉的旧头像图片 ID，Image 服务收到后删除该图片
+}

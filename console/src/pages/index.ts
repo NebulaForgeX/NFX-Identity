@@ -1,5 +1,6 @@
 // 只导出实际存在的页面
 export { default as DashboardPage } from "./DashboardPage";
+export { default as ImagesPage } from "./ImagesPage";
 export { default as LoginPage } from "./LoginPage";
 export { default as NotFoundPage } from "./NotFoundPage";
 export { default as ProfilePage } from "./ProfilePage";

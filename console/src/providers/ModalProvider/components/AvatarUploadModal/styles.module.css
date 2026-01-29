@@ -1,0 +1,229 @@
+/* 与 BaseModal/ConfirmModal 一致：依赖 <dialog> 原生居中 */
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  background: var(--color-bg);
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.2s ease-out;
+}
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-fg-text);
+  margin: 0;
+}
+
+.closeIcon {
+  background: none;
+  border: none;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.closeIcon:hover {
+  color: var(--color-fg-text);
+  background: var(--color-bg-secondary);
+}
+
+.uploadArea {
+  border: 2px dashed var(--color-border-4);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--color-bg-secondary);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadArea:hover {
+  border-color: var(--color-primary);
+  background: var(--color-bg-hover);
+}
+
+.uploadArea.dragging {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.uploadArea.hasPreview {
+  padding: 0;
+  overflow: hidden;
+}
+
+.uploadPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-fg-muted);
+}
+
+.uploadPlaceholder svg {
+  color: var(--color-fg-muted);
+}
+
+.uploadText {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-fg-text);
+}
+
+.uploadHint {
+  font-size: 0.875rem;
+  margin: 0;
+  color: var(--color-fg-muted);
+}
+
+.uploadLimit {
+  font-size: 0.75rem;
+  margin: 0;
+  color: var(--color-fg-muted);
+}
+
+.previewContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+}
+
+.previewOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.previewContainer:hover .previewOverlay {
+  opacity: 1;
+}
+
+.fileInput {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-border-4);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--color-fg-text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: var(--color-bg-secondary);
+}
+
+.uploadButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.uploadButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.uploadButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.success {
+  color: var(--color-success);
+  font-size: 0.875rem;
+  margin: 1rem 0 0;
+  text-align: center;
+}

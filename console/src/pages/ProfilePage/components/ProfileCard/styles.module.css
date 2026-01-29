@@ -43,12 +43,48 @@
   flex-shrink: 0;
 }
 
+.avatarButton {
+  position: relative;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
 .avatar {
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--color-border-4);
+  display: block;
+  transition: filter 0.2s;
+}
+
+.avatarOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
+}
+
+.avatarButton:hover .avatarOverlay {
+  opacity: 1;
+}
+
+.avatarButton:hover .avatar {
+  filter: brightness(0.8);
 }
 
 .infoSection {

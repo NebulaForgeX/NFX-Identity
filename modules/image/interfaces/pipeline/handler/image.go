@@ -3,18 +3,41 @@ package handler
 import (
 	"context"
 
+	"nfxid/events/directory"
 	"nfxid/events/image"
+	imageCommands "nfxid/modules/image/application/images/commands"
+	imageApp "nfxid/modules/image/application/images"
 	"nfxid/pkgs/logx"
 
 	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/google/uuid"
 )
 
 type ImageHandler struct {
-	// 可以注入 application services 或其他依赖
+	imageAppSvc *imageApp.Service
 }
 
-func NewImageHandler() *ImageHandler {
-	return &ImageHandler{}
+func NewImageHandler(imageAppSvc *imageApp.Service) *ImageHandler {
+	return &ImageHandler{imageAppSvc: imageAppSvc}
+}
+
+// OnUserAvatarReplaced 监听用户头像替换事件，删除被替换的旧图片
+func (h *ImageHandler) OnUserAvatarReplaced(ctx context.Context, evt directory.UserAvatarReplacedEvent, msg *message.Message) error {
+	if evt.OldImageID == "" {
+		return nil
+	}
+	imageID, err := uuid.Parse(evt.OldImageID)
+	if err != nil {
+		logx.S().Warnf("[Image Pipeline] invalid old_image_id in UserAvatarReplaced: %s", evt.OldImageID)
+		return nil
+	}
+	err = h.imageAppSvc.DeleteImage(ctx, imageCommands.DeleteImageCmd{ImageID: imageID})
+	if err != nil {
+		logx.S().Warnf("[Image Pipeline] delete old avatar image failed: image_id=%s, err=%v", evt.OldImageID, err)
+		return err
+	}
+	logx.S().Infof("[Image Pipeline] deleted old avatar image: image_id=%s", evt.OldImageID)
+	return nil
 }
 
 // OnImagesInvalidateCache 监听 Images 缓存清除事件

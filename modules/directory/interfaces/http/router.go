@@ -30,27 +30,15 @@ func (r *Router) RegisterRoutes() {
 		// 用户相关
 		auth.Post("/users", r.handlers.User.Create)
 		auth.Get("/users/username/:username", r.handlers.User.GetByUsername)
-		auth.Get("/users/:id/user-emails", r.handlers.UserEmail.GetByUserID) // 根据用户ID获取用户邮箱列表（必须在 /users/:id 之前）
-		auth.Get("/users/:id/user-phones", r.handlers.UserPhone.GetByUserID) // 根据用户ID获取用户电话列表（必须在 /users/:id 之前）
-		auth.Get("/users/:id/user-educations", r.handlers.UserEducation.GetByUserID) // 根据用户ID获取用户教育列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id/user-emails", r.handlers.UserEmail.GetByUserID)           // 根据用户ID获取用户邮箱列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id/user-phones", r.handlers.UserPhone.GetByUserID)           // 根据用户ID获取用户电话列表（必须在 /users/:id 之前）
+		auth.Get("/users/:id/user-educations", r.handlers.UserEducation.GetByUserID)   // 根据用户ID获取用户教育列表（必须在 /users/:id 之前）
 		auth.Get("/users/:id/user-occupations", r.handlers.UserOccupation.GetByUserID) // 根据用户ID获取用户职业列表（必须在 /users/:id 之前）
 		auth.Get("/users/:id", r.handlers.User.GetByID)
 		auth.Patch("/users/:id/status", r.handlers.User.UpdateStatus)
 		auth.Patch("/users/:id/username", r.handlers.User.UpdateUsername)
 		auth.Patch("/users/:id/verify", r.handlers.User.Verify)
 		auth.Delete("/users/:id", r.handlers.User.Delete)
-
-		// 徽章相关
-		auth.Post("/badges", r.handlers.Badge.Create)
-		auth.Get("/badges/:id", r.handlers.Badge.GetByID)
-		auth.Get("/badges/name/:name", r.handlers.Badge.GetByName)
-		auth.Put("/badges/:id", r.handlers.Badge.Update)
-		auth.Delete("/badges/:id", r.handlers.Badge.Delete)
-
-		// 用户徽章相关
-		auth.Post("/user-badges", r.handlers.UserBadge.Create)
-		auth.Get("/user-badges/:id", r.handlers.UserBadge.GetByID)
-		auth.Delete("/user-badges/:id", r.handlers.UserBadge.Delete)
 
 		// 用户教育相关
 		auth.Post("/user-educations", r.handlers.UserEducation.Create)

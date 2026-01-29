@@ -1,0 +1,311 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  margin-bottom: 5rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-fg-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--color-fg-muted);
+  margin: 0;
+}
+
+.errorContainer {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-fg-muted);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Upload Area */
+.uploadArea {
+  border: 2px dashed var(--color-border-4);
+  border-radius: 0.75rem;
+  padding: 3rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--color-bg-secondary);
+}
+
+.uploadArea:hover {
+  border-color: var(--color-primary);
+  background: var(--color-bg-hover);
+}
+
+.uploadArea.dragging {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.uploadPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-fg-muted);
+}
+
+.uploadPlaceholder svg {
+  color: var(--color-fg-muted);
+}
+
+.uploadingIcon {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.uploadText {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-fg-text);
+}
+
+.uploadHint {
+  font-size: 0.875rem;
+  margin: 0;
+  color: var(--color-fg-muted);
+}
+
+.uploadLimit {
+  font-size: 0.75rem;
+  margin: 0;
+  color: var(--color-fg-muted);
+}
+
+.fileInput {
+  display: none;
+}
+
+/* Confirm Section */
+.confirmSection {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-4);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.confirmText {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-fg-text);
+  text-align: center;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.cancelButton {
+  background: var(--color-bg);
+  color: var(--color-fg-text);
+  border: 1px solid var(--color-border-4);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: var(--color-bg-hover);
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirmButton {
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirmButton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.confirmButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Images Grid */
+.imagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.imageCard {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-4);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.imageCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.imageCard:hover .image {
+  transform: scale(1.05);
+}
+
+.primaryBadge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: var(--color-primary);
+  color: var(--color-primary-fg);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.imageCard:hover .imageOverlay {
+  opacity: 1;
+}
+
+.deleteButton {
+  background: var(--color-danger);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteButton:hover {
+  transform: scale(1.1);
+  background: var(--color-danger-dark);
+}
+
+.imageInfo {
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.imageOrder {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-fg-muted);
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-fg-muted);
+}
+
+.emptyState svg {
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.emptyHint {
+  font-size: 0.875rem !important;
+  margin-top: 0.5rem !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .uploadArea {
+    padding: 2rem;
+  }
+
+  .imagesGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"time"
 
-	imageApp "nfxid/modules/image/application/images"
+	"nfxid/constants"
 	imageTagApp "nfxid/modules/image/application/image_tags"
 	imageTypeApp "nfxid/modules/image/application/image_types"
 	imageVariantApp "nfxid/modules/image/application/image_variants"
+	imageApp "nfxid/modules/image/application/images"
 	resourceApp "nfxid/modules/image/application/resource"
 	"nfxid/modules/image/config"
-	imageRepo "nfxid/modules/image/infrastructure/repository/images"
 	imageTagRepo "nfxid/modules/image/infrastructure/repository/image_tags"
 	imageTypeRepo "nfxid/modules/image/infrastructure/repository/image_types"
 	imageVariantRepo "nfxid/modules/image/infrastructure/repository/image_variants"
+	imageRepo "nfxid/modules/image/infrastructure/repository/images"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -41,6 +42,7 @@ type Dependencies struct {
 	imageTypeAppSvc     *imageTypeApp.Service
 	imageTagAppSvc      *imageTagApp.Service
 	imageVariantAppSvc  *imageVariantApp.Service
+	storagePath         string
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -96,7 +98,11 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	imageVariantRepoInstance := imageVariantRepo.NewRepo(postgres.DB())
 
 	//! === Application Services ===
-	imageAppSvc := imageApp.NewService(imageRepoInstance)
+	storageBasePath := cfg.Storage.BasePath
+	if storageBasePath == "" {
+		storageBasePath = constants.StorageBasePath
+	}
+	imageAppSvc := imageApp.NewService(storageBasePath, imageRepoInstance)
 	imageTypeAppSvc := imageTypeApp.NewService(imageTypeRepoInstance)
 	imageTagAppSvc := imageTagApp.NewService(imageTagRepoInstance)
 	imageVariantAppSvc := imageVariantApp.NewService(imageVariantRepoInstance)
@@ -117,6 +123,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		imageTypeAppSvc:     imageTypeAppSvc,
 		imageTagAppSvc:      imageTagAppSvc,
 		imageVariantAppSvc:  imageVariantAppSvc,
+		storagePath:         cfg.Storage.BasePath,
 	}, nil
 }
 
@@ -127,18 +134,19 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) HealthMgr() *health.Manager           { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service    { return d.resourceSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection     { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config    { return d.rabbitMQConfig }
-func (d *Dependencies) ImageAppSvc() *imageApp.Service       { return d.imageAppSvc }
-func (d *Dependencies) ImageTypeAppSvc() *imageTypeApp.Service { return d.imageTypeAppSvc }
-func (d *Dependencies) ImageTagAppSvc() *imageTagApp.Service { return d.imageTagAppSvc }
+func (d *Dependencies) HealthMgr() *health.Manager                   { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service            { return d.resourceSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection            { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier            { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier          { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                  { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher         { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config            { return d.rabbitMQConfig }
+func (d *Dependencies) ImageAppSvc() *imageApp.Service               { return d.imageAppSvc }
+func (d *Dependencies) ImageTypeAppSvc() *imageTypeApp.Service       { return d.imageTypeAppSvc }
+func (d *Dependencies) ImageTagAppSvc() *imageTagApp.Service         { return d.imageTagAppSvc }
 func (d *Dependencies) ImageVariantAppSvc() *imageVariantApp.Service { return d.imageVariantAppSvc }
+func (d *Dependencies) StoragePath() string                          { return d.storagePath }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

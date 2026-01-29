@@ -39,6 +39,12 @@ service ImageService {
   
   // 批量获取图片
   rpc BatchGetImages (BatchGetImagesRequest) returns (BatchGetImagesResponse);
+
+  // 移动图片（从 tmp 移动到目标目录，如 avatar/background）
+  rpc MoveImage (MoveImageRequest) returns (MoveImageResponse);
+
+  // 删除图片（如更换头像时删除旧头像文件）
+  rpc DeleteImage (DeleteImageRequest) returns (DeleteImageResponse);
 }
 
 // Image Service Messages
@@ -65,3 +71,19 @@ message BatchGetImagesRequest {
 message BatchGetImagesResponse {
   repeated Image images = 1;
 }
+
+// 移动图片请求（从 tmp 移动到目标目录）
+message MoveImageRequest {
+  string id = 1;           // 图片ID
+  string target_type = 2;  // 目标类型: "avatar" 或 "background"
+}
+
+message MoveImageResponse {
+  Image image = 1;         // 移动后的图片信息（路径已更新）
+}
+
+message DeleteImageRequest {
+  string id = 1;           // 图片ID
+}
+
+message DeleteImageResponse {}

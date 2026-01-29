@@ -1,6 +1,7 @@
 package pipeline
 
 import (
+	imageApp "nfxid/modules/image/application/images"
 	"nfxid/modules/image/interfaces/pipeline/handler"
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/kafkax/eventbus"
@@ -13,6 +14,7 @@ import (
 type Deps interface {
 	KafkaConfig() *kafkax.Config
 	BusPublisher() *eventbus.BusPublisher
+	ImageAppSvc() *imageApp.Service
 }
 
 func NewServer(d Deps) (*Router, error) {
@@ -23,7 +25,7 @@ func NewServer(d Deps) (*Router, error) {
 	}
 
 	registry := &Registry{
-		ImageHandler: handler.NewImageHandler(),
+		ImageHandler: handler.NewImageHandler(d.ImageAppSvc()),
 	}
 
 	router, err := NewRouter(sub, registry, eventbus.EventRouterConfig{

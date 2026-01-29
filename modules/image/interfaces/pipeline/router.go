@@ -27,6 +27,7 @@ func (r *Router) RegisterRoutes() {
 	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageTypesInvalidateCache)
 	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageVariantsInvalidateCache)
 	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnImageTagsInvalidateCache)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.ImageHandler.OnUserAvatarReplaced)
 }
 
 func (r *Router) Run(ctx context.Context) error {

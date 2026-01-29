@@ -5,8 +5,9 @@ import (
 )
 
 type Registry struct {
-	Image       *handler.ImageHandler
-	ImageType   *handler.ImageTypeHandler
+	Image        *handler.ImageHandler
+	ImageType    *handler.ImageTypeHandler
 	ImageVariant *handler.ImageVariantHandler
-	ImageTag    *handler.ImageTagHandler
+	ImageTag     *handler.ImageTagHandler
+	Upload       *handler.UploadHandler
 }

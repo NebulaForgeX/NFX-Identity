@@ -19,6 +19,7 @@ import {
   UpdateImageTag,
   UpdateImageType,
   UpdateImageVariant,
+  UploadImage,
 } from "@/apis/image.api";
 import type {
   CreateImageRequest,
@@ -41,6 +42,22 @@ import { IMAGE_IMAGE, IMAGE_IMAGE_TYPE, IMAGE_IMAGE_VARIANT, IMAGE_IMAGE_TAG } f
 import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Image 相关 ==========
+
+// 上传图片到 tmp（用于头像/背景等，确认后由 Directory 创建时移动）
+export const useUploadImage = () => {
+  const { t } = useTranslation("hooks.image");
+  return useMutation({
+    mutationFn: async (file: File) => {
+      return await UploadImage(file);
+    },
+    onSuccess: () => {
+      showSuccess(t("uploadSuccess", "Image uploaded."));
+    },
+    onError: (error: AxiosError) => {
+      showError(t("uploadError", "Failed to upload image.") + (error.message ?? ""));
+    },
+  });
+};
 
 // 根据 ID 获取图片
 export const useImage = (params: UnifiedQueryParams<Image> & { id: string }) => {

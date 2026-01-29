@@ -219,6 +219,9 @@ export const URL_PATHS = {
   },
   // Image 模块 - /image/auth
   IMAGE: {
+    // 图片上传相关 - 需要认证
+    UPLOAD_IMAGE: "/image/auth/upload",
+    MOVE_IMAGE: "/image/auth/images/:id/move",
     // 图片相关 - 需要认证
     CREATE_IMAGE: "/image/auth/images",
     GET_IMAGE: "/image/auth/images/:id",

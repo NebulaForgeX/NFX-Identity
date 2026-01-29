@@ -7,6 +7,13 @@ import (
 
 // UpdateUserAvatarImageID 更新用户头像图片ID
 func (s *Service) UpdateUserAvatarImageID(ctx context.Context, cmd userAvatarCommands.UpdateUserAvatarImageIDCmd) error {
+	// update 时通过 gRPC 问 Image 服务该 image 是否存在
+	if s.imageClient != nil {
+		if _, err := s.imageClient.GetImageByID(ctx, cmd.ImageID.String()); err != nil {
+			return err
+		}
+	}
+
 	// Get domain entity
 	userAvatar, err := s.userAvatarRepo.Get.ByUserID(ctx, cmd.UserID)
 	if err != nil {

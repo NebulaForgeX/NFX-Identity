@@ -28,7 +28,6 @@ import (
 	sessionRepo "nfxid/modules/auth/infrastructure/repository/sessions"
 	trustedDeviceRepo "nfxid/modules/auth/infrastructure/repository/trusted_devices"
 	userCredentialRepo "nfxid/modules/auth/infrastructure/repository/user_credentials"
-	"nfxid/constants"
 	"nfxid/pkgs/cache"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -112,7 +111,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	// User Token Verifier (用于 HTTP 中间件 - 验证用户 token)
 	// 使用 tokenx adapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 	userTokenVerifier := &tokenxVerifierAdapter{tokenx: tokenxInstance}
-
+	tokenIssuer := authInfra.NewTokenIssuer(tokenxInstance)
 	// Server Token Verifier (用于 gRPC 拦截器 - 验证服务间通信 token)
 	serverTokenVerifier := servertoken.NewVerifier(
 		&servertoken.HMACSigner{Key: []byte(cfg.Token.SecretKey)},
@@ -131,6 +130,14 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	accountLockoutRepoInstance := accountLockoutRepo.NewRepo(postgres.DB())
 	trustedDeviceRepoInstance := trustedDeviceRepo.NewRepo(postgres.DB())
 
+
+
+	//! === gRPC Clients ===
+	grpcClientsInstance, err := authGrpc.NewGRPCClients(ctx, &cfg.GRPCClient, &cfg.Server, &cfg.Token)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
+	}
+
 	//! === Application Services ===
 	sessionAppSvc := sessionApp.NewService(sessionRepoInstance)
 	userCredentialAppSvc := userCredentialApp.NewService(userCredentialRepoInstance)
@@ -141,41 +148,20 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	loginAttemptAppSvc := loginAttemptApp.NewService(loginAttemptRepoInstance)
 	accountLockoutAppSvc := accountLockoutApp.NewService(accountLockoutRepoInstance)
 	trustedDeviceAppSvc := trustedDeviceApp.NewService(trustedDeviceRepoInstance)
-
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
-
-	//! === gRPC Clients ===
-	grpcClientsInstance, err := authGrpc.NewGRPCClients(ctx, &cfg.GRPCClient, &cfg.Server, &cfg.Token)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
-	}
-
-	// Auth 应用服务（登录/刷新）：注入 gRPC 客户端和 TokenIssuer
-	var authAppSvc *authApp.Service
-	if grpcClientsInstance.DirectoryClient != nil {
-		tokenIssuer := authInfra.NewTokenIssuer(tokenxInstance)
-		expiresInSec := int64(cfg.Token.AccessTokenTTL.Seconds())
-		if expiresInSec <= 0 {
-			expiresInSec = constants.DefaultAccessTokenTTLSeconds
-		}
-		refreshTokenTTL := int64(cfg.Token.RefreshTokenTTL.Seconds())
-		if refreshTokenTTL <= 0 {
-			refreshTokenTTL = constants.DefaultRefreshTokenTTLSeconds
-		}
-		authAppSvc = authApp.NewService(
+	authAppSvc := authApp.NewService(
 			userCredentialRepoInstance,
 			loginAttemptRepoInstance,
 			accountLockoutRepoInstance,
 			refreshTokenRepoInstance,
 			grpcClientsInstance,
 			tokenIssuer,
-			expiresInSec,
-			refreshTokenTTL,
+			int64(cfg.Token.AccessTokenTTL.Seconds()),
+			int64(cfg.Token.RefreshTokenTTL.Seconds()),
 			emailService,
 			cacheConn,
 			userCredentialAppSvc,
 		)
-	}
 
 	return &Dependencies{
 		healthMgr:             healthMgr,

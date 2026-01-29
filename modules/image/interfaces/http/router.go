@@ -24,31 +24,12 @@ func NewRouter(app fiber.Router, tokenVerifier token.Verifier, handlers *Registr
 func (r *Router) RegisterRoutes() {
 	image := r.app.Group("/image")
 
-	// 需要认证的路由（需要token）
+	// 公开：按 ID 返回图片文件（头像/背景等 <img src> 用）
+	image.Get("/public/images/:id", r.handlers.Upload.ServeImage)
+
+	// 需要认证：上传
 	auth := image.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
 	{
-		// 图片相关
-		auth.Post("/images", r.handlers.Image.Create)
-		auth.Get("/images/:id", r.handlers.Image.GetByID)
-		auth.Put("/images/:id", r.handlers.Image.Update)
-		auth.Delete("/images/:id", r.handlers.Image.Delete)
-
-		// 图片类型相关
-		auth.Post("/image-types", r.handlers.ImageType.Create)
-		auth.Get("/image-types/:id", r.handlers.ImageType.GetByID)
-		auth.Put("/image-types/:id", r.handlers.ImageType.Update)
-		auth.Delete("/image-types/:id", r.handlers.ImageType.Delete)
-
-		// 图片变体相关
-		auth.Post("/image-variants", r.handlers.ImageVariant.Create)
-		auth.Get("/image-variants/:id", r.handlers.ImageVariant.GetByID)
-		auth.Put("/image-variants/:id", r.handlers.ImageVariant.Update)
-		auth.Delete("/image-variants/:id", r.handlers.ImageVariant.Delete)
-
-		// 图片标签相关
-		auth.Post("/image-tags", r.handlers.ImageTag.Create)
-		auth.Get("/image-tags/:id", r.handlers.ImageTag.GetByID)
-		auth.Put("/image-tags/:id", r.handlers.ImageTag.Update)
-		auth.Delete("/image-tags/:id", r.handlers.ImageTag.Delete)
+		auth.Post("/upload", r.handlers.Upload.UploadImage)
 	}
 }

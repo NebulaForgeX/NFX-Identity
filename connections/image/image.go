@@ -58,3 +58,32 @@ func (c *ImageClient) BatchGetImages(ctx context.Context, ids []string) ([]*imag
 
 	return resp.Images, nil
 }
+
+// MoveImage 移动图片（从 tmp 移动到目标目录，如 avatar/background）
+func (c *ImageClient) MoveImage(ctx context.Context, id string, targetType string) (*imagepb.Image, error) {
+	req := &imagepb.MoveImageRequest{
+		Id:         id,
+		TargetType: targetType,
+	}
+
+	resp, err := c.client.MoveImage(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return resp.Image, nil
+}
+
+// DeleteImage 删除图片（如更换头像时删除旧头像文件）
+func (c *ImageClient) DeleteImage(ctx context.Context, id string) error {
+	req := &imagepb.DeleteImageRequest{
+		Id: id,
+	}
+
+	_, err := c.client.DeleteImage(ctx, req)
+	if err != nil {
+		return fmt.Errorf("gRPC call failed: %w", err)
+	}
+
+	return nil
+}

@@ -22,12 +22,14 @@ type httpDeps interface {
 	ImageVariantAppSvc() *imageVariantApp.Service
 	ImageTagAppSvc() *imageTagApp.Service
 	UserTokenVerifier() token.Verifier
+	StoragePath() string
 }
 
 func NewHTTPServer(d httpDeps) *fiber.App {
 	app := fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,
 		JSONDecoder: json.Unmarshal,
+		BodyLimit:   10 * 1024 * 1024, // 10MB for file uploads
 	})
 
 	// CORS 中间件 - 必须在其他中间件之前
@@ -47,6 +49,7 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 		ImageType:    handler.NewImageTypeHandler(d.ImageTypeAppSvc()),
 		ImageVariant: handler.NewImageVariantHandler(d.ImageVariantAppSvc()),
 		ImageTag:     handler.NewImageTagHandler(d.ImageTagAppSvc()),
+		Upload:       handler.NewUploadHandler(d.ImageAppSvc(), d.StoragePath()),
 	}
 
 	// 注册路由

@@ -2,7 +2,6 @@ package http
 
 import (
 	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/usertoken"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,20 +23,7 @@ func NewRouter(app fiber.Router, tokenVerifier token.Verifier, handlers *Registr
 func (r *Router) RegisterRoutes() {
 	system := r.app.Group("/system")
 
-	// 公开路由（不需要认证）
-	{
-		// 系统状态相关 - 公开接口
-		system.Get("/system-state/latest", r.handlers.SystemState.GetLatest)
-		// 系统初始化接口 - 公开（因为初始化时还没有用户和token）
-		system.Post("/system-state/initialize", r.handlers.SystemState.Initialize)
-	}
-	// 需要认证的路由（需要token）
-	auth := system.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
-	{
-		// 系统状态相关
-		auth.Get("/system-state/latest", r.handlers.SystemState.GetLatest)
-		auth.Get("/system-state/:id", r.handlers.SystemState.GetByID)
-		auth.Post("/system-state/reset", r.handlers.SystemState.Reset)
-		auth.Delete("/system-state/:id", r.handlers.SystemState.Delete)
-	}
+	// 公开路由（system-base 等服务会调用）
+	system.Get("/system-state/latest", r.handlers.SystemState.GetLatest)
+	system.Post("/system-state/initialize", r.handlers.SystemState.Initialize)
 }

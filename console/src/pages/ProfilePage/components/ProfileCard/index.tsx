@@ -1,10 +1,11 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { Edit } from "@/assets/icons/lucide";
+import { Camera, Edit } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
 import { useUser, useUserProfile, useUserEmailsByUserID, useUserAvatar } from "@/hooks/useDirectory";
+import { showAvatarUpload } from "@/stores/modalStore";
 import { ROUTES } from "@/types/navigation";
 import { buildImageUrl } from "@/utils/image";
 
@@ -51,6 +52,15 @@ const ProfileCardContent = memo(({ userId }: ProfileCardProps) => {
       ? `${userProfile.firstName} ${userProfile.lastName}`
       : userProfile?.displayName || userProfile?.firstName || user?.username || userEmails || t("user");
 
+  const handleAvatarClick = useCallback(() => {
+    showAvatarUpload({
+      userId: userId,
+      onSuccess: () => {
+        // 头像更新成功后会自动刷新
+      },
+    });
+  }, [userId]);
+
   return (
     <div className={styles.profileCard}>
       <button
@@ -61,11 +71,16 @@ const ProfileCardContent = memo(({ userId }: ProfileCardProps) => {
         <Edit size={16} />
       </button>
       <div className={styles.avatarSection}>
-        <img
-          src={userAvatar?.imageId ? buildImageUrl(userAvatar.imageId, "avatar") : "/default-avatar.png"}
-          alt={displayName}
-          className={styles.avatar}
-        />
+        <button className={styles.avatarButton} onClick={handleAvatarClick} title={t("changeAvatar")}>
+          <img
+            src={userAvatar?.imageId ? buildImageUrl(userAvatar.imageId) : "/default-avatar.png"}
+            alt={displayName}
+            className={styles.avatar}
+          />
+          <div className={styles.avatarOverlay}>
+            <Camera size={24} />
+          </div>
+        </button>
       </div>
       <div className={styles.infoSection}>
         <h2 className={styles.displayName}>{displayName}</h2>

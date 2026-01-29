@@ -477,6 +477,183 @@ func (x *BatchGetImagesResponse) GetImages() []*Image {
 	return nil
 }
 
+// 移动图片请求（从 tmp 移动到目标目录）
+type MoveImageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                   // 图片ID
+	TargetType    string                 `protobuf:"bytes,2,opt,name=target_type,json=targetType,proto3" json:"target_type,omitempty"` // 目标类型: "avatar" 或 "background"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MoveImageRequest) Reset() {
+	*x = MoveImageRequest{}
+	mi := &file_image_image_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MoveImageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MoveImageRequest) ProtoMessage() {}
+
+func (x *MoveImageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_image_image_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MoveImageRequest.ProtoReflect.Descriptor instead.
+func (*MoveImageRequest) Descriptor() ([]byte, []int) {
+	return file_image_image_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *MoveImageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *MoveImageRequest) GetTargetType() string {
+	if x != nil {
+		return x.TargetType
+	}
+	return ""
+}
+
+type MoveImageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Image         *Image                 `protobuf:"bytes,1,opt,name=image,proto3" json:"image,omitempty"` // 移动后的图片信息（路径已更新）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MoveImageResponse) Reset() {
+	*x = MoveImageResponse{}
+	mi := &file_image_image_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MoveImageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MoveImageResponse) ProtoMessage() {}
+
+func (x *MoveImageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_image_image_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MoveImageResponse.ProtoReflect.Descriptor instead.
+func (*MoveImageResponse) Descriptor() ([]byte, []int) {
+	return file_image_image_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *MoveImageResponse) GetImage() *Image {
+	if x != nil {
+		return x.Image
+	}
+	return nil
+}
+
+type DeleteImageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // 图片ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteImageRequest) Reset() {
+	*x = DeleteImageRequest{}
+	mi := &file_image_image_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteImageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteImageRequest) ProtoMessage() {}
+
+func (x *DeleteImageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_image_image_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteImageRequest.ProtoReflect.Descriptor instead.
+func (*DeleteImageRequest) Descriptor() ([]byte, []int) {
+	return file_image_image_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteImageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeleteImageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteImageResponse) Reset() {
+	*x = DeleteImageResponse{}
+	mi := &file_image_image_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteImageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteImageResponse) ProtoMessage() {}
+
+func (x *DeleteImageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_image_image_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteImageResponse.ProtoReflect.Descriptor instead.
+func (*DeleteImageResponse) Descriptor() ([]byte, []int) {
+	return file_image_image_proto_rawDescGZIP(), []int{10}
+}
+
 var File_image_image_proto protoreflect.FileDescriptor
 
 const file_image_image_proto_rawDesc = "" +
@@ -530,11 +707,22 @@ const file_image_image_proto_rawDesc = "" +
 	"\x15BatchGetImagesRequest\x12\x10\n" +
 	"\x03ids\x18\x01 \x03(\tR\x03ids\">\n" +
 	"\x16BatchGetImagesResponse\x12$\n" +
-	"\x06images\x18\x01 \x03(\v2\f.image.ImageR\x06images2\xfe\x01\n" +
+	"\x06images\x18\x01 \x03(\v2\f.image.ImageR\x06images\"C\n" +
+	"\x10MoveImageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
+	"\vtarget_type\x18\x02 \x01(\tR\n" +
+	"targetType\"7\n" +
+	"\x11MoveImageResponse\x12\"\n" +
+	"\x05image\x18\x01 \x01(\v2\f.image.ImageR\x05image\"$\n" +
+	"\x12DeleteImageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x15\n" +
+	"\x13DeleteImageResponse2\x84\x03\n" +
 	"\fImageService\x12G\n" +
 	"\fGetImageByID\x12\x1a.image.GetImageByIDRequest\x1a\x1b.image.GetImageByIDResponse\x12V\n" +
 	"\x11GetImageByImageID\x12\x1f.image.GetImageByImageIDRequest\x1a .image.GetImageByImageIDResponse\x12M\n" +
-	"\x0eBatchGetImages\x12\x1c.image.BatchGetImagesRequest\x1a\x1d.image.BatchGetImagesResponseB&Z$nfxid/protos/gen/image/image;imagepbb\x06proto3"
+	"\x0eBatchGetImages\x12\x1c.image.BatchGetImagesRequest\x1a\x1d.image.BatchGetImagesResponse\x12>\n" +
+	"\tMoveImage\x12\x17.image.MoveImageRequest\x1a\x18.image.MoveImageResponse\x12D\n" +
+	"\vDeleteImage\x12\x19.image.DeleteImageRequest\x1a\x1a.image.DeleteImageResponseB&Z$nfxid/protos/gen/image/image;imagepbb\x06proto3"
 
 var (
 	file_image_image_proto_rawDescOnce sync.Once
@@ -548,7 +736,7 @@ func file_image_image_proto_rawDescGZIP() []byte {
 	return file_image_image_proto_rawDescData
 }
 
-var file_image_image_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_image_image_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_image_image_proto_goTypes = []any{
 	(*Image)(nil),                     // 0: image.Image
 	(*GetImageByIDRequest)(nil),       // 1: image.GetImageByIDRequest
@@ -557,28 +745,37 @@ var file_image_image_proto_goTypes = []any{
 	(*GetImageByImageIDResponse)(nil), // 4: image.GetImageByImageIDResponse
 	(*BatchGetImagesRequest)(nil),     // 5: image.BatchGetImagesRequest
 	(*BatchGetImagesResponse)(nil),    // 6: image.BatchGetImagesResponse
-	(*structpb.Struct)(nil),           // 7: google.protobuf.Struct
-	(*timestamppb.Timestamp)(nil),     // 8: google.protobuf.Timestamp
+	(*MoveImageRequest)(nil),          // 7: image.MoveImageRequest
+	(*MoveImageResponse)(nil),         // 8: image.MoveImageResponse
+	(*DeleteImageRequest)(nil),        // 9: image.DeleteImageRequest
+	(*DeleteImageResponse)(nil),       // 10: image.DeleteImageResponse
+	(*structpb.Struct)(nil),           // 11: google.protobuf.Struct
+	(*timestamppb.Timestamp)(nil),     // 12: google.protobuf.Timestamp
 }
 var file_image_image_proto_depIdxs = []int32{
-	7,  // 0: image.Image.metadata:type_name -> google.protobuf.Struct
-	8,  // 1: image.Image.created_at:type_name -> google.protobuf.Timestamp
-	8,  // 2: image.Image.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 3: image.Image.deleted_at:type_name -> google.protobuf.Timestamp
+	11, // 0: image.Image.metadata:type_name -> google.protobuf.Struct
+	12, // 1: image.Image.created_at:type_name -> google.protobuf.Timestamp
+	12, // 2: image.Image.updated_at:type_name -> google.protobuf.Timestamp
+	12, // 3: image.Image.deleted_at:type_name -> google.protobuf.Timestamp
 	0,  // 4: image.GetImageByIDResponse.image:type_name -> image.Image
 	0,  // 5: image.GetImageByImageIDResponse.image:type_name -> image.Image
 	0,  // 6: image.BatchGetImagesResponse.images:type_name -> image.Image
-	1,  // 7: image.ImageService.GetImageByID:input_type -> image.GetImageByIDRequest
-	3,  // 8: image.ImageService.GetImageByImageID:input_type -> image.GetImageByImageIDRequest
-	5,  // 9: image.ImageService.BatchGetImages:input_type -> image.BatchGetImagesRequest
-	2,  // 10: image.ImageService.GetImageByID:output_type -> image.GetImageByIDResponse
-	4,  // 11: image.ImageService.GetImageByImageID:output_type -> image.GetImageByImageIDResponse
-	6,  // 12: image.ImageService.BatchGetImages:output_type -> image.BatchGetImagesResponse
-	10, // [10:13] is the sub-list for method output_type
-	7,  // [7:10] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	0,  // 7: image.MoveImageResponse.image:type_name -> image.Image
+	1,  // 8: image.ImageService.GetImageByID:input_type -> image.GetImageByIDRequest
+	3,  // 9: image.ImageService.GetImageByImageID:input_type -> image.GetImageByImageIDRequest
+	5,  // 10: image.ImageService.BatchGetImages:input_type -> image.BatchGetImagesRequest
+	7,  // 11: image.ImageService.MoveImage:input_type -> image.MoveImageRequest
+	9,  // 12: image.ImageService.DeleteImage:input_type -> image.DeleteImageRequest
+	2,  // 13: image.ImageService.GetImageByID:output_type -> image.GetImageByIDResponse
+	4,  // 14: image.ImageService.GetImageByImageID:output_type -> image.GetImageByImageIDResponse
+	6,  // 15: image.ImageService.BatchGetImages:output_type -> image.BatchGetImagesResponse
+	8,  // 16: image.ImageService.MoveImage:output_type -> image.MoveImageResponse
+	10, // 17: image.ImageService.DeleteImage:output_type -> image.DeleteImageResponse
+	13, // [13:18] is the sub-list for method output_type
+	8,  // [8:13] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_image_image_proto_init() }
@@ -593,7 +790,7 @@ func file_image_image_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_image_image_proto_rawDesc), len(file_image_image_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

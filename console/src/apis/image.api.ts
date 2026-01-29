@@ -20,6 +20,22 @@ import type {
 import { protectedClient } from "./clients";
 import { URL_PATHS } from "./ip";
 
+// ========== 图片上传相关 ==========
+
+// 上传图片（上传到 tmp 目录，后续通过 Directory 服务创建时自动移动）
+export const UploadImage = async (file: File, isPublic: boolean = true): Promise<Image> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const url = `${URL_PATHS.IMAGE.UPLOAD_IMAGE}?is_public=${isPublic}`;
+  const { data } = await protectedClient.post<DataResponse<Image>>(url, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data.data;
+};
+
 // ========== 图片相关 ==========
 
 // 创建图片

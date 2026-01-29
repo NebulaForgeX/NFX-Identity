@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"nfxid/connections/image"
 	badgeApp "nfxid/modules/directory/application/badges"
 	resourceApp "nfxid/modules/directory/application/resource"
 	userAvatarApp "nfxid/modules/directory/application/user_avatars"
@@ -18,6 +19,7 @@ import (
 	userProfileApp "nfxid/modules/directory/application/user_profiles"
 	userApp "nfxid/modules/directory/application/users"
 	"nfxid/modules/directory/config"
+	directoryGrpc "nfxid/modules/directory/infrastructure/grpc"
 	badgeRepo "nfxid/modules/directory/infrastructure/repository/badges"
 	userAvatarRepo "nfxid/modules/directory/infrastructure/repository/user_avatars"
 	userBadgeRepo "nfxid/modules/directory/infrastructure/repository/user_badges"
@@ -62,6 +64,7 @@ type Dependencies struct {
 	serverTokenVerifier  token.Verifier
 	resourceSvc          *resourceApp.Service
 	tokenxInstance       *tokenx.Tokenx
+	grpcClients          *directoryGrpc.GRPCClients
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -123,6 +126,17 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	userAvatarRepoInstance := userAvatarRepo.NewRepo(postgres.DB())
 	userImageRepoInstance := userImageRepo.NewRepo(postgres.DB())
 
+	//! === gRPC Clients（Image 等，create user_avatar/user_image 前校验 image 存在）===
+	grpcClientsInstance, err := directoryGrpc.NewGRPCClients(ctx, &cfg.GRPCClient, &cfg.Server, &cfg.Token)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
+	}
+
+	var imageClientForApp *image.ImageClient // 来自 directoryGrpc.GRPCClients.ImageClient
+	if grpcClientsInstance != nil && grpcClientsInstance.ImageClient != nil {
+		imageClientForApp = grpcClientsInstance.ImageClient
+	}
+
 	//! === Application Services ===
 	userAppSvc := userApp.NewService(userRepoInstance)
 	badgeAppSvc := badgeApp.NewService(badgeRepoInstance)
@@ -133,8 +147,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	userPhoneAppSvc := userPhoneApp.NewService(userPhoneRepoInstance)
 	userPreferenceAppSvc := userPreferenceApp.NewService(userPreferenceRepoInstance)
 	userProfileAppSvc := userProfileApp.NewService(userProfileRepoInstance)
-	userAvatarAppSvc := userAvatarApp.NewService(userAvatarRepoInstance)
-	userImageAppSvc := userImageApp.NewService(userImageRepoInstance)
+	userAvatarAppSvc := userAvatarApp.NewService(userAvatarRepoInstance, imageClientForApp, busPublisher)
+	userImageAppSvc := userImageApp.NewService(userImageRepoInstance, imageClientForApp)
 
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
@@ -160,6 +174,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		serverTokenVerifier:  serverTokenVerifier,
 		resourceSvc:          resourceSvc,
 		tokenxInstance:       tokenxInstance,
+		grpcClients:          grpcClientsInstance,
 	}, nil
 }
 
@@ -167,6 +182,9 @@ func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()
 	d.postgres.Close()
 	d.cache.Close()
+	if d.grpcClients != nil {
+		_ = d.grpcClients.Close()
+	}
 }
 
 // Getter methods for interfaces
