@@ -19,7 +19,7 @@ import (
 	clientScopeRepo "nfxid/modules/clients/infrastructure/repository/client_scopes"
 	ipAllowlistRepo "nfxid/modules/clients/infrastructure/repository/ip_allowlist"
 	rateLimitRepo "nfxid/modules/clients/infrastructure/repository/rate_limits"
-	"nfxid/pkgs/cache"
+	"nfxid/pkgs/cachex"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/kafkax/eventbus"
@@ -32,7 +32,7 @@ import (
 
 type Dependencies struct {
 	healthMgr                *health.Manager
-	cache                    *cache.Connection
+	cache                    *cachex.Connection
 	postgres                 *postgresqlx.Connection
 	kafkaConfig              *kafkax.Config
 	busPublisher             *eventbus.BusPublisher
@@ -59,7 +59,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	}
 
 	// Redis Cache
-	cacheConn, err := cache.InitConn(ctx, cfg.Cache)
+	cacheConn, err := cachex.InitConn(ctx, cfg.Cache)
 	if err != nil {
 		return nil, fmt.Errorf("init Redis: %w", err)
 	}

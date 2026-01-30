@@ -2,7 +2,7 @@ package core
 
 import (
 	"context"
-	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/cachex/config"
 	"nfxid/pkgs/utils/id"
 	"time"
 

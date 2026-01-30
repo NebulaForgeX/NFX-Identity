@@ -1,7 +1,7 @@
 package config
 
 import (
-	"nfxid/pkgs/cache"
+	"nfxid/pkgs/cachex"
 	"nfxid/pkgs/env"
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/logx"
@@ -14,7 +14,7 @@ type Config struct {
 	Env          env.Env
 	Server       ServerConfig       `koanf:"server"`
 	PostgreSQL   postgresqlx.Config `koanf:"postgresql"`
-	Cache        cache.ConnConfig   `koanf:"cache"`
+	Cache        cachex.ConnConfig  `koanf:"cache"`
 	Logger       logx.LoggerConfig  `koanf:"logger"`
 	KafkaConfig  kafkax.Config      `koanf:"kafka"`
 	RabbitMQConfig rabbitmqx.Config `koanf:"rabbitmq"`

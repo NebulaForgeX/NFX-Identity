@@ -1,8 +1,8 @@
-package cache
+package cachex
 
 import (
 	"context"
-	"nfxid/pkgs/cache/connection"
+	"nfxid/pkgs/cachex/connection"
 )
 
 type ConnConfig = connection.Config

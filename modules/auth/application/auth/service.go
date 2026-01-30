@@ -8,7 +8,7 @@ import (
 	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
 	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
 	grpcClients "nfxid/modules/auth/infrastructure/grpc"
-	"nfxid/pkgs/cache"
+	"nfxid/pkgs/cachex"
 	emailPkg "nfxid/pkgs/email"
 )
 
@@ -23,7 +23,7 @@ type Service struct {
 	expiresInSec         int64
 	refreshTokenTTL      int64 // refresh token 有效期（秒）
 	emailService         *emailPkg.EmailService
-	cache                *cache.Connection
+	cache                *cachex.Connection
 	userCredentialAppSvc *userCredentialApp.Service
 }
 
@@ -39,7 +39,7 @@ func NewService(
 	expiresInSec int64,
 	refreshTokenTTL int64,
 	emailService *emailPkg.EmailService,
-	cache *cache.Connection,
+	cache *cachex.Connection,
 	userCredentialAppSvc *userCredentialApp.Service,
 ) *Service {
 	if expiresInSec <= 0 {

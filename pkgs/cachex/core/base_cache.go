@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"nfxid/pkgs/cache/config"
+	"nfxid/pkgs/cachex/config"
 	"nfxid/pkgs/utils/typeutil"
 
 	"github.com/redis/go-redis/v9"

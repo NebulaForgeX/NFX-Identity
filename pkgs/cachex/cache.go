@@ -1,8 +1,8 @@
-package cache
+package cachex
 
 import (
-	"nfxid/pkgs/cache/config"
-	"nfxid/pkgs/cache/core"
+	"nfxid/pkgs/cachex/config"
+	"nfxid/pkgs/cachex/core"
 	"nfxid/pkgs/utils/id"
 	"time"
 

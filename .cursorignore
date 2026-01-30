@@ -134,3 +134,9 @@ data/**/*.sql
 !.env.example
 !.example.env
 !.env
+
+## 确保 pkgs 及其子目录（含 cache）不被忽略
+!pkgs/
+!pkgs/**
+!pkgs/cache/
+!pkgs/cache/**

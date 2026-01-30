@@ -28,7 +28,7 @@ import (
 	sessionRepo "nfxid/modules/auth/infrastructure/repository/sessions"
 	trustedDeviceRepo "nfxid/modules/auth/infrastructure/repository/trusted_devices"
 	userCredentialRepo "nfxid/modules/auth/infrastructure/repository/user_credentials"
-	"nfxid/pkgs/cache"
+	"nfxid/pkgs/cachex"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/kafkax/eventbus"
@@ -42,7 +42,7 @@ import (
 
 type Dependencies struct {
 	healthMgr              *health.Manager
-	cache                  *cache.Connection
+	cache                  *cachex.Connection
 	postgres               *postgresqlx.Connection
 	kafkaConfig            *kafkax.Config
 	busPublisher           *eventbus.BusPublisher
@@ -75,7 +75,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	}
 
 	// Redis Cache
-	cacheConn, err := cache.InitConn(ctx, cfg.Cache)
+	cacheConn, err := cachex.InitConn(ctx, cfg.Cache)
 	if err != nil {
 		return nil, fmt.Errorf("init Redis: %w", err)
 	}
@@ -218,7 +218,7 @@ func (d *Dependencies) BusPublisher() *eventbus.BusPublisher             { retur
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config                { return d.rabbitMQConfig }
 func (d *Dependencies) AuthAppSvc() *authApp.Service                     { return d.authAppSvc }
 func (d *Dependencies) EmailService() *email.EmailService                { return d.emailService }
-func (d *Dependencies) Cache() *cache.Connection                         { return d.cache }
+func (d *Dependencies) Cache() *cachex.Connection                        { return d.cache }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

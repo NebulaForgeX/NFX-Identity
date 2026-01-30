@@ -16,6 +16,7 @@ type Config struct {
 	Host       string           `koanf:"host"`
 	Port       int              `koanf:"port"`
 	Password   string           `koanf:"password"`
+	DB         int              `koanf:"db"` // Redis 数据库编号，0-15，可配置不用默认 0
 	Connection ConnectionConfig `koanf:"connection"`
 	TLS        TLSConfig        `koanf:"tls"`
 }
@@ -47,7 +48,7 @@ func Init(ctx context.Context, cacheCfg Config) (*Connection, error) {
 		options: &redis.Options{
 			Addr:         fmt.Sprintf("%s:%d", cacheCfg.Host, cacheCfg.Port),
 			Password:     cacheCfg.Password,
-			DB:           0, // Default DB 0
+			DB:           cacheCfg.DB,
 			DialTimeout:  cacheCfg.Connection.DialTimeout,
 			ReadTimeout:  cacheCfg.Connection.ReadTimeout,
 			WriteTimeout: cacheCfg.Connection.WriteTimeout,
