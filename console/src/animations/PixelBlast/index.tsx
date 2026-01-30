@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, memo, useMemo } from 'react';
 import * as THREE from 'three';
 import { EffectComposer, EffectPass, RenderPass, Effect } from 'postprocessing';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/providers/ThemeProvider/useTheme';
 import styles from './style.module.css';
 
 type PixelBlastVariant = 'square' | 'circle' | 'triangle' | 'diamond';

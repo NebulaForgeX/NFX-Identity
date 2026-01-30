@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import styles from './style.module.css';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/providers/ThemeProvider/useTheme';
 
 type CanvasStrokeStyle = string | CanvasGradient | CanvasPattern;
 

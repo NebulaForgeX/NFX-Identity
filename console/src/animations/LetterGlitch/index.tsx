@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo, memo, useCallback } from 'react';
 import styles from './style.module.css';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/providers/ThemeProvider/useTheme';
 
 interface LetterGlitchProps {
   glitchColors?: string[];

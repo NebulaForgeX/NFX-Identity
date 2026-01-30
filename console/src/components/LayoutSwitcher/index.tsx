@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useLayout } from "@/hooks/useLayout";
+import { useLayout } from "@/providers/LayoutProvider/useLayout";
 import { useLayoutSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";

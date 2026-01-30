@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { useLayout } from "@/hooks/useLayout";
+import { useLayout } from "@/providers/LayoutProvider/useLayout";
 
 import SideHideLayout from "./SideHideLayout";
 import SideShowLayout from "./SideShowLayout";

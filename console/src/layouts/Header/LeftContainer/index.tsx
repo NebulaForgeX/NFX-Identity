@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Menu } from "@/assets/icons/lucide";
 import { LayoutSwitcher, ThemeSwitcher } from "@/components";
 import { routerEventEmitter } from "@/events/router";
-import { useLayout } from "@/hooks/useLayout";
+import { useLayout } from "@/providers/LayoutProvider/useLayout";
 import styles from "./styles.module.css";
 
 const LeftContainer = memo(() => {

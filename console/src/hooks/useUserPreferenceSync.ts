@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useUpdateUserPreference, useUserPreferenceNormal } from "@/hooks/useDirectory";
-import { useTheme } from "@/hooks/useTheme";
-import { useLayout } from "@/hooks/useLayout";
+import { useTheme } from "@/providers/ThemeProvider/useTheme";
+import { useLayout } from "@/providers/LayoutProvider/useLayout";
 import { ChangeLanguage } from "@/assets/languages/i18n";
 import { LANGUAGE } from "@/assets/languages/i18nResources";
 import type { Language } from "@/assets/languages/i18nResources";
