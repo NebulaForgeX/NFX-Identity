@@ -26,7 +26,7 @@ pkgs/
 ```
 
 **示例**：
-- `cache/` - Redis 缓存层
+- `cachex/` - Redis 缓存层
 - `logx/` - 结构化日志
 - `postgresqlx/` - PostgreSQL 连接
 - `kafkax/` - Kafka 发布/订阅
@@ -37,7 +37,7 @@ pkgs/
 
 ### 核心基础设施
 
-- **`cache/`** - Redis 缓存层（实体缓存、列表缓存、计数器缓存）
+- **`cachex/`** - Redis 缓存层（实体缓存、列表缓存、计数器缓存）
 - **`configx/`** - 配置加载器（Koanf 封装）
 - **`env/`** - 环境变量工具
 - **`logx/`** - 结构化日志（Zap 封装）
