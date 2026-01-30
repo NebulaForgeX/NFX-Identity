@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 
-import { createContext, useCallback, useEffect, useState } from "react";
+import { createContext } from "react";
+import useAction from "./hooks/useAction";
+import useSet from "./hooks/useSet";
 
 export type LayoutMode = "show" | "hide";
 
@@ -22,61 +24,10 @@ interface LayoutProviderProps {
 
 export function LayoutProvider({ children, defaultLayoutMode = "show" }: LayoutProviderProps) {
   // 从 localStorage 读取初始状态（兼容 zustand persist 格式）
-  const [sidebarOpen, setSidebarOpenState] = useState<boolean>(() => {
-    const saved = localStorage.getItem("layout-storage");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // 兼容 zustand persist 格式: { state: { ... } } 或直接 { ... }
-        return parsed.state?.sidebarOpen ?? parsed.sidebarOpen ?? false;
-      } catch {
-        return false;
-      }
-    }
-    return false;
-  });
+  const { sidebarOpen, setSidebarOpen, toggleSidebar, closeSidebar } = useAction();
 
-  const [layoutMode, setLayoutModeState] = useState<LayoutMode>(() => {
-    const saved = localStorage.getItem("layout-storage");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // 兼容 zustand persist 格式: { state: { ... } } 或直接 { ... }
-        const mode = parsed.state?.layoutMode ?? parsed.layoutMode;
-        return mode === "show" || mode === "hide" ? mode : defaultLayoutMode;
-      } catch {
-        return defaultLayoutMode;
-      }
-    }
-    return defaultLayoutMode;
-  });
+  const { layoutMode, setLayoutMode } = useSet(defaultLayoutMode, sidebarOpen);
 
-  // 同步到 localStorage（使用与 zustand persist 兼容的格式）
-  useEffect(() => {
-    const storage = {
-      state: {
-        sidebarOpen,
-        layoutMode,
-      },
-    };
-    localStorage.setItem("layout-storage", JSON.stringify(storage));
-  }, [sidebarOpen, layoutMode]);
-
-  const setSidebarOpen = useCallback((open: boolean) => {
-    setSidebarOpenState(open);
-  }, []);
-
-  const toggleSidebar = useCallback(() => {
-    setSidebarOpenState((prev) => !prev);
-  }, []);
-
-  const closeSidebar = useCallback(() => {
-    setSidebarOpenState(false);
-  }, []);
-
-  const setLayoutMode = useCallback((mode: LayoutMode) => {
-    setLayoutModeState(mode);
-  }, []);
 
   return (
     <LayoutContext.Provider
