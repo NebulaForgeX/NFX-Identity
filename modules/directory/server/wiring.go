@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"nfxid/connections/image"
 	badgeApp "nfxid/modules/directory/application/badges"
 	resourceApp "nfxid/modules/directory/application/resource"
 	userAvatarApp "nfxid/modules/directory/application/user_avatars"
@@ -132,11 +131,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		return nil, fmt.Errorf("failed to create gRPC clients: %w", err)
 	}
 
-	var imageClientForApp *image.ImageClient // 来自 directoryGrpc.GRPCClients.ImageClient
-	if grpcClientsInstance != nil && grpcClientsInstance.ImageClient != nil {
-		imageClientForApp = grpcClientsInstance.ImageClient
-	}
-
 	//! === Application Services ===
 	userAppSvc := userApp.NewService(userRepoInstance)
 	badgeAppSvc := badgeApp.NewService(badgeRepoInstance)
@@ -147,8 +141,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	userPhoneAppSvc := userPhoneApp.NewService(userPhoneRepoInstance)
 	userPreferenceAppSvc := userPreferenceApp.NewService(userPreferenceRepoInstance)
 	userProfileAppSvc := userProfileApp.NewService(userProfileRepoInstance)
-	userAvatarAppSvc := userAvatarApp.NewService(userAvatarRepoInstance, imageClientForApp, busPublisher)
-	userImageAppSvc := userImageApp.NewService(userImageRepoInstance, imageClientForApp)
+	userAvatarAppSvc := userAvatarApp.NewService(userAvatarRepoInstance, grpcClientsInstance, busPublisher)
+	userImageAppSvc := userImageApp.NewService(userImageRepoInstance, grpcClientsInstance)
 
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 

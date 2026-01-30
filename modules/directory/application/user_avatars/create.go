@@ -19,19 +19,16 @@ import (
 // 3. 若已有头像则先取旧 image_id，更新后再通过 gRPC 删除旧头像文件
 // 4. 创建或更新用户头像关联
 func (s *Service) CreateOrUpdateUserAvatar(ctx context.Context, cmd userAvatarCommands.CreateOrUpdateUserAvatarCmd) error {
-	if s.imageClient == nil {
-		return fmt.Errorf("image client not configured")
-	}
 
 	// 获取图片信息
-	image, err := s.imageClient.GetImageByID(ctx, cmd.ImageID.String())
+	image, err := s.grpcClients.ImageClient.GetImageByID(ctx, cmd.ImageID.String())
 	if err != nil {
 		return fmt.Errorf("image not found: %w", err)
 	}
 
 	// 如果图片在 tmp 目录，移动到 avatar 目录
 	if strings.Contains(image.StoragePath, constants.StoragePathTmp) {
-		_, err := s.imageClient.MoveImage(ctx, cmd.ImageID.String(), string(constants.ImageStorageTypeAvatar))
+		_, err := s.grpcClients.ImageClient.MoveImage(ctx, cmd.ImageID.String(), string(constants.ImageStorageTypeAvatar))
 		if err != nil {
 			return fmt.Errorf("failed to move image to avatar directory: %w", err)
 		}

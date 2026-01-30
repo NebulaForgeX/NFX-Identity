@@ -19,19 +19,19 @@ import (
 // 3. 创建用户图片关联
 func (s *Service) CreateUserImage(ctx context.Context, cmd userImageCommands.CreateUserImageCmd) (uuid.UUID, error) {
 	// 通过 gRPC 验证 Image 是否存在
-	if s.imageClient == nil {
+	if s.grpcClients.ImageClient == nil {
 		return uuid.Nil, fmt.Errorf("image client not configured")
 	}
 
 	// 获取图片信息
-	image, err := s.imageClient.GetImageByID(ctx, cmd.ImageID.String())
+	image, err := s.grpcClients.ImageClient.GetImageByID(ctx, cmd.ImageID.String())
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("image not found: %w", err)
 	}
 
 	// 如果图片在 tmp 目录，移动到 background 目录
 	if strings.Contains(image.StoragePath, constants.StoragePathTmp) {
-		_, err := s.imageClient.MoveImage(ctx, cmd.ImageID.String(), string(constants.ImageStorageTypeBackground))
+		_, err := s.grpcClients.ImageClient.MoveImage(ctx, cmd.ImageID.String(), string(constants.ImageStorageTypeBackground))
 		if err != nil {
 			return uuid.Nil, fmt.Errorf("failed to move image to background directory: %w", err)
 		}
