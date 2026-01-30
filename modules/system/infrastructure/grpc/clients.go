@@ -60,16 +60,18 @@ func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg
 	grpcClients.conns = append(grpcClients.conns, authConn)
 	grpcClients.AuthClient = NewAuthClient(authConn)
 
-	// 连接 Image 服务（初始化时清空 data 图片等）
-	if cfg.ImageAddr != "" {
-		imageConn, err := createConnection(cfg.ImageAddr, tokenProvider)
-		if err != nil {
-			grpcClients.Close()
-			return nil, fmt.Errorf("failed to create image connection: %w", err)
-		}
-		grpcClients.conns = append(grpcClients.conns, imageConn)
-		grpcClients.ImageClient = NewImageClient(imageConn)
+	// 连接 Image 服务（bootstrap 清空 data 等，必须配）
+	if cfg.ImageAddr == "" {
+		grpcClients.Close()
+		return nil, fmt.Errorf("system requires grpc_client.image_addr to be set")
 	}
+	imageConn, err := createConnection(cfg.ImageAddr, tokenProvider)
+	if err != nil {
+		grpcClients.Close()
+		return nil, fmt.Errorf("failed to create image connection: %w", err)
+	}
+	grpcClients.conns = append(grpcClients.conns, imageConn)
+	grpcClients.ImageClient = NewImageClient(imageConn)
 
 	// 初始化健康检查客户端
 	if err := initHealthClients(grpcClients, cfg, serverCfg, tokenProvider); err != nil {

@@ -22,22 +22,23 @@ type GRPCClients struct {
 	mu    sync.Mutex
 }
 
-// NewGRPCClients 创建 gRPC 客户端连接
+// NewGRPCClients 创建 gRPC 客户端连接；directory 的 user_avatar/user_image 依赖 Image，必须配 image_addr
 func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg *config.ServerConfig, tokenCfg *tokenx.Config) (*GRPCClients, error) {
 	_ = ctx
 	_ = serverCfg
 
+	if cfg.ImageAddr == "" {
+		return nil, fmt.Errorf("directory requires grpc_client.image_addr to be set")
+	}
 	tokenProvider := createTokenProvider(tokenCfg)
 	clients := &GRPCClients{conns: make([]*grpc.ClientConn, 0)}
 
-	if cfg.ImageAddr != "" {
-		imageConn, err := createConnection(cfg.ImageAddr, tokenProvider)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create image connection: %w", err)
-		}
-		clients.conns = append(clients.conns, imageConn)
-		clients.ImageClient = image.NewImageClient(imagepb.NewImageServiceClient(imageConn))
+	imageConn, err := createConnection(cfg.ImageAddr, tokenProvider)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create image connection: %w", err)
 	}
+	clients.conns = append(clients.conns, imageConn)
+	clients.ImageClient = image.NewImageClient(imagepb.NewImageServiceClient(imageConn))
 
 	return clients, nil
 }

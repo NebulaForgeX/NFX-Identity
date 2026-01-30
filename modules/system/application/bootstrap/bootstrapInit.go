@@ -244,13 +244,9 @@ func (s *Service) clearAllSchemas(ctx context.Context) (map[string]int, error) {
 	return schemaClearResults, nil
 }
 
-// clearAllStorages 清空所有服务的存储（如 Image 的 data 目录下所有图片文件）
+// clearAllStorages 清空所有服务的存储（如 Image 的 data 目录下所有图片文件；NewGRPCClients 已保证 ImageClient 非 nil）
 func (s *Service) clearAllStorages(ctx context.Context) error {
 	logx.S().Info("🧹 Clearing all storages (e.g. image data files)...")
-	if s.grpcClients.ImageClient == nil {
-		logx.S().Info("ℹ️  No Image client, skip clearing image storage")
-		return nil
-	}
 	success, errMsg, err := s.grpcClients.ImageClient.Image.ClearStorageData(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to clear image storage: %w", err)

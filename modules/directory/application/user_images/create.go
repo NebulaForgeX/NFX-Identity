@@ -18,12 +18,7 @@ import (
 // 2. 如果图片在 tmp 目录，移动到 background 目录
 // 3. 创建用户图片关联
 func (s *Service) CreateUserImage(ctx context.Context, cmd userImageCommands.CreateUserImageCmd) (uuid.UUID, error) {
-	// 通过 gRPC 验证 Image 是否存在
-	if s.grpcClients.ImageClient == nil {
-		return uuid.Nil, fmt.Errorf("image client not configured")
-	}
-
-	// 获取图片信息
+	// 获取图片信息（NewGRPCClients 已保证 ImageClient 非 nil）
 	image, err := s.grpcClients.ImageClient.GetImageByID(ctx, cmd.ImageID.String())
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("image not found: %w", err)

@@ -24,11 +24,9 @@ func (s *Service) UpdateUserImageDisplayOrder(ctx context.Context, cmd userImage
 
 // UpdateUserImageImageID 更新用户图片ID
 func (s *Service) UpdateUserImageImageID(ctx context.Context, cmd userImageCommands.UpdateUserImageImageIDCmd) error {
-	// update 时通过 gRPC 问 Image 服务该 image 是否存在（wiring 未配 ImageAddr 时 ImageClient 为 nil，跳过校验）
-	if s.grpcClients.ImageClient != nil {
-		if _, err := s.grpcClients.ImageClient.GetImageByID(ctx, cmd.ImageID.String()); err != nil {
-			return err
-		}
+	// update 时通过 gRPC 问 Image 服务该 image 是否存在（NewGRPCClients 已保证 ImageClient 非 nil）
+	if _, err := s.grpcClients.ImageClient.GetImageByID(ctx, cmd.ImageID.String()); err != nil {
+		return err
 	}
 
 	// Get domain entity

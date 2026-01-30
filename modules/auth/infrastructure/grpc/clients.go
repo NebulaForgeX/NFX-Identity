@@ -20,33 +20,34 @@ type GRPCClients struct {
 	mu    sync.Mutex
 }
 
-// NewGRPCClients 创建 gRPC 客户端连接
+// NewGRPCClients 创建 gRPC 客户端连接；auth 登录/注册依赖 Directory 与 Access，必须都配
 func NewGRPCClients(ctx context.Context, cfg *config.GRPCClientConfig, serverCfg *config.ServerConfig, tokenCfg *tokenx.Config) (*GRPCClients, error) {
 	_ = ctx
 	_ = serverCfg
 
+	if cfg.DirectoryAddr == "" {
+		return nil, fmt.Errorf("auth requires grpc_client.directory_addr to be set")
+	}
+	if cfg.AccessAddr == "" {
+		return nil, fmt.Errorf("auth requires grpc_client.access_addr to be set")
+	}
 	tokenProvider := createTokenProvider(tokenCfg)
 	clients := &GRPCClients{conns: make([]*grpc.ClientConn, 0)}
 
-	// 连接 Directory 服务
-	if cfg.DirectoryAddr != "" {
-		directoryConn, err := createConnection(cfg.DirectoryAddr, tokenProvider)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create directory connection: %w", err)
-		}
-		clients.conns = append(clients.conns, directoryConn)
-		clients.DirectoryClient = NewDirectoryClient(directoryConn)
+	directoryConn, err := createConnection(cfg.DirectoryAddr, tokenProvider)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create directory connection: %w", err)
 	}
+	clients.conns = append(clients.conns, directoryConn)
+	clients.DirectoryClient = NewDirectoryClient(directoryConn)
 
-	// 连接 Access 服务
-	if cfg.AccessAddr != "" {
-		accessConn, err := createConnection(cfg.AccessAddr, tokenProvider)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create access connection: %w", err)
-		}
-		clients.conns = append(clients.conns, accessConn)
-		clients.AccessClient = NewAccessClient(accessConn)
+	accessConn, err := createConnection(cfg.AccessAddr, tokenProvider)
+	if err != nil {
+		_ = clients.Close()
+		return nil, fmt.Errorf("failed to create access connection: %w", err)
 	}
+	clients.conns = append(clients.conns, accessConn)
+	clients.AccessClient = NewAccessClient(accessConn)
 
 	return clients, nil
 }

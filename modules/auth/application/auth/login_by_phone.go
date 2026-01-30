@@ -157,17 +157,14 @@ func (s *Service) LoginByPhone(ctx context.Context, cmd authCommands.LoginByPhon
 		}
 	}
 
-	// 获取用户的角色信息（如果有的话）
+	// 获取用户的角色信息（NewGRPCClients 已保证 AccessClient 非 nil）
 	var roleID string
-	if s.grpcClients.AccessClient != nil {
-		grants, err := s.grpcClients.AccessClient.Grant.GetGrantsBySubject(ctx, "user", up.UserId, nil)
-		if err == nil {
-			// 查找第一个未撤销的角色授权
-			for _, grant := range grants {
-				if grant.GrantType == grantpb.AccessGrantType_ACCESS_GRANT_TYPE_ROLE && grant.RevokedAt == nil {
-					roleID = grant.GrantRefId
-					break // 使用第一个角色
-				}
+	grants, err := s.grpcClients.AccessClient.Grant.GetGrantsBySubject(ctx, "user", up.UserId, nil)
+	if err == nil {
+		for _, grant := range grants {
+			if grant.GrantType == grantpb.AccessGrantType_ACCESS_GRANT_TYPE_ROLE && grant.RevokedAt == nil {
+				roleID = grant.GrantRefId
+				break
 			}
 		}
 	}
