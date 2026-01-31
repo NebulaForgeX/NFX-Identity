@@ -7,7 +7,12 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Dropdown } from "@/components";
 import { useTheme } from "@/providers/ThemeProvider/useTheme";
 
-const ThemeController = memo(() => {
+export interface ThemeControllerProps {
+  /** 选择即改：选择新主题后立即回调，用于保存并应用 */
+  onApply?: (payload: { theme: string }) => void;
+}
+
+const ThemeController = memo(({ onApply }: ThemeControllerProps) => {
   const { t } = useTranslation("elements.directory");
   const { t: tComponents } = useTranslation("components");
   const { availableThemes } = useTheme();
@@ -35,7 +40,10 @@ const ThemeController = memo(() => {
           <Dropdown
             options={themeOptions}
             value={field.value || ""}
-            onChange={field.onChange}
+            onChange={(value) => {
+              field.onChange(value);
+              onApply?.({ theme: value });
+            }}
             placeholder={t("preference.theme.placeholder")}
             error={!!errors.theme}
           />

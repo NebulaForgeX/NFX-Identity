@@ -8,7 +8,12 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Dropdown } from "@/components";
 import { LANGUAGE } from "@/assets/languages/i18nResources";
 
-const LanguageController = memo(() => {
+export interface LanguageControllerProps {
+  /** 选择即改：选择新语言后立即回调，用于保存并应用 */
+  onApply?: (payload: { language: string }) => void;
+}
+
+const LanguageController = memo(({ onApply }: LanguageControllerProps) => {
   const { t } = useTranslation("elements.directory");
   const { t: tComponents } = useTranslation("components");
   const {
@@ -41,7 +46,10 @@ const LanguageController = memo(() => {
           <Dropdown
             options={languageOptions}
             value={field.value || ""}
-            onChange={field.onChange}
+            onChange={(value) => {
+              field.onChange(value);
+              onApply?.({ language: value });
+            }}
             placeholder={t("preference.language.placeholder")}
             error={!!errors.language}
           />

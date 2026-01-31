@@ -1,33 +1,31 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { FormProvider } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
-import { Button, IconButton, Suspense } from "@/components";
+import { IconButton, Suspense } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
 import {
   useInitPreferenceForm,
-  useSubmitPreference,
   ThemeController,
   LanguageController,
   TimezoneController,
   DashboardBackgroundController,
 } from "@/elements/preference";
-import { useUserPreference } from "@/hooks/useDirectory";
+import type { PreferenceFormValues } from "@/elements/preference";
+import { useUserPreference, useCreateUserPreference, useUpdateUserPreference } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
 import type { DashboardBackgroundType } from "@/types";
 import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
-import { ROUTES } from "@/types/navigation";
+import { ChangeLanguage } from "@/assets/languages/i18n";
+import { useTheme } from "@/providers/ThemeProvider/useTheme";
 
 import styles from "./styles.module.css";
 
 const EditPreferencePage = memo(() => {
   const { t } = useTranslation("EditPreferencePage");
-  const navigate = useNavigate();
   const currentUserId = useAuthStore((state) => state.currentUserId);
 
   if (!currentUserId) {
-    navigate(ROUTES.PROFILE);
     return null;
   }
 
@@ -37,7 +35,7 @@ const EditPreferencePage = memo(() => {
         <IconButton
           variant="ghost"
           leftIcon={<ArrowLeftIcon size={20} />}
-          onClick={() => navigate(ROUTES.PROFILE)}
+          onClick={() => window.history.back()}
           className={styles.backButton}
         >
           {t("back")}
@@ -61,9 +59,11 @@ const EditPreferencePage = memo(() => {
 EditPreferencePage.displayName = "EditPreferencePage";
 
 const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
-  const { t } = useTranslation("EditPreferencePage");
-  const navigate = useNavigate();
   const { data: preference } = useUserPreference({ id: userId });
+  const { setTheme } = useTheme();
+  const updatePreference = useUpdateUserPreference({ silent: true });
+  const createPreference = useCreateUserPreference();
+
   const form = useInitPreferenceForm(
     preference
       ? {
@@ -78,30 +78,54 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
         }
       : undefined,
   );
-  const { onSubmit, onSubmitError, isPending } = useSubmitPreference(preference);
+
+  /** 选择即改：保存到后端并应用（主题/语言立即生效） */
+  const handleApply = useCallback(
+    async (payload: Partial<PreferenceFormValues>) => {
+      try {
+        if (preference) {
+          const data: Record<string, unknown> = { ...payload };
+          if (payload.dashboardBackground !== undefined) {
+            const existingOther = (preference.other as Record<string, unknown>) || {};
+            data.other = { ...existingOther, dashboardBackground: payload.dashboardBackground };
+            delete data.dashboardBackground;
+          }
+          await updatePreference.mutateAsync({
+            id: preference.id,
+            data: data as Parameters<typeof updatePreference.mutateAsync>[0]["data"],
+          });
+        } else {
+          const values = form.getValues();
+          const existingOther = (values.other as Record<string, unknown>) || {};
+          const otherData = { ...existingOther, dashboardBackground: (payload.dashboardBackground ?? values.dashboardBackground) || DEFAULT_DASHBOARD_BACKGROUND };
+          await createPreference.mutateAsync({
+            userId,
+            theme: payload.theme ?? values.theme,
+            language: payload.language ?? values.language,
+            timezone: payload.timezone ?? values.timezone,
+            notifications: values.notifications,
+            privacy: values.privacy,
+            display: values.display,
+            other: otherData,
+          });
+        }
+        if (payload.theme) setTheme(payload.theme as Parameters<typeof setTheme>[0]);
+        if (payload.language) ChangeLanguage(payload.language as Parameters<typeof ChangeLanguage>[0]);
+      } catch (e) {
+        console.error("Failed to save preference:", e);
+      }
+    },
+    [preference, form, userId, updatePreference, createPreference, setTheme],
+  );
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onSubmitError)} className={styles.form}>
-        <ThemeController />
-        <LanguageController />
-        <TimezoneController />
-        <DashboardBackgroundController />
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate(ROUTES.PROFILE)}
-            disabled={isPending}
-          >
-            {t("cancel")}
-          </Button>
-          <Button type="submit" variant="primary" disabled={isPending}>
-            {isPending ? t("submitting") : t("submit")}
-          </Button>
-        </div>
-      </form>
+      <div className={styles.form}>
+        <ThemeController onApply={(p) => handleApply(p)} />
+        <LanguageController onApply={(p) => handleApply(p)} />
+        <TimezoneController onApply={(p) => handleApply(p)} />
+        <DashboardBackgroundController onApply={(p) => handleApply(p)} />
+      </div>
     </FormProvider>
   );
 });

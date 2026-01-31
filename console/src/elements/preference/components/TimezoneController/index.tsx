@@ -6,6 +6,11 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { Dropdown } from "@/components";
 
+export interface TimezoneControllerProps {
+  /** 选择即改：选择新时区后立即回调，用于保存 */
+  onApply?: (payload: { timezone: string }) => void;
+}
+
 // 常用时区列表
 const TIMEZONES = [
   "UTC",
@@ -26,7 +31,7 @@ const TIMEZONES = [
   "America/Sao_Paulo",
 ];
 
-const TimezoneController = memo(() => {
+const TimezoneController = memo(({ onApply }: TimezoneControllerProps) => {
   const { t } = useTranslation("elements.directory");
   const {
     control,
@@ -52,7 +57,10 @@ const TimezoneController = memo(() => {
           <Dropdown
             options={timezoneOptions}
             value={field.value || ""}
-            onChange={field.onChange}
+            onChange={(value) => {
+              field.onChange(value);
+              onApply?.({ timezone: value });
+            }}
             placeholder={t("preference.timezone.placeholder")}
             error={!!errors.timezone}
           />

@@ -1,4 +1,5 @@
 import type { PreferenceFormValues } from "../../schemas/preferenceSchema";
+import type { DashboardBackgroundType } from "@/types";
 
 import { memo, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -7,7 +8,12 @@ import { useTranslation } from "react-i18next";
 import { Dropdown } from "@/components";
 import { DASHBOARD_BACKGROUND_VALUES } from "@/types";
 
-const DashboardBackgroundController = memo(() => {
+export interface DashboardBackgroundControllerProps {
+  /** 选择即改：选择新背景后立即回调，用于保存 */
+  onApply?: (payload: { dashboardBackground: DashboardBackgroundType }) => void;
+}
+
+const DashboardBackgroundController = memo(({ onApply }: DashboardBackgroundControllerProps) => {
   const { t } = useTranslation("elements.directory");
   const {
     control,
@@ -41,7 +47,10 @@ const DashboardBackgroundController = memo(() => {
           <Dropdown
             options={backgroundOptions}
             value={field.value || ""}
-            onChange={field.onChange}
+            onChange={(value) => {
+              field.onChange(value);
+              onApply?.({ dashboardBackground: value as DashboardBackgroundType });
+            }}
             placeholder={t("preference.dashboardBackground.placeholder")}
             error={!!errors.dashboardBackground}
           />
