@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginByPhone } from "@/hooks/useAuth";
 
 import { createPhoneLoginSchema, type PhoneLoginFormValues } from "../../schemas/loginSchema";
-import LoginPhoneController from "../LoginPhoneController";
-import LoginPasswordController from "../LoginPasswordController";
+import LoginPhoneController from "../../controllers/LoginPhoneController";
+import LoginPasswordController from "../../controllers/LoginPasswordController";
 import styles from "./styles.module.css";
 
 const LoginPhoneForm = memo(() => {

@@ -8,9 +8,9 @@ import { useResendTimer } from "@/hooks/useResendTimer";
 import { showError, showSuccess } from "@/stores/modalStore";
 
 import { createRegisterSchema, type RegisterFormValues } from "../../schemas/registerSchema";
-import RegisterEmailController from "../RegisterEmailController";
-import RegisterPasswordController from "../RegisterPasswordController";
-import RegisterVerificationCodeController from "../RegisterVerificationCodeController";
+import RegisterEmailController from "../../controllers/RegisterEmailController";
+import RegisterPasswordController from "../../controllers/RegisterPasswordController";
+import RegisterVerificationCodeController from "../../controllers/RegisterVerificationCodeController";
 import styles from "./styles.module.css";
 
 const RegisterForm = memo(() => {

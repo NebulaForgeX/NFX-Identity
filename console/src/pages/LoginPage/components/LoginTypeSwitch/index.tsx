@@ -2,12 +2,12 @@ import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "./styles.module.css";
 
-interface LoginTypeSwitchControllerProps {
+interface LoginTypeSwitchProps {
   loginType: "email" | "phone";
   onLoginTypeChange: (type: "email" | "phone") => void;
 }
 
-const LoginTypeSwitchController = memo(({ loginType, onLoginTypeChange }: LoginTypeSwitchControllerProps) => {
+const LoginTypeSwitch = memo(({ loginType, onLoginTypeChange }: LoginTypeSwitchProps) => {
   const { t } = useTranslation("LoginPage");
 
   const handleTypeChange = (type: "email" | "phone") => {
@@ -34,6 +34,6 @@ const LoginTypeSwitchController = memo(({ loginType, onLoginTypeChange }: LoginT
   );
 });
 
-LoginTypeSwitchController.displayName = "LoginTypeSwitchController";
+LoginTypeSwitch.displayName = "LoginTypeSwitch";
 
-export default LoginTypeSwitchController;
+export default LoginTypeSwitch;

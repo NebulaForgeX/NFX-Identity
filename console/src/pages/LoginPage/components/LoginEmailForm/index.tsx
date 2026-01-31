@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginByEmail } from "@/hooks/useAuth";
 
 import { createEmailLoginSchema, type EmailLoginFormValues } from "../../schemas/loginSchema";
-import LoginEmailController from "../LoginEmailController";
-import LoginPasswordController from "../LoginPasswordController";
+import LoginEmailController from "../../controllers/LoginEmailController";
+import LoginPasswordController from "../../controllers/LoginPasswordController";
 import styles from "./styles.module.css";
 
 const LoginEmailForm = memo(() => {
