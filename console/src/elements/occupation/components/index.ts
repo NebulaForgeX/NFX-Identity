@@ -1,0 +1,11 @@
+export { default as CompanyController } from "./CompanyController";
+export { default as PositionController } from "./PositionController";
+export { default as DepartmentController } from "./DepartmentController";
+export { default as IndustryController } from "./IndustryController";
+export { default as OccupationLocationController } from "./OccupationLocationController";
+export { default as EmploymentTypeController } from "./EmploymentTypeController";
+export { default as OccupationDateController } from "./OccupationDateController";
+export { default as OccupationDescriptionController } from "./OccupationDescriptionController";
+export { default as ResponsibilitiesController } from "./ResponsibilitiesController";
+export { default as OccupationAchievementsController } from "./OccupationAchievementsController";
+export { default as IsCurrentOccupationController } from "./IsCurrentOccupationController";

@@ -5,8 +5,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { Button, IconButton, Suspense } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
-import { useInitOccupationForm, useSubmitOccupation } from "@/elements/directory";
 import {
+  useInitOccupationForm,
+  useSubmitOccupation,
   CompanyController,
   PositionController,
   DepartmentController,
@@ -18,7 +19,7 @@ import {
   OccupationDescriptionController,
   ResponsibilitiesController,
   OccupationAchievementsController,
-} from "@/elements/directory";
+} from "@/elements/occupation";
 import { useUserOccupation } from "@/hooks/useDirectory";
 import { ROUTES } from "@/types/navigation";
 

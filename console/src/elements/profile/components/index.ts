@@ -1,0 +1,13 @@
+export { default as FirstNameController } from "./FirstNameController";
+export { default as LastNameController } from "./LastNameController";
+export { default as NicknameController } from "./NicknameController";
+export { default as DisplayNameController } from "./DisplayNameController";
+export { default as BioController } from "./BioController";
+export { default as LocationController } from "./LocationController";
+export { default as WebsiteController } from "./WebsiteController";
+export { default as GithubController } from "./GithubController";
+export { default as BirthdayController } from "./BirthdayController";
+export { default as AgeController } from "./AgeController";
+export { default as GenderController } from "./GenderController";
+export { default as SocialLinksController } from "./SocialLinksController";
+export { default as SkillsController } from "./SkillsController";

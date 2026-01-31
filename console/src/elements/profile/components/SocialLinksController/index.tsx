@@ -1,7 +1,7 @@
 import type { ProfileFormValues } from "../../schemas/profileSchema";
 import type { KeyValuePair } from "@/components/KeyValueEditor";
 
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 

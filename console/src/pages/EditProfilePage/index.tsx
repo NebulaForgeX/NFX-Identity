@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 import { Button, IconButton, Suspense } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
-import { useInitProfileForm, useSubmitProfile } from "@/elements/directory";
 import {
+  useInitProfileForm,
+  useSubmitProfile,
   FirstNameController,
   LastNameController,
   NicknameController,
@@ -20,7 +21,7 @@ import {
   GithubController,
   SocialLinksController,
   SkillsController,
-} from "@/elements/directory";
+} from "@/elements/profile";
 import { useUserProfile } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
 import { ROUTES } from "@/types/navigation";

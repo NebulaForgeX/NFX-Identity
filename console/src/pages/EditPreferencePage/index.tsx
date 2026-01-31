@@ -5,8 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 import { Button, IconButton, Suspense } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
-import { useInitPreferenceForm, useSubmitPreference } from "@/elements/directory";
-import { ThemeController, LanguageController, TimezoneController, DashboardBackgroundController } from "@/elements/directory";
+import {
+  useInitPreferenceForm,
+  useSubmitPreference,
+  ThemeController,
+  LanguageController,
+  TimezoneController,
+  DashboardBackgroundController,
+} from "@/elements/preference";
 import { useUserPreference } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
 import type { DashboardBackgroundType } from "@/types";

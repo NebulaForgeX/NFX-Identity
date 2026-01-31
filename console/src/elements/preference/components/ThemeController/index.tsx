@@ -1,12 +1,11 @@
 import type { PreferenceFormValues } from "../../schemas/preferenceSchema";
-import type { ThemeName } from "@/assets/themes/types";
 
 import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { Dropdown } from "@/components";
-import { useTheme } from "@/hooks";
+import { useTheme } from "@/providers/ThemeProvider/useTheme";
 
 const ThemeController = memo(() => {
   const { t } = useTranslation("elements.directory");

@@ -1,12 +1,11 @@
 import type { PreferenceFormValues } from "../../schemas/preferenceSchema";
-import type { DashboardBackgroundType } from "@/types";
-import { DASHBOARD_BACKGROUND_VALUES } from "@/types";
 
 import { memo, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Dropdown } from "@/components";
+import { DASHBOARD_BACKGROUND_VALUES } from "@/types";
 
 const DashboardBackgroundController = memo(() => {
   const { t } = useTranslation("elements.directory");
@@ -24,7 +23,15 @@ const DashboardBackgroundController = memo(() => {
 
   return (
     <div style={{ marginBottom: "1rem" }}>
-      <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.875rem", fontWeight: 500, color: "var(--color-fg-text)" }}>
+      <label
+        style={{
+          display: "block",
+          marginBottom: "0.5rem",
+          fontSize: "0.875rem",
+          fontWeight: 500,
+          color: "var(--color-fg-text)",
+        }}
+      >
         {t("preference.dashboardBackground.label")}
       </label>
       <Controller

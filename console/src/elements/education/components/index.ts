@@ -1,0 +1,10 @@
+export { default as SchoolController } from "./SchoolController";
+export { default as DegreeController } from "./DegreeController";
+export { default as MajorController } from "./MajorController";
+export { default as FieldController } from "./FieldController";
+export { default as EducationDateController } from "./EducationDateController";
+export { default as EducationDescriptionController } from "./EducationDescriptionController";
+export { default as GradeController } from "./GradeController";
+export { default as ActivitiesController } from "./ActivitiesController";
+export { default as AchievementsController } from "./AchievementsController";
+export { default as IsCurrentEducationController } from "./IsCurrentEducationController";

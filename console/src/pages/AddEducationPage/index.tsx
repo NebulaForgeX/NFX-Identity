@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 import { Button, IconButton } from "@/components";
 import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
-import { useInitEducationForm, useSubmitEducation } from "@/elements/directory";
 import {
+  useInitEducationForm,
+  useSubmitEducation,
   SchoolController,
   DegreeController,
   MajorController,
@@ -17,7 +18,7 @@ import {
   ActivitiesController,
   AchievementsController,
   IsCurrentEducationController,
-} from "@/elements/directory";
+} from "@/elements/education";
 import { ROUTES } from "@/types/navigation";
 
 import styles from "./styles.module.css";
