@@ -30,3 +30,5 @@ export function BrowserRouterProvider({ children }: BrowserRouterProviderProps) 
     </BrowserRouter>
   );
 }
+
+export default BrowserRouterProvider;

@@ -5,20 +5,17 @@ import { Menu } from "@/assets/icons/lucide";
 import { LayoutSwitcher, ThemeSwitcher } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { useLayout } from "@/providers/LayoutProvider/useLayout";
+
 import styles from "./styles.module.css";
 
 const LeftContainer = memo(() => {
   const { t } = useTranslation("components");
   const { toggleSidebar } = useLayout();
-  
+
   return (
     <div className={styles.headerContainer}>
       {/* 侧边栏切换按钮 */}
-      <button
-        type="button"
-        className={styles.sidebarToggle}
-        onClick={toggleSidebar}
-      >
+      <button type="button" className={styles.sidebarToggle} onClick={toggleSidebar}>
         <Menu size={28} />
       </button>
 
@@ -34,7 +31,7 @@ const LeftContainer = memo(() => {
       </button>
 
       {/* 主题/布局 切换器 */}
-      <ThemeSwitcher status="primary" />
+      <ThemeSwitcher status="default" />
       <LayoutSwitcher status="default" />
     </div>
   );

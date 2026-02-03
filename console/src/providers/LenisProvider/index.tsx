@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import type { LenisOptions } from "lenis";
+import type { ReactNode } from "react";
 
 import { ReactLenis } from "lenis/react";
 
@@ -11,11 +11,7 @@ interface LenisProviderProps {
   root?: boolean | "asChild";
 }
 
-export function LenisProvider({
-  children,
-  options,
-  root = true,
-}: LenisProviderProps) {
+export function LenisProvider({ children, options, root = true }: LenisProviderProps) {
   const lenisRef = useLenisRaf({ enabled: true });
   const finalOptions: LenisOptions = { ...options, autoRaf: false };
 
@@ -25,3 +21,5 @@ export function LenisProvider({
     </ReactLenis>
   );
 }
+
+export default LenisProvider;

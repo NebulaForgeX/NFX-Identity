@@ -3,9 +3,8 @@ import type { ThemeName } from "@/assets/themes/types";
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useTheme } from "@/hooks";
 import { useThemeSync } from "@/hooks/useUserPreferenceSync";
-
+import { useTheme } from "@/providers/ThemeProvider/useTheme";
 import styles from "./styles.module.css";
 
 interface ThemeSwitcherProps {
@@ -70,7 +69,7 @@ const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
         className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
       >
         <ul className={styles.optionsList} role="listbox">
-          {availableThemes.map((theme) => (
+          {availableThemes.map((theme: ThemeName) => (
             <li
               key={theme}
               className={`${styles.option} ${theme === themeName ? styles.selected : ""}`}

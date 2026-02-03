@@ -3,6 +3,7 @@ export interface BaseThemeVariables {
   // 主要颜色
   primary: string;
   primaryLight: string;
+  primaryFg: string;
   success: string;
   successLight: string;
   info: string;
@@ -119,10 +120,11 @@ export interface Theme {
 export const ThemeEnum = {
   DEFAULT: "default",
   LIGHT: "light",
-  DARK: "dark",
-  COSMIC: "cosmic",
   CORPORATE: "corporate",
   FRESH: "fresh",
+  DARK: "dark",
+  COSMIC: "cosmic",
+  COFFEE: "coffee",
 } as const;
 
 export type ThemeName = (typeof ThemeEnum)[keyof typeof ThemeEnum];

@@ -43,3 +43,5 @@ export function ThemeProvider({ children, defaultTheme = "default" }: ThemeProvi
     </ThemeContext.Provider>
   );
 }
+
+export default ThemeProvider;

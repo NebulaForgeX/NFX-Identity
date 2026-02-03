@@ -13,6 +13,7 @@ const useThemeVariables = (currentTheme: Theme, themeName: ThemeName) => {
     // 基础颜色
     root.style.setProperty("--color-primary", vars.primary);
     root.style.setProperty("--color-primary-light", vars.primaryLight);
+    root.style.setProperty("--color-primary-fg", vars.primaryFg);
     root.style.setProperty("--color-success", vars.success);
     root.style.setProperty("--color-success-light", vars.successLight);
     root.style.setProperty("--color-info", vars.info);

@@ -14,6 +14,7 @@ export const darkTheme: Theme = {
     // 主色 - 金黄色/琥珀色
     primary: "#d4a017",
     primaryLight: "#eab308",
+    primaryFg: "#1a1a1a",
 
     // 语义色 - 深色模式、无蓝色，info 用青绿区分
     success: "#22c55e",

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { createContext } from "react";
+
 import useAction from "./hooks/useAction";
 import useSet from "./hooks/useSet";
 
@@ -28,7 +29,6 @@ export function LayoutProvider({ children, defaultLayoutMode = "show" }: LayoutP
 
   const { layoutMode, setLayoutMode } = useSet(defaultLayoutMode, sidebarOpen);
 
-
   return (
     <LayoutContext.Provider
       value={{
@@ -44,3 +44,5 @@ export function LayoutProvider({ children, defaultLayoutMode = "show" }: LayoutP
     </LayoutContext.Provider>
   );
 }
+
+export default LayoutProvider;

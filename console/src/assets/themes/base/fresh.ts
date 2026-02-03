@@ -14,6 +14,7 @@ export const freshTheme: Theme = {
     // 主色 - 青绿（来自 5D866C）
     primary: "#5D866C",
     primaryLight: "#7a9d7e",
+    primaryFg: "#ffffff",
 
     // 语义色 - 与主色协调，不抢戏
     success: "#5D866C",

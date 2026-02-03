@@ -7,6 +7,7 @@ export const corporateTheme: Theme = {
     // 基础颜色
     primary: "#3366ff",
     primaryLight: "#598bff",
+    primaryFg: "#ffffff",
     success: "#00d68f",
     successLight: "#33dfaa",
     info: "#0095ff",

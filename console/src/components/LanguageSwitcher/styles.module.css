@@ -37,7 +37,7 @@
 .selectButton.primary {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-    color: #ffffff;
+    color: var(--color-primary-fg);
 }
 
 .selectButton.primary:hover:not(:disabled) {
@@ -94,7 +94,7 @@
 }
 
 .selectButton.primary .chevronIcon {
-    color: #ffffff;
+    color: var(--color-primary-fg);
 }
 
 .selectButton.default .chevronIcon {

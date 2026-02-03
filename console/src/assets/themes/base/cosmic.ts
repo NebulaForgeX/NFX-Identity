@@ -7,6 +7,7 @@ export const cosmicTheme: Theme = {
     // 基础颜色
     primary: "#a16eff",
     primaryLight: "#b489ff",
+    primaryFg: "#ffffff",
     success: "#00d68f",
     successLight: "#33dfaa",
     info: "#0095ff",

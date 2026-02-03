@@ -47,3 +47,5 @@ export function QueryProvider({ children }: QueryProviderProps) {
     </QueryClientProvider>
   );
 }
+
+export default QueryProvider;

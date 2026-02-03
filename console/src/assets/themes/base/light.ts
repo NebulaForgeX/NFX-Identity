@@ -8,6 +8,7 @@ export const lightTheme: Theme = {
     // 基础颜色 - 黑白对比色系
     primary: "#222b45",
     primaryLight: "#192038",
+    primaryFg: "#ffffff",
     success: "#00d68f",
     successLight: "#33dfaa",
     info: "#0095ff",

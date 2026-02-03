@@ -8,6 +8,7 @@ export const defaultTheme: Theme = {
     // 基础颜色 - 红色系
     primary: "rgb(250, 30, 22)", // #FA1E16 鲜红色
     primaryLight: "rgb(255, 120, 120)", // 浅红色
+    primaryFg: "#ffffff",
     success: "rgb(62, 168, 30)", // 浅绿色（对比色）
     successLight: "rgb(220, 255, 210)",
     info: "rgb(255, 160, 150)", // 亮橙红
