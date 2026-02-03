@@ -125,6 +125,7 @@ export const ThemeEnum = {
   DARK: "dark",
   COSMIC: "cosmic",
   COFFEE: "coffee",
+  WINE: "wine",
 } as const;
 
 export type ThemeName = (typeof ThemeEnum)[keyof typeof ThemeEnum];

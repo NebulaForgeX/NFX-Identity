@@ -7,6 +7,7 @@ import { darkTheme } from "./dark";
 import { defaultTheme } from "./default";
 import { freshTheme } from "./fresh";
 import { lightTheme } from "./light";
+import { wineTheme } from "./wine";
 
 export const themes: Record<ThemeName, Theme> = {
   default: defaultTheme,
@@ -16,6 +17,7 @@ export const themes: Record<ThemeName, Theme> = {
   dark: darkTheme,
   cosmic: cosmicTheme,
   coffee: coffeeTheme,
+  wine: wineTheme,
 };
 
-export { defaultTheme, lightTheme, darkTheme, cosmicTheme, corporateTheme, freshTheme, coffeeTheme };
+export { defaultTheme, lightTheme, darkTheme, cosmicTheme, corporateTheme, freshTheme, coffeeTheme, wineTheme };
