@@ -4,6 +4,8 @@ import type { Theme, ThemeName } from "@/assets/themes/types";
 import { createContext, useState } from "react";
 
 import { themes } from "@/assets/themes/base";
+import { THEME_VALUES } from "@/assets/themes/types";
+
 import useThemeVariables from "./hooks/useThemeVariables";
 
 export interface ThemeContextType {
@@ -35,12 +37,9 @@ export function ThemeProvider({ children, defaultTheme = "default" }: ThemeProvi
     setThemeName(newTheme);
   };
 
-  const availableThemes: ThemeName[] = ["default", "light", "dark", "cosmic", "corporate"];
-
   return (
-    <ThemeContext.Provider value={{ currentTheme, themeName, setTheme, availableThemes }}>
+    <ThemeContext.Provider value={{ currentTheme, themeName, setTheme, availableThemes: THEME_VALUES }}>
       {children}
     </ThemeContext.Provider>
   );
 }
-

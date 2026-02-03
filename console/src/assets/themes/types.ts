@@ -115,5 +115,17 @@ export interface Theme {
   variables: ExtendedThemeVariables;
 }
 
-// 主题名称类型
-export type ThemeName = "default" | "light" | "dark" | "cosmic" | "corporate";
+// 主题枚举（单一数据源，与语言 LANGUAGE 一致）
+export const ThemeEnum = {
+  DEFAULT: "default",
+  LIGHT: "light",
+  DARK: "dark",
+  COSMIC: "cosmic",
+  CORPORATE: "corporate",
+  FRESH: "fresh",
+} as const;
+
+export type ThemeName = (typeof ThemeEnum)[keyof typeof ThemeEnum];
+
+/** 所有可选主题列表，用于 ThemeProvider / 主题切换器 */
+export const THEME_VALUES: ThemeName[] = Object.values(ThemeEnum);
