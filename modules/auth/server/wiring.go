@@ -7,12 +7,12 @@ import (
 
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
 	authApp "nfxid/modules/auth/application/auth"
-	resourceApp "nfxid/modules/auth/application/resource"
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
 	passwordHistoryApp "nfxid/modules/auth/application/password_history"
 	passwordResetApp "nfxid/modules/auth/application/password_resets"
 	refreshTokenApp "nfxid/modules/auth/application/refresh_tokens"
+	resourceApp "nfxid/modules/auth/application/resource"
 	sessionApp "nfxid/modules/auth/application/sessions"
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
 	userCredentialApp "nfxid/modules/auth/application/user_credentials"
@@ -29,6 +29,7 @@ import (
 	trustedDeviceRepo "nfxid/modules/auth/infrastructure/repository/trusted_devices"
 	userCredentialRepo "nfxid/modules/auth/infrastructure/repository/user_credentials"
 	"nfxid/pkgs/cachex"
+	"nfxid/pkgs/email"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/kafkax/eventbus"
@@ -37,7 +38,6 @@ import (
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	"nfxid/pkgs/tokenx"
-	"nfxid/pkgs/email"
 )
 
 type Dependencies struct {

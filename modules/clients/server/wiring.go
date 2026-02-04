@@ -6,12 +6,12 @@ import (
 	"time"
 
 	apiKeyApp "nfxid/modules/clients/application/api_keys"
-	resourceApp "nfxid/modules/clients/application/resource"
 	appApp "nfxid/modules/clients/application/apps"
 	clientCredentialApp "nfxid/modules/clients/application/client_credentials"
 	clientScopeApp "nfxid/modules/clients/application/client_scopes"
 	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
+	resourceApp "nfxid/modules/clients/application/resource"
 	"nfxid/modules/clients/config"
 	apiKeyRepo "nfxid/modules/clients/infrastructure/repository/api_keys"
 	appRepo "nfxid/modules/clients/infrastructure/repository/apps"

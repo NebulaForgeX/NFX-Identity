@@ -1,8 +1,8 @@
 package user_avatars
 
 import (
-	directoryGrpc "nfxid/modules/directory/infrastructure/grpc"
 	userAvatarDomain "nfxid/modules/directory/domain/user_avatars"
+	directoryGrpc "nfxid/modules/directory/infrastructure/grpc"
 	"nfxid/pkgs/kafkax/eventbus"
 )
 
