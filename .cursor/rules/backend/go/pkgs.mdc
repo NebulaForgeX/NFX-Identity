@@ -90,7 +90,7 @@ pkgs/
 
 ### 网络
 
-- **`netx/httpresp/`** - HTTP 响应工具
+- **`errx/`** - 统一错误与 HTTP 映射；**`httpx/`** - 统一响应结构；**`fiberx/`** - Fiber 辅助（ErrorHandler、响应、Logger/Recover、TokenAuth、UserID/TraceID）
 - **`netx/ssh/`** - SSH 隧道工具
 
 ## 包结构规范

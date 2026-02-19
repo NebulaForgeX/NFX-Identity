@@ -55,8 +55,10 @@ import (
     <entity>AppCommands "<project>/modules/<module>/application/<entity>/commands"
     "<project>/modules/<module>/interfaces/http/dto/reqdto"
     "<project>/modules/<module>/interfaces/http/dto/respdto"
-    "<project>/pkgs/netx/httpresp"
-    "github.com/gofiber/fiber/v2"
+    "<project>/pkgs/errx"
+    "<project>/pkgs/fiberx"
+    "<project>/pkgs/httpx"
+    "github.com/gofiber/fiber/v3"
 )
 
 type <Entity>Handler struct {
@@ -70,40 +72,40 @@ func New<Entity>Handler(appSvc *<entity>App.Service) *<Entity>Handler {
 }
 
 // Create 创建 <Entity>
-func (h *<Entity>Handler) Create(c *fiber.Ctx) error {
+func (h *<Entity>Handler) Create(c fiber.Ctx) error {
     var req reqdto.<Entity>CreateRequestDTO
-    if err := c.BodyParser(&req); err != nil {
-        return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+    if err := c.Bind().Body(&req); err != nil {
+        return errx.ErrInvalidBody.WithCause(err)
     }
 
     cmd := req.ToCreateCmd()
-    <entity>ID, err := h.appSvc.Create<Entity>(c.Context(), cmd)
+    ctx := c.Context()
+    <entity>ID, err := h.appSvc.Create<Entity>(ctx, cmd)
     if err != nil {
-        return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create <entity>: "+err.Error())
+        return err
     }
 
-    // 获取创建的实体
-    <entity>View, err := h.appSvc.Get<Entity>(c.Context(), <entity>ID)
+    <entity>View, err := h.appSvc.Get<Entity>(ctx, <entity>ID)
     if err != nil {
-        return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created <entity>: "+err.Error())
+        return err
     }
 
-    return httpresp.Success(c, fiber.StatusCreated, "<Entity> created successfully", httpresp.SuccessOptions{Data: respdto.<Entity>ROToDTO(&<entity>View)})
+    return fiberx.Created(c, "<Entity> created successfully", httpx.SuccessOptions{Data: respdto.<Entity>ROToDTO(&<entity>View)})
 }
 
 // GetByID 根据 ID 获取 <Entity>
-func (h *<Entity>Handler) GetByID(c *fiber.Ctx) error {
+func (h *<Entity>Handler) GetByID(c fiber.Ctx) error {
     var req reqdto.<Entity>ByIDRequestDTO
-    if err := c.ParamsParser(&req); err != nil {
-        return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+    if err := c.Bind().URI(&req); err != nil {
+        return errx.ErrInvalidParams.WithCause(err)
     }
 
     result, err := h.appSvc.Get<Entity>(c.Context(), req.ID)
     if err != nil {
-        return httpresp.Error(c, fiber.StatusNotFound, "<Entity> not found: "+err.Error())
+        return err
     }
 
-    return httpresp.Success(c, fiber.StatusOK, "<Entity> retrieved successfully", httpresp.SuccessOptions{Data: respdto.<Entity>ROToDTO(&result)})
+    return fiberx.OK(c, "<Entity> retrieved successfully", httpx.SuccessOptions{Data: respdto.<Entity>ROToDTO(&result)})
 }
 ```
 
@@ -189,9 +191,9 @@ func <Entity>ROToDTO(ro *<entity>AppResult.<Entity>RO) *<Entity>DTO {
 package http
 
 import (
+    "<project>/pkgs/fiberx/middleware"
     "<project>/pkgs/security/token"
-    "<project>/pkgs/security/token/usertoken"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 )
 
 type Router struct {
@@ -212,7 +214,7 @@ func (r *Router) RegisterRoutes() {
     <module> := r.app.Group("/<module>")
 
     // 需要认证的路由（需要token）
-    auth := <module>.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
+    auth := <module>.Group("/auth", middleware.TokenAuth(r.tokenVerifier))
     {
         // <Entity> 相关
         auth.Post("/<entity>s", r.handlers.<Entity>.Create)

@@ -5,5 +5,5 @@ import (
 )
 
 type ByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }

@@ -5,9 +5,11 @@ import (
 	actorSnapshotAppCommands "nfxid/modules/audit/application/actor_snapshots/commands"
 	"nfxid/modules/audit/interfaces/http/dto/reqdto"
 	"nfxid/modules/audit/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type ActorSnapshotHandler struct {
@@ -18,51 +20,53 @@ func NewActorSnapshotHandler(appSvc *actorSnapshotApp.Service) *ActorSnapshotHan
 	return &ActorSnapshotHandler{appSvc: appSvc}
 }
 
-func (h *ActorSnapshotHandler) Create(c *fiber.Ctx) error {
+func (h *ActorSnapshotHandler) Create(c fiber.Ctx) error {
 	var req reqdto.ActorSnapshotCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	actorSnapshotID, err := h.appSvc.CreateActorSnapshot(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create actor snapshot: "+err.Error())
+		return err
 	}
 
 	// Get the created actor snapshot
 	actorSnapshotView, err := h.appSvc.GetActorSnapshot(c.Context(), actorSnapshotID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created actor snapshot: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Actor snapshot created successfully", httpresp.SuccessOptions{Data: respdto.ActorSnapshotROToDTO(&actorSnapshotView)})
+	return fiberx.Created(c, "Actor snapshot created successfully", httpx.SuccessOptions{Data: respdto.ActorSnapshotROToDTO(&actorSnapshotView)})
 }
 
-func (h *ActorSnapshotHandler) GetByID(c *fiber.Ctx) error {
+func (h *ActorSnapshotHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ActorSnapshotByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetActorSnapshot(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Actor snapshot not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Actor snapshot retrieved successfully", httpresp.SuccessOptions{Data: respdto.ActorSnapshotROToDTO(&result)})
+	return fiberx.OK(c, "Actor snapshot retrieved successfully", httpx.SuccessOptions{Data: respdto.ActorSnapshotROToDTO(&result)})
 }
 
-func (h *ActorSnapshotHandler) Delete(c *fiber.Ctx) error {
+func (h *ActorSnapshotHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ActorSnapshotByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := actorSnapshotAppCommands.DeleteActorSnapshotCmd{ActorSnapshotID: req.ID}
 	if err := h.appSvc.DeleteActorSnapshot(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete actor snapshot: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Actor snapshot deleted successfully")
+	return fiberx.OK(c, "Actor snapshot deleted successfully")
 }
+
+// fiber:context-methods migrated

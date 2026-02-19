@@ -19,21 +19,21 @@ type DomainVerificationCreateRequestDTO struct {
 }
 
 type DomainVerificationVerifyRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type DomainVerificationFailRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *DomainVerificationCreateRequestDTO) ToCreateCmd() domainVerificationAppCommands.CreateDomainVerificationCmd {
 	cmd := domainVerificationAppCommands.CreateDomainVerificationCmd{
-		TenantID:           r.TenantID,
-		Domain:             r.Domain,
-		VerificationToken:  r.VerificationToken,
-		ExpiresAt:          r.ExpiresAt,
-		CreatedBy:          r.CreatedBy,
-		Metadata:           r.Metadata,
+		TenantID:          r.TenantID,
+		Domain:            r.Domain,
+		VerificationToken: r.VerificationToken,
+		ExpiresAt:         r.ExpiresAt,
+		CreatedBy:         r.CreatedBy,
+		Metadata:          r.Metadata,
 	}
 
 	// Parse verification method

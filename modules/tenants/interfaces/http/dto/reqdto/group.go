@@ -19,7 +19,7 @@ type GroupCreateRequestDTO struct {
 }
 
 type GroupUpdateRequestDTO struct {
-	ID            uuid.UUID              `params:"id" validate:"required,uuid"`
+	ID            uuid.UUID              `uri:"id" validate:"required,uuid"`
 	Name          string                 `json:"name" validate:"required"`
 	Type          string                 `json:"type" validate:"required"`
 	ParentGroupID *uuid.UUID             `json:"parent_group_id,omitempty"`
@@ -28,7 +28,7 @@ type GroupUpdateRequestDTO struct {
 }
 
 type GroupByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *GroupCreateRequestDTO) ToCreateCmd() groupAppCommands.CreateGroupCmd {

@@ -11,9 +11,11 @@ import (
 	imageApp "nfxid/modules/image/application/images"
 	imageAppCommands "nfxid/modules/image/application/images/commands"
 	"nfxid/modules/image/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 )
 
@@ -51,13 +53,13 @@ func NewUploadHandler(appSvc *imageApp.Service, storagePath string) *UploadHandl
 // @Param type query string false "Image type: avatar, background, tmp" default(tmp)
 // @Param is_public query bool false "Whether the image is public" default(true)
 // @Success 201 {object} respdto.ImageDTO
-// @Failure 400 {object} httpresp.ErrorResponse
-// @Failure 500 {object} httpresp.ErrorResponse
+// @Failure 400 {object} httpx.HTTPResp
+// @Failure 500 {object} httpx.HTTPResp
 // @Router /image/auth/upload [post]
-func (h *UploadHandler) UploadImage(c *fiber.Ctx) error {
-	// 从 context 获取用户ID（由 AccessTokenMiddleware 设置）
+func (h *UploadHandler) UploadImage(c fiber.Ctx) error {
+	ctx := c.Context()
 	var userID *uuid.UUID
-	if uid, ok := c.Locals("userID").(uuid.UUID); ok {
+	if uid, ok := fiberx.UserIDFromContext(ctx); ok {
 		userID = &uid
 	}
 
@@ -65,24 +67,24 @@ func (h *UploadHandler) UploadImage(c *fiber.Ctx) error {
 	imageType := "tmp"
 
 	// 获取是否公开
-	isPublic := c.QueryBool("is_public", true)
+	isPublic := fiber.Query[bool](c, "is_public", true)
 
 	// 获取上传的文件
 	file, err := c.FormFile("file")
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "No file uploaded: "+err.Error())
+		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "No file uploaded").WithCause(err))
 	}
 
 	// 检查文件大小
 	if file.Size > maxFileSize {
-		return httpresp.Error(c, fiber.StatusBadRequest, fmt.Sprintf("File size exceeds maximum allowed size of %d bytes", maxFileSize))
+		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", fmt.Sprintf("File size exceeds maximum allowed size of %d bytes", maxFileSize)))
 	}
 
 	// 检查 MIME 类型
 	contentType := file.Header.Get("Content-Type")
 	ext, ok := allowedMimeTypes[contentType]
 	if !ok {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid file type. Only JPEG, PNG, GIF, WebP, and SVG images are allowed")
+		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "Invalid file type. Only JPEG, PNG, GIF, WebP, and SVG images are allowed"))
 	}
 
 	// 生成唯一的文件名
@@ -96,27 +98,27 @@ func (h *UploadHandler) UploadImage(c *fiber.Ctx) error {
 	// 确保目录存在
 	dir := filepath.Dir(fullPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create directory: "+err.Error())
+		return err
 	}
 
 	// 打开上传的文件
 	src, err := file.Open()
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to open uploaded file: "+err.Error())
+		return err
 	}
 	defer src.Close()
 
 	// 创建目标文件
 	dst, err := os.Create(fullPath)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create file: "+err.Error())
+		return err
 	}
 	defer dst.Close()
 
 	// 复制文件内容
 	if _, err := io.Copy(dst, src); err != nil {
 		os.Remove(fullPath) // 清理失败的文件
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to save file: "+err.Error())
+		return err
 	}
 
 	// 创建图片记录
@@ -137,16 +139,16 @@ func (h *UploadHandler) UploadImage(c *fiber.Ctx) error {
 	createdID, err := h.appSvc.CreateImage(c.Context(), cmd)
 	if err != nil {
 		os.Remove(fullPath) // 清理文件
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create image record: "+err.Error())
+		return err
 	}
 
 	// 获取创建的图片
 	imageView, err := h.appSvc.GetImage(c.Context(), createdID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created image: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Image uploaded successfully", httpresp.SuccessOptions{Data: respdto.ImageROToDTO(&imageView)})
+	return fiberx.Created(c, "Image uploaded successfully", httpx.SuccessOptions{Data: respdto.ImageROToDTO(&imageView)})
 }
 
 // MoveImage 移动图片（从 tmp 移动到正式目录）
@@ -158,33 +160,33 @@ func (h *UploadHandler) UploadImage(c *fiber.Ctx) error {
 // @Param id path string true "Image ID"
 // @Param type query string true "Target type: avatar, background"
 // @Success 200 {object} respdto.ImageDTO
-// @Failure 400 {object} httpresp.ErrorResponse
-// @Failure 404 {object} httpresp.ErrorResponse
-// @Failure 500 {object} httpresp.ErrorResponse
+// @Failure 400 {object} httpx.HTTPResp
+// @Failure 404 {object} httpx.HTTPResp
+// @Failure 500 {object} httpx.HTTPResp
 // @Router /image/auth/images/{id}/move [post]
-func (h *UploadHandler) MoveImage(c *fiber.Ctx) error {
+func (h *UploadHandler) MoveImage(c fiber.Ctx) error {
 	// 获取图片 ID
 	imageIDStr := c.Params("id")
 	imageID, err := uuid.Parse(imageIDStr)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid image ID: "+err.Error())
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// 获取目标类型
 	targetType := c.Query("type", "")
 	if targetType != "avatar" && targetType != "background" {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid target type. Must be 'avatar' or 'background'")
+		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "Invalid target type. Must be 'avatar' or 'background'"))
 	}
 
 	// 获取图片信息
 	imageView, err := h.appSvc.GetImage(c.Context(), imageID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Image not found: "+err.Error())
+		return err
 	}
 
 	// 检查是否在 tmp 目录
 	if !strings.Contains(imageView.StoragePath, "/tmp/") && !strings.HasPrefix(imageView.StoragePath, "images/tmp/") {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Image is not in tmp directory")
+		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "Image is not in tmp directory"))
 	}
 
 	// 构建新路径
@@ -196,14 +198,14 @@ func (h *UploadHandler) MoveImage(c *fiber.Ctx) error {
 	// 确保目标目录存在
 	dir := filepath.Dir(newFullPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create directory: "+err.Error())
+		return err
 	}
 
 	// 移动文件
 	if err := os.Rename(oldFullPath, newFullPath); err != nil {
 		// 如果 rename 失败（可能跨文件系统），则使用复制+删除
 		if err := copyFile(oldFullPath, newFullPath); err != nil {
-			return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to move file: "+err.Error())
+			return err
 		}
 		os.Remove(oldFullPath)
 	}
@@ -220,16 +222,16 @@ func (h *UploadHandler) MoveImage(c *fiber.Ctx) error {
 	if err := h.appSvc.UpdateImage(c.Context(), cmd); err != nil {
 		// 回滚文件移动
 		os.Rename(newFullPath, oldFullPath)
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update image record: "+err.Error())
+		return err
 	}
 
 	// 获取更新后的图片
 	updatedImage, err := h.appSvc.GetImage(c.Context(), imageID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get updated image: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Image moved successfully", httpresp.SuccessOptions{Data: respdto.ImageROToDTO(&updatedImage)})
+	return fiberx.OK(c, "Image moved successfully", httpx.SuccessOptions{Data: respdto.ImageROToDTO(&updatedImage)})
 }
 
 // copyFile 复制文件
@@ -251,26 +253,28 @@ func copyFile(src, dst string) error {
 }
 
 // ServeImage 根据 image ID 返回图片文件（公开，供 <img src> 使用）
-func (h *UploadHandler) ServeImage(c *fiber.Ctx) error {
+func (h *UploadHandler) ServeImage(c fiber.Ctx) error {
 	idStr := c.Params("id")
 	if idStr == "" {
-		return httpresp.Error(c, fiber.StatusBadRequest, "image id required")
+		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "image id required"))
 	}
 	imageID, err := uuid.Parse(idStr)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "invalid image id")
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	ro, err := h.appSvc.GetImage(c.Context(), imageID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "image not found")
+		return err
 	}
 
 	fullPath := filepath.Join(h.storagePath, ro.StoragePath)
 	if _, err := os.Stat(fullPath); err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "image file not found")
+		return err
 	}
 
 	c.Set("Content-Type", ro.MimeType)
 	return c.SendFile(fullPath)
 }
+
+// fiber:context-methods migrated

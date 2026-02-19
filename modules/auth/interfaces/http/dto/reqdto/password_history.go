@@ -14,7 +14,7 @@ type PasswordHistoryCreateRequestDTO struct {
 }
 
 type PasswordHistoryByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *PasswordHistoryCreateRequestDTO) ToCreateCmd() passwordHistoryAppCommands.CreatePasswordHistoryCmd {

@@ -7,48 +7,48 @@ import (
 )
 
 type UserEducationCreateRequestDTO struct {
-	UserID      uuid.UUID `json:"user_id" validate:"required,uuid"`
-	School      string    `json:"school" validate:"required"`
-	Degree      *string   `json:"degree,omitempty"`
-	Major       *string   `json:"major,omitempty"`
+	UserID       uuid.UUID `json:"user_id" validate:"required,uuid"`
+	School       string    `json:"school" validate:"required"`
+	Degree       *string   `json:"degree,omitempty"`
+	Major        *string   `json:"major,omitempty"`
 	FieldOfStudy *string   `json:"field_of_study,omitempty"`
-	StartDate   *string   `json:"start_date,omitempty"`
-	EndDate     *string   `json:"end_date,omitempty"`
-	IsCurrent   bool      `json:"is_current"`
-	Description *string   `json:"description,omitempty"`
-	Grade       *string   `json:"grade,omitempty"`
-	Activities  *string   `json:"activities,omitempty"`
+	StartDate    *string   `json:"start_date,omitempty"`
+	EndDate      *string   `json:"end_date,omitempty"`
+	IsCurrent    bool      `json:"is_current"`
+	Description  *string   `json:"description,omitempty"`
+	Grade        *string   `json:"grade,omitempty"`
+	Activities   *string   `json:"activities,omitempty"`
 	Achievements *string   `json:"achievements,omitempty"`
 }
 
 type UserEducationUpdateRequestDTO struct {
-	ID          uuid.UUID `params:"id" validate:"required,uuid"`
-	School      string    `json:"school" validate:"required"`
-	Degree      *string   `json:"degree,omitempty"`
-	Major       *string   `json:"major,omitempty"`
+	ID           uuid.UUID `uri:"id" validate:"required,uuid"`
+	School       string    `json:"school" validate:"required"`
+	Degree       *string   `json:"degree,omitempty"`
+	Major        *string   `json:"major,omitempty"`
 	FieldOfStudy *string   `json:"field_of_study,omitempty"`
-	StartDate   *string   `json:"start_date,omitempty"`
-	EndDate     *string   `json:"end_date,omitempty"`
-	IsCurrent   bool      `json:"is_current"`
-	Description *string   `json:"description,omitempty"`
-	Grade       *string   `json:"grade,omitempty"`
-	Activities  *string   `json:"activities,omitempty"`
+	StartDate    *string   `json:"start_date,omitempty"`
+	EndDate      *string   `json:"end_date,omitempty"`
+	IsCurrent    bool      `json:"is_current"`
+	Description  *string   `json:"description,omitempty"`
+	Grade        *string   `json:"grade,omitempty"`
+	Activities   *string   `json:"activities,omitempty"`
 	Achievements *string   `json:"achievements,omitempty"`
 }
 
 func (r *UserEducationCreateRequestDTO) ToCreateCmd() userEducationAppCommands.CreateUserEducationCmd {
 	return userEducationAppCommands.CreateUserEducationCmd{
-		UserID:      r.UserID,
-		School:      r.School,
-		Degree:      r.Degree,
-		Major:       r.Major,
+		UserID:       r.UserID,
+		School:       r.School,
+		Degree:       r.Degree,
+		Major:        r.Major,
 		FieldOfStudy: r.FieldOfStudy,
-		StartDate:   r.StartDate,
-		EndDate:     r.EndDate,
-		IsCurrent:   r.IsCurrent,
-		Description: r.Description,
-		Grade:       r.Grade,
-		Activities:  r.Activities,
+		StartDate:    r.StartDate,
+		EndDate:      r.EndDate,
+		IsCurrent:    r.IsCurrent,
+		Description:  r.Description,
+		Grade:        r.Grade,
+		Activities:   r.Activities,
 		Achievements: r.Achievements,
 	}
 }

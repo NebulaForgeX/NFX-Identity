@@ -5,9 +5,11 @@ import (
 	userImageAppCommands "nfxid/modules/directory/application/user_images/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserImageHandler struct {
@@ -18,172 +20,174 @@ func NewUserImageHandler(appSvc *userImageApp.Service) *UserImageHandler {
 	return &UserImageHandler{appSvc: appSvc}
 }
 
-func (h *UserImageHandler) Create(c *fiber.Ctx) error {
+func (h *UserImageHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserImageCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userImageID, err := h.appSvc.CreateUserImage(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user image: "+err.Error())
+		return err
 	}
 
 	// Get the created user image
 	userImageView, err := h.appSvc.GetUserImage(c.Context(), userImageID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user image: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User image created successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
+	return fiberx.Created(c, "User image created successfully", httpx.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
 }
 
-func (h *UserImageHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserImageHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserImage(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User image not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User image retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&result)})
+	return fiberx.OK(c, "User image retrieved successfully", httpx.SuccessOptions{Data: respdto.UserImageROToDTO(&result)})
 }
 
-func (h *UserImageHandler) GetByUserID(c *fiber.Ctx) error {
+func (h *UserImageHandler) GetByUserID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	results, err := h.appSvc.GetUserImagesByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user images: "+err.Error())
+		return err
 	}
 
 	dtos := respdto.UserImageListROToDTO(results)
-	return httpresp.Success(c, fiber.StatusOK, "User images retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+	return fiberx.OK(c, "User images retrieved successfully", httpx.SuccessOptions{Data: dtos})
 }
 
-func (h *UserImageHandler) GetCurrent(c *fiber.Ctx) error {
+func (h *UserImageHandler) GetCurrent(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetCurrentUserImageByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Current user image not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Current user image retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&result)})
+	return fiberx.OK(c, "Current user image retrieved successfully", httpx.SuccessOptions{Data: respdto.UserImageROToDTO(&result)})
 }
 
-func (h *UserImageHandler) SetPrimary(c *fiber.Ctx) error {
+func (h *UserImageHandler) SetPrimary(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userImageAppCommands.SetPrimaryUserImageCmd{UserImageID: req.ID}
 	if err := h.appSvc.SetPrimaryUserImage(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to set primary user image: "+err.Error())
+		return err
 	}
 
 	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get updated user image: "+err.Error())
+		return err
 	}
-	return httpresp.Success(c, fiber.StatusOK, "Primary user image set successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
+	return fiberx.OK(c, "Primary user image set successfully", httpx.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
 }
 
-func (h *UserImageHandler) UpdateDisplayOrder(c *fiber.Ctx) error {
+func (h *UserImageHandler) UpdateDisplayOrder(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var updateReq reqdto.UserImageUpdateDisplayOrderRequestDTO
-	if err := c.BodyParser(&updateReq); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&updateReq); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := updateReq.ToUpdateDisplayOrderCmd(req.ID)
 	if err := h.appSvc.UpdateUserImageDisplayOrder(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user image display order: "+err.Error())
+		return err
 	}
 
 	// Get the updated user image
 	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get updated user image: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User image display order updated successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
+	return fiberx.OK(c, "User image display order updated successfully", httpx.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
 }
 
-func (h *UserImageHandler) UpdateDisplayOrderBatch(c *fiber.Ctx) error {
+func (h *UserImageHandler) UpdateDisplayOrderBatch(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 	userID := req.ID
 
 	var body reqdto.UserImagesDisplayOrderBatchRequestDTO
-	if err := c.BodyParser(&body); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&body); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := body.ToBatchUpdateDisplayOrderCmd(userID)
 	if err := h.appSvc.UpdateUserImagesDisplayOrderBatch(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user images display order: "+err.Error())
+		return err
 	}
 
 	results, err := h.appSvc.GetUserImagesByUserID(c.Context(), userID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user images: "+err.Error())
+		return err
 	}
-	return httpresp.Success(c, fiber.StatusOK, "User images display order updated successfully", httpresp.SuccessOptions{Data: respdto.UserImageListROToDTO(results)})
+	return fiberx.OK(c, "User images display order updated successfully", httpx.SuccessOptions{Data: respdto.UserImageListROToDTO(results)})
 }
 
-func (h *UserImageHandler) Update(c *fiber.Ctx) error {
+func (h *UserImageHandler) Update(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var updateReq reqdto.UserImageUpdateImageIDRequestDTO
-	if err := c.BodyParser(&updateReq); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&updateReq); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := updateReq.ToUpdateImageIDCmd(req.ID)
 	if err := h.appSvc.UpdateUserImageImageID(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user image: "+err.Error())
+		return err
 	}
 
 	// Get the updated user image
 	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get updated user image: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User image updated successfully", httpresp.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
+	return fiberx.OK(c, "User image updated successfully", httpx.SuccessOptions{Data: respdto.UserImageROToDTO(&userImageView)})
 }
 
-func (h *UserImageHandler) Delete(c *fiber.Ctx) error {
+func (h *UserImageHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userImageAppCommands.DeleteUserImageCmd{UserImageID: req.ID}
 	if err := h.appSvc.DeleteUserImage(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user image: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User image deleted successfully")
+	return fiberx.OK(c, "User image deleted successfully")
 }
+
+// fiber:context-methods migrated

@@ -18,7 +18,7 @@ type UserPreferenceCreateRequestDTO struct {
 }
 
 type UserPreferenceUpdateRequestDTO struct {
-	ID            uuid.UUID              `params:"id" validate:"required,uuid"`
+	ID            uuid.UUID              `uri:"id" validate:"required,uuid"`
 	Theme         *string                `json:"theme,omitempty"`
 	Language      *string                `json:"language,omitempty"`
 	Timezone      *string                `json:"timezone,omitempty"`

@@ -5,9 +5,11 @@ import (
 	groupAppCommands "nfxid/modules/tenants/application/groups/commands"
 	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
 	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type GroupHandler struct {
@@ -18,68 +20,70 @@ func NewGroupHandler(appSvc *groupApp.Service) *GroupHandler {
 	return &GroupHandler{appSvc: appSvc}
 }
 
-func (h *GroupHandler) Create(c *fiber.Ctx) error {
+func (h *GroupHandler) Create(c fiber.Ctx) error {
 	var req reqdto.GroupCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	groupID, err := h.appSvc.CreateGroup(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create group: "+err.Error())
+		return err
 	}
 
 	// Get the created group
 	groupView, err := h.appSvc.GetGroup(c.Context(), groupID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created group: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Group created successfully", httpresp.SuccessOptions{Data: respdto.GroupROToDTO(&groupView)})
+	return fiberx.Created(c, "Group created successfully", httpx.SuccessOptions{Data: respdto.GroupROToDTO(&groupView)})
 }
 
-func (h *GroupHandler) GetByID(c *fiber.Ctx) error {
+func (h *GroupHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.GroupByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetGroup(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Group not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Group retrieved successfully", httpresp.SuccessOptions{Data: respdto.GroupROToDTO(&result)})
+	return fiberx.OK(c, "Group retrieved successfully", httpx.SuccessOptions{Data: respdto.GroupROToDTO(&result)})
 }
 
-func (h *GroupHandler) Update(c *fiber.Ctx) error {
+func (h *GroupHandler) Update(c fiber.Ctx) error {
 	var req reqdto.GroupUpdateRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateCmd()
 	if err := h.appSvc.UpdateGroup(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update group: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Group updated successfully")
+	return fiberx.OK(c, "Group updated successfully")
 }
 
-func (h *GroupHandler) Delete(c *fiber.Ctx) error {
+func (h *GroupHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.GroupByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := groupAppCommands.DeleteGroupCmd{GroupID: req.ID}
 	if err := h.appSvc.DeleteGroup(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete group: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Group deleted successfully")
+	return fiberx.OK(c, "Group deleted successfully")
 }
+
+// fiber:context-methods migrated

@@ -18,16 +18,16 @@ type ImageVariantCreateRequestDTO struct {
 }
 
 type ImageVariantByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type ImageVariantUpdateRequestDTO struct {
-	Width       *int     `json:"width,omitempty"`
-	Height      *int     `json:"height,omitempty"`
-	Size        *int64   `json:"size,omitempty"`
-	MimeType    *string  `json:"mime_type,omitempty"`
-	StoragePath *string  `json:"storage_path,omitempty"`
-	URL         *string  `json:"url,omitempty"`
+	Width       *int    `json:"width,omitempty"`
+	Height      *int    `json:"height,omitempty"`
+	Size        *int64  `json:"size,omitempty"`
+	MimeType    *string `json:"mime_type,omitempty"`
+	StoragePath *string `json:"storage_path,omitempty"`
+	URL         *string `json:"url,omitempty"`
 }
 
 type ImageVariantUpdateURLRequestDTO struct {

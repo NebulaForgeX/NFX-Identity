@@ -22,11 +22,11 @@ type AccountLockoutUnlockRequestDTO struct {
 }
 
 type AccountLockoutByUserIDRequestDTO struct {
-	UserID string `params:"user_id" validate:"required"`
+	UserID string `uri:"user_id" validate:"required"`
 }
 
 type AccountLockoutDeleteRequestDTO struct {
-	UserID string `params:"user_id" validate:"required"`
+	UserID string `uri:"user_id" validate:"required"`
 }
 
 func (r *AccountLockoutCreateRequestDTO) ToCreateCmd() (accountLockoutAppCommands.CreateAccountLockoutCmd, error) {

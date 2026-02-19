@@ -14,17 +14,17 @@ type PermissionCreateRequestDTO struct {
 }
 
 type PermissionUpdateRequestDTO struct {
-	ID          uuid.UUID `params:"id" validate:"required,uuid"`
+	ID          uuid.UUID `uri:"id" validate:"required,uuid"`
 	Name        string    `json:"name" validate:"required"`
 	Description *string   `json:"description,omitempty"`
 }
 
 type PermissionByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type PermissionByKeyRequestDTO struct {
-	Key string `params:"key" validate:"required"`
+	Key string `uri:"key" validate:"required"`
 }
 
 func (r *PermissionCreateRequestDTO) ToCreateCmd() permissionAppCommands.CreatePermissionCmd {

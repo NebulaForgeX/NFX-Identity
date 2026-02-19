@@ -16,7 +16,7 @@ type BadgeCreateRequestDTO struct {
 }
 
 type BadgeUpdateRequestDTO struct {
-	ID          uuid.UUID `params:"id" validate:"required,uuid"`
+	ID          uuid.UUID `uri:"id" validate:"required,uuid"`
 	Name        string    `json:"name" validate:"required"`
 	Description *string   `json:"description,omitempty"`
 	IconURL     *string   `json:"icon_url,omitempty"`
@@ -25,11 +25,11 @@ type BadgeUpdateRequestDTO struct {
 }
 
 type BadgeByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type BadgeByNameRequestDTO struct {
-	Name string `params:"name" validate:"required"`
+	Name string `uri:"name" validate:"required"`
 }
 
 func (r *BadgeCreateRequestDTO) ToCreateCmd() badgeAppCommands.CreateBadgeCmd {

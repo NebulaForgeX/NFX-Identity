@@ -5,9 +5,11 @@ import (
 	userEducationAppCommands "nfxid/modules/directory/application/user_educations/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserEducationHandler struct {
@@ -18,85 +20,87 @@ func NewUserEducationHandler(appSvc *userEducationApp.Service) *UserEducationHan
 	return &UserEducationHandler{appSvc: appSvc}
 }
 
-func (h *UserEducationHandler) Create(c *fiber.Ctx) error {
+func (h *UserEducationHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserEducationCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userEducationID, err := h.appSvc.CreateUserEducation(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user education: "+err.Error())
+		return err
 	}
 
 	// Get the created user education
 	userEducationView, err := h.appSvc.GetUserEducation(c.Context(), userEducationID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user education: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User education created successfully", httpresp.SuccessOptions{Data: respdto.UserEducationROToDTO(&userEducationView)})
+	return fiberx.Created(c, "User education created successfully", httpx.SuccessOptions{Data: respdto.UserEducationROToDTO(&userEducationView)})
 }
 
-func (h *UserEducationHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserEducationHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserEducation(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User education not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User education retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserEducationROToDTO(&result)})
+	return fiberx.OK(c, "User education retrieved successfully", httpx.SuccessOptions{Data: respdto.UserEducationROToDTO(&result)})
 }
 
-func (h *UserEducationHandler) Update(c *fiber.Ctx) error {
+func (h *UserEducationHandler) Update(c fiber.Ctx) error {
 	var req reqdto.UserEducationUpdateRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateCmd()
 	if err := h.appSvc.UpdateUserEducation(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user education: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User education updated successfully")
+	return fiberx.OK(c, "User education updated successfully")
 }
 
-func (h *UserEducationHandler) Delete(c *fiber.Ctx) error {
+func (h *UserEducationHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userEducationAppCommands.DeleteUserEducationCmd{UserEducationID: req.ID}
 	if err := h.appSvc.DeleteUserEducation(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user education: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User education deleted successfully")
+	return fiberx.OK(c, "User education deleted successfully")
 }
 
 // GetByUserID 根据用户ID获取用户教育列表
-func (h *UserEducationHandler) GetByUserID(c *fiber.Ctx) error {
+func (h *UserEducationHandler) GetByUserID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	results, err := h.appSvc.GetUserEducationsByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user educations: "+err.Error())
+		return err
 	}
 
 	dtos := respdto.UserEducationListROToDTO(results)
 
-	return httpresp.Success(c, fiber.StatusOK, "User educations retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+	return fiberx.OK(c, "User educations retrieved successfully", httpx.SuccessOptions{Data: dtos})
 }
+
+// fiber:context-methods migrated

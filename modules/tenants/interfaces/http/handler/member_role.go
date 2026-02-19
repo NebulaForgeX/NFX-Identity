@@ -5,9 +5,11 @@ import (
 	memberRoleAppCommands "nfxid/modules/tenants/application/member_roles/commands"
 	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
 	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type MemberRoleHandler struct {
@@ -18,69 +20,71 @@ func NewMemberRoleHandler(appSvc *memberRoleApp.Service) *MemberRoleHandler {
 	return &MemberRoleHandler{appSvc: appSvc}
 }
 
-func (h *MemberRoleHandler) Create(c *fiber.Ctx) error {
+func (h *MemberRoleHandler) Create(c fiber.Ctx) error {
 	var req reqdto.MemberRoleCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	memberRoleID, err := h.appSvc.CreateMemberRole(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create member role: "+err.Error())
+		return err
 	}
 
 	// Get the created member role
 	memberRoleView, err := h.appSvc.GetMemberRole(c.Context(), memberRoleID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created member role: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Member role created successfully", httpresp.SuccessOptions{Data: respdto.MemberRoleROToDTO(&memberRoleView)})
+	return fiberx.Created(c, "Member role created successfully", httpx.SuccessOptions{Data: respdto.MemberRoleROToDTO(&memberRoleView)})
 }
 
-func (h *MemberRoleHandler) GetByID(c *fiber.Ctx) error {
+func (h *MemberRoleHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetMemberRole(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Member role not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member role retrieved successfully", httpresp.SuccessOptions{Data: respdto.MemberRoleROToDTO(&result)})
+	return fiberx.OK(c, "Member role retrieved successfully", httpx.SuccessOptions{Data: respdto.MemberRoleROToDTO(&result)})
 }
 
-func (h *MemberRoleHandler) Update(c *fiber.Ctx) error {
+func (h *MemberRoleHandler) Update(c fiber.Ctx) error {
 	// Update can be Revoke
 	var req reqdto.MemberRoleRevokeRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToRevokeCmd()
 	if err := h.appSvc.RevokeMemberRole(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to revoke member role: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member role revoked successfully")
+	return fiberx.OK(c, "Member role revoked successfully")
 }
 
-func (h *MemberRoleHandler) Delete(c *fiber.Ctx) error {
+func (h *MemberRoleHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := memberRoleAppCommands.DeleteMemberRoleCmd{MemberRoleID: req.ID}
 	if err := h.appSvc.DeleteMemberRole(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete member role: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member role deleted successfully")
+	return fiberx.OK(c, "Member role deleted successfully")
 }
+
+// fiber:context-methods migrated

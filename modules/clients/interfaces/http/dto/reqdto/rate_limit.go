@@ -9,16 +9,16 @@ import (
 
 type RateLimitCreateRequestDTO struct {
 	AppID         uuid.UUID  `json:"app_id" validate:"required"`
-	LimitType     string      `json:"limit_type" validate:"required"`
-	LimitValue    int         `json:"limit_value" validate:"required"`
-	WindowSeconds int         `json:"window_seconds" validate:"required"`
-	Description   *string     `json:"description,omitempty"`
-	Status        string      `json:"status,omitempty"`
-	CreatedBy     *uuid.UUID  `json:"created_by,omitempty"`
+	LimitType     string     `json:"limit_type" validate:"required"`
+	LimitValue    int        `json:"limit_value" validate:"required"`
+	WindowSeconds int        `json:"window_seconds" validate:"required"`
+	Description   *string    `json:"description,omitempty"`
+	Status        string     `json:"status,omitempty"`
+	CreatedBy     *uuid.UUID `json:"created_by,omitempty"`
 }
 
 type RateLimitByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *RateLimitCreateRequestDTO) ToCreateCmd() rateLimitAppCommands.CreateRateLimitCmd {

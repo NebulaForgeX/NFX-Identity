@@ -48,5 +48,5 @@ func (r *SystemStateResetRequestDTO) ToResetSystemCmd() systemStateCommands.Rese
 
 // SystemStateByIDRequestDTO 根据 ID 获取系统状态请求 DTO
 type SystemStateByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }

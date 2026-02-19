@@ -15,11 +15,11 @@ type UserEmailCreateRequestDTO struct {
 }
 
 type UserEmailSetPrimaryRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type UserEmailVerifyRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *UserEmailCreateRequestDTO) ToCreateCmd() userEmailAppCommands.CreateUserEmailCmd {

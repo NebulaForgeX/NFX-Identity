@@ -5,9 +5,11 @@ import (
 	userPhoneAppCommands "nfxid/modules/directory/application/user_phones/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserPhoneHandler struct {
@@ -18,145 +20,147 @@ func NewUserPhoneHandler(appSvc *userPhoneApp.Service) *UserPhoneHandler {
 	return &UserPhoneHandler{appSvc: appSvc}
 }
 
-func (h *UserPhoneHandler) Create(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserPhoneCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userPhoneID, err := h.appSvc.CreateUserPhone(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user phone: "+err.Error())
+		return err
 	}
 
 	// Get the created user phone
 	userPhoneView, err := h.appSvc.GetUserPhone(c.Context(), userPhoneID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user phone: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User phone created successfully", httpresp.SuccessOptions{Data: respdto.UserPhoneROToDTO(&userPhoneView)})
+	return fiberx.Created(c, "User phone created successfully", httpx.SuccessOptions{Data: respdto.UserPhoneROToDTO(&userPhoneView)})
 }
 
-func (h *UserPhoneHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserPhone(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User phone not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User phone retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserPhoneROToDTO(&result)})
+	return fiberx.OK(c, "User phone retrieved successfully", httpx.SuccessOptions{Data: respdto.UserPhoneROToDTO(&result)})
 }
 
-func (h *UserPhoneHandler) Update(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) Update(c fiber.Ctx) error {
 	// Update can be SetPrimary, Verify, or UpdateVerificationCode
 	// Try SetPrimary first
 	var primaryReq reqdto.UserPhoneSetPrimaryRequestDTO
-	if err := c.ParamsParser(&primaryReq); err == nil {
-		if err := c.BodyParser(&primaryReq); err == nil {
+	if err := c.Bind().URI(&primaryReq); err == nil {
+		if err := c.Bind().Body(&primaryReq); err == nil {
 			cmd := primaryReq.ToSetPrimaryCmd()
 			if err := h.appSvc.SetPrimaryPhone(c.Context(), cmd); err != nil {
-				return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to set primary phone: "+err.Error())
+				return err
 			}
-			return httpresp.Success(c, fiber.StatusOK, "Primary phone set successfully")
+			return fiberx.OK(c, "Primary phone set successfully")
 		}
 	}
 
 	// Try Verify
 	var verifyReq reqdto.UserPhoneVerifyRequestDTO
-	if err := c.ParamsParser(&verifyReq); err == nil {
-		if err := c.BodyParser(&verifyReq); err == nil {
+	if err := c.Bind().URI(&verifyReq); err == nil {
+		if err := c.Bind().Body(&verifyReq); err == nil {
 			cmd := verifyReq.ToVerifyCmd()
 			if err := h.appSvc.VerifyPhone(c.Context(), cmd); err != nil {
-				return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to verify phone: "+err.Error())
+				return err
 			}
-			return httpresp.Success(c, fiber.StatusOK, "Phone verified successfully")
+			return fiberx.OK(c, "Phone verified successfully")
 		}
 	}
 
 	// Try UpdateVerificationCode
 	var updateCodeReq reqdto.UserPhoneUpdateVerificationCodeRequestDTO
-	if err := c.ParamsParser(&updateCodeReq); err == nil {
-		if err := c.BodyParser(&updateCodeReq); err == nil {
+	if err := c.Bind().URI(&updateCodeReq); err == nil {
+		if err := c.Bind().Body(&updateCodeReq); err == nil {
 			cmd := updateCodeReq.ToUpdateVerificationCodeCmd()
 			if err := h.appSvc.UpdateVerificationCode(c.Context(), cmd); err != nil {
-				return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update verification code: "+err.Error())
+				return err
 			}
-			return httpresp.Success(c, fiber.StatusOK, "Verification code updated successfully")
+			return fiberx.OK(c, "Verification code updated successfully")
 		}
 	}
 
-	return httpresp.Error(c, fiber.StatusBadRequest, "Invalid update request")
+	return errx.ErrInvalidParams
 }
 
 // SetPrimary 设置主手机号
-func (h *UserPhoneHandler) SetPrimary(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) SetPrimary(c fiber.Ctx) error {
 	var req reqdto.UserPhoneSetPrimaryRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToSetPrimaryCmd()
 	if err := h.appSvc.SetPrimaryPhone(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to set primary phone: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Primary phone set successfully")
+	return fiberx.OK(c, "Primary phone set successfully")
 }
 
 // Verify 验证手机号
-func (h *UserPhoneHandler) Verify(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) Verify(c fiber.Ctx) error {
 	var req reqdto.UserPhoneVerifyRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToVerifyCmd()
 	if err := h.appSvc.VerifyPhone(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to verify phone: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Phone verified successfully")
+	return fiberx.OK(c, "Phone verified successfully")
 }
 
-func (h *UserPhoneHandler) Delete(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userPhoneAppCommands.DeleteUserPhoneCmd{UserPhoneID: req.ID}
 	if err := h.appSvc.DeleteUserPhone(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user phone: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User phone deleted successfully")
+	return fiberx.OK(c, "User phone deleted successfully")
 }
 
 // GetByUserID 根据用户ID获取用户电话列表
-func (h *UserPhoneHandler) GetByUserID(c *fiber.Ctx) error {
+func (h *UserPhoneHandler) GetByUserID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	results, err := h.appSvc.GetUserPhonesByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user phones: "+err.Error())
+		return err
 	}
 
 	dtos := respdto.UserPhoneListROToDTO(results)
 
-	return httpresp.Success(c, fiber.StatusOK, "User phones retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+	return fiberx.OK(c, "User phones retrieved successfully", httpx.SuccessOptions{Data: dtos})
 }
+
+// fiber:context-methods migrated

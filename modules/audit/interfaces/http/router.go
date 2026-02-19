@@ -3,7 +3,7 @@ package http
 import (
 	"nfxid/pkgs/security/token"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type Router struct {

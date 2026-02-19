@@ -5,9 +5,11 @@ import (
 	memberGroupAppCommands "nfxid/modules/tenants/application/member_groups/commands"
 	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
 	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type MemberGroupHandler struct {
@@ -18,69 +20,71 @@ func NewMemberGroupHandler(appSvc *memberGroupApp.Service) *MemberGroupHandler {
 	return &MemberGroupHandler{appSvc: appSvc}
 }
 
-func (h *MemberGroupHandler) Create(c *fiber.Ctx) error {
+func (h *MemberGroupHandler) Create(c fiber.Ctx) error {
 	var req reqdto.MemberGroupCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	memberGroupID, err := h.appSvc.CreateMemberGroup(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create member group: "+err.Error())
+		return err
 	}
 
 	// Get the created member group
 	memberGroupView, err := h.appSvc.GetMemberGroup(c.Context(), memberGroupID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created member group: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Member group created successfully", httpresp.SuccessOptions{Data: respdto.MemberGroupROToDTO(&memberGroupView)})
+	return fiberx.Created(c, "Member group created successfully", httpx.SuccessOptions{Data: respdto.MemberGroupROToDTO(&memberGroupView)})
 }
 
-func (h *MemberGroupHandler) GetByID(c *fiber.Ctx) error {
+func (h *MemberGroupHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetMemberGroup(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Member group not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member group retrieved successfully", httpresp.SuccessOptions{Data: respdto.MemberGroupROToDTO(&result)})
+	return fiberx.OK(c, "Member group retrieved successfully", httpx.SuccessOptions{Data: respdto.MemberGroupROToDTO(&result)})
 }
 
-func (h *MemberGroupHandler) Update(c *fiber.Ctx) error {
+func (h *MemberGroupHandler) Update(c fiber.Ctx) error {
 	// Update can be Revoke
 	var req reqdto.MemberGroupRevokeRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToRevokeCmd()
 	if err := h.appSvc.RevokeMemberGroup(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to revoke member group: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member group revoked successfully")
+	return fiberx.OK(c, "Member group revoked successfully")
 }
 
-func (h *MemberGroupHandler) Delete(c *fiber.Ctx) error {
+func (h *MemberGroupHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := memberGroupAppCommands.DeleteMemberGroupCmd{MemberGroupID: req.ID}
 	if err := h.appSvc.DeleteMemberGroup(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete member group: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member group deleted successfully")
+	return fiberx.OK(c, "Member group deleted successfully")
 }
+
+// fiber:context-methods migrated

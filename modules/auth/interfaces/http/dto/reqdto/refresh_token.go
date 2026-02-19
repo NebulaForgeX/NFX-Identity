@@ -24,7 +24,7 @@ type RefreshTokenRevokeRequestDTO struct {
 }
 
 type RefreshTokenByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *RefreshTokenCreateRequestDTO) ToCreateCmd() refreshTokenAppCommands.CreateRefreshTokenCmd {

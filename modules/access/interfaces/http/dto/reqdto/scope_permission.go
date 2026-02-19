@@ -7,12 +7,12 @@ import (
 )
 
 type ScopePermissionCreateRequestDTO struct {
-	Scope        string     `json:"scope" validate:"required"`
-	PermissionID uuid.UUID  `json:"permission_id" validate:"required"`
+	Scope        string    `json:"scope" validate:"required"`
+	PermissionID uuid.UUID `json:"permission_id" validate:"required"`
 }
 
 type ScopePermissionByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type ScopePermissionByScopeAndPermissionRequestDTO struct {

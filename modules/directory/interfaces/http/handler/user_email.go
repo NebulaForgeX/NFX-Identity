@@ -5,9 +5,11 @@ import (
 	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserEmailHandler struct {
@@ -18,114 +20,116 @@ func NewUserEmailHandler(appSvc *userEmailApp.Service) *UserEmailHandler {
 	return &UserEmailHandler{appSvc: appSvc}
 }
 
-func (h *UserEmailHandler) Create(c *fiber.Ctx) error {
+func (h *UserEmailHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserEmailCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userEmailID, err := h.appSvc.CreateUserEmail(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user email: "+err.Error())
+		return err
 	}
 
 	// Get the created user email
 	userEmailView, err := h.appSvc.GetUserEmail(c.Context(), userEmailID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user email: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User email created successfully", httpresp.SuccessOptions{Data: respdto.UserEmailROToDTO(&userEmailView)})
+	return fiberx.Created(c, "User email created successfully", httpx.SuccessOptions{Data: respdto.UserEmailROToDTO(&userEmailView)})
 }
 
-func (h *UserEmailHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserEmailHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserEmail(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User email not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User email retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserEmailROToDTO(&result)})
+	return fiberx.OK(c, "User email retrieved successfully", httpx.SuccessOptions{Data: respdto.UserEmailROToDTO(&result)})
 }
 
-func (h *UserEmailHandler) Update(c *fiber.Ctx) error {
+func (h *UserEmailHandler) Update(c fiber.Ctx) error {
 	// UserEmail has specific update methods: SetPrimary and Verify
 	// This generic Update method can be used for SetPrimary
 	var req reqdto.UserEmailSetPrimaryRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := req.ToSetPrimaryCmd()
 	if err := h.appSvc.SetPrimaryEmail(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to set primary email: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Primary email set successfully")
+	return fiberx.OK(c, "Primary email set successfully")
 }
 
-func (h *UserEmailHandler) Delete(c *fiber.Ctx) error {
+func (h *UserEmailHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userEmailAppCommands.DeleteUserEmailCmd{UserEmailID: req.ID}
 	if err := h.appSvc.DeleteUserEmail(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user email: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User email deleted successfully")
+	return fiberx.OK(c, "User email deleted successfully")
 }
 
 // SetPrimary 设置主邮箱
-func (h *UserEmailHandler) SetPrimary(c *fiber.Ctx) error {
+func (h *UserEmailHandler) SetPrimary(c fiber.Ctx) error {
 	var req reqdto.UserEmailSetPrimaryRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := req.ToSetPrimaryCmd()
 	if err := h.appSvc.SetPrimaryEmail(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to set primary email: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Primary email set successfully")
+	return fiberx.OK(c, "Primary email set successfully")
 }
 
 // Verify 验证邮箱
-func (h *UserEmailHandler) Verify(c *fiber.Ctx) error {
+func (h *UserEmailHandler) Verify(c fiber.Ctx) error {
 	var req reqdto.UserEmailVerifyRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := req.ToVerifyCmd()
 	if err := h.appSvc.VerifyEmail(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to verify email: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Email verified successfully")
+	return fiberx.OK(c, "Email verified successfully")
 }
 
 // GetByUserID 根据用户ID获取用户邮箱列表
-func (h *UserEmailHandler) GetByUserID(c *fiber.Ctx) error {
+func (h *UserEmailHandler) GetByUserID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	results, err := h.appSvc.GetUserEmailsByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user emails: "+err.Error())
+		return err
 	}
 
 	dtos := respdto.UserEmailListROToDTO(results)
 
-	return httpresp.Success(c, fiber.StatusOK, "User emails retrieved successfully", httpresp.SuccessOptions{Data: dtos})
+	return fiberx.OK(c, "User emails retrieved successfully", httpx.SuccessOptions{Data: dtos})
 }
+
+// fiber:context-methods migrated

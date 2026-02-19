@@ -20,22 +20,22 @@ type InvitationCreateRequestDTO struct {
 }
 
 type InvitationAcceptRequestDTO struct {
-	InviteID string    `params:"invite_id" validate:"required"`
+	InviteID string    `uri:"invite_id" validate:"required"`
 	UserID   uuid.UUID `json:"user_id" validate:"required,uuid"`
 }
 
 type InvitationRevokeRequestDTO struct {
-	InviteID     string    `params:"invite_id" validate:"required"`
+	InviteID     string    `uri:"invite_id" validate:"required"`
 	RevokedBy    uuid.UUID `json:"revoked_by" validate:"required,uuid"`
 	RevokeReason string    `json:"revoke_reason,omitempty"`
 }
 
 type InvitationByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type InvitationByInviteIDRequestDTO struct {
-	InviteID string `params:"invite_id" validate:"required"`
+	InviteID string `uri:"invite_id" validate:"required"`
 }
 
 func (r *InvitationCreateRequestDTO) ToCreateCmd() invitationAppCommands.CreateInvitationCmd {
@@ -69,8 +69,8 @@ func (r *InvitationAcceptRequestDTO) ToAcceptCmd() invitationAppCommands.AcceptI
 
 func (r *InvitationRevokeRequestDTO) ToRevokeCmd() invitationAppCommands.RevokeInvitationCmd {
 	return invitationAppCommands.RevokeInvitationCmd{
-		InviteID:    r.InviteID,
-		RevokedBy:   r.RevokedBy,
+		InviteID:     r.InviteID,
+		RevokedBy:    r.RevokedBy,
 		RevokeReason: r.RevokeReason,
 	}
 }

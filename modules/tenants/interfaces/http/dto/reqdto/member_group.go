@@ -7,13 +7,13 @@ import (
 )
 
 type MemberGroupCreateRequestDTO struct {
-	MemberID   uuid.UUID `json:"member_id" validate:"required,uuid"`
-	GroupID    uuid.UUID `json:"group_id" validate:"required,uuid"`
+	MemberID   uuid.UUID  `json:"member_id" validate:"required,uuid"`
+	GroupID    uuid.UUID  `json:"group_id" validate:"required,uuid"`
 	AssignedBy *uuid.UUID `json:"assigned_by,omitempty"`
 }
 
 type MemberGroupRevokeRequestDTO struct {
-	ID        uuid.UUID `params:"id" validate:"required,uuid"`
+	ID        uuid.UUID `uri:"id" validate:"required,uuid"`
 	RevokedBy uuid.UUID `json:"revoked_by" validate:"required,uuid"`
 }
 

@@ -5,9 +5,11 @@ import (
 	eventAppCommands "nfxid/modules/audit/application/events/commands"
 	"nfxid/modules/audit/interfaces/http/dto/reqdto"
 	"nfxid/modules/audit/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type EventHandler struct {
@@ -19,53 +21,55 @@ func NewEventHandler(appSvc *eventApp.Service) *EventHandler {
 }
 
 // Create 创建事件
-func (h *EventHandler) Create(c *fiber.Ctx) error {
+func (h *EventHandler) Create(c fiber.Ctx) error {
 	var req reqdto.EventCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	eventID, err := h.appSvc.CreateEvent(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create event: "+err.Error())
+		return err
 	}
 
 	// Get the created event
 	eventView, err := h.appSvc.GetEvent(c.Context(), eventID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created event: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Event created successfully", httpresp.SuccessOptions{Data: respdto.EventROToDTO(&eventView)})
+	return fiberx.Created(c, "Event created successfully", httpx.SuccessOptions{Data: respdto.EventROToDTO(&eventView)})
 }
 
 // GetByID 根据 ID 获取事件
-func (h *EventHandler) GetByID(c *fiber.Ctx) error {
+func (h *EventHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.EventByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetEvent(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Event not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Event retrieved successfully", httpresp.SuccessOptions{Data: respdto.EventROToDTO(&result)})
+	return fiberx.OK(c, "Event retrieved successfully", httpx.SuccessOptions{Data: respdto.EventROToDTO(&result)})
 }
 
 // Delete 删除事件
-func (h *EventHandler) Delete(c *fiber.Ctx) error {
+func (h *EventHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.EventByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := eventAppCommands.DeleteEventCmd{EventID: req.ID}
 	if err := h.appSvc.DeleteEvent(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete event: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Event deleted successfully")
+	return fiberx.OK(c, "Event deleted successfully")
 }
+
+// fiber:context-methods migrated

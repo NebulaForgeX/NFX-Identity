@@ -17,15 +17,15 @@ type UserPhoneCreateRequestDTO struct {
 }
 
 type UserPhoneSetPrimaryRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type UserPhoneVerifyRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type UserPhoneUpdateVerificationCodeRequestDTO struct {
-	ID                    uuid.UUID `params:"id" validate:"required,uuid"`
+	ID                    uuid.UUID `uri:"id" validate:"required,uuid"`
 	VerificationCode      string    `json:"verification_code" validate:"required"`
 	VerificationExpiresAt string    `json:"verification_expires_at" validate:"required"`
 }

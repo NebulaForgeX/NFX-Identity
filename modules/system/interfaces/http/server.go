@@ -2,15 +2,16 @@ package http
 
 import (
 	"encoding/json"
+	"time"
 
 	bootstrapApp "nfxid/modules/system/application/bootstrap"
 	systemStateApp "nfxid/modules/system/application/system_state"
-	"nfxid/pkgs/recover"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/fiberx/middleware"
 	"nfxid/pkgs/security/token"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 type httpDeps interface {
@@ -21,19 +22,24 @@ type httpDeps interface {
 
 func NewHTTPServer(d httpDeps) *fiber.App {
 	app := fiber.New(fiber.Config{
-		JSONEncoder: json.Marshal,
-		JSONDecoder: json.Unmarshal,
+		JSONEncoder:   json.Marshal,
+		JSONDecoder:   json.Unmarshal,
+		ErrorHandler:  fiberx.ErrorHandler,
+		ReadTimeout:   30 * time.Second,
+		WriteTimeout:  30 * time.Second,
+		IdleTimeout:   120 * time.Second,
 	})
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS,PATCH",
-		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "X-Api-Key", "X-Request-ID"},
 		AllowCredentials: false,
-		ExposeHeaders:    "Content-Length",
+		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
+		MaxAge:           3600,
 	}))
 
-	app.Use(recover.RecoverMiddleware(), logger.New())
+	app.Use(middleware.Logger(), middleware.Recover())
 
 	reg := NewRegistry(d.SystemStateAppSvc(), d.BootstrapSvc())
 

@@ -11,12 +11,12 @@ type ScopeCreateRequestDTO struct {
 }
 
 type ScopeUpdateRequestDTO struct {
-	Scope       string  `params:"scope" validate:"required"`
+	Scope       string  `uri:"scope" validate:"required"`
 	Description *string `json:"description,omitempty"`
 }
 
 type ScopeByScopeRequestDTO struct {
-	Scope string `params:"scope" validate:"required"`
+	Scope string `uri:"scope" validate:"required"`
 }
 
 func (r *ScopeCreateRequestDTO) ToCreateCmd() scopeAppCommands.CreateScopeCmd {

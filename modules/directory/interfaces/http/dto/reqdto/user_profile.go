@@ -25,7 +25,7 @@ type UserProfileCreateRequestDTO struct {
 }
 
 type UserProfileUpdateRequestDTO struct {
-	ID          uuid.UUID              `params:"id" validate:"required,uuid"`
+	ID          uuid.UUID              `uri:"id" validate:"required,uuid"`
 	Role        *string                `json:"role,omitempty"`
 	FirstName   *string                `json:"first_name,omitempty"`
 	LastName    *string                `json:"last_name,omitempty"`
@@ -70,14 +70,14 @@ func (r *UserProfileUpdateRequestDTO) ToUpdateCmd() userProfileAppCommands.Updat
 		LastName:      r.LastName,
 		Nickname:      r.Nickname,
 		DisplayName:   r.DisplayName,
-		Bio:            r.Bio,
+		Bio:           r.Bio,
 		Birthday:      r.Birthday,
-		Age:            r.Age,
-		Gender:         r.Gender,
-		Location:       r.Location,
-		Website:        r.Website,
-		Github:         r.Github,
-		SocialLinks:    r.SocialLinks,
-		Skills:         r.Skills,
+		Age:           r.Age,
+		Gender:        r.Gender,
+		Location:      r.Location,
+		Website:       r.Website,
+		Github:        r.Github,
+		SocialLinks:   r.SocialLinks,
+		Skills:        r.Skills,
 	}
 }

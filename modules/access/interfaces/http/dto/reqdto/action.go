@@ -7,11 +7,11 @@ import (
 )
 
 type ActionByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type ActionByKeyRequestDTO struct {
-	Key string `params:"key" validate:"required"`
+	Key string `uri:"key" validate:"required"`
 }
 
 type ActionCreateRequestDTO struct {

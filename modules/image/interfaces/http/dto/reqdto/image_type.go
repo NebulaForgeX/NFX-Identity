@@ -16,11 +16,11 @@ type ImageTypeCreateRequestDTO struct {
 }
 
 type ImageTypeByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type ImageTypeByKeyRequestDTO struct {
-	Key string `params:"key" validate:"required"`
+	Key string `uri:"key" validate:"required"`
 }
 
 type ImageTypeUpdateRequestDTO struct {

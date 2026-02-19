@@ -1,10 +1,10 @@
 package http
 
 import (
+	"nfxid/pkgs/fiberx/middleware"
 	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/usertoken"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type Router struct {
@@ -28,7 +28,7 @@ func (r *Router) RegisterRoutes() {
 	image.Get("/public/images/:id", r.handlers.Upload.ServeImage)
 
 	// 需要认证：上传
-	auth := image.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
+	auth := image.Group("/auth", middleware.TokenAuth(r.tokenVerifier))
 	{
 		auth.Post("/upload", r.handlers.Upload.UploadImage)
 	}

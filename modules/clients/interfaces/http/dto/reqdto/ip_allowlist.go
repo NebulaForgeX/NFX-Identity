@@ -17,11 +17,11 @@ type IPAllowlistCreateRequestDTO struct {
 }
 
 type IPAllowlistByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type IPAllowlistDeleteRequestDTO struct {
-	RuleID string `params:"rule_id" validate:"required"`
+	RuleID string `uri:"rule_id" validate:"required"`
 }
 
 func (r *IPAllowlistCreateRequestDTO) ToCreateCmd() ipAllowlistAppCommands.CreateIPAllowlistCmd {

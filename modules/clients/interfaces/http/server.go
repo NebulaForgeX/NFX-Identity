@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"time"
 
 	apiKeyApp "nfxid/modules/clients/application/api_keys"
 	appApp "nfxid/modules/clients/application/apps"
@@ -10,12 +11,12 @@ import (
 	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
 	"nfxid/modules/clients/interfaces/http/handler"
-	"nfxid/pkgs/recover"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/fiberx/middleware"
 	"nfxid/pkgs/security/token"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 type httpDeps interface {
@@ -30,22 +31,25 @@ type httpDeps interface {
 
 func NewHTTPServer(d httpDeps) *fiber.App {
 	app := fiber.New(fiber.Config{
-		JSONEncoder: json.Marshal,
-		JSONDecoder: json.Unmarshal,
+		JSONEncoder:   json.Marshal,
+		JSONDecoder:   json.Unmarshal,
+		ErrorHandler:  fiberx.ErrorHandler,
+		ReadTimeout:   30 * time.Second,
+		WriteTimeout:  30 * time.Second,
+		IdleTimeout:   120 * time.Second,
 	})
 
-	// CORS 中间件 - 必须在其他中间件之前
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS,PATCH",
-		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "X-Api-Key", "X-Request-ID"},
 		AllowCredentials: false,
-		ExposeHeaders:    "Content-Length",
+		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
+		MaxAge:           3600,
 	}))
 
-	app.Use(recover.RecoverMiddleware(), logger.New())
+	app.Use(middleware.Logger(), middleware.Recover())
 
-	// 创建handlers
 	reg := &Registry{
 		App:              handler.NewAppHandler(d.AppAppSvc()),
 		APIKey:           handler.NewAPIKeyHandler(d.APIKeyAppSvc()),
@@ -55,7 +59,6 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 		RateLimit:        handler.NewRateLimitHandler(d.RateLimitAppSvc()),
 	}
 
-	// 注册路由
 	router := NewRouter(app, d.UserTokenVerifier(), reg)
 	router.RegisterRoutes()
 

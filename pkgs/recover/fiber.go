@@ -2,21 +2,23 @@ package recover
 
 import (
 	"fmt"
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/netx/httpresp"
 	"os"
 	"runtime/debug"
 
-	"github.com/gofiber/fiber/v2"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/logx"
+
+	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"
 )
 
 func RecoverMiddleware() fiber.Handler {
-	return func(c *fiber.Ctx) error {
+	return func(c fiber.Ctx) error {
 		defer func() {
 			if r := recover(); r != nil {
 				// Get logger from context or use global logger
-				logger := logx.From(c.UserContext())
+				logger := logx.From(c.Context())
 				if logger == nil {
 					logger = logx.L()
 				}
@@ -32,13 +34,12 @@ func RecoverMiddleware() fiber.Handler {
 				)
 				fmt.Fprintf(os.Stderr, "panic: %v\n%s\n", r, debug.Stack())
 
-				// Return internal server error
-				if err := httpresp.Error(c, fiber.StatusInternalServerError, "internal server error"); err != nil {
-					logger.Error("failed to send error response", zap.Error(err))
-				}
+				_ = fiberx.ErrorFromErrx(c, errx.ErrInternal)
 			}
 		}()
 
 		return c.Next()
 	}
 }
+
+// fiber:context-methods migrated

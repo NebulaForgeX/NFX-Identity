@@ -22,17 +22,17 @@ type SessionCreateRequestDTO struct {
 }
 
 type SessionRevokeRequestDTO struct {
-	SessionID    string `params:"session_id" validate:"required"`
+	SessionID    string `uri:"session_id" validate:"required"`
 	RevokeReason string `json:"revoke_reason" validate:"required"`
 	RevokedBy    string `json:"revoked_by" validate:"required"`
 }
 
 type SessionByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type SessionBySessionIDRequestDTO struct {
-	SessionID string `params:"session_id" validate:"required"`
+	SessionID string `uri:"session_id" validate:"required"`
 }
 
 func (r *SessionCreateRequestDTO) ToCreateCmd() sessionAppCommands.CreateSessionCmd {

@@ -5,9 +5,11 @@ import (
 	tenantSettingAppCommands "nfxid/modules/tenants/application/tenant_settings/commands"
 	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
 	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type TenantSettingHandler struct {
@@ -18,68 +20,70 @@ func NewTenantSettingHandler(appSvc *tenantSettingApp.Service) *TenantSettingHan
 	return &TenantSettingHandler{appSvc: appSvc}
 }
 
-func (h *TenantSettingHandler) Create(c *fiber.Ctx) error {
+func (h *TenantSettingHandler) Create(c fiber.Ctx) error {
 	var req reqdto.TenantSettingCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
-	tenantSettingID, err := h.appSvc.CreateTenantSetting(c.Context(), cmd)
+	ctx := c.Context()
+	tenantSettingID, err := h.appSvc.CreateTenantSetting(ctx, cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create tenant setting: "+err.Error())
+		return err
 	}
 
-	// Get the created tenant setting
-	tenantSettingView, err := h.appSvc.GetTenantSetting(c.Context(), tenantSettingID)
+	tenantSettingView, err := h.appSvc.GetTenantSetting(ctx, tenantSettingID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created tenant setting: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Tenant setting created successfully", httpresp.SuccessOptions{Data: respdto.TenantSettingROToDTO(&tenantSettingView)})
+	return fiberx.Created(c, "Tenant setting created successfully", httpx.SuccessOptions{Data: respdto.TenantSettingROToDTO(&tenantSettingView)})
 }
 
-func (h *TenantSettingHandler) GetByID(c *fiber.Ctx) error {
+func (h *TenantSettingHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetTenantSetting(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Tenant setting not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Tenant setting retrieved successfully", httpresp.SuccessOptions{Data: respdto.TenantSettingROToDTO(&result)})
+	return fiberx.OK(c, "Tenant setting retrieved successfully", httpx.SuccessOptions{Data: respdto.TenantSettingROToDTO(&result)})
 }
 
-func (h *TenantSettingHandler) Update(c *fiber.Ctx) error {
+func (h *TenantSettingHandler) Update(c fiber.Ctx) error {
 	var req reqdto.TenantSettingUpdateRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateCmd()
 	if err := h.appSvc.UpdateTenantSetting(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update tenant setting: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Tenant setting updated successfully")
+	return fiberx.OK(c, "Tenant setting updated successfully")
 }
 
-func (h *TenantSettingHandler) Delete(c *fiber.Ctx) error {
+func (h *TenantSettingHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := tenantSettingAppCommands.DeleteTenantSettingCmd{TenantSettingID: req.ID}
 	if err := h.appSvc.DeleteTenantSetting(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete tenant setting: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Tenant setting deleted successfully")
+	return fiberx.OK(c, "Tenant setting deleted successfully")
 }
+
+// fiber:context-methods migrated

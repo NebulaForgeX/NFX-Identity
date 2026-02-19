@@ -67,7 +67,7 @@ func FieldsFromCtx(ctx context.Context) logging.Fields {
 	}
 
 	// 添加对端信息
-	if p, ok := peer.FromContext(ctx); ok && p.Addr != nil {
+	if p, ok := peer.FromContext(ctx); ok && p != nil && p.Addr != nil {
 		host, portStr, _ := net.SplitHostPort(p.Addr.String())
 		if host != "" {
 			fs = append(fs, "net.peer.ip", host)

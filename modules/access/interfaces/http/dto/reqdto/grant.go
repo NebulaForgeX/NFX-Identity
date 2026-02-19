@@ -21,23 +21,23 @@ type GrantCreateRequestDTO struct {
 }
 
 type GrantUpdateRequestDTO struct {
-	GrantID   uuid.UUID `params:"id" validate:"required,uuid"`
+	GrantID   uuid.UUID `uri:"id" validate:"required,uuid"`
 	ExpiresAt *string   `json:"expires_at,omitempty"`
 }
 
 type GrantRevokeRequestDTO struct {
-	GrantID      uuid.UUID `params:"id" validate:"required,uuid"`
+	GrantID      uuid.UUID `uri:"id" validate:"required,uuid"`
 	RevokedBy    uuid.UUID `json:"revoked_by" validate:"required"`
 	RevokeReason *string   `json:"revoke_reason,omitempty"`
 }
 
 type GrantByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type GrantBySubjectRequestDTO struct {
-	SubjectType string    `query:"subject_type" validate:"required"`
-	SubjectID   uuid.UUID `query:"subject_id" validate:"required"`
+	SubjectType string     `query:"subject_type" validate:"required"`
+	SubjectID   uuid.UUID  `query:"subject_id" validate:"required"`
 	TenantID    *uuid.UUID `query:"tenant_id,omitempty"`
 }
 
@@ -57,7 +57,7 @@ func (r *GrantCreateRequestDTO) ToCreateCmd() grantAppCommands.CreateGrantCmd {
 		ResourceID:   r.ResourceID,
 		ExpiresAt:    r.ExpiresAt,
 	}
-	
+
 	// Parse enums
 	if r.SubjectType != "" {
 		cmd.SubjectType = grantDomain.SubjectType(r.SubjectType)
@@ -68,7 +68,7 @@ func (r *GrantCreateRequestDTO) ToCreateCmd() grantAppCommands.CreateGrantCmd {
 	if r.Effect != "" {
 		cmd.Effect = grantDomain.GrantEffect(r.Effect)
 	}
-	
+
 	return cmd
 }
 

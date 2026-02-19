@@ -20,7 +20,7 @@ type LoginAttemptCreateRequestDTO struct {
 }
 
 type LoginAttemptByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *LoginAttemptCreateRequestDTO) ToCreateCmd() loginAttemptAppCommands.CreateLoginAttemptCmd {

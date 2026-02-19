@@ -7,18 +7,18 @@ import (
 )
 
 type ImageTagCreateRequestDTO struct {
-	ImageID    uuid.UUID  `json:"image_id" validate:"required,uuid"`
-	Tag        string     `json:"tag" validate:"required"`
-	Confidence *float64   `json:"confidence,omitempty"`
+	ImageID    uuid.UUID `json:"image_id" validate:"required,uuid"`
+	Tag        string    `json:"tag" validate:"required"`
+	Confidence *float64  `json:"confidence,omitempty"`
 }
 
 type ImageTagByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type ImageTagUpdateRequestDTO struct {
-	Tag        string    `json:"tag" validate:"required"`
-	Confidence *float64  `json:"confidence,omitempty"`
+	Tag        string   `json:"tag" validate:"required"`
+	Confidence *float64 `json:"confidence,omitempty"`
 }
 
 func (r *ImageTagCreateRequestDTO) ToCreateCmd() imageTagAppCommands.CreateImageTagCmd {

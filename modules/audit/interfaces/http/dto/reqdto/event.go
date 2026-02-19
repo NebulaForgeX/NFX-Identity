@@ -36,11 +36,11 @@ type EventCreateRequestDTO struct {
 }
 
 type EventByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type EventByEventIDRequestDTO struct {
-	EventID string `params:"event_id" validate:"required"`
+	EventID string `uri:"event_id" validate:"required"`
 }
 
 func (r *EventCreateRequestDTO) ToCreateCmd() auditAppCommands.CreateEventCmd {

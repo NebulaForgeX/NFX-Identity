@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/limiter"
 	"github.com/gofiber/storage/redis/v3"
 )
 
@@ -17,9 +17,9 @@ type RateLimiterConfig struct {
 
 	// Optional configurations
 	SkipIPs      []string
-	KeyGenerator func(c *fiber.Ctx) string
-	LimitReached func(c *fiber.Ctx) error
-	LimiterType  limiter.LimiterHandler
+	KeyGenerator func(c fiber.Ctx) string
+	LimitReached func(c fiber.Ctx) error
+	LimiterType  limiter.Handler
 }
 
 // RateLimiterOption is a function that modifies RateLimiterConfig
@@ -65,21 +65,21 @@ func WithSkipIPs(ips ...string) RateLimiterOption {
 }
 
 // WithKeyGenerator sets a custom key generator function
-func WithKeyGenerator(generator func(c *fiber.Ctx) string) RateLimiterOption {
+func WithKeyGenerator(generator func(c fiber.Ctx) string) RateLimiterOption {
 	return func(cfg *RateLimiterConfig) {
 		cfg.KeyGenerator = generator
 	}
 }
 
 // WithLimitReached sets a custom limit reached handler
-func WithLimitReached(handler func(c *fiber.Ctx) error) RateLimiterOption {
+func WithLimitReached(handler func(c fiber.Ctx) error) RateLimiterOption {
 	return func(cfg *RateLimiterConfig) {
 		cfg.LimitReached = handler
 	}
 }
 
 // WithLimiterType sets the type of limiter to use
-func WithLimiterType(limiterType limiter.LimiterHandler) RateLimiterOption {
+func WithLimiterType(limiterType limiter.Handler) RateLimiterOption {
 	return func(cfg *RateLimiterConfig) {
 		cfg.LimiterType = limiterType
 	}
@@ -104,7 +104,7 @@ func RateLimiterMiddleware(opts ...RateLimiterOption) fiber.Handler {
 	}
 
 	return limiter.New(limiter.Config{
-		Next: func(c *fiber.Ctx) bool {
+		Next: func(c fiber.Ctx) bool {
 			return shouldSkip(c.IP(), cfg.SkipIPs)
 		},
 		Max:               cfg.Max,
@@ -117,7 +117,7 @@ func RateLimiterMiddleware(opts ...RateLimiterOption) fiber.Handler {
 }
 
 // defaultKeyGenerator generates keys based on IP address with X-Forwarded-For support
-func defaultKeyGenerator(c *fiber.Ctx) string {
+func defaultKeyGenerator(c fiber.Ctx) string {
 	forwarded := c.Get("X-Forwarded-For")
 	if forwarded != "" {
 		ips := strings.Split(forwarded, ",")
@@ -127,7 +127,7 @@ func defaultKeyGenerator(c *fiber.Ctx) string {
 }
 
 // defaultLimitReached is the default handler when rate limit is reached
-func defaultLimitReached(c *fiber.Ctx) error {
+func defaultLimitReached(c fiber.Ctx) error {
 	return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
 		"message": "Too many requests",
 	})

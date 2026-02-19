@@ -16,12 +16,12 @@ type TenantAppCreateRequestDTO struct {
 }
 
 type TenantAppUpdateStatusRequestDTO struct {
-	ID     uuid.UUID `params:"id" validate:"required,uuid"`
+	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
 	Status string    `json:"status" validate:"required"`
 }
 
 type TenantAppUpdateSettingsRequestDTO struct {
-	ID       uuid.UUID              `params:"id" validate:"required,uuid"`
+	ID       uuid.UUID              `uri:"id" validate:"required,uuid"`
 	Settings map[string]interface{} `json:"settings" validate:"required"`
 }
 

@@ -1,5 +1,5 @@
 # Base build stage (cache dependencies)
-FROM golang:1.24.4-alpine AS base-builder
+FROM golang:1.25.4-alpine AS base-builder
 WORKDIR /src
 RUN apk add --no-cache git ca-certificates tzdata
 COPY go.mod go.sum ./

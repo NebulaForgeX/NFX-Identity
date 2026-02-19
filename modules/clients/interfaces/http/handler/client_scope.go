@@ -5,9 +5,11 @@ import (
 	clientScopeAppCommands "nfxid/modules/clients/application/client_scopes/commands"
 	"nfxid/modules/clients/interfaces/http/dto/reqdto"
 	"nfxid/modules/clients/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type ClientScopeHandler struct {
@@ -21,53 +23,55 @@ func NewClientScopeHandler(appSvc *clientScopeApp.Service) *ClientScopeHandler {
 }
 
 // Create 创建 Client Scope
-func (h *ClientScopeHandler) Create(c *fiber.Ctx) error {
+func (h *ClientScopeHandler) Create(c fiber.Ctx) error {
 	var req reqdto.ClientScopeCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	clientScopeID, err := h.appSvc.CreateClientScope(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create client scope: "+err.Error())
+		return err
 	}
 
 	// Get the created client scope
 	clientScopeView, err := h.appSvc.GetClientScope(c.Context(), clientScopeID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created client scope: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Client scope created successfully", httpresp.SuccessOptions{Data: respdto.ClientScopeROToDTO(&clientScopeView)})
+	return fiberx.Created(c, "Client scope created successfully", httpx.SuccessOptions{Data: respdto.ClientScopeROToDTO(&clientScopeView)})
 }
 
 // GetByID 根据 ID 获取 Client Scope
-func (h *ClientScopeHandler) GetByID(c *fiber.Ctx) error {
+func (h *ClientScopeHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ClientScopeByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetClientScope(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Client scope not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Client scope retrieved successfully", httpresp.SuccessOptions{Data: respdto.ClientScopeROToDTO(&result)})
+	return fiberx.OK(c, "Client scope retrieved successfully", httpx.SuccessOptions{Data: respdto.ClientScopeROToDTO(&result)})
 }
 
 // Delete 删除 Client Scope
-func (h *ClientScopeHandler) Delete(c *fiber.Ctx) error {
+func (h *ClientScopeHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ClientScopeByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := clientScopeAppCommands.DeleteClientScopeCmd{ClientScopeID: req.ID}
 	if err := h.appSvc.DeleteClientScope(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete client scope: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Client scope deleted successfully")
+	return fiberx.OK(c, "Client scope deleted successfully")
 }
+
+// fiber:context-methods migrated

@@ -13,7 +13,7 @@ type RolePermissionCreateRequestDTO struct {
 }
 
 type RolePermissionByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type RolePermissionByRoleAndPermissionRequestDTO struct {
@@ -22,7 +22,7 @@ type RolePermissionByRoleAndPermissionRequestDTO struct {
 }
 
 type RolePermissionByRoleIDRequestDTO struct {
-	RoleID uuid.UUID `params:"role_id" validate:"required,uuid"`
+	RoleID uuid.UUID `uri:"role_id" validate:"required,uuid"`
 }
 
 func (r *RolePermissionCreateRequestDTO) ToCreateCmd() rolePermissionAppCommands.CreateRolePermissionCmd {

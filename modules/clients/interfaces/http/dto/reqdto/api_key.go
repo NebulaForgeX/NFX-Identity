@@ -18,11 +18,11 @@ type APIKeyCreateRequestDTO struct {
 }
 
 type APIKeyByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type APIKeyDeleteRequestDTO struct {
-	KeyID string `params:"key_id" validate:"required"`
+	KeyID string `uri:"key_id" validate:"required"`
 }
 
 func (r *APIKeyCreateRequestDTO) ToCreateCmd() apiKeyAppCommands.CreateAPIKeyCmd {

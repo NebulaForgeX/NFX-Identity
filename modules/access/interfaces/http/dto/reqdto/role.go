@@ -16,18 +16,18 @@ type RoleCreateRequestDTO struct {
 }
 
 type RoleUpdateRequestDTO struct {
-	ID          uuid.UUID `params:"id" validate:"required,uuid"`
+	ID          uuid.UUID `uri:"id" validate:"required,uuid"`
 	Name        string    `json:"name" validate:"required"`
 	Description *string   `json:"description,omitempty"`
 	ScopeType   string    `json:"scope_type,omitempty"`
 }
 
 type RoleByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type RoleByKeyRequestDTO struct {
-	Key string `params:"key" validate:"required"`
+	Key string `uri:"key" validate:"required"`
 }
 
 func (r *RoleCreateRequestDTO) ToCreateCmd() roleAppCommands.CreateRoleCmd {
@@ -37,12 +37,12 @@ func (r *RoleCreateRequestDTO) ToCreateCmd() roleAppCommands.CreateRoleCmd {
 		Description: r.Description,
 		IsSystem:    r.IsSystem,
 	}
-	
+
 	// Parse scope type
 	if r.ScopeType != "" {
 		cmd.ScopeType = roleDomain.ScopeType(r.ScopeType)
 	}
-	
+
 	return cmd
 }
 
@@ -52,11 +52,11 @@ func (r *RoleUpdateRequestDTO) ToUpdateCmd() roleAppCommands.UpdateRoleCmd {
 		Name:        r.Name,
 		Description: r.Description,
 	}
-	
+
 	// Parse scope type
 	if r.ScopeType != "" {
 		cmd.ScopeType = roleDomain.ScopeType(r.ScopeType)
 	}
-	
+
 	return cmd
 }

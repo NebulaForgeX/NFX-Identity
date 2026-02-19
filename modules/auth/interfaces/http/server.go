@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"time"
 
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
 	authApp "nfxid/modules/auth/application/auth"
@@ -14,12 +15,12 @@ import (
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
 	userCredentialApp "nfxid/modules/auth/application/user_credentials"
 	"nfxid/modules/auth/interfaces/http/handler"
-	"nfxid/pkgs/recover"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/fiberx/middleware"
 	"nfxid/pkgs/security/token"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 )
 
 type httpDeps interface {
@@ -38,20 +39,24 @@ type httpDeps interface {
 
 func NewHTTPServer(d httpDeps) *fiber.App {
 	app := fiber.New(fiber.Config{
-		JSONEncoder: json.Marshal,
-		JSONDecoder: json.Unmarshal,
+		JSONEncoder:   json.Marshal,
+		JSONDecoder:   json.Unmarshal,
+		ErrorHandler:  fiberx.ErrorHandler,
+		ReadTimeout:   30 * time.Second,
+		WriteTimeout:  30 * time.Second,
+		IdleTimeout:   120 * time.Second,
 	})
 
-	// CORS 中间件 - 必须在其他中间件之前
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*", // 开发环境允许所有源
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS,PATCH",
-		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
-		AllowCredentials: false, // 使用通配符时不能为 true，JWT token 通过 Authorization header 传递
-		ExposeHeaders:    "Content-Length",
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With", "X-Api-Key", "X-Request-ID"},
+		AllowCredentials: false,
+		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
+		MaxAge:           3600,
 	}))
 
-	app.Use(recover.RecoverMiddleware(), logger.New())
+	app.Use(middleware.Logger(), middleware.Recover())
 
 	// 创建handlers
 	reg := &Registry{

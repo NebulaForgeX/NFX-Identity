@@ -8,31 +8,31 @@ import (
 )
 
 type UserCreateRequestDTO struct {
-	Username   string    `json:"username" validate:"required"`
-	Status     string    `json:"status,omitempty"`
-	IsVerified bool      `json:"is_verified,omitempty"`
+	Username   string `json:"username" validate:"required"`
+	Status     string `json:"status,omitempty"`
+	IsVerified bool   `json:"is_verified,omitempty"`
 }
 
 type UserUpdateStatusRequestDTO struct {
-	ID     uuid.UUID `params:"id" validate:"required,uuid"`
+	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
 	Status string    `json:"status" validate:"required"`
 }
 
 type UserUpdateUsernameRequestDTO struct {
-	ID       uuid.UUID `params:"id" validate:"required,uuid"`
+	ID       uuid.UUID `uri:"id" validate:"required,uuid"`
 	Username string    `json:"username" validate:"required"`
 }
 
 type UserVerifyRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type UserByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type UserByUsernameRequestDTO struct {
-	Username string `params:"username" validate:"required"`
+	Username string `uri:"username" validate:"required"`
 }
 
 func (r *UserCreateRequestDTO) ToCreateCmd() userAppCommands.CreateUserCmd {

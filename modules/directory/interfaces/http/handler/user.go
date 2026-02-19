@@ -5,9 +5,11 @@ import (
 	userAppCommands "nfxid/modules/directory/application/users/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserHandler struct {
@@ -21,119 +23,121 @@ func NewUserHandler(appSvc *userApp.Service) *UserHandler {
 }
 
 // Create 创建用户
-func (h *UserHandler) Create(c *fiber.Ctx) error {
+func (h *UserHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userID, err := h.appSvc.CreateUser(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user: "+err.Error())
+		return err
 	}
 
 	// Get the created user
 	userView, err := h.appSvc.GetUser(c.Context(), userID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User created successfully", httpresp.SuccessOptions{Data: respdto.UserROToDTO(&userView)})
+	return fiberx.Created(c, "User created successfully", httpx.SuccessOptions{Data: respdto.UserROToDTO(&userView)})
 }
 
 // GetByID 根据 ID 获取用户
-func (h *UserHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.UserByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUser(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserROToDTO(&result)})
+	return fiberx.OK(c, "User retrieved successfully", httpx.SuccessOptions{Data: respdto.UserROToDTO(&result)})
 }
 
 // GetByUsername 根据 Username 获取用户
-func (h *UserHandler) GetByUsername(c *fiber.Ctx) error {
+func (h *UserHandler) GetByUsername(c fiber.Ctx) error {
 	var req reqdto.UserByUsernameRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserByUsername(c.Context(), req.Username)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserROToDTO(&result)})
+	return fiberx.OK(c, "User retrieved successfully", httpx.SuccessOptions{Data: respdto.UserROToDTO(&result)})
 }
 
 // UpdateStatus 更新用户状态
-func (h *UserHandler) UpdateStatus(c *fiber.Ctx) error {
+func (h *UserHandler) UpdateStatus(c fiber.Ctx) error {
 	var req reqdto.UserUpdateStatusRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateStatusCmd()
 	if err := h.appSvc.UpdateUserStatus(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user status: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User status updated successfully")
+	return fiberx.OK(c, "User status updated successfully")
 }
 
 // UpdateUsername 更新用户名
-func (h *UserHandler) UpdateUsername(c *fiber.Ctx) error {
+func (h *UserHandler) UpdateUsername(c fiber.Ctx) error {
 	var req reqdto.UserUpdateUsernameRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateUsernameCmd()
 	if err := h.appSvc.UpdateUsername(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update username: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Username updated successfully")
+	return fiberx.OK(c, "Username updated successfully")
 }
 
 // Verify 验证用户
-func (h *UserHandler) Verify(c *fiber.Ctx) error {
+func (h *UserHandler) Verify(c fiber.Ctx) error {
 	var req reqdto.UserVerifyRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := req.ToVerifyCmd()
 	if err := h.appSvc.VerifyUser(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to verify user: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User verified successfully")
+	return fiberx.OK(c, "User verified successfully")
 }
 
 // Delete 删除用户（软删除）
-func (h *UserHandler) Delete(c *fiber.Ctx) error {
+func (h *UserHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.UserByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userAppCommands.DeleteUserCmd{UserID: req.ID}
 	if err := h.appSvc.DeleteUser(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User deleted successfully")
+	return fiberx.OK(c, "User deleted successfully")
 }
+
+// fiber:context-methods migrated

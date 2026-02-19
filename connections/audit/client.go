@@ -29,7 +29,7 @@ func NewClient(
 		Event:                NewEventClient(eventClient),
 		EventSearchIndex:     NewEventSearchIndexClient(eventSearchIndexClient),
 		ActorSnapshot:        NewActorSnapshotClient(actorSnapshotClient),
-		HashChainCheckpoint:  NewHashChainCheckpointClient(hashChainCheckpointClient),
+		HashChainCheckpoint:   NewHashChainCheckpointClient(hashChainCheckpointClient),
 		EventRetentionPolicy: NewEventRetentionPolicyClient(eventRetentionPolicyClient),
 	}
 }

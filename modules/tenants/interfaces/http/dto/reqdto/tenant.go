@@ -17,7 +17,7 @@ type TenantCreateRequestDTO struct {
 }
 
 type TenantUpdateRequestDTO struct {
-	ID            uuid.UUID              `params:"id" validate:"required,uuid"`
+	ID            uuid.UUID              `uri:"id" validate:"required,uuid"`
 	Name          string                 `json:"name" validate:"required"`
 	DisplayName   *string                `json:"display_name,omitempty"`
 	PrimaryDomain *string                `json:"primary_domain,omitempty"`
@@ -25,16 +25,16 @@ type TenantUpdateRequestDTO struct {
 }
 
 type TenantUpdateStatusRequestDTO struct {
-	ID     uuid.UUID `params:"id" validate:"required,uuid"`
+	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
 	Status string    `json:"status" validate:"required"`
 }
 
 type TenantByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type TenantByTenantIDRequestDTO struct {
-	TenantID string `params:"tenant_id" validate:"required"`
+	TenantID string `uri:"tenant_id" validate:"required"`
 }
 
 func (r *TenantCreateRequestDTO) ToCreateCmd() tenantAppCommands.CreateTenantCmd {

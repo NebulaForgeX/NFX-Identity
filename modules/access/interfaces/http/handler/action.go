@@ -4,9 +4,11 @@ import (
 	actionApp "nfxid/modules/access/application/actions"
 	"nfxid/modules/access/interfaces/http/dto/reqdto"
 	"nfxid/modules/access/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type ActionHandler struct {
@@ -18,45 +20,47 @@ func NewActionHandler(appSvc *actionApp.Service) *ActionHandler {
 }
 
 // GetByID 根据 ID 获取 Action
-func (h *ActionHandler) GetByID(c *fiber.Ctx) error {
+func (h *ActionHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ActionByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 	result, err := h.appSvc.GetAction(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Action not found: "+err.Error())
+		return err
 	}
-	return httpresp.Success(c, fiber.StatusOK, "Action retrieved successfully", httpresp.SuccessOptions{Data: respdto.ActionROToDTO(&result)})
+	return fiberx.OK(c, "Action retrieved successfully", httpx.SuccessOptions{Data: respdto.ActionROToDTO(&result)})
 }
 
 // GetByKey 根据 Key 获取 Action
-func (h *ActionHandler) GetByKey(c *fiber.Ctx) error {
+func (h *ActionHandler) GetByKey(c fiber.Ctx) error {
 	var req reqdto.ActionByKeyRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 	result, err := h.appSvc.GetActionByKey(c.Context(), req.Key)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Action not found: "+err.Error())
+		return err
 	}
-	return httpresp.Success(c, fiber.StatusOK, "Action retrieved successfully", httpresp.SuccessOptions{Data: respdto.ActionROToDTO(&result)})
+	return fiberx.OK(c, "Action retrieved successfully", httpx.SuccessOptions{Data: respdto.ActionROToDTO(&result)})
 }
 
 // Create 创建 Action
-func (h *ActionHandler) Create(c *fiber.Ctx) error {
+func (h *ActionHandler) Create(c fiber.Ctx) error {
 	var req reqdto.ActionCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 	cmd := req.ToCreateCmd()
 	actionID, err := h.appSvc.CreateAction(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create action: "+err.Error())
+		return err
 	}
 	result, err := h.appSvc.GetAction(c.Context(), actionID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created action: "+err.Error())
+		return err
 	}
-	return httpresp.Success(c, fiber.StatusCreated, "Action created successfully", httpresp.SuccessOptions{Data: respdto.ActionROToDTO(&result)})
+	return fiberx.Created(c, "Action created successfully", httpx.SuccessOptions{Data: respdto.ActionROToDTO(&result)})
 }
+
+// fiber:context-methods migrated

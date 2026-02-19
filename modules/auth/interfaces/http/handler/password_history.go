@@ -4,9 +4,11 @@ import (
 	passwordHistoryApp "nfxid/modules/auth/application/password_history"
 	"nfxid/modules/auth/interfaces/http/dto/reqdto"
 	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type PasswordHistoryHandler struct {
@@ -20,38 +22,40 @@ func NewPasswordHistoryHandler(appSvc *passwordHistoryApp.Service) *PasswordHist
 }
 
 // Create 创建密码历史
-func (h *PasswordHistoryHandler) Create(c *fiber.Ctx) error {
+func (h *PasswordHistoryHandler) Create(c fiber.Ctx) error {
 	var req reqdto.PasswordHistoryCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	passwordHistoryID, err := h.appSvc.CreatePasswordHistory(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create password history: "+err.Error())
+		return err
 	}
 
 	// Get the created password history
 	passwordHistoryView, err := h.appSvc.GetPasswordHistory(c.Context(), passwordHistoryID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created password history: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Password history created successfully", httpresp.SuccessOptions{Data: respdto.PasswordHistoryROToDTO(&passwordHistoryView)})
+	return fiberx.Created(c, "Password history created successfully", httpx.SuccessOptions{Data: respdto.PasswordHistoryROToDTO(&passwordHistoryView)})
 }
 
 // GetByID 根据 ID 获取密码历史
-func (h *PasswordHistoryHandler) GetByID(c *fiber.Ctx) error {
+func (h *PasswordHistoryHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.PasswordHistoryByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetPasswordHistory(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Password history not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Password history retrieved successfully", httpresp.SuccessOptions{Data: respdto.PasswordHistoryROToDTO(&result)})
+	return fiberx.OK(c, "Password history retrieved successfully", httpx.SuccessOptions{Data: respdto.PasswordHistoryROToDTO(&result)})
 }
+
+// fiber:context-methods migrated

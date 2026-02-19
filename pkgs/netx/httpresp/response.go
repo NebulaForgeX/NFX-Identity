@@ -1,8 +1,8 @@
 package httpresp
 
 import (
-	"github.com/gofiber/fiber/v2"
-	fiberutils "github.com/gofiber/fiber/v2/utils"
+	"github.com/gofiber/fiber/v3"
+	fiberutils "github.com/gofiber/utils/v2"
 	"github.com/google/uuid"
 )
 
@@ -17,7 +17,7 @@ type HTTPResp struct {
 }
 
 // Success creates a successful response
-func Success(c *fiber.Ctx, httpStatus int, message string, opts ...SuccessOptions) error {
+func Success(c fiber.Ctx, httpStatus int, message string, opts ...SuccessOptions) error {
 	var opt SuccessOptions
 	if len(opts) > 0 {
 		opt = opts[0]
@@ -27,7 +27,7 @@ func Success(c *fiber.Ctx, httpStatus int, message string, opts ...SuccessOption
 }
 
 // Error creates an error response
-func Error(c *fiber.Ctx, httpStatus int, message string, opts ...ErrorOptions) error {
+func Error(c fiber.Ctx, httpStatus int, message string, opts ...ErrorOptions) error {
 	var opt ErrorOptions
 	if len(opts) > 0 {
 		opt = opts[0]
@@ -37,7 +37,7 @@ func Error(c *fiber.Ctx, httpStatus int, message string, opts ...ErrorOptions) e
 }
 
 // CustomStatus creates a response with custom status string
-func CustomStatus(c *fiber.Ctx, httpStatus int, status string, message string, opts ...SuccessOptions) error {
+func CustomStatus(c fiber.Ctx, httpStatus int, status string, message string, opts ...SuccessOptions) error {
 	var opt SuccessOptions
 	if len(opts) > 0 {
 		opt = opts[0]
@@ -47,7 +47,7 @@ func CustomStatus(c *fiber.Ctx, httpStatus int, status string, message string, o
 }
 
 // jsonResponse creates a standardized JSON response
-func jsonResponse(c *fiber.Ctx, httpStatus int, statusStr string, message string, data any, meta map[string]any, addTraceID bool) error {
+func jsonResponse(c fiber.Ctx, httpStatus int, statusStr string, message string, data any, meta map[string]any, addTraceID bool) error {
 	if message == "" {
 		message = fiberutils.StatusMessage(httpStatus)
 	}

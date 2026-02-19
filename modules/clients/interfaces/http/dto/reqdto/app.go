@@ -20,7 +20,7 @@ type AppCreateRequestDTO struct {
 }
 
 type AppUpdateRequestDTO struct {
-	ID          uuid.UUID              `params:"id" validate:"required,uuid"`
+	ID          uuid.UUID              `uri:"id" validate:"required,uuid"`
 	Name        string                 `json:"name" validate:"required"`
 	Description *string                `json:"description,omitempty"`
 	Type        string                 `json:"type" validate:"required"`
@@ -30,11 +30,11 @@ type AppUpdateRequestDTO struct {
 }
 
 type AppByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 type AppByAppIDRequestDTO struct {
-	AppID string `params:"app_id" validate:"required"`
+	AppID string `uri:"app_id" validate:"required"`
 }
 
 func (r *AppCreateRequestDTO) ToCreateCmd() appAppCommands.CreateAppCmd {

@@ -5,9 +5,11 @@ import (
 	sessionAppCommands "nfxid/modules/auth/application/sessions/commands"
 	"nfxid/modules/auth/interfaces/http/dto/reqdto"
 	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type SessionHandler struct {
@@ -21,71 +23,73 @@ func NewSessionHandler(appSvc *sessionApp.Service) *SessionHandler {
 }
 
 // Create 创建会话
-func (h *SessionHandler) Create(c *fiber.Ctx) error {
+func (h *SessionHandler) Create(c fiber.Ctx) error {
 	var req reqdto.SessionCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	sessionID, err := h.appSvc.CreateSession(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create session: "+err.Error())
+		return err
 	}
 
 	// Get the created session
 	sessionView, err := h.appSvc.GetSession(c.Context(), sessionID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created session: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Session created successfully", httpresp.SuccessOptions{Data: respdto.SessionROToDTO(&sessionView)})
+	return fiberx.Created(c, "Session created successfully", httpx.SuccessOptions{Data: respdto.SessionROToDTO(&sessionView)})
 }
 
 // GetByID 根据 ID 获取会话
-func (h *SessionHandler) GetByID(c *fiber.Ctx) error {
+func (h *SessionHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.SessionByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetSession(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Session not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Session retrieved successfully", httpresp.SuccessOptions{Data: respdto.SessionROToDTO(&result)})
+	return fiberx.OK(c, "Session retrieved successfully", httpx.SuccessOptions{Data: respdto.SessionROToDTO(&result)})
 }
 
 // Revoke 撤销会话
-func (h *SessionHandler) Revoke(c *fiber.Ctx) error {
+func (h *SessionHandler) Revoke(c fiber.Ctx) error {
 	var req reqdto.SessionRevokeRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToRevokeCmd()
 	if err := h.appSvc.RevokeSession(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to revoke session: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Session revoked successfully")
+	return fiberx.OK(c, "Session revoked successfully")
 }
 
 // Delete 删除会话
-func (h *SessionHandler) Delete(c *fiber.Ctx) error {
+func (h *SessionHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.SessionByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := sessionAppCommands.DeleteSessionCmd{SessionID: req.ID}
 	if err := h.appSvc.DeleteSession(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete session: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Session deleted successfully")
+	return fiberx.OK(c, "Session deleted successfully")
 }
+
+// fiber:context-methods migrated

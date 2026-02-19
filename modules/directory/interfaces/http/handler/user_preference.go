@@ -5,9 +5,11 @@ import (
 	userPreferenceAppCommands "nfxid/modules/directory/application/user_preferences/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserPreferenceHandler struct {
@@ -18,68 +20,70 @@ func NewUserPreferenceHandler(appSvc *userPreferenceApp.Service) *UserPreference
 	return &UserPreferenceHandler{appSvc: appSvc}
 }
 
-func (h *UserPreferenceHandler) Create(c *fiber.Ctx) error {
+func (h *UserPreferenceHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserPreferenceCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userPreferenceID, err := h.appSvc.CreateUserPreference(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user preference: "+err.Error())
+		return err
 	}
 
 	// Get the created user preference
 	userPreferenceView, err := h.appSvc.GetUserPreference(c.Context(), userPreferenceID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user preference: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User preference created successfully", httpresp.SuccessOptions{Data: respdto.UserPreferenceROToDTO(&userPreferenceView)})
+	return fiberx.Created(c, "User preference created successfully", httpx.SuccessOptions{Data: respdto.UserPreferenceROToDTO(&userPreferenceView)})
 }
 
-func (h *UserPreferenceHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserPreferenceHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserPreference(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User preference not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User preference retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserPreferenceROToDTO(&result)})
+	return fiberx.OK(c, "User preference retrieved successfully", httpx.SuccessOptions{Data: respdto.UserPreferenceROToDTO(&result)})
 }
 
-func (h *UserPreferenceHandler) Update(c *fiber.Ctx) error {
+func (h *UserPreferenceHandler) Update(c fiber.Ctx) error {
 	var req reqdto.UserPreferenceUpdateRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateCmd()
 	if err := h.appSvc.UpdateUserPreference(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user preference: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User preference updated successfully")
+	return fiberx.OK(c, "User preference updated successfully")
 }
 
-func (h *UserPreferenceHandler) Delete(c *fiber.Ctx) error {
+func (h *UserPreferenceHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userPreferenceAppCommands.DeleteUserPreferenceCmd{UserPreferenceID: req.ID}
 	if err := h.appSvc.DeleteUserPreference(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user preference: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User preference deleted successfully")
+	return fiberx.OK(c, "User preference deleted successfully")
 }
+
+// fiber:context-methods migrated

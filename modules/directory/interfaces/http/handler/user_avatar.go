@@ -5,9 +5,11 @@ import (
 	userAvatarAppCommands "nfxid/modules/directory/application/user_avatars/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserAvatarHandler struct {
@@ -18,75 +20,77 @@ func NewUserAvatarHandler(appSvc *userAvatarApp.Service) *UserAvatarHandler {
 	return &UserAvatarHandler{appSvc: appSvc}
 }
 
-func (h *UserAvatarHandler) CreateOrUpdate(c *fiber.Ctx) error {
+func (h *UserAvatarHandler) CreateOrUpdate(c fiber.Ctx) error {
 	var req reqdto.UserAvatarCreateOrUpdateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateOrUpdateCmd()
 	if err := h.appSvc.CreateOrUpdateUserAvatar(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create or update user avatar: "+err.Error())
+		return err
 	}
 
 	// Get the created/updated user avatar
 	userAvatarView, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.UserID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get user avatar: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User avatar created or updated successfully", httpresp.SuccessOptions{Data: respdto.UserAvatarROToDTO(&userAvatarView)})
+	return fiberx.OK(c, "User avatar created or updated successfully", httpx.SuccessOptions{Data: respdto.UserAvatarROToDTO(&userAvatarView)})
 }
 
-func (h *UserAvatarHandler) GetByUserID(c *fiber.Ctx) error {
+func (h *UserAvatarHandler) GetByUserID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User avatar not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User avatar retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserAvatarROToDTO(&result)})
+	return fiberx.OK(c, "User avatar retrieved successfully", httpx.SuccessOptions{Data: respdto.UserAvatarROToDTO(&result)})
 }
 
-func (h *UserAvatarHandler) Update(c *fiber.Ctx) error {
+func (h *UserAvatarHandler) Update(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var updateReq reqdto.UserAvatarUpdateImageIDRequestDTO
-	if err := c.BodyParser(&updateReq); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&updateReq); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := updateReq.ToUpdateImageIDCmd(req.ID)
 	if err := h.appSvc.UpdateUserAvatarImageID(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user avatar: "+err.Error())
+		return err
 	}
 
 	// Get the updated user avatar
 	userAvatarView, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get updated user avatar: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User avatar updated successfully", httpresp.SuccessOptions{Data: respdto.UserAvatarROToDTO(&userAvatarView)})
+	return fiberx.OK(c, "User avatar updated successfully", httpx.SuccessOptions{Data: respdto.UserAvatarROToDTO(&userAvatarView)})
 }
 
-func (h *UserAvatarHandler) Delete(c *fiber.Ctx) error {
+func (h *UserAvatarHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userAvatarAppCommands.DeleteUserAvatarCmd{UserID: req.ID}
 	if err := h.appSvc.DeleteUserAvatar(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user avatar: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User avatar deleted successfully")
+	return fiberx.OK(c, "User avatar deleted successfully")
 }
+
+// fiber:context-methods migrated

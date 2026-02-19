@@ -1,10 +1,10 @@
 package http
 
 import (
+	"nfxid/pkgs/fiberx/middleware"
 	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/usertoken"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type Router struct {
@@ -25,7 +25,7 @@ func (r *Router) RegisterRoutes() {
 	access := r.app.Group("/access")
 
 	// 需要认证的路由（UserSecurityPage 展示 + 权限管理 UI：角色/权限/角色-权限 CRUD）
-	auth := access.Group("/auth", usertoken.AccessTokenMiddleware(r.tokenVerifier))
+	auth := access.Group("/auth", middleware.TokenAuth(r.tokenVerifier))
 	{
 		auth.Get("/grants", r.handlers.Grant.GetBySubject)
 		auth.Get("/grants/:id", r.handlers.Grant.GetByID)

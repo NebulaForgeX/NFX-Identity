@@ -5,9 +5,11 @@ import (
 	userProfileAppCommands "nfxid/modules/directory/application/user_profiles/commands"
 	"nfxid/modules/directory/interfaces/http/dto/reqdto"
 	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserProfileHandler struct {
@@ -18,68 +20,70 @@ func NewUserProfileHandler(appSvc *userProfileApp.Service) *UserProfileHandler {
 	return &UserProfileHandler{appSvc: appSvc}
 }
 
-func (h *UserProfileHandler) Create(c *fiber.Ctx) error {
+func (h *UserProfileHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserProfileCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userProfileID, err := h.appSvc.CreateUserProfile(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user profile: "+err.Error())
+		return err
 	}
 
 	// Get the created user profile
 	userProfileView, err := h.appSvc.GetUserProfile(c.Context(), userProfileID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user profile: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User profile created successfully", httpresp.SuccessOptions{Data: respdto.UserProfileROToDTO(&userProfileView)})
+	return fiberx.Created(c, "User profile created successfully", httpx.SuccessOptions{Data: respdto.UserProfileROToDTO(&userProfileView)})
 }
 
-func (h *UserProfileHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserProfileHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserProfile(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User profile not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User profile retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserProfileROToDTO(&result)})
+	return fiberx.OK(c, "User profile retrieved successfully", httpx.SuccessOptions{Data: respdto.UserProfileROToDTO(&result)})
 }
 
-func (h *UserProfileHandler) Update(c *fiber.Ctx) error {
+func (h *UserProfileHandler) Update(c fiber.Ctx) error {
 	var req reqdto.UserProfileUpdateRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateCmd()
 	if err := h.appSvc.UpdateUserProfile(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user profile: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User profile updated successfully")
+	return fiberx.OK(c, "User profile updated successfully")
 }
 
-func (h *UserProfileHandler) Delete(c *fiber.Ctx) error {
+func (h *UserProfileHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.ByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userProfileAppCommands.DeleteUserProfileCmd{UserProfileID: req.ID}
 	if err := h.appSvc.DeleteUserProfile(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user profile: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User profile deleted successfully")
+	return fiberx.OK(c, "User profile deleted successfully")
 }
+
+// fiber:context-methods migrated

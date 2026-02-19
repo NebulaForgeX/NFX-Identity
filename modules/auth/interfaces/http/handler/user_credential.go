@@ -5,9 +5,11 @@ import (
 	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
 	"nfxid/modules/auth/interfaces/http/dto/reqdto"
 	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type UserCredentialHandler struct {
@@ -21,71 +23,73 @@ func NewUserCredentialHandler(appSvc *userCredentialApp.Service) *UserCredential
 }
 
 // Create 创建用户凭证
-func (h *UserCredentialHandler) Create(c *fiber.Ctx) error {
+func (h *UserCredentialHandler) Create(c fiber.Ctx) error {
 	var req reqdto.UserCredentialCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	userCredentialID, err := h.appSvc.CreateUserCredential(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create user credential: "+err.Error())
+		return err
 	}
 
 	// Get the created user credential
 	userCredentialView, err := h.appSvc.GetUserCredential(c.Context(), userCredentialID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created user credential: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "User credential created successfully", httpresp.SuccessOptions{Data: respdto.UserCredentialROToDTO(&userCredentialView)})
+	return fiberx.Created(c, "User credential created successfully", httpx.SuccessOptions{Data: respdto.UserCredentialROToDTO(&userCredentialView)})
 }
 
 // GetByID 根据 ID 获取用户凭证
-func (h *UserCredentialHandler) GetByID(c *fiber.Ctx) error {
+func (h *UserCredentialHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.UserCredentialByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetUserCredential(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "User credential not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User credential retrieved successfully", httpresp.SuccessOptions{Data: respdto.UserCredentialROToDTO(&result)})
+	return fiberx.OK(c, "User credential retrieved successfully", httpx.SuccessOptions{Data: respdto.UserCredentialROToDTO(&result)})
 }
 
 // Update 更新用户凭证
-func (h *UserCredentialHandler) Update(c *fiber.Ctx) error {
+func (h *UserCredentialHandler) Update(c fiber.Ctx) error {
 	var req reqdto.UserCredentialUpdateRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateCmd()
 	if err := h.appSvc.UpdateUserCredential(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update user credential: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User credential updated successfully")
+	return fiberx.OK(c, "User credential updated successfully")
 }
 
 // Delete 删除用户凭证
-func (h *UserCredentialHandler) Delete(c *fiber.Ctx) error {
+func (h *UserCredentialHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.UserCredentialByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userCredentialAppCommands.DeleteUserCredentialCmd{UserCredentialID: req.ID}
 	if err := h.appSvc.DeleteUserCredential(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete user credential: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "User credential deleted successfully")
+	return fiberx.OK(c, "User credential deleted successfully")
 }
+
+// fiber:context-methods migrated

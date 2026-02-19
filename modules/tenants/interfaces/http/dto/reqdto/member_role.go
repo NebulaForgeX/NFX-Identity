@@ -7,16 +7,16 @@ import (
 )
 
 type MemberRoleCreateRequestDTO struct {
-	TenantID   uuid.UUID `json:"tenant_id" validate:"required,uuid"`
-	MemberID   uuid.UUID `json:"member_id" validate:"required,uuid"`
-	RoleID     uuid.UUID `json:"role_id" validate:"required,uuid"`
+	TenantID   uuid.UUID  `json:"tenant_id" validate:"required,uuid"`
+	MemberID   uuid.UUID  `json:"member_id" validate:"required,uuid"`
+	RoleID     uuid.UUID  `json:"role_id" validate:"required,uuid"`
 	AssignedBy *uuid.UUID `json:"assigned_by,omitempty"`
 	ExpiresAt  *string    `json:"expires_at,omitempty"`
 	Scope      *string    `json:"scope,omitempty"`
 }
 
 type MemberRoleRevokeRequestDTO struct {
-	ID           uuid.UUID `params:"id" validate:"required,uuid"`
+	ID           uuid.UUID `uri:"id" validate:"required,uuid"`
 	RevokedBy    uuid.UUID `json:"revoked_by" validate:"required,uuid"`
 	RevokeReason string    `json:"revoke_reason"`
 }

@@ -8,22 +8,22 @@ import (
 )
 
 type MemberCreateRequestDTO struct {
-	TenantID   uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
-	UserID     uuid.UUID              `json:"user_id" validate:"required,uuid"`
-	Status     string                 `json:"status,omitempty"`
-	Source     string                 `json:"source,omitempty"`
-	CreatedBy  *uuid.UUID             `json:"created_by,omitempty"`
+	TenantID    uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
+	UserID      uuid.UUID              `json:"user_id" validate:"required,uuid"`
+	Status      string                 `json:"status,omitempty"`
+	Source      string                 `json:"source,omitempty"`
+	CreatedBy   *uuid.UUID             `json:"created_by,omitempty"`
 	ExternalRef *string                `json:"external_ref,omitempty"`
-	Metadata   map[string]interface{} `json:"metadata,omitempty"`
+	Metadata    map[string]interface{} `json:"metadata,omitempty"`
 }
 
 type MemberUpdateStatusRequestDTO struct {
-	ID     uuid.UUID `params:"id" validate:"required,uuid"`
+	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
 	Status string    `json:"status" validate:"required"`
 }
 
 type MemberByIDRequestDTO struct {
-	ID uuid.UUID `params:"id" validate:"required,uuid"`
+	ID uuid.UUID `uri:"id" validate:"required,uuid"`
 }
 
 func (r *MemberCreateRequestDTO) ToCreateCmd() memberAppCommands.CreateMemberCmd {

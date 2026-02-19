@@ -5,9 +5,11 @@ import (
 	systemStateApp "nfxid/modules/system/application/system_state"
 	systemStateCommands "nfxid/modules/system/application/system_state/commands"
 	"nfxid/modules/system/interfaces/http/dto/reqdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type SystemStateHandler struct {
@@ -23,73 +25,75 @@ func NewSystemStateHandler(appSvc *systemStateApp.Service, bootstrapSvc *bootstr
 }
 
 // GetLatest 获取最新的系统状态
-func (h *SystemStateHandler) GetLatest(c *fiber.Ctx) error {
+func (h *SystemStateHandler) GetLatest(c fiber.Ctx) error {
 	result, err := h.appSvc.GetLatestSystemState(c.Context())
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get system state: "+err.Error())
+		return err
 	}
-	return httpresp.Success(c, fiber.StatusOK, "System state retrieved successfully", httpresp.SuccessOptions{Data: result})
+	return fiberx.OK(c, "System state retrieved successfully", httpx.SuccessOptions{Data: result})
 }
 
 // GetByID 根据 ID 获取系统状态
-func (h *SystemStateHandler) GetByID(c *fiber.Ctx) error {
+func (h *SystemStateHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.SystemStateByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetSystemState(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "System state not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "System state retrieved successfully", httpresp.SuccessOptions{Data: result})
+	return fiberx.OK(c, "System state retrieved successfully", httpx.SuccessOptions{Data: result})
 }
 
 // Initialize 初始化系统
 // 使用 BootstrapInit 服务进行完整的系统初始化
-func (h *SystemStateHandler) Initialize(c *fiber.Ctx) error {
+func (h *SystemStateHandler) Initialize(c fiber.Ctx) error {
 	var req reqdto.SystemStateInitializeRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	// 使用 DTO 的转换方法
 	bootstrapCmd := req.ToBootstrapInitCmd()
 
 	if err := h.bootstrapSvc.BootstrapInit(c.Context(), bootstrapCmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to initialize system: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "System initialized successfully")
+	return fiberx.OK(c, "System initialized successfully")
 }
 
 // Reset 重置系统
-func (h *SystemStateHandler) Reset(c *fiber.Ctx) error {
+func (h *SystemStateHandler) Reset(c fiber.Ctx) error {
 	var req reqdto.SystemStateResetRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToResetSystemCmd()
 	if err := h.appSvc.ResetSystem(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to reset system: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "System reset successfully")
+	return fiberx.OK(c, "System reset successfully")
 }
 
 // Delete 删除系统状态
-func (h *SystemStateHandler) Delete(c *fiber.Ctx) error {
+func (h *SystemStateHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.SystemStateByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := systemStateCommands.DeleteSystemStateCmd{SystemStateID: req.ID}
 	if err := h.appSvc.DeleteSystemState(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete system state: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "System state deleted successfully")
+	return fiberx.OK(c, "System state deleted successfully")
 }
+
+// fiber:context-methods migrated

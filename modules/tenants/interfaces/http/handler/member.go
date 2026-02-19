@@ -5,9 +5,11 @@ import (
 	memberAppCommands "nfxid/modules/tenants/application/members/commands"
 	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
 	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/netx/httpresp"
+	"nfxid/pkgs/errx"
+	"nfxid/pkgs/fiberx"
+	"nfxid/pkgs/httpx"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type MemberHandler struct {
@@ -18,68 +20,70 @@ func NewMemberHandler(appSvc *memberApp.Service) *MemberHandler {
 	return &MemberHandler{appSvc: appSvc}
 }
 
-func (h *MemberHandler) Create(c *fiber.Ctx) error {
+func (h *MemberHandler) Create(c fiber.Ctx) error {
 	var req reqdto.MemberCreateRequestDTO
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToCreateCmd()
 	memberID, err := h.appSvc.CreateMember(c.Context(), cmd)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to create member: "+err.Error())
+		return err
 	}
 
 	// Get the created member
 	memberView, err := h.appSvc.GetMember(c.Context(), memberID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to get created member: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusCreated, "Member created successfully", httpresp.SuccessOptions{Data: respdto.MemberROToDTO(&memberView)})
+	return fiberx.Created(c, "Member created successfully", httpx.SuccessOptions{Data: respdto.MemberROToDTO(&memberView)})
 }
 
-func (h *MemberHandler) GetByID(c *fiber.Ctx) error {
+func (h *MemberHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.MemberByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetMember(c.Context(), req.ID)
 	if err != nil {
-		return httpresp.Error(c, fiber.StatusNotFound, "Member not found: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member retrieved successfully", httpresp.SuccessOptions{Data: respdto.MemberROToDTO(&result)})
+	return fiberx.OK(c, "Member retrieved successfully", httpx.SuccessOptions{Data: respdto.MemberROToDTO(&result)})
 }
 
-func (h *MemberHandler) Update(c *fiber.Ctx) error {
+func (h *MemberHandler) Update(c fiber.Ctx) error {
 	var req reqdto.MemberUpdateStatusRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
-	if err := c.BodyParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request body: "+err.Error())
+	if err := c.Bind().Body(&req); err != nil {
+		return errx.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToUpdateStatusCmd()
 	if err := h.appSvc.UpdateMemberStatus(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to update member status: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member status updated successfully")
+	return fiberx.OK(c, "Member status updated successfully")
 }
 
-func (h *MemberHandler) Delete(c *fiber.Ctx) error {
+func (h *MemberHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.MemberByIDRequestDTO
-	if err := c.ParamsParser(&req); err != nil {
-		return httpresp.Error(c, fiber.StatusBadRequest, "Invalid request params: "+err.Error())
+	if err := c.Bind().URI(&req); err != nil {
+		return errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := memberAppCommands.DeleteMemberCmd{MemberID: req.ID}
 	if err := h.appSvc.DeleteMember(c.Context(), cmd); err != nil {
-		return httpresp.Error(c, fiber.StatusInternalServerError, "Failed to delete member: "+err.Error())
+		return err
 	}
 
-	return httpresp.Success(c, fiber.StatusOK, "Member deleted successfully")
+	return fiberx.OK(c, "Member deleted successfully")
 }
+
+// fiber:context-methods migrated
