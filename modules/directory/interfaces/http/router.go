@@ -27,74 +27,74 @@ func (r *Router) RegisterRoutes() {
 	// 需要认证的路由（需要token）
 	auth := directory.Group("/auth", middleware.TokenAuth(r.tokenVerifier))
 	{
-		// 用户相关
+		// 用户相关（Rex 规范：:user_id）
 		auth.Post("/users", r.handlers.User.Create)
 		auth.Get("/users/username/:username", r.handlers.User.GetByUsername)
-		auth.Get("/users/:id/user-emails", r.handlers.UserEmail.GetByUserID)           // 根据用户ID获取用户邮箱列表（必须在 /users/:id 之前）
-		auth.Get("/users/:id/user-phones", r.handlers.UserPhone.GetByUserID)           // 根据用户ID获取用户电话列表（必须在 /users/:id 之前）
-		auth.Get("/users/:id/user-educations", r.handlers.UserEducation.GetByUserID)   // 根据用户ID获取用户教育列表（必须在 /users/:id 之前）
-		auth.Get("/users/:id/user-occupations", r.handlers.UserOccupation.GetByUserID) // 根据用户ID获取用户职业列表（必须在 /users/:id 之前）
-		auth.Get("/users/:id", r.handlers.User.GetByID)
-		auth.Patch("/users/:id/status", r.handlers.User.UpdateStatus)
-		auth.Patch("/users/:id/username", r.handlers.User.UpdateUsername)
-		auth.Patch("/users/:id/verify", r.handlers.User.Verify)
-		auth.Delete("/users/:id", r.handlers.User.Delete)
+		auth.Get("/users/:user_id/user-emails", r.handlers.UserEmail.GetByUserID)
+		auth.Get("/users/:user_id/user-phones", r.handlers.UserPhone.GetByUserID)
+		auth.Get("/users/:user_id/user-educations", r.handlers.UserEducation.GetByUserID)
+		auth.Get("/users/:user_id/user-occupations", r.handlers.UserOccupation.GetByUserID)
+		auth.Get("/users/:user_id", r.handlers.User.GetByID)
+		auth.Patch("/users/:user_id/status", r.handlers.User.UpdateStatus)
+		auth.Patch("/users/:user_id/username", r.handlers.User.UpdateUsername)
+		auth.Patch("/users/:user_id/verify", r.handlers.User.Verify)
+		auth.Delete("/users/:user_id", r.handlers.User.Delete)
 
 		// 用户教育相关
 		auth.Post("/user-educations", r.handlers.UserEducation.Create)
-		auth.Get("/user-educations/:id", r.handlers.UserEducation.GetByID)
-		auth.Put("/user-educations/:id", r.handlers.UserEducation.Update)
-		auth.Delete("/user-educations/:id", r.handlers.UserEducation.Delete)
+		auth.Get("/user-educations/:user_education_id", r.handlers.UserEducation.GetByID)
+		auth.Put("/user-educations/:user_education_id", r.handlers.UserEducation.Update)
+		auth.Delete("/user-educations/:user_education_id", r.handlers.UserEducation.Delete)
 
 		// 用户邮箱相关
 		auth.Post("/user-emails", r.handlers.UserEmail.Create)
-		auth.Get("/user-emails/:id", r.handlers.UserEmail.GetByID)
-		auth.Put("/user-emails/:id", r.handlers.UserEmail.Update)
-		auth.Patch("/user-emails/:id/set-primary", r.handlers.UserEmail.SetPrimary)
-		auth.Patch("/user-emails/:id/verify", r.handlers.UserEmail.Verify)
-		auth.Delete("/user-emails/:id", r.handlers.UserEmail.Delete)
+		auth.Get("/user-emails/:user_email_id", r.handlers.UserEmail.GetByID)
+		auth.Put("/user-emails/:user_email_id", r.handlers.UserEmail.Update)
+		auth.Patch("/user-emails/:user_email_id/set-primary", r.handlers.UserEmail.SetPrimary)
+		auth.Patch("/user-emails/:user_email_id/verify", r.handlers.UserEmail.Verify)
+		auth.Delete("/user-emails/:user_email_id", r.handlers.UserEmail.Delete)
 
 		// 用户职业相关
 		auth.Post("/user-occupations", r.handlers.UserOccupation.Create)
-		auth.Get("/user-occupations/:id", r.handlers.UserOccupation.GetByID)
-		auth.Put("/user-occupations/:id", r.handlers.UserOccupation.Update)
-		auth.Delete("/user-occupations/:id", r.handlers.UserOccupation.Delete)
+		auth.Get("/user-occupations/:user_occupation_id", r.handlers.UserOccupation.GetByID)
+		auth.Put("/user-occupations/:user_occupation_id", r.handlers.UserOccupation.Update)
+		auth.Delete("/user-occupations/:user_occupation_id", r.handlers.UserOccupation.Delete)
 
 		// 用户电话相关
 		auth.Post("/user-phones", r.handlers.UserPhone.Create)
-		auth.Get("/user-phones/:id", r.handlers.UserPhone.GetByID)
-		auth.Put("/user-phones/:id", r.handlers.UserPhone.Update)
-		auth.Patch("/user-phones/:id/set-primary", r.handlers.UserPhone.SetPrimary)
-		auth.Patch("/user-phones/:id/verify", r.handlers.UserPhone.Verify)
-		auth.Delete("/user-phones/:id", r.handlers.UserPhone.Delete)
+		auth.Get("/user-phones/:user_phone_id", r.handlers.UserPhone.GetByID)
+		auth.Put("/user-phones/:user_phone_id", r.handlers.UserPhone.Update)
+		auth.Patch("/user-phones/:user_phone_id/set-primary", r.handlers.UserPhone.SetPrimary)
+		auth.Patch("/user-phones/:user_phone_id/verify", r.handlers.UserPhone.Verify)
+		auth.Delete("/user-phones/:user_phone_id", r.handlers.UserPhone.Delete)
 
 		// 用户偏好相关
 		auth.Post("/user-preferences", r.handlers.UserPreference.Create)
-		auth.Get("/user-preferences/:id", r.handlers.UserPreference.GetByID)
-		auth.Put("/user-preferences/:id", r.handlers.UserPreference.Update)
-		auth.Delete("/user-preferences/:id", r.handlers.UserPreference.Delete)
+		auth.Get("/user-preferences/:user_preference_id", r.handlers.UserPreference.GetByID)
+		auth.Put("/user-preferences/:user_preference_id", r.handlers.UserPreference.Update)
+		auth.Delete("/user-preferences/:user_preference_id", r.handlers.UserPreference.Delete)
 
 		// 用户资料相关
 		auth.Post("/user-profiles", r.handlers.UserProfile.Create)
-		auth.Get("/user-profiles/:id", r.handlers.UserProfile.GetByID)
-		auth.Put("/user-profiles/:id", r.handlers.UserProfile.Update)
-		auth.Delete("/user-profiles/:id", r.handlers.UserProfile.Delete)
+		auth.Get("/user-profiles/:user_profile_id", r.handlers.UserProfile.GetByID)
+		auth.Put("/user-profiles/:user_profile_id", r.handlers.UserProfile.Update)
+		auth.Delete("/user-profiles/:user_profile_id", r.handlers.UserProfile.Delete)
 
-		// 用户头像相关
+		// 用户头像相关（1:1 与 user，均用 user_id）
 		auth.Post("/user-avatars", r.handlers.UserAvatar.CreateOrUpdate)
-		auth.Get("/user-avatars/:id", r.handlers.UserAvatar.GetByUserID)
-		auth.Put("/user-avatars/:id", r.handlers.UserAvatar.Update)
-		auth.Delete("/user-avatars/:id", r.handlers.UserAvatar.Delete)
+		auth.Get("/user-avatars/user/:user_id", r.handlers.UserAvatar.GetByUserID)
+		auth.Put("/user-avatars/:user_id", r.handlers.UserAvatar.Update)
+		auth.Delete("/user-avatars/:user_id", r.handlers.UserAvatar.Delete)
 
 		// 用户图片相关
 		auth.Post("/user-images", r.handlers.UserImage.Create)
-		auth.Get("/user-images/:id", r.handlers.UserImage.GetByID)
-		auth.Get("/users/:id/user-images", r.handlers.UserImage.GetByUserID)
-		auth.Get("/users/:id/user-images/current", r.handlers.UserImage.GetCurrent)
-		auth.Put("/user-images/:id", r.handlers.UserImage.Update)
-		auth.Patch("/user-images/:id/set-primary", r.handlers.UserImage.SetPrimary)
-		auth.Patch("/user-images/:id/display-order", r.handlers.UserImage.UpdateDisplayOrder)
-		auth.Patch("/users/:id/user-images/display-order", r.handlers.UserImage.UpdateDisplayOrderBatch)
-		auth.Delete("/user-images/:id", r.handlers.UserImage.Delete)
+		auth.Get("/user-images/:user_image_id", r.handlers.UserImage.GetByID)
+		auth.Get("/users/:user_id/user-images", r.handlers.UserImage.GetByUserID)
+		auth.Get("/users/:user_id/user-images/current", r.handlers.UserImage.GetCurrent)
+		auth.Put("/user-images/:user_image_id", r.handlers.UserImage.Update)
+		auth.Patch("/user-images/:user_image_id/set-primary", r.handlers.UserImage.SetPrimary)
+		auth.Patch("/user-images/:user_image_id/display-order", r.handlers.UserImage.UpdateDisplayOrder)
+		auth.Patch("/users/:user_id/user-images/display-order", r.handlers.UserImage.UpdateDisplayOrderBatch)
+		auth.Delete("/user-images/:user_image_id", r.handlers.UserImage.Delete)
 	}
 }

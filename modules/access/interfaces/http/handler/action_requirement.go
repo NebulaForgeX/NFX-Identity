@@ -26,7 +26,7 @@ func (h *ActionRequirementHandler) GetByID(c fiber.Ctx) error {
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
-	result, err := h.appSvc.GetActionRequirement(c.Context(), req.ID)
+	result, err := h.appSvc.GetActionRequirement(c.Context(), req.ActionRequirementID)
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func (h *ActionRequirementHandler) Delete(c fiber.Ctx) error {
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
-	err := h.appSvc.DeleteActionRequirement(c.Context(), arAppCommands.DeleteActionRequirementCmd{ActionRequirementID: req.ID})
+	err := h.appSvc.DeleteActionRequirement(c.Context(), arAppCommands.DeleteActionRequirementCmd{ActionRequirementID: req.ActionRequirementID})
 	if err != nil {
 		return err
 	}

@@ -14,12 +14,16 @@ type UserEmailCreateRequestDTO struct {
 	VerificationToken *string   `json:"verification_token,omitempty"`
 }
 
+type UserEmailByIDRequestDTO struct {
+	UserEmailID uuid.UUID `uri:"user_email_id" validate:"required,uuid"`
+}
+
 type UserEmailSetPrimaryRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserEmailID uuid.UUID `uri:"user_email_id" validate:"required,uuid"`
 }
 
 type UserEmailVerifyRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserEmailID uuid.UUID `uri:"user_email_id" validate:"required,uuid"`
 }
 
 func (r *UserEmailCreateRequestDTO) ToCreateCmd() userEmailAppCommands.CreateUserEmailCmd {
@@ -34,12 +38,12 @@ func (r *UserEmailCreateRequestDTO) ToCreateCmd() userEmailAppCommands.CreateUse
 
 func (r *UserEmailSetPrimaryRequestDTO) ToSetPrimaryCmd() userEmailAppCommands.SetPrimaryEmailCmd {
 	return userEmailAppCommands.SetPrimaryEmailCmd{
-		UserEmailID: r.ID,
+		UserEmailID: r.UserEmailID,
 	}
 }
 
 func (r *UserEmailVerifyRequestDTO) ToVerifyCmd() userEmailAppCommands.VerifyEmailCmd {
 	return userEmailAppCommands.VerifyEmailCmd{
-		UserEmailID: r.ID,
+		UserEmailID: r.UserEmailID,
 	}
 }

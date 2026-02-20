@@ -17,8 +17,12 @@ type UserPreferenceCreateRequestDTO struct {
 	Other         map[string]interface{} `json:"other,omitempty"`
 }
 
+type UserPreferenceByIDRequestDTO struct {
+	UserPreferenceID uuid.UUID `uri:"user_preference_id" validate:"required,uuid"`
+}
+
 type UserPreferenceUpdateRequestDTO struct {
-	ID            uuid.UUID              `uri:"id" validate:"required,uuid"`
+	UserPreferenceID uuid.UUID              `uri:"user_preference_id" validate:"required,uuid"`
 	Theme         *string                `json:"theme,omitempty"`
 	Language      *string                `json:"language,omitempty"`
 	Timezone      *string                `json:"timezone,omitempty"`
@@ -43,7 +47,7 @@ func (r *UserPreferenceCreateRequestDTO) ToCreateCmd() userPreferenceAppCommands
 
 func (r *UserPreferenceUpdateRequestDTO) ToUpdateCmd() userPreferenceAppCommands.UpdateUserPreferenceCmd {
 	return userPreferenceAppCommands.UpdateUserPreferenceCmd{
-		UserPreferenceID: r.ID,
+		UserPreferenceID: r.UserPreferenceID,
 		Theme:            r.Theme,
 		Language:         r.Language,
 		Timezone:         r.Timezone,

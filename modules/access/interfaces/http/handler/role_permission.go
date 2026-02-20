@@ -51,7 +51,7 @@ func (h *RolePermissionHandler) GetByID(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetRolePermission(c.Context(), req.ID)
+	result, err := h.appSvc.GetRolePermission(c.Context(), req.RolePermissionID)
 	if err != nil {
 		return err
 	}
@@ -86,7 +86,7 @@ func (h *RolePermissionHandler) Delete(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := rolePermissionAppCommands.DeleteRolePermissionCmd{RolePermissionID: req.ID}
+	cmd := rolePermissionAppCommands.DeleteRolePermissionCmd{RolePermissionID: req.RolePermissionID}
 	if err := h.appSvc.DeleteRolePermission(c.Context(), cmd); err != nil {
 		return err
 	}

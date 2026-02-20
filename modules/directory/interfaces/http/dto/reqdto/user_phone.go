@@ -16,16 +16,20 @@ type UserPhoneCreateRequestDTO struct {
 	VerificationExpiresAt *string   `json:"verification_expires_at,omitempty"`
 }
 
+type UserPhoneByIDRequestDTO struct {
+	UserPhoneID uuid.UUID `uri:"user_phone_id" validate:"required,uuid"`
+}
+
 type UserPhoneSetPrimaryRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserPhoneID uuid.UUID `uri:"user_phone_id" validate:"required,uuid"`
 }
 
 type UserPhoneVerifyRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserPhoneID uuid.UUID `uri:"user_phone_id" validate:"required,uuid"`
 }
 
 type UserPhoneUpdateVerificationCodeRequestDTO struct {
-	ID                    uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserPhoneID           uuid.UUID `uri:"user_phone_id" validate:"required,uuid"`
 	VerificationCode      string    `json:"verification_code" validate:"required"`
 	VerificationExpiresAt string    `json:"verification_expires_at" validate:"required"`
 }
@@ -44,19 +48,19 @@ func (r *UserPhoneCreateRequestDTO) ToCreateCmd() userPhoneAppCommands.CreateUse
 
 func (r *UserPhoneSetPrimaryRequestDTO) ToSetPrimaryCmd() userPhoneAppCommands.SetPrimaryPhoneCmd {
 	return userPhoneAppCommands.SetPrimaryPhoneCmd{
-		UserPhoneID: r.ID,
+		UserPhoneID: r.UserPhoneID,
 	}
 }
 
 func (r *UserPhoneVerifyRequestDTO) ToVerifyCmd() userPhoneAppCommands.VerifyPhoneCmd {
 	return userPhoneAppCommands.VerifyPhoneCmd{
-		UserPhoneID: r.ID,
+		UserPhoneID: r.UserPhoneID,
 	}
 }
 
 func (r *UserPhoneUpdateVerificationCodeRequestDTO) ToUpdateVerificationCodeCmd() userPhoneAppCommands.UpdateVerificationCodeCmd {
 	return userPhoneAppCommands.UpdateVerificationCodeCmd{
-		UserPhoneID:           r.ID,
+		UserPhoneID:           r.UserPhoneID,
 		VerificationCode:      r.VerificationCode,
 		VerificationExpiresAt: r.VerificationExpiresAt,
 	}

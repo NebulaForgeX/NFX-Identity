@@ -10,8 +10,8 @@ import (
 
 type ActionRequirement struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
-	ActionID     uuid.UUID `gorm:"type:uuid;uniqueIndexNames: []string{action_requirements_action_id_permission_id_key},priority:1;index:idx_action_requirements_action_group,priority:1;index:idx_action_requirements_action_id"`
-	PermissionID uuid.UUID `gorm:"type:uuid;uniqueIndexNames: []string{action_requirements_action_id_permission_id_key},priority:2;index:idx_action_requirements_permission_id"`
+	ActionID     uuid.UUID `gorm:"type:uuid;uniqueIndex:action_requirements_action_id_permission_id_key,priority:1;index:idx_action_requirements_action_group,priority:1;index:idx_action_requirements_action_id"`
+	PermissionID uuid.UUID `gorm:"type:uuid;uniqueIndex:action_requirements_action_id_permission_id_key,priority:2;index:idx_action_requirements_permission_id"`
 	GroupID      int       `gorm:"type:integer;index:idx_action_requirements_action_group,priority:2"`
 	CreatedAt    time.Time `gorm:"autoCreateTime"`
 }

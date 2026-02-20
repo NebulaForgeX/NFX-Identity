@@ -40,7 +40,7 @@ export const CreateRole = async (params: CreateRoleRequest): Promise<Role> => {
 
 // 根据 ID 获取角色
 export const GetRole = async (id: string): Promise<Role> => {
-  const url = URL_PATHS.ACCESS.GET_ROLE.replace(":id", id);
+  const url = URL_PATHS.ACCESS.GET_ROLE.replace(":role_id", id);
   const { data } = await protectedClient.get<DataResponse<Role>>(url);
   return data.data;
 };
@@ -60,14 +60,14 @@ export const GetRoleByKey = async (key: string): Promise<Role | null> => {
 
 // 更新角色
 export const UpdateRole = async (id: string, params: UpdateRoleRequest): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.UPDATE_ROLE.replace(":id", id);
+  const url = URL_PATHS.ACCESS.UPDATE_ROLE.replace(":role_id", id);
   const { data } = await protectedClient.put<BaseResponse>(url, params);
   return data;
 };
 
 // 删除角色
 export const DeleteRole = async (id: string): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.DELETE_ROLE.replace(":id", id);
+  const url = URL_PATHS.ACCESS.DELETE_ROLE.replace(":role_id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };
@@ -82,7 +82,7 @@ export const CreatePermission = async (params: CreatePermissionRequest): Promise
 
 // 根据 ID 获取权限
 export const GetPermission = async (id: string): Promise<Permission> => {
-  const url = URL_PATHS.ACCESS.GET_PERMISSION.replace(":id", id);
+  const url = URL_PATHS.ACCESS.GET_PERMISSION.replace(":permission_id", id);
   const { data } = await protectedClient.get<DataResponse<Permission>>(url);
   return data.data;
 };
@@ -102,14 +102,14 @@ export const GetPermissionByKey = async (key: string): Promise<Permission | null
 
 // 更新权限
 export const UpdatePermission = async (id: string, params: UpdatePermissionRequest): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.UPDATE_PERMISSION.replace(":id", id);
+  const url = URL_PATHS.ACCESS.UPDATE_PERMISSION.replace(":permission_id", id);
   const { data } = await protectedClient.put<BaseResponse>(url, params);
   return data;
 };
 
 // 删除权限
 export const DeletePermission = async (id: string): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.DELETE_PERMISSION.replace(":id", id);
+  const url = URL_PATHS.ACCESS.DELETE_PERMISSION.replace(":permission_id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };
@@ -165,21 +165,21 @@ export const GetGrantsBySubject = async (params: {
 
 // 根据 ID 获取授权
 export const GetGrant = async (id: string): Promise<Grant> => {
-  const url = URL_PATHS.ACCESS.GET_GRANT.replace(":id", id);
+  const url = URL_PATHS.ACCESS.GET_GRANT.replace(":grant_id", id);
   const { data } = await protectedClient.get<DataResponse<Grant>>(url);
   return data.data;
 };
 
 // 更新授权
 export const UpdateGrant = async (id: string, params: UpdateGrantRequest): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.UPDATE_GRANT.replace(":id", id);
+  const url = URL_PATHS.ACCESS.UPDATE_GRANT.replace(":grant_id", id);
   const { data } = await protectedClient.put<BaseResponse>(url, params);
   return data;
 };
 
 // 删除授权
 export const DeleteGrant = async (id: string): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.DELETE_GRANT.replace(":id", id);
+  const url = URL_PATHS.ACCESS.DELETE_GRANT.replace(":grant_id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };
@@ -204,14 +204,14 @@ export const GetRolePermissionsByRole = async (roleId: string): Promise<RolePerm
 
 // 根据 ID 获取角色权限关联
 export const GetRolePermission = async (id: string): Promise<RolePermission> => {
-  const url = URL_PATHS.ACCESS.GET_ROLE_PERMISSION.replace(":id", id);
+  const url = URL_PATHS.ACCESS.GET_ROLE_PERMISSION.replace(":role_permission_id", id);
   const { data } = await protectedClient.get<DataResponse<RolePermission>>(url);
   return data.data;
 };
 
 // 删除角色权限关联
 export const DeleteRolePermission = async (id: string): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.DELETE_ROLE_PERMISSION.replace(":id", id);
+  const url = URL_PATHS.ACCESS.DELETE_ROLE_PERMISSION.replace(":role_permission_id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };
@@ -249,7 +249,7 @@ export const CreateAction = async (params: CreateActionRequest): Promise<Action>
 };
 
 export const GetAction = async (id: string): Promise<Action> => {
-  const url = URL_PATHS.ACCESS.GET_ACTION.replace(":id", id);
+  const url = URL_PATHS.ACCESS.GET_ACTION.replace(":action_id", id);
   const { data } = await protectedClient.get<DataResponse<Action>>(url);
   return data.data;
 };
@@ -291,13 +291,13 @@ export const GetActionRequirementsByPermission = async (
 };
 
 export const GetActionRequirement = async (id: string): Promise<ActionRequirement> => {
-  const url = URL_PATHS.ACCESS.GET_ACTION_REQUIREMENT.replace(":id", id);
+  const url = URL_PATHS.ACCESS.GET_ACTION_REQUIREMENT.replace(":action_requirement_id", id);
   const { data } = await protectedClient.get<DataResponse<ActionRequirement>>(url);
   return data.data;
 };
 
 export const DeleteActionRequirement = async (id: string): Promise<BaseResponse> => {
-  const url = URL_PATHS.ACCESS.DELETE_ACTION_REQUIREMENT.replace(":id", id);
+  const url = URL_PATHS.ACCESS.DELETE_ACTION_REQUIREMENT.replace(":action_requirement_id", id);
   const { data } = await protectedClient.delete<BaseResponse>(url);
   return data;
 };

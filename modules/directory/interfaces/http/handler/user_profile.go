@@ -42,12 +42,12 @@ func (h *UserProfileHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserProfileHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserProfileByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserProfile(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserProfile(c.Context(), req.UserProfileID)
 	if err != nil {
 		return err
 	}
@@ -73,12 +73,12 @@ func (h *UserProfileHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserProfileHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserProfileByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userProfileAppCommands.DeleteUserProfileCmd{UserProfileID: req.ID}
+	cmd := userProfileAppCommands.DeleteUserProfileCmd{UserProfileID: req.UserProfileID}
 	if err := h.appSvc.DeleteUserProfile(c.Context(), cmd); err != nil {
 		return err
 	}

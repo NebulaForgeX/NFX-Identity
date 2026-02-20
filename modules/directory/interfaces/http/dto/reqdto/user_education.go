@@ -21,8 +21,12 @@ type UserEducationCreateRequestDTO struct {
 	Achievements *string   `json:"achievements,omitempty"`
 }
 
+type UserEducationByIDRequestDTO struct {
+	UserEducationID uuid.UUID `uri:"user_education_id" validate:"required,uuid"`
+}
+
 type UserEducationUpdateRequestDTO struct {
-	ID           uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserEducationID uuid.UUID `uri:"user_education_id" validate:"required,uuid"`
 	School       string    `json:"school" validate:"required"`
 	Degree       *string   `json:"degree,omitempty"`
 	Major        *string   `json:"major,omitempty"`
@@ -55,7 +59,7 @@ func (r *UserEducationCreateRequestDTO) ToCreateCmd() userEducationAppCommands.C
 
 func (r *UserEducationUpdateRequestDTO) ToUpdateCmd() userEducationAppCommands.UpdateUserEducationCmd {
 	return userEducationAppCommands.UpdateUserEducationCmd{
-		UserEducationID: r.ID,
+		UserEducationID: r.UserEducationID,
 		School:          r.School,
 		Degree:          r.Degree,
 		Major:           r.Major,

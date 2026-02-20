@@ -42,12 +42,12 @@ func (h *UserEducationHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserEducationHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserEducationByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserEducation(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserEducation(c.Context(), req.UserEducationID)
 	if err != nil {
 		return err
 	}
@@ -73,12 +73,12 @@ func (h *UserEducationHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserEducationHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserEducationByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userEducationAppCommands.DeleteUserEducationCmd{UserEducationID: req.ID}
+	cmd := userEducationAppCommands.DeleteUserEducationCmd{UserEducationID: req.UserEducationID}
 	if err := h.appSvc.DeleteUserEducation(c.Context(), cmd); err != nil {
 		return err
 	}
@@ -88,12 +88,12 @@ func (h *UserEducationHandler) Delete(c fiber.Ctx) error {
 
 // GetByUserID 根据用户ID获取用户教育列表
 func (h *UserEducationHandler) GetByUserID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	results, err := h.appSvc.GetUserEducationsByUserID(c.Context(), req.ID)
+	results, err := h.appSvc.GetUserEducationsByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}

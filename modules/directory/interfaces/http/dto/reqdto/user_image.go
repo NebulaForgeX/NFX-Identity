@@ -12,6 +12,11 @@ type UserImageCreateRequestDTO struct {
 	DisplayOrder int       `json:"display_order,omitempty"`
 }
 
+// UserImageByIDRequestDTO 用于 GetByID/SetPrimary/Update/Delete（路径 /user-images/:user_image_id）
+type UserImageByIDRequestDTO struct {
+	UserImageID uuid.UUID `uri:"user_image_id" validate:"required,uuid"`
+}
+
 type UserImageUpdateDisplayOrderRequestDTO struct {
 	DisplayOrder int `json:"display_order" validate:"required"`
 }

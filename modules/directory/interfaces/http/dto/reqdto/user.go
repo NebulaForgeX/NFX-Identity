@@ -14,21 +14,21 @@ type UserCreateRequestDTO struct {
 }
 
 type UserUpdateStatusRequestDTO struct {
-	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserID uuid.UUID `uri:"user_id" validate:"required,uuid"`
 	Status string    `json:"status" validate:"required"`
 }
 
 type UserUpdateUsernameRequestDTO struct {
-	ID       uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserID   uuid.UUID `uri:"user_id" validate:"required,uuid"`
 	Username string    `json:"username" validate:"required"`
 }
 
 type UserVerifyRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserID uuid.UUID `uri:"user_id" validate:"required,uuid"`
 }
 
 type UserByIDRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserID uuid.UUID `uri:"user_id" validate:"required,uuid"`
 }
 
 type UserByUsernameRequestDTO struct {
@@ -53,20 +53,20 @@ func (r *UserCreateRequestDTO) ToCreateCmd() userAppCommands.CreateUserCmd {
 
 func (r *UserUpdateStatusRequestDTO) ToUpdateStatusCmd() userAppCommands.UpdateUserStatusCmd {
 	return userAppCommands.UpdateUserStatusCmd{
-		UserID: r.ID,
+		UserID: r.UserID,
 		Status: userDomain.UserStatus(r.Status),
 	}
 }
 
 func (r *UserUpdateUsernameRequestDTO) ToUpdateUsernameCmd() userAppCommands.UpdateUsernameCmd {
 	return userAppCommands.UpdateUsernameCmd{
-		UserID:   r.ID,
+		UserID:   r.UserID,
 		Username: r.Username,
 	}
 }
 
 func (r *UserVerifyRequestDTO) ToVerifyCmd() userAppCommands.VerifyUserCmd {
 	return userAppCommands.VerifyUserCmd{
-		UserID: r.ID,
+		UserID: r.UserID,
 	}
 }

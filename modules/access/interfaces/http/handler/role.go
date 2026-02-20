@@ -51,7 +51,7 @@ func (h *RoleHandler) GetByID(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetRole(c.Context(), req.ID)
+	result, err := h.appSvc.GetRole(c.Context(), req.RoleID)
 	if err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ func (h *RoleHandler) Delete(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := roleAppCommands.DeleteRoleCmd{RoleID: req.ID}
+	cmd := roleAppCommands.DeleteRoleCmd{RoleID: req.RoleID}
 	if err := h.appSvc.DeleteRole(c.Context(), cmd); err != nil {
 		return err
 	}

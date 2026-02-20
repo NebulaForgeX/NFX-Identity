@@ -13,7 +13,7 @@ type RolePermissionCreateRequestDTO struct {
 }
 
 type RolePermissionByIDRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	RolePermissionID uuid.UUID `uri:"role_permission_id" validate:"required,uuid"`
 }
 
 type RolePermissionByRoleAndPermissionRequestDTO struct {

@@ -41,12 +41,12 @@ func (h *UserAvatarHandler) CreateOrUpdate(c fiber.Ctx) error {
 }
 
 func (h *UserAvatarHandler) GetByUserID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (h *UserAvatarHandler) GetByUserID(c fiber.Ctx) error {
 }
 
 func (h *UserAvatarHandler) Update(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
@@ -65,13 +65,13 @@ func (h *UserAvatarHandler) Update(c fiber.Ctx) error {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 
-	cmd := updateReq.ToUpdateImageIDCmd(req.ID)
+	cmd := updateReq.ToUpdateImageIDCmd(req.UserID)
 	if err := h.appSvc.UpdateUserAvatarImageID(c.Context(), cmd); err != nil {
 		return err
 	}
 
 	// Get the updated user avatar
-	userAvatarView, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.ID)
+	userAvatarView, err := h.appSvc.GetUserAvatarByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}
@@ -80,12 +80,12 @@ func (h *UserAvatarHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserAvatarHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userAvatarAppCommands.DeleteUserAvatarCmd{UserID: req.ID}
+	cmd := userAvatarAppCommands.DeleteUserAvatarCmd{UserID: req.UserID}
 	if err := h.appSvc.DeleteUserAvatar(c.Context(), cmd); err != nil {
 		return err
 	}

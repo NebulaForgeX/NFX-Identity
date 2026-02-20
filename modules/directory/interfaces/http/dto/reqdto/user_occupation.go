@@ -23,8 +23,12 @@ type UserOccupationCreateRequestDTO struct {
 	SkillsUsed       []string  `json:"skills_used,omitempty"`
 }
 
+type UserOccupationByIDRequestDTO struct {
+	UserOccupationID uuid.UUID `uri:"user_occupation_id" validate:"required,uuid"`
+}
+
 type UserOccupationUpdateRequestDTO struct {
-	ID               uuid.UUID `uri:"id" validate:"required,uuid"`
+	UserOccupationID uuid.UUID `uri:"user_occupation_id" validate:"required,uuid"`
 	Company          string    `json:"company" validate:"required"`
 	Position         string    `json:"position" validate:"required"`
 	Department       *string   `json:"department,omitempty"`
@@ -61,7 +65,7 @@ func (r *UserOccupationCreateRequestDTO) ToCreateCmd() userOccupationAppCommands
 
 func (r *UserOccupationUpdateRequestDTO) ToUpdateCmd() userOccupationAppCommands.UpdateUserOccupationCmd {
 	return userOccupationAppCommands.UpdateUserOccupationCmd{
-		UserOccupationID: r.ID,
+		UserOccupationID: r.UserOccupationID,
 		Company:          r.Company,
 		Position:         r.Position,
 		Department:       r.Department,

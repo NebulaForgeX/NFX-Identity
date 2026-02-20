@@ -11,6 +11,11 @@ type UserAvatarCreateOrUpdateRequestDTO struct {
 	ImageID uuid.UUID `json:"image_id" validate:"required,uuid"`
 }
 
+// UserAvatarByIDRequestDTO 用于 Update/Delete（路径 /user-avatars/:user_avatar_id）
+type UserAvatarByIDRequestDTO struct {
+	UserAvatarID uuid.UUID `uri:"user_avatar_id" validate:"required,uuid"`
+}
+
 type UserAvatarUpdateImageIDRequestDTO struct {
 	ImageID uuid.UUID `json:"image_id" validate:"required,uuid"`
 }

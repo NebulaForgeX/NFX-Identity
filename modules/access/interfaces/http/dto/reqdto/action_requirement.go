@@ -7,7 +7,7 @@ import (
 )
 
 type ActionRequirementByIDRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	ActionRequirementID uuid.UUID `uri:"action_requirement_id" validate:"required,uuid"`
 }
 
 type ActionRequirementByPermissionIDRequestDTO struct {
@@ -37,5 +37,5 @@ func (r *ActionRequirementCreateRequestDTO) ToCreateCmd() (arAppCommands.CreateA
 }
 
 type ActionRequirementDeleteRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	ActionRequirementID uuid.UUID `uri:"action_requirement_id" validate:"required,uuid"`
 }

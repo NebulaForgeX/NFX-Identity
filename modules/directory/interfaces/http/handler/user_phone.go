@@ -42,12 +42,12 @@ func (h *UserPhoneHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserPhoneHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserPhoneByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserPhone(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserPhone(c.Context(), req.UserPhoneID)
 	if err != nil {
 		return err
 	}
@@ -133,12 +133,12 @@ func (h *UserPhoneHandler) Verify(c fiber.Ctx) error {
 }
 
 func (h *UserPhoneHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserPhoneByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userPhoneAppCommands.DeleteUserPhoneCmd{UserPhoneID: req.ID}
+	cmd := userPhoneAppCommands.DeleteUserPhoneCmd{UserPhoneID: req.UserPhoneID}
 	if err := h.appSvc.DeleteUserPhone(c.Context(), cmd); err != nil {
 		return err
 	}
@@ -148,12 +148,12 @@ func (h *UserPhoneHandler) Delete(c fiber.Ctx) error {
 
 // GetByUserID 根据用户ID获取用户电话列表
 func (h *UserPhoneHandler) GetByUserID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	results, err := h.appSvc.GetUserPhonesByUserID(c.Context(), req.ID)
+	results, err := h.appSvc.GetUserPhonesByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}

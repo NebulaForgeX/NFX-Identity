@@ -16,14 +16,14 @@ type RoleCreateRequestDTO struct {
 }
 
 type RoleUpdateRequestDTO struct {
-	ID          uuid.UUID `uri:"id" validate:"required,uuid"`
+	RoleID      uuid.UUID `uri:"role_id" validate:"required,uuid"`
 	Name        string    `json:"name" validate:"required"`
 	Description *string   `json:"description,omitempty"`
 	ScopeType   string    `json:"scope_type,omitempty"`
 }
 
 type RoleByIDRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	RoleID uuid.UUID `uri:"role_id" validate:"required,uuid"`
 }
 
 type RoleByKeyRequestDTO struct {
@@ -48,7 +48,7 @@ func (r *RoleCreateRequestDTO) ToCreateCmd() roleAppCommands.CreateRoleCmd {
 
 func (r *RoleUpdateRequestDTO) ToUpdateCmd() roleAppCommands.UpdateRoleCmd {
 	cmd := roleAppCommands.UpdateRoleCmd{
-		RoleID:      r.ID,
+		RoleID:      r.RoleID,
 		Name:        r.Name,
 		Description: r.Description,
 	}

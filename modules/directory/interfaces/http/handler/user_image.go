@@ -42,12 +42,12 @@ func (h *UserImageHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserImageByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserImage(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserImage(c.Context(), req.UserImageID)
 	if err != nil {
 		return err
 	}
@@ -56,12 +56,12 @@ func (h *UserImageHandler) GetByID(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) GetByUserID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	results, err := h.appSvc.GetUserImagesByUserID(c.Context(), req.ID)
+	results, err := h.appSvc.GetUserImagesByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}
@@ -71,12 +71,12 @@ func (h *UserImageHandler) GetByUserID(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) GetCurrent(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetCurrentUserImageByUserID(c.Context(), req.ID)
+	result, err := h.appSvc.GetCurrentUserImageByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}
@@ -85,17 +85,17 @@ func (h *UserImageHandler) GetCurrent(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) SetPrimary(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserImageByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userImageAppCommands.SetPrimaryUserImageCmd{UserImageID: req.ID}
+	cmd := userImageAppCommands.SetPrimaryUserImageCmd{UserImageID: req.UserImageID}
 	if err := h.appSvc.SetPrimaryUserImage(c.Context(), cmd); err != nil {
 		return err
 	}
 
-	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
+	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.UserImageID)
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func (h *UserImageHandler) SetPrimary(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) UpdateDisplayOrder(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserImageByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
@@ -113,13 +113,13 @@ func (h *UserImageHandler) UpdateDisplayOrder(c fiber.Ctx) error {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 
-	cmd := updateReq.ToUpdateDisplayOrderCmd(req.ID)
+	cmd := updateReq.ToUpdateDisplayOrderCmd(req.UserImageID)
 	if err := h.appSvc.UpdateUserImageDisplayOrder(c.Context(), cmd); err != nil {
 		return err
 	}
 
 	// Get the updated user image
-	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
+	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.UserImageID)
 	if err != nil {
 		return err
 	}
@@ -128,11 +128,11 @@ func (h *UserImageHandler) UpdateDisplayOrder(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) UpdateDisplayOrderBatch(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
-	userID := req.ID
+	userID := req.UserID
 
 	var body reqdto.UserImagesDisplayOrderBatchRequestDTO
 	if err := c.Bind().Body(&body); err != nil {
@@ -152,7 +152,7 @@ func (h *UserImageHandler) UpdateDisplayOrderBatch(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) Update(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserImageByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
@@ -162,13 +162,13 @@ func (h *UserImageHandler) Update(c fiber.Ctx) error {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 
-	cmd := updateReq.ToUpdateImageIDCmd(req.ID)
+	cmd := updateReq.ToUpdateImageIDCmd(req.UserImageID)
 	if err := h.appSvc.UpdateUserImageImageID(c.Context(), cmd); err != nil {
 		return err
 	}
 
 	// Get the updated user image
-	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.ID)
+	userImageView, err := h.appSvc.GetUserImage(c.Context(), req.UserImageID)
 	if err != nil {
 		return err
 	}
@@ -177,12 +177,12 @@ func (h *UserImageHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserImageHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserImageByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userImageAppCommands.DeleteUserImageCmd{UserImageID: req.ID}
+	cmd := userImageAppCommands.DeleteUserImageCmd{UserImageID: req.UserImageID}
 	if err := h.appSvc.DeleteUserImage(c.Context(), cmd); err != nil {
 		return err
 	}

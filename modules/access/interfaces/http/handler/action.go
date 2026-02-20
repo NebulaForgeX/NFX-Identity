@@ -25,7 +25,7 @@ func (h *ActionHandler) GetByID(c fiber.Ctx) error {
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
-	result, err := h.appSvc.GetAction(c.Context(), req.ID)
+	result, err := h.appSvc.GetAction(c.Context(), req.ActionID)
 	if err != nil {
 		return err
 	}

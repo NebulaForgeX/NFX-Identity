@@ -24,8 +24,12 @@ type UserProfileCreateRequestDTO struct {
 	Skills      map[string]interface{} `json:"skills,omitempty"`
 }
 
+type UserProfileByIDRequestDTO struct {
+	UserProfileID uuid.UUID `uri:"user_profile_id" validate:"required,uuid"`
+}
+
 type UserProfileUpdateRequestDTO struct {
-	ID          uuid.UUID              `uri:"id" validate:"required,uuid"`
+	UserProfileID uuid.UUID              `uri:"user_profile_id" validate:"required,uuid"`
 	Role        *string                `json:"role,omitempty"`
 	FirstName   *string                `json:"first_name,omitempty"`
 	LastName    *string                `json:"last_name,omitempty"`
@@ -64,7 +68,7 @@ func (r *UserProfileCreateRequestDTO) ToCreateCmd() userProfileAppCommands.Creat
 
 func (r *UserProfileUpdateRequestDTO) ToUpdateCmd() userProfileAppCommands.UpdateUserProfileCmd {
 	return userProfileAppCommands.UpdateUserProfileCmd{
-		UserProfileID: r.ID,
+		UserProfileID: r.UserProfileID,
 		Role:          r.Role,
 		FirstName:     r.FirstName,
 		LastName:      r.LastName,

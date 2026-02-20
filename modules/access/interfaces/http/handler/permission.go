@@ -51,7 +51,7 @@ func (h *PermissionHandler) GetByID(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetPermission(c.Context(), req.ID)
+	result, err := h.appSvc.GetPermission(c.Context(), req.PermissionID)
 	if err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ func (h *PermissionHandler) Delete(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := permissionAppCommands.DeletePermissionCmd{PermissionID: req.ID}
+	cmd := permissionAppCommands.DeletePermissionCmd{PermissionID: req.PermissionID}
 	if err := h.appSvc.DeletePermission(c.Context(), cmd); err != nil {
 		return err
 	}

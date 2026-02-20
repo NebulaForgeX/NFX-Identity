@@ -63,31 +63,58 @@ protectedClient.defaults.transformRequest = [
   },
 ];
 
-// 4) 响应拦截器：这里的 res.data 已经是 camelCase
+// Rex 错误体类型（与后端 httpx.HTTPResp 错误时一致，snake_case 转 camelCase）
+type RexErrorData = {
+  message?: string;
+  errCode?: string;
+  status?: number;
+  details?: unknown;
+  traceId?: string;
+};
+
+/** 按 Rex 规范统一错误：把 response.data.message 写入 error.message，便于 UI 直接展示 */
+function normalizeRexApiError(error: AxiosError<RexErrorData>): void {
+  const errorData = error.response?.data;
+  const msg = errorData?.message;
+  if (msg && typeof msg === "string") {
+    try {
+      Object.defineProperty(error, "message", { value: msg, configurable: true });
+    } catch {
+      (error as unknown as Record<string, string>).message = msg;
+    }
+  }
+}
+
+/** 响应错误时打日志（Rex 字段：message, errCode, status） */
+function logRexApiError(error: AxiosError<RexErrorData>): void {
+  const errorData = error.response?.data as RexErrorData | undefined;
+  const msg = errorData?.message;
+  if (msg) {
+    console.log("❌ API Error:", {
+      message: msg,
+      errCode: errorData?.errCode,
+      status: error.response?.status ?? errorData?.status,
+      url: error.config?.url,
+      method: error.config?.method,
+    });
+  } else if (import.meta.env.DEV && error.response?.status) {
+    console.log("❌ HTTP Error:", {
+      status: error.response.status,
+      url: error.config?.url,
+      method: error.config?.method,
+    });
+  }
+}
+
+// 4) 响应拦截器：按 Rex-Backend 错误体统一处理（status, err_code, message, details, trace_id）
 protectedClient.interceptors.response.use(
   (response) => response,
   async (error: unknown) => {
     if (!(error instanceof AxiosError)) {
       return Promise.reject(error);
     }
-
-    const errorData = error.response?.data as { message?: string } | undefined;
-    const errorMessage = errorData?.message;
-
-    if (errorMessage) {
-      console.log("❌ API Error:", {
-        message: errorMessage,
-        status: error.response?.status,
-        url: error.config?.url,
-        method: error.config?.method,
-      });
-    } else if (import.meta.env.DEV && error.response?.status) {
-      console.log("❌ HTTP Error:", {
-        status: error.response.status,
-        url: error.config?.url,
-        method: error.config?.method,
-      });
-    }
+    normalizeRexApiError(error);
+    logRexApiError(error);
 
     if (error.response?.status === 401 && error.config && !error.config._retry) {
       error.config._retry = true;
@@ -115,6 +142,18 @@ protectedClient.interceptors.response.use(
       }
     }
 
+    return Promise.reject(error);
+  },
+);
+
+// 4b) publicClient 同样按 Rex 错误体统一 error.message（登录/注册/验证码等）
+publicClient.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (error instanceof AxiosError) {
+      normalizeRexApiError(error);
+      logRexApiError(error);
+    }
     return Promise.reject(error);
   },
 );

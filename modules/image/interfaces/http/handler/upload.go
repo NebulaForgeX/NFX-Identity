@@ -254,7 +254,7 @@ func copyFile(src, dst string) error {
 
 // ServeImage 根据 image ID 返回图片文件（公开，供 <img src> 使用）
 func (h *UploadHandler) ServeImage(c fiber.Ctx) error {
-	idStr := c.Params("id")
+	idStr := c.Params("image_id")
 	if idStr == "" {
 		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "image id required"))
 	}

@@ -33,11 +33,11 @@ COMMENT ON SCHEMA "tenants" IS 'Multi-tenant management schema';
 -- Create extension "pgcrypto"
 CREATE EXTENSION "pgcrypto" WITH SCHEMA "public" VERSION "1.3";
 -- Create extension "btree_gist"
-CREATE EXTENSION "btree_gist" WITH SCHEMA "public" VERSION "1.7";
+CREATE EXTENSION "btree_gist" WITH SCHEMA "public" VERSION "1.8";
 -- Create enum type "environment"
 CREATE TYPE "clients"."environment" AS ENUM ('production', 'staging', 'development', 'test');
--- Create enum type "mfa_type"
-CREATE TYPE "auth"."mfa_type" AS ENUM ('totp', 'sms', 'email', 'webauthn', 'backup_code');
+-- Create enum type "failure_code"
+CREATE TYPE "auth"."failure_code" AS ENUM ('bad_password', 'user_not_found', 'locked', 'mfa_required', 'mfa_failed', 'account_disabled', 'credential_expired', 'rate_limited', 'ip_blocked', 'device_not_trusted', 'other');
 -- Create enum type "scope_type"
 CREATE TYPE "access"."scope_type" AS ENUM ('TENANT', 'APP', 'GLOBAL');
 -- Create enum type "subject_type"
@@ -46,6 +46,33 @@ CREATE TYPE "access"."subject_type" AS ENUM ('USER', 'CLIENT');
 CREATE TYPE "access"."grant_type" AS ENUM ('ROLE', 'PERMISSION');
 -- Create enum type "grant_effect"
 CREATE TYPE "access"."grant_effect" AS ENUM ('ALLOW', 'DENY');
+-- Create enum type "credential_status"
+CREATE TYPE "clients"."credential_status" AS ENUM ('active', 'expired', 'revoked', 'rotating');
+-- Create "actions" table
+CREATE TABLE "access"."actions" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "key" character varying(255) NOT NULL,
+  "service" character varying(255) NOT NULL,
+  "status" character varying(50) NOT NULL DEFAULT 'active',
+  "name" character varying(255) NOT NULL,
+  "description" text NULL,
+  "is_system" boolean NOT NULL DEFAULT false,
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "deleted_at" timestamp NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "actions_key_key" UNIQUE ("key")
+);
+-- Create index "idx_actions_deleted_at" to table: "actions"
+CREATE INDEX "idx_actions_deleted_at" ON "access"."actions" ("deleted_at");
+-- Create index "idx_actions_is_system" to table: "actions"
+CREATE INDEX "idx_actions_is_system" ON "access"."actions" ("is_system");
+-- Create index "idx_actions_key" to table: "actions"
+CREATE INDEX "idx_actions_key" ON "access"."actions" ("key");
+-- Create index "idx_actions_service" to table: "actions"
+CREATE INDEX "idx_actions_service" ON "access"."actions" ("service");
+-- Create index "idx_actions_status" to table: "actions"
+CREATE INDEX "idx_actions_status" ON "access"."actions" ("status");
 -- Create "grants" table
 CREATE TABLE "access"."grants" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -118,14 +145,14 @@ COMMENT ON COLUMN "system"."system_state"."last_reset_at" IS 'Timestamp when sys
 COMMENT ON COLUMN "system"."system_state"."last_reset_by" IS 'User ID who reset the system. Even if database is cleared after reset, can be traced via log files for accountability';
 -- Set comment to column: "created_at" on table: "system_state"
 COMMENT ON COLUMN "system"."system_state"."created_at" IS 'Record creation time. Used to determine latest state (ORDER BY created_at DESC LIMIT 1)';
--- Create enum type "tenant_status"
-CREATE TYPE "tenants"."tenant_status" AS ENUM ('ACTIVE', 'SUSPENDED', 'CLOSED', 'PENDING');
--- Create enum type "api_key_status"
-CREATE TYPE "clients"."api_key_status" AS ENUM ('active', 'revoked', 'expired');
--- Create enum type "member_status"
-CREATE TYPE "tenants"."member_status" AS ENUM ('INVITED', 'ACTIVE', 'SUSPENDED', 'REMOVED');
 -- Create enum type "verification_status"
 CREATE TYPE "tenants"."verification_status" AS ENUM ('PENDING', 'VERIFIED', 'FAILED', 'EXPIRED');
+-- Create enum type "verification_method"
+CREATE TYPE "tenants"."verification_method" AS ENUM ('DNS', 'TXT', 'HTML', 'FILE');
+-- Create enum type "group_type"
+CREATE TYPE "tenants"."group_type" AS ENUM ('department', 'team', 'group', 'other');
+-- Create enum type "tenant_app_status"
+CREATE TYPE "tenants"."tenant_app_status" AS ENUM ('ACTIVE', 'DISABLED', 'SUSPENDED');
 -- Create enum type "actor_type"
 CREATE TYPE "audit"."actor_type" AS ENUM ('user', 'service', 'system', 'admin');
 -- Create enum type "result_type"
@@ -307,26 +334,25 @@ CREATE INDEX "idx_hash_chain_checkpoints_partition_date" ON "audit"."hash_chain_
 CREATE INDEX "idx_hash_chain_checkpoints_prev_hash" ON "audit"."hash_chain_checkpoints" ("prev_checkpoint_hash");
 -- Create index "idx_hash_chain_checkpoints_tenant_id" to table: "hash_chain_checkpoints"
 CREATE INDEX "idx_hash_chain_checkpoints_tenant_id" ON "audit"."hash_chain_checkpoints" ("tenant_id");
+-- Create enum type "credential_type"
+CREATE TYPE "auth"."credential_type" AS ENUM ('password', 'passkey', 'oauth_link', 'saml', 'ldap');
 -- Create enum type "credential_status"
 CREATE TYPE "auth"."credential_status" AS ENUM ('active', 'disabled', 'expired');
--- Create enum type "revoke_reason"
-CREATE TYPE "auth"."revoke_reason" AS ENUM ('user_logout', 'admin_revoke', 'password_changed', 'rotation', 'account_locked', 'device_changed', 'suspicious_activity', 'other');
--- Create enum type "failure_code"
-CREATE TYPE "auth"."failure_code" AS ENUM ('bad_password', 'user_not_found', 'locked', 'mfa_required', 'mfa_failed', 'account_disabled', 'credential_expired', 'rate_limited', 'ip_blocked', 'device_not_trusted', 'other');
+-- Create enum type "user_status"
+CREATE TYPE "directory"."user_status" AS ENUM ('pending', 'active', 'deactive');
 -- Create enum type "lock_reason"
 CREATE TYPE "auth"."lock_reason" AS ENUM ('too_many_attempts', 'admin_lock', 'risk_detected', 'suspicious_activity', 'compliance', 'other');
 -- Create enum type "reset_delivery"
 CREATE TYPE "auth"."reset_delivery" AS ENUM ('email', 'sms');
 -- Create enum type "reset_status"
 CREATE TYPE "auth"."reset_status" AS ENUM ('issued', 'used', 'expired', 'revoked');
--- Create enum type "credential_status"
-CREATE TYPE "clients"."credential_status" AS ENUM ('active', 'expired', 'revoked', 'rotating');
+-- Create enum type "mfa_type"
+CREATE TYPE "auth"."mfa_type" AS ENUM ('totp', 'sms', 'email', 'webauthn', 'backup_code');
 -- Create enum type "session_revoke_reason"
 CREATE TYPE "auth"."session_revoke_reason" AS ENUM ('user_logout', 'admin_revoke', 'password_changed', 'device_changed', 'account_locked', 'suspicious_activity', 'session_expired', 'other');
 -- Create "account_lockouts" table
 CREATE TABLE "auth"."account_lockouts" (
   "user_id" uuid NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "locked_until" timestamp NULL,
   "lock_reason" "auth"."lock_reason" NOT NULL,
   "locked_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -343,12 +369,9 @@ CREATE TABLE "auth"."account_lockouts" (
 CREATE INDEX "idx_account_lockouts_locked_at" ON "auth"."account_lockouts" ("locked_at");
 -- Create index "idx_account_lockouts_locked_until" to table: "account_lockouts"
 CREATE INDEX "idx_account_lockouts_locked_until" ON "auth"."account_lockouts" ("locked_until") WHERE (locked_until IS NOT NULL);
--- Create index "idx_account_lockouts_tenant_id" to table: "account_lockouts"
-CREATE INDEX "idx_account_lockouts_tenant_id" ON "auth"."account_lockouts" ("tenant_id");
 -- Create "login_attempts" table
 CREATE TABLE "auth"."login_attempts" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "tenant_id" uuid NOT NULL,
   "identifier" character varying(255) NOT NULL,
   "user_id" uuid NULL,
   "ip" inet NULL,
@@ -363,19 +386,18 @@ CREATE TABLE "auth"."login_attempts" (
 );
 -- Create index "idx_login_attempts_created_at" to table: "login_attempts"
 CREATE INDEX "idx_login_attempts_created_at" ON "auth"."login_attempts" ("created_at");
+-- Create index "idx_login_attempts_identifier" to table: "login_attempts"
+CREATE INDEX "idx_login_attempts_identifier" ON "auth"."login_attempts" ("identifier", "created_at");
+-- Create index "idx_login_attempts_ip" to table: "login_attempts"
+CREATE INDEX "idx_login_attempts_ip" ON "auth"."login_attempts" ("ip", "created_at");
 -- Create index "idx_login_attempts_success" to table: "login_attempts"
 CREATE INDEX "idx_login_attempts_success" ON "auth"."login_attempts" ("success", "created_at");
--- Create index "idx_login_attempts_tenant_identifier" to table: "login_attempts"
-CREATE INDEX "idx_login_attempts_tenant_identifier" ON "auth"."login_attempts" ("tenant_id", "identifier", "created_at");
--- Create index "idx_login_attempts_tenant_ip" to table: "login_attempts"
-CREATE INDEX "idx_login_attempts_tenant_ip" ON "auth"."login_attempts" ("tenant_id", "ip", "created_at");
 -- Create index "idx_login_attempts_user_id" to table: "login_attempts"
 CREATE INDEX "idx_login_attempts_user_id" ON "auth"."login_attempts" ("user_id", "created_at");
 -- Create "mfa_factors" table
 CREATE TABLE "auth"."mfa_factors" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "factor_id" character varying(255) NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "user_id" uuid NOT NULL,
   "type" "auth"."mfa_type" NOT NULL,
   "secret_encrypted" text NULL,
@@ -397,8 +419,6 @@ CREATE INDEX "idx_mfa_factors_deleted_at" ON "auth"."mfa_factors" ("deleted_at")
 CREATE INDEX "idx_mfa_factors_enabled" ON "auth"."mfa_factors" ("user_id", "enabled") WHERE (enabled = true);
 -- Create index "idx_mfa_factors_factor_id" to table: "mfa_factors"
 CREATE INDEX "idx_mfa_factors_factor_id" ON "auth"."mfa_factors" ("factor_id");
--- Create index "idx_mfa_factors_tenant_id" to table: "mfa_factors"
-CREATE INDEX "idx_mfa_factors_tenant_id" ON "auth"."mfa_factors" ("tenant_id");
 -- Create index "idx_mfa_factors_type" to table: "mfa_factors"
 CREATE INDEX "idx_mfa_factors_type" ON "auth"."mfa_factors" ("type");
 -- Create index "idx_mfa_factors_user_id" to table: "mfa_factors"
@@ -407,7 +427,6 @@ CREATE INDEX "idx_mfa_factors_user_id" ON "auth"."mfa_factors" ("user_id");
 CREATE TABLE "auth"."password_history" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "user_id" uuid NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "password_hash" character varying(255) NOT NULL,
   "hash_alg" character varying(50) NULL,
   "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -415,15 +434,12 @@ CREATE TABLE "auth"."password_history" (
 );
 -- Create index "idx_password_history_created_at" to table: "password_history"
 CREATE INDEX "idx_password_history_created_at" ON "auth"."password_history" ("created_at");
--- Create index "idx_password_history_tenant_id" to table: "password_history"
-CREATE INDEX "idx_password_history_tenant_id" ON "auth"."password_history" ("tenant_id");
 -- Create index "idx_password_history_user_id" to table: "password_history"
 CREATE INDEX "idx_password_history_user_id" ON "auth"."password_history" ("user_id", "created_at" DESC);
 -- Create "password_resets" table
 CREATE TABLE "auth"."password_resets" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "reset_id" character varying(255) NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "user_id" uuid NOT NULL,
   "delivery" "auth"."reset_delivery" NOT NULL,
   "code_hash" character varying(255) NOT NULL,
@@ -446,16 +462,15 @@ CREATE INDEX "idx_password_resets_expires_at" ON "auth"."password_resets" ("expi
 CREATE INDEX "idx_password_resets_reset_id" ON "auth"."password_resets" ("reset_id");
 -- Create index "idx_password_resets_status" to table: "password_resets"
 CREATE INDEX "idx_password_resets_status" ON "auth"."password_resets" ("status");
--- Create index "idx_password_resets_tenant_id" to table: "password_resets"
-CREATE INDEX "idx_password_resets_tenant_id" ON "auth"."password_resets" ("tenant_id");
 -- Create index "idx_password_resets_user_id" to table: "password_resets"
 CREATE INDEX "idx_password_resets_user_id" ON "auth"."password_resets" ("user_id");
+-- Create enum type "revoke_reason"
+CREATE TYPE "auth"."revoke_reason" AS ENUM ('user_logout', 'admin_revoke', 'password_changed', 'rotation', 'account_locked', 'device_changed', 'suspicious_activity', 'other');
 -- Create "refresh_tokens" table
 CREATE TABLE "auth"."refresh_tokens" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "token_id" character varying(255) NOT NULL,
   "user_id" uuid NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "app_id" uuid NULL,
   "client_id" character varying(255) NULL,
   "session_id" uuid NULL,
@@ -481,19 +496,14 @@ CREATE INDEX "idx_refresh_tokens_expires_at" ON "auth"."refresh_tokens" ("expire
 CREATE INDEX "idx_refresh_tokens_revoked_at" ON "auth"."refresh_tokens" ("revoked_at") WHERE (revoked_at IS NULL);
 -- Create index "idx_refresh_tokens_session_id" to table: "refresh_tokens"
 CREATE INDEX "idx_refresh_tokens_session_id" ON "auth"."refresh_tokens" ("session_id");
--- Create index "idx_refresh_tokens_tenant_id" to table: "refresh_tokens"
-CREATE INDEX "idx_refresh_tokens_tenant_id" ON "auth"."refresh_tokens" ("tenant_id");
 -- Create index "idx_refresh_tokens_token_id" to table: "refresh_tokens"
 CREATE INDEX "idx_refresh_tokens_token_id" ON "auth"."refresh_tokens" ("token_id");
 -- Create index "idx_refresh_tokens_user_id" to table: "refresh_tokens"
 CREATE INDEX "idx_refresh_tokens_user_id" ON "auth"."refresh_tokens" ("user_id");
--- Create index "idx_refresh_tokens_user_tenant" to table: "refresh_tokens"
-CREATE INDEX "idx_refresh_tokens_user_tenant" ON "auth"."refresh_tokens" ("user_id", "tenant_id");
 -- Create "sessions" table
 CREATE TABLE "auth"."sessions" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "session_id" character varying(255) NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "user_id" uuid NOT NULL,
   "app_id" uuid NULL,
   "client_id" character varying(255) NULL,
@@ -522,18 +532,15 @@ CREATE INDEX "idx_sessions_last_seen_at" ON "auth"."sessions" ("last_seen_at");
 CREATE INDEX "idx_sessions_revoked_at" ON "auth"."sessions" ("revoked_at") WHERE (revoked_at IS NULL);
 -- Create index "idx_sessions_session_id" to table: "sessions"
 CREATE INDEX "idx_sessions_session_id" ON "auth"."sessions" ("session_id");
--- Create index "idx_sessions_tenant_id" to table: "sessions"
-CREATE INDEX "idx_sessions_tenant_id" ON "auth"."sessions" ("tenant_id");
+-- Create index "idx_sessions_user_active" to table: "sessions"
+CREATE INDEX "idx_sessions_user_active" ON "auth"."sessions" ("user_id", "revoked_at") WHERE (revoked_at IS NULL);
 -- Create index "idx_sessions_user_id" to table: "sessions"
 CREATE INDEX "idx_sessions_user_id" ON "auth"."sessions" ("user_id");
--- Create index "idx_sessions_user_tenant_active" to table: "sessions"
-CREATE INDEX "idx_sessions_user_tenant_active" ON "auth"."sessions" ("user_id", "tenant_id", "revoked_at") WHERE (revoked_at IS NULL);
 -- Create "trusted_devices" table
 CREATE TABLE "auth"."trusted_devices" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "device_id" character varying(255) NOT NULL,
   "user_id" uuid NOT NULL,
-  "tenant_id" uuid NOT NULL,
   "device_fingerprint_hash" character varying(255) NOT NULL,
   "device_name" character varying(255) NULL,
   "trusted_until" timestamp NOT NULL,
@@ -543,25 +550,17 @@ CREATE TABLE "auth"."trusted_devices" (
   "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY ("id"),
-  CONSTRAINT "trusted_devices_user_id_device_id_tenant_id_key" UNIQUE ("user_id", "device_id", "tenant_id")
+  CONSTRAINT "trusted_devices_user_id_device_id_key" UNIQUE ("user_id", "device_id")
 );
 -- Create index "idx_trusted_devices_device_id" to table: "trusted_devices"
 CREATE INDEX "idx_trusted_devices_device_id" ON "auth"."trusted_devices" ("device_id");
--- Create index "idx_trusted_devices_tenant_id" to table: "trusted_devices"
-CREATE INDEX "idx_trusted_devices_tenant_id" ON "auth"."trusted_devices" ("tenant_id");
 -- Create index "idx_trusted_devices_trusted_until" to table: "trusted_devices"
 CREATE INDEX "idx_trusted_devices_trusted_until" ON "auth"."trusted_devices" ("trusted_until");
 -- Create index "idx_trusted_devices_user_id" to table: "trusted_devices"
 CREATE INDEX "idx_trusted_devices_user_id" ON "auth"."trusted_devices" ("user_id");
--- Create index "idx_trusted_devices_user_tenant" to table: "trusted_devices"
-CREATE INDEX "idx_trusted_devices_user_tenant" ON "auth"."trusted_devices" ("user_id", "tenant_id");
--- Create enum type "credential_type"
-CREATE TYPE "auth"."credential_type" AS ENUM ('password', 'passkey', 'oauth_link', 'saml', 'ldap');
 -- Create "user_credentials" table
 CREATE TABLE "auth"."user_credentials" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "user_id" uuid NOT NULL,
-  "tenant_id" uuid NOT NULL,
+  "id" uuid NOT NULL,
   "credential_type" "auth"."credential_type" NOT NULL DEFAULT 'password',
   "password_hash" character varying(255) NULL,
   "hash_alg" character varying(50) NULL,
@@ -574,31 +573,69 @@ CREATE TABLE "auth"."user_credentials" (
   "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "deleted_at" timestamp NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "user_credentials_user_id_key" UNIQUE ("user_id")
+  PRIMARY KEY ("id")
 );
 -- Create index "idx_user_credentials_deleted_at" to table: "user_credentials"
 CREATE INDEX "idx_user_credentials_deleted_at" ON "auth"."user_credentials" ("deleted_at");
 -- Create index "idx_user_credentials_status" to table: "user_credentials"
 CREATE INDEX "idx_user_credentials_status" ON "auth"."user_credentials" ("status");
--- Create index "idx_user_credentials_tenant_id" to table: "user_credentials"
-CREATE INDEX "idx_user_credentials_tenant_id" ON "auth"."user_credentials" ("tenant_id");
 -- Create index "idx_user_credentials_type" to table: "user_credentials"
 CREATE INDEX "idx_user_credentials_type" ON "auth"."user_credentials" ("credential_type");
--- Create index "idx_user_credentials_user_id" to table: "user_credentials"
-CREATE INDEX "idx_user_credentials_user_id" ON "auth"."user_credentials" ("user_id");
 -- Create enum type "app_type"
 CREATE TYPE "clients"."app_type" AS ENUM ('server', 'service', 'internal', 'partner', 'third_party');
 -- Create enum type "app_status"
 CREATE TYPE "clients"."app_status" AS ENUM ('active', 'disabled', 'suspended', 'pending');
--- Create enum type "verification_method"
-CREATE TYPE "tenants"."verification_method" AS ENUM ('DNS', 'TXT', 'HTML', 'FILE');
+-- Create enum type "invitation_status"
+CREATE TYPE "tenants"."invitation_status" AS ENUM ('PENDING', 'ACCEPTED', 'EXPIRED', 'REVOKED');
 -- Create enum type "allowlist_status"
 CREATE TYPE "clients"."allowlist_status" AS ENUM ('active', 'disabled', 'revoked');
 -- Create enum type "rate_limit_type"
 CREATE TYPE "clients"."rate_limit_type" AS ENUM ('requests_per_second', 'requests_per_minute', 'requests_per_hour', 'requests_per_day');
 -- Create enum type "member_source"
 CREATE TYPE "tenants"."member_source" AS ENUM ('MANUAL', 'INVITE', 'SCIM', 'SSO', 'HR_SYNC', 'IMPORT');
+-- Create enum type "api_key_status"
+CREATE TYPE "clients"."api_key_status" AS ENUM ('active', 'revoked', 'expired');
+-- Create enum type "member_status"
+CREATE TYPE "tenants"."member_status" AS ENUM ('INVITED', 'ACTIVE', 'SUSPENDED', 'REMOVED');
+-- Create enum type "tenant_status"
+CREATE TYPE "tenants"."tenant_status" AS ENUM ('ACTIVE', 'SUSPENDED', 'CLOSED', 'PENDING');
+-- Create "permissions" table
+CREATE TABLE "access"."permissions" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "key" character varying(255) NOT NULL,
+  "name" character varying(255) NOT NULL,
+  "description" text NULL,
+  "is_system" boolean NOT NULL DEFAULT false,
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "deleted_at" timestamp NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "permissions_key_key" UNIQUE ("key")
+);
+-- Create index "idx_permissions_deleted_at" to table: "permissions"
+CREATE INDEX "idx_permissions_deleted_at" ON "access"."permissions" ("deleted_at");
+-- Create index "idx_permissions_is_system" to table: "permissions"
+CREATE INDEX "idx_permissions_is_system" ON "access"."permissions" ("is_system");
+-- Create index "idx_permissions_key" to table: "permissions"
+CREATE INDEX "idx_permissions_key" ON "access"."permissions" ("key");
+-- Create "action_requirements" table
+CREATE TABLE "access"."action_requirements" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "action_id" uuid NOT NULL,
+  "permission_id" uuid NOT NULL,
+  "group_id" integer NOT NULL DEFAULT 1,
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "action_requirements_action_id_permission_id_key" UNIQUE ("action_id", "permission_id"),
+  CONSTRAINT "action_requirements_action_id_fkey" FOREIGN KEY ("action_id") REFERENCES "access"."actions" ("id") ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT "action_requirements_permission_id_fkey" FOREIGN KEY ("permission_id") REFERENCES "access"."permissions" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
+);
+-- Create index "idx_action_requirements_action_group" to table: "action_requirements"
+CREATE INDEX "idx_action_requirements_action_group" ON "access"."action_requirements" ("action_id", "group_id");
+-- Create index "idx_action_requirements_action_id" to table: "action_requirements"
+CREATE INDEX "idx_action_requirements_action_id" ON "access"."action_requirements" ("action_id");
+-- Create index "idx_action_requirements_permission_id" to table: "action_requirements"
+CREATE INDEX "idx_action_requirements_permission_id" ON "access"."action_requirements" ("permission_id");
 -- Create "apps" table
 CREATE TABLE "clients"."apps" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -630,14 +667,6 @@ CREATE INDEX "idx_apps_status" ON "clients"."apps" ("status");
 CREATE INDEX "idx_apps_tenant_environment" ON "clients"."apps" ("tenant_id", "environment");
 -- Create index "idx_apps_tenant_id" to table: "apps"
 CREATE INDEX "idx_apps_tenant_id" ON "clients"."apps" ("tenant_id");
--- Create enum type "invitation_status"
-CREATE TYPE "tenants"."invitation_status" AS ENUM ('PENDING', 'ACCEPTED', 'EXPIRED', 'REVOKED');
--- Create enum type "user_status"
-CREATE TYPE "directory"."user_status" AS ENUM ('pending', 'active', 'deactive');
--- Create enum type "group_type"
-CREATE TYPE "tenants"."group_type" AS ENUM ('department', 'team', 'group', 'other');
--- Create enum type "tenant_app_status"
-CREATE TYPE "tenants"."tenant_app_status" AS ENUM ('ACTIVE', 'DISABLED', 'SUSPENDED');
 -- Create "api_keys" table
 CREATE TABLE "clients"."api_keys" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -972,8 +1001,6 @@ CREATE TABLE "image"."image_variants" (
 );
 -- Create index "idx_image_variants_image_id" to table: "image_variants"
 CREATE INDEX "idx_image_variants_image_id" ON "image"."image_variants" ("image_id");
--- Create index "idx_image_variants_image_key" to table: "image_variants"
-CREATE INDEX "idx_image_variants_image_key" ON "image"."image_variants" ("image_id", "variant_key");
 -- Create index "idx_image_variants_url" to table: "image_variants"
 CREATE INDEX "idx_image_variants_url" ON "image"."image_variants" ("url") WHERE (url IS NOT NULL);
 -- Create index "idx_image_variants_variant_key" to table: "image_variants"
@@ -1182,25 +1209,6 @@ CREATE TABLE "clients"."rate_limits" (
 CREATE INDEX "idx_rate_limits_app_id" ON "clients"."rate_limits" ("app_id");
 -- Create index "idx_rate_limits_status" to table: "rate_limits"
 CREATE INDEX "idx_rate_limits_status" ON "clients"."rate_limits" ("status");
--- Create "permissions" table
-CREATE TABLE "access"."permissions" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "key" character varying(255) NOT NULL,
-  "name" character varying(255) NOT NULL,
-  "description" text NULL,
-  "is_system" boolean NOT NULL DEFAULT false,
-  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "deleted_at" timestamp NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "permissions_key_key" UNIQUE ("key")
-);
--- Create index "idx_permissions_deleted_at" to table: "permissions"
-CREATE INDEX "idx_permissions_deleted_at" ON "access"."permissions" ("deleted_at");
--- Create index "idx_permissions_is_system" to table: "permissions"
-CREATE INDEX "idx_permissions_is_system" ON "access"."permissions" ("is_system");
--- Create index "idx_permissions_key" to table: "permissions"
-CREATE INDEX "idx_permissions_key" ON "access"."permissions" ("key");
 -- Create "roles" table
 CREATE TABLE "access"."roles" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1294,8 +1302,7 @@ CREATE INDEX "idx_tenant_apps_status" ON "tenants"."tenant_apps" ("status");
 CREATE INDEX "idx_tenant_apps_tenant_id" ON "tenants"."tenant_apps" ("tenant_id");
 -- Create "tenant_settings" table
 CREATE TABLE "tenants"."tenant_settings" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "tenant_id" uuid NOT NULL,
+  "id" uuid NOT NULL,
   "enforce_mfa" boolean NOT NULL DEFAULT false,
   "allowed_email_domains" text[] NULL,
   "session_ttl_minutes" integer NULL,
@@ -1306,32 +1313,8 @@ CREATE TABLE "tenants"."tenant_settings" (
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_by" uuid NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "tenant_settings_tenant_id_key" UNIQUE ("tenant_id"),
-  CONSTRAINT "tenant_settings_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"."tenants" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
+  CONSTRAINT "tenant_settings_id_fkey" FOREIGN KEY ("id") REFERENCES "tenants"."tenants" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
 );
--- Create index "idx_tenant_settings_tenant_id" to table: "tenant_settings"
-CREATE INDEX "idx_tenant_settings_tenant_id" ON "tenants"."tenant_settings" ("tenant_id");
--- Create "badges" table
-CREATE TABLE "directory"."badges" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "name" character varying(50) NOT NULL,
-  "description" text NULL,
-  "icon_url" character varying(255) NULL,
-  "color" character varying(20) NULL,
-  "category" character varying(50) NULL,
-  "is_system" boolean NOT NULL DEFAULT false,
-  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "deleted_at" timestamp NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "badges_name_key" UNIQUE ("name")
-);
--- Create index "idx_badges_category" to table: "badges"
-CREATE INDEX "idx_badges_category" ON "directory"."badges" ("category");
--- Create index "idx_badges_deleted_at" to table: "badges"
-CREATE INDEX "idx_badges_deleted_at" ON "directory"."badges" ("deleted_at");
--- Create index "idx_badges_name" to table: "badges"
-CREATE INDEX "idx_badges_name" ON "directory"."badges" ("name");
 -- Create "users" table
 CREATE TABLE "directory"."users" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1353,6 +1336,44 @@ CREATE INDEX "idx_users_last_login_at" ON "directory"."users" ("last_login_at");
 CREATE INDEX "idx_users_status" ON "directory"."users" ("status");
 -- Create index "idx_users_username" to table: "users"
 CREATE INDEX "idx_users_username" ON "directory"."users" ("username");
+-- Create "user_avatars" table
+CREATE TABLE "directory"."user_avatars" (
+  "user_id" uuid NOT NULL,
+  "image_id" uuid NOT NULL,
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("user_id"),
+  CONSTRAINT "user_avatars_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "directory"."users" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
+);
+-- Create index "idx_user_avatars_image_id" to table: "user_avatars"
+CREATE INDEX "idx_user_avatars_image_id" ON "directory"."user_avatars" ("image_id");
+-- Set comment to table: "user_avatars"
+COMMENT ON TABLE "directory"."user_avatars" IS 'User avatar table - stores current avatar for each user (one-to-one relationship)';
+-- Set comment to column: "user_id" on table: "user_avatars"
+COMMENT ON COLUMN "directory"."user_avatars"."user_id" IS 'Reference to directory.users.id (primary key, one-to-one)';
+-- Set comment to column: "image_id" on table: "user_avatars"
+COMMENT ON COLUMN "directory"."user_avatars"."image_id" IS 'Reference to image.images.id (application-level consistency, no foreign key)';
+-- Create "badges" table
+CREATE TABLE "directory"."badges" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "name" character varying(50) NOT NULL,
+  "description" text NULL,
+  "icon_url" character varying(255) NULL,
+  "color" character varying(20) NULL,
+  "category" character varying(50) NULL,
+  "is_system" boolean NOT NULL DEFAULT false,
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "deleted_at" timestamp NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "badges_name_key" UNIQUE ("name")
+);
+-- Create index "idx_badges_category" to table: "badges"
+CREATE INDEX "idx_badges_category" ON "directory"."badges" ("category");
+-- Create index "idx_badges_deleted_at" to table: "badges"
+CREATE INDEX "idx_badges_deleted_at" ON "directory"."badges" ("deleted_at");
+-- Create index "idx_badges_name" to table: "badges"
+CREATE INDEX "idx_badges_name" ON "directory"."badges" ("name");
 -- Create "user_badges" table
 CREATE TABLE "directory"."user_badges" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1429,6 +1450,42 @@ CREATE INDEX "idx_user_emails_is_primary" ON "directory"."user_emails" ("user_id
 CREATE INDEX "idx_user_emails_is_verified" ON "directory"."user_emails" ("is_verified");
 -- Create index "idx_user_emails_user_id" to table: "user_emails"
 CREATE INDEX "idx_user_emails_user_id" ON "directory"."user_emails" ("user_id");
+-- Create "user_images" table
+CREATE TABLE "directory"."user_images" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "user_id" uuid NOT NULL,
+  "image_id" uuid NOT NULL,
+  "display_order" integer NOT NULL DEFAULT 0,
+  "created_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "deleted_at" timestamp NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "user_images_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "directory"."users" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
+);
+-- Create index "idx_user_images_created_at" to table: "user_images"
+CREATE INDEX "idx_user_images_created_at" ON "directory"."user_images" ("created_at");
+-- Create index "idx_user_images_deleted_at" to table: "user_images"
+CREATE INDEX "idx_user_images_deleted_at" ON "directory"."user_images" ("deleted_at");
+-- Create index "idx_user_images_display_order" to table: "user_images"
+CREATE INDEX "idx_user_images_display_order" ON "directory"."user_images" ("user_id", "display_order") WHERE (deleted_at IS NULL);
+-- Create index "idx_user_images_image_id" to table: "user_images"
+CREATE INDEX "idx_user_images_image_id" ON "directory"."user_images" ("image_id");
+-- Create index "idx_user_images_user_id" to table: "user_images"
+CREATE INDEX "idx_user_images_user_id" ON "directory"."user_images" ("user_id");
+-- Create index "idx_user_images_user_image_unique" to table: "user_images"
+CREATE UNIQUE INDEX "idx_user_images_user_image_unique" ON "directory"."user_images" ("user_id", "image_id") WHERE (deleted_at IS NULL);
+-- Create index "idx_user_images_user_order" to table: "user_images"
+CREATE INDEX "idx_user_images_user_order" ON "directory"."user_images" ("user_id", "display_order") WHERE (deleted_at IS NULL);
+-- Set comment to table: "user_images"
+COMMENT ON TABLE "directory"."user_images" IS 'User images table - stores all user images with display order. Image type is stored in image.images.type_id';
+-- Set comment to column: "user_id" on table: "user_images"
+COMMENT ON COLUMN "directory"."user_images"."user_id" IS 'Reference to directory.users.id';
+-- Set comment to column: "image_id" on table: "user_images"
+COMMENT ON COLUMN "directory"."user_images"."image_id" IS 'Reference to image.images.id (application-level consistency, no foreign key). Image type can be queried via image.images.type_id';
+-- Set comment to column: "display_order" on table: "user_images"
+COMMENT ON COLUMN "directory"."user_images"."display_order" IS 'Display order: 0 = current/active image, higher numbers = later in sequence';
+-- Set comment to column: "deleted_at" on table: "user_images"
+COMMENT ON COLUMN "directory"."user_images"."deleted_at" IS 'Soft delete timestamp (NULL = active, NOT NULL = deleted)';
 -- Create "user_occupations" table
 CREATE TABLE "directory"."user_occupations" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1494,11 +1551,10 @@ CREATE INDEX "idx_user_phones_phone" ON "directory"."user_phones" ("phone");
 CREATE INDEX "idx_user_phones_user_id" ON "directory"."user_phones" ("user_id");
 -- Create "user_preferences" table
 CREATE TABLE "directory"."user_preferences" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "user_id" uuid NOT NULL,
+  "id" uuid NOT NULL,
   "theme" character varying(50) NULL DEFAULT 'light',
   "language" character varying(10) NULL DEFAULT 'en',
-  "timezone" character varying(50) NULL DEFAULT 'UTC',
+  "timezone" character varying(50) NULL DEFAULT 'Etc/UTC',
   "notifications" jsonb NULL DEFAULT '{}',
   "privacy" jsonb NULL DEFAULT '{}',
   "display" jsonb NULL DEFAULT '{}',
@@ -1507,25 +1563,18 @@ CREATE TABLE "directory"."user_preferences" (
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "deleted_at" timestamp NULL,
   PRIMARY KEY ("id"),
-  CONSTRAINT "user_preferences_user_id_key" UNIQUE ("user_id"),
-  CONSTRAINT "user_preferences_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "directory"."users" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
+  CONSTRAINT "user_preferences_id_fkey" FOREIGN KEY ("id") REFERENCES "directory"."users" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
 );
 -- Create index "idx_user_preferences_deleted_at" to table: "user_preferences"
 CREATE INDEX "idx_user_preferences_deleted_at" ON "directory"."user_preferences" ("deleted_at");
--- Create index "idx_user_preferences_user_id" to table: "user_preferences"
-CREATE INDEX "idx_user_preferences_user_id" ON "directory"."user_preferences" ("user_id");
 -- Create "user_profiles" table
 CREATE TABLE "directory"."user_profiles" (
-  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "user_id" uuid NOT NULL,
+  "id" uuid NOT NULL,
   "role" character varying(100) NULL,
   "first_name" character varying(100) NULL,
   "last_name" character varying(100) NULL,
   "nickname" character varying(50) NULL,
   "display_name" character varying(100) NULL,
-  "avatar_id" uuid NULL,
-  "background_id" uuid NULL,
-  "background_ids" uuid[] NULL,
   "bio" text NULL,
   "birthday" date NULL,
   "age" integer NULL,
@@ -1540,13 +1589,8 @@ CREATE TABLE "directory"."user_profiles" (
   "deleted_at" timestamp NULL,
   PRIMARY KEY ("id"),
   CONSTRAINT "user_profiles_nickname_key" UNIQUE ("nickname"),
-  CONSTRAINT "user_profiles_user_id_key" UNIQUE ("user_id"),
-  CONSTRAINT "user_profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "directory"."users" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
+  CONSTRAINT "user_profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "directory"."users" ("id") ON UPDATE NO ACTION ON DELETE CASCADE
 );
--- Create index "idx_user_profiles_avatar_id" to table: "user_profiles"
-CREATE INDEX "idx_user_profiles_avatar_id" ON "directory"."user_profiles" ("avatar_id");
--- Create index "idx_user_profiles_background_id" to table: "user_profiles"
-CREATE INDEX "idx_user_profiles_background_id" ON "directory"."user_profiles" ("background_id");
 -- Create index "idx_user_profiles_birthday" to table: "user_profiles"
 CREATE INDEX "idx_user_profiles_birthday" ON "directory"."user_profiles" ("birthday");
 -- Create index "idx_user_profiles_deleted_at" to table: "user_profiles"
@@ -1565,7 +1609,5 @@ CREATE INDEX "idx_user_profiles_location" ON "directory"."user_profiles" ("locat
 CREATE INDEX "idx_user_profiles_nickname" ON "directory"."user_profiles" ("nickname");
 -- Create index "idx_user_profiles_role" to table: "user_profiles"
 CREATE INDEX "idx_user_profiles_role" ON "directory"."user_profiles" ("role");
--- Create index "idx_user_profiles_user_id" to table: "user_profiles"
-CREATE INDEX "idx_user_profiles_user_id" ON "directory"."user_profiles" ("user_id");
 -- Create index "idx_user_profiles_website" to table: "user_profiles"
 CREATE INDEX "idx_user_profiles_website" ON "directory"."user_profiles" ("website");

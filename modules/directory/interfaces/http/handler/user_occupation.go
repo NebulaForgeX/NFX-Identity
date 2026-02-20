@@ -42,12 +42,12 @@ func (h *UserOccupationHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserOccupationHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserOccupationByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserOccupation(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserOccupation(c.Context(), req.UserOccupationID)
 	if err != nil {
 		return err
 	}
@@ -73,12 +73,12 @@ func (h *UserOccupationHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserOccupationHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserOccupationByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userOccupationAppCommands.DeleteUserOccupationCmd{UserOccupationID: req.ID}
+	cmd := userOccupationAppCommands.DeleteUserOccupationCmd{UserOccupationID: req.UserOccupationID}
 	if err := h.appSvc.DeleteUserOccupation(c.Context(), cmd); err != nil {
 		return err
 	}
@@ -88,12 +88,12 @@ func (h *UserOccupationHandler) Delete(c fiber.Ctx) error {
 
 // GetByUserID 根据用户ID获取用户职业列表
 func (h *UserOccupationHandler) GetByUserID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	results, err := h.appSvc.GetUserOccupationsByUserID(c.Context(), req.ID, nil)
+	results, err := h.appSvc.GetUserOccupationsByUserID(c.Context(), req.UserID, nil)
 	if err != nil {
 		return err
 	}

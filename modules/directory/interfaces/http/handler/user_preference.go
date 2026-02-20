@@ -42,12 +42,12 @@ func (h *UserPreferenceHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserPreferenceHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserPreferenceByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserPreference(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserPreference(c.Context(), req.UserPreferenceID)
 	if err != nil {
 		return err
 	}
@@ -73,12 +73,12 @@ func (h *UserPreferenceHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserPreferenceHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserPreferenceByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userPreferenceAppCommands.DeleteUserPreferenceCmd{UserPreferenceID: req.ID}
+	cmd := userPreferenceAppCommands.DeleteUserPreferenceCmd{UserPreferenceID: req.UserPreferenceID}
 	if err := h.appSvc.DeleteUserPreference(c.Context(), cmd); err != nil {
 		return err
 	}

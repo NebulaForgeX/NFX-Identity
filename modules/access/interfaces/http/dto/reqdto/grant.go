@@ -21,18 +21,18 @@ type GrantCreateRequestDTO struct {
 }
 
 type GrantUpdateRequestDTO struct {
-	GrantID   uuid.UUID `uri:"id" validate:"required,uuid"`
+	GrantID   uuid.UUID `uri:"grant_id" validate:"required,uuid"`
 	ExpiresAt *string   `json:"expires_at,omitempty"`
 }
 
 type GrantRevokeRequestDTO struct {
-	GrantID      uuid.UUID `uri:"id" validate:"required,uuid"`
+	GrantID      uuid.UUID `uri:"grant_id" validate:"required,uuid"`
 	RevokedBy    uuid.UUID `json:"revoked_by" validate:"required"`
 	RevokeReason *string   `json:"revoke_reason,omitempty"`
 }
 
 type GrantByIDRequestDTO struct {
-	ID uuid.UUID `uri:"id" validate:"required,uuid"`
+	GrantID uuid.UUID `uri:"grant_id" validate:"required,uuid"`
 }
 
 type GrantBySubjectRequestDTO struct {

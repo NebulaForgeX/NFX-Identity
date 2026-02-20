@@ -51,7 +51,7 @@ func (h *UserHandler) GetByID(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUser(c.Context(), req.ID)
+	result, err := h.appSvc.GetUser(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}
@@ -132,7 +132,7 @@ func (h *UserHandler) Delete(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userAppCommands.DeleteUserCmd{UserID: req.ID}
+	cmd := userAppCommands.DeleteUserCmd{UserID: req.UserID}
 	if err := h.appSvc.DeleteUser(c.Context(), cmd); err != nil {
 		return err
 	}

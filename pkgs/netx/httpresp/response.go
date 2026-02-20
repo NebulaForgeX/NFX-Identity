@@ -1,3 +1,5 @@
+// Package httpresp 已弃用：请使用 pkgs/httpx + pkgs/fiberx（与 Rex-Backend 一致）。
+// 错误响应应使用 fiberx.Error / ErrorFromErrx，返回格式为 status(int), err_code, message, details, trace_id。
 package httpresp
 
 import (
@@ -6,7 +8,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// httpresp represents a standardized HTTP response structure
+// httpresp represents a legacy HTTP response structure (Status string "success"/"error", Code uint16).
+// Deprecated: use httpx.HTTPResp + fiberx.Error/BuildErrorResp for Rex-aligned error returns.
 type HTTPResp struct {
 	Status  string         `json:"status"`
 	Code    uint16         `json:"code"`

@@ -42,12 +42,12 @@ func (h *UserEmailHandler) Create(c fiber.Ctx) error {
 }
 
 func (h *UserEmailHandler) GetByID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserEmailByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetUserEmail(c.Context(), req.ID)
+	result, err := h.appSvc.GetUserEmail(c.Context(), req.UserEmailID)
 	if err != nil {
 		return err
 	}
@@ -72,12 +72,12 @@ func (h *UserEmailHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *UserEmailHandler) Delete(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserEmailByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := userEmailAppCommands.DeleteUserEmailCmd{UserEmailID: req.ID}
+	cmd := userEmailAppCommands.DeleteUserEmailCmd{UserEmailID: req.UserEmailID}
 	if err := h.appSvc.DeleteUserEmail(c.Context(), cmd); err != nil {
 		return err
 	}
@@ -117,12 +117,12 @@ func (h *UserEmailHandler) Verify(c fiber.Ctx) error {
 
 // GetByUserID 根据用户ID获取用户邮箱列表
 func (h *UserEmailHandler) GetByUserID(c fiber.Ctx) error {
-	var req reqdto.ByIDRequestDTO
+	var req reqdto.UserByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	results, err := h.appSvc.GetUserEmailsByUserID(c.Context(), req.ID)
+	results, err := h.appSvc.GetUserEmailsByUserID(c.Context(), req.UserID)
 	if err != nil {
 		return err
 	}

@@ -51,7 +51,7 @@ func (h *GrantHandler) GetByID(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	result, err := h.appSvc.GetGrant(c.Context(), req.ID)
+	result, err := h.appSvc.GetGrant(c.Context(), req.GrantID)
 	if err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func (h *GrantHandler) Delete(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 
-	cmd := grantAppCommands.DeleteGrantCmd{GrantID: req.ID}
+	cmd := grantAppCommands.DeleteGrantCmd{GrantID: req.GrantID}
 	if err := h.appSvc.DeleteGrant(c.Context(), cmd); err != nil {
 		return err
 	}
