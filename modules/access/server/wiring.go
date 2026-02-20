@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
 	resourceApp "nfxid/modules/access/application/resource"
+	superadminsApp "nfxid/modules/access/application/super_admins"
+	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
 	"nfxid/modules/access/config"
+	superadminsRepo "nfxid/modules/access/infrastructure/repository/super_admins"
 	tenantrolesRepo "nfxid/modules/access/infrastructure/repository/tenant_roles"
 	"nfxid/pkgs/cachex"
 	"nfxid/pkgs/health"
@@ -28,6 +30,7 @@ type Dependencies struct {
 	busPublisher         *eventbus.BusPublisher
 	rabbitMQConfig       *rabbitmqx.Config
 	tenantRoleAppSvc     *tenantrolesApp.Service
+	superAdminAppSvc     *superadminsApp.Service
 	resourceSvc          *resourceApp.Service
 	userTokenVerifier    token.Verifier
 	serverTokenVerifier  token.Verifier
@@ -68,6 +71,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 
 	tenantRoleRepoInstance := tenantrolesRepo.NewRepo(postgres.DB())
 	tenantRoleAppSvc := tenantrolesApp.NewService(tenantRoleRepoInstance)
+	superAdminRepoInstance := superadminsRepo.NewRepo(postgres.DB())
+	superAdminAppSvc := superadminsApp.NewService(superAdminRepoInstance)
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
 	return &Dependencies{
@@ -78,6 +83,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		busPublisher:       busPublisher,
 		rabbitMQConfig:     &rabbitMQConfig,
 		tenantRoleAppSvc:   tenantRoleAppSvc,
+		superAdminAppSvc:   superAdminAppSvc,
 		resourceSvc:        resourceSvc,
 		userTokenVerifier:  userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
@@ -87,8 +93,9 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 
 func (d *Dependencies) HealthMgr() *health.Manager         { return d.healthMgr }
 func (d *Dependencies) ResourceSvc() *resourceApp.Service  { return d.resourceSvc }
-func (d *Dependencies) TenantRoleAppSvc() *tenantrolesApp.Service { return d.tenantRoleAppSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection   { return d.postgres }
+func (d *Dependencies) TenantRoleAppSvc() *tenantrolesApp.Service   { return d.tenantRoleAppSvc }
+func (d *Dependencies) SuperAdminAppSvc() *superadminsApp.Service   { return d.superAdminAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection           { return d.postgres }
 func (d *Dependencies) UserTokenVerifier() token.Verifier   { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier { return d.serverTokenVerifier }
 func (d *Dependencies) KafkaConfig() *kafkax.Config        { return d.kafkaConfig }

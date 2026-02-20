@@ -341,12 +341,12 @@ func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommand
 	return userID, nil
 }
 
-// initAccessService 初始化 Access 服务
-// 新模型使用 super_admins/tenant_roles/tenant_role_assignments，此处仅占位返回；如需将 admin 设为 super_admin 需在 access 模块实现 CreateSuperAdmin RPC 后调用。
+// initAccessService 初始化 Access 服务：将首个管理员用户设为超级管理员（super_admin）
 func (s *Service) initAccessService(ctx context.Context, adminUserID uuid.UUID) (uuid.UUID, error) {
-	_ = ctx
-	_ = adminUserID
-	// TODO: 若 access 暴露 CreateSuperAdmin，可在此调用将 admin 用户加入 super_admins
+	if err := s.grpcClients.AccessClient.Client.SuperAdmin.CreateSuperAdmin(ctx, adminUserID.String()); err != nil {
+		return uuid.Nil, fmt.Errorf("failed to create super admin: %w", err)
+	}
+	// super_admin 无 role_id，仅 user_id；metadata 中 admin_role_id 保持为零值
 	return uuid.Nil, nil
 }
 

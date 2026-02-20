@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	SuperAdminService_GetSuperAdminByUserID_FullMethodName = "/super_admin.SuperAdminService/GetSuperAdminByUserID"
 	SuperAdminService_ListSuperAdmins_FullMethodName       = "/super_admin.SuperAdminService/ListSuperAdmins"
+	SuperAdminService_CreateSuperAdmin_FullMethodName      = "/super_admin.SuperAdminService/CreateSuperAdmin"
 )
 
 // SuperAdminServiceClient is the client API for SuperAdminService service.
@@ -29,6 +30,7 @@ const (
 type SuperAdminServiceClient interface {
 	GetSuperAdminByUserID(ctx context.Context, in *GetSuperAdminByUserIDRequest, opts ...grpc.CallOption) (*GetSuperAdminByUserIDResponse, error)
 	ListSuperAdmins(ctx context.Context, in *ListSuperAdminsRequest, opts ...grpc.CallOption) (*ListSuperAdminsResponse, error)
+	CreateSuperAdmin(ctx context.Context, in *CreateSuperAdminRequest, opts ...grpc.CallOption) (*CreateSuperAdminResponse, error)
 }
 
 type superAdminServiceClient struct {
@@ -59,12 +61,23 @@ func (c *superAdminServiceClient) ListSuperAdmins(ctx context.Context, in *ListS
 	return out, nil
 }
 
+func (c *superAdminServiceClient) CreateSuperAdmin(ctx context.Context, in *CreateSuperAdminRequest, opts ...grpc.CallOption) (*CreateSuperAdminResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSuperAdminResponse)
+	err := c.cc.Invoke(ctx, SuperAdminService_CreateSuperAdmin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SuperAdminServiceServer is the server API for SuperAdminService service.
 // All implementations must embed UnimplementedSuperAdminServiceServer
 // for forward compatibility.
 type SuperAdminServiceServer interface {
 	GetSuperAdminByUserID(context.Context, *GetSuperAdminByUserIDRequest) (*GetSuperAdminByUserIDResponse, error)
 	ListSuperAdmins(context.Context, *ListSuperAdminsRequest) (*ListSuperAdminsResponse, error)
+	CreateSuperAdmin(context.Context, *CreateSuperAdminRequest) (*CreateSuperAdminResponse, error)
 	mustEmbedUnimplementedSuperAdminServiceServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedSuperAdminServiceServer) GetSuperAdminByUserID(context.Contex
 }
 func (UnimplementedSuperAdminServiceServer) ListSuperAdmins(context.Context, *ListSuperAdminsRequest) (*ListSuperAdminsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSuperAdmins not implemented")
+}
+func (UnimplementedSuperAdminServiceServer) CreateSuperAdmin(context.Context, *CreateSuperAdminRequest) (*CreateSuperAdminResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSuperAdmin not implemented")
 }
 func (UnimplementedSuperAdminServiceServer) mustEmbedUnimplementedSuperAdminServiceServer() {}
 func (UnimplementedSuperAdminServiceServer) testEmbeddedByValue()                           {}
@@ -138,6 +154,24 @@ func _SuperAdminService_ListSuperAdmins_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SuperAdminService_CreateSuperAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSuperAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SuperAdminServiceServer).CreateSuperAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SuperAdminService_CreateSuperAdmin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SuperAdminServiceServer).CreateSuperAdmin(ctx, req.(*CreateSuperAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SuperAdminService_ServiceDesc is the grpc.ServiceDesc for SuperAdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var SuperAdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSuperAdmins",
 			Handler:    _SuperAdminService_ListSuperAdmins_Handler,
+		},
+		{
+			MethodName: "CreateSuperAdmin",
+			Handler:    _SuperAdminService_CreateSuperAdmin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

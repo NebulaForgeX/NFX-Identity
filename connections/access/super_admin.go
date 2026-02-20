@@ -36,3 +36,12 @@ func (c *SuperAdminClient) ListSuperAdmins(ctx context.Context, limit, offset *i
 	}
 	return resp.SuperAdmins, nil
 }
+
+// CreateSuperAdmin 将指定用户设为超级管理员（bootstrap 初始化时创建首个最高权限账号）
+func (c *SuperAdminClient) CreateSuperAdmin(ctx context.Context, userID string) error {
+	_, err := c.client.CreateSuperAdmin(ctx, &superadminpb.CreateSuperAdminRequest{UserId: userID})
+	if err != nil {
+		return fmt.Errorf("gRPC call failed: %w", err)
+	}
+	return nil
+}

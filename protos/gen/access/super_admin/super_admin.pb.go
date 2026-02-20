@@ -258,6 +258,86 @@ func (x *ListSuperAdminsResponse) GetSuperAdmins() []*SuperAdmin {
 	return nil
 }
 
+type CreateSuperAdminRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSuperAdminRequest) Reset() {
+	*x = CreateSuperAdminRequest{}
+	mi := &file_access_super_admin_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSuperAdminRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSuperAdminRequest) ProtoMessage() {}
+
+func (x *CreateSuperAdminRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_access_super_admin_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSuperAdminRequest.ProtoReflect.Descriptor instead.
+func (*CreateSuperAdminRequest) Descriptor() ([]byte, []int) {
+	return file_access_super_admin_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CreateSuperAdminRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type CreateSuperAdminResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSuperAdminResponse) Reset() {
+	*x = CreateSuperAdminResponse{}
+	mi := &file_access_super_admin_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSuperAdminResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSuperAdminResponse) ProtoMessage() {}
+
+func (x *CreateSuperAdminResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_access_super_admin_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSuperAdminResponse.ProtoReflect.Descriptor instead.
+func (*CreateSuperAdminResponse) Descriptor() ([]byte, []int) {
+	return file_access_super_admin_proto_rawDescGZIP(), []int{6}
+}
+
 var File_access_super_admin_proto protoreflect.FileDescriptor
 
 const file_access_super_admin_proto_rawDesc = "" +
@@ -279,10 +359,14 @@ const file_access_super_admin_proto_rawDesc = "" +
 	"\x06_limitB\t\n" +
 	"\a_offset\"U\n" +
 	"\x17ListSuperAdminsResponse\x12:\n" +
-	"\fsuper_admins\x18\x01 \x03(\v2\x17.super_admin.SuperAdminR\vsuperAdmins2\xe1\x01\n" +
+	"\fsuper_admins\x18\x01 \x03(\v2\x17.super_admin.SuperAdminR\vsuperAdmins\"2\n" +
+	"\x17CreateSuperAdminRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"\x1a\n" +
+	"\x18CreateSuperAdminResponse2\xc2\x02\n" +
 	"\x11SuperAdminService\x12n\n" +
 	"\x15GetSuperAdminByUserID\x12).super_admin.GetSuperAdminByUserIDRequest\x1a*.super_admin.GetSuperAdminByUserIDResponse\x12\\\n" +
-	"\x0fListSuperAdmins\x12#.super_admin.ListSuperAdminsRequest\x1a$.super_admin.ListSuperAdminsResponseB2Z0nfxid/protos/gen/access/super_admin;superadminpbb\x06proto3"
+	"\x0fListSuperAdmins\x12#.super_admin.ListSuperAdminsRequest\x1a$.super_admin.ListSuperAdminsResponse\x12_\n" +
+	"\x10CreateSuperAdmin\x12$.super_admin.CreateSuperAdminRequest\x1a%.super_admin.CreateSuperAdminResponseB2Z0nfxid/protos/gen/access/super_admin;superadminpbb\x06proto3"
 
 var (
 	file_access_super_admin_proto_rawDescOnce sync.Once
@@ -296,25 +380,29 @@ func file_access_super_admin_proto_rawDescGZIP() []byte {
 	return file_access_super_admin_proto_rawDescData
 }
 
-var file_access_super_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_access_super_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_access_super_admin_proto_goTypes = []any{
 	(*SuperAdmin)(nil),                    // 0: super_admin.SuperAdmin
 	(*GetSuperAdminByUserIDRequest)(nil),  // 1: super_admin.GetSuperAdminByUserIDRequest
 	(*GetSuperAdminByUserIDResponse)(nil), // 2: super_admin.GetSuperAdminByUserIDResponse
 	(*ListSuperAdminsRequest)(nil),        // 3: super_admin.ListSuperAdminsRequest
 	(*ListSuperAdminsResponse)(nil),       // 4: super_admin.ListSuperAdminsResponse
-	(*timestamppb.Timestamp)(nil),         // 5: google.protobuf.Timestamp
+	(*CreateSuperAdminRequest)(nil),       // 5: super_admin.CreateSuperAdminRequest
+	(*CreateSuperAdminResponse)(nil),      // 6: super_admin.CreateSuperAdminResponse
+	(*timestamppb.Timestamp)(nil),         // 7: google.protobuf.Timestamp
 }
 var file_access_super_admin_proto_depIdxs = []int32{
-	5, // 0: super_admin.SuperAdmin.created_at:type_name -> google.protobuf.Timestamp
+	7, // 0: super_admin.SuperAdmin.created_at:type_name -> google.protobuf.Timestamp
 	0, // 1: super_admin.GetSuperAdminByUserIDResponse.super_admin:type_name -> super_admin.SuperAdmin
 	0, // 2: super_admin.ListSuperAdminsResponse.super_admins:type_name -> super_admin.SuperAdmin
 	1, // 3: super_admin.SuperAdminService.GetSuperAdminByUserID:input_type -> super_admin.GetSuperAdminByUserIDRequest
 	3, // 4: super_admin.SuperAdminService.ListSuperAdmins:input_type -> super_admin.ListSuperAdminsRequest
-	2, // 5: super_admin.SuperAdminService.GetSuperAdminByUserID:output_type -> super_admin.GetSuperAdminByUserIDResponse
-	4, // 6: super_admin.SuperAdminService.ListSuperAdmins:output_type -> super_admin.ListSuperAdminsResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
+	5, // 5: super_admin.SuperAdminService.CreateSuperAdmin:input_type -> super_admin.CreateSuperAdminRequest
+	2, // 6: super_admin.SuperAdminService.GetSuperAdminByUserID:output_type -> super_admin.GetSuperAdminByUserIDResponse
+	4, // 7: super_admin.SuperAdminService.ListSuperAdmins:output_type -> super_admin.ListSuperAdminsResponse
+	6, // 8: super_admin.SuperAdminService.CreateSuperAdmin:output_type -> super_admin.CreateSuperAdminResponse
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -332,7 +420,7 @@ func file_access_super_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_access_super_admin_proto_rawDesc), len(file_access_super_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
