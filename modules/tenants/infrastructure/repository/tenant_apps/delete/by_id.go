@@ -11,5 +11,5 @@ import (
 func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 	return h.db.WithContext(ctx).
 		Where("id = ?", id).
-		Delete(&models.TenantApp{}).Error
+		Delete(&models.TenantApplication{}).Error
 }

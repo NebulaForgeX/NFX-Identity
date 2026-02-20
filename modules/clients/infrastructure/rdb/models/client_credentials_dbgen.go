@@ -10,20 +10,20 @@ import (
 )
 
 type ClientCredential struct {
-	ID           uuid.UUID                     `gorm:"type:uuid;primaryKey"`
-	AppID        uuid.UUID                     `gorm:"type:uuid;index:idx_client_credentials_app_id;index:idx_client_credentials_app_status,priority:1"`
-	ClientID     string                        `gorm:"type:varchar(255);uniqueIndex:client_credentials_client_id_key;index:idx_client_credentials_client_id"`
-	SecretHash   string                        `gorm:"type:varchar(255)"`
-	HashAlg      string                        `gorm:"type:varchar(50)"`
-	Status       enums.ClientsCredentialStatus `gorm:"type:credential_status;index:idx_client_credentials_app_status,priority:2;index:idx_client_credentials_status"`
-	CreatedAt    time.Time                     `gorm:"autoCreateTime"`
-	RotatedAt    *time.Time                    `gorm:"type:timestamp"`
-	ExpiresAt    *time.Time                    `gorm:"type:timestamp;index:idx_client_credentials_expires_at"`
-	LastUsedAt   *time.Time                    `gorm:"type:timestamp;index:idx_client_credentials_last_used_at"`
-	CreatedBy    *uuid.UUID                    `gorm:"type:uuid"`
-	RevokedAt    *time.Time                    `gorm:"type:timestamp"`
-	RevokedBy    *uuid.UUID                    `gorm:"type:uuid"`
-	RevokeReason *string                       `gorm:"type:text"`
+	ID            uuid.UUID                     `gorm:"type:uuid;primaryKey"`
+	ApplicationID uuid.UUID                     `gorm:"type:uuid;index:idx_client_credentials_app_status,priority:1;index:idx_client_credentials_application_id"`
+	ClientID      string                        `gorm:"type:varchar(255);uniqueIndex:client_credentials_client_id_key;index:idx_client_credentials_client_id"`
+	SecretHash    string                        `gorm:"type:varchar(255)"`
+	HashAlg       string                        `gorm:"type:varchar(50)"`
+	Status        enums.ClientsCredentialStatus `gorm:"type:credential_status;index:idx_client_credentials_app_status,priority:2;index:idx_client_credentials_status"`
+	CreatedAt     time.Time                     `gorm:"autoCreateTime"`
+	RotatedAt     *time.Time                    `gorm:"type:timestamp"`
+	ExpiresAt     *time.Time                    `gorm:"type:timestamp;index:idx_client_credentials_expires_at"`
+	LastUsedAt    *time.Time                    `gorm:"type:timestamp;index:idx_client_credentials_last_used_at"`
+	CreatedBy     *uuid.UUID                    `gorm:"type:uuid"`
+	RevokedAt     *time.Time                    `gorm:"type:timestamp"`
+	RevokedBy     *uuid.UUID                    `gorm:"type:uuid"`
+	RevokeReason  *string                       `gorm:"type:text"`
 }
 
 func (ClientCredential) TableName() string { return "clients.client_credentials" }
@@ -36,27 +36,27 @@ func (m *ClientCredential) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var ClientCredentialCols = struct {
-	ID, AppID, ClientID, SecretHash, HashAlg, Status, CreatedAt,
+	ID, ApplicationID, ClientID, SecretHash, HashAlg, Status, CreatedAt,
 	RotatedAt, ExpiresAt, LastUsedAt, CreatedBy, RevokedAt, RevokedBy, RevokeReason string
 }{
-	ID:           "id",
-	AppID:        "app_id",
-	ClientID:     "client_id",
-	SecretHash:   "secret_hash",
-	HashAlg:      "hash_alg",
-	Status:       "status",
-	CreatedAt:    "created_at",
-	RotatedAt:    "rotated_at",
-	ExpiresAt:    "expires_at",
-	LastUsedAt:   "last_used_at",
-	CreatedBy:    "created_by",
-	RevokedAt:    "revoked_at",
-	RevokedBy:    "revoked_by",
-	RevokeReason: "revoke_reason",
+	ID:            "id",
+	ApplicationID: "application_id",
+	ClientID:      "client_id",
+	SecretHash:    "secret_hash",
+	HashAlg:       "hash_alg",
+	Status:        "status",
+	CreatedAt:     "created_at",
+	RotatedAt:     "rotated_at",
+	ExpiresAt:     "expires_at",
+	LastUsedAt:    "last_used_at",
+	CreatedBy:     "created_by",
+	RevokedAt:     "revoked_at",
+	RevokedBy:     "revoked_by",
+	RevokeReason:  "revoke_reason",
 }
 
 const (
-	ClientCredentialPk            = "client_credentials_pkey"
-	ClientCredentialUkClientIdKey = "client_credentials_client_id_key"
-	ClientCredentialFkAppIdFkey   = "client_credentials_app_id_fkey"
+	ClientCredentialPk                  = "client_credentials_pkey"
+	ClientCredentialUkClientIdKey       = "client_credentials_client_id_key"
+	ClientCredentialFkApplicationIdFkey = "client_credentials_application_id_fkey"
 )

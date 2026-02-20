@@ -22,9 +22,9 @@ func APIKeyDomainToModel(ak *api_keys.APIKey) *models.ApiKey {
 	}
 
 	return &models.ApiKey{
-		ID:           ak.ID(),
-		KeyID:        ak.KeyID(),
-		AppID:        ak.AppID(),
+		ID:            ak.ID(),
+		KeyID:         ak.KeyID(),
+		ApplicationID: ak.AppID(),
 		KeyHash:      ak.KeyHash(),
 		HashAlg:      ak.HashAlg(),
 		Name:         ak.Name(),
@@ -54,7 +54,7 @@ func APIKeyModelToDomain(m *models.ApiKey) *api_keys.APIKey {
 	state := api_keys.APIKeyState{
 		ID:           m.ID,
 		KeyID:        m.KeyID,
-		AppID:        m.AppID,
+		AppID:        m.ApplicationID,
 		KeyHash:      m.KeyHash,
 		HashAlg:      m.HashAlg,
 		Name:         m.Name,

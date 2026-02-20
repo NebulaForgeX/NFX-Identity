@@ -31,6 +31,11 @@ if (Test-Path $GEN_DIR) {
     New-Item -ItemType Directory -Path $GEN_DIR -Force | Out-Null
 }
 
+# Clear all generated enum files before generating (avoid stale files when enums are removed)
+if (Test-Path $DEST_DIR) {
+    Get-ChildItem -Path $DEST_DIR -Filter "*_enum_dbgen.go" -File | Remove-Item -Force
+}
+
 $DOCKER_COMPOSE_FILE = $env:RESOURCES_DOCKER_COMPOSE
 
 # Ensure shadow DB exists (ignore error if already exists)

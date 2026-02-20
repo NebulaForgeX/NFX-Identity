@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS "audit"."events" (
   "occurred_at" TIMESTAMP NOT NULL, -- Event occurrence time (not just write time)
   "received_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Time written to audit database (for delay investigation)
   "tenant_id" UUID, -- Multi-tenant isolation (references tenants.tenants.id, application-level consistency)
-  "app_id" UUID, -- App isolation (references clients.apps.id, application-level consistency)
-  "actor_type" "audit".actor_type NOT NULL, -- user|service|system|admin
-  "actor_id" UUID NOT NULL, -- user_id or client_id (references directory.users.id or clients.apps.id, application-level consistency)
+  "application_id" UUID,
+  "actor_type" "audit".actor_type NOT NULL,
+  "actor_id" UUID NOT NULL,
   "actor_tenant_member_id" UUID, -- Optional: backend member identity (if distinguishing member)
   "action" VARCHAR(255) NOT NULL, -- Action enum string: "user.login", "users.list", "grants.update", "clients.secret.rotate", etc.
   "target_type" VARCHAR(100), -- Target resource type: "user", "tenant", "client", "role", "asset", "token", "export_job", etc.
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "audit"."events" (
 CREATE INDEX IF NOT EXISTS "idx_events_event_id" ON "audit"."events"("event_id");
 CREATE INDEX IF NOT EXISTS "idx_events_occurred_at" ON "audit"."events"("occurred_at");
 CREATE INDEX IF NOT EXISTS "idx_events_tenant_id" ON "audit"."events"("tenant_id");
-CREATE INDEX IF NOT EXISTS "idx_events_app_id" ON "audit"."events"("app_id");
+CREATE INDEX IF NOT EXISTS "idx_events_application_id" ON "audit"."events"("application_id");
 CREATE INDEX IF NOT EXISTS "idx_events_actor" ON "audit"."events"("actor_type", "actor_id");
 CREATE INDEX IF NOT EXISTS "idx_events_action" ON "audit"."events"("action");
 CREATE INDEX IF NOT EXISTS "idx_events_target" ON "audit"."events"("target_type", "target_id");

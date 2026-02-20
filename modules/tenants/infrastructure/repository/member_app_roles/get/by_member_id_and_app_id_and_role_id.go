@@ -15,7 +15,7 @@ import (
 func (h *Handler) ByMemberIDAndAppIDAndRoleID(ctx context.Context, memberID, appID, roleID uuid.UUID) (*member_app_roles.MemberAppRole, error) {
 	var m models.MemberAppRole
 	if err := h.db.WithContext(ctx).
-		Where("member_id = ? AND app_id = ? AND role_id = ?", memberID, appID, roleID).
+		Where("member_id = ? AND application_id = ? AND role_id = ?", memberID, appID, roleID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, member_app_roles.ErrMemberAppRoleNotFound

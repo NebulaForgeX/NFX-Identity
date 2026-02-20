@@ -11,8 +11,8 @@ import (
 
 type RateLimit struct {
 	ID            uuid.UUID                  `gorm:"type:uuid;primaryKey"`
-	AppID         uuid.UUID                  `gorm:"type:uuid;index:idx_rate_limits_app_id;uniqueIndex:rate_limits_app_id_limit_type_key,priority:1"`
-	LimitType     enums.ClientsRateLimitType `gorm:"type:rate_limit_type;uniqueIndex:rate_limits_app_id_limit_type_key,priority:2"`
+	ApplicationID uuid.UUID                  `gorm:"type:uuid;index:idx_rate_limits_application_id;uniqueIndex:rate_limits_application_id_limit_type_key,priority:1"`
+	LimitType     enums.ClientsRateLimitType `gorm:"type:rate_limit_type;uniqueIndex:rate_limits_application_id_limit_type_key,priority:2"`
 	LimitValue    int                        `gorm:"type:integer"`
 	WindowSeconds int                        `gorm:"type:integer"`
 	Description   *string                    `gorm:"type:text"`
@@ -33,11 +33,11 @@ func (m *RateLimit) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var RateLimitCols = struct {
-	ID, AppID, LimitType, LimitValue, WindowSeconds, Description, Status,
+	ID, ApplicationID, LimitType, LimitValue, WindowSeconds, Description, Status,
 	CreatedAt, CreatedBy, UpdatedAt, UpdatedBy string
 }{
 	ID:            "id",
-	AppID:         "app_id",
+	ApplicationID: "application_id",
 	LimitType:     "limit_type",
 	LimitValue:    "limit_value",
 	WindowSeconds: "window_seconds",
@@ -50,7 +50,7 @@ var RateLimitCols = struct {
 }
 
 const (
-	RateLimitPk                  = "rate_limits_pkey"
-	RateLimitUkAppIdLimitTypeKey = "rate_limits_app_id_limit_type_key"
-	RateLimitFkAppIdFkey         = "rate_limits_app_id_fkey"
+	RateLimitPk                          = "rate_limits_pkey"
+	RateLimitUkApplicationIdLimitTypeKey = "rate_limits_application_id_limit_type_key"
+	RateLimitFkApplicationIdFkey         = "rate_limits_application_id_fkey"
 )

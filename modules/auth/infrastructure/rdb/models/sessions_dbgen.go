@@ -13,7 +13,7 @@ type Session struct {
 	ID                uuid.UUID                      `gorm:"type:uuid;primaryKey"`
 	SessionID         string                         `gorm:"type:varchar(255);index:idx_sessions_session_id;uniqueIndex:sessions_session_id_key"`
 	UserID            uuid.UUID                      `gorm:"type:uuid;index:idx_sessions_user_active,priority:1;index:idx_sessions_user_id"`
-	AppID             *uuid.UUID                     `gorm:"type:uuid;index:idx_sessions_app_id"`
+	ApplicationID     *uuid.UUID                     `gorm:"type:uuid;index:idx_sessions_application_id"`
 	ClientID          *string                        `gorm:"type:varchar(255)"`
 	CreatedAt         time.Time                      `gorm:"autoCreateTime"`
 	LastSeenAt        time.Time                      `gorm:"type:timestamp;index:idx_sessions_last_seen_at"`
@@ -39,14 +39,14 @@ func (m *Session) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var SessionCols = struct {
-	ID, SessionID, UserID, AppID, ClientID, CreatedAt, LastSeenAt,
+	ID, SessionID, UserID, ApplicationID, ClientID, CreatedAt, LastSeenAt,
 	ExpiresAt, IP, UaHash, DeviceID, DeviceFingerprint, DeviceName, RevokedAt,
 	RevokeReason, RevokedBy, UpdatedAt string
 }{
 	ID:                "id",
 	SessionID:         "session_id",
 	UserID:            "user_id",
-	AppID:             "app_id",
+	ApplicationID:     "application_id",
 	ClientID:          "client_id",
 	CreatedAt:         "created_at",
 	LastSeenAt:        "last_seen_at",

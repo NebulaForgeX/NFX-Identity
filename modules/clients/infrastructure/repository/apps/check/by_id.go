@@ -11,7 +11,7 @@ import (
 func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (bool, error) {
 	var count int64
 	err := h.db.WithContext(ctx).
-		Model(&models.App{}).
+		Model(&models.Application{}).
 		Where("id = ?", id).
 		Count(&count).Error
 	return count > 0, err

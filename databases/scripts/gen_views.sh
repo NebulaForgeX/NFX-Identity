@@ -70,6 +70,13 @@ else
   mkdir -p "$GEN_DIR"
 fi
 
+# Clear all generated view files in module dirs before generating (avoid stale files when views are removed)
+for module_views in "${REPO_ROOT}/modules"/*/infrastructure/rdb/views; do
+  if [ -d "$module_views" ]; then
+    rm -f "${module_views}"/*_dbgen.go
+  fi
+done
+
 # set local module prefix, for goimports grouping
 MODPATH="$(go list -m 2>/dev/null || echo "")"
 [[ -n "$MODPATH" ]] && export GOIMPORTSLOCAL="$MODPATH"

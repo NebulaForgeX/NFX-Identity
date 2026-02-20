@@ -255,7 +255,7 @@ type Event struct {
 	OccurredAt          *timestamppb.Timestamp  `protobuf:"bytes,3,opt,name=occurred_at,json=occurredAt,proto3" json:"occurred_at,omitempty"`                                                              // 发生时间
 	ReceivedAt          *timestamppb.Timestamp  `protobuf:"bytes,4,opt,name=received_at,json=receivedAt,proto3" json:"received_at,omitempty"`                                                              // 接收时间
 	TenantId            *string                 `protobuf:"bytes,5,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`                                                              // 租户ID (UUID)
-	AppId               *string                 `protobuf:"bytes,6,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                                       // 应用ID (UUID)
+	ApplicationId       *string                 `protobuf:"bytes,6,opt,name=application_id,json=applicationId,proto3,oneof" json:"application_id,omitempty"`                                               // 应用ID (UUID)
 	ActorType           AuditActorType          `protobuf:"varint,7,opt,name=actor_type,json=actorType,proto3,enum=event.AuditActorType" json:"actor_type,omitempty"`                                      // 操作者类型：user, service, system, admin
 	ActorId             string                  `protobuf:"bytes,8,opt,name=actor_id,json=actorId,proto3" json:"actor_id,omitempty"`                                                                       // 操作者ID (UUID)
 	ActorTenantMemberId *string                 `protobuf:"bytes,9,opt,name=actor_tenant_member_id,json=actorTenantMemberId,proto3,oneof" json:"actor_tenant_member_id,omitempty"`                         // 操作者租户成员ID (UUID)
@@ -347,9 +347,9 @@ func (x *Event) GetTenantId() string {
 	return ""
 }
 
-func (x *Event) GetAppId() string {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
+func (x *Event) GetApplicationId() string {
+	if x != nil && x.ApplicationId != nil {
+		return *x.ApplicationId
 	}
 	return ""
 }
@@ -889,7 +889,7 @@ var File_audit_event_proto protoreflect.FileDescriptor
 
 const file_audit_event_proto_rawDesc = "" +
 	"\n" +
-	"\x11audit/event.proto\x12\x05event\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x91\v\n" +
+	"\x11audit/event.proto\x12\x05event\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xa9\v\n" +
 	"\x05Event\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bevent_id\x18\x02 \x01(\tR\aeventId\x12;\n" +
@@ -897,8 +897,8 @@ const file_audit_event_proto_rawDesc = "" +
 	"occurredAt\x12;\n" +
 	"\vreceived_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"receivedAt\x12 \n" +
-	"\ttenant_id\x18\x05 \x01(\tH\x00R\btenantId\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x06 \x01(\tH\x01R\x05appId\x88\x01\x01\x124\n" +
+	"\ttenant_id\x18\x05 \x01(\tH\x00R\btenantId\x88\x01\x01\x12*\n" +
+	"\x0eapplication_id\x18\x06 \x01(\tH\x01R\rapplicationId\x88\x01\x01\x124\n" +
 	"\n" +
 	"actor_type\x18\a \x01(\x0e2\x15.event.AuditActorTypeR\tactorType\x12\x19\n" +
 	"\bactor_id\x18\b \x01(\tR\aactorId\x128\n" +
@@ -934,8 +934,8 @@ const file_audit_event_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x1c \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\f\n" +
 	"\n" +
-	"_tenant_idB\t\n" +
-	"\a_app_idB\x19\n" +
+	"_tenant_idB\x11\n" +
+	"\x0f_application_idB\x19\n" +
 	"\x17_actor_tenant_member_idB\x0e\n" +
 	"\f_target_typeB\f\n" +
 	"\n" +

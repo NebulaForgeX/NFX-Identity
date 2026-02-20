@@ -12,7 +12,7 @@ func (h *Handler) Generic(ctx context.Context, a *apps.App) error {
 	m := mapper.AppDomainToModel(a)
 	updates := mapper.AppModelToUpdates(m)
 	return h.db.WithContext(ctx).
-		Model(&models.App{}).
+		Model(&models.Application{}).
 		Where("id = ?", a.ID()).
 		Updates(updates).Error
 }

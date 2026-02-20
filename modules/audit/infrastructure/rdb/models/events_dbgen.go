@@ -16,7 +16,7 @@ type Event struct {
 	OccurredAt          time.Time                     `gorm:"type:timestamp;index:idx_events_action_occurred,priority:2;index:idx_events_actor_occurred,priority:3;index:idx_events_occurred_at;index:idx_events_tenant_action,priority:3;index:idx_events_tenant_occurred,priority:2"`
 	ReceivedAt          time.Time                     `gorm:"type:timestamp"`
 	TenantID            *uuid.UUID                    `gorm:"type:uuid;index:idx_events_tenant_action,priority:1;index:idx_events_tenant_id;index:idx_events_tenant_occurred,priority:1"`
-	AppID               *uuid.UUID                    `gorm:"type:uuid;index:idx_events_app_id"`
+	ApplicationID       *uuid.UUID                    `gorm:"type:uuid;index:idx_events_application_id"`
 	ActorType           enums.AuditActorType          `gorm:"type:actor_type;index:idx_events_actor,priority:1;index:idx_events_actor_occurred,priority:1"`
 	ActorID             uuid.UUID                     `gorm:"type:uuid;index:idx_events_actor,priority:2;index:idx_events_actor_occurred,priority:2"`
 	ActorTenantMemberID *uuid.UUID                    `gorm:"type:uuid"`
@@ -51,7 +51,7 @@ func (m *Event) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var EventCols = struct {
-	ID, EventID, OccurredAt, ReceivedAt, TenantID, AppID, ActorType,
+	ID, EventID, OccurredAt, ReceivedAt, TenantID, ApplicationID, ActorType,
 	ActorID, ActorTenantMemberID, Action, TargetType, TargetID, Result, FailureReasonCode,
 	HttpMethod, HttpPath, HttpStatus, RequestID, TraceID, IP, UserAgent,
 	GeoCountry, RiskLevel, DataClassification, PrevHash, EventHash, Metadata, CreatedAt string
@@ -61,7 +61,7 @@ var EventCols = struct {
 	OccurredAt:          "occurred_at",
 	ReceivedAt:          "received_at",
 	TenantID:            "tenant_id",
-	AppID:               "app_id",
+	ApplicationID:       "application_id",
 	ActorType:           "actor_type",
 	ActorID:             "actor_id",
 	ActorTenantMemberID: "actor_tenant_member_id",

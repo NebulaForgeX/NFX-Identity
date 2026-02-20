@@ -22,7 +22,7 @@ func RefreshTokenDomainToModel(rt *refresh_tokens.RefreshToken) *models.RefreshT
 		ID:           rt.ID(),
 		TokenID:      rt.TokenID(),
 		UserID:       rt.UserID(),
-		AppID:        rt.AppID(),
+		ApplicationID: rt.AppID(),
 		ClientID:     rt.ClientID(),
 		SessionID:    rt.SessionID(),
 		IssuedAt:     rt.IssuedAt(),
@@ -54,7 +54,7 @@ func RefreshTokenModelToDomain(m *models.RefreshToken) *refresh_tokens.RefreshTo
 		ID:           m.ID,
 		TokenID:      m.TokenID,
 		UserID:       m.UserID,
-		AppID:        m.AppID,
+		AppID:        m.ApplicationID,
 		ClientID:     m.ClientID,
 		SessionID:    m.SessionID,
 		IssuedAt:     m.IssuedAt,
@@ -76,7 +76,7 @@ func RefreshTokenModelToDomain(m *models.RefreshToken) *refresh_tokens.RefreshTo
 func RefreshTokenModelToUpdates(m *models.RefreshToken) map[string]any {
 	return map[string]any{
 		models.RefreshTokenCols.UserID:       m.UserID,
-		models.RefreshTokenCols.AppID:       m.AppID,
+		models.RefreshTokenCols.ApplicationID: m.ApplicationID,
 		models.RefreshTokenCols.ClientID:    m.ClientID,
 		models.RefreshTokenCols.SessionID:   m.SessionID,
 		models.RefreshTokenCols.IssuedAt:    m.IssuedAt,

@@ -13,9 +13,9 @@ import (
 
 // ByTenantIDAndAppID 根据 TenantID 和 AppID 获取 TenantApp，实现 tenant_apps.Get 接口
 func (h *Handler) ByTenantIDAndAppID(ctx context.Context, tenantID, appID uuid.UUID) (*tenant_apps.TenantApp, error) {
-	var m models.TenantApp
+	var m models.TenantApplication
 	if err := h.db.WithContext(ctx).
-		Where("tenant_id = ? AND app_id = ?", tenantID, appID).
+		Where("tenant_id = ? AND application_id = ?", tenantID, appID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, tenant_apps.ErrTenantAppNotFound

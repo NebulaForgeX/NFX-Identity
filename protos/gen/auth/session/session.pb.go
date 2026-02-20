@@ -97,7 +97,7 @@ type Session struct {
 	Id                string                   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                      // 会话ID (UUID)
 	SessionId         string                   `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`                                                       // 会话标识符 (varchar(255))
 	UserId            string                   `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                // 用户ID (UUID)
-	AppId             *string                  `protobuf:"bytes,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                             // 应用ID (UUID)
+	ApplicationId     *string                  `protobuf:"bytes,4,opt,name=application_id,json=applicationId,proto3,oneof" json:"application_id,omitempty"`                                     // 应用ID (UUID)
 	ClientId          *string                  `protobuf:"bytes,5,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`                                                    // 客户端ID (varchar(255))
 	CreatedAt         *timestamppb.Timestamp   `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                       // 创建时间
 	LastSeenAt        *timestamppb.Timestamp   `protobuf:"bytes,7,opt,name=last_seen_at,json=lastSeenAt,proto3" json:"last_seen_at,omitempty"`                                                  // 最后活跃时间
@@ -166,9 +166,9 @@ func (x *Session) GetUserId() string {
 	return ""
 }
 
-func (x *Session) GetAppId() string {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
+func (x *Session) GetApplicationId() string {
+	if x != nil && x.ApplicationId != nil {
+		return *x.ApplicationId
 	}
 	return ""
 }
@@ -621,13 +621,13 @@ var File_auth_session_proto protoreflect.FileDescriptor
 
 const file_auth_session_proto_rawDesc = "" +
 	"\n" +
-	"\x12auth/session.proto\x12\asession\x1a\x1fgoogle/protobuf/timestamp.proto\"\xee\x06\n" +
+	"\x12auth/session.proto\x12\asession\x1a\x1fgoogle/protobuf/timestamp.proto\"\x86\a\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1a\n" +
-	"\x06app_id\x18\x04 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12*\n" +
+	"\x0eapplication_id\x18\x04 \x01(\tH\x00R\rapplicationId\x88\x01\x01\x12 \n" +
 	"\tclient_id\x18\x05 \x01(\tH\x01R\bclientId\x88\x01\x01\x129\n" +
 	"\n" +
 	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12<\n" +
@@ -648,8 +648,8 @@ const file_auth_session_proto_rawDesc = "" +
 	"\n" +
 	"revoked_by\x18\x10 \x01(\tH\tR\trevokedBy\x88\x01\x01\x129\n" +
 	"\n" +
-	"updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\t\n" +
-	"\a_app_idB\f\n" +
+	"updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x11\n" +
+	"\x0f_application_idB\f\n" +
 	"\n" +
 	"_client_idB\x05\n" +
 	"\x03_ipB\n" +

@@ -14,7 +14,7 @@ import (
 func (h *Handler) ActiveByAppID(ctx context.Context, appID uuid.UUID) ([]*api_keys.APIKey, error) {
 	var ms []models.ApiKey
 	if err := h.db.WithContext(ctx).
-		Where("app_id = ? AND status = ?", appID, enums.ClientsApiKeyStatusActive).
+		Where("application_id = ? AND status = ?", appID, enums.ClientsApiKeyStatusActive).
 		Find(&ms).Error; err != nil {
 		return nil, err
 	}

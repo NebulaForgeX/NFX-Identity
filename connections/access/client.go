@@ -1,47 +1,35 @@
 package access
 
 import (
-	actionpb "nfxid/protos/gen/access/action"
-	actionrequirementpb "nfxid/protos/gen/access/action_requirement"
-	grantpb "nfxid/protos/gen/access/grant"
-	permissionpb "nfxid/protos/gen/access/permission"
-	rolepb "nfxid/protos/gen/access/role"
-	rolepermissionpb "nfxid/protos/gen/access/role_permission"
-	scopepb "nfxid/protos/gen/access/scope"
-	scopepermissionpb "nfxid/protos/gen/access/scope_permission"
+	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
+	applicationrolepb "nfxid/protos/gen/access/application_role"
+	superadminpb "nfxid/protos/gen/access/super_admin"
+	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
+	tenantrolepb "nfxid/protos/gen/access/tenant_role"
 )
 
-// Client Access 服务客户端
+// Client Access 服务 gRPC 客户端聚合
 type Client struct {
-	Action            *ActionClient
-	ActionRequirement *ActionRequirementClient
-	Role              *RoleClient
-	Permission        *PermissionClient
-	Grant             *GrantClient
-	RolePermission    *RolePermissionClient
-	Scope             *ScopeClient
-	ScopePermission   *ScopePermissionClient
+	SuperAdmin               *SuperAdminClient
+	TenantRole                *TenantRoleClient
+	TenantRoleAssignment      *TenantRoleAssignmentClient
+	ApplicationRole           *ApplicationRoleClient
+	ApplicationRoleAssignment *ApplicationRoleAssignmentClient
 }
 
 // NewClient 创建 Access 客户端
 func NewClient(
-	actionClient actionpb.ActionServiceClient,
-	actionRequirementClient actionrequirementpb.ActionRequirementServiceClient,
-	roleClient rolepb.RoleServiceClient,
-	permissionClient permissionpb.PermissionServiceClient,
-	grantClient grantpb.GrantServiceClient,
-	rolePermissionClient rolepermissionpb.RolePermissionServiceClient,
-	scopeClient scopepb.ScopeServiceClient,
-	scopePermissionClient scopepermissionpb.ScopePermissionServiceClient,
+	superAdminClient superadminpb.SuperAdminServiceClient,
+	tenantRoleClient tenantrolepb.TenantRoleServiceClient,
+	tenantRoleAssignmentClient tenantroleassignmentpb.TenantRoleAssignmentServiceClient,
+	applicationRoleClient applicationrolepb.ApplicationRoleServiceClient,
+	applicationRoleAssignmentClient applicationroleassignmentpb.ApplicationRoleAssignmentServiceClient,
 ) *Client {
 	return &Client{
-		Action:            NewActionClient(actionClient),
-		ActionRequirement: NewActionRequirementClient(actionRequirementClient),
-		Role:              NewRoleClient(roleClient),
-		Permission:        NewPermissionClient(permissionClient),
-		Grant:             NewGrantClient(grantClient),
-		RolePermission:    NewRolePermissionClient(rolePermissionClient),
-		Scope:             NewScopeClient(scopeClient),
-		ScopePermission:   NewScopePermissionClient(scopePermissionClient),
+		SuperAdmin:               NewSuperAdminClient(superAdminClient),
+		TenantRole:               NewTenantRoleClient(tenantRoleClient),
+		TenantRoleAssignment:     NewTenantRoleAssignmentClient(tenantRoleAssignmentClient),
+		ApplicationRole:          NewApplicationRoleClient(applicationRoleClient),
+		ApplicationRoleAssignment: NewApplicationRoleAssignmentClient(applicationRoleAssignmentClient),
 	}
 }

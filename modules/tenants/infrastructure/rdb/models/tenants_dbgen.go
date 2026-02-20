@@ -15,6 +15,7 @@ type Tenant struct {
 	TenantID      string                    `gorm:"type:varchar(255);index:idx_tenants_tenant_id;uniqueIndex:tenants_tenant_id_key"`
 	Name          string                    `gorm:"type:varchar(255);index:idx_tenants_name"`
 	DisplayName   *string                   `gorm:"type:varchar(255)"`
+	OwnerID       uuid.UUID                 `gorm:"type:uuid"`
 	Status        enums.TenantsTenantStatus `gorm:"type:tenant_status;index:idx_tenants_status"`
 	PrimaryDomain *string                   `gorm:"type:varchar(255);index:idx_tenants_primary_domain"`
 	CreatedAt     time.Time                 `gorm:"autoCreateTime"`
@@ -33,13 +34,14 @@ func (m *Tenant) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var TenantCols = struct {
-	ID, TenantID, Name, DisplayName, Status, PrimaryDomain, CreatedAt,
-	UpdatedAt, DeletedAt, Metadata string
+	ID, TenantID, Name, DisplayName, OwnerID, Status, PrimaryDomain,
+	CreatedAt, UpdatedAt, DeletedAt, Metadata string
 }{
 	ID:            "id",
 	TenantID:      "tenant_id",
 	Name:          "name",
 	DisplayName:   "display_name",
+	OwnerID:       "owner_id",
 	Status:        "status",
 	PrimaryDomain: "primary_domain",
 	CreatedAt:     "created_at",

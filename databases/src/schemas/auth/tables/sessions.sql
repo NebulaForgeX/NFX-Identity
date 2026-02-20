@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "auth"."sessions" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "session_id" VARCHAR(255) NOT NULL UNIQUE, -- Unique session identifier
   "user_id" UUID NOT NULL, -- References directory.users.id (application-level consistency)
-  "app_id" UUID, -- Which application this session belongs to
+  "application_id" UUID,
   "client_id" VARCHAR(255), -- OAuth client identifier
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "last_seen_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS "auth"."sessions" (
 
 CREATE INDEX IF NOT EXISTS "idx_sessions_session_id" ON "auth"."sessions"("session_id");
 CREATE INDEX IF NOT EXISTS "idx_sessions_user_id" ON "auth"."sessions"("user_id");
-CREATE INDEX IF NOT EXISTS "idx_sessions_app_id" ON "auth"."sessions"("app_id");
+CREATE INDEX IF NOT EXISTS "idx_sessions_application_id" ON "auth"."sessions"("application_id");
 CREATE INDEX IF NOT EXISTS "idx_sessions_expires_at" ON "auth"."sessions"("expires_at");
 CREATE INDEX IF NOT EXISTS "idx_sessions_revoked_at" ON "auth"."sessions"("revoked_at") WHERE "revoked_at" IS NULL;
 CREATE INDEX IF NOT EXISTS "idx_sessions_user_active" ON "auth"."sessions"("user_id", "revoked_at") WHERE "revoked_at" IS NULL;

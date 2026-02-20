@@ -9,8 +9,8 @@ import (
 	"gorm.io/datatypes"
 )
 
-// TenantAppDomainToModel 将 Domain TenantApp 转换为 Model TenantApp
-func TenantAppDomainToModel(ta *tenant_apps.TenantApp) *models.TenantApp {
+// TenantAppDomainToModel 将 Domain TenantApp 转换为 Model TenantApplication
+func TenantAppDomainToModel(ta *tenant_apps.TenantApp) *models.TenantApplication {
 	if ta == nil {
 		return nil
 	}
@@ -22,20 +22,20 @@ func TenantAppDomainToModel(ta *tenant_apps.TenantApp) *models.TenantApp {
 		settings = &jsonData
 	}
 
-	return &models.TenantApp{
-		ID:        ta.ID(),
-		TenantID:  ta.TenantID(),
-		AppID:     ta.AppID(),
-		Status:    tenantAppStatusDomainToEnum(ta.Status()),
-		CreatedAt: ta.CreatedAt(),
-		CreatedBy: ta.CreatedBy(),
-		UpdatedAt: ta.UpdatedAt(),
-		Settings:  settings,
+	return &models.TenantApplication{
+		ID:            ta.ID(),
+		TenantID:      ta.TenantID(),
+		ApplicationID: ta.AppID(),
+		Status:        tenantAppStatusDomainToEnum(ta.Status()),
+		CreatedAt:     ta.CreatedAt(),
+		CreatedBy:     ta.CreatedBy(),
+		UpdatedAt:     ta.UpdatedAt(),
+		Settings:      settings,
 	}
 }
 
-// TenantAppModelToDomain 将 Model TenantApp 转换为 Domain TenantApp
-func TenantAppModelToDomain(m *models.TenantApp) *tenant_apps.TenantApp {
+// TenantAppModelToDomain 将 Model TenantApplication 转换为 Domain TenantApp
+func TenantAppModelToDomain(m *models.TenantApplication) *tenant_apps.TenantApp {
 	if m == nil {
 		return nil
 	}
@@ -48,7 +48,7 @@ func TenantAppModelToDomain(m *models.TenantApp) *tenant_apps.TenantApp {
 	state := tenant_apps.TenantAppState{
 		ID:        m.ID,
 		TenantID:  m.TenantID,
-		AppID:     m.AppID,
+		AppID:     m.ApplicationID,
 		Status:    tenantAppStatusEnumToDomain(m.Status),
 		CreatedAt: m.CreatedAt,
 		CreatedBy: m.CreatedBy,
@@ -59,50 +59,50 @@ func TenantAppModelToDomain(m *models.TenantApp) *tenant_apps.TenantApp {
 	return tenant_apps.NewTenantAppFromState(state)
 }
 
-// TenantAppModelToUpdates 将 Model TenantApp 转换为更新字段映射
-func TenantAppModelToUpdates(m *models.TenantApp) map[string]any {
+// TenantAppModelToUpdates 将 Model TenantApplication 转换为更新字段映射
+func TenantAppModelToUpdates(m *models.TenantApplication) map[string]any {
 	var settings any
 	if m.Settings != nil {
 		settings = m.Settings
 	}
 
 	return map[string]any{
-		models.TenantAppCols.TenantID:  m.TenantID,
-		models.TenantAppCols.AppID:     m.AppID,
-		models.TenantAppCols.Status:    m.Status,
-		models.TenantAppCols.CreatedBy: m.CreatedBy,
-		models.TenantAppCols.UpdatedAt: m.UpdatedAt,
-		models.TenantAppCols.Settings:  settings,
+		models.TenantApplicationCols.TenantID:      m.TenantID,
+		models.TenantApplicationCols.ApplicationID: m.ApplicationID,
+		models.TenantApplicationCols.Status:        m.Status,
+		models.TenantApplicationCols.CreatedBy:     m.CreatedBy,
+		models.TenantApplicationCols.UpdatedAt:     m.UpdatedAt,
+		models.TenantApplicationCols.Settings:      settings,
 	}
 }
 
 // 枚举转换辅助函数
 
-// TenantAppStatusDomainToEnum 将 Domain TenantAppStatus 转换为 Enum TenantAppStatus
-func TenantAppStatusDomainToEnum(tas tenant_apps.TenantAppStatus) enums.TenantsTenantAppStatus {
+// TenantAppStatusDomainToEnum 将 Domain TenantAppStatus 转换为 Enum TenantsTenantApplicationStatus
+func TenantAppStatusDomainToEnum(tas tenant_apps.TenantAppStatus) enums.TenantsTenantApplicationStatus {
 	return tenantAppStatusDomainToEnum(tas)
 }
 
-func tenantAppStatusDomainToEnum(tas tenant_apps.TenantAppStatus) enums.TenantsTenantAppStatus {
+func tenantAppStatusDomainToEnum(tas tenant_apps.TenantAppStatus) enums.TenantsTenantApplicationStatus {
 	switch tas {
 	case tenant_apps.TenantAppStatusActive:
-		return enums.TenantsTenantAppStatusActive
+		return enums.TenantsTenantApplicationStatusActive
 	case tenant_apps.TenantAppStatusDisabled:
-		return enums.TenantsTenantAppStatusDisabled
+		return enums.TenantsTenantApplicationStatusDisabled
 	case tenant_apps.TenantAppStatusSuspended:
-		return enums.TenantsTenantAppStatusSuspended
+		return enums.TenantsTenantApplicationStatusSuspended
 	default:
-		return enums.TenantsTenantAppStatusActive
+		return enums.TenantsTenantApplicationStatusActive
 	}
 }
 
-func tenantAppStatusEnumToDomain(tas enums.TenantsTenantAppStatus) tenant_apps.TenantAppStatus {
+func tenantAppStatusEnumToDomain(tas enums.TenantsTenantApplicationStatus) tenant_apps.TenantAppStatus {
 	switch tas {
-	case enums.TenantsTenantAppStatusActive:
+	case enums.TenantsTenantApplicationStatusActive:
 		return tenant_apps.TenantAppStatusActive
-	case enums.TenantsTenantAppStatusDisabled:
+	case enums.TenantsTenantApplicationStatusDisabled:
 		return tenant_apps.TenantAppStatusDisabled
-	case enums.TenantsTenantAppStatusSuspended:
+	case enums.TenantsTenantApplicationStatusSuspended:
 		return tenant_apps.TenantAppStatusSuspended
 	default:
 		return tenant_apps.TenantAppStatusActive

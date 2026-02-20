@@ -14,12 +14,12 @@ import (
 func (h *Handler) Status(ctx context.Context, id uuid.UUID, status apps.AppStatus) error {
 	statusEnum := mapper.AppStatusDomainToEnum(status)
 	updates := map[string]any{
-		models.AppCols.Status:    statusEnum,
-		models.AppCols.UpdatedAt: time.Now().UTC(),
+		models.ApplicationCols.Status:    statusEnum,
+		models.ApplicationCols.UpdatedAt: time.Now().UTC(),
 	}
 
 	return h.db.WithContext(ctx).
-		Model(&models.App{}).
+		Model(&models.Application{}).
 		Where("id = ?", id).
 		Updates(updates).Error
 }

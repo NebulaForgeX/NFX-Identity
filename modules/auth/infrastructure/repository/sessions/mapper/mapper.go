@@ -22,7 +22,7 @@ func SessionDomainToModel(s *sessions.Session) *models.Session {
 		ID:                s.ID(),
 		SessionID:         s.SessionID(),
 		UserID:            s.UserID(),
-		AppID:             s.AppID(),
+		ApplicationID:    s.AppID(),
 		ClientID:          s.ClientID(),
 		CreatedAt:         s.CreatedAt(),
 		LastSeenAt:        s.LastSeenAt(),
@@ -55,7 +55,7 @@ func SessionModelToDomain(m *models.Session) *sessions.Session {
 		ID:                m.ID,
 		SessionID:         m.SessionID,
 		UserID:            m.UserID,
-		AppID:             m.AppID,
+		AppID:             m.ApplicationID,
 		ClientID:          m.ClientID,
 		CreatedAt:         m.CreatedAt,
 		LastSeenAt:        m.LastSeenAt,
@@ -78,7 +78,7 @@ func SessionModelToDomain(m *models.Session) *sessions.Session {
 func SessionModelToUpdates(m *models.Session) map[string]any {
 	return map[string]any{
 		models.SessionCols.UserID:            m.UserID,
-		models.SessionCols.AppID:             m.AppID,
+		models.SessionCols.ApplicationID:    m.ApplicationID,
 		models.SessionCols.ClientID:          m.ClientID,
 		models.SessionCols.LastSeenAt:        m.LastSeenAt,
 		models.SessionCols.ExpiresAt:         m.ExpiresAt,

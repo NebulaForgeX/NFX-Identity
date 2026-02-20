@@ -11,7 +11,7 @@ import (
 
 // ByTenantID 根据 TenantID 获取 App 列表，实现 apps.Get 接口
 func (h *Handler) ByTenantID(ctx context.Context, tenantID uuid.UUID) ([]*apps.App, error) {
-	var ms []models.App
+	var ms []models.Application
 	if err := h.db.WithContext(ctx).
 		Where("tenant_id = ?", tenantID).
 		Find(&ms).Error; err != nil {

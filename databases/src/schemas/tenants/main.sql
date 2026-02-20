@@ -1,12 +1,10 @@
 -- atlas:import schema.sql
 -- atlas:import tables/tenants.sql
 -- atlas:import tables/members.sql
--- atlas:import tables/member_roles.sql
 -- atlas:import tables/invitations.sql
--- atlas:import tables/tenant_apps.sql
+-- atlas:import tables/tenant_applications.sql
 -- atlas:import tables/tenant_settings.sql
 -- atlas:import tables/groups.sql
 -- atlas:import tables/member_groups.sql
--- atlas:import tables/member_app_roles.sql
 -- atlas:import tables/domain_verifications.sql
 

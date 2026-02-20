@@ -1,0 +1,38 @@
+syntax = "proto3";
+package tenant_application;
+option go_package = "nfxid/protos/gen/tenants/tenant_application;tenantapplicationpb";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// 租户应用状态枚举（与 enums.TenantsTenantApplicationStatus 一致）
+enum TenantsTenantApplicationStatus {
+  TENANTS_TENANT_APPLICATION_STATUS_UNSPECIFIED = 0;
+  TENANTS_TENANT_APPLICATION_STATUS_ACTIVE = 1;
+  TENANTS_TENANT_APPLICATION_STATUS_DISABLED = 2;
+  TENANTS_TENANT_APPLICATION_STATUS_SUSPENDED = 3;
+}
+
+// 租户应用信息（tenants.tenant_applications）
+message TenantApplication {
+  string id = 1;
+  string tenant_id = 2;
+  string application_id = 3;
+  TenantsTenantApplicationStatus status = 4;
+  google.protobuf.Timestamp created_at = 5;
+  optional string created_by = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Struct settings = 8;
+}
+
+service TenantApplicationService {
+  rpc GetTenantApplicationByID (GetTenantApplicationByIDRequest) returns (GetTenantApplicationByIDResponse);
+  rpc GetTenantApplicationsByTenantID (GetTenantApplicationsByTenantIDRequest) returns (GetTenantApplicationsByTenantIDResponse);
+  rpc GetTenantApplicationsByApplicationID (GetTenantApplicationsByApplicationIDRequest) returns (GetTenantApplicationsByApplicationIDResponse);
+}
+
+message GetTenantApplicationByIDRequest { string id = 1; }
+message GetTenantApplicationByIDResponse { TenantApplication tenant_application = 1; }
+message GetTenantApplicationsByTenantIDRequest { string tenant_id = 1; }
+message GetTenantApplicationsByTenantIDResponse { repeated TenantApplication tenant_applications = 1; }
+message GetTenantApplicationsByApplicationIDRequest { string application_id = 1; }
+message GetTenantApplicationsByApplicationIDResponse { repeated TenantApplication tenant_applications = 1; }

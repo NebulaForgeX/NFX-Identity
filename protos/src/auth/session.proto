@@ -24,7 +24,7 @@ message Session {
   string id = 1;                           // 会话ID (UUID)
   string session_id = 2;                   // 会话标识符 (varchar(255))
   string user_id = 3;                      // 用户ID (UUID)
-  optional string app_id = 4;              // 应用ID (UUID)
+  optional string application_id = 4;     // 应用ID (UUID)
   optional string client_id = 5;           // 客户端ID (varchar(255))
   google.protobuf.Timestamp created_at = 6;             // 创建时间
   google.protobuf.Timestamp last_seen_at = 7;           // 最后活跃时间

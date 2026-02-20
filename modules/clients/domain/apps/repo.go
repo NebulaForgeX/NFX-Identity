@@ -26,6 +26,7 @@ type Get interface {
 	ByAppID(ctx context.Context, appID string) (*App, error)
 	ByTenantID(ctx context.Context, tenantID uuid.UUID) ([]*App, error)
 	ByTenantIDAndEnvironment(ctx context.Context, tenantID uuid.UUID, environment Environment) ([]*App, error)
+	ByIDs(ctx context.Context, ids []uuid.UUID) ([]*App, error)
 }
 
 // Check 定义检查相关的方法

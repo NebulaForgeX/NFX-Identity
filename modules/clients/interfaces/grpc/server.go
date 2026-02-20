@@ -14,10 +14,8 @@ import (
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
 	schemapb "nfxid/protos/gen/common/schema"
-	apppb "nfxid/protos/gen/clients/app"
-	apikeypb "nfxid/protos/gen/clients/api_key"
+	applicationpb "nfxid/protos/gen/clients/application"
 	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
-	clientscopepb "nfxid/protos/gen/clients/client_scope"
 	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
 	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
 
@@ -44,10 +42,8 @@ func NewServer(d Deps) *grpc.Server {
 	s := grpc.NewServer(opts...)
 
 	// Register gRPC services
-	apppb.RegisterAppServiceServer(s, grpcHandler.NewAppHandler(d.AppAppSvc()))
-	apikeypb.RegisterApiKeyServiceServer(s, grpcHandler.NewAPIKeyHandler(d.APIKeyAppSvc()))
+	applicationpb.RegisterApplicationServiceServer(s, grpcHandler.NewApplicationHandler(d.AppAppSvc()))
 	clientcredentialpb.RegisterClientCredentialServiceServer(s, grpcHandler.NewClientCredentialHandler(d.ClientCredentialAppSvc()))
-	clientscopepb.RegisterClientScopeServiceServer(s, grpcHandler.NewClientScopeHandler(d.ClientScopeAppSvc()))
 	ipallowlistpb.RegisterIpAllowlistServiceServer(s, grpcHandler.NewIPAllowlistHandler(d.IPAllowlistAppSvc()))
 	ratelimitpb.RegisterRateLimitServiceServer(s, grpcHandler.NewRateLimitHandler(d.RateLimitAppSvc()))
 

@@ -12,7 +12,7 @@ func (h *Handler) Generic(ctx context.Context, ta *tenant_apps.TenantApp) error 
 	m := mapper.TenantAppDomainToModel(ta)
 	updates := mapper.TenantAppModelToUpdates(m)
 	return h.db.WithContext(ctx).
-		Model(&models.TenantApp{}).
+		Model(&models.TenantApplication{}).
 		Where("id = ?", ta.ID()).
 		Updates(updates).Error
 }

@@ -1,3 +1,2 @@
 CREATE SCHEMA IF NOT EXISTS "auth";
-COMMENT ON SCHEMA "auth" IS 'Authentication and authorization schema';
-
+COMMENT ON SCHEMA "auth" IS 'Authentication schema';

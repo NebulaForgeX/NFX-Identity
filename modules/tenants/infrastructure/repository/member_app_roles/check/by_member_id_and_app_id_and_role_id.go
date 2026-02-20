@@ -12,7 +12,7 @@ func (h *Handler) ByMemberIDAndAppIDAndRoleID(ctx context.Context, memberID, app
 	var count int64
 	err := h.db.WithContext(ctx).
 		Model(&models.MemberAppRole{}).
-		Where("member_id = ? AND app_id = ? AND role_id = ?", memberID, appID, roleID).
+		Where("member_id = ? AND application_id = ? AND role_id = ?", memberID, appID, roleID).
 		Count(&count).Error
 	return count > 0, err
 }

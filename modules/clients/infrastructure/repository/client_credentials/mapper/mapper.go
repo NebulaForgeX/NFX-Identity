@@ -14,7 +14,7 @@ func ClientCredentialDomainToModel(cc *client_credentials.ClientCredential) *mod
 
 	return &models.ClientCredential{
 		ID:           cc.ID(),
-		AppID:        cc.AppID(),
+		ApplicationID: cc.AppID(),
 		ClientID:     cc.ClientID(),
 		SecretHash:   cc.SecretHash(),
 		HashAlg:      cc.HashAlg(),
@@ -38,7 +38,7 @@ func ClientCredentialModelToDomain(m *models.ClientCredential) *client_credentia
 
 	state := client_credentials.ClientCredentialState{
 		ID:           m.ID,
-		AppID:        m.AppID,
+		AppID:        m.ApplicationID,
 		ClientID:     m.ClientID,
 		SecretHash:   m.SecretHash,
 		HashAlg:      m.HashAlg,

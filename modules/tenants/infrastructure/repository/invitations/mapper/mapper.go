@@ -2,7 +2,6 @@ package mapper
 
 import (
 	"encoding/json"
-	"strings"
 	"nfxid/enums"
 	"nfxid/modules/tenants/domain/invitations"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
@@ -17,15 +16,10 @@ func InvitationDomainToModel(i *invitations.Invitation) *models.Invitation {
 		return nil
 	}
 
-	// 序列化 RoleIDs 为 PostgreSQL UUID数组格式 "{uuid1,uuid2,...}"
-	var roleIdsStr *string
+	// Domain 使用 RoleIDs 切片，Model 使用单个 TenantRoleID，取第一个
+	var tenantRoleID uuid.UUID
 	if len(i.RoleIDs()) > 0 {
-		ids := make([]string, len(i.RoleIDs()))
-		for j, id := range i.RoleIDs() {
-			ids[j] = id.String()
-		}
-		idsStr := "{" + strings.Join(ids, ",") + "}"
-		roleIdsStr = &idsStr
+		tenantRoleID = i.RoleIDs()[0]
 	}
 
 	var metadata *datatypes.JSON
@@ -50,7 +44,7 @@ func InvitationDomainToModel(i *invitations.Invitation) *models.Invitation {
 		RevokedBy:        i.RevokedBy(),
 		RevokedAt:        i.RevokedAt(),
 		RevokeReason:     i.RevokeReason(),
-		RoleIds:          roleIdsStr, // Model 使用 RoleIds，Domain 使用 RoleIDs
+		TenantRoleID:     tenantRoleID,
 		Metadata:         metadata,
 	}
 }
@@ -61,20 +55,10 @@ func InvitationModelToDomain(m *models.Invitation) *invitations.Invitation {
 		return nil
 	}
 
-	// 解析 RoleIDs 从 PostgreSQL UUID数组格式 "{uuid1,uuid2,...}"
+	// Model 使用单个 TenantRoleID，Domain 使用 RoleIDs 切片
 	var roleIDs []uuid.UUID
-	if m.RoleIds != nil && *m.RoleIds != "" {
-		// 移除大括号并分割
-		idsStr := strings.Trim(*m.RoleIds, "{}")
-		if idsStr != "" {
-			idStrs := strings.Split(idsStr, ",")
-			roleIDs = make([]uuid.UUID, 0, len(idStrs))
-			for _, idStr := range idStrs {
-				if id, err := uuid.Parse(strings.TrimSpace(idStr)); err == nil {
-					roleIDs = append(roleIDs, id)
-				}
-			}
-		}
+	if m.TenantRoleID != uuid.Nil {
+		roleIDs = []uuid.UUID{m.TenantRoleID}
 	}
 
 	var metadata map[string]interface{}
@@ -83,22 +67,22 @@ func InvitationModelToDomain(m *models.Invitation) *invitations.Invitation {
 	}
 
 	state := invitations.InvitationState{
-		ID:              m.ID,
-		InviteID:        m.InviteID,
-		TenantID:        m.TenantID,
-		Email:           m.Email,
-		TokenHash:       m.TokenHash,
-		ExpiresAt:       m.ExpiresAt,
-		Status:          invitationStatusEnumToDomain(m.Status),
-		InvitedBy:       m.InvitedBy,
-		InvitedAt:       m.InvitedAt,
+		ID:               m.ID,
+		InviteID:         m.InviteID,
+		TenantID:         m.TenantID,
+		Email:            m.Email,
+		TokenHash:        m.TokenHash,
+		ExpiresAt:        m.ExpiresAt,
+		Status:           invitationStatusEnumToDomain(m.Status),
+		InvitedBy:        m.InvitedBy,
+		InvitedAt:        m.InvitedAt,
 		AcceptedByUserID: m.AcceptedByUserID,
-		AcceptedAt:      m.AcceptedAt,
-		RevokedBy:       m.RevokedBy,
-		RevokedAt:       m.RevokedAt,
-		RevokeReason:    m.RevokeReason,
-		RoleIDs:         roleIDs, // Model 使用 RoleIds，Domain 使用 RoleIDs
-		Metadata:        metadata,
+		AcceptedAt:       m.AcceptedAt,
+		RevokedBy:        m.RevokedBy,
+		RevokedAt:        m.RevokedAt,
+		RevokeReason:     m.RevokeReason,
+		RoleIDs:          roleIDs,
+		Metadata:         metadata,
 	}
 
 	return invitations.NewInvitationFromState(state)
@@ -125,7 +109,7 @@ func InvitationModelToUpdates(m *models.Invitation) map[string]any {
 		models.InvitationCols.RevokedBy:        m.RevokedBy,
 		models.InvitationCols.RevokedAt:        m.RevokedAt,
 		models.InvitationCols.RevokeReason:     m.RevokeReason,
-		models.InvitationCols.RoleIds:          m.RoleIds,
+		models.InvitationCols.TenantRoleID:     m.TenantRoleID,
 		models.InvitationCols.Metadata:         metadata,
 	}
 }

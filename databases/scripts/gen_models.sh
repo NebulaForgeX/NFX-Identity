@@ -72,6 +72,13 @@ else
   mkdir -p "$GEN_DIR"
 fi
 
+# Clear all generated model files in module dirs before generating (avoid stale files when tables are removed)
+for module_models in "${REPO_ROOT}/modules"/*/infrastructure/rdb/models; do
+  if [ -d "$module_models" ]; then
+    rm -f "${module_models}"/*_dbgen.go
+  fi
+done
+
 # set local module prefix, for goimports grouping
 MODPATH="$(go list -m 2>/dev/null || echo "")"
 [[ -n "$MODPATH" ]] && export GOIMPORTSLOCAL="$MODPATH"

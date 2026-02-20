@@ -13,7 +13,7 @@ import (
 func (h *Handler) ByAppID(ctx context.Context, appID uuid.UUID) ([]*client_scopes.ClientScope, error) {
 	var ms []models.ClientScope
 	if err := h.db.WithContext(ctx).
-		Where("app_id = ?", appID).
+		Where("application_id = ?", appID).
 		Find(&ms).Error; err != nil {
 		return nil, err
 	}

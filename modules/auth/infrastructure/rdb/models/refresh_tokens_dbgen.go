@@ -10,22 +10,22 @@ import (
 )
 
 type RefreshToken struct {
-	ID           uuid.UUID               `gorm:"type:uuid;primaryKey"`
-	TokenID      string                  `gorm:"type:varchar(255);index:idx_refresh_tokens_token_id;uniqueIndex:refresh_tokens_token_id_key"`
-	UserID       uuid.UUID               `gorm:"type:uuid;index:idx_refresh_tokens_user_id"`
-	AppID        *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_app_id"`
-	ClientID     *string                 `gorm:"type:varchar(255)"`
-	SessionID    *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_session_id"`
-	IssuedAt     time.Time               `gorm:"type:timestamp"`
-	ExpiresAt    time.Time               `gorm:"type:timestamp;index:idx_refresh_tokens_expires_at"`
-	RevokedAt    *time.Time              `gorm:"type:timestamp;index:idx_refresh_tokens_revoked_at"`
-	RevokeReason *enums.AuthRevokeReason `gorm:"type:revoke_reason"`
-	RotatedFrom  *uuid.UUID              `gorm:"type:uuid"`
-	DeviceID     *string                 `gorm:"type:varchar(255)"`
-	IP           *string                 `gorm:"type:inet"`
-	UaHash       *string                 `gorm:"type:varchar(64)"`
-	CreatedAt    time.Time               `gorm:"autoCreateTime"`
-	UpdatedAt    time.Time               `gorm:"autoUpdateTime"`
+	ID            uuid.UUID               `gorm:"type:uuid;primaryKey"`
+	TokenID       string                  `gorm:"type:varchar(255);index:idx_refresh_tokens_token_id;uniqueIndex:refresh_tokens_token_id_key"`
+	UserID        uuid.UUID               `gorm:"type:uuid;index:idx_refresh_tokens_user_id"`
+	ApplicationID *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_application_id"`
+	ClientID      *string                 `gorm:"type:varchar(255)"`
+	SessionID     *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_session_id"`
+	IssuedAt      time.Time               `gorm:"type:timestamp"`
+	ExpiresAt     time.Time               `gorm:"type:timestamp;index:idx_refresh_tokens_expires_at"`
+	RevokedAt     *time.Time              `gorm:"type:timestamp;index:idx_refresh_tokens_revoked_at"`
+	RevokeReason  *enums.AuthRevokeReason `gorm:"type:revoke_reason"`
+	RotatedFrom   *uuid.UUID              `gorm:"type:uuid"`
+	DeviceID      *string                 `gorm:"type:varchar(255)"`
+	IP            *string                 `gorm:"type:inet"`
+	UaHash        *string                 `gorm:"type:varchar(64)"`
+	CreatedAt     time.Time               `gorm:"autoCreateTime"`
+	UpdatedAt     time.Time               `gorm:"autoUpdateTime"`
 }
 
 func (RefreshToken) TableName() string { return "auth.refresh_tokens" }
@@ -38,26 +38,26 @@ func (m *RefreshToken) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var RefreshTokenCols = struct {
-	ID, TokenID, UserID, AppID, ClientID, SessionID, IssuedAt,
+	ID, TokenID, UserID, ApplicationID, ClientID, SessionID, IssuedAt,
 	ExpiresAt, RevokedAt, RevokeReason, RotatedFrom, DeviceID, IP, UaHash,
 	CreatedAt, UpdatedAt string
 }{
-	ID:           "id",
-	TokenID:      "token_id",
-	UserID:       "user_id",
-	AppID:        "app_id",
-	ClientID:     "client_id",
-	SessionID:    "session_id",
-	IssuedAt:     "issued_at",
-	ExpiresAt:    "expires_at",
-	RevokedAt:    "revoked_at",
-	RevokeReason: "revoke_reason",
-	RotatedFrom:  "rotated_from",
-	DeviceID:     "device_id",
-	IP:           "ip",
-	UaHash:       "ua_hash",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
+	ID:            "id",
+	TokenID:       "token_id",
+	UserID:        "user_id",
+	ApplicationID: "application_id",
+	ClientID:      "client_id",
+	SessionID:     "session_id",
+	IssuedAt:      "issued_at",
+	ExpiresAt:     "expires_at",
+	RevokedAt:     "revoked_at",
+	RevokeReason:  "revoke_reason",
+	RotatedFrom:   "rotated_from",
+	DeviceID:      "device_id",
+	IP:            "ip",
+	UaHash:        "ua_hash",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
 }
 
 const (

@@ -15,7 +15,7 @@ func IPAllowlistDomainToModel(ip *ip_allowlist.IPAllowlist) *models.IpAllowlist 
 	return &models.IpAllowlist{
 		ID:           ip.ID(),
 		RuleID:       ip.RuleID(),
-		AppID:        ip.AppID(),
+		ApplicationID: ip.AppID(),
 		Cidr:         ip.CIDR(), // Model 使用 Cidr，Domain 使用 CIDR
 		Description:  ip.Description(),
 		Status:       allowlistStatusDomainToEnum(ip.Status()),
@@ -38,7 +38,7 @@ func IPAllowlistModelToDomain(m *models.IpAllowlist) *ip_allowlist.IPAllowlist {
 	state := ip_allowlist.IPAllowlistState{
 		ID:           m.ID,
 		RuleID:       m.RuleID,
-		AppID:        m.AppID,
+		AppID:        m.ApplicationID,
 		CIDR:         m.Cidr, // Model 使用 Cidr，Domain 使用 CIDR
 		Description:  m.Description,
 		Status:       allowlistStatusEnumToDomain(m.Status),

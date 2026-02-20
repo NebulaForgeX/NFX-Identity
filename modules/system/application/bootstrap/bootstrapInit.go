@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"nfxid/constants"
 	bootstrapCommands "nfxid/modules/system/application/bootstrap/commands"
 	systemStateDomain "nfxid/modules/system/domain/system_state"
 	"nfxid/pkgs/logx"
@@ -343,54 +342,12 @@ func (s *Service) initDirectoryService(ctx context.Context, cmd bootstrapCommand
 }
 
 // initAccessService 初始化 Access 服务
-// 创建初始角色和权限（角色与权限定义见 constants/init.go）
+// 新模型使用 super_admins/tenant_roles/tenant_role_assignments，此处仅占位返回；如需将 admin 设为 super_admin 需在 access 模块实现 CreateSuperAdmin RPC 后调用。
 func (s *Service) initAccessService(ctx context.Context, adminUserID uuid.UUID) (uuid.UUID, error) {
-	// 0. 注册所有 action（来自 constants.InitActions），供 CheckAccess 按 key 查询
-	for _, a := range constants.InitActions {
-		_, err := s.grpcClients.AccessClient.Action.CreateAction(ctx, a.ActionKey, a.Service, "active", a.Name, nil, true)
-		if err != nil {
-			return uuid.Nil, fmt.Errorf("failed to create action %s: %w", a.ActionKey, err)
-		}
-	}
-
-	// 1. 创建系统管理员角色
-	adminRoleDesc := constants.InitAdminRoleDesc
-	adminRoleID, err := s.grpcClients.AccessClient.Role.CreateRole(ctx, constants.InitAdminRoleKey, constants.InitAdminRoleName, &adminRoleDesc, constants.InitAdminRoleScope, true)
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("failed to create admin role: %w", err)
-	}
-
-	// 2. 创建基础权限（来自 constants.InitPermissions）
-	var permissionIDs []string
-	for _, perm := range constants.InitPermissions {
-		permDesc := perm.Description
-		permID, err := s.grpcClients.AccessClient.Permission.CreatePermission(ctx, perm.Key, perm.Name, &permDesc, true)
-		if err != nil {
-			return uuid.Nil, fmt.Errorf("failed to create permission %s: %w", perm.Key, err)
-		}
-		permissionIDs = append(permissionIDs, permID)
-	}
-
-	// 3. 将权限分配给角色
-	for _, permID := range permissionIDs {
-		_, err := s.grpcClients.AccessClient.RolePermission.CreateRolePermission(ctx, adminRoleID, permID)
-		if err != nil {
-			return uuid.Nil, fmt.Errorf("failed to assign permission %s to role: %w", permID, err)
-		}
-	}
-
-	// 4. 将角色分配给用户（通过 Grant）
-	_, err = s.grpcClients.AccessClient.Grant.CreateGrant(ctx, "user", adminUserID.String(), "role", adminRoleID, nil)
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("failed to grant role to user: %w", err)
-	}
-
-	roleID, err := uuid.Parse(adminRoleID)
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("invalid role ID returned: %w", err)
-	}
-
-	return roleID, nil
+	_ = ctx
+	_ = adminUserID
+	// TODO: 若 access 暴露 CreateSuperAdmin，可在此调用将 admin 用户加入 super_admins
+	return uuid.Nil, nil
 }
 
 // initAuthService 初始化 Auth 服务

@@ -13,7 +13,7 @@ import (
 func (h *Handler) ByMemberIDAndAppID(ctx context.Context, memberID, appID uuid.UUID) ([]*member_app_roles.MemberAppRole, error) {
 	var ms []models.MemberAppRole
 	if err := h.db.WithContext(ctx).
-		Where("member_id = ? AND app_id = ?", memberID, appID).
+		Where("member_id = ? AND application_id = ?", memberID, appID).
 		Find(&ms).Error; err != nil {
 		return nil, err
 	}

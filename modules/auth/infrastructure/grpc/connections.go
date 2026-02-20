@@ -9,10 +9,11 @@ import (
 	"nfxid/pkgs/security/token/servertoken"
 	"nfxid/pkgs/tokenx"
 
-	grantpb "nfxid/protos/gen/access/grant"
-	permissionpb "nfxid/protos/gen/access/permission"
-	rolepb "nfxid/protos/gen/access/role"
-	rolepermissionpb "nfxid/protos/gen/access/role_permission"
+	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
+	applicationrolepb "nfxid/protos/gen/access/application_role"
+	superadminpb "nfxid/protos/gen/access/super_admin"
+	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
+	tenantrolepb "nfxid/protos/gen/access/tenant_role"
 	useremailpb "nfxid/protos/gen/directory/user_email"
 	userpb "nfxid/protos/gen/directory/user"
 	userphonepb "nfxid/protos/gen/directory/user_phone"
@@ -56,19 +57,19 @@ func createConnection(addr string, tokenProvider servertoken.TokenProvider) (*gr
 
 // AccessClient Access 服务客户端（只包含需要的服务）
 type AccessClient struct {
-	Role           *access.RoleClient
-	Permission     *access.PermissionClient
-	RolePermission *access.RolePermissionClient
-	Grant          *access.GrantClient
+	Client *access.Client
 }
 
 // NewAccessClient 创建 Access 客户端
 func NewAccessClient(conn *grpc.ClientConn) *AccessClient {
 	return &AccessClient{
-		Role:           access.NewRoleClient(rolepb.NewRoleServiceClient(conn)),
-		Permission:     access.NewPermissionClient(permissionpb.NewPermissionServiceClient(conn)),
-		RolePermission: access.NewRolePermissionClient(rolepermissionpb.NewRolePermissionServiceClient(conn)),
-		Grant:          access.NewGrantClient(grantpb.NewGrantServiceClient(conn)),
+		Client: access.NewClient(
+			superadminpb.NewSuperAdminServiceClient(conn),
+			tenantrolepb.NewTenantRoleServiceClient(conn),
+			tenantroleassignmentpb.NewTenantRoleAssignmentServiceClient(conn),
+			applicationrolepb.NewApplicationRoleServiceClient(conn),
+			applicationroleassignmentpb.NewApplicationRoleAssignmentServiceClient(conn),
+		),
 	}
 }
 

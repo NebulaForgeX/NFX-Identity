@@ -31,7 +31,7 @@ message Invitation {
   optional string revoked_by = 12;         // 撤销者ID (UUID)
   optional google.protobuf.Timestamp revoked_at = 13;  // 撤销时间
   optional string revoke_reason = 14;      // 撤销原因 (text)
-  repeated string role_ids = 15;           // 角色ID数组 (uuid[])
+  string tenant_role_id = 15;             // 租户角色ID (UUID, access.tenant_roles)
   optional google.protobuf.Struct metadata = 16; // 元数据 (JSONB)
 }
 

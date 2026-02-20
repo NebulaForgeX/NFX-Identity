@@ -21,11 +21,9 @@ import (
 	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 	grouppb "nfxid/protos/gen/tenants/group"
 	invitationpb "nfxid/protos/gen/tenants/invitation"
-	memberapprolepb "nfxid/protos/gen/tenants/member_app_role"
 	membergrouppb "nfxid/protos/gen/tenants/member_group"
-	memberrolepb "nfxid/protos/gen/tenants/member_role"
 	memberpb "nfxid/protos/gen/tenants/member"
-	tenantapppb "nfxid/protos/gen/tenants/tenant_app"
+	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
 	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
 	tenantpb "nfxid/protos/gen/tenants/tenant"
 
@@ -60,12 +58,10 @@ func NewServer(d Deps) *grpc.Server {
 	grouppb.RegisterGroupServiceServer(s, grpcHandler.NewGroupHandler(d.GroupAppSvc()))
 	memberpb.RegisterMemberServiceServer(s, grpcHandler.NewMemberHandler(d.MemberAppSvc()))
 	invitationpb.RegisterInvitationServiceServer(s, grpcHandler.NewInvitationHandler(d.InvitationAppSvc()))
-	tenantapppb.RegisterTenantAppServiceServer(s, grpcHandler.NewTenantAppHandler(d.TenantAppAppSvc()))
+	tenantapplicationpb.RegisterTenantApplicationServiceServer(s, grpcHandler.NewTenantApplicationHandler(d.TenantAppAppSvc()))
 	tenantsettingpb.RegisterTenantSettingServiceServer(s, grpcHandler.NewTenantSettingHandler(d.TenantSettingAppSvc()))
 	domainverificationpb.RegisterDomainVerificationServiceServer(s, grpcHandler.NewDomainVerificationHandler(d.DomainVerificationAppSvc()))
-	memberrolepb.RegisterMemberRoleServiceServer(s, grpcHandler.NewMemberRoleHandler(d.MemberRoleAppSvc()))
 	membergrouppb.RegisterMemberGroupServiceServer(s, grpcHandler.NewMemberGroupHandler(d.MemberGroupAppSvc()))
-	memberapprolepb.RegisterMemberAppRoleServiceServer(s, grpcHandler.NewMemberAppRoleHandler(d.MemberAppRoleAppSvc()))
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "tenants"))

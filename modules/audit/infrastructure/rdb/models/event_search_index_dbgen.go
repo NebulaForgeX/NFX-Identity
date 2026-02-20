@@ -13,7 +13,7 @@ type EventSearchIndex struct {
 	ID                 uuid.UUID                     `gorm:"type:uuid;primaryKey"`
 	EventID            string                        `gorm:"type:varchar(255);uniqueIndex:event_search_index_event_id_key;index:idx_event_search_index_event_id"`
 	TenantID           *uuid.UUID                    `gorm:"type:uuid;index:idx_event_search_index_tenant_occurred,priority:1"`
-	AppID              *uuid.UUID                    `gorm:"type:uuid"`
+	ApplicationID      *uuid.UUID                    `gorm:"type:uuid"`
 	ActorType          enums.AuditActorType          `gorm:"type:actor_type;index:idx_event_search_index_actor,priority:1"`
 	ActorID            uuid.UUID                     `gorm:"type:uuid;index:idx_event_search_index_actor,priority:2"`
 	Action             string                        `gorm:"type:varchar(255);index:idx_event_search_index_action,priority:1"`
@@ -38,14 +38,14 @@ func (m *EventSearchIndex) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var EventSearchIndexCols = struct {
-	ID, EventID, TenantID, AppID, ActorType, ActorID, Action,
+	ID, EventID, TenantID, ApplicationID, ActorType, ActorID, Action,
 	TargetType, TargetID, Result, OccurredAt, IP, RiskLevel, DataClassification,
 	Tags, CreatedAt string
 }{
 	ID:                 "id",
 	EventID:            "event_id",
 	TenantID:           "tenant_id",
-	AppID:              "app_id",
+	ApplicationID:      "application_id",
 	ActorType:          "actor_type",
 	ActorID:            "actor_id",
 	Action:             "action",

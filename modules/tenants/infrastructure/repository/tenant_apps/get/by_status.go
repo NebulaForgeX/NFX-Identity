@@ -10,7 +10,7 @@ import (
 // ByStatus 根据 Status 获取 TenantApp 列表，实现 tenant_apps.Get 接口
 func (h *Handler) ByStatus(ctx context.Context, status tenant_apps.TenantAppStatus) ([]*tenant_apps.TenantApp, error) {
 	statusEnum := mapper.TenantAppStatusDomainToEnum(status)
-	var ms []models.TenantApp
+	var ms []models.TenantApplication
 	if err := h.db.WithContext(ctx).
 		Where("status = ?", statusEnum).
 		Find(&ms).Error; err != nil {

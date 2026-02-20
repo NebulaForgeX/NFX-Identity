@@ -96,7 +96,7 @@ type Invitation struct {
 	RevokedBy        *string                 `protobuf:"bytes,12,opt,name=revoked_by,json=revokedBy,proto3,oneof" json:"revoked_by,omitempty"`                          // 撤销者ID (UUID)
 	RevokedAt        *timestamppb.Timestamp  `protobuf:"bytes,13,opt,name=revoked_at,json=revokedAt,proto3,oneof" json:"revoked_at,omitempty"`                          // 撤销时间
 	RevokeReason     *string                 `protobuf:"bytes,14,opt,name=revoke_reason,json=revokeReason,proto3,oneof" json:"revoke_reason,omitempty"`                 // 撤销原因 (text)
-	RoleIds          []string                `protobuf:"bytes,15,rep,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`                                      // 角色ID数组 (uuid[])
+	TenantRoleId     string                  `protobuf:"bytes,15,opt,name=tenant_role_id,json=tenantRoleId,proto3" json:"tenant_role_id,omitempty"`                     // 租户角色ID (UUID, access.tenant_roles)
 	Metadata         *structpb.Struct        `protobuf:"bytes,16,opt,name=metadata,proto3,oneof" json:"metadata,omitempty"`                                             // 元数据 (JSONB)
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
@@ -230,11 +230,11 @@ func (x *Invitation) GetRevokeReason() string {
 	return ""
 }
 
-func (x *Invitation) GetRoleIds() []string {
+func (x *Invitation) GetTenantRoleId() string {
 	if x != nil {
-		return x.RoleIds
+		return x.TenantRoleId
 	}
-	return nil
+	return ""
 }
 
 func (x *Invitation) GetMetadata() *structpb.Struct {
@@ -522,7 +522,7 @@ var File_tenants_invitation_proto protoreflect.FileDescriptor
 const file_tenants_invitation_proto_rawDesc = "" +
 	"\n" +
 	"\x18tenants/invitation.proto\x12\n" +
-	"invitation\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x9b\x06\n" +
+	"invitation\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xa6\x06\n" +
 	"\n" +
 	"Invitation\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
@@ -546,8 +546,8 @@ const file_tenants_invitation_proto_rawDesc = "" +
 	"revoked_by\x18\f \x01(\tH\x02R\trevokedBy\x88\x01\x01\x12>\n" +
 	"\n" +
 	"revoked_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\x03R\trevokedAt\x88\x01\x01\x12(\n" +
-	"\rrevoke_reason\x18\x0e \x01(\tH\x04R\frevokeReason\x88\x01\x01\x12\x19\n" +
-	"\brole_ids\x18\x0f \x03(\tR\aroleIds\x128\n" +
+	"\rrevoke_reason\x18\x0e \x01(\tH\x04R\frevokeReason\x88\x01\x01\x12$\n" +
+	"\x0etenant_role_id\x18\x0f \x01(\tR\ftenantRoleId\x128\n" +
 	"\bmetadata\x18\x10 \x01(\v2\x17.google.protobuf.StructH\x05R\bmetadata\x88\x01\x01B\x16\n" +
 	"\x14_accepted_by_user_idB\x0e\n" +
 	"\f_accepted_atB\r\n" +

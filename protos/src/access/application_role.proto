@@ -1,0 +1,56 @@
+syntax = "proto3";
+package application_role;
+
+option go_package = "nfxid/protos/gen/access/application_role;applicationrolepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 应用角色信息（access.application_roles）
+message ApplicationRole {
+  string id = 1;                        // 角色ID (UUID)
+  string application_id = 2;            // 应用ID (UUID)
+  string role_key = 3;                  // 角色键 (varchar(32))
+  optional string name = 4;             // 名称 (varchar(255))
+  google.protobuf.Timestamp created_at = 5; // 创建时间
+}
+
+// ApplicationRole 服务
+service ApplicationRoleService {
+  rpc GetApplicationRoleByID (GetApplicationRoleByIDRequest) returns (GetApplicationRoleByIDResponse);
+  rpc GetApplicationRoleByApplicationIDAndRoleKey (GetApplicationRoleByApplicationIDAndRoleKeyRequest) returns (GetApplicationRoleByApplicationIDAndRoleKeyResponse);
+  rpc ListApplicationRolesByApplicationID (ListApplicationRolesByApplicationIDRequest) returns (ListApplicationRolesByApplicationIDResponse);
+  rpc BatchGetApplicationRoles (BatchGetApplicationRolesRequest) returns (BatchGetApplicationRolesResponse);
+}
+
+message GetApplicationRoleByIDRequest {
+  string id = 1;
+}
+
+message GetApplicationRoleByIDResponse {
+  ApplicationRole application_role = 1;
+}
+
+message GetApplicationRoleByApplicationIDAndRoleKeyRequest {
+  string application_id = 1;
+  string role_key = 2;
+}
+
+message GetApplicationRoleByApplicationIDAndRoleKeyResponse {
+  ApplicationRole application_role = 1;
+}
+
+message ListApplicationRolesByApplicationIDRequest {
+  string application_id = 1;
+}
+
+message ListApplicationRolesByApplicationIDResponse {
+  repeated ApplicationRole application_roles = 1;
+}
+
+message BatchGetApplicationRolesRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetApplicationRolesResponse {
+  repeated ApplicationRole application_roles = 1;
+}

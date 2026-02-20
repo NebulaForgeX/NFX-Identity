@@ -12,7 +12,7 @@ func (h *Handler) ByAppIDAndScope(ctx context.Context, appID uuid.UUID, scope st
 	var count int64
 	err := h.db.WithContext(ctx).
 		Model(&models.ClientScope{}).
-		Where("app_id = ? AND scope = ?", appID, scope).
+		Where("application_id = ? AND scope = ?", appID, scope).
 		Count(&count).Error
 	return count > 0, err
 }

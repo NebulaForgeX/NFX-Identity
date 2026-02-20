@@ -14,7 +14,7 @@ func RateLimitDomainToModel(rl *rate_limits.RateLimit) *models.RateLimit {
 
 	return &models.RateLimit{
 		ID:            rl.ID(),
-		AppID:         rl.AppID(),
+		ApplicationID: rl.AppID(),
 		LimitType:     rateLimitTypeDomainToEnum(rl.LimitType()),
 		LimitValue:    rl.LimitValue(),
 		WindowSeconds: rl.WindowSeconds(),
@@ -35,7 +35,7 @@ func RateLimitModelToDomain(m *models.RateLimit) *rate_limits.RateLimit {
 
 	state := rate_limits.RateLimitState{
 		ID:            m.ID,
-		AppID:         m.AppID,
+		AppID:         m.ApplicationID,
 		LimitType:     rateLimitTypeEnumToDomain(m.LimitType),
 		LimitValue:    m.LimitValue,
 		WindowSeconds: m.WindowSeconds,

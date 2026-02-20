@@ -15,7 +15,7 @@ import (
 func (h *Handler) ByAppIDAndScope(ctx context.Context, appID uuid.UUID, scope string) (*client_scopes.ClientScope, error) {
 	var m models.ClientScope
 	if err := h.db.WithContext(ctx).
-		Where("app_id = ? AND scope = ?", appID, scope).
+		Where("application_id = ? AND scope = ?", appID, scope).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, client_scopes.ErrClientScopeNotFound

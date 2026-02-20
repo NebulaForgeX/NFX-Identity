@@ -12,7 +12,7 @@ import (
 func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 	result := h.db.WithContext(ctx).
 		Where("id = ?", id).
-		Delete(&models.App{})
+		Delete(&models.Application{})
 
 	if result.Error != nil {
 		return result.Error

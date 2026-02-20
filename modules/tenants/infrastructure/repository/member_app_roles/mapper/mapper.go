@@ -12,9 +12,9 @@ func MemberAppRoleDomainToModel(mar *member_app_roles.MemberAppRole) *models.Mem
 	}
 
 	return &models.MemberAppRole{
-		ID:           mar.ID(),
-		MemberID:     mar.MemberID(),
-		AppID:        mar.AppID(),
+		ID:            mar.ID(),
+		MemberID:      mar.MemberID(),
+		ApplicationID: mar.AppID(),
 		RoleID:       mar.RoleID(),
 		AssignedAt:   mar.AssignedAt(),
 		AssignedBy:   mar.AssignedBy(),
@@ -34,7 +34,7 @@ func MemberAppRoleModelToDomain(m *models.MemberAppRole) *member_app_roles.Membe
 	state := member_app_roles.MemberAppRoleState{
 		ID:           m.ID,
 		MemberID:     m.MemberID,
-		AppID:        m.AppID,
+		AppID:        m.ApplicationID,
 		RoleID:       m.RoleID,
 		AssignedAt:   m.AssignedAt,
 		AssignedBy:   m.AssignedBy,
@@ -50,8 +50,8 @@ func MemberAppRoleModelToDomain(m *models.MemberAppRole) *member_app_roles.Membe
 // MemberAppRoleModelToUpdates 将 Model MemberAppRole 转换为更新字段映射
 func MemberAppRoleModelToUpdates(m *models.MemberAppRole) map[string]any {
 	return map[string]any{
-		models.MemberAppRoleCols.MemberID:     m.MemberID,
-		models.MemberAppRoleCols.AppID:        m.AppID,
+		models.MemberAppRoleCols.MemberID:      m.MemberID,
+		models.MemberAppRoleCols.ApplicationID: m.ApplicationID,
 		models.MemberAppRoleCols.RoleID:       m.RoleID,
 		models.MemberAppRoleCols.AssignedAt:   m.AssignedAt,
 		models.MemberAppRoleCols.AssignedBy:   m.AssignedBy,

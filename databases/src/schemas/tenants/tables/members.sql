@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "tenants"."members" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "member_id" UUID NOT NULL UNIQUE DEFAULT gen_random_uuid(), -- Member entity ID (avoid composite primary key for better references)
   "tenant_id" UUID NOT NULL REFERENCES "tenants"."tenants"("id") ON DELETE CASCADE,
-  "user_id" UUID NOT NULL, -- References directory.users.id (application-level consistency)
+  "user_id" UUID NOT NULL, -- References directory.users.id (application-level consistency). Role = access.tenant_role_assignments
   "status" "tenants".member_status NOT NULL DEFAULT 'INVITED',
   "source" "tenants".member_source NOT NULL DEFAULT 'MANUAL',
   "joined_at" TIMESTAMP, -- When member joined

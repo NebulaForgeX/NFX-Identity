@@ -5,24 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	actionRequirementApp "nfxid/modules/access/application/action_requirements"
-	actionApp "nfxid/modules/access/application/actions"
-	grantApp "nfxid/modules/access/application/grants"
-	permissionApp "nfxid/modules/access/application/permissions"
+	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
 	resourceApp "nfxid/modules/access/application/resource"
-	rolePermissionApp "nfxid/modules/access/application/role_permissions"
-	roleApp "nfxid/modules/access/application/roles"
-	scopePermissionApp "nfxid/modules/access/application/scope_permissions"
-	scopeApp "nfxid/modules/access/application/scopes"
 	"nfxid/modules/access/config"
-	actionRequirementRepo "nfxid/modules/access/infrastructure/repository/action_requirements"
-	actionRepo "nfxid/modules/access/infrastructure/repository/actions"
-	grantRepo "nfxid/modules/access/infrastructure/repository/grants"
-	permissionRepo "nfxid/modules/access/infrastructure/repository/permissions"
-	rolePermissionRepo "nfxid/modules/access/infrastructure/repository/role_permissions"
-	roleRepo "nfxid/modules/access/infrastructure/repository/roles"
-	scopePermissionRepo "nfxid/modules/access/infrastructure/repository/scope_permissions"
-	scopeRepo "nfxid/modules/access/infrastructure/repository/scopes"
+	tenantrolesRepo "nfxid/modules/access/infrastructure/repository/tenant_roles"
 	"nfxid/pkgs/cachex"
 	"nfxid/pkgs/health"
 	"nfxid/pkgs/kafkax"
@@ -35,118 +21,79 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr               *health.Manager
-	cache                   *cachex.Connection
-	postgres                *postgresqlx.Connection
-	kafkaConfig             *kafkax.Config
-	busPublisher            *eventbus.BusPublisher
-	rabbitMQConfig          *rabbitmqx.Config
-	actionAppSvc            *actionApp.Service
-	actionRequirementAppSvc *actionRequirementApp.Service
-	roleAppSvc              *roleApp.Service
-	permissionAppSvc        *permissionApp.Service
-	scopeAppSvc             *scopeApp.Service
-	grantAppSvc             *grantApp.Service
-	rolePermissionAppSvc    *rolePermissionApp.Service
-	scopePermissionAppSvc   *scopePermissionApp.Service
-	resourceSvc             *resourceApp.Service
-	userTokenVerifier       token.Verifier
-	serverTokenVerifier     token.Verifier
-	tokenxInstance          *tokenx.Tokenx
+	healthMgr           *health.Manager
+	cache                *cachex.Connection
+	postgres             *postgresqlx.Connection
+	kafkaConfig          *kafkax.Config
+	busPublisher         *eventbus.BusPublisher
+	rabbitMQConfig       *rabbitmqx.Config
+	tenantRoleAppSvc     *tenantrolesApp.Service
+	resourceSvc          *resourceApp.Service
+	userTokenVerifier    token.Verifier
+	serverTokenVerifier  token.Verifier
+	tokenxInstance       *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
-	//! === Initialize Infrastructure ===
-
-	// PostgreSQL Connection
 	postgres, err := postgresqlx.Init(ctx, cfg.PostgreSQL)
 	if err != nil {
 		return nil, fmt.Errorf("init PostgreSQL: %w", err)
 	}
 
-	// Redis Cache
 	cacheConn, err := cachex.InitConn(ctx, cfg.Cache)
 	if err != nil {
 		return nil, fmt.Errorf("init Redis: %w", err)
 	}
 
-	//! === Health Manager ===
 	healthMgr := health.NewManager(ctx, 30*time.Second)
 	healthMgr.Register(postgres)
 	healthMgr.Register(cacheConn)
 
-	//! === Kafka Service ===
 	kafkaConfig := cfg.KafkaConfig
 	busPublisher, err := kafkax.NewPublisher(&kafkaConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create kafka publisher: %w", err)
 	}
 
-	//! === RabbitMQ Config ===
 	rabbitMQConfig := cfg.RabbitMQConfig
-
-	//! === Tokenx ===
-	// 使用配置文件中的 token 配置（确保与其他服务一致）
 	tokenCfg := cfg.Token
 	tokenxInstance := tokenx.New(tokenCfg)
 
-	//! === Token Verifiers ===
-	// User Token Verifier (用于 HTTP 中间件 - 验证用户 token)
 	userTokenVerifier := &tokenxVerifierAdapter{tokenx: tokenxInstance}
-
-	// Server Token Verifier (用于 gRPC 拦截器 - 验证服务间通信 token)
 	serverTokenVerifier := servertoken.NewVerifier(
 		&servertoken.HMACSigner{Key: []byte(tokenCfg.SecretKey)},
 		tokenCfg.Issuer,
 		servertoken.WithAllowedSkew(5*time.Second),
 	)
 
-	//! === Repository ===
-	roleRepoInstance := roleRepo.NewRepo(postgres.DB())
-	permissionRepoInstance := permissionRepo.NewRepo(postgres.DB())
-	scopeRepoInstance := scopeRepo.NewRepo(postgres.DB())
-	grantRepoInstance := grantRepo.NewRepo(postgres.DB())
-	rolePermissionRepoInstance := rolePermissionRepo.NewRepo(postgres.DB())
-	scopePermissionRepoInstance := scopePermissionRepo.NewRepo(postgres.DB())
-	actionRepoInstance := actionRepo.NewRepo(postgres.DB())
-	actionRequirementRepoInstance := actionRequirementRepo.NewRepo(postgres.DB())
-
-	//! === Application Services ===
-	actionAppSvc := actionApp.NewService(actionRepoInstance)
-	actionRequirementAppSvc := actionRequirementApp.NewService(actionRequirementRepoInstance)
-	roleAppSvc := roleApp.NewService(roleRepoInstance)
-	permissionAppSvc := permissionApp.NewService(permissionRepoInstance)
-	scopeAppSvc := scopeApp.NewService(scopeRepoInstance)
-	grantAppSvc := grantApp.NewService(grantRepoInstance)
-	rolePermissionAppSvc := rolePermissionApp.NewService(rolePermissionRepoInstance)
-	scopePermissionAppSvc := scopePermissionApp.NewService(scopePermissionRepoInstance)
+	tenantRoleRepoInstance := tenantrolesRepo.NewRepo(postgres.DB())
+	tenantRoleAppSvc := tenantrolesApp.NewService(tenantRoleRepoInstance)
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
 	return &Dependencies{
-		healthMgr:               healthMgr,
-		postgres:                postgres,
-		cache:                   cacheConn,
-		kafkaConfig:             &kafkaConfig,
-		busPublisher:            busPublisher,
-		rabbitMQConfig:          &rabbitMQConfig,
-		actionAppSvc:            actionAppSvc,
-		actionRequirementAppSvc: actionRequirementAppSvc,
-		roleAppSvc:              roleAppSvc,
-		permissionAppSvc:        permissionAppSvc,
-		scopeAppSvc:             scopeAppSvc,
-		grantAppSvc:             grantAppSvc,
-		rolePermissionAppSvc:    rolePermissionAppSvc,
-		scopePermissionAppSvc:   scopePermissionAppSvc,
-		resourceSvc:             resourceSvc,
-		userTokenVerifier:       userTokenVerifier,
-		serverTokenVerifier:     serverTokenVerifier,
-		tokenxInstance:          tokenxInstance,
+		healthMgr:          healthMgr,
+		postgres:           postgres,
+		cache:              cacheConn,
+		kafkaConfig:        &kafkaConfig,
+		busPublisher:       busPublisher,
+		rabbitMQConfig:     &rabbitMQConfig,
+		tenantRoleAppSvc:   tenantRoleAppSvc,
+		resourceSvc:        resourceSvc,
+		userTokenVerifier:  userTokenVerifier,
+		serverTokenVerifier: serverTokenVerifier,
+		tokenxInstance:     tokenxInstance,
 	}, nil
 }
 
-// Getter methods for interfaces
-func (d *Dependencies) HealthMgr() *health.Manager        { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
+func (d *Dependencies) HealthMgr() *health.Manager         { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service  { return d.resourceSvc }
+func (d *Dependencies) TenantRoleAppSvc() *tenantrolesApp.Service { return d.tenantRoleAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection   { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier   { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config        { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config  { return d.rabbitMQConfig }
 
 func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()
@@ -154,29 +101,6 @@ func (d *Dependencies) Cleanup() {
 	d.cache.Close()
 }
 
-// Getter methods for interfaces
-func (d *Dependencies) ActionAppSvc() *actionApp.Service { return d.actionAppSvc }
-func (d *Dependencies) ActionRequirementAppSvc() *actionRequirementApp.Service {
-	return d.actionRequirementAppSvc
-}
-func (d *Dependencies) RoleAppSvc() *roleApp.Service             { return d.roleAppSvc }
-func (d *Dependencies) PermissionAppSvc() *permissionApp.Service { return d.permissionAppSvc }
-func (d *Dependencies) ScopeAppSvc() *scopeApp.Service           { return d.scopeAppSvc }
-func (d *Dependencies) GrantAppSvc() *grantApp.Service           { return d.grantAppSvc }
-func (d *Dependencies) RolePermissionAppSvc() *rolePermissionApp.Service {
-	return d.rolePermissionAppSvc
-}
-func (d *Dependencies) ScopePermissionAppSvc() *scopePermissionApp.Service {
-	return d.scopePermissionAppSvc
-}
-func (d *Dependencies) Postgres() *postgresqlx.Connection    { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config    { return d.rabbitMQConfig }
-
-// tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {
 	tokenx *tokenx.Tokenx
 }
@@ -186,8 +110,6 @@ func (a *tokenxVerifierAdapter) Verify(ctx context.Context, tokenStr string) (*t
 	if err != nil {
 		return nil, err
 	}
-
-	// 转换为 security/token.Claims
 	return &token.Claims{
 		Registered: claims.RegisteredClaims,
 		Raw: map[string]any{

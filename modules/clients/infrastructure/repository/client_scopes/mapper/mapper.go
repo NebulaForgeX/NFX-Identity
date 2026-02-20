@@ -12,8 +12,8 @@ func ClientScopeDomainToModel(cs *client_scopes.ClientScope) *models.ClientScope
 	}
 
 	return &models.ClientScope{
-		ID:           cs.ID(),
-		AppID:        cs.AppID(),
+		ID:             cs.ID(),
+		ApplicationID:  cs.AppID(),
 		Scope:        cs.Scope(),
 		GrantedBy:    cs.GrantedBy(),
 		GrantedAt:    cs.GrantedAt(),
@@ -33,7 +33,7 @@ func ClientScopeModelToDomain(m *models.ClientScope) *client_scopes.ClientScope 
 
 	state := client_scopes.ClientScopeState{
 		ID:           m.ID,
-		AppID:        m.AppID,
+		AppID:        m.ApplicationID,
 		Scope:        m.Scope,
 		GrantedBy:    m.GrantedBy,
 		GrantedAt:    m.GrantedAt,

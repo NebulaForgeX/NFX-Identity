@@ -13,7 +13,7 @@ import (
 func (h *Handler) ByAppID(ctx context.Context, appID uuid.UUID) ([]*api_keys.APIKey, error) {
 	var ms []models.ApiKey
 	if err := h.db.WithContext(ctx).
-		Where("app_id = ?", appID).
+		Where("application_id = ?", appID).
 		Find(&ms).Error; err != nil {
 		return nil, err
 	}

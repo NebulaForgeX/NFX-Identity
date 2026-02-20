@@ -11,8 +11,8 @@ import (
 func (h *Handler) ByTenantIDAndAppID(ctx context.Context, tenantID, appID uuid.UUID) (bool, error) {
 	var count int64
 	err := h.db.WithContext(ctx).
-		Model(&models.TenantApp{}).
-		Where("tenant_id = ? AND app_id = ?", tenantID, appID).
+		Model(&models.TenantApplication{}).
+		Where("tenant_id = ? AND application_id = ?", tenantID, appID).
 		Count(&count).Error
 	return count > 0, err
 }

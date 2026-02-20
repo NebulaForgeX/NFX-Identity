@@ -1,6 +1,5 @@
 -- Groups table: Organizational structure (minimum implementation)
--- Enterprise requirement: "Can we assign permissions by department? Can we grant permissions to a team?"
--- Supports: departments, teams, groups with optional tree structure
+-- Organizational structure: departments, teams, groups (optional tree via parent_group_id)
 CREATE TYPE "tenants".group_type AS ENUM ('department', 'team', 'group', 'other');
 
 CREATE TABLE IF NOT EXISTS "tenants"."groups" (

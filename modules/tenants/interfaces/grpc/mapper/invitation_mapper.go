@@ -50,11 +50,7 @@ func InvitationROToProto(v *invitationAppResult.InvitationRO) *invitationpb.Invi
 	}
 
 	if v.RoleIDs != nil && len(v.RoleIDs) > 0 {
-		roleIDs := make([]string, len(v.RoleIDs))
-		for i, roleID := range v.RoleIDs {
-			roleIDs[i] = roleID.String()
-		}
-		invitation.RoleIds = roleIDs
+		invitation.TenantRoleId = v.RoleIDs[0].String()
 	}
 
 	if v.Metadata != nil && len(v.Metadata) > 0 {

@@ -35,7 +35,7 @@ func EventROToProto(v *auditAppResult.EventRO) *eventpb.Event {
 	}
 	if v.AppID != nil {
 		appIDStr := v.AppID.String()
-		event.AppId = &appIDStr
+		event.ApplicationId = &appIDStr
 	}
 	if v.ActorTenantMemberID != nil {
 		actorTenantMemberIDStr := v.ActorTenantMemberID.String()

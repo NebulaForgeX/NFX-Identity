@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "auth"."refresh_tokens" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "token_id" VARCHAR(255) NOT NULL UNIQUE, -- Random token identifier (not guessable)
   "user_id" UUID NOT NULL, -- References directory.users.id (application-level consistency)
-  "app_id" UUID, -- Which application/client this token belongs to (references clients.apps.id)
+  "application_id" UUID,
   "client_id" VARCHAR(255), -- OAuth client identifier
   "session_id" UUID, -- Link to sessions table (optional)
   "issued_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "auth"."refresh_tokens" (
 
 CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_token_id" ON "auth"."refresh_tokens"("token_id");
 CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_user_id" ON "auth"."refresh_tokens"("user_id");
-CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_app_id" ON "auth"."refresh_tokens"("app_id");
+CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_application_id" ON "auth"."refresh_tokens"("application_id");
 CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_session_id" ON "auth"."refresh_tokens"("session_id");
 CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_expires_at" ON "auth"."refresh_tokens"("expires_at");
 CREATE INDEX IF NOT EXISTS "idx_refresh_tokens_revoked_at" ON "auth"."refresh_tokens"("revoked_at") WHERE "revoked_at" IS NULL;

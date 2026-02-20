@@ -10,8 +10,8 @@ import (
 	"gorm.io/datatypes"
 )
 
-// AppDomainToModel 将 Domain App 转换为 Model App
-func AppDomainToModel(a *apps.App) *models.App {
+// AppDomainToModel 将 Domain App 转换为 Model Application
+func AppDomainToModel(a *apps.App) *models.Application {
 	if a == nil {
 		return nil
 	}
@@ -22,26 +22,26 @@ func AppDomainToModel(a *apps.App) *models.App {
 		metadata = (*datatypes.JSON)(&metadataBytes)
 	}
 
-	return &models.App{
-		ID:          a.ID(),
-		AppID:       a.AppID(),
-		TenantID:    a.TenantID(),
-		Name:        a.Name(),
-		Description: a.Description(),
-		Type:        appTypeDomainToEnum(a.Type()),
-		Status:      appStatusDomainToEnum(a.Status()),
-		Environment: environmentDomainToEnum(a.Environment()),
-		CreatedAt:   a.CreatedAt(),
-		UpdatedAt:   a.UpdatedAt(),
-		CreatedBy:   a.CreatedBy(),
-		UpdatedBy:   a.UpdatedBy(),
-		Metadata:    metadata,
-		DeletedAt:   timex.TimeToGormDeletedAt(a.DeletedAt()),
+	return &models.Application{
+		ID:            a.ID(),
+		ApplicationID: a.AppID(),
+		TenantID:      a.TenantID(),
+		Name:          a.Name(),
+		Description:   a.Description(),
+		Type:          appTypeDomainToEnum(a.Type()),
+		Status:        appStatusDomainToEnum(a.Status()),
+		Environment:   environmentDomainToEnum(a.Environment()),
+		CreatedAt:     a.CreatedAt(),
+		UpdatedAt:     a.UpdatedAt(),
+		CreatedBy:     a.CreatedBy(),
+		UpdatedBy:     a.UpdatedBy(),
+		Metadata:      metadata,
+		DeletedAt:     timex.TimeToGormDeletedAt(a.DeletedAt()),
 	}
 }
 
-// AppModelToDomain 将 Model App 转换为 Domain App
-func AppModelToDomain(m *models.App) *apps.App {
+// AppModelToDomain 将 Model Application 转换为 Domain App
+func AppModelToDomain(m *models.Application) *apps.App {
 	if m == nil {
 		return nil
 	}
@@ -53,7 +53,7 @@ func AppModelToDomain(m *models.App) *apps.App {
 
 	state := apps.AppState{
 		ID:          m.ID,
-		AppID:       m.AppID,
+		AppID:       m.ApplicationID,
 		TenantID:    m.TenantID,
 		Name:        m.Name,
 		Description: m.Description,
@@ -71,18 +71,18 @@ func AppModelToDomain(m *models.App) *apps.App {
 	return apps.NewAppFromState(state)
 }
 
-// AppModelToUpdates 将 Model App 转换为更新字段映射
-func AppModelToUpdates(m *models.App) map[string]any {
+// AppModelToUpdates 将 Model Application 转换为更新字段映射
+func AppModelToUpdates(m *models.Application) map[string]any {
 	updates := map[string]any{
-		models.AppCols.Name:        m.Name,
-		models.AppCols.Description: m.Description,
-		models.AppCols.Type:        m.Type,
-		models.AppCols.Status:      m.Status,
-		models.AppCols.Environment: m.Environment,
-		models.AppCols.UpdatedAt:   m.UpdatedAt,
-		models.AppCols.UpdatedBy:   m.UpdatedBy,
-		models.AppCols.Metadata:    m.Metadata,
-		models.AppCols.DeletedAt:   m.DeletedAt,
+		models.ApplicationCols.Name:        m.Name,
+		models.ApplicationCols.Description: m.Description,
+		models.ApplicationCols.Type:        m.Type,
+		models.ApplicationCols.Status:      m.Status,
+		models.ApplicationCols.Environment: m.Environment,
+		models.ApplicationCols.UpdatedAt:   m.UpdatedAt,
+		models.ApplicationCols.UpdatedBy:   m.UpdatedBy,
+		models.ApplicationCols.Metadata:    m.Metadata,
+		models.ApplicationCols.DeletedAt:   m.DeletedAt,
 	}
 	return updates
 }

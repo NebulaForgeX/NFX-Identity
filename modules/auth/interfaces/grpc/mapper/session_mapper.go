@@ -26,7 +26,7 @@ func SessionROToProto(v *sessionAppResult.SessionRO) *sessionpb.Session {
 
 	if v.AppID != nil {
 		appIDStr := v.AppID.String()
-		session.AppId = &appIDStr
+		session.ApplicationId = &appIDStr
 	}
 	if v.ClientID != nil {
 		session.ClientId = v.ClientID

@@ -1,0 +1,35 @@
+syntax = "proto3";
+package tenant_role_assignment;
+
+option go_package = "nfxid/protos/gen/access/tenant_role_assignment;tenantroleassignmentpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 租户角色分配（access.tenant_role_assignments）
+message TenantRoleAssignment {
+  string id = 1;
+  string user_id = 2;
+  string tenant_id = 3;
+  string tenant_role_id = 4;
+  google.protobuf.Timestamp assigned_at = 5;
+  optional string assigned_by = 6;
+}
+
+service TenantRoleAssignmentService {
+  rpc GetTenantRoleAssignmentByID (GetTenantRoleAssignmentByIDRequest) returns (GetTenantRoleAssignmentByIDResponse);
+  rpc GetTenantRoleAssignmentByUserAndTenant (GetTenantRoleAssignmentByUserAndTenantRequest) returns (GetTenantRoleAssignmentByUserAndTenantResponse);
+  rpc ListTenantRoleAssignmentsByUserID (ListTenantRoleAssignmentsByUserIDRequest) returns (ListTenantRoleAssignmentsByUserIDResponse);
+  rpc ListTenantRoleAssignmentsByTenantID (ListTenantRoleAssignmentsByTenantIDRequest) returns (ListTenantRoleAssignmentsByTenantIDResponse);
+  rpc BatchGetTenantRoleAssignments (BatchGetTenantRoleAssignmentsRequest) returns (BatchGetTenantRoleAssignmentsResponse);
+}
+
+message GetTenantRoleAssignmentByIDRequest { string id = 1; }
+message GetTenantRoleAssignmentByIDResponse { TenantRoleAssignment tenant_role_assignment = 1; }
+message GetTenantRoleAssignmentByUserAndTenantRequest { string user_id = 1; string tenant_id = 2; }
+message GetTenantRoleAssignmentByUserAndTenantResponse { TenantRoleAssignment tenant_role_assignment = 1; }
+message ListTenantRoleAssignmentsByUserIDRequest { string user_id = 1; }
+message ListTenantRoleAssignmentsByUserIDResponse { repeated TenantRoleAssignment tenant_role_assignments = 1; }
+message ListTenantRoleAssignmentsByTenantIDRequest { string tenant_id = 1; }
+message ListTenantRoleAssignmentsByTenantIDResponse { repeated TenantRoleAssignment tenant_role_assignments = 1; }
+message BatchGetTenantRoleAssignmentsRequest { repeated string ids = 1; }
+message BatchGetTenantRoleAssignmentsResponse { repeated TenantRoleAssignment tenant_role_assignments = 1; }

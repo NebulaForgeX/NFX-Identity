@@ -9,7 +9,7 @@ import (
 func (h *Handler) ByAppID(ctx context.Context, appID string) (bool, error) {
 	var count int64
 	err := h.db.WithContext(ctx).
-		Model(&models.App{}).
+		Model(&models.Application{}).
 		Where("app_id = ?", appID).
 		Count(&count).Error
 	return count > 0, err

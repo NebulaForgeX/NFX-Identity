@@ -13,8 +13,8 @@ type Image struct {
 	ID               uuid.UUID       `gorm:"type:uuid;primaryKey"`
 	TypeID           *uuid.UUID      `gorm:"type:uuid;index:idx_images_type_id;index:idx_images_type_public,priority:1"`
 	UserID           *uuid.UUID      `gorm:"type:uuid;index:idx_images_tenant_user,priority:2;index:idx_images_user_id;index:idx_images_user_public,priority:1"`
-	TenantID         *uuid.UUID      `gorm:"type:uuid;index:idx_images_tenant_app,priority:1;index:idx_images_tenant_id;index:idx_images_tenant_user,priority:1"`
-	AppID            *uuid.UUID      `gorm:"type:uuid;index:idx_images_app_id;index:idx_images_tenant_app,priority:2"`
+	TenantID         *uuid.UUID      `gorm:"type:uuid;index:idx_images_tenant_application,priority:1;index:idx_images_tenant_id;index:idx_images_tenant_user,priority:1"`
+	ApplicationID    *uuid.UUID      `gorm:"type:uuid;index:idx_images_application_id;index:idx_images_tenant_application,priority:2"`
 	SourceDomain     *string         `gorm:"type:text;index:idx_images_source_domain"`
 	Filename         string          `gorm:"type:text;index:idx_images_filename"`
 	OriginalFilename string          `gorm:"type:text"`
@@ -41,7 +41,7 @@ func (m *Image) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 var ImageCols = struct {
-	ID, TypeID, UserID, TenantID, AppID, SourceDomain, Filename,
+	ID, TypeID, UserID, TenantID, ApplicationID, SourceDomain, Filename,
 	OriginalFilename, MimeType, Size, Width, Height, StoragePath, URL,
 	IsPublic, Metadata, CreatedAt, UpdatedAt, DeletedAt string
 }{
@@ -49,7 +49,7 @@ var ImageCols = struct {
 	TypeID:           "type_id",
 	UserID:           "user_id",
 	TenantID:         "tenant_id",
-	AppID:            "app_id",
+	ApplicationID:    "application_id",
 	SourceDomain:     "source_domain",
 	Filename:         "filename",
 	OriginalFilename: "original_filename",

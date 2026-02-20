@@ -13,7 +13,7 @@ import (
 func (h *Handler) ActiveByAppID(ctx context.Context, appID uuid.UUID) ([]*client_scopes.ClientScope, error) {
 	var ms []models.ClientScope
 	if err := h.db.WithContext(ctx).
-		Where("app_id = ? AND revoked_at IS NULL", appID).
+		Where("application_id = ? AND revoked_at IS NULL", appID).
 		Find(&ms).Error; err != nil {
 		return nil, err
 	}

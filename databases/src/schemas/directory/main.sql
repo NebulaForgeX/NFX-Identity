@@ -1,5 +1,4 @@
 -- atlas:import schema.sql
--- Import users first because other tables reference it
 -- atlas:import tables/users.sql
 -- atlas:import tables/user_emails.sql
 -- atlas:import tables/user_phones.sql

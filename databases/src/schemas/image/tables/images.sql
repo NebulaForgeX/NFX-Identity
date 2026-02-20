@@ -19,9 +19,7 @@ CREATE TABLE "image"."images" (
   -- References tenants.tenants.id (application-level consistency)
   "tenant_id" UUID,
   
-  -- App isolation: which app uploaded this image (optional)
-  -- References clients.apps.id (application-level consistency)
-  "app_id" UUID,
+  "application_id" UUID,
   
   -- Source domain/service that uploaded this image (e.g., 'auth', 'product', 'post', 'cms')
   -- Helps with analytics and service-specific queries
@@ -70,7 +68,7 @@ CREATE TABLE "image"."images" (
 CREATE INDEX "idx_images_type_id" ON "image"."images"("type_id");
 CREATE INDEX "idx_images_user_id" ON "image"."images"("user_id");
 CREATE INDEX "idx_images_tenant_id" ON "image"."images"("tenant_id");
-CREATE INDEX "idx_images_app_id" ON "image"."images"("app_id");
+CREATE INDEX "idx_images_application_id" ON "image"."images"("application_id");
 CREATE INDEX "idx_images_is_public" ON "image"."images"("is_public");
 CREATE INDEX "idx_images_deleted_at" ON "image"."images"("deleted_at");
 CREATE INDEX "idx_images_source_domain" ON "image"."images"("source_domain");
@@ -82,14 +80,14 @@ CREATE INDEX "idx_images_mime_type" ON "image"."images"("mime_type");
 CREATE INDEX "idx_images_user_public" ON "image"."images"("user_id", "is_public") WHERE "deleted_at" IS NULL;
 CREATE INDEX "idx_images_type_public" ON "image"."images"("type_id", "is_public") WHERE "deleted_at" IS NULL;
 CREATE INDEX "idx_images_tenant_user" ON "image"."images"("tenant_id", "user_id") WHERE "deleted_at" IS NULL;
-CREATE INDEX "idx_images_tenant_app" ON "image"."images"("tenant_id", "app_id") WHERE "deleted_at" IS NULL;
+CREATE INDEX "idx_images_tenant_application" ON "image"."images"("tenant_id", "application_id") WHERE "deleted_at" IS NULL;
 
 -- Table and column comments
 COMMENT ON TABLE "image"."images" IS 'Main table storing original image metadata for all uploaded images';
 COMMENT ON COLUMN "image"."images"."type_id" IS 'Reference to image_types table defining the image category/usage';
 COMMENT ON COLUMN "image"."images"."user_id" IS 'UUID of user who uploaded the image (from directory.users, application-level consistency)';
 COMMENT ON COLUMN "image"."images"."tenant_id" IS 'Tenant isolation: which tenant this image belongs to (from tenants.tenants.id, application-level consistency)';
-COMMENT ON COLUMN "image"."images"."app_id" IS 'App isolation: which app uploaded this image (from clients.apps.id, application-level consistency)';
+COMMENT ON COLUMN "image"."images"."application_id" IS 'Which application uploaded this image (clients.applications.id, application-level)';
 COMMENT ON COLUMN "image"."images"."source_domain" IS 'Source service identifier: auth, product, post, cms, etc.';
 COMMENT ON COLUMN "image"."images"."filename" IS 'Current filename after processing (may differ from original_filename)';
 COMMENT ON COLUMN "image"."images"."original_filename" IS 'Original filename as uploaded by user';

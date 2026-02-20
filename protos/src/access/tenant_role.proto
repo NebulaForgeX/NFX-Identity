@@ -1,0 +1,31 @@
+syntax = "proto3";
+package tenant_role;
+
+option go_package = "nfxid/protos/gen/access/tenant_role;tenantrolepb";
+
+import "google/protobuf/timestamp.proto";
+
+// 租户角色信息（access.tenant_roles）
+message TenantRole {
+  string id = 1;
+  string tenant_id = 2;
+  string role_key = 3;
+  optional string name = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+service TenantRoleService {
+  rpc GetTenantRoleByID (GetTenantRoleByIDRequest) returns (GetTenantRoleByIDResponse);
+  rpc GetTenantRoleByTenantIDAndRoleKey (GetTenantRoleByTenantIDAndRoleKeyRequest) returns (GetTenantRoleByTenantIDAndRoleKeyResponse);
+  rpc ListTenantRolesByTenantID (ListTenantRolesByTenantIDRequest) returns (ListTenantRolesByTenantIDResponse);
+  rpc BatchGetTenantRoles (BatchGetTenantRolesRequest) returns (BatchGetTenantRolesResponse);
+}
+
+message GetTenantRoleByIDRequest { string id = 1; }
+message GetTenantRoleByIDResponse { TenantRole tenant_role = 1; }
+message GetTenantRoleByTenantIDAndRoleKeyRequest { string tenant_id = 1; string role_key = 2; }
+message GetTenantRoleByTenantIDAndRoleKeyResponse { TenantRole tenant_role = 1; }
+message ListTenantRolesByTenantIDRequest { string tenant_id = 1; }
+message ListTenantRolesByTenantIDResponse { repeated TenantRole tenant_roles = 1; }
+message BatchGetTenantRolesRequest { repeated string ids = 1; }
+message BatchGetTenantRolesResponse { repeated TenantRole tenant_roles = 1; }

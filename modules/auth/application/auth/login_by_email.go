@@ -11,7 +11,6 @@ import (
 	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
 	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
 	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
-	grantpb "nfxid/protos/gen/access/grant"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -158,15 +157,12 @@ func (s *Service) LoginByEmail(ctx context.Context, cmd authCommands.LoginByEmai
 		}
 	}
 
-	// 获取用户的角色信息（NewGRPCClients 已保证 AccessClient 非 nil）
+	// 获取用户的租户角色（取第一个 assignment 的 tenant_role_id 作为 roleID）
 	var roleID string
-	grants, err := s.grpcClients.AccessClient.Grant.GetGrantsBySubject(ctx, "user", ue.UserId, nil)
-	if err == nil {
-		for _, grant := range grants {
-			if grant.GrantType == grantpb.AccessGrantType_ACCESS_GRANT_TYPE_ROLE && grant.RevokedAt == nil {
-				roleID = grant.GrantRefId
-				break
-			}
+	if s.grpcClients.AccessClient != nil && s.grpcClients.AccessClient.Client != nil && s.grpcClients.AccessClient.Client.TenantRoleAssignment != nil {
+		list, err := s.grpcClients.AccessClient.Client.TenantRoleAssignment.ListTenantRoleAssignmentsByUserID(ctx, ue.UserId)
+		if err == nil && len(list) > 0 && list[0].TenantRoleId != "" {
+			roleID = list[0].TenantRoleId
 		}
 	}
 

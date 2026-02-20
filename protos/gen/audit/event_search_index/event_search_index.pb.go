@@ -252,7 +252,7 @@ type EventSearchIndex struct {
 	Id                 string                  `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                                             // 索引ID (UUID)
 	EventId            string                  `protobuf:"bytes,2,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`                                                                                    // 事件ID (varchar(255))
 	TenantId           *string                 `protobuf:"bytes,3,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`                                                                           // 租户ID (UUID)
-	AppId              *string                 `protobuf:"bytes,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                                                    // 应用ID (UUID)
+	ApplicationId      *string                 `protobuf:"bytes,4,opt,name=application_id,json=applicationId,proto3,oneof" json:"application_id,omitempty"`                                                            // 应用ID (UUID)
 	ActorType          AuditActorType          `protobuf:"varint,5,opt,name=actor_type,json=actorType,proto3,enum=event_search_index.AuditActorType" json:"actor_type,omitempty"`                                      // 操作者类型：user, service, system, admin
 	ActorId            string                  `protobuf:"bytes,6,opt,name=actor_id,json=actorId,proto3" json:"actor_id,omitempty"`                                                                                    // 操作者ID (UUID)
 	Action             string                  `protobuf:"bytes,7,opt,name=action,proto3" json:"action,omitempty"`                                                                                                     // 操作 (varchar(255))
@@ -320,9 +320,9 @@ func (x *EventSearchIndex) GetTenantId() string {
 	return ""
 }
 
-func (x *EventSearchIndex) GetAppId() string {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
+func (x *EventSearchIndex) GetApplicationId() string {
+	if x != nil && x.ApplicationId != nil {
+		return *x.ApplicationId
 	}
 	return ""
 }
@@ -728,12 +728,12 @@ var File_audit_event_search_index_proto protoreflect.FileDescriptor
 
 const file_audit_event_search_index_proto_rawDesc = "" +
 	"\n" +
-	"\x1eaudit/event_search_index.proto\x12\x12event_search_index\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf6\x05\n" +
+	"\x1eaudit/event_search_index.proto\x12\x12event_search_index\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8e\x06\n" +
 	"\x10EventSearchIndex\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bevent_id\x18\x02 \x01(\tR\aeventId\x12 \n" +
-	"\ttenant_id\x18\x03 \x01(\tH\x00R\btenantId\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x04 \x01(\tH\x01R\x05appId\x88\x01\x01\x12A\n" +
+	"\ttenant_id\x18\x03 \x01(\tH\x00R\btenantId\x88\x01\x01\x12*\n" +
+	"\x0eapplication_id\x18\x04 \x01(\tH\x01R\rapplicationId\x88\x01\x01\x12A\n" +
 	"\n" +
 	"actor_type\x18\x05 \x01(\x0e2\".event_search_index.AuditActorTypeR\tactorType\x12\x19\n" +
 	"\bactor_id\x18\x06 \x01(\tR\aactorId\x12\x16\n" +
@@ -753,8 +753,8 @@ const file_audit_event_search_index_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\f\n" +
 	"\n" +
-	"_tenant_idB\t\n" +
-	"\a_app_idB\x0e\n" +
+	"_tenant_idB\x11\n" +
+	"\x0f_application_idB\x0e\n" +
 	"\f_target_typeB\f\n" +
 	"\n" +
 	"_target_idB\x05\n" +

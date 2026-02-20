@@ -25,7 +25,7 @@ type Invitation struct {
 	RevokedBy        *uuid.UUID                    `gorm:"type:uuid"`
 	RevokedAt        *time.Time                    `gorm:"type:timestamp"`
 	RevokeReason     *string                       `gorm:"type:text"`
-	RoleIds          *string                       `gorm:"type:uuid[];index:idx_invitations_role_ids"`
+	TenantRoleID     uuid.UUID                     `gorm:"type:uuid;index:idx_invitations_tenant_role_id"`
 	Metadata         *datatypes.JSON               `gorm:"type:jsonb"`
 }
 
@@ -41,7 +41,7 @@ func (m *Invitation) BeforeCreate(tx *gorm.DB) (err error) {
 var InvitationCols = struct {
 	ID, InviteID, TenantID, Email, TokenHash, ExpiresAt, Status,
 	InvitedBy, InvitedAt, AcceptedByUserID, AcceptedAt, RevokedBy, RevokedAt, RevokeReason,
-	RoleIds, Metadata string
+	TenantRoleID, Metadata string
 }{
 	ID:               "id",
 	InviteID:         "invite_id",
@@ -57,7 +57,7 @@ var InvitationCols = struct {
 	RevokedBy:        "revoked_by",
 	RevokedAt:        "revoked_at",
 	RevokeReason:     "revoke_reason",
-	RoleIds:          "role_ids",
+	TenantRoleID:     "tenant_role_id",
 	Metadata:         "metadata",
 }
 

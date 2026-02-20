@@ -46,7 +46,7 @@ message EventSearchIndex {
   string id = 1;                              // 索引ID (UUID)
   string event_id = 2;                        // 事件ID (varchar(255))
   optional string tenant_id = 3;              // 租户ID (UUID)
-  optional string app_id = 4;                 // 应用ID (UUID)
+  optional string application_id = 4;     // 应用ID (UUID)
   AuditActorType actor_type = 5;              // 操作者类型：user, service, system, admin
   string actor_id = 6;                        // 操作者ID (UUID)
   string action = 7;                          // 操作 (varchar(255))

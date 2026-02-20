@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "audit"."event_search_index" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "event_id" VARCHAR(255) NOT NULL UNIQUE, -- References audit.events.event_id (application-level consistency)
   "tenant_id" UUID, -- Multi-tenant isolation
-  "app_id" UUID, -- App isolation
+  "application_id" UUID,
   "actor_type" "audit".actor_type NOT NULL,
   "actor_id" UUID NOT NULL,
   "action" VARCHAR(255) NOT NULL,

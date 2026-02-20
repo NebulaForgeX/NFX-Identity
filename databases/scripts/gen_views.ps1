@@ -40,6 +40,17 @@ if (Test-Path $GEN_DIR) {
     New-Item -ItemType Directory -Path $GEN_DIR -Force | Out-Null
 }
 
+# Clear all generated view files in module dirs before generating (avoid stale files when views are removed)
+$modulesPath = Join-Path $REPO_ROOT "modules"
+if (Test-Path $modulesPath) {
+    Get-ChildItem -Path $modulesPath -Directory | ForEach-Object {
+        $viewsDir = Join-Path $_.FullName "infrastructure\rdb\views"
+        if (Test-Path $viewsDir) {
+            Get-ChildItem -Path $viewsDir -Filter "*_dbgen.go" -File | Remove-Item -Force
+        }
+    }
+}
+
 # Set local module prefix for goimports grouping
 try {
     $MODPATH = & go list -m 2>&1

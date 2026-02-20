@@ -4,14 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	actionRequirementApp "nfxid/modules/access/application/action_requirements"
-	actionApp "nfxid/modules/access/application/actions"
-	grantApp "nfxid/modules/access/application/grants"
-	permissionApp "nfxid/modules/access/application/permissions"
-	rolePermissionApp "nfxid/modules/access/application/role_permissions"
-	roleApp "nfxid/modules/access/application/roles"
-	scopePermissionApp "nfxid/modules/access/application/scope_permissions"
-	scopeApp "nfxid/modules/access/application/scopes"
+	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
 	"nfxid/modules/access/interfaces/http/handler"
 	"nfxid/pkgs/fiberx"
 	"nfxid/pkgs/fiberx/middleware"
@@ -22,14 +15,7 @@ import (
 )
 
 type httpDeps interface {
-	ActionAppSvc() *actionApp.Service
-	ActionRequirementAppSvc() *actionRequirementApp.Service
-	RoleAppSvc() *roleApp.Service
-	PermissionAppSvc() *permissionApp.Service
-	ScopeAppSvc() *scopeApp.Service
-	GrantAppSvc() *grantApp.Service
-	RolePermissionAppSvc() *rolePermissionApp.Service
-	ScopePermissionAppSvc() *scopePermissionApp.Service
+	TenantRoleAppSvc() *tenantrolesApp.Service
 	UserTokenVerifier() token.Verifier
 }
 
@@ -55,14 +41,7 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 	app.Use(middleware.Logger(), middleware.Recover())
 
 	reg := &Registry{
-		Role:              handler.NewRoleHandler(d.RoleAppSvc()),
-		Permission:        handler.NewPermissionHandler(d.PermissionAppSvc()),
-		Scope:             handler.NewScopeHandler(d.ScopeAppSvc()),
-		Grant:             handler.NewGrantHandler(d.GrantAppSvc()),
-		RolePermission:    handler.NewRolePermissionHandler(d.RolePermissionAppSvc()),
-		ScopePermission:   handler.NewScopePermissionHandler(d.ScopePermissionAppSvc()),
-		Action:            handler.NewActionHandler(d.ActionAppSvc()),
-		ActionRequirement: handler.NewActionRequirementHandler(d.ActionRequirementAppSvc()),
+		TenantRole: handler.NewTenantRoleHandler(d.TenantRoleAppSvc()),
 	}
 
 	router := NewRouter(app, d.UserTokenVerifier(), reg)

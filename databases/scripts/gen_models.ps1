@@ -40,6 +40,17 @@ if (Test-Path $GEN_DIR) {
     New-Item -ItemType Directory -Path $GEN_DIR -Force | Out-Null
 }
 
+# Clear all generated model files in module dirs before generating (avoid stale files when tables are removed)
+$modulesPath = Join-Path $REPO_ROOT "modules"
+if (Test-Path $modulesPath) {
+    Get-ChildItem -Path $modulesPath -Directory | ForEach-Object {
+        $modelsDir = Join-Path $_.FullName "infrastructure\rdb\models"
+        if (Test-Path $modelsDir) {
+            Get-ChildItem -Path $modelsDir -Filter "*_dbgen.go" -File | Remove-Item -Force
+        }
+    }
+}
+
 # Set local module prefix for goimports grouping
 try {
     $MODPATH = & go list -m 2>&1

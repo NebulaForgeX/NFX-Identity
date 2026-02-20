@@ -1,0 +1,66 @@
+syntax = "proto3";
+package application_role_assignment;
+
+option go_package = "nfxid/protos/gen/access/application_role_assignment;applicationroleassignmentpb";
+
+import "google/protobuf/timestamp.proto";
+
+// 应用角色分配信息（access.application_role_assignments）
+message ApplicationRoleAssignment {
+  string id = 1;                        // 分配ID (UUID)
+  string user_id = 2;                   // 用户ID (UUID)
+  string application_id = 3;           // 应用ID (UUID)
+  string application_role_id = 4;      // 应用角色ID (UUID)
+  google.protobuf.Timestamp assigned_at = 5; // 分配时间
+  optional string assigned_by = 6;      // 分配者ID (UUID)
+}
+
+// ApplicationRoleAssignment 服务
+service ApplicationRoleAssignmentService {
+  rpc GetApplicationRoleAssignmentByID (GetApplicationRoleAssignmentByIDRequest) returns (GetApplicationRoleAssignmentByIDResponse);
+  rpc GetApplicationRoleAssignmentByUserAndApplication (GetApplicationRoleAssignmentByUserAndApplicationRequest) returns (GetApplicationRoleAssignmentByUserAndApplicationResponse);
+  rpc ListApplicationRoleAssignmentsByUserID (ListApplicationRoleAssignmentsByUserIDRequest) returns (ListApplicationRoleAssignmentsByUserIDResponse);
+  rpc ListApplicationRoleAssignmentsByApplicationID (ListApplicationRoleAssignmentsByApplicationIDRequest) returns (ListApplicationRoleAssignmentsByApplicationIDResponse);
+  rpc BatchGetApplicationRoleAssignments (BatchGetApplicationRoleAssignmentsRequest) returns (BatchGetApplicationRoleAssignmentsResponse);
+}
+
+message GetApplicationRoleAssignmentByIDRequest {
+  string id = 1;
+}
+
+message GetApplicationRoleAssignmentByIDResponse {
+  ApplicationRoleAssignment application_role_assignment = 1;
+}
+
+message GetApplicationRoleAssignmentByUserAndApplicationRequest {
+  string user_id = 1;
+  string application_id = 2;
+}
+
+message GetApplicationRoleAssignmentByUserAndApplicationResponse {
+  ApplicationRoleAssignment application_role_assignment = 1;
+}
+
+message ListApplicationRoleAssignmentsByUserIDRequest {
+  string user_id = 1;
+}
+
+message ListApplicationRoleAssignmentsByUserIDResponse {
+  repeated ApplicationRoleAssignment application_role_assignments = 1;
+}
+
+message ListApplicationRoleAssignmentsByApplicationIDRequest {
+  string application_id = 1;
+}
+
+message ListApplicationRoleAssignmentsByApplicationIDResponse {
+  repeated ApplicationRoleAssignment application_role_assignments = 1;
+}
+
+message BatchGetApplicationRoleAssignmentsRequest {
+  repeated string ids = 1;
+}
+
+message BatchGetApplicationRoleAssignmentsResponse {
+  repeated ApplicationRoleAssignment application_role_assignments = 1;
+}

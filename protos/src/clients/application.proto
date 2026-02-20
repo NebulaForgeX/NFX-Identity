@@ -1,0 +1,66 @@
+syntax = "proto3";
+package application;
+option go_package = "nfxid/protos/gen/clients/application;applicationpb";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+enum ClientsAppType {
+  CLIENTS_APP_TYPE_UNSPECIFIED = 0;
+  CLIENTS_APP_TYPE_SERVER = 1;
+  CLIENTS_APP_TYPE_SERVICE = 2;
+  CLIENTS_APP_TYPE_INTERNAL = 3;
+  CLIENTS_APP_TYPE_PARTNER = 4;
+  CLIENTS_APP_TYPE_THIRD_PARTY = 5;
+}
+enum ClientsAppStatus {
+  CLIENTS_APP_STATUS_UNSPECIFIED = 0;
+  CLIENTS_APP_STATUS_ACTIVE = 1;
+  CLIENTS_APP_STATUS_DISABLED = 2;
+  CLIENTS_APP_STATUS_SUSPENDED = 3;
+  CLIENTS_APP_STATUS_PENDING = 4;
+}
+enum ClientsEnvironment {
+  CLIENTS_ENVIRONMENT_UNSPECIFIED = 0;
+  CLIENTS_ENVIRONMENT_PRODUCTION = 1;
+  CLIENTS_ENVIRONMENT_STAGING = 2;
+  CLIENTS_ENVIRONMENT_DEVELOPMENT = 3;
+  CLIENTS_ENVIRONMENT_TEST = 4;
+}
+
+// 应用信息（clients.applications）
+message Application {
+  string id = 1;
+  string application_id = 2;
+  string tenant_id = 3;
+  string name = 4;
+  optional string description = 5;
+  ClientsAppType type = 6;
+  ClientsAppStatus status = 7;
+  ClientsEnvironment environment = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  optional string created_by = 11;
+  optional string updated_by = 12;
+  optional google.protobuf.Struct metadata = 13;
+  optional google.protobuf.Timestamp deleted_at = 14;
+}
+
+service ApplicationService {
+  rpc GetApplicationByID (GetApplicationByIDRequest) returns (GetApplicationByIDResponse);
+  rpc GetApplicationByApplicationID (GetApplicationByApplicationIDRequest) returns (GetApplicationByApplicationIDResponse);
+  rpc GetApplicationsByTenantID (GetApplicationsByTenantIDRequest) returns (GetApplicationsByTenantIDResponse);
+  rpc BatchGetApplications (BatchGetApplicationsRequest) returns (BatchGetApplicationsResponse);
+}
+
+message GetApplicationByIDRequest { string id = 1; }
+message GetApplicationByIDResponse { Application application = 1; }
+message GetApplicationByApplicationIDRequest { string application_id = 1; }
+message GetApplicationByApplicationIDResponse { Application application = 1; }
+message GetApplicationsByTenantIDRequest {
+  string tenant_id = 1;
+  optional ClientsEnvironment environment = 2;
+  optional ClientsAppStatus status = 3;
+}
+message GetApplicationsByTenantIDResponse { repeated Application applications = 1; }
+message BatchGetApplicationsRequest { repeated string ids = 1; }
+message BatchGetApplicationsResponse { repeated Application applications = 1; }

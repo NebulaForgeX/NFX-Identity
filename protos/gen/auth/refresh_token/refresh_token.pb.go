@@ -97,7 +97,7 @@ type RefreshToken struct {
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                     // 令牌ID (UUID)
 	TokenId       string                 `protobuf:"bytes,2,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`                                                            // 令牌标识符 (varchar(255))
 	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                               // 用户ID (UUID)
-	AppId         *string                `protobuf:"bytes,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`                                                            // 应用ID (UUID)
+	ApplicationId *string                `protobuf:"bytes,4,opt,name=application_id,json=applicationId,proto3,oneof" json:"application_id,omitempty"`                                    // 应用ID (UUID)
 	ClientId      *string                `protobuf:"bytes,5,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`                                                   // 客户端ID (varchar(255))
 	SessionId     *string                `protobuf:"bytes,6,opt,name=session_id,json=sessionId,proto3,oneof" json:"session_id,omitempty"`                                                // 会话ID (UUID)
 	IssuedAt      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=issued_at,json=issuedAt,proto3" json:"issued_at,omitempty"`                                                         // 签发时间
@@ -165,9 +165,9 @@ func (x *RefreshToken) GetUserId() string {
 	return ""
 }
 
-func (x *RefreshToken) GetAppId() string {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
+func (x *RefreshToken) GetApplicationId() string {
+	if x != nil && x.ApplicationId != nil {
+		return *x.ApplicationId
 	}
 	return ""
 }
@@ -525,12 +525,12 @@ var File_auth_refresh_token_proto protoreflect.FileDescriptor
 
 const file_auth_refresh_token_proto_rawDesc = "" +
 	"\n" +
-	"\x18auth/refresh_token.proto\x12\rrefresh_token\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa1\x06\n" +
+	"\x18auth/refresh_token.proto\x12\rrefresh_token\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb9\x06\n" +
 	"\fRefreshToken\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\btoken_id\x18\x02 \x01(\tR\atokenId\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x1a\n" +
-	"\x06app_id\x18\x04 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\x12*\n" +
+	"\x0eapplication_id\x18\x04 \x01(\tH\x00R\rapplicationId\x88\x01\x01\x12 \n" +
 	"\tclient_id\x18\x05 \x01(\tH\x01R\bclientId\x88\x01\x01\x12\"\n" +
 	"\n" +
 	"session_id\x18\x06 \x01(\tH\x02R\tsessionId\x88\x01\x01\x127\n" +
@@ -548,8 +548,8 @@ const file_auth_refresh_token_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\t\n" +
-	"\a_app_idB\f\n" +
+	"updated_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x11\n" +
+	"\x0f_application_idB\f\n" +
 	"\n" +
 	"_client_idB\r\n" +
 	"\v_session_idB\r\n" +

@@ -12,7 +12,7 @@ import (
 // ByTenantIDAndEnvironment 根据 TenantID 和 Environment 获取 App 列表，实现 apps.Get 接口
 func (h *Handler) ByTenantIDAndEnvironment(ctx context.Context, tenantID uuid.UUID, environment apps.Environment) ([]*apps.App, error) {
 	envEnum := mapper.EnvironmentDomainToEnum(environment)
-	var ms []models.App
+	var ms []models.Application
 	if err := h.db.WithContext(ctx).
 		Where("tenant_id = ? AND environment = ?", tenantID, envEnum).
 		Find(&ms).Error; err != nil {

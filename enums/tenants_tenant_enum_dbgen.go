@@ -11,10 +11,10 @@ const (
 	TenantsTenantStatusPending   TenantsTenantStatus = "PENDING"
 )
 
-type TenantsTenantAppStatus string
+type TenantsTenantApplicationStatus string
 
 const (
-	TenantsTenantAppStatusActive    TenantsTenantAppStatus = "ACTIVE"
-	TenantsTenantAppStatusDisabled  TenantsTenantAppStatus = "DISABLED"
-	TenantsTenantAppStatusSuspended TenantsTenantAppStatus = "SUSPENDED"
+	TenantsTenantApplicationStatusActive    TenantsTenantApplicationStatus = "ACTIVE"
+	TenantsTenantApplicationStatusDisabled  TenantsTenantApplicationStatus = "DISABLED"
+	TenantsTenantApplicationStatusSuspended TenantsTenantApplicationStatus = "SUSPENDED"
 )

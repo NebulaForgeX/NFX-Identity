@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS "tenants"."invitations" (
   "revoked_by" UUID, -- Who revoked this invitation
   "revoked_at" TIMESTAMP,
   "revoke_reason" TEXT,
-  "role_ids" UUID[], -- Pre-assigned role IDs (references access.roles.id, application-level consistency)
-  "metadata" JSONB DEFAULT '{}'::jsonb -- Extended fields: {"app_id": "...", "message": "...", ...}
+  "tenant_role_id" UUID NOT NULL, -- Role to assign when accepted → write into access.tenant_role_assignments (references access.tenant_roles.id)
+  "metadata" JSONB DEFAULT '{}'::jsonb -- Extended fields: {"message": "...", ...}
 );
 
 CREATE INDEX IF NOT EXISTS "idx_invitations_invite_id" ON "tenants"."invitations"("invite_id");
@@ -28,5 +28,5 @@ CREATE INDEX IF NOT EXISTS "idx_invitations_email" ON "tenants"."invitations"("e
 CREATE INDEX IF NOT EXISTS "idx_invitations_status" ON "tenants"."invitations"("status");
 CREATE INDEX IF NOT EXISTS "idx_invitations_tenant_status" ON "tenants"."invitations"("tenant_id", "status");
 CREATE INDEX IF NOT EXISTS "idx_invitations_expires_at" ON "tenants"."invitations"("expires_at");
-CREATE INDEX IF NOT EXISTS "idx_invitations_role_ids" ON "tenants"."invitations" USING GIN("role_ids"); -- GIN index for array queries
+CREATE INDEX IF NOT EXISTS "idx_invitations_tenant_role_id" ON "tenants"."invitations"("tenant_role_id");
 

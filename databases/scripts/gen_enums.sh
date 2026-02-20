@@ -56,6 +56,11 @@ else
   mkdir -p "$GEN_DIR"
 fi
 
+# Clear all generated enum files before generating (avoid stale files when enums are removed)
+if [ -d "$DEST_DIR" ]; then
+  rm -f "${DEST_DIR}"/*_enum_dbgen.go
+fi
+
 ATLAS_ENV_ARGS=(
   -e "POSTGRES_USER=${POSTGRES_USER}"
   -e "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
