@@ -5,12 +5,10 @@ import (
 
 	userOccupationApp "nfxid/modules/directory/application/user_occupations"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserOccupationHandler struct {
@@ -28,13 +26,12 @@ func NewUserOccupationHandler(userOccupationAppSvc *userOccupationApp.Service) *
 func (h *UserOccupationHandler) GetUserOccupationByID(ctx context.Context, req *useroccupationpb.GetUserOccupationByIDRequest) (*useroccupationpb.GetUserOccupationByIDResponse, error) {
 	userOccupationID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_occupation_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userOccupationView, err := h.userOccupationAppSvc.GetUserOccupation(ctx, userOccupationID)
 	if err != nil {
-		logx.S().Errorf("failed to get user occupation by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user occupation not found: %v", err)
+		return nil, err
 	}
 
 	userOccupation := mapper.UserOccupationROToProto(&userOccupationView)
@@ -45,7 +42,7 @@ func (h *UserOccupationHandler) GetUserOccupationByID(ctx context.Context, req *
 func (h *UserOccupationHandler) GetUserOccupationsByUserID(ctx context.Context, req *useroccupationpb.GetUserOccupationsByUserIDRequest) (*useroccupationpb.GetUserOccupationsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var isCurrent *bool
@@ -55,8 +52,7 @@ func (h *UserOccupationHandler) GetUserOccupationsByUserID(ctx context.Context, 
 
 	userOccupationViews, err := h.userOccupationAppSvc.GetUserOccupationsByUserID(ctx, userID, isCurrent)
 	if err != nil {
-		logx.S().Errorf("failed to get user occupations by user_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get user occupations: %v", err)
+		return nil, err
 	}
 
 	userOccupations := mapper.UserOccupationListROToProto(userOccupationViews)

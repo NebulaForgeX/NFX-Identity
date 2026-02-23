@@ -2,7 +2,8 @@ package resource
 
 import (
 	"context"
-	"errors"
+
+	"nfxid/pkgs/errx"
 )
 
 // CheckMySQL 检查 MySQL 数据库连接的健康状态
@@ -15,7 +16,7 @@ func (s *Service) CheckMySQL(ctx context.Context) error {
 // CheckPostgres 检查 PostgreSQL 数据库连接的健康状态
 func (s *Service) CheckPostgres(ctx context.Context) error {
 	if s.postgres == nil {
-		return errors.New("postgres connection not initialized")
+		return errx.FailedPrecond("POSTGRES_NOT_INITIALIZED", "postgres connection not initialized")
 	}
 	return s.postgres.Check(ctx)
 }

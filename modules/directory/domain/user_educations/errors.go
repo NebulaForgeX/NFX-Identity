@@ -1,9 +1,9 @@
 package user_educations
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrUserEducationNotFound = errors.New("user education not found")
-	ErrUserIDRequired        = errors.New("user id is required")
-	ErrSchoolRequired        = errors.New("school is required")
+	ErrUserEducationNotFound = errx.NotFound("USER_EDUCATION_NOT_FOUND", "user education not found")
+	ErrUserIDRequired         = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrSchoolRequired         = errx.InvalidArg("SCHOOL_REQUIRED", "school is required")
 )

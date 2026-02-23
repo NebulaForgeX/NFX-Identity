@@ -5,9 +5,7 @@ import (
 
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
 	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"nfxid/pkgs/errx"
 )
 
 type RateLimitHandler struct {
@@ -23,5 +21,5 @@ func NewRateLimitHandler(rateLimitAppSvc *rateLimitApp.Service) *RateLimitHandle
 
 // GetRateLimitByID 根据ID获取Rate Limit
 func (h *RateLimitHandler) GetRateLimitByID(ctx context.Context, req *ratelimitpb.GetRateLimitByIDRequest) (*ratelimitpb.GetRateLimitByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRateLimitByID not implemented")
+	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetRateLimitByID not implemented")
 }

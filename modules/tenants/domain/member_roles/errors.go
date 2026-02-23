@@ -1,13 +1,13 @@
 package member_roles
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrMemberRoleNotFound     = errors.New("member role not found")
-	ErrTenantIDRequired       = errors.New("tenant id is required")
-	ErrMemberIDRequired       = errors.New("member id is required")
-	ErrRoleIDRequired         = errors.New("role id is required")
-	ErrMemberRoleAlreadyExists = errors.New("member role already exists")
-	ErrMemberRoleAlreadyRevoked = errors.New("member role already revoked")
-	ErrMemberRoleExpired      = errors.New("member role expired")
+	ErrMemberRoleNotFound     = errx.NotFound("MEMBER_ROLE_NOT_FOUND", "member role not found")
+	ErrTenantIDRequired       = errx.InvalidArg("TENANT_ID_REQUIRED", "tenant id is required")
+	ErrMemberIDRequired       = errx.InvalidArg("MEMBER_ID_REQUIRED", "member id is required")
+	ErrRoleIDRequired         = errx.InvalidArg("ROLE_ID_REQUIRED", "role id is required")
+	ErrMemberRoleAlreadyExists = errx.Conflict("MEMBER_ROLE_ALREADY_EXISTS", "member role already exists")
+	ErrMemberRoleAlreadyRevoked = errx.Conflict("MEMBER_ROLE_ALREADY_REVOKED", "member role already revoked")
+	ErrMemberRoleExpired      = errx.Expired("MEMBER_ROLE_EXPIRED", "member role expired")
 )

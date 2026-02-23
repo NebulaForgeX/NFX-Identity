@@ -5,12 +5,10 @@ import (
 
 	tenantSettingApp "nfxid/modules/tenants/application/tenant_settings"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type TenantSettingHandler struct {
@@ -28,13 +26,12 @@ func NewTenantSettingHandler(tenantSettingAppSvc *tenantSettingApp.Service) *Ten
 func (h *TenantSettingHandler) GetTenantSettingByID(ctx context.Context, req *tenantsettingpb.GetTenantSettingByIDRequest) (*tenantsettingpb.GetTenantSettingByIDResponse, error) {
 	tenantSettingID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_setting_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	tenantSettingView, err := h.tenantSettingAppSvc.GetTenantSetting(ctx, tenantSettingID)
 	if err != nil {
-		logx.S().Errorf("failed to get tenant setting by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "tenant setting not found: %v", err)
+		return nil, err
 	}
 
 	tenantSetting := mapper.TenantSettingROToProto(&tenantSettingView)
@@ -45,13 +42,12 @@ func (h *TenantSettingHandler) GetTenantSettingByID(ctx context.Context, req *te
 func (h *TenantSettingHandler) GetTenantSettingByTenantID(ctx context.Context, req *tenantsettingpb.GetTenantSettingByTenantIDRequest) (*tenantsettingpb.GetTenantSettingByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	tenantSettingView, err := h.tenantSettingAppSvc.GetTenantSettingByTenantID(ctx, tenantID)
 	if err != nil {
-		logx.S().Errorf("failed to get tenant setting by tenant_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "tenant setting not found: %v", err)
+		return nil, err
 	}
 
 	tenantSetting := mapper.TenantSettingROToProto(&tenantSettingView)

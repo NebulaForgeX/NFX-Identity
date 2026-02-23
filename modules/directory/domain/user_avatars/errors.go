@@ -1,9 +1,9 @@
 package user_avatars
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrUserAvatarNotFound = errors.New("user avatar not found")
-	ErrUserIDRequired     = errors.New("user id is required")
-	ErrImageIDRequired    = errors.New("image id is required")
+	ErrUserAvatarNotFound = errx.NotFound("USER_AVATAR_NOT_FOUND", "user avatar not found")
+	ErrUserIDRequired     = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrImageIDRequired    = errx.InvalidArg("IMAGE_ID_REQUIRED", "image id is required")
 )

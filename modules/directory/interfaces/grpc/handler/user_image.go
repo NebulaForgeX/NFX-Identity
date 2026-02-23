@@ -6,12 +6,10 @@ import (
 	userImageApp "nfxid/modules/directory/application/user_images"
 	userImageAppCommands "nfxid/modules/directory/application/user_images/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	userimagepb "nfxid/protos/gen/directory/user_image"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserImageHandler struct {
@@ -30,12 +28,12 @@ func (h *UserImageHandler) CreateUserImage(ctx context.Context, req *userimagepb
 	// 解析用户ID和图片ID
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	imageID, err := uuid.Parse(req.ImageId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// 创建命令
@@ -48,15 +46,13 @@ func (h *UserImageHandler) CreateUserImage(ctx context.Context, req *userimagepb
 	// 调用应用服务创建用户图片
 	userImageID, err := h.userImageAppSvc.CreateUserImage(ctx, cmd)
 	if err != nil {
-		logx.S().Errorf("failed to create user image: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to create user image: %v", err)
+		return nil, err
 	}
 
 	// 获取创建的用户图片
 	userImageView, err := h.userImageAppSvc.GetUserImage(ctx, userImageID)
 	if err != nil {
-		logx.S().Errorf("failed to get created user image: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get created user image: %v", err)
+		return nil, err
 	}
 
 	// 转换为 protobuf 响应
@@ -68,13 +64,12 @@ func (h *UserImageHandler) CreateUserImage(ctx context.Context, req *userimagepb
 func (h *UserImageHandler) GetUserImageByID(ctx context.Context, req *userimagepb.GetUserImageByIDRequest) (*userimagepb.GetUserImageByIDResponse, error) {
 	userImageID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userImageView, err := h.userImageAppSvc.GetUserImage(ctx, userImageID)
 	if err != nil {
-		logx.S().Errorf("failed to get user image by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user image not found: %v", err)
+		return nil, err
 	}
 
 	userImage := mapper.UserImageROToProto(&userImageView)
@@ -85,13 +80,12 @@ func (h *UserImageHandler) GetUserImageByID(ctx context.Context, req *userimagep
 func (h *UserImageHandler) GetUserImagesByUserID(ctx context.Context, req *userimagepb.GetUserImagesByUserIDRequest) (*userimagepb.GetUserImagesByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userImageViews, err := h.userImageAppSvc.GetUserImagesByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get user images by user_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get user images: %v", err)
+		return nil, err
 	}
 
 	userImages := mapper.UserImageListROToProto(userImageViews)
@@ -102,13 +96,12 @@ func (h *UserImageHandler) GetUserImagesByUserID(ctx context.Context, req *useri
 func (h *UserImageHandler) GetUserImagesByImageID(ctx context.Context, req *userimagepb.GetUserImagesByImageIDRequest) (*userimagepb.GetUserImagesByImageIDResponse, error) {
 	imageID, err := uuid.Parse(req.ImageId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userImageViews, err := h.userImageAppSvc.GetUserImagesByImageID(ctx, imageID)
 	if err != nil {
-		logx.S().Errorf("failed to get user images by image_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get user images: %v", err)
+		return nil, err
 	}
 
 	userImages := mapper.UserImageListROToProto(userImageViews)
@@ -119,14 +112,12 @@ func (h *UserImageHandler) GetUserImagesByImageID(ctx context.Context, req *user
 func (h *UserImageHandler) GetCurrentUserImageByUserID(ctx context.Context, req *userimagepb.GetCurrentUserImageByUserIDRequest) (*userimagepb.GetCurrentUserImageByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userImageView, err := h.userImageAppSvc.GetCurrentUserImageByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get current user image by user_id: %v", err)
-		// Return empty response if not found
-		return &userimagepb.GetCurrentUserImageByUserIDResponse{}, nil
+		return nil, err
 	}
 
 	userImage := mapper.UserImageROToProto(&userImageView)
@@ -137,7 +128,7 @@ func (h *UserImageHandler) GetCurrentUserImageByUserID(ctx context.Context, req 
 func (h *UserImageHandler) UpdateUserImageDisplayOrder(ctx context.Context, req *userimagepb.UpdateUserImageDisplayOrderRequest) (*userimagepb.UpdateUserImageDisplayOrderResponse, error) {
 	userImageID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userImageAppCommands.UpdateUserImageDisplayOrderCmd{
@@ -146,15 +137,13 @@ func (h *UserImageHandler) UpdateUserImageDisplayOrder(ctx context.Context, req 
 	}
 
 	if err := h.userImageAppSvc.UpdateUserImageDisplayOrder(ctx, cmd); err != nil {
-		logx.S().Errorf("failed to update user image display order: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to update user image display order: %v", err)
+		return nil, err
 	}
 
 	// 获取更新的用户图片
 	userImageView, err := h.userImageAppSvc.GetUserImage(ctx, userImageID)
 	if err != nil {
-		logx.S().Errorf("failed to get updated user image: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get updated user image: %v", err)
+		return nil, err
 	}
 
 	userImage := mapper.UserImageROToProto(&userImageView)
@@ -165,12 +154,12 @@ func (h *UserImageHandler) UpdateUserImageDisplayOrder(ctx context.Context, req 
 func (h *UserImageHandler) UpdateUserImageImageID(ctx context.Context, req *userimagepb.UpdateUserImageImageIDRequest) (*userimagepb.UpdateUserImageImageIDResponse, error) {
 	userImageID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	imageID, err := uuid.Parse(req.ImageId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userImageAppCommands.UpdateUserImageImageIDCmd{
@@ -179,15 +168,13 @@ func (h *UserImageHandler) UpdateUserImageImageID(ctx context.Context, req *user
 	}
 
 	if err := h.userImageAppSvc.UpdateUserImageImageID(ctx, cmd); err != nil {
-		logx.S().Errorf("failed to update user image image_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to update user image image_id: %v", err)
+		return nil, err
 	}
 
 	// 获取更新的用户图片
 	userImageView, err := h.userImageAppSvc.GetUserImage(ctx, userImageID)
 	if err != nil {
-		logx.S().Errorf("failed to get updated user image: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get updated user image: %v", err)
+		return nil, err
 	}
 
 	userImage := mapper.UserImageROToProto(&userImageView)
@@ -198,13 +185,12 @@ func (h *UserImageHandler) UpdateUserImageImageID(ctx context.Context, req *user
 func (h *UserImageHandler) DeleteUserImage(ctx context.Context, req *userimagepb.DeleteUserImageRequest) (*userimagepb.DeleteUserImageResponse, error) {
 	userImageID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_image_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userImageAppCommands.DeleteUserImageCmd{UserImageID: userImageID}
 	if err := h.userImageAppSvc.DeleteUserImage(ctx, cmd); err != nil {
-		logx.S().Errorf("failed to delete user image: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to delete user image: %v", err)
+		return nil, err
 	}
 
 	return &userimagepb.DeleteUserImageResponse{Success: true}, nil

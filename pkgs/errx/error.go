@@ -11,8 +11,8 @@ type Error struct {
 	Kind    Kind           `json:"kind"`
 	Code    string         `json:"code"`
 	Message string         `json:"message"`
-	Details map[string]any `json:"details,omitempty"`
-	Cause   error          `json:"-"`
+	Details map[string]any `json:"details,omitempty"` // External details for client
+	Cause   error          `json:"-"`                 // Internal details for debugging
 }
 
 func New(kind Kind, code string, message string) *Error {
@@ -64,6 +64,7 @@ func (e *Error) Error() string {
 	if e == nil {
 		return ""
 	}
+
 	switch {
 	case e.Message != "" && e.Cause != nil:
 		return fmt.Sprintf("%s: %v", e.Message, e.Cause)
@@ -87,6 +88,7 @@ func (e *Error) Unwrap() error {
 	return e.Cause
 }
 
+// HttpStatus returns the HTTP status code for the error.
 func (e *Error) HttpStatus() int {
 	return HTTPStatusFromKind(e.Kind)
 }
@@ -99,6 +101,7 @@ func (e *Error) clone() *Error {
 	if e == nil {
 		return nil
 	}
+
 	var details map[string]any
 	if e.Details != nil {
 		details = make(map[string]any, len(e.Details))
@@ -106,6 +109,7 @@ func (e *Error) clone() *Error {
 			details[k] = v
 		}
 	}
+
 	return &Error{
 		Kind:    e.Kind,
 		Code:    e.Code,

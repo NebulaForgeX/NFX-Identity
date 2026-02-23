@@ -1,9 +1,9 @@
 package tenant_settings
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrTenantSettingNotFound     = errors.New("tenant setting not found")
-	ErrTenantIDRequired          = errors.New("tenant id is required")
-	ErrTenantSettingAlreadyExists = errors.New("tenant setting already exists")
+	ErrTenantSettingNotFound     = errx.NotFound("TENANT_SETTING_NOT_FOUND", "tenant setting not found")
+	ErrTenantIDRequired          = errx.InvalidArg("TENANT_ID_REQUIRED", "tenant id is required")
+	ErrTenantSettingAlreadyExists = errx.Conflict("TENANT_SETTING_ALREADY_EXISTS", "tenant setting already exists")
 )

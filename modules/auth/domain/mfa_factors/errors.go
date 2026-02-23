@@ -1,13 +1,13 @@
 package mfa_factors
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrMFAFactorNotFound      = errors.New("mfa factor not found")
-	ErrFactorIDRequired       = errors.New("factor id is required")
-	ErrUserIDRequired         = errors.New("user id is required")
-	ErrTenantIDRequired       = errors.New("tenant id is required")
-	ErrTypeRequired           = errors.New("type is required")
-	ErrFactorIDAlreadyExists  = errors.New("factor id already exists")
-	ErrInvalidMFAType         = errors.New("invalid mfa type")
+	ErrMFAFactorNotFound     = errx.NotFound("MFA_FACTOR_NOT_FOUND", "mfa factor not found")
+	ErrFactorIDRequired      = errx.InvalidArg("FACTOR_ID_REQUIRED", "factor id is required")
+	ErrUserIDRequired        = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrTenantIDRequired      = errx.InvalidArg("TENANT_ID_REQUIRED", "tenant id is required")
+	ErrTypeRequired          = errx.InvalidArg("TYPE_REQUIRED", "type is required")
+	ErrFactorIDAlreadyExists = errx.Conflict("FACTOR_ID_ALREADY_EXISTS", "factor id already exists")
+	ErrInvalidMFAType        = errx.InvalidArg("INVALID_MFA_TYPE", "invalid mfa type")
 )

@@ -9,6 +9,7 @@ import (
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
 	resourceApp "nfxid/modules/clients/application/resource"
 	grpcHandler "nfxid/modules/clients/interfaces/grpc/handler"
+	"nfxid/pkgs/grpcx/interceptor"
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
@@ -36,7 +37,10 @@ type Deps interface {
 
 func NewServer(d Deps) *grpc.Server {
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(servertoken.UnaryAuthInterceptor(d.ServerTokenVerifier())),
+		grpc.ChainUnaryInterceptor(
+			interceptor.UnaryErrorHandler(),
+			servertoken.UnaryAuthInterceptor(d.ServerTokenVerifier()),
+		),
 	}
 
 	s := grpc.NewServer(opts...)

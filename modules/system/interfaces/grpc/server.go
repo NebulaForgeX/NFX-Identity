@@ -4,6 +4,7 @@ import (
 	systemStateApp "nfxid/modules/system/application/system_state"
 	resourceApp "nfxid/modules/system/application/resource"
 	grpcHandler "nfxid/modules/system/interfaces/grpc/handler"
+	"nfxid/pkgs/grpcx/interceptor"
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
@@ -23,7 +24,10 @@ type Deps interface {
 
 func NewServer(d Deps) *grpc.Server {
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(servertoken.UnaryAuthInterceptor(d.ServerTokenVerifier())),
+		grpc.ChainUnaryInterceptor(
+			interceptor.UnaryErrorHandler(),
+			servertoken.UnaryAuthInterceptor(d.ServerTokenVerifier()),
+		),
 	}
 
 	s := grpc.NewServer(opts...)

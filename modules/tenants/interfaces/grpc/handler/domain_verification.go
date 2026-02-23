@@ -6,12 +6,10 @@ import (
 	domainVerificationApp "nfxid/modules/tenants/application/domain_verifications"
 	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type DomainVerificationHandler struct {
@@ -29,13 +27,12 @@ func NewDomainVerificationHandler(domainVerificationAppSvc *domainVerificationAp
 func (h *DomainVerificationHandler) GetDomainVerificationByID(ctx context.Context, req *domainverificationpb.GetDomainVerificationByIDRequest) (*domainverificationpb.GetDomainVerificationByIDResponse, error) {
 	domainVerificationID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid domain_verification_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	domainVerificationView, err := h.domainVerificationAppSvc.GetDomainVerification(ctx, domainVerificationID)
 	if err != nil {
-		logx.S().Errorf("failed to get domain verification by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "domain verification not found: %v", err)
+		return nil, err
 	}
 
 	domainVerification := mapper.DomainVerificationROToProto(&domainVerificationView)
@@ -46,8 +43,7 @@ func (h *DomainVerificationHandler) GetDomainVerificationByID(ctx context.Contex
 func (h *DomainVerificationHandler) GetDomainVerificationByDomain(ctx context.Context, req *domainverificationpb.GetDomainVerificationByDomainRequest) (*domainverificationpb.GetDomainVerificationByDomainResponse, error) {
 	domainVerificationView, err := h.domainVerificationAppSvc.GetDomainVerificationByDomain(ctx, req.Domain)
 	if err != nil {
-		logx.S().Errorf("failed to get domain verification by domain: %v", err)
-		return nil, status.Errorf(codes.NotFound, "domain verification not found: %v", err)
+		return nil, err
 	}
 
 	domainVerification := mapper.DomainVerificationROToProto(&domainVerificationView)
@@ -58,7 +54,7 @@ func (h *DomainVerificationHandler) GetDomainVerificationByDomain(ctx context.Co
 func (h *DomainVerificationHandler) GetDomainVerificationsByTenantID(ctx context.Context, req *domainverificationpb.GetDomainVerificationsByTenantIDRequest) (*domainverificationpb.GetDomainVerificationsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var verificationStatus *domainVerificationDomain.VerificationStatus
@@ -69,8 +65,7 @@ func (h *DomainVerificationHandler) GetDomainVerificationsByTenantID(ctx context
 
 	domainVerificationViews, err := h.domainVerificationAppSvc.GetDomainVerificationsByTenantID(ctx, tenantID, verificationStatus)
 	if err != nil {
-		logx.S().Errorf("failed to get domain verifications by tenant_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get domain verifications: %v", err)
+		return nil, err
 	}
 
 	domainVerifications := mapper.DomainVerificationListROToProto(domainVerificationViews)

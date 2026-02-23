@@ -1,12 +1,12 @@
 package groups
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrGroupNotFound      = errors.New("group not found")
-	ErrGroupIDRequired    = errors.New("group id is required")
-	ErrNameRequired       = errors.New("name is required")
-	ErrTenantIDRequired   = errors.New("tenant id is required")
-	ErrGroupIDAlreadyExists = errors.New("group id already exists")
-	ErrInvalidGroupType   = errors.New("invalid group type")
+	ErrGroupNotFound       = errx.NotFound("GROUP_NOT_FOUND", "group not found")
+	ErrGroupIDRequired     = errx.InvalidArg("GROUP_ID_REQUIRED", "group id is required")
+	ErrNameRequired        = errx.InvalidArg("NAME_REQUIRED", "name is required")
+	ErrTenantIDRequired     = errx.InvalidArg("TENANT_ID_REQUIRED", "tenant id is required")
+	ErrGroupIDAlreadyExists = errx.Conflict("GROUP_ID_ALREADY_EXISTS", "group id already exists")
+	ErrInvalidGroupType    = errx.InvalidArg("INVALID_GROUP_TYPE", "invalid group type")
 )

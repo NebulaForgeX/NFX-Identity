@@ -1,11 +1,11 @@
 package user_emails
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrUserEmailNotFound      = errors.New("user email not found")
-	ErrUserIDRequired         = errors.New("user id is required")
-	ErrEmailRequired          = errors.New("email is required")
-	ErrEmailAlreadyExists     = errors.New("email already exists")
-	ErrInvalidEmail           = errors.New("invalid email format")
+	ErrUserEmailNotFound  = errx.NotFound("USER_EMAIL_NOT_FOUND", "user email not found")
+	ErrUserIDRequired     = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrEmailRequired      = errx.InvalidArg("EMAIL_REQUIRED", "email is required")
+	ErrEmailAlreadyExists = errx.Conflict("EMAIL_ALREADY_EXISTS", "email already exists")
+	ErrInvalidEmail       = errx.InvalidArg("INVALID_EMAIL", "invalid email format")
 )

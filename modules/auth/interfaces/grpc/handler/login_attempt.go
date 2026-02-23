@@ -5,9 +5,7 @@ import (
 
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"nfxid/pkgs/errx"
 )
 
 type LoginAttemptHandler struct {
@@ -23,5 +21,5 @@ func NewLoginAttemptHandler(loginAttemptAppSvc *loginAttemptApp.Service) *LoginA
 
 // GetLoginAttemptByID 根据ID获取登录尝试
 func (h *LoginAttemptHandler) GetLoginAttemptByID(ctx context.Context, req *loginattemptpb.GetLoginAttemptByIDRequest) (*loginattemptpb.GetLoginAttemptByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLoginAttemptByID not implemented")
+	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetLoginAttemptByID not implemented")
 }

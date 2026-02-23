@@ -45,7 +45,7 @@ func (h *AccountLockoutHandler) Create(c fiber.Ctx) error {
 func (h *AccountLockoutHandler) GetByUserID(c fiber.Ctx) error {
 	userIDStr := c.Params("user_id")
 	if userIDStr == "" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "user_id is required"))
+		return errx.InvalidArg("INVALID_PARAMS", "user_id is required")
 	}
 
 	userID, err := uuid.Parse(userIDStr)
@@ -84,7 +84,7 @@ func (h *AccountLockoutHandler) Unlock(c fiber.Ctx) error {
 func (h *AccountLockoutHandler) Delete(c fiber.Ctx) error {
 	userIDStr := c.Params("user_id")
 	if userIDStr == "" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "user_id is required"))
+		return errx.InvalidArg("INVALID_PARAMS", "user_id is required")
 	}
 
 	req := reqdto.AccountLockoutDeleteRequestDTO{UserID: userIDStr}

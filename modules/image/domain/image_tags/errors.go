@@ -1,10 +1,10 @@
 package image_tags
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrImageTagNotFound      = errors.New("image tag not found")
-	ErrImageIDRequired       = errors.New("image id is required")
-	ErrTagRequired           = errors.New("tag is required")
-	ErrImageTagAlreadyExists = errors.New("image tag already exists")
+	ErrImageTagNotFound      = errx.NotFound("IMAGE_TAG_NOT_FOUND", "image tag not found")
+	ErrImageIDRequired       = errx.InvalidArg("IMAGE_ID_REQUIRED", "image id is required")
+	ErrTagRequired           = errx.InvalidArg("TAG_REQUIRED", "tag is required")
+	ErrImageTagAlreadyExists = errx.Conflict("IMAGE_TAG_ALREADY_EXISTS", "image tag already exists")
 )

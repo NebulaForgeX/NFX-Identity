@@ -5,12 +5,10 @@ import (
 
 	memberGroupApp "nfxid/modules/tenants/application/member_groups"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	membergrouppb "nfxid/protos/gen/tenants/member_group"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type MemberGroupHandler struct {
@@ -28,13 +26,12 @@ func NewMemberGroupHandler(memberGroupAppSvc *memberGroupApp.Service) *MemberGro
 func (h *MemberGroupHandler) GetMemberGroupByID(ctx context.Context, req *membergrouppb.GetMemberGroupByIDRequest) (*membergrouppb.GetMemberGroupByIDResponse, error) {
 	memberGroupID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid member_group_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	memberGroupView, err := h.memberGroupAppSvc.GetMemberGroup(ctx, memberGroupID)
 	if err != nil {
-		logx.S().Errorf("failed to get member group by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "member group not found: %v", err)
+		return nil, err
 	}
 
 	memberGroup := mapper.MemberGroupROToProto(&memberGroupView)
@@ -45,13 +42,12 @@ func (h *MemberGroupHandler) GetMemberGroupByID(ctx context.Context, req *member
 func (h *MemberGroupHandler) GetMemberGroupsByMemberID(ctx context.Context, req *membergrouppb.GetMemberGroupsByMemberIDRequest) (*membergrouppb.GetMemberGroupsByMemberIDResponse, error) {
 	memberID, err := uuid.Parse(req.MemberId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid member_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	memberGroupViews, err := h.memberGroupAppSvc.GetMemberGroupsByMemberID(ctx, memberID)
 	if err != nil {
-		logx.S().Errorf("failed to get member groups by member_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get member groups: %v", err)
+		return nil, err
 	}
 
 	memberGroups := mapper.MemberGroupListROToProto(memberGroupViews)
@@ -62,13 +58,12 @@ func (h *MemberGroupHandler) GetMemberGroupsByMemberID(ctx context.Context, req 
 func (h *MemberGroupHandler) GetMemberGroupsByGroupID(ctx context.Context, req *membergrouppb.GetMemberGroupsByGroupIDRequest) (*membergrouppb.GetMemberGroupsByGroupIDResponse, error) {
 	groupID, err := uuid.Parse(req.GroupId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid group_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	memberGroupViews, err := h.memberGroupAppSvc.GetMemberGroupsByGroupID(ctx, groupID)
 	if err != nil {
-		logx.S().Errorf("failed to get member groups by group_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get member groups: %v", err)
+		return nil, err
 	}
 
 	memberGroups := mapper.MemberGroupListROToProto(memberGroupViews)

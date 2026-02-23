@@ -64,7 +64,7 @@ func (h *PasswordResetHandler) GetByID(c fiber.Ctx) error {
 func (h *PasswordResetHandler) Update(c fiber.Ctx) error {
 	idStr := c.Params("id")
 	if idStr == "" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "id is required"))
+		return errx.InvalidArg("INVALID_PARAMS", "id is required")
 	}
 
 	id, err := uuid.Parse(idStr)
@@ -101,7 +101,7 @@ func (h *PasswordResetHandler) Update(c fiber.Ctx) error {
 func (h *PasswordResetHandler) Delete(c fiber.Ctx) error {
 	idStr := c.Params("id")
 	if idStr == "" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "id is required"))
+		return errx.InvalidArg("INVALID_PARAMS", "id is required")
 	}
 
 	id, err := uuid.Parse(idStr)

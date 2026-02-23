@@ -1,11 +1,11 @@
 package tenants
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrTenantNotFound      = errors.New("tenant not found")
-	ErrTenantIDRequired    = errors.New("tenant id is required")
-	ErrNameRequired        = errors.New("name is required")
-	ErrTenantIDAlreadyExists = errors.New("tenant id already exists")
-	ErrInvalidTenantStatus = errors.New("invalid tenant status")
+	ErrTenantNotFound       = errx.NotFound("TENANT_NOT_FOUND", "tenant not found")
+	ErrTenantIDRequired     = errx.InvalidArg("TENANT_ID_REQUIRED", "tenant id is required")
+	ErrNameRequired         = errx.InvalidArg("NAME_REQUIRED", "name is required")
+	ErrTenantIDAlreadyExists = errx.Conflict("TENANT_ID_ALREADY_EXISTS", "tenant id already exists")
+	ErrInvalidTenantStatus  = errx.InvalidArg("INVALID_TENANT_STATUS", "invalid tenant status")
 )

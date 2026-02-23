@@ -5,9 +5,7 @@ import (
 
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
 	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"nfxid/pkgs/errx"
 )
 
 type TrustedDeviceHandler struct {
@@ -23,5 +21,5 @@ func NewTrustedDeviceHandler(trustedDeviceAppSvc *trustedDeviceApp.Service) *Tru
 
 // GetTrustedDeviceByID 根据ID获取受信任设备
 func (h *TrustedDeviceHandler) GetTrustedDeviceByID(ctx context.Context, req *trusteddevicepb.GetTrustedDeviceByIDRequest) (*trusteddevicepb.GetTrustedDeviceByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTrustedDeviceByID not implemented")
+	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetTrustedDeviceByID not implemented")
 }

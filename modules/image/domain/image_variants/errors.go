@@ -1,11 +1,11 @@
 package image_variants
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrImageVariantNotFound      = errors.New("image variant not found")
-	ErrImageIDRequired           = errors.New("image id is required")
-	ErrVariantKeyRequired        = errors.New("variant key is required")
-	ErrStoragePathRequired       = errors.New("storage path is required")
-	ErrImageVariantAlreadyExists = errors.New("image variant already exists")
+	ErrImageVariantNotFound      = errx.NotFound("IMAGE_VARIANT_NOT_FOUND", "image variant not found")
+	ErrImageIDRequired           = errx.InvalidArg("IMAGE_ID_REQUIRED", "image id is required")
+	ErrVariantKeyRequired        = errx.InvalidArg("VARIANT_KEY_REQUIRED", "variant key is required")
+	ErrStoragePathRequired       = errx.InvalidArg("STORAGE_PATH_REQUIRED", "storage path is required")
+	ErrImageVariantAlreadyExists = errx.Conflict("IMAGE_VARIANT_ALREADY_EXISTS", "image variant already exists")
 )

@@ -1,9 +1,9 @@
 package login_attempts
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrLoginAttemptNotFound = errors.New("login attempt not found")
-	ErrIdentifierRequired   = errors.New("identifier is required")
-	ErrInvalidFailureCode   = errors.New("invalid failure code")
+	ErrLoginAttemptNotFound = errx.NotFound("LOGIN_ATTEMPT_NOT_FOUND", "login attempt not found")
+	ErrIdentifierRequired   = errx.InvalidArg("IDENTIFIER_REQUIRED", "identifier is required")
+	ErrInvalidFailureCode  = errx.InvalidArg("INVALID_FAILURE_CODE", "invalid failure code")
 )

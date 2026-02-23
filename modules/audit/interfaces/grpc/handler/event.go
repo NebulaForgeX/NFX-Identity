@@ -6,12 +6,10 @@ import (
 
 	eventApp "nfxid/modules/audit/application/events"
 	"nfxid/modules/audit/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	eventpb "nfxid/protos/gen/audit/event"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type EventHandler struct {
@@ -29,13 +27,12 @@ func NewEventHandler(eventAppSvc *eventApp.Service) *EventHandler {
 func (h *EventHandler) GetEventByID(ctx context.Context, req *eventpb.GetEventByIDRequest) (*eventpb.GetEventByIDResponse, error) {
 	eventID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid event_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	eventView, err := h.eventAppSvc.GetEvent(ctx, eventID)
 	if err != nil {
-		logx.S().Errorf("failed to get event by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "event not found: %v", err)
+		return nil, err
 	}
 
 	event := mapper.EventROToProto(&eventView)
@@ -46,8 +43,7 @@ func (h *EventHandler) GetEventByID(ctx context.Context, req *eventpb.GetEventBy
 func (h *EventHandler) GetEventByEventID(ctx context.Context, req *eventpb.GetEventByEventIDRequest) (*eventpb.GetEventByEventIDResponse, error) {
 	eventView, err := h.eventAppSvc.GetEventByEventID(ctx, req.EventId)
 	if err != nil {
-		logx.S().Errorf("failed to get event by event_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "event not found: %v", err)
+		return nil, err
 	}
 
 	event := mapper.EventROToProto(&eventView)
@@ -58,19 +54,18 @@ func (h *EventHandler) GetEventByEventID(ctx context.Context, req *eventpb.GetEv
 func (h *EventHandler) GetEventsByActor(ctx context.Context, req *eventpb.GetEventsByActorRequest) (*eventpb.GetEventsByActorResponse, error) {
 	actorID, err := uuid.Parse(req.ActorId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid actor_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// Parse actor type
 	actorType := mapper.ActorTypeFromProto(req.ActorType)
-	
+
 	// ByActor method doesn't require time range, pass nil
 	var startTime, endTime *time.Time
 
 	eventViews, err := h.eventAppSvc.GetEventsByActor(ctx, actorType, actorID, startTime, endTime)
 	if err != nil {
-		logx.S().Errorf("failed to get events by actor: %v", err)
-		return nil, status.Errorf(codes.NotFound, "events not found: %v", err)
+		return nil, err
 	}
 
 	// Apply limit if specified
@@ -97,7 +92,6 @@ func (h *EventHandler) BatchGetEvents(ctx context.Context, req *eventpb.BatchGet
 	for _, eventID := range eventIDs {
 		eventView, err := h.eventAppSvc.GetEvent(ctx, eventID)
 		if err != nil {
-			logx.S().Warnf("failed to get event %s: %v", eventID, err)
 			continue
 		}
 		event := mapper.EventROToProto(&eventView)

@@ -5,12 +5,10 @@ import (
 
 	badgeApp "nfxid/modules/directory/application/badges"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	badgepb "nfxid/protos/gen/directory/badge"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type BadgeHandler struct {
@@ -28,13 +26,12 @@ func NewBadgeHandler(badgeAppSvc *badgeApp.Service) *BadgeHandler {
 func (h *BadgeHandler) GetBadgeByID(ctx context.Context, req *badgepb.GetBadgeByIDRequest) (*badgepb.GetBadgeByIDResponse, error) {
 	badgeID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid badge_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	badgeView, err := h.badgeAppSvc.GetBadge(ctx, badgeID)
 	if err != nil {
-		logx.S().Errorf("failed to get badge by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "badge not found: %v", err)
+		return nil, err
 	}
 
 	badge := mapper.BadgeROToProto(&badgeView)
@@ -45,8 +42,7 @@ func (h *BadgeHandler) GetBadgeByID(ctx context.Context, req *badgepb.GetBadgeBy
 func (h *BadgeHandler) GetBadgeByName(ctx context.Context, req *badgepb.GetBadgeByNameRequest) (*badgepb.GetBadgeByNameResponse, error) {
 	badgeView, err := h.badgeAppSvc.GetBadgeByName(ctx, req.Name)
 	if err != nil {
-		logx.S().Errorf("failed to get badge by name: %v", err)
-		return nil, status.Errorf(codes.NotFound, "badge not found: %v", err)
+		return nil, err
 	}
 
 	badge := mapper.BadgeROToProto(&badgeView)
@@ -67,8 +63,7 @@ func (h *BadgeHandler) GetAllBadges(ctx context.Context, req *badgepb.GetAllBadg
 
 	badgeViews, err := h.badgeAppSvc.GetAllBadges(ctx, category, isSystem)
 	if err != nil {
-		logx.S().Errorf("failed to get all badges: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get badges: %v", err)
+		return nil, err
 	}
 
 	badges := mapper.BadgeListROToProto(badgeViews)
@@ -90,7 +85,6 @@ func (h *BadgeHandler) BatchGetBadges(ctx context.Context, req *badgepb.BatchGet
 	for _, badgeID := range badgeIDs {
 		badgeView, err := h.badgeAppSvc.GetBadge(ctx, badgeID)
 		if err != nil {
-			logx.S().Warnf("failed to get badge %s: %v", badgeID, err)
 			continue
 		}
 		badge := mapper.BadgeROToProto(&badgeView)

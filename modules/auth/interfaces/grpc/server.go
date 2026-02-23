@@ -12,6 +12,7 @@ import (
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
 	resourceApp "nfxid/modules/auth/application/resource"
 	grpcHandler "nfxid/modules/auth/interfaces/grpc/handler"
+	"nfxid/pkgs/grpcx/interceptor"
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
@@ -48,7 +49,10 @@ type Deps interface {
 func NewServer(d Deps) *grpc.Server {
 	// 创建 gRPC 服务器，添加认证拦截器（使用 ServerTokenVerifier 用于服务间通信）
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(servertoken.UnaryAuthInterceptor(d.ServerTokenVerifier())),
+		grpc.ChainUnaryInterceptor(
+			interceptor.UnaryErrorHandler(),
+			servertoken.UnaryAuthInterceptor(d.ServerTokenVerifier()),
+		),
 	}
 
 	s := grpc.NewServer(opts...)

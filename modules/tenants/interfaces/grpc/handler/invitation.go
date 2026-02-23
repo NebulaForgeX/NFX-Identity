@@ -6,12 +6,10 @@ import (
 	invitationApp "nfxid/modules/tenants/application/invitations"
 	invitationDomain "nfxid/modules/tenants/domain/invitations"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	invitationpb "nfxid/protos/gen/tenants/invitation"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type InvitationHandler struct {
@@ -29,13 +27,12 @@ func NewInvitationHandler(invitationAppSvc *invitationApp.Service) *InvitationHa
 func (h *InvitationHandler) GetInvitationByID(ctx context.Context, req *invitationpb.GetInvitationByIDRequest) (*invitationpb.GetInvitationByIDResponse, error) {
 	invitationID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid invitation_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	invitationView, err := h.invitationAppSvc.GetInvitation(ctx, invitationID)
 	if err != nil {
-		logx.S().Errorf("failed to get invitation by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "invitation not found: %v", err)
+		return nil, err
 	}
 
 	invitation := mapper.InvitationROToProto(&invitationView)
@@ -46,8 +43,7 @@ func (h *InvitationHandler) GetInvitationByID(ctx context.Context, req *invitati
 func (h *InvitationHandler) GetInvitationByInvitationID(ctx context.Context, req *invitationpb.GetInvitationByInvitationIDRequest) (*invitationpb.GetInvitationByInvitationIDResponse, error) {
 	invitationView, err := h.invitationAppSvc.GetInvitationByInviteID(ctx, req.InvitationId)
 	if err != nil {
-		logx.S().Errorf("failed to get invitation by invitation_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "invitation not found: %v", err)
+		return nil, err
 	}
 
 	invitation := mapper.InvitationROToProto(&invitationView)
@@ -58,7 +54,7 @@ func (h *InvitationHandler) GetInvitationByInvitationID(ctx context.Context, req
 func (h *InvitationHandler) GetInvitationsByTenantID(ctx context.Context, req *invitationpb.GetInvitationsByTenantIDRequest) (*invitationpb.GetInvitationsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var invitationStatus *invitationDomain.InvitationStatus
@@ -69,8 +65,7 @@ func (h *InvitationHandler) GetInvitationsByTenantID(ctx context.Context, req *i
 
 	invitationViews, err := h.invitationAppSvc.GetInvitationsByTenantID(ctx, tenantID, invitationStatus)
 	if err != nil {
-		logx.S().Errorf("failed to get invitations by tenant_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get invitations: %v", err)
+		return nil, err
 	}
 
 	invitations := mapper.InvitationListROToProto(invitationViews)

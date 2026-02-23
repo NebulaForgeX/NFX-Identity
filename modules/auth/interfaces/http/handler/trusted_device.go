@@ -64,7 +64,7 @@ func (h *TrustedDeviceHandler) GetByID(c fiber.Ctx) error {
 func (h *TrustedDeviceHandler) Delete(c fiber.Ctx) error {
 	idStr := c.Params("id")
 	if idStr == "" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "id is required"))
+		return errx.InvalidArg("INVALID_PARAMS", "id is required")
 	}
 
 	id, err := uuid.Parse(idStr)

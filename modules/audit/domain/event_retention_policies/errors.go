@@ -1,13 +1,13 @@
 package event_retention_policies
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrEventRetentionPolicyNotFound      = errors.New("event retention policy not found")
-	ErrPolicyNameRequired                = errors.New("policy name is required")
-	ErrRetentionDaysRequired             = errors.New("retention days is required")
-	ErrRetentionActionRequired           = errors.New("retention action is required")
-	ErrPolicyNameAlreadyExists           = errors.New("policy name already exists")
-	ErrInvalidRetentionAction            = errors.New("invalid retention action")
-	ErrInvalidStatus                     = errors.New("invalid status")
+	ErrEventRetentionPolicyNotFound = errx.NotFound("EVENT_RETENTION_POLICY_NOT_FOUND", "event retention policy not found")
+	ErrPolicyNameRequired           = errx.InvalidArg("POLICY_NAME_REQUIRED", "policy name is required")
+	ErrRetentionDaysRequired       = errx.InvalidArg("RETENTION_DAYS_REQUIRED", "retention days is required")
+	ErrRetentionActionRequired     = errx.InvalidArg("RETENTION_ACTION_REQUIRED", "retention action is required")
+	ErrPolicyNameAlreadyExists      = errx.Conflict("POLICY_NAME_ALREADY_EXISTS", "policy name already exists")
+	ErrInvalidRetentionAction      = errx.InvalidArg("INVALID_RETENTION_ACTION", "invalid retention action")
+	ErrInvalidStatus                = errx.InvalidArg("INVALID_STATUS", "invalid status")
 )

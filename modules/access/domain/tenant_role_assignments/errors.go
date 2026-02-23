@@ -1,7 +1,7 @@
 package tenant_role_assignments
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrTenantRoleAssignmentNotFound = errors.New("tenant role assignment not found")
+	ErrTenantRoleAssignmentNotFound = errx.NotFound("TENANT_ROLE_ASSIGNMENT_NOT_FOUND", "tenant role assignment not found")
 )

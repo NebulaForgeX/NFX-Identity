@@ -5,9 +5,7 @@ import (
 
 	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
 	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"nfxid/pkgs/errx"
 )
 
 type MFAFactorHandler struct {
@@ -23,5 +21,5 @@ func NewMFAFactorHandler(mfaFactorAppSvc *mfaFactorApp.Service) *MFAFactorHandle
 
 // GetMfaFactorByID 根据ID获取MFA因子
 func (h *MFAFactorHandler) GetMfaFactorByID(ctx context.Context, req *mfafactorpb.GetMfaFactorByIDRequest) (*mfafactorpb.GetMfaFactorByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMfaFactorByID not implemented")
+	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetMfaFactorByID not implemented")
 }

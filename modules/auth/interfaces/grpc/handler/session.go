@@ -5,12 +5,10 @@ import (
 
 	sessionApp "nfxid/modules/auth/application/sessions"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	sessionpb "nfxid/protos/gen/auth/session"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type SessionHandler struct {
@@ -28,13 +26,12 @@ func NewSessionHandler(sessionAppSvc *sessionApp.Service) *SessionHandler {
 func (h *SessionHandler) GetSessionByID(ctx context.Context, req *sessionpb.GetSessionByIDRequest) (*sessionpb.GetSessionByIDResponse, error) {
 	sessionID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid session_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	sessionView, err := h.sessionAppSvc.GetSession(ctx, sessionID)
 	if err != nil {
-		logx.S().Errorf("failed to get session by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "session not found: %v", err)
+		return nil, err
 	}
 
 	session := mapper.SessionROToProto(&sessionView)
@@ -45,8 +42,7 @@ func (h *SessionHandler) GetSessionByID(ctx context.Context, req *sessionpb.GetS
 func (h *SessionHandler) GetSessionBySessionID(ctx context.Context, req *sessionpb.GetSessionBySessionIDRequest) (*sessionpb.GetSessionBySessionIDResponse, error) {
 	sessionView, err := h.sessionAppSvc.GetSessionBySessionID(ctx, req.SessionId)
 	if err != nil {
-		logx.S().Errorf("failed to get session by session_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "session not found: %v", err)
+		return nil, err
 	}
 
 	session := mapper.SessionROToProto(&sessionView)
@@ -57,13 +53,12 @@ func (h *SessionHandler) GetSessionBySessionID(ctx context.Context, req *session
 func (h *SessionHandler) GetSessionsByUserID(ctx context.Context, req *sessionpb.GetSessionsByUserIDRequest) (*sessionpb.GetSessionsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	sessionViews, err := h.sessionAppSvc.GetSessionsByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get sessions by user_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "sessions not found: %v", err)
+		return nil, err
 	}
 
 	sessions := mapper.SessionListROToProto(sessionViews)
@@ -85,7 +80,6 @@ func (h *SessionHandler) BatchGetSessions(ctx context.Context, req *sessionpb.Ba
 	for _, sessionID := range sessionIDs {
 		sessionView, err := h.sessionAppSvc.GetSession(ctx, sessionID)
 		if err != nil {
-			logx.S().Warnf("failed to get session %s: %v", sessionID, err)
 			continue
 		}
 		session := mapper.SessionROToProto(&sessionView)

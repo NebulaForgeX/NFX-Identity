@@ -1,11 +1,11 @@
 package member_groups
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrMemberGroupNotFound     = errors.New("member group not found")
-	ErrMemberIDRequired        = errors.New("member id is required")
-	ErrGroupIDRequired         = errors.New("group id is required")
-	ErrMemberGroupAlreadyExists = errors.New("member group already exists")
-	ErrMemberGroupAlreadyRevoked = errors.New("member group already revoked")
+	ErrMemberGroupNotFound     = errx.NotFound("MEMBER_GROUP_NOT_FOUND", "member group not found")
+	ErrMemberIDRequired        = errx.InvalidArg("MEMBER_ID_REQUIRED", "member id is required")
+	ErrGroupIDRequired         = errx.InvalidArg("GROUP_ID_REQUIRED", "group id is required")
+	ErrMemberGroupAlreadyExists = errx.Conflict("MEMBER_GROUP_ALREADY_EXISTS", "member group already exists")
+	ErrMemberGroupAlreadyRevoked = errx.Conflict("MEMBER_GROUP_ALREADY_REVOKED", "member group already revoked")
 )

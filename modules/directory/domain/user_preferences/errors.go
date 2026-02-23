@@ -1,9 +1,9 @@
 package user_preferences
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrUserPreferenceNotFound   = errors.New("user preference not found")
-	ErrUserIDRequired           = errors.New("user id is required")
-	ErrUserPreferenceAlreadyExists = errors.New("user preference already exists")
+	ErrUserPreferenceNotFound     = errx.NotFound("USER_PREFERENCE_NOT_FOUND", "user preference not found")
+	ErrUserIDRequired             = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrUserPreferenceAlreadyExists = errx.Conflict("USER_PREFERENCE_ALREADY_EXISTS", "user preference already exists")
 )

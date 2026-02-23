@@ -1,16 +1,16 @@
 package api_keys
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrAPIKeyNotFound      = errors.New("api key not found")
-	ErrKeyIDRequired       = errors.New("key id is required")
-	ErrAppIDRequired       = errors.New("app id is required")
-	ErrKeyHashRequired     = errors.New("key hash is required")
-	ErrHashAlgRequired     = errors.New("hash alg is required")
-	ErrNameRequired        = errors.New("name is required")
-	ErrKeyIDAlreadyExists  = errors.New("key id already exists")
-	ErrInvalidAPIKeyStatus = errors.New("invalid api key status")
-	ErrAPIKeyAlreadyRevoked = errors.New("api key already revoked")
-	ErrAPIKeyExpired       = errors.New("api key expired")
+	ErrAPIKeyNotFound       = errx.NotFound("API_KEY_NOT_FOUND", "api key not found")
+	ErrKeyIDRequired        = errx.InvalidArg("KEY_ID_REQUIRED", "key id is required")
+	ErrAppIDRequired        = errx.InvalidArg("APP_ID_REQUIRED", "app id is required")
+	ErrKeyHashRequired      = errx.InvalidArg("KEY_HASH_REQUIRED", "key hash is required")
+	ErrHashAlgRequired      = errx.InvalidArg("HASH_ALG_REQUIRED", "hash alg is required")
+	ErrNameRequired         = errx.InvalidArg("NAME_REQUIRED", "name is required")
+	ErrKeyIDAlreadyExists   = errx.Conflict("KEY_ID_ALREADY_EXISTS", "key id already exists")
+	ErrInvalidAPIKeyStatus  = errx.InvalidArg("INVALID_API_KEY_STATUS", "invalid api key status")
+	ErrAPIKeyAlreadyRevoked = errx.Conflict("API_KEY_ALREADY_REVOKED", "api key already revoked")
+	ErrAPIKeyExpired        = errx.Expired("API_KEY_EXPIRED", "api key expired")
 )

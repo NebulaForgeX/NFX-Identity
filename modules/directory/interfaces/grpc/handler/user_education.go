@@ -5,12 +5,10 @@ import (
 
 	userEducationApp "nfxid/modules/directory/application/user_educations"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	usereducationpb "nfxid/protos/gen/directory/user_education"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserEducationHandler struct {
@@ -28,13 +26,12 @@ func NewUserEducationHandler(userEducationAppSvc *userEducationApp.Service) *Use
 func (h *UserEducationHandler) GetUserEducationByID(ctx context.Context, req *usereducationpb.GetUserEducationByIDRequest) (*usereducationpb.GetUserEducationByIDResponse, error) {
 	userEducationID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_education_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userEducationView, err := h.userEducationAppSvc.GetUserEducation(ctx, userEducationID)
 	if err != nil {
-		logx.S().Errorf("failed to get user education by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user education not found: %v", err)
+		return nil, err
 	}
 
 	userEducation := mapper.UserEducationROToProto(&userEducationView)
@@ -45,13 +42,12 @@ func (h *UserEducationHandler) GetUserEducationByID(ctx context.Context, req *us
 func (h *UserEducationHandler) GetUserEducationsByUserID(ctx context.Context, req *usereducationpb.GetUserEducationsByUserIDRequest) (*usereducationpb.GetUserEducationsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userEducationViews, err := h.userEducationAppSvc.GetUserEducationsByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get user educations by user_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get user educations: %v", err)
+		return nil, err
 	}
 
 	userEducations := mapper.UserEducationListROToProto(userEducationViews)

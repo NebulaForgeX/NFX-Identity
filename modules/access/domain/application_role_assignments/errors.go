@@ -1,7 +1,7 @@
 package application_role_assignments
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrApplicationRoleAssignmentNotFound = errors.New("application role assignment not found")
+	ErrApplicationRoleAssignmentNotFound = errx.NotFound("APPLICATION_ROLE_ASSIGNMENT_NOT_FOUND", "application role assignment not found")
 )

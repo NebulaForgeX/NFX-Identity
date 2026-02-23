@@ -6,12 +6,10 @@ import (
 	userProfileApp "nfxid/modules/directory/application/user_profiles"
 	userProfileAppCommands "nfxid/modules/directory/application/user_profiles/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	userprofilepb "nfxid/protos/gen/directory/user_profile"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserProfileHandler struct {
@@ -30,7 +28,7 @@ func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userpro
 	// 解析用户ID（id 直接引用 users.id）
 	userID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// 转换 protobuf Struct 到 map[string]interface{}
@@ -80,15 +78,13 @@ func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userpro
 	// 调用应用服务创建用户资料
 	userProfileID, err := h.userProfileAppSvc.CreateUserProfile(ctx, cmd)
 	if err != nil {
-		logx.S().Errorf("failed to create user profile: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to create user profile: %v", err)
+		return nil, err
 	}
 
 	// 获取创建的用户资料
 	userProfileView, err := h.userProfileAppSvc.GetUserProfile(ctx, userProfileID)
 	if err != nil {
-		logx.S().Errorf("failed to get created user profile: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get created user profile: %v", err)
+		return nil, err
 	}
 
 	// 转换为 protobuf 响应
@@ -100,13 +96,12 @@ func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userpro
 func (h *UserProfileHandler) GetUserProfileByID(ctx context.Context, req *userprofilepb.GetUserProfileByIDRequest) (*userprofilepb.GetUserProfileByIDResponse, error) {
 	userProfileID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_profile_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userProfileView, err := h.userProfileAppSvc.GetUserProfile(ctx, userProfileID)
 	if err != nil {
-		logx.S().Errorf("failed to get user profile by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user profile not found: %v", err)
+		return nil, err
 	}
 
 	userProfile := mapper.UserProfileROToProto(&userProfileView)
@@ -117,13 +112,12 @@ func (h *UserProfileHandler) GetUserProfileByID(ctx context.Context, req *userpr
 func (h *UserProfileHandler) GetUserProfileByUserID(ctx context.Context, req *userprofilepb.GetUserProfileByUserIDRequest) (*userprofilepb.GetUserProfileByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userProfileView, err := h.userProfileAppSvc.GetUserProfileByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get user profile by user_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user profile not found: %v", err)
+		return nil, err
 	}
 
 	userProfile := mapper.UserProfileROToProto(&userProfileView)
@@ -145,7 +139,6 @@ func (h *UserProfileHandler) BatchGetUserProfiles(ctx context.Context, req *user
 	for _, userProfileID := range userProfileIDs {
 		userProfileView, err := h.userProfileAppSvc.GetUserProfile(ctx, userProfileID)
 		if err != nil {
-			logx.S().Warnf("failed to get user profile %s: %v", userProfileID, err)
 			continue
 		}
 		userProfile := mapper.UserProfileROToProto(&userProfileView)

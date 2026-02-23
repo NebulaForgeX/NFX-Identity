@@ -5,12 +5,10 @@ import (
 
 	tenantApp "nfxid/modules/tenants/application/tenants"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	tenantpb "nfxid/protos/gen/tenants/tenant"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type TenantHandler struct {
@@ -28,13 +26,12 @@ func NewTenantHandler(tenantAppSvc *tenantApp.Service) *TenantHandler {
 func (h *TenantHandler) GetTenantByID(ctx context.Context, req *tenantpb.GetTenantByIDRequest) (*tenantpb.GetTenantByIDResponse, error) {
 	tenantID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	tenantView, err := h.tenantAppSvc.GetTenant(ctx, tenantID)
 	if err != nil {
-		logx.S().Errorf("failed to get tenant by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "tenant not found: %v", err)
+		return nil, err
 	}
 
 	tenant := mapper.TenantROToProto(&tenantView)
@@ -45,8 +42,7 @@ func (h *TenantHandler) GetTenantByID(ctx context.Context, req *tenantpb.GetTena
 func (h *TenantHandler) GetTenantByTenantID(ctx context.Context, req *tenantpb.GetTenantByTenantIDRequest) (*tenantpb.GetTenantByTenantIDResponse, error) {
 	tenantView, err := h.tenantAppSvc.GetTenantByTenantID(ctx, req.TenantId)
 	if err != nil {
-		logx.S().Errorf("failed to get tenant by tenant_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "tenant not found: %v", err)
+		return nil, err
 	}
 
 	tenant := mapper.TenantROToProto(&tenantView)
@@ -68,7 +64,6 @@ func (h *TenantHandler) BatchGetTenants(ctx context.Context, req *tenantpb.Batch
 	for _, tenantID := range tenantIDs {
 		tenantView, err := h.tenantAppSvc.GetTenant(ctx, tenantID)
 		if err != nil {
-			logx.S().Warnf("failed to get tenant %s: %v", tenantID, err)
 			continue
 		}
 		tenant := mapper.TenantROToProto(&tenantView)

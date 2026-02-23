@@ -2,7 +2,6 @@ package handler
 
 import (
 	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
-	domain "nfxid/modules/access/domain/tenant_roles"
 	"nfxid/modules/access/interfaces/http/dto/reqdto"
 	"nfxid/modules/access/interfaces/http/dto/respdto"
 	"nfxid/pkgs/errx"
@@ -25,9 +24,6 @@ func (h *TenantRoleHandler) GetByID(c fiber.Ctx) error {
 	}
 	r, err := h.svc.GetByID(c.Context(), req.ID)
 	if err != nil {
-		if err == domain.ErrTenantRoleNotFound {
-			return fiberx.ErrorFromErrx(c, errx.NotFound("NOT_FOUND", "tenant role not found").WithCause(err))
-		}
 		return err
 	}
 	return fiberx.OK(c, "Tenant role retrieved successfully", httpx.SuccessOptions{Data: respdto.TenantRoleToDTO(r)})
@@ -40,9 +36,6 @@ func (h *TenantRoleHandler) GetByTenantIDAndRoleKey(c fiber.Ctx) error {
 	}
 	r, err := h.svc.GetByTenantIDAndRoleKey(c.Context(), req.TenantID, req.RoleKey)
 	if err != nil {
-		if err == domain.ErrTenantRoleNotFound {
-			return fiberx.ErrorFromErrx(c, errx.NotFound("NOT_FOUND", "tenant role not found").WithCause(err))
-		}
 		return err
 	}
 	return fiberx.OK(c, "Tenant role retrieved successfully", httpx.SuccessOptions{Data: respdto.TenantRoleToDTO(r)})
@@ -71,9 +64,6 @@ func (h *TenantRoleHandler) Create(c fiber.Ctx) error {
 	}
 	r, err := h.svc.Create(c.Context(), tenantrolesApp.CreateParams{TenantID: tenantID, RoleKey: roleKey, Name: name})
 	if err != nil {
-		if err == domain.ErrTenantRoleKeyExistsInTenant {
-			return fiberx.ErrorFromErrx(c, errx.Conflict("CONFLICT", "tenant role key already exists in tenant").WithCause(err))
-		}
 		return err
 	}
 	return fiberx.Created(c, "Tenant role created successfully", httpx.SuccessOptions{Data: respdto.TenantRoleToDTO(r)})
@@ -89,9 +79,6 @@ func (h *TenantRoleHandler) Update(c fiber.Ctx) error {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 	if err := h.svc.Update(c.Context(), uriReq.ID, body.RoleKey, body.Name); err != nil {
-		if err == domain.ErrTenantRoleNotFound {
-			return fiberx.ErrorFromErrx(c, errx.NotFound("NOT_FOUND", "tenant role not found").WithCause(err))
-		}
 		return err
 	}
 	return fiberx.OK(c, "Tenant role updated successfully", httpx.SuccessOptions{})
@@ -103,9 +90,6 @@ func (h *TenantRoleHandler) DeleteByID(c fiber.Ctx) error {
 		return errx.ErrInvalidParams.WithCause(err)
 	}
 	if err := h.svc.DeleteByID(c.Context(), req.ID); err != nil {
-		if err == domain.ErrTenantRoleNotFound {
-			return fiberx.ErrorFromErrx(c, errx.NotFound("NOT_FOUND", "tenant role not found").WithCause(err))
-		}
 		return err
 	}
 	return fiberx.OK(c, "Tenant role deleted successfully", httpx.SuccessOptions{})

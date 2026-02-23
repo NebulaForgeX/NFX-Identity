@@ -1,12 +1,12 @@
 package account_lockouts
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrAccountLockoutNotFound   = errors.New("account lockout not found")
-	ErrUserIDRequired           = errors.New("user id is required")
-	ErrLockReasonRequired       = errors.New("lock reason is required")
-	ErrInvalidLockReason        = errors.New("invalid lock reason")
-	ErrAccountAlreadyLocked     = errors.New("account already locked")
-	ErrAccountNotLocked         = errors.New("account is not locked")
+	ErrAccountLockoutNotFound = errx.NotFound("ACCOUNT_LOCKOUT_NOT_FOUND", "account lockout not found")
+	ErrUserIDRequired         = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrLockReasonRequired     = errx.InvalidArg("LOCK_REASON_REQUIRED", "lock reason is required")
+	ErrInvalidLockReason      = errx.InvalidArg("INVALID_LOCK_REASON", "invalid lock reason")
+	ErrAccountAlreadyLocked   = errx.Conflict("ACCOUNT_ALREADY_LOCKED", "account already locked")
+	ErrAccountNotLocked       = errx.FailedPrecond("ACCOUNT_NOT_LOCKED", "account is not locked")
 )

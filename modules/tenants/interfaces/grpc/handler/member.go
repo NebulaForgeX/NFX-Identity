@@ -6,12 +6,10 @@ import (
 	memberApp "nfxid/modules/tenants/application/members"
 	memberDomain "nfxid/modules/tenants/domain/members"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	memberpb "nfxid/protos/gen/tenants/member"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type MemberHandler struct {
@@ -29,13 +27,12 @@ func NewMemberHandler(memberAppSvc *memberApp.Service) *MemberHandler {
 func (h *MemberHandler) GetMemberByID(ctx context.Context, req *memberpb.GetMemberByIDRequest) (*memberpb.GetMemberByIDResponse, error) {
 	memberID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid member_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	memberView, err := h.memberAppSvc.GetMember(ctx, memberID)
 	if err != nil {
-		logx.S().Errorf("failed to get member by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "member not found: %v", err)
+		return nil, err
 	}
 
 	member := mapper.MemberROToProto(&memberView)
@@ -46,18 +43,17 @@ func (h *MemberHandler) GetMemberByID(ctx context.Context, req *memberpb.GetMemb
 func (h *MemberHandler) GetMemberByUserID(ctx context.Context, req *memberpb.GetMemberByUserIDRequest) (*memberpb.GetMemberByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	memberView, err := h.memberAppSvc.GetMemberByUserID(ctx, userID, tenantID)
 	if err != nil {
-		logx.S().Errorf("failed to get member by user_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "member not found: %v", err)
+		return nil, err
 	}
 
 	member := mapper.MemberROToProto(&memberView)
@@ -68,7 +64,7 @@ func (h *MemberHandler) GetMemberByUserID(ctx context.Context, req *memberpb.Get
 func (h *MemberHandler) GetMembersByTenantID(ctx context.Context, req *memberpb.GetMembersByTenantIDRequest) (*memberpb.GetMembersByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var memberStatus *memberDomain.MemberStatus
@@ -79,8 +75,7 @@ func (h *MemberHandler) GetMembersByTenantID(ctx context.Context, req *memberpb.
 
 	memberViews, err := h.memberAppSvc.GetMembersByTenantID(ctx, tenantID, memberStatus)
 	if err != nil {
-		logx.S().Errorf("failed to get members by tenant_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get members: %v", err)
+		return nil, err
 	}
 
 	members := mapper.MemberListROToProto(memberViews)
@@ -102,7 +97,6 @@ func (h *MemberHandler) BatchGetMembers(ctx context.Context, req *memberpb.Batch
 	for _, memberID := range memberIDs {
 		memberView, err := h.memberAppSvc.GetMember(ctx, memberID)
 		if err != nil {
-			logx.S().Warnf("failed to get member %s: %v", memberID, err)
 			continue
 		}
 		member := mapper.MemberROToProto(&memberView)

@@ -5,9 +5,7 @@ import (
 
 	clientCredentialApp "nfxid/modules/clients/application/client_credentials"
 	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"nfxid/pkgs/errx"
 )
 
 type ClientCredentialHandler struct {
@@ -23,5 +21,5 @@ func NewClientCredentialHandler(clientCredentialAppSvc *clientCredentialApp.Serv
 
 // GetClientCredentialByID 根据ID获取Client Credential
 func (h *ClientCredentialHandler) GetClientCredentialByID(ctx context.Context, req *clientcredentialpb.GetClientCredentialByIDRequest) (*clientcredentialpb.GetClientCredentialByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetClientCredentialByID not implemented")
+	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetClientCredentialByID not implemented")
 }

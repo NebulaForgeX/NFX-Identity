@@ -5,9 +5,7 @@ import (
 
 	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
 	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"nfxid/pkgs/errx"
 )
 
 type IPAllowlistHandler struct {
@@ -23,5 +21,5 @@ func NewIPAllowlistHandler(ipAllowlistAppSvc *ipAllowlistApp.Service) *IPAllowli
 
 // GetIpAllowlistByID 根据ID获取IP Allowlist
 func (h *IPAllowlistHandler) GetIpAllowlistByID(ctx context.Context, req *ipallowlistpb.GetIpAllowlistByIDRequest) (*ipallowlistpb.GetIpAllowlistByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetIpAllowlistByID not implemented")
+	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetIpAllowlistByID not implemented")
 }

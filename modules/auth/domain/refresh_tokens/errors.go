@@ -1,14 +1,14 @@
 package refresh_tokens
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrRefreshTokenNotFound     = errors.New("refresh token not found")
-	ErrTokenIDRequired          = errors.New("token id is required")
-	ErrUserIDRequired           = errors.New("user id is required")
-	ErrExpiresAtRequired        = errors.New("expires at is required")
-	ErrTokenIDAlreadyExists     = errors.New("token id already exists")
-	ErrTokenAlreadyRevoked      = errors.New("token already revoked")
-	ErrTokenExpired             = errors.New("token expired")
-	ErrInvalidRevokeReason      = errors.New("invalid revoke reason")
+	ErrRefreshTokenNotFound  = errx.NotFound("REFRESH_TOKEN_NOT_FOUND", "refresh token not found")
+	ErrTokenIDRequired       = errx.InvalidArg("TOKEN_ID_REQUIRED", "token id is required")
+	ErrUserIDRequired        = errx.InvalidArg("USER_ID_REQUIRED", "user id is required")
+	ErrExpiresAtRequired     = errx.InvalidArg("EXPIRES_AT_REQUIRED", "expires at is required")
+	ErrTokenIDAlreadyExists  = errx.Conflict("TOKEN_ID_ALREADY_EXISTS", "token id already exists")
+	ErrTokenAlreadyRevoked   = errx.Conflict("TOKEN_ALREADY_REVOKED", "token already revoked")
+	ErrTokenExpired          = errx.Expired("TOKEN_EXPIRED", "token expired")
+	ErrInvalidRevokeReason   = errx.InvalidArg("INVALID_REVOKE_REASON", "invalid revoke reason")
 )

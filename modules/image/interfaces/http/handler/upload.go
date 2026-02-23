@@ -72,19 +72,19 @@ func (h *UploadHandler) UploadImage(c fiber.Ctx) error {
 	// 获取上传的文件
 	file, err := c.FormFile("file")
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "No file uploaded").WithCause(err))
+		return errx.InvalidArg("INVALID_PARAMS", "No file uploaded").WithCause(err)
 	}
 
 	// 检查文件大小
 	if file.Size > maxFileSize {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", fmt.Sprintf("File size exceeds maximum allowed size of %d bytes", maxFileSize)))
+		return errx.InvalidArg("INVALID_PARAMS", fmt.Sprintf("File size exceeds maximum allowed size of %d bytes", maxFileSize))
 	}
 
 	// 检查 MIME 类型
 	contentType := file.Header.Get("Content-Type")
 	ext, ok := allowedMimeTypes[contentType]
 	if !ok {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "Invalid file type. Only JPEG, PNG, GIF, WebP, and SVG images are allowed"))
+		return errx.InvalidArg("INVALID_PARAMS", "Invalid file type. Only JPEG, PNG, GIF, WebP, and SVG images are allowed")
 	}
 
 	// 生成唯一的文件名
@@ -175,7 +175,7 @@ func (h *UploadHandler) MoveImage(c fiber.Ctx) error {
 	// 获取目标类型
 	targetType := c.Query("type", "")
 	if targetType != "avatar" && targetType != "background" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "Invalid target type. Must be 'avatar' or 'background'"))
+		return errx.InvalidArg("INVALID_PARAMS", "Invalid target type. Must be 'avatar' or 'background'")
 	}
 
 	// 获取图片信息
@@ -186,7 +186,7 @@ func (h *UploadHandler) MoveImage(c fiber.Ctx) error {
 
 	// 检查是否在 tmp 目录
 	if !strings.Contains(imageView.StoragePath, "/tmp/") && !strings.HasPrefix(imageView.StoragePath, "images/tmp/") {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "Image is not in tmp directory"))
+		return errx.InvalidArg("INVALID_PARAMS", "Image is not in tmp directory")
 	}
 
 	// 构建新路径
@@ -256,7 +256,7 @@ func copyFile(src, dst string) error {
 func (h *UploadHandler) ServeImage(c fiber.Ctx) error {
 	idStr := c.Params("image_id")
 	if idStr == "" {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PARAMS", "image id required"))
+		return errx.InvalidArg("INVALID_PARAMS", "image id required")
 	}
 	imageID, err := uuid.Parse(idStr)
 	if err != nil {

@@ -6,12 +6,10 @@ import (
 	userEmailApp "nfxid/modules/directory/application/user_emails"
 	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	useremailpb "nfxid/protos/gen/directory/user_email"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserEmailHandler struct {
@@ -30,7 +28,7 @@ func (h *UserEmailHandler) CreateUserEmail(ctx context.Context, req *useremailpb
 	// 解析用户ID
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// 创建命令
@@ -45,15 +43,13 @@ func (h *UserEmailHandler) CreateUserEmail(ctx context.Context, req *useremailpb
 	// 调用应用服务创建用户邮箱
 	userEmailID, err := h.userEmailAppSvc.CreateUserEmail(ctx, cmd)
 	if err != nil {
-		logx.S().Errorf("failed to create user email: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to create user email: %v", err)
+		return nil, err
 	}
 
 	// 获取创建的用户邮箱
 	userEmailView, err := h.userEmailAppSvc.GetUserEmail(ctx, userEmailID)
 	if err != nil {
-		logx.S().Errorf("failed to get created user email: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get created user email: %v", err)
+		return nil, err
 	}
 
 	// 转换为 protobuf 响应
@@ -65,13 +61,12 @@ func (h *UserEmailHandler) CreateUserEmail(ctx context.Context, req *useremailpb
 func (h *UserEmailHandler) GetUserEmailByID(ctx context.Context, req *useremailpb.GetUserEmailByIDRequest) (*useremailpb.GetUserEmailByIDResponse, error) {
 	userEmailID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_email_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userEmailView, err := h.userEmailAppSvc.GetUserEmail(ctx, userEmailID)
 	if err != nil {
-		logx.S().Errorf("failed to get user email by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user email not found: %v", err)
+		return nil, err
 	}
 
 	userEmail := mapper.UserEmailROToProto(&userEmailView)
@@ -82,8 +77,7 @@ func (h *UserEmailHandler) GetUserEmailByID(ctx context.Context, req *useremailp
 func (h *UserEmailHandler) GetUserEmailByEmail(ctx context.Context, req *useremailpb.GetUserEmailByEmailRequest) (*useremailpb.GetUserEmailByEmailResponse, error) {
 	userEmailView, err := h.userEmailAppSvc.GetUserEmailByEmail(ctx, req.Email)
 	if err != nil {
-		logx.S().Errorf("failed to get user email by email: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user email not found: %v", err)
+		return nil, err
 	}
 
 	userEmail := mapper.UserEmailROToProto(&userEmailView)
@@ -94,13 +88,12 @@ func (h *UserEmailHandler) GetUserEmailByEmail(ctx context.Context, req *userema
 func (h *UserEmailHandler) GetUserEmailsByUserID(ctx context.Context, req *useremailpb.GetUserEmailsByUserIDRequest) (*useremailpb.GetUserEmailsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userEmailViews, err := h.userEmailAppSvc.GetUserEmailsByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get user emails by user_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get user emails: %v", err)
+		return nil, err
 	}
 
 	userEmails := mapper.UserEmailListROToProto(userEmailViews)

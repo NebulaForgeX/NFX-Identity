@@ -5,12 +5,10 @@ import (
 
 	groupApp "nfxid/modules/tenants/application/groups"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	grouppb "nfxid/protos/gen/tenants/group"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GroupHandler struct {
@@ -28,13 +26,12 @@ func NewGroupHandler(groupAppSvc *groupApp.Service) *GroupHandler {
 func (h *GroupHandler) GetGroupByID(ctx context.Context, req *grouppb.GetGroupByIDRequest) (*grouppb.GetGroupByIDResponse, error) {
 	groupID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid group_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	groupView, err := h.groupAppSvc.GetGroup(ctx, groupID)
 	if err != nil {
-		logx.S().Errorf("failed to get group by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "group not found: %v", err)
+		return nil, err
 	}
 
 	group := mapper.GroupROToProto(&groupView)
@@ -45,22 +42,21 @@ func (h *GroupHandler) GetGroupByID(ctx context.Context, req *grouppb.GetGroupBy
 func (h *GroupHandler) GetGroupsByTenantID(ctx context.Context, req *grouppb.GetGroupsByTenantIDRequest) (*grouppb.GetGroupsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid tenant_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	var parentID *uuid.UUID
 	if req.ParentId != nil && *req.ParentId != "" {
 		parsed, err := uuid.Parse(*req.ParentId)
 		if err != nil {
-			return nil, status.Errorf(codes.InvalidArgument, "invalid parent_id: %v", err)
+			return nil, errx.ErrInvalidParams.WithCause(err)
 		}
 		parentID = &parsed
 	}
 
 	groupViews, err := h.groupAppSvc.GetGroupsByTenantID(ctx, tenantID, parentID)
 	if err != nil {
-		logx.S().Errorf("failed to get groups by tenant_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get groups: %v", err)
+		return nil, err
 	}
 
 	groups := mapper.GroupListROToProto(groupViews)
@@ -82,7 +78,6 @@ func (h *GroupHandler) BatchGetGroups(ctx context.Context, req *grouppb.BatchGet
 	for _, groupID := range groupIDs {
 		groupView, err := h.groupAppSvc.GetGroup(ctx, groupID)
 		if err != nil {
-			logx.S().Warnf("failed to get group %s: %v", groupID, err)
 			continue
 		}
 		group := mapper.GroupROToProto(&groupView)

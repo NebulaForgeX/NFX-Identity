@@ -32,6 +32,7 @@ func NewValidationError(errs validator.ValidationErrors) *ValidationError {
 	if len(errs) == 0 {
 		return &ValidationError{Errors: nil}
 	}
+
 	fieldErrors := make([]FieldError, 0, len(errs))
 	for _, fe := range errs {
 		field := fe.Field()
@@ -44,6 +45,7 @@ func NewValidationError(errs validator.ValidationErrors) *ValidationError {
 			Params: fieldErrorParams(fe),
 		})
 	}
+
 	return &ValidationError{Errors: fieldErrors}
 }
 

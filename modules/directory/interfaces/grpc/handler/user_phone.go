@@ -7,12 +7,10 @@ import (
 	userPhoneApp "nfxid/modules/directory/application/user_phones"
 	userPhoneAppCommands "nfxid/modules/directory/application/user_phones/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	userphonepb "nfxid/protos/gen/directory/user_phone"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserPhoneHandler struct {
@@ -31,7 +29,7 @@ func (h *UserPhoneHandler) CreateUserPhone(ctx context.Context, req *userphonepb
 	// 解析用户ID
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// 处理验证码过期时间
@@ -55,15 +53,13 @@ func (h *UserPhoneHandler) CreateUserPhone(ctx context.Context, req *userphonepb
 	// 调用应用服务创建用户手机
 	userPhoneID, err := h.userPhoneAppSvc.CreateUserPhone(ctx, cmd)
 	if err != nil {
-		logx.S().Errorf("failed to create user phone: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to create user phone: %v", err)
+		return nil, err
 	}
 
 	// 获取创建的用户手机
 	userPhoneView, err := h.userPhoneAppSvc.GetUserPhone(ctx, userPhoneID)
 	if err != nil {
-		logx.S().Errorf("failed to get created user phone: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get created user phone: %v", err)
+		return nil, err
 	}
 
 	// 转换为 protobuf 响应
@@ -75,13 +71,12 @@ func (h *UserPhoneHandler) CreateUserPhone(ctx context.Context, req *userphonepb
 func (h *UserPhoneHandler) GetUserPhoneByID(ctx context.Context, req *userphonepb.GetUserPhoneByIDRequest) (*userphonepb.GetUserPhoneByIDResponse, error) {
 	userPhoneID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_phone_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userPhoneView, err := h.userPhoneAppSvc.GetUserPhone(ctx, userPhoneID)
 	if err != nil {
-		logx.S().Errorf("failed to get user phone by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user phone not found: %v", err)
+		return nil, err
 	}
 
 	userPhone := mapper.UserPhoneROToProto(&userPhoneView)
@@ -92,8 +87,7 @@ func (h *UserPhoneHandler) GetUserPhoneByID(ctx context.Context, req *userphonep
 func (h *UserPhoneHandler) GetUserPhoneByCountryCodeAndPhone(ctx context.Context, req *userphonepb.GetUserPhoneByCountryCodeAndPhoneRequest) (*userphonepb.GetUserPhoneByCountryCodeAndPhoneResponse, error) {
 	userPhoneView, err := h.userPhoneAppSvc.GetUserPhoneByCountryCodeAndPhone(ctx, req.CountryCode, req.Phone)
 	if err != nil {
-		logx.S().Errorf("failed to get user phone by country code and phone: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user phone not found: %v", err)
+		return nil, err
 	}
 
 	userPhone := mapper.UserPhoneROToProto(&userPhoneView)
@@ -104,13 +98,12 @@ func (h *UserPhoneHandler) GetUserPhoneByCountryCodeAndPhone(ctx context.Context
 func (h *UserPhoneHandler) GetUserPhonesByUserID(ctx context.Context, req *userphonepb.GetUserPhonesByUserIDRequest) (*userphonepb.GetUserPhonesByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userPhoneViews, err := h.userPhoneAppSvc.GetUserPhonesByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get user phones by user_id: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get user phones: %v", err)
+		return nil, err
 	}
 
 	userPhones := mapper.UserPhoneListROToProto(userPhoneViews)

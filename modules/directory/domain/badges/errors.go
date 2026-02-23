@@ -1,9 +1,9 @@
 package badges
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrBadgeNotFound      = errors.New("badge not found")
-	ErrNameRequired       = errors.New("name is required")
-	ErrNameAlreadyExists  = errors.New("name already exists")
+	ErrBadgeNotFound     = errx.NotFound("BADGE_NOT_FOUND", "badge not found")
+	ErrNameRequired      = errx.InvalidArg("NAME_REQUIRED", "name is required")
+	ErrNameAlreadyExists = errx.Conflict("NAME_ALREADY_EXISTS", "name already exists")
 )

@@ -3,22 +3,19 @@ package handler
 import (
 	"context"
 
-	superadminpb "nfxid/protos/gen/access/super_admin"
 	superadminsApp "nfxid/modules/access/application/super_admins"
-	domain "nfxid/modules/access/domain/super_admins"
 	"nfxid/modules/access/interfaces/grpc/mapper"
+	superadminpb "nfxid/protos/gen/access/super_admin"
+	"nfxid/pkgs/errx"
+
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
-// SuperAdminHandler 实现 SuperAdminServiceServer
 type SuperAdminHandler struct {
 	superadminpb.UnimplementedSuperAdminServiceServer
 	svc *superadminsApp.Service
 }
 
-// NewSuperAdminHandler 创建 handler
 func NewSuperAdminHandler(svc *superadminsApp.Service) *SuperAdminHandler {
 	return &SuperAdminHandler{svc: svc}
 }
@@ -26,14 +23,11 @@ func NewSuperAdminHandler(svc *superadminsApp.Service) *SuperAdminHandler {
 func (h *SuperAdminHandler) GetSuperAdminByUserID(ctx context.Context, req *superadminpb.GetSuperAdminByUserIDRequest) (*superadminpb.GetSuperAdminByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid user_id")
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 	s, err := h.svc.GetByUserID(ctx, userID)
 	if err != nil {
-		if err == domain.ErrSuperAdminNotFound {
-			return nil, status.Error(codes.NotFound, err.Error())
-		}
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	return &superadminpb.GetSuperAdminByUserIDResponse{
 		SuperAdmin: mapper.SuperAdminDomainToProto(s),
@@ -50,7 +44,7 @@ func (h *SuperAdminHandler) ListSuperAdmins(ctx context.Context, req *superadmin
 	}
 	list, err := h.svc.List(ctx, limit, offset)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	out := make([]*superadminpb.SuperAdmin, len(list))
 	for i := range list {
@@ -61,14 +55,14 @@ func (h *SuperAdminHandler) ListSuperAdmins(ctx context.Context, req *superadmin
 
 func (h *SuperAdminHandler) CreateSuperAdmin(ctx context.Context, req *superadminpb.CreateSuperAdminRequest) (*superadminpb.CreateSuperAdminResponse, error) {
 	if req.UserId == "" {
-		return nil, status.Error(codes.InvalidArgument, "user_id required")
+		return nil, errx.InvalidArg("USER_ID_REQUIRED", "user_id required")
 	}
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid user_id")
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 	if err := h.svc.Create(ctx, userID); err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	return &superadminpb.CreateSuperAdminResponse{}, nil
 }

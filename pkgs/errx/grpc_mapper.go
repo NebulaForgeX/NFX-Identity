@@ -2,6 +2,7 @@ package errx
 
 import "google.golang.org/grpc/codes"
 
+// GRPCCodeFromKind maps errx.Kind to gRPC codes.Code.
 func GRPCCodeFromKind(k Kind) codes.Code {
 	switch k {
 	case KindInvalidArgument:
@@ -27,6 +28,7 @@ func GRPCCodeFromKind(k Kind) codes.Code {
 	}
 }
 
+// GRPCCode returns the gRPC status code for the error.
 func GRPCCode(err error) codes.Code {
 	if e := AsError(err); e != nil {
 		return GRPCCodeFromKind(e.Kind)

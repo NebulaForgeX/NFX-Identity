@@ -6,12 +6,10 @@ import (
 	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
 	userPreferenceAppCommands "nfxid/modules/directory/application/user_preferences/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/logx"
 	userpreferencepb "nfxid/protos/gen/directory/user_preference"
+	"nfxid/pkgs/errx"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type UserPreferenceHandler struct {
@@ -30,7 +28,7 @@ func (h *UserPreferenceHandler) CreateUserPreference(ctx context.Context, req *u
 	// 解析用户ID（id 直接引用 users.id）
 	userID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	// 转换 protobuf Struct 到 map[string]interface{}
@@ -80,15 +78,13 @@ func (h *UserPreferenceHandler) CreateUserPreference(ctx context.Context, req *u
 	// 调用应用服务创建用户偏好
 	userPreferenceID, err := h.userPreferenceAppSvc.CreateUserPreference(ctx, cmd)
 	if err != nil {
-		logx.S().Errorf("failed to create user preference: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to create user preference: %v", err)
+		return nil, err
 	}
 
 	// 获取创建的用户偏好
 	userPreferenceView, err := h.userPreferenceAppSvc.GetUserPreference(ctx, userPreferenceID)
 	if err != nil {
-		logx.S().Errorf("failed to get created user preference: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to get created user preference: %v", err)
+		return nil, err
 	}
 
 	// 转换为 protobuf 响应
@@ -100,13 +96,12 @@ func (h *UserPreferenceHandler) CreateUserPreference(ctx context.Context, req *u
 func (h *UserPreferenceHandler) GetUserPreferenceByID(ctx context.Context, req *userpreferencepb.GetUserPreferenceByIDRequest) (*userpreferencepb.GetUserPreferenceByIDResponse, error) {
 	userPreferenceID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_preference_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userPreferenceView, err := h.userPreferenceAppSvc.GetUserPreference(ctx, userPreferenceID)
 	if err != nil {
-		logx.S().Errorf("failed to get user preference by id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user preference not found: %v", err)
+		return nil, err
 	}
 
 	userPreference := mapper.UserPreferenceROToProto(&userPreferenceView)
@@ -117,13 +112,12 @@ func (h *UserPreferenceHandler) GetUserPreferenceByID(ctx context.Context, req *
 func (h *UserPreferenceHandler) GetUserPreferenceByUserID(ctx context.Context, req *userpreferencepb.GetUserPreferenceByUserIDRequest) (*userpreferencepb.GetUserPreferenceByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid user_id: %v", err)
+		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	userPreferenceView, err := h.userPreferenceAppSvc.GetUserPreferenceByUserID(ctx, userID)
 	if err != nil {
-		logx.S().Errorf("failed to get user preference by user_id: %v", err)
-		return nil, status.Errorf(codes.NotFound, "user preference not found: %v", err)
+		return nil, err
 	}
 
 	userPreference := mapper.UserPreferenceROToProto(&userPreferenceView)

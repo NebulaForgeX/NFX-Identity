@@ -1,10 +1,10 @@
 package users
 
-import "errors"
+import "nfxid/pkgs/errx"
 
 var (
-	ErrUserNotFound      = errors.New("user not found")
-	ErrUsernameRequired  = errors.New("username is required")
-	ErrUsernameAlreadyExists = errors.New("username already exists")
-	ErrInvalidUserStatus = errors.New("invalid user status")
+	ErrUserNotFound         = errx.NotFound("USER_NOT_FOUND", "user not found")
+	ErrUsernameRequired     = errx.InvalidArg("USERNAME_REQUIRED", "username is required")
+	ErrUsernameAlreadyExists = errx.Conflict("USERNAME_ALREADY_EXISTS", "username already exists")
+	ErrInvalidUserStatus    = errx.InvalidArg("INVALID_USER_STATUS", "invalid user status")
 )
