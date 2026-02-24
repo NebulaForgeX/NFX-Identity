@@ -1,11 +1,9 @@
 // API 响应类型定义 - 对齐 NFX-Identity errx + fiberx 规范
 
-import type { ApiErrCode } from "./apiError";
-
 /** 成功/错误统一信封：status 为 HTTP 状态码，错误时含 err_code（后端 errx.Code） */
 export interface BaseResponse {
   status: number;
-  errCode?: ApiErrCode;
+  errCode?: string;
   message: string;
   details?: unknown;
   meta?: Record<string, unknown>;

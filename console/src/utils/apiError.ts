@@ -7,9 +7,9 @@
 import type { AxiosError } from "axios";
 
 import i18n from "@/assets/languages/i18n";
-import type { ApiErrCode, ApiErrorBody } from "@/types/apiError";
+import type { ApiErrorBody } from "@/types/apiError";
 
-export type { ApiErrorBody, ApiErrCode };
+export type { ApiErrorBody };
 
 /** 仅当为后端错误（有 response.data）时解析，否则返回 null。不对外部 error 做多余判断。 */
 export function getApiError(error: unknown): ApiErrorBody | null {
@@ -17,7 +17,7 @@ export function getApiError(error: unknown): ApiErrorBody | null {
   if (!d || typeof d !== "object") return null;
   return {
     status: d.status,
-    errCode: d.errCode as ApiErrCode | undefined,
+    errCode: d.errCode,
     message: d.message,
     details: d.details,
     traceId: d.traceId,
