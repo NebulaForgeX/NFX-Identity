@@ -19,3 +19,36 @@ var (
 	ErrInvalidVerificationStatus       = errx.InvalidArg(CodeInvalidVerificationStatus, "invalid verification status")
 	ErrDomainVerificationExpired       = errx.Expired(CodeDomainVerificationExpired, "domain verification expired")
 )
+
+/*
+!DOMAIN_VERIFICATION_NOT_FOUND
+*en<domain verification not found>
+*zh<域名验证不存在>
+*fr<vérification de domaine introuvable>
+
+!DOMAIN_REQUIRED
+*en<domain required>
+*zh<域名为必填>
+*fr<domaine requis>
+
+!DOMAIN_VERIFICATION_ALREADY_EXISTS
+*en<domain verification already exists>
+*zh<域名验证已存在>
+*fr<vérification de domaine existe déjà>
+
+!INVALID_VERIFICATION_METHOD
+*en<invalid verification method>
+*zh<无效的验证方式>
+*fr<méthode de vérification invalide>
+
+!INVALID_VERIFICATION_STATUS
+*en<invalid verification status>
+*zh<无效的验证状态>
+*fr<statut de vérification invalide>
+
+!DOMAIN_VERIFICATION_EXPIRED
+*en<domain verification expired>
+*zh<域名验证已过期>
+*fr<vérification de domaine expirée>
+
+*/

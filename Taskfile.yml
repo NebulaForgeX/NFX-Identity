@@ -176,6 +176,21 @@ tasks:
     cmds:
       - rm -rf bin/
 
+  errors:add-templates:
+    desc: "Add /* */ translation template block to .go files in errors/src that don't have it"
+    cmds:
+      - go run ./errors/cmd/add_templates/ ./errors
+
+  errors:gen-langs:
+    desc: "Clear errors/langs then generate frontend i18n JSON from /* */ blocks in errors/src"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ ./errors
+
+  errors:add-templates:
+    desc: "Add /* */ translation template block to .go files in errors/src that don't have it"
+    cmds:
+      - go run ./errors/cmd/add_templates/ ./errors
+
   console:
     desc: "Run console dev server"
     dir: console

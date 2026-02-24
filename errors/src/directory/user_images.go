@@ -9,3 +9,11 @@ const (
 var (
 	ErrUserImageNotFound = errx.NotFound(CodeUserImageNotFound, "user image not found")
 )
+
+/*
+!USER_IMAGE_NOT_FOUND
+*en<user image not found>
+*zh<用户图片不存在>
+*fr<image utilisateur introuvable>
+
+*/

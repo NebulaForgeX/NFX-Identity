@@ -65,6 +65,9 @@ services:
           path: enums
           target: /app/enums
         - action: sync
+          path: errors
+          target: /app/errors
+        - action: sync
           path: events
           target: /app/events
         - action: sync
@@ -132,6 +135,9 @@ services:
         - action: sync
           path: enums
           target: /app/enums
+        - action: sync
+          path: errors
+          target: /app/errors
         - action: sync
           path: events
           target: /app/events
@@ -201,6 +207,9 @@ services:
           path: enums
           target: /app/enums
         - action: sync
+          path: errors
+          target: /app/errors
+        - action: sync
           path: events
           target: /app/events
         - action: sync
@@ -268,6 +277,9 @@ services:
         - action: sync
           path: enums
           target: /app/enums
+        - action: sync
+          path: errors
+          target: /app/errors
         - action: sync
           path: events
           target: /app/events
@@ -337,6 +349,9 @@ services:
           path: enums
           target: /app/enums
         - action: sync
+          path: errors
+          target: /app/errors
+        - action: sync
           path: events
           target: /app/events
         - action: sync
@@ -404,6 +419,9 @@ services:
         - action: sync
           path: enums
           target: /app/enums
+        - action: sync
+          path: errors
+          target: /app/errors
         - action: sync
           path: events
           target: /app/events
@@ -473,6 +491,9 @@ services:
           path: enums
           target: /app/enums
         - action: sync
+          path: errors
+          target: /app/errors
+        - action: sync
           path: events
           target: /app/events
         - action: sync
@@ -540,6 +561,9 @@ services:
         - action: sync
           path: enums
           target: /app/enums
+        - action: sync
+          path: errors
+          target: /app/errors
         - action: sync
           path: events
           target: /app/events
