@@ -7,6 +7,9 @@
     http_port = "${HTTP_PORT}"
     grpc_port = "${GRPC_PORT_TENANTS}"
 
+    [server.access_log]
+    mode = "logger"
+
 [postgresql]
     host = "${POSTGRESQL_HOST}"
     port = "${POSTGRESQL_PORT}"

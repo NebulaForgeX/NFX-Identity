@@ -29,7 +29,7 @@ func RunHTTP(ctx context.Context, cfg *config.Config) error {
 
 	logx.S().Info("✅ HTTP Server: All dependencies initialized successfully (PostgreSQL, Redis, Kafka Publisher)")
 
-	httpSrv := httpInterfaces.NewHTTPServer(deps)
+	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg.Server.AccessLog)
 	httpAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.HTTPPort))
 	g, gctx := errgroup.WithContext(ctx)
 
@@ -174,7 +174,7 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 	logx.S().Info("✅ All-in-One Server: All dependencies initialized successfully (PostgreSQL, Redis, Kafka Publisher, RabbitMQ)")
 
 	// === Initialize Servers ===
-	httpSrv := httpInterfaces.NewHTTPServer(deps)
+	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg.Server.AccessLog)
 	grpcSrv := grpcInterfaces.NewServer(deps)
 	eventbusSrv, err := eventbusInterfaces.NewServer(deps)
 	if err != nil {

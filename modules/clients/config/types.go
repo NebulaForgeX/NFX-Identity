@@ -3,6 +3,7 @@ package config
 import (
 	"nfxid/pkgs/cachex"
 	"nfxid/pkgs/env"
+	"nfxid/pkgs/httpx"
 	"nfxid/pkgs/kafkax"
 	"nfxid/pkgs/logx"
 	"nfxid/pkgs/postgresqlx"
@@ -33,8 +34,9 @@ type GRPCClientConfig struct {
 }
 
 type ServerConfig struct {
-	Name     string `koanf:"name"`
-	Host     string `koanf:"host"`
-	HTTPPort int    `koanf:"http_port"`
-	GRPCPort int    `koanf:"grpc_port"`
+	Name      string                `koanf:"name"`
+	Host      string                `koanf:"host"`
+	HTTPPort  int                   `koanf:"http_port"`
+	GRPCPort  int                   `koanf:"grpc_port"`
+	AccessLog httpx.AccessLogConfig `koanf:"access_log"`
 }

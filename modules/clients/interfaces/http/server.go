@@ -13,6 +13,7 @@ import (
 	"nfxid/modules/clients/interfaces/http/handler"
 	"nfxid/pkgs/fiberx"
 	"nfxid/pkgs/fiberx/middleware"
+	"nfxid/pkgs/httpx"
 	"nfxid/pkgs/security/token"
 
 	"github.com/gofiber/fiber/v3"
@@ -29,7 +30,7 @@ type httpDeps interface {
 	UserTokenVerifier() token.Verifier
 }
 
-func NewHTTPServer(d httpDeps) *fiber.App {
+func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
@@ -48,7 +49,7 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 		MaxAge:           3600,
 	}))
 
-	app.Use(middleware.Logger(), middleware.Recover())
+	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
 
 	reg := &Registry{
 		App:              handler.NewAppHandler(d.AppAppSvc()),
