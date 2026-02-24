@@ -6,8 +6,8 @@ import (
 	userApp "nfxid/modules/directory/application/users"
 	userAppCommands "nfxid/modules/directory/application/users/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	userpb "nfxid/protos/gen/directory/user"
 	"nfxid/pkgs/errx"
+	userpb "nfxid/protos/gen/directory/user"
 
 	"github.com/google/uuid"
 )

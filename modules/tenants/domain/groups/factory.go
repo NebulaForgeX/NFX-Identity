@@ -1,6 +1,7 @@
 package groups
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -54,13 +55,13 @@ func NewGroupFromState(st GroupState) *Group {
 
 func validateGroupParams(p NewGroupParams) error {
 	if p.GroupID == "" {
-		return ErrGroupIDRequired
+		return tenantsErr.ErrGroupIDRequired
 	}
 	if p.Name == "" {
-		return ErrNameRequired
+		return tenantsErr.ErrNameRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if p.Type != "" {
 		validTypes := map[GroupType]struct{}{
@@ -70,7 +71,7 @@ func validateGroupParams(p NewGroupParams) error {
 			GroupTypeOther:      {},
 		}
 		if _, ok := validTypes[p.Type]; !ok {
-			return ErrInvalidGroupType
+			return tenantsErr.ErrInvalidGroupType
 		}
 	}
 	return nil

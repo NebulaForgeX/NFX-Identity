@@ -22,7 +22,7 @@ func (s *Service) GetGroupsByTenantID(ctx context.Context, tenantID uuid.UUID, p
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]groupResult.GroupRO, 0, len(domainEntities))
 	for _, entity := range domainEntities {
 		// 如果指定了parentID，进行过滤

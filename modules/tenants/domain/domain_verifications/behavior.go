@@ -1,6 +1,7 @@
 package domain_verifications
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 )
 
@@ -9,10 +10,10 @@ func (dv *DomainVerification) Verify() error {
 		return nil // already verified
 	}
 	if dv.Status() == VerificationStatusFailed {
-		return ErrDomainVerificationExpired
+		return tenantsErr.ErrDomainVerificationExpired
 	}
 	if dv.IsExpired() {
-		return ErrDomainVerificationExpired
+		return tenantsErr.ErrDomainVerificationExpired
 	}
 
 	now := time.Now().UTC()

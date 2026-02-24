@@ -1,6 +1,7 @@
 package ip_allowlist
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (ip *IPAllowlist) Update(description *string, cidr string, updatedBy *uuid.UUID) error {
 	if ip.RevokedAt() != nil {
-		return ErrIPAllowlistAlreadyRevoked
+		return clientsErr.ErrIPAllowlistAlreadyRevoked
 	}
 	if cidr != "" {
 		ip.state.CIDR = cidr
@@ -23,7 +24,7 @@ func (ip *IPAllowlist) Update(description *string, cidr string, updatedBy *uuid.
 
 func (ip *IPAllowlist) UpdateStatus(status AllowlistStatus, updatedBy *uuid.UUID) error {
 	if ip.RevokedAt() != nil {
-		return ErrIPAllowlistAlreadyRevoked
+		return clientsErr.ErrIPAllowlistAlreadyRevoked
 	}
 	validStatuses := map[AllowlistStatus]struct{}{
 		AllowlistStatusActive:   {},
@@ -31,7 +32,7 @@ func (ip *IPAllowlist) UpdateStatus(status AllowlistStatus, updatedBy *uuid.UUID
 		AllowlistStatusRevoked:  {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidAllowlistStatus
+		return clientsErr.ErrInvalidAllowlistStatus
 	}
 
 	ip.state.Status = status
@@ -42,7 +43,7 @@ func (ip *IPAllowlist) UpdateStatus(status AllowlistStatus, updatedBy *uuid.UUID
 
 func (ip *IPAllowlist) Revoke(revokedBy uuid.UUID, reason string) error {
 	if ip.RevokedAt() != nil {
-		return ErrIPAllowlistAlreadyRevoked
+		return clientsErr.ErrIPAllowlistAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

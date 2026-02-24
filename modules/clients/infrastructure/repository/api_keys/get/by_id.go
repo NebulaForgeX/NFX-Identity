@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/api_keys"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/api_keys/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*api_keys.APIKey, err
 	var m models.ApiKey
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, api_keys.ErrAPIKeyNotFound
+			return nil, clientsErr.ErrAPIKeyNotFound
 		}
 		return nil, err
 	}

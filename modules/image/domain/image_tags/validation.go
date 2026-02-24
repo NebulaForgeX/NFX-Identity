@@ -1,13 +1,17 @@
 package image_tags
 
-import "github.com/google/uuid"
+import (
+	imageErr "nfxid/errors/src/image"
+
+	"github.com/google/uuid"
+)
 
 func (it *ImageTag) Validate() error {
 	if it.ImageID() == uuid.Nil {
-		return ErrImageIDRequired
+		return imageErr.ErrImageIDRequired
 	}
 	if it.Tag() == "" {
-		return ErrTagRequired
+		return imageErr.ErrTagRequired
 	}
 	return nil
 }

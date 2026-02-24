@@ -2,8 +2,8 @@ package user_profiles
 
 import (
 	"context"
-	"time"
 	userProfileCommands "nfxid/modules/directory/application/user_profiles/commands"
+	"time"
 )
 
 // UpdateUserProfile 更新用户资料

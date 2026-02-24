@@ -1,27 +1,28 @@
 package images
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewImageParams struct {
-	TypeID          *uuid.UUID
-	UserID          *uuid.UUID
-	TenantID        *uuid.UUID
-	AppID           *uuid.UUID
-	SourceDomain    *string
-	Filename        string
+	TypeID           *uuid.UUID
+	UserID           *uuid.UUID
+	TenantID         *uuid.UUID
+	AppID            *uuid.UUID
+	SourceDomain     *string
+	Filename         string
 	OriginalFilename string
-	MimeType        string
-	Size            int64
-	Width           *int
-	Height          *int
-	StoragePath     string
-	URL             *string
-	IsPublic        bool
-	Metadata        map[string]interface{}
+	MimeType         string
+	Size             int64
+	Width            *int
+	Height           *int
+	StoragePath      string
+	URL              *string
+	IsPublic         bool
+	Metadata         map[string]interface{}
 }
 
 func NewImage(p NewImageParams) (*Image, error) {
@@ -36,24 +37,24 @@ func NewImage(p NewImageParams) (*Image, error) {
 
 	now := time.Now().UTC()
 	return NewImageFromState(ImageState{
-		ID:              id,
-		TypeID:          p.TypeID,
-		UserID:          p.UserID,
-		TenantID:        p.TenantID,
-		AppID:           p.AppID,
-		SourceDomain:    p.SourceDomain,
-		Filename:        p.Filename,
+		ID:               id,
+		TypeID:           p.TypeID,
+		UserID:           p.UserID,
+		TenantID:         p.TenantID,
+		AppID:            p.AppID,
+		SourceDomain:     p.SourceDomain,
+		Filename:         p.Filename,
 		OriginalFilename: p.OriginalFilename,
-		MimeType:        p.MimeType,
-		Size:            p.Size,
-		Width:           p.Width,
-		Height:          p.Height,
-		StoragePath:     p.StoragePath,
-		URL:             p.URL,
-		IsPublic:        p.IsPublic,
-		Metadata:        p.Metadata,
-		CreatedAt:       now,
-		UpdatedAt:       now,
+		MimeType:         p.MimeType,
+		Size:             p.Size,
+		Width:            p.Width,
+		Height:           p.Height,
+		StoragePath:      p.StoragePath,
+		URL:              p.URL,
+		IsPublic:         p.IsPublic,
+		Metadata:         p.Metadata,
+		CreatedAt:        now,
+		UpdatedAt:        now,
 	}), nil
 }
 
@@ -63,19 +64,19 @@ func NewImageFromState(st ImageState) *Image {
 
 func validateImageParams(p NewImageParams) error {
 	if p.Filename == "" {
-		return ErrFilenameRequired
+		return imageErr.ErrFilenameRequired
 	}
 	if p.OriginalFilename == "" {
-		return ErrOriginalFilenameRequired
+		return imageErr.ErrOriginalFilenameRequired
 	}
 	if p.MimeType == "" {
-		return ErrMimeTypeRequired
+		return imageErr.ErrMimeTypeRequired
 	}
 	if p.StoragePath == "" {
-		return ErrStoragePathRequired
+		return imageErr.ErrStoragePathRequired
 	}
 	if p.Size <= 0 {
-		return ErrSizeRequired
+		return imageErr.ErrSizeRequired
 	}
 	return nil
 }

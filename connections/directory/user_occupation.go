@@ -34,7 +34,7 @@ func (c *UserOccupationClient) GetUserOccupationByID(ctx context.Context, id str
 // GetUserOccupationsByUserID 根据用户ID获取用户职业列表
 func (c *UserOccupationClient) GetUserOccupationsByUserID(ctx context.Context, userID string, isCurrent *bool) ([]*useroccupationpb.UserOccupation, error) {
 	req := &useroccupationpb.GetUserOccupationsByUserIDRequest{
-		UserId: userID,
+		UserId:    userID,
 		IsCurrent: isCurrent,
 	}
 

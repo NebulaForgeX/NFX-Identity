@@ -2,9 +2,10 @@ package client_credentials
 
 import (
 	"context"
-	"time"
+	clientsErr "nfxid/errors/src/clients"
 	clientCredentialCommands "nfxid/modules/clients/application/client_credentials/commands"
 	clientCredentialDomain "nfxid/modules/clients/domain/client_credentials"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +14,7 @@ import (
 func (s *Service) CreateClientCredential(ctx context.Context, cmd clientCredentialCommands.CreateClientCredentialCmd) (uuid.UUID, error) {
 	// Check if client_id already exists
 	if exists, _ := s.clientCredentialRepo.Check.ByClientID(ctx, cmd.ClientID); exists {
-		return uuid.Nil, clientCredentialDomain.ErrClientIDAlreadyExists
+		return uuid.Nil, clientsErr.ErrClientIDAlreadyExists
 	}
 
 	// Parse expires_at if provided

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	domain "nfxid/modules/access/domain/super_admins"
+
 	"github.com/google/uuid"
 )
 

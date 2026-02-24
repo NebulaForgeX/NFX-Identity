@@ -12,12 +12,12 @@ import (
 // 封装了消息发布器和 Exchange 解析器，提供消息键到 Exchange + RoutingKey 的转换。
 // 支持在发送消息时动态指定 Exchange 类型。
 type BusPublisher struct {
-	pub              message.Publisher
-	exchangeResolver *ExchangeResolver
-	uri               string              // RabbitMQ URI，用于动态声明 Exchange
-	exchangeConfig    ExchangeConfig      // Exchange 配置，用于动态声明
+	pub               message.Publisher
+	exchangeResolver  *ExchangeResolver
+	uri               string                  // RabbitMQ URI，用于动态声明 Exchange
+	exchangeConfig    ExchangeConfig          // Exchange 配置，用于动态声明
 	declaredExchanges map[string]ExchangeType // 已声明的 Exchange（缓存）
-	mu                sync.RWMutex         // 保护 declaredExchanges 的并发访问
+	mu                sync.RWMutex            // 保护 declaredExchanges 的并发访问
 }
 
 // ExchangeConfig Exchange 配置，用于动态声明
@@ -43,8 +43,8 @@ func NewBusPublisher(
 	exchangeResolver *ExchangeResolver,
 ) *BusPublisher {
 	return &BusPublisher{
-		pub:              pub,
-		exchangeResolver: exchangeResolver,
+		pub:               pub,
+		exchangeResolver:  exchangeResolver,
 		declaredExchanges: make(map[string]ExchangeType),
 	}
 }
@@ -75,10 +75,10 @@ func NewBusPublisherWithConfig(
 	exchangeConfig ExchangeConfig,
 ) *BusPublisher {
 	return &BusPublisher{
-		pub:              pub,
-		exchangeResolver: exchangeResolver,
-		uri:              uri,
-		exchangeConfig:   exchangeConfig,
+		pub:               pub,
+		exchangeResolver:  exchangeResolver,
+		uri:               uri,
+		exchangeConfig:    exchangeConfig,
 		declaredExchanges: make(map[string]ExchangeType),
 	}
 }

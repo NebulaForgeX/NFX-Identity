@@ -2,9 +2,9 @@ package user_occupations
 
 import (
 	"context"
-	"time"
 	userOccupationCommands "nfxid/modules/directory/application/user_occupations/commands"
 	userOccupationDomain "nfxid/modules/directory/domain/user_occupations"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -28,20 +28,20 @@ func (s *Service) CreateUserOccupation(ctx context.Context, cmd userOccupationCo
 
 	// Create domain entity
 	userOccupation, err := userOccupationDomain.NewUserOccupation(userOccupationDomain.NewUserOccupationParams{
-		UserID:          cmd.UserID,
-		Company:         cmd.Company,
-		Position:        cmd.Position,
-		Department:      cmd.Department,
-		Industry:        cmd.Industry,
-		Location:        cmd.Location,
-		EmploymentType:  cmd.EmploymentType,
-		StartDate:       startDate,
-		EndDate:         endDate,
-		IsCurrent:       cmd.IsCurrent,
-		Description:     cmd.Description,
+		UserID:           cmd.UserID,
+		Company:          cmd.Company,
+		Position:         cmd.Position,
+		Department:       cmd.Department,
+		Industry:         cmd.Industry,
+		Location:         cmd.Location,
+		EmploymentType:   cmd.EmploymentType,
+		StartDate:        startDate,
+		EndDate:          endDate,
+		IsCurrent:        cmd.IsCurrent,
+		Description:      cmd.Description,
 		Responsibilities: cmd.Responsibilities,
-		Achievements:    cmd.Achievements,
-		SkillsUsed:      cmd.SkillsUsed,
+		Achievements:     cmd.Achievements,
+		SkillsUsed:       cmd.SkillsUsed,
 	})
 	if err != nil {
 		return uuid.Nil, err

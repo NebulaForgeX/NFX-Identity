@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/ip_allowlist"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByRuleID(ctx context.Context, ruleID string) (*ip_allowlist.IP
 	var m models.IpAllowlist
 	if err := h.db.WithContext(ctx).Where("rule_id = ?", ruleID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ip_allowlist.ErrIPAllowlistNotFound
+			return nil, clientsErr.ErrIPAllowlistNotFound
 		}
 		return nil, err
 	}

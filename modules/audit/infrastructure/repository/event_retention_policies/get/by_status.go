@@ -19,7 +19,7 @@ func (h *Handler) ByStatus(ctx context.Context, status string) ([]*event_retenti
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*event_retention_policies.EventRetentionPolicy, len(ms))
 	for i := range ms {
 		result[i] = mapper.EventRetentionPolicyModelToDomain(&ms[i])

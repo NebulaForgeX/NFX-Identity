@@ -7,7 +7,7 @@ import (
 )
 
 type TenantSettingCreateRequestDTO struct {
-	TenantID            uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
+	TenantID            uuid.UUID              `json:"tenant_id"                       validate:"required,uuid"`
 	EnforceMFA          bool                   `json:"enforce_mfa"`
 	AllowedEmailDomains []string               `json:"allowed_email_domains,omitempty"`
 	SessionTTLMinutes   *int                   `json:"session_ttl_minutes,omitempty"`
@@ -18,13 +18,13 @@ type TenantSettingCreateRequestDTO struct {
 
 type TenantSettingUpdateRequestDTO struct {
 	ID                  uuid.UUID              `uri:"id" validate:"required,uuid"`
-	EnforceMFA          *bool                  `json:"enforce_mfa,omitempty"`
-	AllowedEmailDomains []string               `json:"allowed_email_domains,omitempty"`
-	SessionTTLMinutes   *int                   `json:"session_ttl_minutes,omitempty"`
-	PasswordPolicy      map[string]interface{} `json:"password_policy,omitempty"`
-	LoginPolicy         map[string]interface{} `json:"login_policy,omitempty"`
-	MFAPolicy           map[string]interface{} `json:"mfa_policy,omitempty"`
-	UpdatedBy           *uuid.UUID             `json:"updated_by,omitempty"`
+	EnforceMFA          *bool                  `                                  json:"enforce_mfa,omitempty"`
+	AllowedEmailDomains []string               `                                  json:"allowed_email_domains,omitempty"`
+	SessionTTLMinutes   *int                   `                                  json:"session_ttl_minutes,omitempty"`
+	PasswordPolicy      map[string]interface{} `                                  json:"password_policy,omitempty"`
+	LoginPolicy         map[string]interface{} `                                  json:"login_policy,omitempty"`
+	MFAPolicy           map[string]interface{} `                                  json:"mfa_policy,omitempty"`
+	UpdatedBy           *uuid.UUID             `                                  json:"updated_by,omitempty"`
 }
 
 func (r *TenantSettingCreateRequestDTO) ToCreateCmd() tenantSettingAppCommands.CreateTenantSettingCmd {

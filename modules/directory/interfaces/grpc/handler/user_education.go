@@ -5,8 +5,8 @@ import (
 
 	userEducationApp "nfxid/modules/directory/application/user_educations"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	usereducationpb "nfxid/protos/gen/directory/user_education"
 	"nfxid/pkgs/errx"
+	usereducationpb "nfxid/protos/gen/directory/user_education"
 
 	"github.com/google/uuid"
 )
@@ -23,7 +23,10 @@ func NewUserEducationHandler(userEducationAppSvc *userEducationApp.Service) *Use
 }
 
 // GetUserEducationByID 根据ID获取用户教育
-func (h *UserEducationHandler) GetUserEducationByID(ctx context.Context, req *usereducationpb.GetUserEducationByIDRequest) (*usereducationpb.GetUserEducationByIDResponse, error) {
+func (h *UserEducationHandler) GetUserEducationByID(
+	ctx context.Context,
+	req *usereducationpb.GetUserEducationByIDRequest,
+) (*usereducationpb.GetUserEducationByIDResponse, error) {
 	userEducationID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -39,7 +42,10 @@ func (h *UserEducationHandler) GetUserEducationByID(ctx context.Context, req *us
 }
 
 // GetUserEducationsByUserID 根据用户ID获取用户教育列表
-func (h *UserEducationHandler) GetUserEducationsByUserID(ctx context.Context, req *usereducationpb.GetUserEducationsByUserIDRequest) (*usereducationpb.GetUserEducationsByUserIDResponse, error) {
+func (h *UserEducationHandler) GetUserEducationsByUserID(
+	ctx context.Context,
+	req *usereducationpb.GetUserEducationsByUserIDRequest,
+) (*usereducationpb.GetUserEducationsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

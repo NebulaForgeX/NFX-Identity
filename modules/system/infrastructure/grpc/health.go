@@ -34,7 +34,7 @@ func NewHealthChecker() *HealthChecker {
 // initHealthClients 初始化所有服务的健康检查客户端
 func initHealthClients(grpcClients *GRPCClients, cfg *config.GRPCClientConfig, serverCfg *config.ServerConfig, tokenProvider servertoken.TokenProvider) error {
 	healthChecker := NewHealthChecker()
-	
+
 	// 构建 system 服务地址（自身）
 	systemAddr := fmt.Sprintf("%s:%d", serverCfg.Host, serverCfg.GRPCPort)
 

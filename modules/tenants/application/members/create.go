@@ -4,6 +4,7 @@ import (
 	"context"
 	memberCommands "nfxid/modules/tenants/application/members/commands"
 	memberDomain "nfxid/modules/tenants/domain/members"
+	tenantsErr "nfxid/errors/src/tenants"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateMember(ctx context.Context, cmd memberCommands.CreateMemberCmd) (uuid.UUID, error) {
 	// Check if member already exists
 	if exists, _ := s.memberRepo.Check.ByTenantIDAndUserID(ctx, cmd.TenantID, cmd.UserID); exists {
-		return uuid.Nil, memberDomain.ErrMemberAlreadyExists
+		return uuid.Nil, tenantsErr.ErrMemberAlreadyExists
 	}
 
 	// Create domain entity

@@ -19,22 +19,22 @@ func RefreshTokenDomainToModel(rt *refresh_tokens.RefreshToken) *models.RefreshT
 	}
 
 	return &models.RefreshToken{
-		ID:           rt.ID(),
-		TokenID:      rt.TokenID(),
-		UserID:       rt.UserID(),
+		ID:            rt.ID(),
+		TokenID:       rt.TokenID(),
+		UserID:        rt.UserID(),
 		ApplicationID: rt.AppID(),
-		ClientID:     rt.ClientID(),
-		SessionID:    rt.SessionID(),
-		IssuedAt:     rt.IssuedAt(),
-		ExpiresAt:    rt.ExpiresAt(),
-		RevokedAt:    rt.RevokedAt(),
-		RevokeReason: revokeReason,
-		RotatedFrom:  rt.RotatedFrom(),
-		DeviceID:     rt.DeviceID(),
-		IP:           rt.IP(),
-		UaHash:       rt.UAHash(), // Model 使用 UaHash，Domain 使用 UAHash
-		CreatedAt:    rt.CreatedAt(),
-		UpdatedAt:    rt.UpdatedAt(),
+		ClientID:      rt.ClientID(),
+		SessionID:     rt.SessionID(),
+		IssuedAt:      rt.IssuedAt(),
+		ExpiresAt:     rt.ExpiresAt(),
+		RevokedAt:     rt.RevokedAt(),
+		RevokeReason:  revokeReason,
+		RotatedFrom:   rt.RotatedFrom(),
+		DeviceID:      rt.DeviceID(),
+		IP:            rt.IP(),
+		UaHash:        rt.UAHash(), // Model 使用 UaHash，Domain 使用 UAHash
+		CreatedAt:     rt.CreatedAt(),
+		UpdatedAt:     rt.UpdatedAt(),
 	}
 }
 
@@ -75,19 +75,19 @@ func RefreshTokenModelToDomain(m *models.RefreshToken) *refresh_tokens.RefreshTo
 // RefreshTokenModelToUpdates 将 Model RefreshToken 转换为更新字段映射
 func RefreshTokenModelToUpdates(m *models.RefreshToken) map[string]any {
 	return map[string]any{
-		models.RefreshTokenCols.UserID:       m.UserID,
+		models.RefreshTokenCols.UserID:        m.UserID,
 		models.RefreshTokenCols.ApplicationID: m.ApplicationID,
-		models.RefreshTokenCols.ClientID:    m.ClientID,
-		models.RefreshTokenCols.SessionID:   m.SessionID,
-		models.RefreshTokenCols.IssuedAt:    m.IssuedAt,
-		models.RefreshTokenCols.ExpiresAt:   m.ExpiresAt,
-		models.RefreshTokenCols.RevokedAt:   m.RevokedAt,
-		models.RefreshTokenCols.RevokeReason: m.RevokeReason,
-		models.RefreshTokenCols.RotatedFrom: m.RotatedFrom,
-		models.RefreshTokenCols.DeviceID:    m.DeviceID,
-		models.RefreshTokenCols.IP:          m.IP,
-		models.RefreshTokenCols.UaHash:      m.UaHash,
-		models.RefreshTokenCols.UpdatedAt:   m.UpdatedAt,
+		models.RefreshTokenCols.ClientID:      m.ClientID,
+		models.RefreshTokenCols.SessionID:     m.SessionID,
+		models.RefreshTokenCols.IssuedAt:      m.IssuedAt,
+		models.RefreshTokenCols.ExpiresAt:     m.ExpiresAt,
+		models.RefreshTokenCols.RevokedAt:     m.RevokedAt,
+		models.RefreshTokenCols.RevokeReason:  m.RevokeReason,
+		models.RefreshTokenCols.RotatedFrom:   m.RotatedFrom,
+		models.RefreshTokenCols.DeviceID:      m.DeviceID,
+		models.RefreshTokenCols.IP:            m.IP,
+		models.RefreshTokenCols.UaHash:        m.UaHash,
+		models.RefreshTokenCols.UpdatedAt:     m.UpdatedAt,
 	}
 }
 

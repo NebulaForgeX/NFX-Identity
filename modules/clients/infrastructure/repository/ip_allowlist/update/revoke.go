@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
 	"nfxid/enums"
-	"nfxid/modules/clients/domain/ip_allowlist"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -20,23 +20,23 @@ func (h *Handler) Revoke(ctx context.Context, ruleID string, revokedBy uuid.UUID
 		Where("rule_id = ?", ruleID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return ip_allowlist.ErrIPAllowlistNotFound
+			return clientsErr.ErrIPAllowlistNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.Status == enums.ClientsAllowlistStatusRevoked {
-		return ip_allowlist.ErrIPAllowlistAlreadyRevoked
+		return clientsErr.ErrIPAllowlistAlreadyRevoked
 	}
 
 	now := time.Now().UTC()
 	updates := map[string]any{
-		models.IpAllowlistCols.Status:      enums.ClientsAllowlistStatusRevoked,
-		models.IpAllowlistCols.RevokedAt:   &now,
-		models.IpAllowlistCols.RevokedBy:   &revokedBy,
+		models.IpAllowlistCols.Status:       enums.ClientsAllowlistStatusRevoked,
+		models.IpAllowlistCols.RevokedAt:    &now,
+		models.IpAllowlistCols.RevokedBy:    &revokedBy,
 		models.IpAllowlistCols.RevokeReason: &reason,
-		models.IpAllowlistCols.UpdatedAt:   now,
+		models.IpAllowlistCols.UpdatedAt:    now,
 	}
 
 	return h.db.WithContext(ctx).

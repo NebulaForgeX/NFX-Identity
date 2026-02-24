@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"nfxid/constants"
+	dirErr "nfxid/errors/src/directory"
 	userImageCommands "nfxid/modules/directory/application/user_images/commands"
 	userImageDomain "nfxid/modules/directory/domain/user_images"
 
@@ -34,7 +35,7 @@ func (s *Service) CreateUserImage(ctx context.Context, cmd userImageCommands.Cre
 
 	// Check if image already exists for this user
 	if exists, _ := s.userImageRepo.Check.ByUserIDAndImageID(ctx, cmd.UserID, cmd.ImageID); exists {
-		return uuid.Nil, userImageDomain.ErrUserImageNotFound // or return existing ID
+		return uuid.Nil, dirErr.ErrUserImageNotFound // or return existing ID
 	}
 
 	// Create domain entity

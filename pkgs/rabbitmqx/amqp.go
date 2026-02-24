@@ -4,9 +4,10 @@ import (
 	"crypto/tls"
 	"time"
 
+	"nfxid/pkgs/rabbitmqx/messaging"
+
 	"github.com/ThreeDotsLabs/watermill-amqp/v3/pkg/amqp"
 	amqp091 "github.com/rabbitmq/amqp091-go"
-	"nfxid/pkgs/rabbitmqx/messaging"
 )
 
 // BuildAMQPConfig 构建 AMQP 配置。

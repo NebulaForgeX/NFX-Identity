@@ -1,6 +1,7 @@
 package apps
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,10 +9,10 @@ import (
 
 func (a *App) Update(name string, description *string, appType AppType, environment Environment, metadata map[string]interface{}, updatedBy *uuid.UUID) error {
 	if a.DeletedAt() != nil {
-		return ErrAppNotFound
+		return clientsErr.ErrAppNotFound
 	}
 	if name == "" {
-		return ErrNameRequired
+		return clientsErr.ErrNameRequired
 	}
 	if appType != "" {
 		validTypes := map[AppType]struct{}{
@@ -22,7 +23,7 @@ func (a *App) Update(name string, description *string, appType AppType, environm
 			AppTypeThirdParty: {},
 		}
 		if _, ok := validTypes[appType]; !ok {
-			return ErrInvalidAppType
+			return clientsErr.ErrInvalidAppType
 		}
 		a.state.Type = appType
 	}
@@ -34,7 +35,7 @@ func (a *App) Update(name string, description *string, appType AppType, environm
 			EnvironmentTest:        {},
 		}
 		if _, ok := validEnvironments[environment]; !ok {
-			return ErrInvalidEnvironment
+			return clientsErr.ErrInvalidEnvironment
 		}
 		a.state.Environment = environment
 	}
@@ -51,7 +52,7 @@ func (a *App) Update(name string, description *string, appType AppType, environm
 
 func (a *App) UpdateStatus(status AppStatus, updatedBy *uuid.UUID) error {
 	if a.DeletedAt() != nil {
-		return ErrAppNotFound
+		return clientsErr.ErrAppNotFound
 	}
 	validStatuses := map[AppStatus]struct{}{
 		AppStatusActive:    {},
@@ -60,7 +61,7 @@ func (a *App) UpdateStatus(status AppStatus, updatedBy *uuid.UUID) error {
 		AppStatusPending:   {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidAppStatus
+		return clientsErr.ErrInvalidAppStatus
 	}
 
 	a.state.Status = status

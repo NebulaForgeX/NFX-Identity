@@ -7,8 +7,8 @@ import (
 	userPhoneApp "nfxid/modules/directory/application/user_phones"
 	userPhoneAppCommands "nfxid/modules/directory/application/user_phones/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	userphonepb "nfxid/protos/gen/directory/user_phone"
 	"nfxid/pkgs/errx"
+	userphonepb "nfxid/protos/gen/directory/user_phone"
 
 	"github.com/google/uuid"
 )
@@ -84,7 +84,10 @@ func (h *UserPhoneHandler) GetUserPhoneByID(ctx context.Context, req *userphonep
 }
 
 // GetUserPhoneByCountryCodeAndPhone 根据国家代码和手机号获取用户手机
-func (h *UserPhoneHandler) GetUserPhoneByCountryCodeAndPhone(ctx context.Context, req *userphonepb.GetUserPhoneByCountryCodeAndPhoneRequest) (*userphonepb.GetUserPhoneByCountryCodeAndPhoneResponse, error) {
+func (h *UserPhoneHandler) GetUserPhoneByCountryCodeAndPhone(
+	ctx context.Context,
+	req *userphonepb.GetUserPhoneByCountryCodeAndPhoneRequest,
+) (*userphonepb.GetUserPhoneByCountryCodeAndPhoneResponse, error) {
 	userPhoneView, err := h.userPhoneAppSvc.GetUserPhoneByCountryCodeAndPhone(ctx, req.CountryCode, req.Phone)
 	if err != nil {
 		return nil, err
@@ -95,7 +98,10 @@ func (h *UserPhoneHandler) GetUserPhoneByCountryCodeAndPhone(ctx context.Context
 }
 
 // GetUserPhonesByUserID 根据用户ID获取用户手机列表
-func (h *UserPhoneHandler) GetUserPhonesByUserID(ctx context.Context, req *userphonepb.GetUserPhonesByUserIDRequest) (*userphonepb.GetUserPhonesByUserIDResponse, error) {
+func (h *UserPhoneHandler) GetUserPhonesByUserID(
+	ctx context.Context,
+	req *userphonepb.GetUserPhonesByUserIDRequest,
+) (*userphonepb.GetUserPhonesByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

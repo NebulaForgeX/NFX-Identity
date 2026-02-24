@@ -1,23 +1,24 @@
 package sessions
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewSessionParams struct {
-	SessionID        string
-	TenantID         uuid.UUID
-	UserID           uuid.UUID
-	AppID            *uuid.UUID
-	ClientID         *string
-	ExpiresAt        time.Time
-	IP               *string
-	UAHash           *string
-	DeviceID         *string
+	SessionID         string
+	TenantID          uuid.UUID
+	UserID            uuid.UUID
+	AppID             *uuid.UUID
+	ClientID          *string
+	ExpiresAt         time.Time
+	IP                *string
+	UAHash            *string
+	DeviceID          *string
 	DeviceFingerprint *string
-	DeviceName       *string
+	DeviceName        *string
 }
 
 func NewSession(p NewSessionParams) (*Session, error) {
@@ -56,16 +57,16 @@ func NewSessionFromState(st SessionState) *Session {
 
 func validateSessionParams(p NewSessionParams) error {
 	if p.SessionID == "" {
-		return ErrSessionIDRequired
+		return authErr.ErrSessionIDRequired
 	}
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if p.ExpiresAt.IsZero() {
-		return ErrExpiresAtRequired
+		return authErr.ErrExpiresAtRequired
 	}
 	return nil
 }

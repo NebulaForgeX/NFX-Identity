@@ -4,6 +4,7 @@ import (
 	"context"
 	groupCommands "nfxid/modules/tenants/application/groups/commands"
 	groupDomain "nfxid/modules/tenants/domain/groups"
+	tenantsErr "nfxid/errors/src/tenants"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateGroup(ctx context.Context, cmd groupCommands.CreateGroupCmd) (uuid.UUID, error) {
 	// Check if group ID already exists
 	if exists, _ := s.groupRepo.Check.ByGroupID(ctx, cmd.GroupID); exists {
-		return uuid.Nil, groupDomain.ErrGroupIDAlreadyExists
+		return uuid.Nil, tenantsErr.ErrGroupIDAlreadyExists
 	}
 
 	// Create domain entity

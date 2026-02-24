@@ -5,8 +5,8 @@ import (
 
 	tenantApp "nfxid/modules/tenants/application/tenants"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	tenantpb "nfxid/protos/gen/tenants/tenant"
 	"nfxid/pkgs/errx"
+	tenantpb "nfxid/protos/gen/tenants/tenant"
 
 	"github.com/google/uuid"
 )

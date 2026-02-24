@@ -8,13 +8,13 @@ import (
 
 // CreateMemberCmd 创建成员命令
 type CreateMemberCmd struct {
-	TenantID   uuid.UUID
-	UserID     uuid.UUID
-	Status     members.MemberStatus
-	Source     members.MemberSource
-	CreatedBy  *uuid.UUID
+	TenantID    uuid.UUID
+	UserID      uuid.UUID
+	Status      members.MemberStatus
+	Source      members.MemberSource
+	CreatedBy   *uuid.UUID
 	ExternalRef *string
-	Metadata   map[string]interface{}
+	Metadata    map[string]interface{}
 }
 
 // UpdateMemberStatusCmd 更新成员状态命令

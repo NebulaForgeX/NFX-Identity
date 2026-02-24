@@ -1,16 +1,20 @@
 package member_roles
 
-import "github.com/google/uuid"
+import (
+	tenantsErr "nfxid/errors/src/tenants"
+
+	"github.com/google/uuid"
+)
 
 func (mr *MemberRole) Validate() error {
 	if mr.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if mr.MemberID() == uuid.Nil {
-		return ErrMemberIDRequired
+		return tenantsErr.ErrMemberIDRequired
 	}
 	if mr.RoleID() == uuid.Nil {
-		return ErrRoleIDRequired
+		return tenantsErr.ErrRoleIDRequired
 	}
 	return nil
 }

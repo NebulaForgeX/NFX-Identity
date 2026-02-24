@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	imageErr "nfxid/errors/src/image"
 	"nfxid/modules/image/domain/image_tags"
 	"nfxid/modules/image/infrastructure/rdb/models"
 	"nfxid/modules/image/infrastructure/repository/image_tags/mapper"
@@ -18,7 +19,7 @@ func (h *Handler) ByImageIDAndTag(ctx context.Context, imageID uuid.UUID, tag st
 		Where("image_id = ? AND tag = ?", imageID, tag).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, image_tags.ErrImageTagNotFound
+			return nil, imageErr.ErrImageTagNotFound
 		}
 		return nil, err
 	}

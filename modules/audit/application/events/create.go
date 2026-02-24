@@ -2,9 +2,9 @@ package events
 
 import (
 	"context"
-	"time"
 	eventCommands "nfxid/modules/audit/application/events/commands"
 	eventDomain "nfxid/modules/audit/domain/events"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -23,31 +23,31 @@ func (s *Service) CreateEvent(ctx context.Context, cmd eventCommands.CreateEvent
 
 	// Create domain entity
 	event, err := eventDomain.NewEvent(eventDomain.NewEventParams{
-		EventID:              cmd.EventID,
-		OccurredAt:           occurredAt,
-		TenantID:             cmd.TenantID,
-		AppID:                cmd.AppID,
-		ActorType:            cmd.ActorType,
-		ActorID:              cmd.ActorID,
-		ActorTenantMemberID:  cmd.ActorTenantMemberID,
-		Action:               cmd.Action,
-		TargetType:           cmd.TargetType,
-		TargetID:             cmd.TargetID,
-		Result:               cmd.Result,
-		FailureReasonCode:    cmd.FailureReasonCode,
-		HTTPMethod:           cmd.HTTPMethod,
-		HTTPPath:             cmd.HTTPPath,
-		HTTPStatus:           cmd.HTTPStatus,
-		RequestID:            cmd.RequestID,
-		TraceID:              cmd.TraceID,
-		IP:                   cmd.IP,
-		UserAgent:            cmd.UserAgent,
-		GeoCountry:           cmd.GeoCountry,
-		RiskLevel:            cmd.RiskLevel,
-		DataClassification:   cmd.DataClassification,
-		PrevHash:             cmd.PrevHash,
-		EventHash:            cmd.EventHash,
-		Metadata:             cmd.Metadata,
+		EventID:             cmd.EventID,
+		OccurredAt:          occurredAt,
+		TenantID:            cmd.TenantID,
+		AppID:               cmd.AppID,
+		ActorType:           cmd.ActorType,
+		ActorID:             cmd.ActorID,
+		ActorTenantMemberID: cmd.ActorTenantMemberID,
+		Action:              cmd.Action,
+		TargetType:          cmd.TargetType,
+		TargetID:            cmd.TargetID,
+		Result:              cmd.Result,
+		FailureReasonCode:   cmd.FailureReasonCode,
+		HTTPMethod:          cmd.HTTPMethod,
+		HTTPPath:            cmd.HTTPPath,
+		HTTPStatus:          cmd.HTTPStatus,
+		RequestID:           cmd.RequestID,
+		TraceID:             cmd.TraceID,
+		IP:                  cmd.IP,
+		UserAgent:           cmd.UserAgent,
+		GeoCountry:          cmd.GeoCountry,
+		RiskLevel:           cmd.RiskLevel,
+		DataClassification:  cmd.DataClassification,
+		PrevHash:            cmd.PrevHash,
+		EventHash:           cmd.EventHash,
+		Metadata:            cmd.Metadata,
 	})
 	if err != nil {
 		return uuid.Nil, err

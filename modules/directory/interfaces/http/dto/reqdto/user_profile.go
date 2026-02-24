@@ -7,7 +7,7 @@ import (
 )
 
 type UserProfileCreateRequestDTO struct {
-	UserID      uuid.UUID              `json:"user_id" validate:"required,uuid"`
+	UserID      uuid.UUID              `json:"user_id"                validate:"required,uuid"`
 	Role        *string                `json:"role,omitempty"`
 	FirstName   *string                `json:"first_name,omitempty"`
 	LastName    *string                `json:"last_name,omitempty"`
@@ -30,20 +30,20 @@ type UserProfileByIDRequestDTO struct {
 
 type UserProfileUpdateRequestDTO struct {
 	UserProfileID uuid.UUID              `uri:"user_profile_id" validate:"required,uuid"`
-	Role        *string                `json:"role,omitempty"`
-	FirstName   *string                `json:"first_name,omitempty"`
-	LastName    *string                `json:"last_name,omitempty"`
-	Nickname    *string                `json:"nickname,omitempty"`
-	DisplayName *string                `json:"display_name,omitempty"`
-	Bio         *string                `json:"bio,omitempty"`
-	Birthday    *string                `json:"birthday,omitempty"`
-	Age         *int                   `json:"age,omitempty"`
-	Gender      *string                `json:"gender,omitempty"`
-	Location    *string                `json:"location,omitempty"`
-	Website     *string                `json:"website,omitempty"`
-	Github      *string                `json:"github,omitempty"`
-	SocialLinks map[string]interface{} `json:"social_links,omitempty"`
-	Skills      map[string]interface{} `json:"skills,omitempty"`
+	Role          *string                `                                               json:"role,omitempty"`
+	FirstName     *string                `                                               json:"first_name,omitempty"`
+	LastName      *string                `                                               json:"last_name,omitempty"`
+	Nickname      *string                `                                               json:"nickname,omitempty"`
+	DisplayName   *string                `                                               json:"display_name,omitempty"`
+	Bio           *string                `                                               json:"bio,omitempty"`
+	Birthday      *string                `                                               json:"birthday,omitempty"`
+	Age           *int                   `                                               json:"age,omitempty"`
+	Gender        *string                `                                               json:"gender,omitempty"`
+	Location      *string                `                                               json:"location,omitempty"`
+	Website       *string                `                                               json:"website,omitempty"`
+	Github        *string                `                                               json:"github,omitempty"`
+	SocialLinks   map[string]interface{} `                                               json:"social_links,omitempty"`
+	Skills        map[string]interface{} `                                               json:"skills,omitempty"`
 }
 
 func (r *UserProfileCreateRequestDTO) ToCreateCmd() userProfileAppCommands.CreateUserProfileCmd {

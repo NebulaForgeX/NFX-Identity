@@ -2,9 +2,9 @@ package images
 
 import (
 	"context"
-	"time"
 	imageCommands "nfxid/modules/image/application/images/commands"
 	imageDomain "nfxid/modules/image/domain/images"
+	"time"
 )
 
 // UpdateImage 更新图片
@@ -17,25 +17,25 @@ func (s *Service) UpdateImage(ctx context.Context, cmd imageCommands.UpdateImage
 
 	// Get current state
 	currentState := imageDomain.ImageState{
-		ID:              image.ID(),
-		TypeID:          image.TypeID(),
-		UserID:          image.UserID(),
-		TenantID:        image.TenantID(),
-		AppID:           image.AppID(),
-		SourceDomain:    image.SourceDomain(),
-		Filename:        image.Filename(),
+		ID:               image.ID(),
+		TypeID:           image.TypeID(),
+		UserID:           image.UserID(),
+		TenantID:         image.TenantID(),
+		AppID:            image.AppID(),
+		SourceDomain:     image.SourceDomain(),
+		Filename:         image.Filename(),
 		OriginalFilename: image.OriginalFilename(),
-		MimeType:        image.MimeType(),
-		Size:            image.Size(),
-		Width:           image.Width(),
-		Height:          image.Height(),
-		StoragePath:     image.StoragePath(),
-		URL:             image.URL(),
-		IsPublic:        image.IsPublic(),
-		Metadata:        image.Metadata(),
-		CreatedAt:       image.CreatedAt(),
-		UpdatedAt:       image.UpdatedAt(),
-		DeletedAt:       image.DeletedAt(),
+		MimeType:         image.MimeType(),
+		Size:             image.Size(),
+		Width:            image.Width(),
+		Height:           image.Height(),
+		StoragePath:      image.StoragePath(),
+		URL:              image.URL(),
+		IsPublic:         image.IsPublic(),
+		Metadata:         image.Metadata(),
+		CreatedAt:        image.CreatedAt(),
+		UpdatedAt:        image.UpdatedAt(),
+		DeletedAt:        image.DeletedAt(),
 	}
 
 	// Update fields if provided
@@ -128,4 +128,3 @@ func (s *Service) UpdateImagePublic(ctx context.Context, cmd imageCommands.Updat
 	// Save to repository
 	return s.imageRepo.Update.UpdatePublic(ctx, cmd.ImageID, cmd.IsPublic)
 }
-

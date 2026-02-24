@@ -1,19 +1,23 @@
 package mfa_factors
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (mf *MFAFactor) Validate() error {
 	if mf.FactorID() == "" {
-		return ErrFactorIDRequired
+		return authErr.ErrFactorIDRequired
 	}
 	if mf.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if mf.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if mf.Type() == "" {
-		return ErrTypeRequired
+		return authErr.ErrTypeRequired
 	}
 	validTypes := map[MFAType]struct{}{
 		MFATypeTOTP:       {},
@@ -23,7 +27,7 @@ func (mf *MFAFactor) Validate() error {
 		MFATypeBackupCode: {},
 	}
 	if _, ok := validTypes[mf.Type()]; !ok {
-		return ErrInvalidMFAType
+		return authErr.ErrInvalidMFAType
 	}
 	return nil
 }

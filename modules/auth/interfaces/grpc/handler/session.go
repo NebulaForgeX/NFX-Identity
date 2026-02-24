@@ -5,8 +5,8 @@ import (
 
 	sessionApp "nfxid/modules/auth/application/sessions"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
-	sessionpb "nfxid/protos/gen/auth/session"
 	"nfxid/pkgs/errx"
+	sessionpb "nfxid/protos/gen/auth/session"
 
 	"github.com/google/uuid"
 )
@@ -39,7 +39,10 @@ func (h *SessionHandler) GetSessionByID(ctx context.Context, req *sessionpb.GetS
 }
 
 // GetSessionBySessionID 根据会话标识符获取会话
-func (h *SessionHandler) GetSessionBySessionID(ctx context.Context, req *sessionpb.GetSessionBySessionIDRequest) (*sessionpb.GetSessionBySessionIDResponse, error) {
+func (h *SessionHandler) GetSessionBySessionID(
+	ctx context.Context,
+	req *sessionpb.GetSessionBySessionIDRequest,
+) (*sessionpb.GetSessionBySessionIDResponse, error) {
 	sessionView, err := h.sessionAppSvc.GetSessionBySessionID(ctx, req.SessionId)
 	if err != nil {
 		return nil, err

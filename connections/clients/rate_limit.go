@@ -34,7 +34,7 @@ func (c *RateLimitClient) GetRateLimitByID(ctx context.Context, id string) (*rat
 // GetRateLimitsByAppID 根据应用ID获取速率限制列表
 func (c *RateLimitClient) GetRateLimitsByAppID(ctx context.Context, appID string, status *string) ([]*ratelimitpb.RateLimit, error) {
 	req := &ratelimitpb.GetRateLimitsByAppIDRequest{
-		AppId: appID,
+		AppId:  appID,
 		Status: status,
 	}
 

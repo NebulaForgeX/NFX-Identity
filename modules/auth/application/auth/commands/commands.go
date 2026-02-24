@@ -27,7 +27,7 @@ type SendVerificationCodeCmd struct {
 
 // SignupCmd 注册命令
 type SignupCmd struct {
-	Email           string
-	Password        string
+	Email            string
+	Password         string
 	VerificationCode string
 }

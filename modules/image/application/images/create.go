@@ -12,21 +12,21 @@ import (
 func (s *Service) CreateImage(ctx context.Context, cmd imageCommands.CreateImageCmd) (uuid.UUID, error) {
 	// Create domain entity
 	image, err := imageDomain.NewImage(imageDomain.NewImageParams{
-		TypeID:          cmd.TypeID,
-		UserID:          cmd.UserID,
-		TenantID:        cmd.TenantID,
-		AppID:           cmd.AppID,
-		SourceDomain:    cmd.SourceDomain,
-		Filename:        cmd.Filename,
+		TypeID:           cmd.TypeID,
+		UserID:           cmd.UserID,
+		TenantID:         cmd.TenantID,
+		AppID:            cmd.AppID,
+		SourceDomain:     cmd.SourceDomain,
+		Filename:         cmd.Filename,
 		OriginalFilename: cmd.OriginalFilename,
-		MimeType:        cmd.MimeType,
-		Size:            cmd.Size,
-		Width:           cmd.Width,
-		Height:          cmd.Height,
-		StoragePath:     cmd.StoragePath,
-		URL:             cmd.URL,
-		IsPublic:        cmd.IsPublic,
-		Metadata:        cmd.Metadata,
+		MimeType:         cmd.MimeType,
+		Size:             cmd.Size,
+		Width:            cmd.Width,
+		Height:           cmd.Height,
+		StoragePath:      cmd.StoragePath,
+		URL:              cmd.URL,
+		IsPublic:         cmd.IsPublic,
+		Metadata:         cmd.Metadata,
 	})
 	if err != nil {
 		return uuid.Nil, err

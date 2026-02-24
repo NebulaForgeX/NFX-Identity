@@ -9,16 +9,16 @@ import (
 )
 
 type MemberRoleRO struct {
-	ID          uuid.UUID
-	TenantID    uuid.UUID
-	MemberID    uuid.UUID
-	RoleID      uuid.UUID
-	AssignedAt  time.Time
-	AssignedBy  *uuid.UUID
-	ExpiresAt   *time.Time
-	Scope       *string
-	RevokedAt   *time.Time
-	RevokedBy   *uuid.UUID
+	ID           uuid.UUID
+	TenantID     uuid.UUID
+	MemberID     uuid.UUID
+	RoleID       uuid.UUID
+	AssignedAt   time.Time
+	AssignedBy   *uuid.UUID
+	ExpiresAt    *time.Time
+	Scope        *string
+	RevokedAt    *time.Time
+	RevokedBy    *uuid.UUID
 	RevokeReason *string
 }
 
@@ -29,16 +29,16 @@ func MemberRoleMapper(mr *member_roles.MemberRole) MemberRoleRO {
 	}
 
 	return MemberRoleRO{
-		ID:          mr.ID(),
-		TenantID:    mr.TenantID(),
-		MemberID:    mr.MemberID(),
-		RoleID:      mr.RoleID(),
-		AssignedAt:  mr.AssignedAt(),
-		AssignedBy:  mr.AssignedBy(),
-		ExpiresAt:   mr.ExpiresAt(),
-		Scope:       mr.Scope(),
-		RevokedAt:   mr.RevokedAt(),
-		RevokedBy:   mr.RevokedBy(),
+		ID:           mr.ID(),
+		TenantID:     mr.TenantID(),
+		MemberID:     mr.MemberID(),
+		RoleID:       mr.RoleID(),
+		AssignedAt:   mr.AssignedAt(),
+		AssignedBy:   mr.AssignedBy(),
+		ExpiresAt:    mr.ExpiresAt(),
+		Scope:        mr.Scope(),
+		RevokedAt:    mr.RevokedAt(),
+		RevokedBy:    mr.RevokedBy(),
 		RevokeReason: mr.RevokeReason(),
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	userphonepb "nfxid/protos/gen/directory/user_phone"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -13,7 +14,7 @@ type CreateUserPhoneDTO struct {
 	Phone                 string
 	CountryCode           *string
 	IsPrimary             bool
-	IsVerified             bool
+	IsVerified            bool
 	VerificationCode      *string
 	VerificationExpiresAt *time.Time
 }
@@ -21,11 +22,11 @@ type CreateUserPhoneDTO struct {
 // ToCreateUserPhoneRequest 转换为 protobuf 请求
 func (d *CreateUserPhoneDTO) ToCreateUserPhoneRequest() *userphonepb.CreateUserPhoneRequest {
 	req := &userphonepb.CreateUserPhoneRequest{
-		UserId:          d.UserID,
-		Phone:           d.Phone,
-		CountryCode:     d.CountryCode,
-		IsPrimary:       d.IsPrimary,
-		IsVerified:      d.IsVerified,
+		UserId:           d.UserID,
+		Phone:            d.Phone,
+		CountryCode:      d.CountryCode,
+		IsPrimary:        d.IsPrimary,
+		IsVerified:       d.IsVerified,
 		VerificationCode: d.VerificationCode,
 	}
 

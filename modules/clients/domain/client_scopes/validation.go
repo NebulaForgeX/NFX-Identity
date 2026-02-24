@@ -1,13 +1,17 @@
 package client_scopes
 
-import "github.com/google/uuid"
+import (
+	clientsErr "nfxid/errors/src/clients"
+
+	"github.com/google/uuid"
+)
 
 func (cs *ClientScope) Validate() error {
 	if cs.AppID() == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if cs.Scope() == "" {
-		return ErrScopeRequired
+		return clientsErr.ErrScopeRequired
 	}
 	return nil
 }

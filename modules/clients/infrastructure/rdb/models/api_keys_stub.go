@@ -11,21 +11,21 @@ import (
 )
 
 type ApiKey struct {
-	ID             uuid.UUID                   `gorm:"type:uuid;primaryKey"`
-	KeyID          string                      `gorm:"type:varchar(255)"`
-	ApplicationID  uuid.UUID                   `gorm:"type:uuid"`
-	KeyHash        string                      `gorm:"type:varchar(255)"`
-	HashAlg        string                      `gorm:"type:varchar(50)"`
-	Name           string                      `gorm:"type:varchar(255)"`
-	Status         enums.ClientsApiKeyStatus    `gorm:"type:varchar(50)"`
-	ExpiresAt      *time.Time                  `gorm:"type:timestamp"`
-	CreatedAt      time.Time                   `gorm:"autoCreateTime"`
-	RevokedAt      *time.Time                  `gorm:"type:timestamp"`
-	RevokedBy      *uuid.UUID                  `gorm:"type:uuid"`
-	RevokeReason   *string                     `gorm:"type:text"`
-	LastUsedAt     *time.Time                  `gorm:"type:timestamp"`
-	CreatedBy      *uuid.UUID                  `gorm:"type:uuid"`
-	Metadata       *datatypes.JSON             `gorm:"type:jsonb"`
+	ID            uuid.UUID                 `gorm:"type:uuid;primaryKey"`
+	KeyID         string                    `gorm:"type:varchar(255)"`
+	ApplicationID uuid.UUID                 `gorm:"type:uuid"`
+	KeyHash       string                    `gorm:"type:varchar(255)"`
+	HashAlg       string                    `gorm:"type:varchar(50)"`
+	Name          string                    `gorm:"type:varchar(255)"`
+	Status        enums.ClientsApiKeyStatus `gorm:"type:varchar(50)"`
+	ExpiresAt     *time.Time                `gorm:"type:timestamp"`
+	CreatedAt     time.Time                 `gorm:"autoCreateTime"`
+	RevokedAt     *time.Time                `gorm:"type:timestamp"`
+	RevokedBy     *uuid.UUID                `gorm:"type:uuid"`
+	RevokeReason  *string                   `gorm:"type:text"`
+	LastUsedAt    *time.Time                `gorm:"type:timestamp"`
+	CreatedBy     *uuid.UUID                `gorm:"type:uuid"`
+	Metadata      *datatypes.JSON           `gorm:"type:jsonb"`
 }
 
 func (ApiKey) TableName() string { return "clients.api_keys" }

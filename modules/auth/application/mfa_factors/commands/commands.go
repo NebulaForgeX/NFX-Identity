@@ -8,23 +8,23 @@ import (
 
 // CreateMFAFactorCmd 创建MFA因子命令
 type CreateMFAFactorCmd struct {
-	FactorID         string
-	TenantID         uuid.UUID
-	UserID           uuid.UUID
-	Type             mfa_factors.MFAType
-	SecretEncrypted  *string
-	Phone            *string
-	Email            *string
-	Name             *string
-	Enabled          bool
+	FactorID          string
+	TenantID          uuid.UUID
+	UserID            uuid.UUID
+	Type              mfa_factors.MFAType
+	SecretEncrypted   *string
+	Phone             *string
+	Email             *string
+	Name              *string
+	Enabled           bool
 	RecoveryCodesHash *string
 }
 
 // UpdateMFAFactorCmd 更新MFA因子命令
 type UpdateMFAFactorCmd struct {
-	FactorID         string
-	Name             *string
-	Enabled          bool
+	FactorID string
+	Name     *string
+	Enabled  bool
 }
 
 // EnableMFAFactorCmd 启用MFA因子命令

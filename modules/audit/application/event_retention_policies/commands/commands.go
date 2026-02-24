@@ -8,16 +8,16 @@ import (
 
 // CreateEventRetentionPolicyCmd 创建事件保留策略命令
 type CreateEventRetentionPolicyCmd struct {
-	PolicyName        string
-	TenantID          *uuid.UUID
-	ActionPattern     *string
+	PolicyName         string
+	TenantID           *uuid.UUID
+	ActionPattern      *string
 	DataClassification *event_retention_policies.DataClassification
-	RiskLevel         *event_retention_policies.RiskLevel
-	RetentionDays     int
-	RetentionAction   event_retention_policies.RetentionAction
-	ArchiveLocation   *string
-	Status            string
-	CreatedBy         *uuid.UUID
+	RiskLevel          *event_retention_policies.RiskLevel
+	RetentionDays      int
+	RetentionAction    event_retention_policies.RetentionAction
+	ArchiveLocation    *string
+	Status             string
+	CreatedBy          *uuid.UUID
 }
 
 // UpdateEventRetentionPolicyCmd 更新事件保留策略命令

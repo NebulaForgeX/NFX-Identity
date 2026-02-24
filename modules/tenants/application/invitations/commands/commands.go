@@ -27,8 +27,8 @@ type AcceptInvitationCmd struct {
 
 // RevokeInvitationCmd 撤销邀请命令
 type RevokeInvitationCmd struct {
-	InviteID    string
-	RevokedBy   uuid.UUID
+	InviteID     string
+	RevokedBy    uuid.UUID
 	RevokeReason string
 }
 

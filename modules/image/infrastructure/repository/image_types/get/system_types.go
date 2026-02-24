@@ -19,7 +19,7 @@ func (h *Handler) SystemTypes(ctx context.Context) ([]*image_types.ImageType, er
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*image_types.ImageType, len(ms))
 	for i := range ms {
 		result[i] = mapper.ImageTypeModelToDomain(&ms[i])

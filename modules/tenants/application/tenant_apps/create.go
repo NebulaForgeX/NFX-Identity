@@ -4,6 +4,7 @@ import (
 	"context"
 	tenantAppCommands "nfxid/modules/tenants/application/tenant_apps/commands"
 	tenantAppDomain "nfxid/modules/tenants/domain/tenant_apps"
+	tenantsErr "nfxid/errors/src/tenants"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateTenantApp(ctx context.Context, cmd tenantAppCommands.CreateTenantAppCmd) (uuid.UUID, error) {
 	// Check if tenant app already exists
 	if exists, _ := s.tenantAppRepo.Check.ByTenantIDAndAppID(ctx, cmd.TenantID, cmd.AppID); exists {
-		return uuid.Nil, tenantAppDomain.ErrTenantAppAlreadyExists
+		return uuid.Nil, tenantsErr.ErrTenantAppAlreadyExists
 	}
 
 	// Create domain entity

@@ -1,13 +1,17 @@
 package domain_verifications
 
-import "github.com/google/uuid"
+import (
+	tenantsErr "nfxid/errors/src/tenants"
+
+	"github.com/google/uuid"
+)
 
 func (dv *DomainVerification) Validate() error {
 	if dv.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if dv.Domain() == "" {
-		return ErrDomainRequired
+		return tenantsErr.ErrDomainRequired
 	}
 	validMethods := map[VerificationMethod]struct{}{
 		VerificationMethodDNS:  {},
@@ -16,7 +20,7 @@ func (dv *DomainVerification) Validate() error {
 		VerificationMethodFILE: {},
 	}
 	if _, ok := validMethods[dv.VerificationMethod()]; !ok {
-		return ErrInvalidVerificationMethod
+		return tenantsErr.ErrInvalidVerificationMethod
 	}
 	validStatuses := map[VerificationStatus]struct{}{
 		VerificationStatusPending:  {},
@@ -25,7 +29,7 @@ func (dv *DomainVerification) Validate() error {
 		VerificationStatusExpired:  {},
 	}
 	if _, ok := validStatuses[dv.Status()]; !ok {
-		return ErrInvalidVerificationStatus
+		return tenantsErr.ErrInvalidVerificationStatus
 	}
 	return nil
 }

@@ -2,11 +2,13 @@ package users
 
 import (
 	"time"
+
+	dirErr "nfxid/errors/src/directory"
 )
 
 func (u *User) UpdateStatus(status UserStatus) error {
 	if u.DeletedAt() != nil {
-		return ErrUserNotFound
+		return dirErr.ErrUserNotFound
 	}
 	validStatuses := map[UserStatus]struct{}{
 		UserStatusPending:  {},
@@ -14,7 +16,7 @@ func (u *User) UpdateStatus(status UserStatus) error {
 		UserStatusDeactive: {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidUserStatus
+		return dirErr.ErrInvalidUserStatus
 	}
 
 	u.state.Status = status
@@ -24,7 +26,7 @@ func (u *User) UpdateStatus(status UserStatus) error {
 
 func (u *User) UpdateLastLogin() error {
 	if u.DeletedAt() != nil {
-		return ErrUserNotFound
+		return dirErr.ErrUserNotFound
 	}
 
 	now := time.Now().UTC()
@@ -35,7 +37,7 @@ func (u *User) UpdateLastLogin() error {
 
 func (u *User) Verify() error {
 	if u.DeletedAt() != nil {
-		return ErrUserNotFound
+		return dirErr.ErrUserNotFound
 	}
 
 	u.state.IsVerified = true
@@ -45,10 +47,10 @@ func (u *User) Verify() error {
 
 func (u *User) UpdateUsername(username string) error {
 	if u.DeletedAt() != nil {
-		return ErrUserNotFound
+		return dirErr.ErrUserNotFound
 	}
 	if username == "" {
-		return ErrUsernameRequired
+		return dirErr.ErrUsernameRequired
 	}
 
 	u.state.Username = username

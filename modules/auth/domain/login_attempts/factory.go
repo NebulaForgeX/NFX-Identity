@@ -1,6 +1,7 @@
 package login_attempts
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,24 +51,24 @@ func NewLoginAttemptFromState(st LoginAttemptState) *LoginAttempt {
 
 func validateLoginAttemptParams(p NewLoginAttemptParams) error {
 	if p.Identifier == "" {
-		return ErrIdentifierRequired
+		return authErr.ErrIdentifierRequired
 	}
 	if p.FailureCode != nil {
 		validCodes := map[FailureCode]struct{}{
-			FailureCodeBadPassword:      {},
-			FailureCodeUserNotFound:     {},
-			FailureCodeLocked:           {},
-			FailureCodeMFARequired:      {},
-			FailureCodeMFAFailed:        {},
-			FailureCodeAccountDisabled:  {},
+			FailureCodeBadPassword:       {},
+			FailureCodeUserNotFound:      {},
+			FailureCodeLocked:            {},
+			FailureCodeMFARequired:       {},
+			FailureCodeMFAFailed:         {},
+			FailureCodeAccountDisabled:   {},
 			FailureCodeCredentialExpired: {},
-			FailureCodeRateLimited:      {},
-			FailureCodeIPBlocked:        {},
-			FailureCodeDeviceNotTrusted: {},
-			FailureCodeOther:            {},
+			FailureCodeRateLimited:       {},
+			FailureCodeIPBlocked:         {},
+			FailureCodeDeviceNotTrusted:  {},
+			FailureCodeOther:             {},
 		}
 		if _, ok := validCodes[*p.FailureCode]; !ok {
-			return ErrInvalidFailureCode
+			return authErr.ErrInvalidFailureCode
 		}
 	}
 	return nil

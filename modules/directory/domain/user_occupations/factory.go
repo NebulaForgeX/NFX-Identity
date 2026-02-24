@@ -1,26 +1,27 @@
 package user_occupations
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewUserOccupationParams struct {
-	UserID          uuid.UUID
-	Company         string
-	Position        string
-	Department      *string
-	Industry        *string
-	Location        *string
-	EmploymentType  *string
-	StartDate       *time.Time
-	EndDate         *time.Time
-	IsCurrent       bool
-	Description     *string
+	UserID           uuid.UUID
+	Company          string
+	Position         string
+	Department       *string
+	Industry         *string
+	Location         *string
+	EmploymentType   *string
+	StartDate        *time.Time
+	EndDate          *time.Time
+	IsCurrent        bool
+	Description      *string
 	Responsibilities *string
-	Achievements    *string
-	SkillsUsed      []string
+	Achievements     *string
+	SkillsUsed       []string
 }
 
 func NewUserOccupation(p NewUserOccupationParams) (*UserOccupation, error) {
@@ -35,23 +36,23 @@ func NewUserOccupation(p NewUserOccupationParams) (*UserOccupation, error) {
 
 	now := time.Now().UTC()
 	return NewUserOccupationFromState(UserOccupationState{
-		ID:              id,
-		UserID:          p.UserID,
-		Company:         p.Company,
-		Position:        p.Position,
-		Department:      p.Department,
-		Industry:        p.Industry,
-		Location:        p.Location,
-		EmploymentType:  p.EmploymentType,
-		StartDate:       p.StartDate,
-		EndDate:         p.EndDate,
-		IsCurrent:       p.IsCurrent,
-		Description:     p.Description,
+		ID:               id,
+		UserID:           p.UserID,
+		Company:          p.Company,
+		Position:         p.Position,
+		Department:       p.Department,
+		Industry:         p.Industry,
+		Location:         p.Location,
+		EmploymentType:   p.EmploymentType,
+		StartDate:        p.StartDate,
+		EndDate:          p.EndDate,
+		IsCurrent:        p.IsCurrent,
+		Description:      p.Description,
 		Responsibilities: p.Responsibilities,
-		Achievements:    p.Achievements,
-		SkillsUsed:      p.SkillsUsed,
-		CreatedAt:       now,
-		UpdatedAt:       now,
+		Achievements:     p.Achievements,
+		SkillsUsed:       p.SkillsUsed,
+		CreatedAt:        now,
+		UpdatedAt:        now,
 	}), nil
 }
 
@@ -61,13 +62,13 @@ func NewUserOccupationFromState(st UserOccupationState) *UserOccupation {
 
 func validateUserOccupationParams(p NewUserOccupationParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.Company == "" {
-		return ErrCompanyRequired
+		return dirErr.ErrCompanyRequired
 	}
 	if p.Position == "" {
-		return ErrPositionRequired
+		return dirErr.ErrPositionRequired
 	}
 	return nil
 }

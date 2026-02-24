@@ -1,22 +1,26 @@
 package trusted_devices
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (td *TrustedDevice) Validate() error {
 	if td.DeviceID() == "" {
-		return ErrDeviceIDRequired
+		return authErr.ErrDeviceIDRequired
 	}
 	if td.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if td.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if td.DeviceFingerprintHash() == "" {
-		return ErrDeviceFingerprintHashRequired
+		return authErr.ErrDeviceFingerprintHashRequired
 	}
 	if td.TrustedUntil().IsZero() {
-		return ErrTrustedUntilRequired
+		return authErr.ErrTrustedUntilRequired
 	}
 	return nil
 }

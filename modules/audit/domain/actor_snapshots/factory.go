@@ -1,6 +1,7 @@
 package actor_snapshots
 
 import (
+	auditErr "nfxid/errors/src/audit"
 	"time"
 
 	"github.com/google/uuid"
@@ -53,7 +54,7 @@ func NewActorSnapshotFromState(st ActorSnapshotState) *ActorSnapshot {
 
 func validateActorSnapshotParams(p NewActorSnapshotParams) error {
 	if p.ActorType == "" {
-		return ErrActorTypeRequired
+		return auditErr.ErrActorTypeRequired
 	}
 	validActorTypes := map[ActorType]struct{}{
 		ActorTypeUser:    {},
@@ -62,10 +63,10 @@ func validateActorSnapshotParams(p NewActorSnapshotParams) error {
 		ActorTypeAdmin:   {},
 	}
 	if _, ok := validActorTypes[p.ActorType]; !ok {
-		return ErrInvalidActorType
+		return auditErr.ErrInvalidActorType
 	}
 	if p.ActorID == uuid.Nil {
-		return ErrActorIDRequired
+		return auditErr.ErrActorIDRequired
 	}
 	return nil
 }

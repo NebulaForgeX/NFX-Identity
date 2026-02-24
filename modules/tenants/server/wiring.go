@@ -39,26 +39,26 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr                  *health.Manager
-	cache                      *cachex.Connection
-	postgres                   *postgresqlx.Connection
-	kafkaConfig                *kafkax.Config
-	busPublisher               *eventbus.BusPublisher
-	rabbitMQConfig             *rabbitmqx.Config
-	tenantAppSvc               *tenantApp.Service
-	groupAppSvc                *groupApp.Service
-	memberAppSvc               *memberApp.Service
-	invitationAppSvc           *invitationApp.Service
-	tenantAppAppSvc            *tenantAppApp.Service
-	tenantSettingAppSvc        *tenantSettingApp.Service
-	domainVerificationAppSvc   *domainVerificationApp.Service
-	memberRoleAppSvc           *memberRoleApp.Service
-	memberGroupAppSvc          *memberGroupApp.Service
-	memberAppRoleAppSvc        *memberAppRoleApp.Service
-	userTokenVerifier          token.Verifier
-	serverTokenVerifier        token.Verifier
-	resourceSvc         *resourceApp.Service
-	tokenxInstance             *tokenx.Tokenx
+	healthMgr                *health.Manager
+	cache                    *cachex.Connection
+	postgres                 *postgresqlx.Connection
+	kafkaConfig              *kafkax.Config
+	busPublisher             *eventbus.BusPublisher
+	rabbitMQConfig           *rabbitmqx.Config
+	tenantAppSvc             *tenantApp.Service
+	groupAppSvc              *groupApp.Service
+	memberAppSvc             *memberApp.Service
+	invitationAppSvc         *invitationApp.Service
+	tenantAppAppSvc          *tenantAppApp.Service
+	tenantSettingAppSvc      *tenantSettingApp.Service
+	domainVerificationAppSvc *domainVerificationApp.Service
+	memberRoleAppSvc         *memberRoleApp.Service
+	memberGroupAppSvc        *memberGroupApp.Service
+	memberAppRoleAppSvc      *memberAppRoleApp.Service
+	userTokenVerifier        token.Verifier
+	serverTokenVerifier      token.Verifier
+	resourceSvc              *resourceApp.Service
+	tokenxInstance           *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -145,14 +145,14 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		memberAppSvc:             memberAppSvc,
 		invitationAppSvc:         invitationAppSvc,
 		tenantAppAppSvc:          tenantAppAppSvc,
-		tenantSettingAppSvc:     tenantSettingAppSvc,
+		tenantSettingAppSvc:      tenantSettingAppSvc,
 		domainVerificationAppSvc: domainVerificationAppSvc,
 		memberRoleAppSvc:         memberRoleAppSvc,
 		memberGroupAppSvc:        memberGroupAppSvc,
 		memberAppRoleAppSvc:      memberAppRoleAppSvc,
 		userTokenVerifier:        userTokenVerifier,
 		serverTokenVerifier:      serverTokenVerifier,
-		resourceSvc:         resourceSvc,
+		resourceSvc:              resourceSvc,
 		tokenxInstance:           tokenxInstance,
 	}, nil
 }
@@ -164,24 +164,26 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) HealthMgr() *health.Manager                         { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
-func (d *Dependencies) TenantAppSvc() *tenantApp.Service                    { return d.tenantAppSvc }
-func (d *Dependencies) GroupAppSvc() *groupApp.Service                      { return d.groupAppSvc }
-func (d *Dependencies) MemberAppSvc() *memberApp.Service                   { return d.memberAppSvc }
-func (d *Dependencies) InvitationAppSvc() *invitationApp.Service             { return d.invitationAppSvc }
-func (d *Dependencies) TenantAppAppSvc() *tenantAppApp.Service               { return d.tenantAppAppSvc }
-func (d *Dependencies) TenantSettingAppSvc() *tenantSettingApp.Service       { return d.tenantSettingAppSvc }
-func (d *Dependencies) DomainVerificationAppSvc() *domainVerificationApp.Service { return d.domainVerificationAppSvc }
-func (d *Dependencies) MemberRoleAppSvc() *memberRoleApp.Service             { return d.memberRoleAppSvc }
-func (d *Dependencies) MemberGroupAppSvc() *memberGroupApp.Service            { return d.memberGroupAppSvc }
-func (d *Dependencies) MemberAppRoleAppSvc() *memberAppRoleApp.Service       { return d.memberAppRoleAppSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection                  { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier                   { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier                   { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                           { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher                 { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config                     { return d.rabbitMQConfig }
+func (d *Dependencies) HealthMgr() *health.Manager                     { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service              { return d.resourceSvc }
+func (d *Dependencies) TenantAppSvc() *tenantApp.Service               { return d.tenantAppSvc }
+func (d *Dependencies) GroupAppSvc() *groupApp.Service                 { return d.groupAppSvc }
+func (d *Dependencies) MemberAppSvc() *memberApp.Service               { return d.memberAppSvc }
+func (d *Dependencies) InvitationAppSvc() *invitationApp.Service       { return d.invitationAppSvc }
+func (d *Dependencies) TenantAppAppSvc() *tenantAppApp.Service         { return d.tenantAppAppSvc }
+func (d *Dependencies) TenantSettingAppSvc() *tenantSettingApp.Service { return d.tenantSettingAppSvc }
+func (d *Dependencies) DomainVerificationAppSvc() *domainVerificationApp.Service {
+	return d.domainVerificationAppSvc
+}
+func (d *Dependencies) MemberRoleAppSvc() *memberRoleApp.Service       { return d.memberRoleAppSvc }
+func (d *Dependencies) MemberGroupAppSvc() *memberGroupApp.Service     { return d.memberGroupAppSvc }
+func (d *Dependencies) MemberAppRoleAppSvc() *memberAppRoleApp.Service { return d.memberAppRoleAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection              { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier              { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                    { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher           { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config              { return d.rabbitMQConfig }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/infrastructure/rdb/models"
+	"time"
 )
 
 // UpdateLastUsed 更新最后使用时间，实现 trusted_devices.Update 接口

@@ -1,6 +1,7 @@
 package user_avatars
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (ua *UserAvatar) UpdateImageID(imageID uuid.UUID) error {
 	if imageID == uuid.Nil {
-		return ErrImageIDRequired
+		return dirErr.ErrImageIDRequired
 	}
 	ua.state.ImageID = imageID
 	ua.state.UpdatedAt = time.Now().UTC()

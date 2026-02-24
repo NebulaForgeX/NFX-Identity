@@ -1,12 +1,13 @@
 package user_preferences
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
 func (up *UserPreference) Update(theme, language, timezone *string, notifications, privacy, display, other map[string]interface{}) error {
 	if up.DeletedAt() != nil {
-		return ErrUserPreferenceNotFound
+		return dirErr.ErrUserPreferenceNotFound
 	}
 
 	if theme != nil && *theme != "" {
@@ -37,7 +38,7 @@ func (up *UserPreference) Update(theme, language, timezone *string, notification
 
 func (up *UserPreference) UpdateTheme(theme string) error {
 	if up.DeletedAt() != nil {
-		return ErrUserPreferenceNotFound
+		return dirErr.ErrUserPreferenceNotFound
 	}
 	up.state.Theme = theme
 	up.state.UpdatedAt = time.Now().UTC()
@@ -46,7 +47,7 @@ func (up *UserPreference) UpdateTheme(theme string) error {
 
 func (up *UserPreference) UpdateLanguage(language string) error {
 	if up.DeletedAt() != nil {
-		return ErrUserPreferenceNotFound
+		return dirErr.ErrUserPreferenceNotFound
 	}
 	up.state.Language = language
 	up.state.UpdatedAt = time.Now().UTC()
@@ -55,7 +56,7 @@ func (up *UserPreference) UpdateLanguage(language string) error {
 
 func (up *UserPreference) UpdateTimezone(timezone string) error {
 	if up.DeletedAt() != nil {
-		return ErrUserPreferenceNotFound
+		return dirErr.ErrUserPreferenceNotFound
 	}
 	up.state.Timezone = timezone
 	up.state.UpdatedAt = time.Now().UTC()

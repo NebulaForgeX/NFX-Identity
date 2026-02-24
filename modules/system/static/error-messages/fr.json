@@ -1,0 +1,6 @@
+{
+  "APPLICATION_ID_REQUIRED": "application_id is required",
+  "APPLICATION_ROLE_ASSIGNMENT_NOT_FOUND": "application role assignment not found",
+  "APPLICATION_ROLE_NOT_FOUND": "application role not found",
+  "ROLE_KEY_REQUIRED": "role_key is required"
+}

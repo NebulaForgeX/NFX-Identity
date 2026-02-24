@@ -1,19 +1,20 @@
 package members
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewMemberParams struct {
-	TenantID   uuid.UUID
-	UserID     uuid.UUID
-	Status     MemberStatus
-	Source     MemberSource
-	CreatedBy  *uuid.UUID
+	TenantID    uuid.UUID
+	UserID      uuid.UUID
+	Status      MemberStatus
+	Source      MemberSource
+	CreatedBy   *uuid.UUID
 	ExternalRef *string
-	Metadata   map[string]interface{}
+	Metadata    map[string]interface{}
 }
 
 func NewMember(p NewMemberParams) (*Member, error) {
@@ -69,10 +70,10 @@ func NewMemberFromState(st MemberState) *Member {
 
 func validateMemberParams(p NewMemberParams) error {
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return tenantsErr.ErrUserIDRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[MemberStatus]struct{}{
@@ -82,7 +83,7 @@ func validateMemberParams(p NewMemberParams) error {
 			MemberStatusRemoved:   {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidMemberStatus
+			return tenantsErr.ErrInvalidMemberStatus
 		}
 	}
 	if p.Source != "" {
@@ -95,7 +96,7 @@ func validateMemberParams(p NewMemberParams) error {
 			MemberSourceImport: {},
 		}
 		if _, ok := validSources[p.Source]; !ok {
-			return ErrInvalidMemberSource
+			return tenantsErr.ErrInvalidMemberSource
 		}
 	}
 	return nil

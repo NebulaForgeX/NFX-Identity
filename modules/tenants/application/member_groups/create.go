@@ -4,6 +4,7 @@ import (
 	"context"
 	memberGroupCommands "nfxid/modules/tenants/application/member_groups/commands"
 	memberGroupDomain "nfxid/modules/tenants/domain/member_groups"
+	tenantsErr "nfxid/errors/src/tenants"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateMemberGroup(ctx context.Context, cmd memberGroupCommands.CreateMemberGroupCmd) (uuid.UUID, error) {
 	// Check if member group already exists
 	if exists, _ := s.memberGroupRepo.Check.ByMemberIDAndGroupID(ctx, cmd.MemberID, cmd.GroupID); exists {
-		return uuid.Nil, memberGroupDomain.ErrMemberGroupAlreadyExists
+		return uuid.Nil, tenantsErr.ErrMemberGroupAlreadyExists
 	}
 
 	// Create domain entity

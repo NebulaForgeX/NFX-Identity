@@ -1,6 +1,7 @@
 package members
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 )
 
@@ -12,7 +13,7 @@ func (m *Member) UpdateStatus(status MemberStatus) error {
 		MemberStatusRemoved:   {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidMemberStatus
+		return tenantsErr.ErrInvalidMemberStatus
 	}
 
 	m.state.Status = status

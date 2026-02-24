@@ -4,8 +4,8 @@ import (
 	"context"
 
 	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
-	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
 	"nfxid/pkgs/errx"
+	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
 )
 
 type IPAllowlistHandler struct {
@@ -20,6 +20,9 @@ func NewIPAllowlistHandler(ipAllowlistAppSvc *ipAllowlistApp.Service) *IPAllowli
 }
 
 // GetIpAllowlistByID 根据ID获取IP Allowlist
-func (h *IPAllowlistHandler) GetIpAllowlistByID(ctx context.Context, req *ipallowlistpb.GetIpAllowlistByIDRequest) (*ipallowlistpb.GetIpAllowlistByIDResponse, error) {
+func (h *IPAllowlistHandler) GetIpAllowlistByID(
+	ctx context.Context,
+	req *ipallowlistpb.GetIpAllowlistByIDRequest,
+) (*ipallowlistpb.GetIpAllowlistByIDResponse, error) {
 	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetIpAllowlistByID not implemented")
 }

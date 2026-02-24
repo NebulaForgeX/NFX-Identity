@@ -1,32 +1,32 @@
 package grpc
 
 import (
-	sessionApp "nfxid/modules/auth/application/sessions"
-	userCredentialApp "nfxid/modules/auth/application/user_credentials"
-	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
-	refreshTokenApp "nfxid/modules/auth/application/refresh_tokens"
-	passwordResetApp "nfxid/modules/auth/application/password_resets"
-	passwordHistoryApp "nfxid/modules/auth/application/password_history"
-	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
 	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
-	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
+	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
+	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
+	passwordHistoryApp "nfxid/modules/auth/application/password_history"
+	passwordResetApp "nfxid/modules/auth/application/password_resets"
+	refreshTokenApp "nfxid/modules/auth/application/refresh_tokens"
 	resourceApp "nfxid/modules/auth/application/resource"
+	sessionApp "nfxid/modules/auth/application/sessions"
+	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
+	userCredentialApp "nfxid/modules/auth/application/user_credentials"
 	grpcHandler "nfxid/modules/auth/interfaces/grpc/handler"
 	"nfxid/pkgs/grpcx/interceptor"
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
+	accountlockoutpb "nfxid/protos/gen/auth/account_lockout"
+	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
+	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
+	passwordhistorypb "nfxid/protos/gen/auth/password_history"
+	passwordresetpb "nfxid/protos/gen/auth/password_reset"
+	refreshtokenpb "nfxid/protos/gen/auth/refresh_token"
+	sessionpb "nfxid/protos/gen/auth/session"
+	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
+	usercredentialpb "nfxid/protos/gen/auth/user_credential"
 	healthpb "nfxid/protos/gen/common/health"
 	schemapb "nfxid/protos/gen/common/schema"
-	sessionpb "nfxid/protos/gen/auth/session"
-	usercredentialpb "nfxid/protos/gen/auth/user_credential"
-	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
-	refreshtokenpb "nfxid/protos/gen/auth/refresh_token"
-	passwordresetpb "nfxid/protos/gen/auth/password_reset"
-	passwordhistorypb "nfxid/protos/gen/auth/password_history"
-	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
-	accountlockoutpb "nfxid/protos/gen/auth/account_lockout"
-	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
 
 	"google.golang.org/grpc"
 )
@@ -96,7 +96,7 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "auth"))
-	
+
 	// Register schema service
 	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "auth"))
 

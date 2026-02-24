@@ -8,8 +8,8 @@ import (
 )
 
 type UserCredentialCreateRequestDTO struct {
-	UserID             uuid.UUID              `json:"user_id" validate:"required"`
-	CredentialType     string                 `json:"credential_type" validate:"required"`
+	UserID             uuid.UUID              `json:"user_id"                        validate:"required"`
+	CredentialType     string                 `json:"credential_type"                validate:"required"`
 	PasswordHash       *string                `json:"password_hash,omitempty"`
 	HashAlg            *string                `json:"hash_alg,omitempty"`
 	HashParams         map[string]interface{} `json:"hash_params,omitempty"`
@@ -19,8 +19,8 @@ type UserCredentialCreateRequestDTO struct {
 
 type UserCredentialUpdateRequestDTO struct {
 	ID                 uuid.UUID `uri:"id" validate:"required,uuid"`
-	Status             string    `json:"status,omitempty"`
-	MustChangePassword bool      `json:"must_change_password,omitempty"`
+	Status             string    `                                  json:"status,omitempty"`
+	MustChangePassword bool      `                                  json:"must_change_password,omitempty"`
 }
 
 type UserCredentialByIDRequestDTO struct {

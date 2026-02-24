@@ -2,6 +2,7 @@ package tokenx
 
 import (
 	"fmt"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -51,7 +52,9 @@ func (g *Generator) GenerateTokenPair(userID, username, email, phone, countryCod
 }
 
 // GenerateTokenPairWithRefreshID 生成 Token 对（Access + Refresh，refresh token 带 token_id/jti）
-func (g *Generator) GenerateTokenPairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID string) (accessToken, refreshToken string, err error) {
+func (g *Generator) GenerateTokenPairWithRefreshID(
+	userID, username, email, phone, countryCode, roleID, refreshTokenID string,
+) (accessToken, refreshToken string, err error) {
 	accessToken, err = g.GenerateAccessToken(userID, username, email, phone, countryCode, roleID)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to generate access token: %w", err)

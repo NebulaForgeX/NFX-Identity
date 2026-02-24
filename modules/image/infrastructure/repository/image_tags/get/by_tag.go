@@ -19,7 +19,7 @@ func (h *Handler) ByTag(ctx context.Context, tag string) ([]*image_tags.ImageTag
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*image_tags.ImageTag, len(ms))
 	for i := range ms {
 		result[i] = mapper.ImageTagModelToDomain(&ms[i])

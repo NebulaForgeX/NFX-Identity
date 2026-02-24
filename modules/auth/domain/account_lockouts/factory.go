@@ -1,6 +1,7 @@
 package account_lockouts
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,10 +39,10 @@ func NewAccountLockoutFromState(st AccountLockoutState) *AccountLockout {
 
 func validateAccountLockoutParams(p NewAccountLockoutParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.LockReason == "" {
-		return ErrLockReasonRequired
+		return authErr.ErrLockReasonRequired
 	}
 	validReasons := map[LockReason]struct{}{
 		LockReasonTooManyAttempts:    {},
@@ -52,7 +53,7 @@ func validateAccountLockoutParams(p NewAccountLockoutParams) error {
 		LockReasonOther:              {},
 	}
 	if _, ok := validReasons[p.LockReason]; !ok {
-		return ErrInvalidLockReason
+		return authErr.ErrInvalidLockReason
 	}
 	return nil
 }

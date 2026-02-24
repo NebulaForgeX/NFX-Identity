@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	dirErr "nfxid/errors/src/directory"
 	"nfxid/modules/directory/domain/user_images"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/user_images/mapper"
@@ -18,7 +20,7 @@ func (h *Handler) ByUserIDAndImageID(ctx context.Context, userID, imageID uuid.U
 		Where("user_id = ? AND image_id = ? AND deleted_at IS NULL", userID, imageID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, user_images.ErrUserImageNotFound
+			return nil, dirErr.ErrUserImageNotFound
 		}
 		return nil, err
 	}

@@ -11,16 +11,16 @@ import (
 )
 
 type Config struct {
-	Env          env.Env
-	Server       ServerConfig       `koanf:"server"`
-	PostgreSQL   postgresqlx.Config `koanf:"postgresql"`
-	Cache        cachex.ConnConfig  `koanf:"cache"`
-	Logger       logx.LoggerConfig  `koanf:"logger"`
-	Storage      StorageConfig      `koanf:"storage"`
-	KafkaConfig  kafkax.Config      `koanf:"kafka"`
-	RabbitMQConfig rabbitmqx.Config `koanf:"rabbitmq"`
-	GRPCClient   GRPCClientConfig   `koanf:"grpc_client"`
-	Token        tokenx.Config      `koanf:"token"`
+	Env            env.Env
+	Server         ServerConfig       `koanf:"server"`
+	PostgreSQL     postgresqlx.Config `koanf:"postgresql"`
+	Cache          cachex.ConnConfig  `koanf:"cache"`
+	Logger         logx.LoggerConfig  `koanf:"logger"`
+	Storage        StorageConfig      `koanf:"storage"`
+	KafkaConfig    kafkax.Config      `koanf:"kafka"`
+	RabbitMQConfig rabbitmqx.Config   `koanf:"rabbitmq"`
+	GRPCClient     GRPCClientConfig   `koanf:"grpc_client"`
+	Token          tokenx.Config      `koanf:"token"`
 }
 
 type GRPCClientConfig struct {

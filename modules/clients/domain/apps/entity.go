@@ -9,10 +9,10 @@ import (
 type AppType string
 
 const (
-	AppTypeServer    AppType = "server"
-	AppTypeService   AppType = "service"
-	AppTypeInternal  AppType = "internal"
-	AppTypePartner   AppType = "partner"
+	AppTypeServer     AppType = "server"
+	AppTypeService    AppType = "service"
+	AppTypeInternal   AppType = "internal"
+	AppTypePartner    AppType = "partner"
 	AppTypeThirdParty AppType = "third_party"
 )
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	systemErr "nfxid/errors/src/system"
 	bootstrapCommands "nfxid/modules/system/application/bootstrap/commands"
 	systemStateDomain "nfxid/modules/system/domain/system_state"
 	"nfxid/pkgs/logx"
@@ -84,7 +85,7 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 func (s *Service) checkSystemInitialized(ctx context.Context) error {
 	latestState, err := s.systemStateRepo.Get.Latest(ctx)
 	if err != nil {
-		if errors.Is(err, systemStateDomain.ErrSystemStateNotFound) {
+		if errors.Is(err, systemErr.ErrSystemStateNotFound) {
 			logx.S().Info("ℹ️  No system state record found, proceeding with initialization...")
 			return nil
 		}
@@ -258,7 +259,14 @@ func (s *Service) clearAllStorages(ctx context.Context) error {
 }
 
 // finalizeSystemState 更新 metadata 并标记系统为已初始化
-func (s *Service) finalizeSystemState(ctx context.Context, systemState *systemStateDomain.SystemState, adminUserID, adminRoleID uuid.UUID, initializedServices []string, schemaClearResults map[string]int, version string) error {
+func (s *Service) finalizeSystemState(
+	ctx context.Context,
+	systemState *systemStateDomain.SystemState,
+	adminUserID, adminRoleID uuid.UUID,
+	initializedServices []string,
+	schemaClearResults map[string]int,
+	version string,
+) error {
 	// 更新 metadata
 	updatedMetadata := map[string]interface{}{
 		"bootstrap_started_at":   systemState.Metadata()["bootstrap_started_at"],

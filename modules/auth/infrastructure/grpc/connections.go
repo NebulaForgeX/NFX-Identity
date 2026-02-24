@@ -9,13 +9,13 @@ import (
 	"nfxid/pkgs/security/token/servertoken"
 	"nfxid/pkgs/tokenx"
 
-	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
 	applicationrolepb "nfxid/protos/gen/access/application_role"
+	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
 	superadminpb "nfxid/protos/gen/access/super_admin"
-	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
 	tenantrolepb "nfxid/protos/gen/access/tenant_role"
-	useremailpb "nfxid/protos/gen/directory/user_email"
+	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
 	userpb "nfxid/protos/gen/directory/user"
+	useremailpb "nfxid/protos/gen/directory/user_email"
 	userphonepb "nfxid/protos/gen/directory/user_phone"
 	userpreferencepb "nfxid/protos/gen/directory/user_preference"
 	userprofilepb "nfxid/protos/gen/directory/user_profile"
@@ -25,20 +25,20 @@ import (
 
 // DirectoryClient Directory 服务客户端（只包含需要的服务）
 type DirectoryClient struct {
-	User          *directory.UserClient
-	UserEmail     *directory.UserEmailClient
-	UserPhone     *directory.UserPhoneClient
-	UserProfile   *directory.UserProfileClient
+	User           *directory.UserClient
+	UserEmail      *directory.UserEmailClient
+	UserPhone      *directory.UserPhoneClient
+	UserProfile    *directory.UserProfileClient
 	UserPreference *directory.UserPreferenceClient
 }
 
 // NewDirectoryClient 创建 Directory 客户端
 func NewDirectoryClient(conn *grpc.ClientConn) *DirectoryClient {
 	return &DirectoryClient{
-		User:          directory.NewUserClient(userpb.NewUserServiceClient(conn)),
-		UserEmail:     directory.NewUserEmailClient(useremailpb.NewUserEmailServiceClient(conn)),
-		UserPhone:     directory.NewUserPhoneClient(userphonepb.NewUserPhoneServiceClient(conn)),
-		UserProfile:   directory.NewUserProfileClient(userprofilepb.NewUserProfileServiceClient(conn)),
+		User:           directory.NewUserClient(userpb.NewUserServiceClient(conn)),
+		UserEmail:      directory.NewUserEmailClient(useremailpb.NewUserEmailServiceClient(conn)),
+		UserPhone:      directory.NewUserPhoneClient(userphonepb.NewUserPhoneServiceClient(conn)),
+		UserProfile:    directory.NewUserProfileClient(userprofilepb.NewUserProfileServiceClient(conn)),
 		UserPreference: directory.NewUserPreferenceClient(userpreferencepb.NewUserPreferenceServiceClient(conn)),
 	}
 }

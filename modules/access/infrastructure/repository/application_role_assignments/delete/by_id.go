@@ -3,7 +3,7 @@ package delete
 import (
 	"context"
 
-	"nfxid/modules/access/domain/application_role_assignments"
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -15,7 +15,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 		return res.Error
 	}
 	if res.RowsAffected == 0 {
-		return application_role_assignments.ErrApplicationRoleAssignmentNotFound
+		return accessErr.ErrApplicationRoleAssignmentNotFound
 	}
 	return nil
 }

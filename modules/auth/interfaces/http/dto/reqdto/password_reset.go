@@ -8,12 +8,12 @@ import (
 )
 
 type PasswordResetCreateRequestDTO struct {
-	ResetID     string    `json:"reset_id" validate:"required"`
-	TenantID    uuid.UUID `json:"tenant_id" validate:"required"`
-	UserID      uuid.UUID `json:"user_id" validate:"required"`
-	Delivery    string    `json:"delivery" validate:"required"`
-	CodeHash    string    `json:"code_hash" validate:"required"`
-	ExpiresAt   string    `json:"expires_at" validate:"required"`
+	ResetID     string    `json:"reset_id"               validate:"required"`
+	TenantID    uuid.UUID `json:"tenant_id"              validate:"required"`
+	UserID      uuid.UUID `json:"user_id"                validate:"required"`
+	Delivery    string    `json:"delivery"               validate:"required"`
+	CodeHash    string    `json:"code_hash"              validate:"required"`
+	ExpiresAt   string    `json:"expires_at"             validate:"required"`
 	RequestedIP *string   `json:"requested_ip,omitempty"`
 	UAHash      *string   `json:"ua_hash,omitempty"`
 }

@@ -3,7 +3,9 @@ package tenant_roles
 import (
 	"context"
 
+	accessErr "nfxid/errors/src/access"
 	domain "nfxid/modules/access/domain/tenant_roles"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +20,7 @@ type CreateParams struct {
 func (s *Service) Create(ctx context.Context, p CreateParams) (*domain.TenantRole, error) {
 	exists, _ := s.repo.Check.ByTenantIDAndRoleKey(ctx, p.TenantID, p.RoleKey)
 	if exists {
-		return nil, domain.ErrTenantRoleKeyExistsInTenant
+		return nil, accessErr.ErrTenantRoleKeyExistsInTenant
 	}
 	r, err := domain.NewTenantRole(domain.NewTenantRoleParams{
 		TenantID: p.TenantID,

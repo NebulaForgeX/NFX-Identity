@@ -20,16 +20,16 @@ type Tenant struct {
 }
 
 type TenantState struct {
-	ID           uuid.UUID
-	TenantID     string
-	Name         string
-	DisplayName  *string
-	Status       TenantStatus
+	ID            uuid.UUID
+	TenantID      string
+	Name          string
+	DisplayName   *string
+	Status        TenantStatus
 	PrimaryDomain *string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    *time.Time
-	Metadata     map[string]interface{}
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     *time.Time
+	Metadata      map[string]interface{}
 }
 
 func (t *Tenant) ID() uuid.UUID                    { return t.state.ID }

@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/client_credentials"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return client_credentials.ErrClientCredentialNotFound
+		return clientsErr.ErrClientCredentialNotFound
 	}
 	return nil
 }

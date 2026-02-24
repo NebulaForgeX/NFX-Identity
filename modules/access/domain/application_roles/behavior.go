@@ -1,12 +1,16 @@
 package application_roles
 
+import (
+	accessErr "nfxid/errors/src/access"
+)
+
 func (r *ApplicationRole) UpdateName(name *string) {
 	r.state.Name = name
 }
 
 func (r *ApplicationRole) Update(roleKey string, name *string) error {
 	if roleKey == "" {
-		return ErrApplicationRoleRoleKeyRequired
+		return accessErr.ErrApplicationRoleRoleKeyRequired
 	}
 	r.state.RoleKey = roleKey
 	r.state.Name = name

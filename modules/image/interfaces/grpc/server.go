@@ -9,8 +9,8 @@ import (
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
 	healthpb "nfxid/protos/gen/common/health"
-	imagepb "nfxid/protos/gen/image/image"
 	schemapb "nfxid/protos/gen/common/schema"
+	imagepb "nfxid/protos/gen/image/image"
 
 	"google.golang.org/grpc"
 )

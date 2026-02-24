@@ -1,6 +1,7 @@
 package member_roles
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (mr *MemberRole) Revoke(revokedBy uuid.UUID, reason string) error {
 	if mr.RevokedAt() != nil {
-		return ErrMemberRoleAlreadyRevoked
+		return tenantsErr.ErrMemberRoleAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

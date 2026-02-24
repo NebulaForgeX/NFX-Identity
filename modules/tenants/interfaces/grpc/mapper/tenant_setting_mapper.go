@@ -16,10 +16,10 @@ func TenantSettingROToProto(v *tenantSettingAppResult.TenantSettingRO) *tenantse
 
 	tenantSetting := &tenantsettingpb.TenantSetting{
 		Id:                  v.ID.String(), // id 直接引用 tenants.id
-		EnforceMfa:         v.EnforceMFA,
+		EnforceMfa:          v.EnforceMFA,
 		AllowedEmailDomains: v.AllowedEmailDomains,
-		CreatedAt:          timestamppb.New(v.CreatedAt),
-		UpdatedAt:          timestamppb.New(v.UpdatedAt),
+		CreatedAt:           timestamppb.New(v.CreatedAt),
+		UpdatedAt:           timestamppb.New(v.UpdatedAt),
 	}
 
 	if v.SessionTTLMinutes != nil {

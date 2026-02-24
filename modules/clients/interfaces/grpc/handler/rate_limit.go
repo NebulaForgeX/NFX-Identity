@@ -4,8 +4,8 @@ import (
 	"context"
 
 	rateLimitApp "nfxid/modules/clients/application/rate_limits"
-	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
 	"nfxid/pkgs/errx"
+	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
 )
 
 type RateLimitHandler struct {

@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	dirErr "nfxid/errors/src/directory"
 	"nfxid/modules/directory/domain/user_profiles"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/user_profiles/mapper"
@@ -16,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*user_profiles.UserPr
 	var m models.UserProfile
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, user_profiles.ErrUserProfileNotFound
+			return nil, dirErr.ErrUserProfileNotFound
 		}
 		return nil, err
 	}

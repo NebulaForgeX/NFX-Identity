@@ -23,9 +23,9 @@ type RevokeClientCredentialCmd struct {
 
 // RotateClientCredentialCmd 轮换客户端凭证命令
 type RotateClientCredentialCmd struct {
-	ClientID     string
+	ClientID      string
 	NewSecretHash string
-	NewHashAlg   string
+	NewHashAlg    string
 }
 
 // UpdateLastUsedCmd 更新最后使用时间命令

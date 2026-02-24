@@ -60,7 +60,11 @@ func (h *TenantsHandler) OnTenantSettingsInvalidateCache(ctx context.Context, ev
 }
 
 // OnDomainVerificationsInvalidateCache 监听 DomainVerifications 缓存清除事件
-func (h *TenantsHandler) OnDomainVerificationsInvalidateCache(ctx context.Context, evt tenants.DomainVerificationsInvalidateCacheEvent, msg *message.Message) error {
+func (h *TenantsHandler) OnDomainVerificationsInvalidateCache(
+	ctx context.Context,
+	evt tenants.DomainVerificationsInvalidateCacheEvent,
+	msg *message.Message,
+) error {
 	logx.S().Infof("✅ [Tenants Pipeline] 收到 DomainVerifications 缓存清除事件: id=%s, prefix=%s, namespace=%s",
 		evt.ID, evt.Prefix, evt.Namespace)
 	return nil

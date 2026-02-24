@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
+	systemErr "nfxid/errors/src/system"
 	systemStateResult "nfxid/modules/system/application/system_state/results"
-	systemStateDomain "nfxid/modules/system/domain/system_state"
 
 	"github.com/google/uuid"
 )
@@ -26,7 +26,7 @@ func (s *Service) GetLatestSystemState(ctx context.Context) (systemStateResult.S
 	domainEntity, err := s.systemStateRepo.Get.Latest(ctx)
 	if err != nil {
 		// 如果是未找到记录的错误，返回默认的未初始化状态
-		if errors.Is(err, systemStateDomain.ErrSystemStateNotFound) {
+		if errors.Is(err, systemErr.ErrSystemStateNotFound) {
 			now := time.Now()
 			return systemStateResult.SystemStateRO{
 				ID:                    uuid.Nil,

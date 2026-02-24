@@ -1,6 +1,7 @@
 package image_types
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,7 +46,7 @@ func NewImageTypeFromState(st ImageTypeState) *ImageType {
 
 func validateImageTypeParams(p NewImageTypeParams) error {
 	if p.Key == "" {
-		return ErrKeyRequired
+		return imageErr.ErrKeyRequired
 	}
 	return nil
 }

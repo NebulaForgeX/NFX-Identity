@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	dirErr "nfxid/errors/src/directory"
 	"nfxid/modules/directory/domain/user_phones"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/user_phones/mapper"
@@ -18,7 +20,7 @@ func (h *Handler) PrimaryByUserID(ctx context.Context, userID uuid.UUID) (*user_
 		Where("user_id = ? AND is_primary = ?", userID, true).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, user_phones.ErrUserPhoneNotFound
+			return nil, dirErr.ErrUserPhoneNotFound
 		}
 		return nil, err
 	}

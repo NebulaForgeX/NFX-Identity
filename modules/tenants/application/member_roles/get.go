@@ -22,7 +22,7 @@ func (s *Service) GetMemberRolesByMemberID(ctx context.Context, memberID uuid.UU
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]memberRoleResult.MemberRoleRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = memberRoleResult.MemberRoleMapper(entity)

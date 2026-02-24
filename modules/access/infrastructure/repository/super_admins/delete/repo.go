@@ -2,6 +2,7 @@ package delete
 
 import (
 	"nfxid/modules/access/domain/super_admins"
+
 	"gorm.io/gorm"
 )
 

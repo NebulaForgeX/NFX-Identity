@@ -1,6 +1,7 @@
 package rate_limits
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,10 +9,10 @@ import (
 
 func (rl *RateLimit) UpdateLimit(limitValue, windowSeconds int, description *string, updatedBy *uuid.UUID) error {
 	if limitValue <= 0 {
-		return ErrLimitValueRequired
+		return clientsErr.ErrLimitValueRequired
 	}
 	if windowSeconds <= 0 {
-		return ErrWindowSecondsRequired
+		return clientsErr.ErrWindowSecondsRequired
 	}
 
 	rl.state.LimitValue = limitValue
@@ -30,7 +31,7 @@ func (rl *RateLimit) UpdateStatus(status string, updatedBy *uuid.UUID) error {
 		"disabled": {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidStatus
+		return clientsErr.ErrInvalidStatus
 	}
 
 	rl.state.Status = status

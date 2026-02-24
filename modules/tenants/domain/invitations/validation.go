@@ -1,25 +1,29 @@
 package invitations
 
-import "github.com/google/uuid"
+import (
+	tenantsErr "nfxid/errors/src/tenants"
+
+	"github.com/google/uuid"
+)
 
 func (i *Invitation) Validate() error {
 	if i.InviteID() == "" {
-		return ErrInviteIDRequired
+		return tenantsErr.ErrInviteIDRequired
 	}
 	if i.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if i.Email() == "" {
-		return ErrEmailRequired
+		return tenantsErr.ErrEmailRequired
 	}
 	if i.TokenHash() == "" {
-		return ErrTokenHashRequired
+		return tenantsErr.ErrTokenHashRequired
 	}
 	if i.ExpiresAt().IsZero() {
-		return ErrExpiresAtRequired
+		return tenantsErr.ErrExpiresAtRequired
 	}
 	if i.InvitedBy() == uuid.Nil {
-		return ErrInvitedByRequired
+		return tenantsErr.ErrInvitedByRequired
 	}
 	validStatuses := map[InvitationStatus]struct{}{
 		InvitationStatusPending:  {},
@@ -28,7 +32,7 @@ func (i *Invitation) Validate() error {
 		InvitationStatusRevoked:  {},
 	}
 	if _, ok := validStatuses[i.Status()]; !ok {
-		return ErrInvalidInvitationStatus
+		return tenantsErr.ErrInvalidInvitationStatus
 	}
 	return nil
 }

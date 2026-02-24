@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/domain/members"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/members/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByMemberID(ctx context.Context, memberID uuid.UUID) (*members.
 	var m models.Member
 	if err := h.db.WithContext(ctx).Where("member_id = ?", memberID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, members.ErrMemberNotFound
+			return nil, tenantsErr.ErrMemberNotFound
 		}
 		return nil, err
 	}

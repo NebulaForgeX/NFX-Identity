@@ -6,8 +6,8 @@ import (
 	invitationApp "nfxid/modules/tenants/application/invitations"
 	invitationDomain "nfxid/modules/tenants/domain/invitations"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	invitationpb "nfxid/protos/gen/tenants/invitation"
 	"nfxid/pkgs/errx"
+	invitationpb "nfxid/protos/gen/tenants/invitation"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +24,10 @@ func NewInvitationHandler(invitationAppSvc *invitationApp.Service) *InvitationHa
 }
 
 // GetInvitationByID 根据ID获取邀请
-func (h *InvitationHandler) GetInvitationByID(ctx context.Context, req *invitationpb.GetInvitationByIDRequest) (*invitationpb.GetInvitationByIDResponse, error) {
+func (h *InvitationHandler) GetInvitationByID(
+	ctx context.Context,
+	req *invitationpb.GetInvitationByIDRequest,
+) (*invitationpb.GetInvitationByIDResponse, error) {
 	invitationID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -40,7 +43,10 @@ func (h *InvitationHandler) GetInvitationByID(ctx context.Context, req *invitati
 }
 
 // GetInvitationByInvitationID 根据邀请ID获取邀请
-func (h *InvitationHandler) GetInvitationByInvitationID(ctx context.Context, req *invitationpb.GetInvitationByInvitationIDRequest) (*invitationpb.GetInvitationByInvitationIDResponse, error) {
+func (h *InvitationHandler) GetInvitationByInvitationID(
+	ctx context.Context,
+	req *invitationpb.GetInvitationByInvitationIDRequest,
+) (*invitationpb.GetInvitationByInvitationIDResponse, error) {
 	invitationView, err := h.invitationAppSvc.GetInvitationByInviteID(ctx, req.InvitationId)
 	if err != nil {
 		return nil, err
@@ -51,7 +57,10 @@ func (h *InvitationHandler) GetInvitationByInvitationID(ctx context.Context, req
 }
 
 // GetInvitationsByTenantID 根据租户ID获取邀请列表
-func (h *InvitationHandler) GetInvitationsByTenantID(ctx context.Context, req *invitationpb.GetInvitationsByTenantIDRequest) (*invitationpb.GetInvitationsByTenantIDResponse, error) {
+func (h *InvitationHandler) GetInvitationsByTenantID(
+	ctx context.Context,
+	req *invitationpb.GetInvitationsByTenantIDRequest,
+) (*invitationpb.GetInvitationsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

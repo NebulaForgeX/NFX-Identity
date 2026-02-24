@@ -14,13 +14,13 @@ func UserPhoneROToProto(v *userPhoneAppResult.UserPhoneRO) *userphonepb.UserPhon
 	}
 
 	userPhone := &userphonepb.UserPhone{
-		Id:        v.ID.String(),
-		UserId:    v.UserID.String(),
-		Phone:     v.Phone,
-		IsPrimary: v.IsPrimary,
+		Id:         v.ID.String(),
+		UserId:     v.UserID.String(),
+		Phone:      v.Phone,
+		IsPrimary:  v.IsPrimary,
 		IsVerified: v.IsVerified,
-		CreatedAt: timestamppb.New(v.CreatedAt),
-		UpdatedAt: timestamppb.New(v.UpdatedAt),
+		CreatedAt:  timestamppb.New(v.CreatedAt),
+		UpdatedAt:  timestamppb.New(v.UpdatedAt),
 	}
 
 	if v.CountryCode != nil {

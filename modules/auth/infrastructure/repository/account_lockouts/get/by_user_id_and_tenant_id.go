@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/account_lockouts"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/account_lockouts/mapper"
@@ -18,7 +19,7 @@ func (h *Handler) ByUserIDAndTenantID(ctx context.Context, userID, tenantID uuid
 		Where("user_id = ? AND tenant_id = ?", userID, tenantID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, account_lockouts.ErrAccountLockoutNotFound
+			return nil, authErr.ErrAccountLockoutNotFound
 		}
 		return nil, err
 	}

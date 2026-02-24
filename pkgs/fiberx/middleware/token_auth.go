@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"strings"
 	"nfxid/pkgs/errx"
 	"nfxid/pkgs/fiberx"
 	"nfxid/pkgs/security/token"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"

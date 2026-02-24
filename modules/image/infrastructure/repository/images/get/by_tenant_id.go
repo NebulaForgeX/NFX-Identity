@@ -20,7 +20,7 @@ func (h *Handler) ByTenantID(ctx context.Context, tenantID uuid.UUID) ([]*images
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*images.Image, len(ms))
 	for i := range ms {
 		result[i] = mapper.ImageModelToDomain(&ms[i])

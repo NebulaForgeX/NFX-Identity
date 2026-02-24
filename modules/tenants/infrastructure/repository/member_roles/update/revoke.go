@@ -3,9 +3,9 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
-	"nfxid/modules/tenants/domain/member_roles"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -19,14 +19,14 @@ func (h *Handler) Revoke(ctx context.Context, id uuid.UUID, revokedBy uuid.UUID,
 		Where("id = ?", id).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return member_roles.ErrMemberRoleNotFound
+			return tenantsErr.ErrMemberRoleNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.RevokedAt != nil {
-		return member_roles.ErrMemberRoleAlreadyRevoked
+		return tenantsErr.ErrMemberRoleAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

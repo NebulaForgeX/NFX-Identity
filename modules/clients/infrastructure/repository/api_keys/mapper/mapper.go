@@ -25,18 +25,18 @@ func APIKeyDomainToModel(ak *api_keys.APIKey) *models.ApiKey {
 		ID:            ak.ID(),
 		KeyID:         ak.KeyID(),
 		ApplicationID: ak.AppID(),
-		KeyHash:      ak.KeyHash(),
-		HashAlg:      ak.HashAlg(),
-		Name:         ak.Name(),
-		Status:       apiKeyStatusDomainToEnum(ak.Status()),
-		ExpiresAt:    ak.ExpiresAt(),
-		CreatedAt:    ak.CreatedAt(),
-		RevokedAt:    ak.RevokedAt(),
-		RevokedBy:    ak.RevokedBy(),
-		RevokeReason: ak.RevokeReason(),
-		LastUsedAt:   ak.LastUsedAt(),
-		CreatedBy:    ak.CreatedBy(),
-		Metadata:     metadata,
+		KeyHash:       ak.KeyHash(),
+		HashAlg:       ak.HashAlg(),
+		Name:          ak.Name(),
+		Status:        apiKeyStatusDomainToEnum(ak.Status()),
+		ExpiresAt:     ak.ExpiresAt(),
+		CreatedAt:     ak.CreatedAt(),
+		RevokedAt:     ak.RevokedAt(),
+		RevokedBy:     ak.RevokedBy(),
+		RevokeReason:  ak.RevokeReason(),
+		LastUsedAt:    ak.LastUsedAt(),
+		CreatedBy:     ak.CreatedBy(),
+		Metadata:      metadata,
 	}
 }
 
@@ -75,16 +75,16 @@ func APIKeyModelToDomain(m *models.ApiKey) *api_keys.APIKey {
 // APIKeyModelToUpdates 将 Model ApiKey 转换为更新字段映射
 func APIKeyModelToUpdates(m *models.ApiKey) map[string]any {
 	return map[string]any{
-		models.ApiKeyCols.KeyHash:    m.KeyHash,
-		models.ApiKeyCols.HashAlg:    m.HashAlg,
-		models.ApiKeyCols.Name:       m.Name,
-		models.ApiKeyCols.Status:     m.Status,
-		models.ApiKeyCols.ExpiresAt:  m.ExpiresAt,
-		models.ApiKeyCols.RevokedAt:  m.RevokedAt,
-		models.ApiKeyCols.RevokedBy:  m.RevokedBy,
+		models.ApiKeyCols.KeyHash:      m.KeyHash,
+		models.ApiKeyCols.HashAlg:      m.HashAlg,
+		models.ApiKeyCols.Name:         m.Name,
+		models.ApiKeyCols.Status:       m.Status,
+		models.ApiKeyCols.ExpiresAt:    m.ExpiresAt,
+		models.ApiKeyCols.RevokedAt:    m.RevokedAt,
+		models.ApiKeyCols.RevokedBy:    m.RevokedBy,
 		models.ApiKeyCols.RevokeReason: m.RevokeReason,
-		models.ApiKeyCols.LastUsedAt: m.LastUsedAt,
-		models.ApiKeyCols.Metadata:   m.Metadata,
+		models.ApiKeyCols.LastUsedAt:   m.LastUsedAt,
+		models.ApiKeyCols.Metadata:     m.Metadata,
 	}
 }
 

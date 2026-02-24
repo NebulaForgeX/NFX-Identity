@@ -11,14 +11,14 @@ import (
 // HealthHandler 健康检查处理器
 type HealthHandler struct {
 	healthpb.UnimplementedHealthServiceServer
-resourceSvc *resource.Service
+	resourceSvc *resource.Service
 	serviceName string
 }
 
 // NewHealthHandler 创建健康检查处理器
 func NewHealthHandler(resourceSvc *resource.Service, serviceName string) *HealthHandler {
 	return &HealthHandler{
-resourceSvc: resourceSvc,
+		resourceSvc: resourceSvc,
 		serviceName: serviceName,
 	}
 }
@@ -64,9 +64,9 @@ func (h *HealthHandler) GetHealth(ctx context.Context, req *healthpb.GetHealthRe
 	if kafkaErr != nil {
 		errMsg := kafkaErr.Error()
 		infra.Others["kafka"] = &healthpb.ResourceHealth{
-			Healthy:     false,
+			Healthy:      false,
 			ErrorMessage: &errMsg,
-			CheckedAt:   now,
+			CheckedAt:    now,
 		}
 		allHealthy = false
 	} else {
@@ -81,9 +81,9 @@ func (h *HealthHandler) GetHealth(ctx context.Context, req *healthpb.GetHealthRe
 	if rabbitMQErr != nil {
 		errMsg := rabbitMQErr.Error()
 		infra.Others["rabbitmq"] = &healthpb.ResourceHealth{
-			Healthy:     false,
+			Healthy:      false,
 			ErrorMessage: &errMsg,
-			CheckedAt:   now,
+			CheckedAt:    now,
 		}
 		allHealthy = false
 	} else {

@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/refresh_tokens"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*refresh_tokens.Refre
 	var m models.RefreshToken
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, refresh_tokens.ErrRefreshTokenNotFound
+			return nil, authErr.ErrRefreshTokenNotFound
 		}
 		return nil, err
 	}

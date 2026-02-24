@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/domain/tenant_apps"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/tenant_apps/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*tenant_apps.TenantAp
 	var m models.TenantApplication
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, tenant_apps.ErrTenantAppNotFound
+			return nil, tenantsErr.ErrTenantAppNotFound
 		}
 		return nil, err
 	}

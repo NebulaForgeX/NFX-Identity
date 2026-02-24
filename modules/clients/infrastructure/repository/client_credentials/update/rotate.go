@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
 	"nfxid/enums"
-	"nfxid/modules/clients/domain/client_credentials"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -19,7 +19,7 @@ func (h *Handler) Rotate(ctx context.Context, clientID string, newSecretHash, ne
 		Where("client_id = ?", clientID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return client_credentials.ErrClientCredentialNotFound
+			return clientsErr.ErrClientCredentialNotFound
 		}
 		return err
 	}

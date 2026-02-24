@@ -4,7 +4,8 @@ import (
 	"context"
 	"errors"
 	"time"
-	"nfxid/modules/clients/domain/client_scopes"
+
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -19,14 +20,14 @@ func (h *Handler) Revoke(ctx context.Context, id uuid.UUID, revokedBy uuid.UUID,
 		Where("id = ?", id).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return client_scopes.ErrClientScopeNotFound
+			return clientsErr.ErrClientScopeNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.RevokedAt != nil {
-		return client_scopes.ErrClientScopeAlreadyRevoked
+		return clientsErr.ErrClientScopeAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

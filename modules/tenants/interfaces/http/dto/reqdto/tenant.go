@@ -8,8 +8,8 @@ import (
 )
 
 type TenantCreateRequestDTO struct {
-	TenantID      string                 `json:"tenant_id" validate:"required"`
-	Name          string                 `json:"name" validate:"required"`
+	TenantID      string                 `json:"tenant_id"                validate:"required"`
+	Name          string                 `json:"name"                     validate:"required"`
 	DisplayName   *string                `json:"display_name,omitempty"`
 	Status        string                 `json:"status,omitempty"`
 	PrimaryDomain *string                `json:"primary_domain,omitempty"`
@@ -18,15 +18,15 @@ type TenantCreateRequestDTO struct {
 
 type TenantUpdateRequestDTO struct {
 	ID            uuid.UUID              `uri:"id" validate:"required,uuid"`
-	Name          string                 `json:"name" validate:"required"`
-	DisplayName   *string                `json:"display_name,omitempty"`
-	PrimaryDomain *string                `json:"primary_domain,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	Name          string                 `         validate:"required"      json:"name"`
+	DisplayName   *string                `                                  json:"display_name,omitempty"`
+	PrimaryDomain *string                `                                  json:"primary_domain,omitempty"`
+	Metadata      map[string]interface{} `                                  json:"metadata,omitempty"`
 }
 
 type TenantUpdateStatusRequestDTO struct {
 	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
-	Status string    `json:"status" validate:"required"`
+	Status string    `         validate:"required"      json:"status"`
 }
 
 type TenantByIDRequestDTO struct {

@@ -1,8 +1,8 @@
 package grpc
 
 import (
-	systemStateApp "nfxid/modules/system/application/system_state"
 	resourceApp "nfxid/modules/system/application/resource"
+	systemStateApp "nfxid/modules/system/application/system_state"
 	grpcHandler "nfxid/modules/system/interfaces/grpc/handler"
 	"nfxid/pkgs/grpcx/interceptor"
 	"nfxid/pkgs/postgresqlx"
@@ -34,10 +34,10 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register gRPC services
 	systemstatepb.RegisterSystemStateServiceServer(s, grpcHandler.NewSystemStateHandler(d.SystemStateAppSvc()))
-	
+
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "system"))
-	
+
 	// Register schema service (special handler for system to ensure system_state has only one record)
 	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSystemSchemaHandler(d.Postgres().DB(), "system"))
 

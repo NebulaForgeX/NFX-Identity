@@ -69,7 +69,7 @@ func (l *listCache[ID]) GetIDsOrLoad(
 }
 
 type listPage[ID id.IDtype] struct {
-	IDs   []ID  `json:"ids" msgpack:"ids"`
+	IDs   []ID  `json:"ids"   msgpack:"ids"`
 	Total int64 `json:"total" msgpack:"total"`
 }
 

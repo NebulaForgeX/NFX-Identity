@@ -2,7 +2,8 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/client_scopes"
+
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +19,7 @@ func (h *Handler) ByAppIDAndScope(ctx context.Context, appID uuid.UUID, scope st
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return client_scopes.ErrClientScopeNotFound
+		return clientsErr.ErrClientScopeNotFound
 	}
 	return nil
 }

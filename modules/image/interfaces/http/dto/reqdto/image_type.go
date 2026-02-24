@@ -7,7 +7,7 @@ import (
 )
 
 type ImageTypeCreateRequestDTO struct {
-	Key         string  `json:"key" validate:"required"`
+	Key         string  `json:"key"                    validate:"required"`
 	Description *string `json:"description,omitempty"`
 	MaxWidth    *int    `json:"max_width,omitempty"`
 	MaxHeight   *int    `json:"max_height,omitempty"`
@@ -24,7 +24,7 @@ type ImageTypeByKeyRequestDTO struct {
 }
 
 type ImageTypeUpdateRequestDTO struct {
-	Key         string  `json:"key" validate:"required"`
+	Key         string  `json:"key"                    validate:"required"`
 	Description *string `json:"description,omitempty"`
 	MaxWidth    *int    `json:"max_width,omitempty"`
 	MaxHeight   *int    `json:"max_height,omitempty"`

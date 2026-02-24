@@ -1,15 +1,16 @@
 package password_resets
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 )
 
 func (pr *PasswordReset) MarkAsUsed() error {
 	if pr.Status() == ResetStatusUsed {
-		return ErrResetAlreadyUsed
+		return authErr.ErrResetAlreadyUsed
 	}
 	if pr.IsExpired() {
-		return ErrResetExpired
+		return authErr.ErrResetExpired
 	}
 
 	now := time.Now().UTC()
@@ -33,7 +34,7 @@ func (pr *PasswordReset) UpdateStatus(status ResetStatus) error {
 		ResetStatusRevoked: {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidResetStatus
+		return authErr.ErrInvalidResetStatus
 	}
 
 	pr.state.Status = status

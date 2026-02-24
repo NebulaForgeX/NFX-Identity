@@ -6,8 +6,8 @@ import (
 	memberApp "nfxid/modules/tenants/application/members"
 	memberDomain "nfxid/modules/tenants/domain/members"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	memberpb "nfxid/protos/gen/tenants/member"
 	"nfxid/pkgs/errx"
+	memberpb "nfxid/protos/gen/tenants/member"
 
 	"github.com/google/uuid"
 )

@@ -9,9 +9,9 @@ import (
 
 // Service 资源健康检查服务
 type Service struct {
-	postgres   *postgresqlx.Connection
-	cache      *cachex.Connection
-	kafkaCfg   *kafkax.Config
+	postgres    *postgresqlx.Connection
+	cache       *cachex.Connection
+	kafkaCfg    *kafkax.Config
 	rabbitMQCfg *rabbitmqx.Config
 }
 
@@ -23,9 +23,9 @@ func NewService(
 	rabbitMQCfg *rabbitmqx.Config,
 ) *Service {
 	return &Service{
-		postgres:   postgres,
-		cache:      cache,
-		kafkaCfg:   kafkaCfg,
+		postgres:    postgres,
+		cache:       cache,
+		kafkaCfg:    kafkaCfg,
 		rabbitMQCfg: rabbitMQCfg,
 	}
 }

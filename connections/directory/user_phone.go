@@ -37,7 +37,7 @@ func (c *UserPhoneClient) CreateUserPhoneDefault(ctx context.Context, userID, ph
 		Phone:                 phone,
 		CountryCode:           &countryCode,
 		IsPrimary:             true,
-		IsVerified:             true,
+		IsVerified:            true,
 		VerificationCode:      nil,
 		VerificationExpiresAt: nil,
 	}

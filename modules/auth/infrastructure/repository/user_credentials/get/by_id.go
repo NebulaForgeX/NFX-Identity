@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/user_credentials"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/user_credentials/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*user_credentials.Use
 	var m models.UserCredential
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, user_credentials.ErrUserCredentialNotFound
+			return nil, authErr.ErrUserCredentialNotFound
 		}
 		return nil, err
 	}

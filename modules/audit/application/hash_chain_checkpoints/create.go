@@ -2,9 +2,9 @@ package hash_chain_checkpoints
 
 import (
 	"context"
-	"time"
 	hashChainCheckpointCommands "nfxid/modules/audit/application/hash_chain_checkpoints/commands"
 	hashChainCheckpointDomain "nfxid/modules/audit/domain/hash_chain_checkpoints"
+	"time"
 
 	"github.com/google/uuid"
 )

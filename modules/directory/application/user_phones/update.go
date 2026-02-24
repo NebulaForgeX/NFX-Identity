@@ -2,8 +2,8 @@ package user_phones
 
 import (
 	"context"
-	"time"
 	userPhoneCommands "nfxid/modules/directory/application/user_phones/commands"
+	"time"
 )
 
 // SetPrimaryPhone 设置主手机号

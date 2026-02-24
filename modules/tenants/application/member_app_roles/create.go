@@ -2,9 +2,10 @@ package member_app_roles
 
 import (
 	"context"
-	"time"
 	memberAppRoleCommands "nfxid/modules/tenants/application/member_app_roles/commands"
 	memberAppRoleDomain "nfxid/modules/tenants/domain/member_app_roles"
+	tenantsErr "nfxid/errors/src/tenants"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +14,7 @@ import (
 func (s *Service) CreateMemberAppRole(ctx context.Context, cmd memberAppRoleCommands.CreateMemberAppRoleCmd) (uuid.UUID, error) {
 	// Check if member app role already exists
 	if exists, _ := s.memberAppRoleRepo.Check.ByMemberIDAndAppIDAndRoleID(ctx, cmd.MemberID, cmd.AppID, cmd.RoleID); exists {
-		return uuid.Nil, memberAppRoleDomain.ErrMemberAppRoleAlreadyExists
+		return uuid.Nil, tenantsErr.ErrMemberAppRoleAlreadyExists
 	}
 
 	var expiresAt *time.Time

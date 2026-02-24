@@ -9,9 +9,9 @@ import (
 type CredentialStatus string
 
 const (
-	CredentialStatusActive  CredentialStatus = "active"
-	CredentialStatusExpired CredentialStatus = "expired"
-	CredentialStatusRevoked CredentialStatus = "revoked"
+	CredentialStatusActive   CredentialStatus = "active"
+	CredentialStatusExpired  CredentialStatus = "expired"
+	CredentialStatusRevoked  CredentialStatus = "revoked"
 	CredentialStatusRotating CredentialStatus = "rotating"
 )
 
@@ -20,19 +20,19 @@ type ClientCredential struct {
 }
 
 type ClientCredentialState struct {
-	ID          uuid.UUID
-	AppID       uuid.UUID
-	ClientID    string
-	SecretHash  string
-	HashAlg     string
-	Status      CredentialStatus
-	CreatedAt   time.Time
-	RotatedAt   *time.Time
-	ExpiresAt   *time.Time
-	LastUsedAt  *time.Time
-	CreatedBy   *uuid.UUID
-	RevokedAt   *time.Time
-	RevokedBy   *uuid.UUID
+	ID           uuid.UUID
+	AppID        uuid.UUID
+	ClientID     string
+	SecretHash   string
+	HashAlg      string
+	Status       CredentialStatus
+	CreatedAt    time.Time
+	RotatedAt    *time.Time
+	ExpiresAt    *time.Time
+	LastUsedAt   *time.Time
+	CreatedBy    *uuid.UUID
+	RevokedAt    *time.Time
+	RevokedBy    *uuid.UUID
 	RevokeReason *string
 }
 

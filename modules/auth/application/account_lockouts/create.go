@@ -2,16 +2,17 @@ package account_lockouts
 
 import (
 	"context"
-	"time"
+	authErr "nfxid/errors/src/auth"
 	accountLockoutCommands "nfxid/modules/auth/application/account_lockouts/commands"
 	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
+	"time"
 )
 
 // CreateAccountLockout 创建账户锁定
 func (s *Service) CreateAccountLockout(ctx context.Context, cmd accountLockoutCommands.CreateAccountLockoutCmd) error {
 	// Check if account is already locked
 	if exists, _ := s.accountLockoutRepo.Check.ByUserID(ctx, cmd.UserID); exists {
-		return accountLockoutDomain.ErrAccountAlreadyLocked
+		return authErr.ErrAccountAlreadyLocked
 	}
 
 	var lockedUntil *time.Time

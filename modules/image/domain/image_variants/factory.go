@@ -1,6 +1,7 @@
 package image_variants
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,13 +50,13 @@ func NewImageVariantFromState(st ImageVariantState) *ImageVariant {
 
 func validateImageVariantParams(p NewImageVariantParams) error {
 	if p.ImageID == uuid.Nil {
-		return ErrImageIDRequired
+		return imageErr.ErrImageIDRequired
 	}
 	if p.VariantKey == "" {
-		return ErrVariantKeyRequired
+		return imageErr.ErrVariantKeyRequired
 	}
 	if p.StoragePath == "" {
-		return ErrStoragePathRequired
+		return imageErr.ErrStoragePathRequired
 	}
 	return nil
 }

@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
 	"nfxid/enums"
-	"nfxid/modules/tenants/domain/invitations"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -20,14 +20,14 @@ func (h *Handler) Revoke(ctx context.Context, inviteID string, revokedBy uuid.UU
 		Where("invite_id = ?", inviteID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return invitations.ErrInvitationNotFound
+			return tenantsErr.ErrInvitationNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.Status == enums.TenantsInvitationStatusRevoked {
-		return invitations.ErrInvitationAlreadyRevoked
+		return tenantsErr.ErrInvitationAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

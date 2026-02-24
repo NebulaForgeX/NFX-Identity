@@ -9,10 +9,10 @@ import (
 
 // Client Image 服务客户端
 type Client struct {
-	Image       *ImageClient
-	ImageType   *ImageTypeClient
+	Image        *ImageClient
+	ImageType    *ImageTypeClient
 	ImageVariant *ImageVariantClient
-	ImageTag    *ImageTagClient
+	ImageTag     *ImageTagClient
 }
 
 // NewClient 创建 Image 客户端
@@ -23,9 +23,9 @@ func NewClient(
 	imageTagClient imagetagpb.ImageTagServiceClient,
 ) *Client {
 	return &Client{
-		Image:       NewImageClient(imageClient),
-		ImageType:   NewImageTypeClient(imageTypeClient),
+		Image:        NewImageClient(imageClient),
+		ImageType:    NewImageTypeClient(imageTypeClient),
 		ImageVariant: NewImageVariantClient(imageVariantClient),
-		ImageTag:    NewImageTagClient(imageTagClient),
+		ImageTag:     NewImageTagClient(imageTagClient),
 	}
 }

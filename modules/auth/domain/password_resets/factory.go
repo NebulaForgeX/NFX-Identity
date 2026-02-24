@@ -1,6 +1,7 @@
 package password_resets
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
@@ -51,29 +52,29 @@ func NewPasswordResetFromState(st PasswordResetState) *PasswordReset {
 
 func validatePasswordResetParams(p NewPasswordResetParams) error {
 	if p.ResetID == "" {
-		return ErrResetIDRequired
+		return authErr.ErrResetIDRequired
 	}
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if p.Delivery == "" {
-		return ErrDeliveryRequired
+		return authErr.ErrDeliveryRequired
 	}
 	validDeliveries := map[ResetDelivery]struct{}{
 		ResetDeliveryEmail: {},
 		ResetDeliverySMS:   {},
 	}
 	if _, ok := validDeliveries[p.Delivery]; !ok {
-		return ErrInvalidResetDelivery
+		return authErr.ErrInvalidResetDelivery
 	}
 	if p.CodeHash == "" {
-		return ErrCodeHashRequired
+		return authErr.ErrCodeHashRequired
 	}
 	if p.ExpiresAt.IsZero() {
-		return ErrExpiresAtRequired
+		return authErr.ErrExpiresAtRequired
 	}
 	return nil
 }

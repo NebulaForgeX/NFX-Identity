@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
+	"nfxid/connections/directory/dto"
 	authCommands "nfxid/modules/auth/application/auth/commands"
 	authResults "nfxid/modules/auth/application/auth/results"
+	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
 	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
 	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
-	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
-	"nfxid/connections/directory/dto"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -65,7 +65,7 @@ func (s *Service) Signup(ctx context.Context, cmd authCommands.SignupCmd) (authR
 		if err != nil {
 			return authResults.SignupResult{}, fmt.Errorf("invalid user ID: %w", err)
 		}
-		
+
 		// 获取现有用户信息
 		user, err := s.grpcClients.DirectoryClient.User.GetUserByID(ctx, userIDStr)
 		if err != nil {
@@ -184,4 +184,3 @@ func (s *Service) Signup(ctx context.Context, cmd authCommands.SignupCmd) (authR
 		UserID:       userIDStr,
 	}, nil
 }
-

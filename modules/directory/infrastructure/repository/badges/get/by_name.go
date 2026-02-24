@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	dirErr "nfxid/errors/src/directory"
 	"nfxid/modules/directory/domain/badges"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/badges/mapper"
@@ -15,7 +17,7 @@ func (h *Handler) ByName(ctx context.Context, name string) (*badges.Badge, error
 	var m models.Badge
 	if err := h.db.WithContext(ctx).Where("name = ?", name).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, badges.ErrBadgeNotFound
+			return nil, dirErr.ErrBadgeNotFound
 		}
 		return nil, err
 	}

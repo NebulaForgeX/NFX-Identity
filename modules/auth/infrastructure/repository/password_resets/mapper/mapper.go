@@ -47,8 +47,8 @@ func PasswordResetModelToDomain(m *models.PasswordReset) *password_resets.Passwo
 		UAHash:       m.UaHash, // Model 使用 UaHash，Domain 使用 UAHash
 		AttemptCount: m.AttemptCount,
 		Status:       resetStatusEnumToDomain(m.Status),
-		CreatedAt:   m.CreatedAt,
-		UpdatedAt:   m.UpdatedAt,
+		CreatedAt:    m.CreatedAt,
+		UpdatedAt:    m.UpdatedAt,
 	}
 
 	return password_resets.NewPasswordResetFromState(state)
@@ -57,16 +57,16 @@ func PasswordResetModelToDomain(m *models.PasswordReset) *password_resets.Passwo
 // PasswordResetModelToUpdates 将 Model PasswordReset 转换为更新字段映射
 func PasswordResetModelToUpdates(m *models.PasswordReset) map[string]any {
 	return map[string]any{
-		models.PasswordResetCols.UserID:      m.UserID,
-		models.PasswordResetCols.Delivery:    m.Delivery,
-		models.PasswordResetCols.CodeHash:    m.CodeHash,
-		models.PasswordResetCols.ExpiresAt:   m.ExpiresAt,
-		models.PasswordResetCols.UsedAt:     m.UsedAt,
-		models.PasswordResetCols.RequestedIP: m.RequestedIP,
-		models.PasswordResetCols.UaHash:     m.UaHash,
+		models.PasswordResetCols.UserID:       m.UserID,
+		models.PasswordResetCols.Delivery:     m.Delivery,
+		models.PasswordResetCols.CodeHash:     m.CodeHash,
+		models.PasswordResetCols.ExpiresAt:    m.ExpiresAt,
+		models.PasswordResetCols.UsedAt:       m.UsedAt,
+		models.PasswordResetCols.RequestedIP:  m.RequestedIP,
+		models.PasswordResetCols.UaHash:       m.UaHash,
 		models.PasswordResetCols.AttemptCount: m.AttemptCount,
-		models.PasswordResetCols.Status:      m.Status,
-		models.PasswordResetCols.UpdatedAt:   m.UpdatedAt,
+		models.PasswordResetCols.Status:       m.Status,
+		models.PasswordResetCols.UpdatedAt:    m.UpdatedAt,
 	}
 }
 

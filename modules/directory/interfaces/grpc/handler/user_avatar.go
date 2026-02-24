@@ -6,8 +6,8 @@ import (
 	userAvatarApp "nfxid/modules/directory/application/user_avatars"
 	userAvatarAppCommands "nfxid/modules/directory/application/user_avatars/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	useravatarpb "nfxid/protos/gen/directory/user_avatar"
 	"nfxid/pkgs/errx"
+	useravatarpb "nfxid/protos/gen/directory/user_avatar"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +24,10 @@ func NewUserAvatarHandler(userAvatarAppSvc *userAvatarApp.Service) *UserAvatarHa
 }
 
 // CreateOrUpdateUserAvatar 创建或更新用户头像
-func (h *UserAvatarHandler) CreateOrUpdateUserAvatar(ctx context.Context, req *useravatarpb.CreateOrUpdateUserAvatarRequest) (*useravatarpb.CreateOrUpdateUserAvatarResponse, error) {
+func (h *UserAvatarHandler) CreateOrUpdateUserAvatar(
+	ctx context.Context,
+	req *useravatarpb.CreateOrUpdateUserAvatarRequest,
+) (*useravatarpb.CreateOrUpdateUserAvatarResponse, error) {
 	// 解析用户ID和图片ID
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
@@ -59,7 +62,10 @@ func (h *UserAvatarHandler) CreateOrUpdateUserAvatar(ctx context.Context, req *u
 }
 
 // GetUserAvatarByUserID 根据用户ID获取用户头像
-func (h *UserAvatarHandler) GetUserAvatarByUserID(ctx context.Context, req *useravatarpb.GetUserAvatarByUserIDRequest) (*useravatarpb.GetUserAvatarByUserIDResponse, error) {
+func (h *UserAvatarHandler) GetUserAvatarByUserID(
+	ctx context.Context,
+	req *useravatarpb.GetUserAvatarByUserIDRequest,
+) (*useravatarpb.GetUserAvatarByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -75,7 +81,10 @@ func (h *UserAvatarHandler) GetUserAvatarByUserID(ctx context.Context, req *user
 }
 
 // GetUserAvatarByImageID 根据图片ID获取用户头像
-func (h *UserAvatarHandler) GetUserAvatarByImageID(ctx context.Context, req *useravatarpb.GetUserAvatarByImageIDRequest) (*useravatarpb.GetUserAvatarByImageIDResponse, error) {
+func (h *UserAvatarHandler) GetUserAvatarByImageID(
+	ctx context.Context,
+	req *useravatarpb.GetUserAvatarByImageIDRequest,
+) (*useravatarpb.GetUserAvatarByImageIDResponse, error) {
 	imageID, err := uuid.Parse(req.ImageId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

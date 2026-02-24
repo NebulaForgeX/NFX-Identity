@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/user_credentials"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByUserID(ctx context.Context, userID uuid.UUID) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return user_credentials.ErrUserCredentialNotFound
+		return authErr.ErrUserCredentialNotFound
 	}
 	return nil
 }

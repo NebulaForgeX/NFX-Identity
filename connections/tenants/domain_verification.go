@@ -46,7 +46,11 @@ func (c *DomainVerificationClient) GetDomainVerificationByDomain(ctx context.Con
 }
 
 // GetDomainVerificationsByTenantID 根据租户ID获取域名验证列表
-func (c *DomainVerificationClient) GetDomainVerificationsByTenantID(ctx context.Context, tenantID string, status *domainverificationpb.TenantsVerificationStatus) ([]*domainverificationpb.DomainVerification, error) {
+func (c *DomainVerificationClient) GetDomainVerificationsByTenantID(
+	ctx context.Context,
+	tenantID string,
+	status *domainverificationpb.TenantsVerificationStatus,
+) ([]*domainverificationpb.DomainVerification, error) {
 	req := &domainverificationpb.GetDomainVerificationsByTenantIDRequest{
 		TenantId: tenantID,
 		Status:   status,

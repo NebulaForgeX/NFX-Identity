@@ -9,10 +9,10 @@ import (
 
 // Client Clients 服务 gRPC 客户端聚合
 type Client struct {
-	Application       *ApplicationClient
-	ClientCredential  *ClientCredentialClient
-	IpAllowlist       *IpAllowlistClient
-	RateLimit         *RateLimitClient
+	Application      *ApplicationClient
+	ClientCredential *ClientCredentialClient
+	IpAllowlist      *IpAllowlistClient
+	RateLimit        *RateLimitClient
 }
 
 // NewClient 创建 Clients 客户端

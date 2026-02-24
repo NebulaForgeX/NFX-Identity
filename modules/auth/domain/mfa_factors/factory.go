@@ -1,21 +1,22 @@
 package mfa_factors
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewMFAFactorParams struct {
-	FactorID         string
-	TenantID         uuid.UUID
-	UserID           uuid.UUID
-	Type             MFAType
-	SecretEncrypted  *string
-	Phone            *string
-	Email            *string
-	Name             *string
-	Enabled          bool
+	FactorID          string
+	TenantID          uuid.UUID
+	UserID            uuid.UUID
+	Type              MFAType
+	SecretEncrypted   *string
+	Phone             *string
+	Email             *string
+	Name              *string
+	Enabled           bool
 	RecoveryCodesHash *string
 }
 
@@ -53,16 +54,16 @@ func NewMFAFactorFromState(st MFAFactorState) *MFAFactor {
 
 func validateMFAFactorParams(p NewMFAFactorParams) error {
 	if p.FactorID == "" {
-		return ErrFactorIDRequired
+		return authErr.ErrFactorIDRequired
 	}
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if p.Type == "" {
-		return ErrTypeRequired
+		return authErr.ErrTypeRequired
 	}
 	validTypes := map[MFAType]struct{}{
 		MFATypeTOTP:       {},
@@ -72,7 +73,7 @@ func validateMFAFactorParams(p NewMFAFactorParams) error {
 		MFATypeBackupCode: {},
 	}
 	if _, ok := validTypes[p.Type]; !ok {
-		return ErrInvalidMFAType
+		return authErr.ErrInvalidMFAType
 	}
 	return nil
 }

@@ -7,13 +7,13 @@ import (
 )
 
 type ImageVariantCreateRequestDTO struct {
-	ImageID     uuid.UUID `json:"image_id" validate:"required,uuid"`
-	VariantKey  string    `json:"variant_key" validate:"required"`
+	ImageID     uuid.UUID `json:"image_id"            validate:"required,uuid"`
+	VariantKey  string    `json:"variant_key"         validate:"required"`
 	Width       *int      `json:"width,omitempty"`
 	Height      *int      `json:"height,omitempty"`
 	Size        *int64    `json:"size,omitempty"`
 	MimeType    *string   `json:"mime_type,omitempty"`
-	StoragePath string    `json:"storage_path" validate:"required"`
+	StoragePath string    `json:"storage_path"        validate:"required"`
 	URL         *string   `json:"url,omitempty"`
 }
 

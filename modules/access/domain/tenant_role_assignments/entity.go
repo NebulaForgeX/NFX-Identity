@@ -19,9 +19,9 @@ type TenantRoleAssignmentState struct {
 	AssignedBy   *uuid.UUID
 }
 
-func (a *TenantRoleAssignment) ID() uuid.UUID             { return a.state.ID }
-func (a *TenantRoleAssignment) UserID() uuid.UUID        { return a.state.UserID }
-func (a *TenantRoleAssignment) TenantID() uuid.UUID       { return a.state.TenantID }
-func (a *TenantRoleAssignment) TenantRoleID() uuid.UUID   { return a.state.TenantRoleID }
-func (a *TenantRoleAssignment) AssignedAt() time.Time     { return a.state.AssignedAt }
-func (a *TenantRoleAssignment) AssignedBy() *uuid.UUID     { return a.state.AssignedBy }
+func (a *TenantRoleAssignment) ID() uuid.UUID           { return a.state.ID }
+func (a *TenantRoleAssignment) UserID() uuid.UUID       { return a.state.UserID }
+func (a *TenantRoleAssignment) TenantID() uuid.UUID     { return a.state.TenantID }
+func (a *TenantRoleAssignment) TenantRoleID() uuid.UUID { return a.state.TenantRoleID }
+func (a *TenantRoleAssignment) AssignedAt() time.Time   { return a.state.AssignedAt }
+func (a *TenantRoleAssignment) AssignedBy() *uuid.UUID  { return a.state.AssignedBy }

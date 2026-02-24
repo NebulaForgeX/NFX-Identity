@@ -1,6 +1,7 @@
 package hash_chain_checkpoints
 
 import (
+	auditErr "nfxid/errors/src/audit"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,13 +51,13 @@ func NewHashChainCheckpointFromState(st HashChainCheckpointState) *HashChainChec
 
 func validateHashChainCheckpointParams(p NewHashChainCheckpointParams) error {
 	if p.CheckpointID == "" {
-		return ErrCheckpointIDRequired
+		return auditErr.ErrCheckpointIDRequired
 	}
 	if p.PartitionDate.IsZero() {
-		return ErrPartitionDateRequired
+		return auditErr.ErrPartitionDateRequired
 	}
 	if p.CheckpointHash == "" {
-		return ErrCheckpointHashRequired
+		return auditErr.ErrCheckpointHashRequired
 	}
 	return nil
 }

@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/password_resets"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return password_resets.ErrPasswordResetNotFound
+		return authErr.ErrPasswordResetNotFound
 	}
 	return nil
 }

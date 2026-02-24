@@ -30,8 +30,14 @@ func (c *TenantApplicationClient) GetTenantApplicationsByTenantID(ctx context.Co
 	return resp.TenantApplications, nil
 }
 
-func (c *TenantApplicationClient) GetTenantApplicationsByApplicationID(ctx context.Context, applicationID string) ([]*tenantapplicationpb.TenantApplication, error) {
-	resp, err := c.client.GetTenantApplicationsByApplicationID(ctx, &tenantapplicationpb.GetTenantApplicationsByApplicationIDRequest{ApplicationId: applicationID})
+func (c *TenantApplicationClient) GetTenantApplicationsByApplicationID(
+	ctx context.Context,
+	applicationID string,
+) ([]*tenantapplicationpb.TenantApplication, error) {
+	resp, err := c.client.GetTenantApplicationsByApplicationID(
+		ctx,
+		&tenantapplicationpb.GetTenantApplicationsByApplicationIDRequest{ApplicationId: applicationID},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("gRPC call failed: %w", err)
 	}

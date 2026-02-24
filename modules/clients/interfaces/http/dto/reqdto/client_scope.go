@@ -7,8 +7,8 @@ import (
 )
 
 type ClientScopeCreateRequestDTO struct {
-	AppID     uuid.UUID  `json:"app_id" validate:"required"`
-	Scope     string     `json:"scope" validate:"required"`
+	AppID     uuid.UUID  `json:"app_id"               validate:"required"`
+	Scope     string     `json:"scope"                validate:"required"`
 	GrantedBy *uuid.UUID `json:"granted_by,omitempty"`
 	ExpiresAt *string    `json:"expires_at,omitempty"`
 }

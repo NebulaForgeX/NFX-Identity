@@ -24,17 +24,17 @@ import (
 
 type Dependencies struct {
 	healthMgr           *health.Manager
-	cache                *cachex.Connection
-	postgres             *postgresqlx.Connection
-	kafkaConfig          *kafkax.Config
-	busPublisher         *eventbus.BusPublisher
-	rabbitMQConfig       *rabbitmqx.Config
-	tenantRoleAppSvc     *tenantrolesApp.Service
-	superAdminAppSvc     *superadminsApp.Service
-	resourceSvc          *resourceApp.Service
-	userTokenVerifier    token.Verifier
-	serverTokenVerifier  token.Verifier
-	tokenxInstance       *tokenx.Tokenx
+	cache               *cachex.Connection
+	postgres            *postgresqlx.Connection
+	kafkaConfig         *kafkax.Config
+	busPublisher        *eventbus.BusPublisher
+	rabbitMQConfig      *rabbitmqx.Config
+	tenantRoleAppSvc    *tenantrolesApp.Service
+	superAdminAppSvc    *superadminsApp.Service
+	resourceSvc         *resourceApp.Service
+	userTokenVerifier   token.Verifier
+	serverTokenVerifier token.Verifier
+	tokenxInstance      *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -76,31 +76,31 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
 	return &Dependencies{
-		healthMgr:          healthMgr,
-		postgres:           postgres,
-		cache:              cacheConn,
-		kafkaConfig:        &kafkaConfig,
-		busPublisher:       busPublisher,
-		rabbitMQConfig:     &rabbitMQConfig,
-		tenantRoleAppSvc:   tenantRoleAppSvc,
-		superAdminAppSvc:   superAdminAppSvc,
-		resourceSvc:        resourceSvc,
-		userTokenVerifier:  userTokenVerifier,
+		healthMgr:           healthMgr,
+		postgres:            postgres,
+		cache:               cacheConn,
+		kafkaConfig:         &kafkaConfig,
+		busPublisher:        busPublisher,
+		rabbitMQConfig:      &rabbitMQConfig,
+		tenantRoleAppSvc:    tenantRoleAppSvc,
+		superAdminAppSvc:    superAdminAppSvc,
+		resourceSvc:         resourceSvc,
+		userTokenVerifier:   userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
-		tokenxInstance:     tokenxInstance,
+		tokenxInstance:      tokenxInstance,
 	}, nil
 }
 
-func (d *Dependencies) HealthMgr() *health.Manager         { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service  { return d.resourceSvc }
-func (d *Dependencies) TenantRoleAppSvc() *tenantrolesApp.Service   { return d.tenantRoleAppSvc }
-func (d *Dependencies) SuperAdminAppSvc() *superadminsApp.Service   { return d.superAdminAppSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection           { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier   { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config        { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config  { return d.rabbitMQConfig }
+func (d *Dependencies) HealthMgr() *health.Manager                { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service         { return d.resourceSvc }
+func (d *Dependencies) TenantRoleAppSvc() *tenantrolesApp.Service { return d.tenantRoleAppSvc }
+func (d *Dependencies) SuperAdminAppSvc() *superadminsApp.Service { return d.superAdminAppSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection         { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier         { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier       { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config               { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher      { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config         { return d.rabbitMQConfig }
 
 func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()

@@ -5,8 +5,8 @@ import (
 
 	userBadgeApp "nfxid/modules/directory/application/user_badges"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	userbadgepb "nfxid/protos/gen/directory/user_badge"
 	"nfxid/pkgs/errx"
+	userbadgepb "nfxid/protos/gen/directory/user_badge"
 
 	"github.com/google/uuid"
 )
@@ -39,7 +39,10 @@ func (h *UserBadgeHandler) GetUserBadgeByID(ctx context.Context, req *userbadgep
 }
 
 // GetUserBadgesByUserID 根据用户ID获取用户徽章列表
-func (h *UserBadgeHandler) GetUserBadgesByUserID(ctx context.Context, req *userbadgepb.GetUserBadgesByUserIDRequest) (*userbadgepb.GetUserBadgesByUserIDResponse, error) {
+func (h *UserBadgeHandler) GetUserBadgesByUserID(
+	ctx context.Context,
+	req *userbadgepb.GetUserBadgesByUserIDRequest,
+) (*userbadgepb.GetUserBadgesByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -55,7 +58,10 @@ func (h *UserBadgeHandler) GetUserBadgesByUserID(ctx context.Context, req *userb
 }
 
 // GetUserBadgesByBadgeID 根据徽章ID获取用户徽章列表
-func (h *UserBadgeHandler) GetUserBadgesByBadgeID(ctx context.Context, req *userbadgepb.GetUserBadgesByBadgeIDRequest) (*userbadgepb.GetUserBadgesByBadgeIDResponse, error) {
+func (h *UserBadgeHandler) GetUserBadgesByBadgeID(
+	ctx context.Context,
+	req *userbadgepb.GetUserBadgesByBadgeIDRequest,
+) (*userbadgepb.GetUserBadgesByBadgeIDResponse, error) {
 	badgeID, err := uuid.Parse(req.BadgeId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

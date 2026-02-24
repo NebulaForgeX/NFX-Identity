@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/domain/groups"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/groups/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*groups.Group, error)
 	var m models.Group
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, groups.ErrGroupNotFound
+			return nil, tenantsErr.ErrGroupNotFound
 		}
 		return nil, err
 	}

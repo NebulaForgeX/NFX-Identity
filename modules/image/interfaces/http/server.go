@@ -28,13 +28,13 @@ type httpDeps interface {
 
 func NewHTTPServer(d httpDeps) *fiber.App {
 	app := fiber.New(fiber.Config{
-		JSONEncoder:   json.Marshal,
-		JSONDecoder:   json.Unmarshal,
-		ErrorHandler:  fiberx.ErrorHandler,
-		ReadTimeout:   30 * time.Second,
-		WriteTimeout:  30 * time.Second,
-		IdleTimeout:   120 * time.Second,
-		BodyLimit:     10 * 1024 * 1024, // 10MB for file uploads
+		JSONEncoder:  json.Marshal,
+		JSONDecoder:  json.Unmarshal,
+		ErrorHandler: fiberx.ErrorHandler,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  120 * time.Second,
+		BodyLimit:    10 * 1024 * 1024, // 10MB for file uploads
 	})
 
 	app.Use(cors.New(cors.Config{

@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/enums"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -14,8 +14,8 @@ func (h *Handler) Leave(ctx context.Context, memberID uuid.UUID) error {
 	now := time.Now().UTC()
 	status := enums.TenantsMemberStatusRemoved
 	updates := map[string]any{
-		models.MemberCols.Status:   status,
-		models.MemberCols.LeftAt:   &now,
+		models.MemberCols.Status:    status,
+		models.MemberCols.LeftAt:    &now,
 		models.MemberCols.UpdatedAt: now,
 	}
 

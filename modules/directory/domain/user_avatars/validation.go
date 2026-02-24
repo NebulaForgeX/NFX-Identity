@@ -1,13 +1,17 @@
 package user_avatars
 
-import "github.com/google/uuid"
+import (
+	dirErr "nfxid/errors/src/directory"
+
+	"github.com/google/uuid"
+)
 
 func (ua *UserAvatar) Validate() error {
 	if ua.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if ua.ImageID() == uuid.Nil {
-		return ErrImageIDRequired
+		return dirErr.ErrImageIDRequired
 	}
 	return nil
 }

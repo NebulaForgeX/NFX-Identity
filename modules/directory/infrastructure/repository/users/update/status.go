@@ -2,10 +2,10 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/directory/domain/users"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/users/mapper"
+	"time"
 
 	"github.com/google/uuid"
 )

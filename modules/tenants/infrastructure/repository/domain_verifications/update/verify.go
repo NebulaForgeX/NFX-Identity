@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
 	"nfxid/enums"
-	"nfxid/modules/tenants/domain/domain_verifications"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -20,7 +20,7 @@ func (h *Handler) Verify(ctx context.Context, id uuid.UUID) error {
 		Where("id = ?", id).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return domain_verifications.ErrDomainVerificationNotFound
+			return tenantsErr.ErrDomainVerificationNotFound
 		}
 		return err
 	}
@@ -28,7 +28,7 @@ func (h *Handler) Verify(ctx context.Context, id uuid.UUID) error {
 	now := time.Now().UTC()
 	status := enums.TenantsVerificationStatusVerified
 	updates := map[string]any{
-		models.DomainVerificationCols.Status:    status,
+		models.DomainVerificationCols.Status:     status,
 		models.DomainVerificationCols.VerifiedAt: &now,
 	}
 

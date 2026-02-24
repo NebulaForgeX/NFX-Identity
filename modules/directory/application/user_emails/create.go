@@ -2,6 +2,7 @@ package user_emails
 
 import (
 	"context"
+	dirErr "nfxid/errors/src/directory"
 	userEmailCommands "nfxid/modules/directory/application/user_emails/commands"
 	userEmailDomain "nfxid/modules/directory/domain/user_emails"
 
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateUserEmail(ctx context.Context, cmd userEmailCommands.CreateUserEmailCmd) (uuid.UUID, error) {
 	// Check if email already exists
 	if exists, _ := s.userEmailRepo.Check.ByEmail(ctx, cmd.Email); exists {
-		return uuid.Nil, userEmailDomain.ErrEmailAlreadyExists
+		return uuid.Nil, dirErr.ErrEmailAlreadyExists
 	}
 
 	// Create domain entity

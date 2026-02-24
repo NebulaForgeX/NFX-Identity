@@ -2,9 +2,9 @@ package trusted_devices
 
 import (
 	"context"
-	"time"
 	trustedDeviceCommands "nfxid/modules/auth/application/trusted_devices/commands"
 	trustedDeviceDomain "nfxid/modules/auth/domain/trusted_devices"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -19,14 +19,14 @@ func (s *Service) CreateTrustedDevice(ctx context.Context, cmd trustedDeviceComm
 
 	// Create domain entity
 	trustedDevice, err := trustedDeviceDomain.NewTrustedDevice(trustedDeviceDomain.NewTrustedDeviceParams{
-		DeviceID:             cmd.DeviceID,
-		UserID:               cmd.UserID,
-		TenantID:             cmd.TenantID,
+		DeviceID:              cmd.DeviceID,
+		UserID:                cmd.UserID,
+		TenantID:              cmd.TenantID,
 		DeviceFingerprintHash: cmd.DeviceFingerprintHash,
-		DeviceName:           cmd.DeviceName,
-		TrustedUntil:         trustedUntil,
-		IP:                   cmd.IP,
-		UAHash:               cmd.UAHash,
+		DeviceName:            cmd.DeviceName,
+		TrustedUntil:          trustedUntil,
+		IP:                    cmd.IP,
+		UAHash:                cmd.UAHash,
 	})
 	if err != nil {
 		return uuid.Nil, err

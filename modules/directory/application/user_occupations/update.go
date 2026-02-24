@@ -2,8 +2,8 @@ package user_occupations
 
 import (
 	"context"
-	"time"
 	userOccupationCommands "nfxid/modules/directory/application/user_occupations/commands"
+	"time"
 )
 
 // UpdateUserOccupation 更新用户职业经历

@@ -20,7 +20,7 @@ func (h *Handler) ByImageID(ctx context.Context, imageID uuid.UUID) ([]*image_ta
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*image_tags.ImageTag, len(ms))
 	for i := range ms {
 		result[i] = mapper.ImageTagModelToDomain(&ms[i])

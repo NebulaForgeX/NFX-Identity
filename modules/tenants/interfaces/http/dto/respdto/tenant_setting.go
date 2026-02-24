@@ -9,17 +9,17 @@ import (
 )
 
 type TenantSettingDTO struct {
-	ID                 uuid.UUID              `json:"id"`
-	TenantID           uuid.UUID              `json:"tenant_id"`
-	EnforceMFA         bool                   `json:"enforce_mfa"`
-	AllowedEmailDomains []string              `json:"allowed_email_domains,omitempty"`
-	SessionTTLMinutes  *int                   `json:"session_ttl_minutes,omitempty"`
-	PasswordPolicy     map[string]interface{} `json:"password_policy,omitempty"`
-	LoginPolicy        map[string]interface{} `json:"login_policy,omitempty"`
-	MFAPolicy          map[string]interface{} `json:"mfa_policy,omitempty"`
-	CreatedAt          time.Time              `json:"created_at"`
-	UpdatedAt          time.Time              `json:"updated_at"`
-	UpdatedBy          *uuid.UUID             `json:"updated_by,omitempty"`
+	ID                  uuid.UUID              `json:"id"`
+	TenantID            uuid.UUID              `json:"tenant_id"`
+	EnforceMFA          bool                   `json:"enforce_mfa"`
+	AllowedEmailDomains []string               `json:"allowed_email_domains,omitempty"`
+	SessionTTLMinutes   *int                   `json:"session_ttl_minutes,omitempty"`
+	PasswordPolicy      map[string]interface{} `json:"password_policy,omitempty"`
+	LoginPolicy         map[string]interface{} `json:"login_policy,omitempty"`
+	MFAPolicy           map[string]interface{} `json:"mfa_policy,omitempty"`
+	CreatedAt           time.Time              `json:"created_at"`
+	UpdatedAt           time.Time              `json:"updated_at"`
+	UpdatedBy           *uuid.UUID             `json:"updated_by,omitempty"`
 }
 
 // TenantSettingROToDTO converts application TenantSettingRO to response DTO
@@ -29,17 +29,17 @@ func TenantSettingROToDTO(v *tenantSettingAppResult.TenantSettingRO) *TenantSett
 	}
 
 	return &TenantSettingDTO{
-		ID:                 v.ID,
-		TenantID:           v.TenantID,
-		EnforceMFA:         v.EnforceMFA,
+		ID:                  v.ID,
+		TenantID:            v.TenantID,
+		EnforceMFA:          v.EnforceMFA,
 		AllowedEmailDomains: v.AllowedEmailDomains,
-		SessionTTLMinutes:  v.SessionTTLMinutes,
-		PasswordPolicy:     v.PasswordPolicy,
-		LoginPolicy:        v.LoginPolicy,
-		MFAPolicy:          v.MFAPolicy,
-		CreatedAt:          v.CreatedAt,
-		UpdatedAt:          v.UpdatedAt,
-		UpdatedBy:          v.UpdatedBy,
+		SessionTTLMinutes:   v.SessionTTLMinutes,
+		PasswordPolicy:      v.PasswordPolicy,
+		LoginPolicy:         v.LoginPolicy,
+		MFAPolicy:           v.MFAPolicy,
+		CreatedAt:           v.CreatedAt,
+		UpdatedAt:           v.UpdatedAt,
+		UpdatedBy:           v.UpdatedBy,
 	}
 }
 

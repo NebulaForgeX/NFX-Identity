@@ -1,12 +1,13 @@
 package images
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 )
 
 func (i *Image) UpdateURL(url string) error {
 	if i.DeletedAt() != nil {
-		return ErrImageNotFound
+		return imageErr.ErrImageNotFound
 	}
 	i.state.URL = &url
 	i.state.UpdatedAt = time.Now().UTC()
@@ -15,7 +16,7 @@ func (i *Image) UpdateURL(url string) error {
 
 func (i *Image) UpdatePublic(isPublic bool) error {
 	if i.DeletedAt() != nil {
-		return ErrImageNotFound
+		return imageErr.ErrImageNotFound
 	}
 	i.state.IsPublic = isPublic
 	i.state.UpdatedAt = time.Now().UTC()
@@ -24,7 +25,7 @@ func (i *Image) UpdatePublic(isPublic bool) error {
 
 func (i *Image) UpdateMetadata(metadata map[string]interface{}) error {
 	if i.DeletedAt() != nil {
-		return ErrImageNotFound
+		return imageErr.ErrImageNotFound
 	}
 	if metadata == nil {
 		return nil

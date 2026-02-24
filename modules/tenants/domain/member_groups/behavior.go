@@ -1,6 +1,7 @@
 package member_groups
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (mg *MemberGroup) Revoke(revokedBy uuid.UUID) error {
 	if mg.RevokedAt() != nil {
-		return ErrMemberGroupAlreadyRevoked
+		return tenantsErr.ErrMemberGroupAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

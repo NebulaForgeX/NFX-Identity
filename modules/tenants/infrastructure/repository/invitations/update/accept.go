@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
 	"nfxid/enums"
-	"nfxid/modules/tenants/domain/invitations"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -20,19 +20,19 @@ func (h *Handler) Accept(ctx context.Context, inviteID string, userID uuid.UUID)
 		Where("invite_id = ?", inviteID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return invitations.ErrInvitationNotFound
+			return tenantsErr.ErrInvitationNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经接受
 	if m.Status == enums.TenantsInvitationStatusAccepted {
-		return invitations.ErrInvitationAlreadyAccepted
+		return tenantsErr.ErrInvitationAlreadyAccepted
 	}
 
 	// 检查是否已过期
 	if m.ExpiresAt.Before(time.Now().UTC()) {
-		return invitations.ErrInvitationExpired
+		return tenantsErr.ErrInvitationExpired
 	}
 
 	now := time.Now().UTC()
@@ -40,7 +40,7 @@ func (h *Handler) Accept(ctx context.Context, inviteID string, userID uuid.UUID)
 	updates := map[string]any{
 		models.InvitationCols.Status:           status,
 		models.InvitationCols.AcceptedByUserID: &userID,
-		models.InvitationCols.AcceptedAt:      &now,
+		models.InvitationCols.AcceptedAt:       &now,
 	}
 
 	return h.db.WithContext(ctx).

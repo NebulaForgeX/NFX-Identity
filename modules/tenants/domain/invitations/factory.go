@@ -1,21 +1,22 @@
 package invitations
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewInvitationParams struct {
-	InviteID    string
-	TenantID    uuid.UUID
-	Email       string
-	TokenHash   string
-	ExpiresAt   time.Time
-	Status      InvitationStatus
-	InvitedBy   uuid.UUID
-	RoleIDs     []uuid.UUID
-	Metadata    map[string]interface{}
+	InviteID  string
+	TenantID  uuid.UUID
+	Email     string
+	TokenHash string
+	ExpiresAt time.Time
+	Status    InvitationStatus
+	InvitedBy uuid.UUID
+	RoleIDs   []uuid.UUID
+	Metadata  map[string]interface{}
 }
 
 func NewInvitation(p NewInvitationParams) (*Invitation, error) {
@@ -35,17 +36,17 @@ func NewInvitation(p NewInvitationParams) (*Invitation, error) {
 
 	now := time.Now().UTC()
 	return NewInvitationFromState(InvitationState{
-		ID:              id,
-		InviteID:        p.InviteID,
-		TenantID:        p.TenantID,
-		Email:           p.Email,
-		TokenHash:       p.TokenHash,
-		ExpiresAt:       p.ExpiresAt,
-		Status:          status,
-		InvitedBy:       p.InvitedBy,
-		InvitedAt:       now,
-		RoleIDs:         p.RoleIDs,
-		Metadata:        p.Metadata,
+		ID:        id,
+		InviteID:  p.InviteID,
+		TenantID:  p.TenantID,
+		Email:     p.Email,
+		TokenHash: p.TokenHash,
+		ExpiresAt: p.ExpiresAt,
+		Status:    status,
+		InvitedBy: p.InvitedBy,
+		InvitedAt: now,
+		RoleIDs:   p.RoleIDs,
+		Metadata:  p.Metadata,
 	}), nil
 }
 
@@ -55,22 +56,22 @@ func NewInvitationFromState(st InvitationState) *Invitation {
 
 func validateInvitationParams(p NewInvitationParams) error {
 	if p.InviteID == "" {
-		return ErrInviteIDRequired
+		return tenantsErr.ErrInviteIDRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if p.Email == "" {
-		return ErrEmailRequired
+		return tenantsErr.ErrEmailRequired
 	}
 	if p.TokenHash == "" {
-		return ErrTokenHashRequired
+		return tenantsErr.ErrTokenHashRequired
 	}
 	if p.ExpiresAt.IsZero() {
-		return ErrExpiresAtRequired
+		return tenantsErr.ErrExpiresAtRequired
 	}
 	if p.InvitedBy == uuid.Nil {
-		return ErrInvitedByRequired
+		return tenantsErr.ErrInvitedByRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[InvitationStatus]struct{}{
@@ -80,7 +81,7 @@ func validateInvitationParams(p NewInvitationParams) error {
 			InvitationStatusRevoked:  {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidInvitationStatus
+			return tenantsErr.ErrInvalidInvitationStatus
 		}
 	}
 	return nil

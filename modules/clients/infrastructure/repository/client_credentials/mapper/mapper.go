@@ -13,20 +13,20 @@ func ClientCredentialDomainToModel(cc *client_credentials.ClientCredential) *mod
 	}
 
 	return &models.ClientCredential{
-		ID:           cc.ID(),
+		ID:            cc.ID(),
 		ApplicationID: cc.AppID(),
-		ClientID:     cc.ClientID(),
-		SecretHash:   cc.SecretHash(),
-		HashAlg:      cc.HashAlg(),
-		Status:       credentialStatusDomainToEnum(cc.Status()),
-		CreatedAt:    cc.CreatedAt(),
-		RotatedAt:    cc.RotatedAt(),
-		ExpiresAt:    cc.ExpiresAt(),
-		LastUsedAt:   cc.LastUsedAt(),
-		CreatedBy:    cc.CreatedBy(),
-		RevokedAt:    cc.RevokedAt(),
-		RevokedBy:    cc.RevokedBy(),
-		RevokeReason: cc.RevokeReason(),
+		ClientID:      cc.ClientID(),
+		SecretHash:    cc.SecretHash(),
+		HashAlg:       cc.HashAlg(),
+		Status:        credentialStatusDomainToEnum(cc.Status()),
+		CreatedAt:     cc.CreatedAt(),
+		RotatedAt:     cc.RotatedAt(),
+		ExpiresAt:     cc.ExpiresAt(),
+		LastUsedAt:    cc.LastUsedAt(),
+		CreatedBy:     cc.CreatedBy(),
+		RevokedAt:     cc.RevokedAt(),
+		RevokedBy:     cc.RevokedBy(),
+		RevokeReason:  cc.RevokeReason(),
 	}
 }
 
@@ -61,12 +61,12 @@ func ClientCredentialModelToUpdates(m *models.ClientCredential) map[string]any {
 	return map[string]any{
 		models.ClientCredentialCols.SecretHash:   m.SecretHash,
 		models.ClientCredentialCols.HashAlg:      m.HashAlg,
-		models.ClientCredentialCols.Status:      m.Status,
+		models.ClientCredentialCols.Status:       m.Status,
 		models.ClientCredentialCols.RotatedAt:    m.RotatedAt,
 		models.ClientCredentialCols.ExpiresAt:    m.ExpiresAt,
 		models.ClientCredentialCols.LastUsedAt:   m.LastUsedAt,
-		models.ClientCredentialCols.RevokedAt:     m.RevokedAt,
-		models.ClientCredentialCols.RevokedBy:     m.RevokedBy,
+		models.ClientCredentialCols.RevokedAt:    m.RevokedAt,
+		models.ClientCredentialCols.RevokedBy:    m.RevokedBy,
 		models.ClientCredentialCols.RevokeReason: m.RevokeReason,
 	}
 }

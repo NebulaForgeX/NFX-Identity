@@ -5,6 +5,7 @@ import (
 
 	"nfxid/pkgs/postgresqlx"
 	schemapb "nfxid/protos/gen/common/schema"
+
 	"gorm.io/gorm"
 )
 

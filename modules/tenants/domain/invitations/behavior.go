@@ -1,6 +1,7 @@
 package invitations
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,13 +9,13 @@ import (
 
 func (i *Invitation) Accept(userID uuid.UUID) error {
 	if i.Status() == InvitationStatusAccepted {
-		return ErrInvitationAlreadyAccepted
+		return tenantsErr.ErrInvitationAlreadyAccepted
 	}
 	if i.Status() == InvitationStatusRevoked {
-		return ErrInvitationAlreadyRevoked
+		return tenantsErr.ErrInvitationAlreadyRevoked
 	}
 	if i.IsExpired() {
-		return ErrInvitationExpired
+		return tenantsErr.ErrInvitationExpired
 	}
 
 	now := time.Now().UTC()
@@ -26,10 +27,10 @@ func (i *Invitation) Accept(userID uuid.UUID) error {
 
 func (i *Invitation) Revoke(revokedBy uuid.UUID, reason string) error {
 	if i.Status() == InvitationStatusRevoked {
-		return ErrInvitationAlreadyRevoked
+		return tenantsErr.ErrInvitationAlreadyRevoked
 	}
 	if i.Status() == InvitationStatusAccepted {
-		return ErrInvitationAlreadyAccepted
+		return tenantsErr.ErrInvitationAlreadyAccepted
 	}
 
 	now := time.Now().UTC()
@@ -50,7 +51,7 @@ func (i *Invitation) IsValid() bool {
 
 func (i *Invitation) UpdateRoleIDs(roleIDs []uuid.UUID) error {
 	if i.Status() != InvitationStatusPending {
-		return ErrInvitationAlreadyAccepted
+		return tenantsErr.ErrInvitationAlreadyAccepted
 	}
 	i.state.RoleIDs = roleIDs
 	return nil

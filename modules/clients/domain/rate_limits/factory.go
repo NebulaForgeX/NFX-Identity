@@ -1,6 +1,7 @@
 package rate_limits
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -57,10 +58,10 @@ func NewRateLimitFromState(st RateLimitState) *RateLimit {
 
 func validateRateLimitParams(p NewRateLimitParams) error {
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if p.LimitType == "" {
-		return ErrLimitTypeRequired
+		return clientsErr.ErrLimitTypeRequired
 	}
 	validTypes := map[RateLimitType]struct{}{
 		RateLimitTypeRequestsPerSecond: {},
@@ -69,13 +70,13 @@ func validateRateLimitParams(p NewRateLimitParams) error {
 		RateLimitTypeRequestsPerDay:    {},
 	}
 	if _, ok := validTypes[p.LimitType]; !ok {
-		return ErrInvalidRateLimitType
+		return clientsErr.ErrInvalidRateLimitType
 	}
 	if p.LimitValue <= 0 {
-		return ErrLimitValueRequired
+		return clientsErr.ErrLimitValueRequired
 	}
 	if p.WindowSeconds <= 0 {
-		return ErrWindowSecondsRequired
+		return clientsErr.ErrWindowSecondsRequired
 	}
 	return nil
 }

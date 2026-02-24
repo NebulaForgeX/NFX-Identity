@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"nfxid/enums"
-	"nfxid/modules/auth/domain/password_resets"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"time"
 
@@ -19,14 +19,14 @@ func (h *Handler) MarkAsUsed(ctx context.Context, resetID string) error {
 		Where("reset_id = ?", resetID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return password_resets.ErrPasswordResetNotFound
+			return authErr.ErrPasswordResetNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经使用
 	if m.UsedAt != nil {
-		return password_resets.ErrResetAlreadyUsed
+		return authErr.ErrResetAlreadyUsed
 	}
 
 	now := time.Now().UTC()

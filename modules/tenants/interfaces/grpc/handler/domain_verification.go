@@ -6,8 +6,8 @@ import (
 	domainVerificationApp "nfxid/modules/tenants/application/domain_verifications"
 	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 	"nfxid/pkgs/errx"
+	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +24,10 @@ func NewDomainVerificationHandler(domainVerificationAppSvc *domainVerificationAp
 }
 
 // GetDomainVerificationByID 根据ID获取域名验证
-func (h *DomainVerificationHandler) GetDomainVerificationByID(ctx context.Context, req *domainverificationpb.GetDomainVerificationByIDRequest) (*domainverificationpb.GetDomainVerificationByIDResponse, error) {
+func (h *DomainVerificationHandler) GetDomainVerificationByID(
+	ctx context.Context,
+	req *domainverificationpb.GetDomainVerificationByIDRequest,
+) (*domainverificationpb.GetDomainVerificationByIDResponse, error) {
 	domainVerificationID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -40,7 +43,10 @@ func (h *DomainVerificationHandler) GetDomainVerificationByID(ctx context.Contex
 }
 
 // GetDomainVerificationByDomain 根据域名获取域名验证
-func (h *DomainVerificationHandler) GetDomainVerificationByDomain(ctx context.Context, req *domainverificationpb.GetDomainVerificationByDomainRequest) (*domainverificationpb.GetDomainVerificationByDomainResponse, error) {
+func (h *DomainVerificationHandler) GetDomainVerificationByDomain(
+	ctx context.Context,
+	req *domainverificationpb.GetDomainVerificationByDomainRequest,
+) (*domainverificationpb.GetDomainVerificationByDomainResponse, error) {
 	domainVerificationView, err := h.domainVerificationAppSvc.GetDomainVerificationByDomain(ctx, req.Domain)
 	if err != nil {
 		return nil, err
@@ -51,7 +57,10 @@ func (h *DomainVerificationHandler) GetDomainVerificationByDomain(ctx context.Co
 }
 
 // GetDomainVerificationsByTenantID 根据租户ID获取域名验证列表
-func (h *DomainVerificationHandler) GetDomainVerificationsByTenantID(ctx context.Context, req *domainverificationpb.GetDomainVerificationsByTenantIDRequest) (*domainverificationpb.GetDomainVerificationsByTenantIDResponse, error) {
+func (h *DomainVerificationHandler) GetDomainVerificationsByTenantID(
+	ctx context.Context,
+	req *domainverificationpb.GetDomainVerificationsByTenantIDRequest,
+) (*domainverificationpb.GetDomainVerificationsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

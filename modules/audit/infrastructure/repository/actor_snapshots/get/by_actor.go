@@ -23,7 +23,7 @@ func (h *Handler) ByActor(ctx context.Context, actorType actor_snapshots.ActorTy
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*actor_snapshots.ActorSnapshot, len(ms))
 	for i := range ms {
 		result[i] = mapper.ActorSnapshotModelToDomain(&ms[i])

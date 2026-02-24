@@ -23,13 +23,13 @@ type MemberAppRoleState struct {
 	RevokeReason *string
 }
 
-func (mar *MemberAppRole) ID() uuid.UUID            { return mar.state.ID }
-func (mar *MemberAppRole) MemberID() uuid.UUID       { return mar.state.MemberID }
-func (mar *MemberAppRole) AppID() uuid.UUID          { return mar.state.AppID }
-func (mar *MemberAppRole) RoleID() uuid.UUID         { return mar.state.RoleID }
-func (mar *MemberAppRole) AssignedAt() time.Time     { return mar.state.AssignedAt }
-func (mar *MemberAppRole) AssignedBy() *uuid.UUID    { return mar.state.AssignedBy }
-func (mar *MemberAppRole) ExpiresAt() *time.Time     { return mar.state.ExpiresAt }
-func (mar *MemberAppRole) RevokedAt() *time.Time     { return mar.state.RevokedAt }
-func (mar *MemberAppRole) RevokedBy() *uuid.UUID     { return mar.state.RevokedBy }
-func (mar *MemberAppRole) RevokeReason() *string     { return mar.state.RevokeReason }
+func (mar *MemberAppRole) ID() uuid.UUID          { return mar.state.ID }
+func (mar *MemberAppRole) MemberID() uuid.UUID    { return mar.state.MemberID }
+func (mar *MemberAppRole) AppID() uuid.UUID       { return mar.state.AppID }
+func (mar *MemberAppRole) RoleID() uuid.UUID      { return mar.state.RoleID }
+func (mar *MemberAppRole) AssignedAt() time.Time  { return mar.state.AssignedAt }
+func (mar *MemberAppRole) AssignedBy() *uuid.UUID { return mar.state.AssignedBy }
+func (mar *MemberAppRole) ExpiresAt() *time.Time  { return mar.state.ExpiresAt }
+func (mar *MemberAppRole) RevokedAt() *time.Time  { return mar.state.RevokedAt }
+func (mar *MemberAppRole) RevokedBy() *uuid.UUID  { return mar.state.RevokedBy }
+func (mar *MemberAppRole) RevokeReason() *string  { return mar.state.RevokeReason }

@@ -17,4 +17,3 @@ func (s *Service) Update(ctx context.Context, id uuid.UUID, roleKey string, name
 	}
 	return s.repo.Update.Generic(ctx, r)
 }
-

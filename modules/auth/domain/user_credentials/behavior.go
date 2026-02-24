@@ -1,15 +1,16 @@
 package user_credentials
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 )
 
 func (uc *UserCredential) UpdatePassword(passwordHash string, hashAlg string, hashParams map[string]interface{}) error {
 	if uc.DeletedAt() != nil {
-		return ErrUserCredentialNotFound
+		return authErr.ErrUserCredentialNotFound
 	}
 	if passwordHash == "" {
-		return ErrPasswordHashRequired
+		return authErr.ErrPasswordHashRequired
 	}
 
 	now := time.Now().UTC()
@@ -25,7 +26,7 @@ func (uc *UserCredential) UpdatePassword(passwordHash string, hashAlg string, ha
 
 func (uc *UserCredential) UpdateStatus(status CredentialStatus) error {
 	if uc.DeletedAt() != nil {
-		return ErrUserCredentialNotFound
+		return authErr.ErrUserCredentialNotFound
 	}
 	validStatuses := map[CredentialStatus]struct{}{
 		CredentialStatusActive:   {},
@@ -33,7 +34,7 @@ func (uc *UserCredential) UpdateStatus(status CredentialStatus) error {
 		CredentialStatusExpired:  {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidCredentialStatus
+		return authErr.ErrInvalidCredentialStatus
 	}
 
 	uc.state.Status = status
@@ -44,7 +45,7 @@ func (uc *UserCredential) UpdateStatus(status CredentialStatus) error {
 
 func (uc *UserCredential) UpdateLastSuccessLogin() error {
 	if uc.DeletedAt() != nil {
-		return ErrUserCredentialNotFound
+		return authErr.ErrUserCredentialNotFound
 	}
 
 	now := time.Now().UTC()
@@ -55,7 +56,7 @@ func (uc *UserCredential) UpdateLastSuccessLogin() error {
 
 func (uc *UserCredential) SetMustChangePassword(mustChange bool) error {
 	if uc.DeletedAt() != nil {
-		return ErrUserCredentialNotFound
+		return authErr.ErrUserCredentialNotFound
 	}
 
 	uc.state.MustChangePassword = mustChange

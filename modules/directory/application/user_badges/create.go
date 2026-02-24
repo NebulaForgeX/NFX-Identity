@@ -2,9 +2,10 @@ package user_badges
 
 import (
 	"context"
-	"time"
+	dirErr "nfxid/errors/src/directory"
 	userBadgeCommands "nfxid/modules/directory/application/user_badges/commands"
 	userBadgeDomain "nfxid/modules/directory/domain/user_badges"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +14,7 @@ import (
 func (s *Service) CreateUserBadge(ctx context.Context, cmd userBadgeCommands.CreateUserBadgeCmd) (uuid.UUID, error) {
 	// Check if user badge already exists
 	if exists, _ := s.userBadgeRepo.Check.ByUserIDAndBadgeID(ctx, cmd.UserID, cmd.BadgeID); exists {
-		return uuid.Nil, userBadgeDomain.ErrUserBadgeAlreadyExists
+		return uuid.Nil, dirErr.ErrUserBadgeAlreadyExists
 	}
 
 	var earnedAt *time.Time

@@ -3,9 +3,9 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
-	"nfxid/modules/auth/domain/account_lockouts"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -19,14 +19,14 @@ func (h *Handler) Unlock(ctx context.Context, userID uuid.UUID, unlockedBy strin
 		Where("user_id = ?", userID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return account_lockouts.ErrAccountLockoutNotFound
+			return authErr.ErrAccountLockoutNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经解锁
 	if m.UnlockedAt != nil {
-		return account_lockouts.ErrAccountNotLocked
+		return authErr.ErrAccountNotLocked
 	}
 
 	now := time.Now().UTC()

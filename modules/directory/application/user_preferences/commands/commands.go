@@ -24,7 +24,7 @@ type UpdateUserPreferenceCmd struct {
 	Timezone         *string
 	Notifications    map[string]interface{}
 	Privacy          map[string]interface{}
-	Display         map[string]interface{}
+	Display          map[string]interface{}
 	Other            map[string]interface{}
 }
 

@@ -28,17 +28,17 @@ func NewAuthHandler(authSvc *authApp.Service) *AuthHandler {
 // LoginByEmail 处理 POST /auth/login/email
 func (h *AuthHandler) LoginByEmail(c fiber.Ctx) error {
 	if h.authSvc == nil {
-	return errx.Internal("SERVICE_UNAVAILABLE", "login not configured")
+		return errx.Internal("SERVICE_UNAVAILABLE", "login not configured")
 	}
 	var req reqdto.LoginByEmailRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 	if req.Email == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "email is required")
+		return errx.InvalidArg("INVALID_PARAMS", "email is required")
 	}
 	if req.Password == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "password is required")
+		return errx.InvalidArg("INVALID_PARAMS", "password is required")
 	}
 
 	clientIP := fiberx.GetIP(c)
@@ -72,20 +72,20 @@ func (h *AuthHandler) LoginByEmail(c fiber.Ctx) error {
 // LoginByPhone 处理 POST /auth/login/phone
 func (h *AuthHandler) LoginByPhone(c fiber.Ctx) error {
 	if h.authSvc == nil {
-	return errx.Internal("SERVICE_UNAVAILABLE", "login not configured")
+		return errx.Internal("SERVICE_UNAVAILABLE", "login not configured")
 	}
 	var req reqdto.LoginByPhoneRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 	if req.Phone == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "phone is required")
+		return errx.InvalidArg("INVALID_PARAMS", "phone is required")
 	}
 	if req.CountryCode == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "country_code is required")
+		return errx.InvalidArg("INVALID_PARAMS", "country_code is required")
 	}
 	if req.Password == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "password is required")
+		return errx.InvalidArg("INVALID_PARAMS", "password is required")
 	}
 
 	clientIP := fiberx.GetIP(c)
@@ -120,14 +120,14 @@ func (h *AuthHandler) LoginByPhone(c fiber.Ctx) error {
 // Refresh 处理 POST /auth/refresh
 func (h *AuthHandler) Refresh(c fiber.Ctx) error {
 	if h.authSvc == nil {
-	return errx.Internal("SERVICE_UNAVAILABLE", "refresh not configured")
+		return errx.Internal("SERVICE_UNAVAILABLE", "refresh not configured")
 	}
 	var req reqdto.RefreshRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 	if req.RefreshToken == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "refresh_token is required")
+		return errx.InvalidArg("INVALID_PARAMS", "refresh_token is required")
 	}
 
 	clientIP := fiberx.GetIP(c)
@@ -154,14 +154,14 @@ func (h *AuthHandler) Refresh(c fiber.Ctx) error {
 // SendVerificationCode 处理 POST /auth/send-verification-code
 func (h *AuthHandler) SendVerificationCode(c fiber.Ctx) error {
 	if h.authSvc == nil {
-	return errx.Internal("SERVICE_UNAVAILABLE", "verification code service not configured")
+		return errx.Internal("SERVICE_UNAVAILABLE", "verification code service not configured")
 	}
 	var req reqdto.SendVerificationCodeRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 	if req.Email == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "email is required")
+		return errx.InvalidArg("INVALID_PARAMS", "email is required")
 	}
 
 	cmd := authCommands.SendVerificationCodeCmd{
@@ -182,20 +182,20 @@ func (h *AuthHandler) SendVerificationCode(c fiber.Ctx) error {
 // Signup 处理 POST /auth/signup
 func (h *AuthHandler) Signup(c fiber.Ctx) error {
 	if h.authSvc == nil {
-	return errx.Internal("SERVICE_UNAVAILABLE", "signup not configured")
+		return errx.Internal("SERVICE_UNAVAILABLE", "signup not configured")
 	}
 	var req reqdto.SignupRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
 		return errx.ErrInvalidBody.WithCause(err)
 	}
 	if req.Email == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "email is required")
+		return errx.InvalidArg("INVALID_PARAMS", "email is required")
 	}
 	if req.Password == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "password is required")
+		return errx.InvalidArg("INVALID_PARAMS", "password is required")
 	}
 	if req.VerificationCode == "" {
-	return errx.InvalidArg("INVALID_PARAMS", "verification code is required")
+		return errx.InvalidArg("INVALID_PARAMS", "verification code is required")
 	}
 
 	cmd := authCommands.SignupCmd{

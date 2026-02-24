@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/domain/application_roles"
 	"nfxid/modules/access/infrastructure/rdb/models"
 	"nfxid/modules/access/infrastructure/repository/application_roles/mapper"
@@ -17,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*application_roles.Ap
 	var m models.ApplicationRole
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, application_roles.ErrApplicationRoleNotFound
+			return nil, accessErr.ErrApplicationRoleNotFound
 		}
 		return nil, err
 	}

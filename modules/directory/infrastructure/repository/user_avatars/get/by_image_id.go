@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	dirErr "nfxid/errors/src/directory"
 	"nfxid/modules/directory/domain/user_avatars"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/user_avatars/mapper"
@@ -16,7 +18,7 @@ func (h *Handler) ByImageID(ctx context.Context, imageID uuid.UUID) (*user_avata
 	var m models.UserAvatar
 	if err := h.db.WithContext(ctx).Where("image_id = ?", imageID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, user_avatars.ErrUserAvatarNotFound
+			return nil, dirErr.ErrUserAvatarNotFound
 		}
 		return nil, err
 	}

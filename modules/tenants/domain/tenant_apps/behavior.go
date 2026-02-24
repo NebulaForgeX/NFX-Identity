@@ -1,6 +1,7 @@
 package tenant_apps
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 )
 
@@ -11,7 +12,7 @@ func (ta *TenantApp) UpdateStatus(status TenantAppStatus) error {
 		TenantAppStatusSuspended: {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidTenantAppStatus
+		return tenantsErr.ErrInvalidTenantAppStatus
 	}
 
 	ta.state.Status = status

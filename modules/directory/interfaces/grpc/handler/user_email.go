@@ -6,8 +6,8 @@ import (
 	userEmailApp "nfxid/modules/directory/application/user_emails"
 	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	useremailpb "nfxid/protos/gen/directory/user_email"
 	"nfxid/pkgs/errx"
+	useremailpb "nfxid/protos/gen/directory/user_email"
 
 	"github.com/google/uuid"
 )
@@ -74,7 +74,10 @@ func (h *UserEmailHandler) GetUserEmailByID(ctx context.Context, req *useremailp
 }
 
 // GetUserEmailByEmail 根据邮箱地址获取用户邮箱
-func (h *UserEmailHandler) GetUserEmailByEmail(ctx context.Context, req *useremailpb.GetUserEmailByEmailRequest) (*useremailpb.GetUserEmailByEmailResponse, error) {
+func (h *UserEmailHandler) GetUserEmailByEmail(
+	ctx context.Context,
+	req *useremailpb.GetUserEmailByEmailRequest,
+) (*useremailpb.GetUserEmailByEmailResponse, error) {
 	userEmailView, err := h.userEmailAppSvc.GetUserEmailByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -85,7 +88,10 @@ func (h *UserEmailHandler) GetUserEmailByEmail(ctx context.Context, req *userema
 }
 
 // GetUserEmailsByUserID 根据用户ID获取用户邮箱列表
-func (h *UserEmailHandler) GetUserEmailsByUserID(ctx context.Context, req *useremailpb.GetUserEmailsByUserIDRequest) (*useremailpb.GetUserEmailsByUserIDResponse, error) {
+func (h *UserEmailHandler) GetUserEmailsByUserID(
+	ctx context.Context,
+	req *useremailpb.GetUserEmailsByUserIDRequest,
+) (*useremailpb.GetUserEmailsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

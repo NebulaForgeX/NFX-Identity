@@ -4,8 +4,8 @@ import (
 	"context"
 
 	passwordHistoryApp "nfxid/modules/auth/application/password_history"
-	passwordhistorypb "nfxid/protos/gen/auth/password_history"
 	"nfxid/pkgs/errx"
+	passwordhistorypb "nfxid/protos/gen/auth/password_history"
 )
 
 type PasswordHistoryHandler struct {
@@ -20,6 +20,9 @@ func NewPasswordHistoryHandler(passwordHistoryAppSvc *passwordHistoryApp.Service
 }
 
 // GetPasswordHistoryByID 根据ID获取密码历史
-func (h *PasswordHistoryHandler) GetPasswordHistoryByID(ctx context.Context, req *passwordhistorypb.GetPasswordHistoryByIDRequest) (*passwordhistorypb.GetPasswordHistoryByIDResponse, error) {
+func (h *PasswordHistoryHandler) GetPasswordHistoryByID(
+	ctx context.Context,
+	req *passwordhistorypb.GetPasswordHistoryByIDRequest,
+) (*passwordhistorypb.GetPasswordHistoryByIDResponse, error) {
 	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetPasswordHistoryByID not implemented")
 }

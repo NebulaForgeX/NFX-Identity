@@ -6,14 +6,14 @@ import (
 
 // CreateTrustedDeviceCmd 创建受信任设备命令
 type CreateTrustedDeviceCmd struct {
-	DeviceID             string
-	UserID               uuid.UUID
-	TenantID             uuid.UUID
+	DeviceID              string
+	UserID                uuid.UUID
+	TenantID              uuid.UUID
 	DeviceFingerprintHash string
-	DeviceName           *string
-	TrustedUntil         string
-	IP                   *string
-	UAHash               *string
+	DeviceName            *string
+	TrustedUntil          string
+	IP                    *string
+	UAHash                *string
 }
 
 // UpdateLastUsedCmd 更新最后使用时间命令

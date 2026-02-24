@@ -7,8 +7,8 @@ import (
 )
 
 type UserPhoneCreateRequestDTO struct {
-	UserID                uuid.UUID `json:"user_id" validate:"required,uuid"`
-	Phone                 string    `json:"phone" validate:"required"`
+	UserID                uuid.UUID `json:"user_id"                           validate:"required,uuid"`
+	Phone                 string    `json:"phone"                             validate:"required"`
 	CountryCode           *string   `json:"country_code,omitempty"`
 	IsPrimary             bool      `json:"is_primary"`
 	IsVerified            bool      `json:"is_verified"`
@@ -30,8 +30,8 @@ type UserPhoneVerifyRequestDTO struct {
 
 type UserPhoneUpdateVerificationCodeRequestDTO struct {
 	UserPhoneID           uuid.UUID `uri:"user_phone_id" validate:"required,uuid"`
-	VerificationCode      string    `json:"verification_code" validate:"required"`
-	VerificationExpiresAt string    `json:"verification_expires_at" validate:"required"`
+	VerificationCode      string    `                    validate:"required"      json:"verification_code"`
+	VerificationExpiresAt string    `                    validate:"required"      json:"verification_expires_at"`
 }
 
 func (r *UserPhoneCreateRequestDTO) ToCreateCmd() userPhoneAppCommands.CreateUserPhoneCmd {

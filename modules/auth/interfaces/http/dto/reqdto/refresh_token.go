@@ -8,12 +8,12 @@ import (
 )
 
 type RefreshTokenCreateRequestDTO struct {
-	TokenID   string     `json:"token_id" validate:"required"`
-	UserID    uuid.UUID  `json:"user_id" validate:"required"`
+	TokenID   string     `json:"token_id"             validate:"required"`
+	UserID    uuid.UUID  `json:"user_id"              validate:"required"`
 	AppID     *uuid.UUID `json:"app_id,omitempty"`
 	ClientID  *string    `json:"client_id,omitempty"`
 	SessionID *uuid.UUID `json:"session_id,omitempty"`
-	ExpiresAt string     `json:"expires_at" validate:"required"`
+	ExpiresAt string     `json:"expires_at"           validate:"required"`
 	DeviceID  *string    `json:"device_id,omitempty"`
 	IP        *string    `json:"ip,omitempty"`
 	UAHash    *string    `json:"ua_hash,omitempty"`

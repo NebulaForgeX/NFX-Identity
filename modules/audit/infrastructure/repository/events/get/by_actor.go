@@ -16,14 +16,14 @@ import (
 func (h *Handler) ByActor(ctx context.Context, actorType events.ActorType, actorID uuid.UUID, startTime, endTime *time.Time) ([]*events.Event, error) {
 	query := h.db.WithContext(ctx).
 		Where("actor_type = ? AND actor_id = ?", actorType, actorID)
-	
+
 	if startTime != nil {
 		query = query.Where("occurred_at >= ?", *startTime)
 	}
 	if endTime != nil {
 		query = query.Where("occurred_at <= ?", *endTime)
 	}
-	
+
 	var ms []models.Event
 	if err := query.Find(&ms).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -31,7 +31,7 @@ func (h *Handler) ByActor(ctx context.Context, actorType events.ActorType, actor
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*events.Event, len(ms))
 	for i := range ms {
 		result[i] = mapper.EventModelToDomain(&ms[i])

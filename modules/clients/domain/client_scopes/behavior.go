@@ -1,6 +1,7 @@
 package client_scopes
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (cs *ClientScope) Revoke(revokedBy uuid.UUID, reason string) error {
 	if cs.RevokedAt() != nil {
-		return ErrClientScopeAlreadyRevoked
+		return clientsErr.ErrClientScopeAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

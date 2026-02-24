@@ -20,7 +20,7 @@ func (h *Handler) ByPartitionDate(ctx context.Context, partitionDate time.Time) 
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*hash_chain_checkpoints.HashChainCheckpoint, len(ms))
 	for i := range ms {
 		result[i] = mapper.HashChainCheckpointModelToDomain(&ms[i])

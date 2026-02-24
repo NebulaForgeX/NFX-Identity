@@ -2,10 +2,10 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/domain/password_resets"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/password_resets/mapper"
+	"time"
 )
 
 // UpdateStatus 更新状态，实现 password_resets.Update 接口

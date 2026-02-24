@@ -52,4 +52,3 @@ func BuildInvestorContactEmailHTML(name, email, subject, message string) string 
 
 	return html
 }
-

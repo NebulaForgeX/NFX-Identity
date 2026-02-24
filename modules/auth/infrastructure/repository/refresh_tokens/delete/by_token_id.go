@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/refresh_tokens"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 )
 
@@ -16,7 +16,7 @@ func (h *Handler) ByTokenID(ctx context.Context, tokenID string) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return refresh_tokens.ErrRefreshTokenNotFound
+		return authErr.ErrRefreshTokenNotFound
 	}
 	return nil
 }

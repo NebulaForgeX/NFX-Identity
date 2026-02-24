@@ -1,16 +1,16 @@
 package access
 
 import (
-	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
 	applicationrolepb "nfxid/protos/gen/access/application_role"
+	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
 	superadminpb "nfxid/protos/gen/access/super_admin"
-	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
 	tenantrolepb "nfxid/protos/gen/access/tenant_role"
+	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
 )
 
 // Client Access 服务 gRPC 客户端聚合
 type Client struct {
-	SuperAdmin               *SuperAdminClient
+	SuperAdmin                *SuperAdminClient
 	TenantRole                *TenantRoleClient
 	TenantRoleAssignment      *TenantRoleAssignmentClient
 	ApplicationRole           *ApplicationRoleClient
@@ -26,10 +26,10 @@ func NewClient(
 	applicationRoleAssignmentClient applicationroleassignmentpb.ApplicationRoleAssignmentServiceClient,
 ) *Client {
 	return &Client{
-		SuperAdmin:               NewSuperAdminClient(superAdminClient),
-		TenantRole:               NewTenantRoleClient(tenantRoleClient),
-		TenantRoleAssignment:     NewTenantRoleAssignmentClient(tenantRoleAssignmentClient),
-		ApplicationRole:          NewApplicationRoleClient(applicationRoleClient),
+		SuperAdmin:                NewSuperAdminClient(superAdminClient),
+		TenantRole:                NewTenantRoleClient(tenantRoleClient),
+		TenantRoleAssignment:      NewTenantRoleAssignmentClient(tenantRoleAssignmentClient),
+		ApplicationRole:           NewApplicationRoleClient(applicationRoleClient),
 		ApplicationRoleAssignment: NewApplicationRoleAssignmentClient(applicationRoleAssignmentClient),
 	}
 }

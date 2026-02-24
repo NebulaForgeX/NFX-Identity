@@ -8,12 +8,12 @@ import (
 
 // TokenClaims JWT Token Claims
 type TokenClaims struct {
-	UserID      string   `json:"user_id"`       // 用户ID
-	Username    string   `json:"username"`      // 用户名
-	Email       string   `json:"email"`          // 邮箱
-	Phone       string   `json:"phone"`          // 手机号
-	CountryCode string   `json:"country_code"`   // 国家代码（手机号登录时使用）
-	RoleID      string   `json:"role_id"`       // 角色ID
+	UserID      string    `json:"user_id"`      // 用户ID
+	Username    string    `json:"username"`     // 用户名
+	Email       string    `json:"email"`        // 邮箱
+	Phone       string    `json:"phone"`        // 手机号
+	CountryCode string    `json:"country_code"` // 国家代码（手机号登录时使用）
+	RoleID      string    `json:"role_id"`      // 角色ID
 	Type        TokenType `json:"type"`         // Token 类型：access 或 refresh
 	jwt.RegisteredClaims
 }

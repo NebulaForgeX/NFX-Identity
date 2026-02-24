@@ -20,7 +20,7 @@ func (h *Handler) ByTenantID(ctx context.Context, tenantID uuid.UUID) ([]*event_
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*event_retention_policies.EventRetentionPolicy, len(ms))
 	for i := range ms {
 		result[i] = mapper.EventRetentionPolicyModelToDomain(&ms[i])

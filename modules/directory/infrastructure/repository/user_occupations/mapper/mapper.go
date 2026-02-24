@@ -1,10 +1,10 @@
 package mapper
 
 import (
-	"strings"
 	"nfxid/modules/directory/domain/user_occupations"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/pkgs/utils/timex"
+	"strings"
 )
 
 // UserOccupationDomainToModel 将 Domain UserOccupation 转换为 Model UserOccupation
@@ -27,19 +27,19 @@ func UserOccupationDomainToModel(uo *user_occupations.UserOccupation) *models.Us
 		Company:          uo.Company(),
 		Position:         uo.Position(),
 		Department:       uo.Department(),
-		Industry:          uo.Industry(),
-		Location:          uo.Location(),
-		EmploymentType:    uo.EmploymentType(),
-		StartDate:         uo.StartDate(),
-		EndDate:           uo.EndDate(),
-		IsCurrent:         uo.IsCurrent(),
-		Description:       uo.Description(),
-		Responsibilities:  uo.Responsibilities(),
-		Achievements:      uo.Achievements(),
-		SkillsUsed:         skillsUsedStr,
-		CreatedAt:          uo.CreatedAt(),
-		UpdatedAt:          uo.UpdatedAt(),
-		DeletedAt:          timex.TimeToGormDeletedAt(uo.DeletedAt()),
+		Industry:         uo.Industry(),
+		Location:         uo.Location(),
+		EmploymentType:   uo.EmploymentType(),
+		StartDate:        uo.StartDate(),
+		EndDate:          uo.EndDate(),
+		IsCurrent:        uo.IsCurrent(),
+		Description:      uo.Description(),
+		Responsibilities: uo.Responsibilities(),
+		Achievements:     uo.Achievements(),
+		SkillsUsed:       skillsUsedStr,
+		CreatedAt:        uo.CreatedAt(),
+		UpdatedAt:        uo.UpdatedAt(),
+		DeletedAt:        timex.TimeToGormDeletedAt(uo.DeletedAt()),
 	}
 }
 
@@ -69,19 +69,19 @@ func UserOccupationModelToDomain(m *models.UserOccupation) *user_occupations.Use
 		Company:          m.Company,
 		Position:         m.Position,
 		Department:       m.Department,
-		Industry:          m.Industry,
-		Location:          m.Location,
-		EmploymentType:    m.EmploymentType,
-		StartDate:         m.StartDate,
-		EndDate:           m.EndDate,
-		IsCurrent:         m.IsCurrent,
-		Description:       m.Description,
-		Responsibilities:  m.Responsibilities,
-		Achievements:      m.Achievements,
-		SkillsUsed:         skillsUsed,
-		CreatedAt:          m.CreatedAt,
-		UpdatedAt:          m.UpdatedAt,
-		DeletedAt:          timex.GormDeletedAtToTime(m.DeletedAt),
+		Industry:         m.Industry,
+		Location:         m.Location,
+		EmploymentType:   m.EmploymentType,
+		StartDate:        m.StartDate,
+		EndDate:          m.EndDate,
+		IsCurrent:        m.IsCurrent,
+		Description:      m.Description,
+		Responsibilities: m.Responsibilities,
+		Achievements:     m.Achievements,
+		SkillsUsed:       skillsUsed,
+		CreatedAt:        m.CreatedAt,
+		UpdatedAt:        m.UpdatedAt,
+		DeletedAt:        timex.GormDeletedAtToTime(m.DeletedAt),
 	}
 
 	return user_occupations.NewUserOccupationFromState(state)
@@ -94,17 +94,17 @@ func UserOccupationModelToUpdates(m *models.UserOccupation) map[string]any {
 		models.UserOccupationCols.Company:          m.Company,
 		models.UserOccupationCols.Position:         m.Position,
 		models.UserOccupationCols.Department:       m.Department,
-		models.UserOccupationCols.Industry:          m.Industry,
-		models.UserOccupationCols.Location:          m.Location,
-		models.UserOccupationCols.EmploymentType:    m.EmploymentType,
-		models.UserOccupationCols.StartDate:         m.StartDate,
-		models.UserOccupationCols.EndDate:           m.EndDate,
-		models.UserOccupationCols.IsCurrent:         m.IsCurrent,
-		models.UserOccupationCols.Description:       m.Description,
-		models.UserOccupationCols.Responsibilities:  m.Responsibilities,
-		models.UserOccupationCols.Achievements:      m.Achievements,
-		models.UserOccupationCols.SkillsUsed:         m.SkillsUsed,
-		models.UserOccupationCols.UpdatedAt:          m.UpdatedAt,
-		models.UserOccupationCols.DeletedAt:          m.DeletedAt,
+		models.UserOccupationCols.Industry:         m.Industry,
+		models.UserOccupationCols.Location:         m.Location,
+		models.UserOccupationCols.EmploymentType:   m.EmploymentType,
+		models.UserOccupationCols.StartDate:        m.StartDate,
+		models.UserOccupationCols.EndDate:          m.EndDate,
+		models.UserOccupationCols.IsCurrent:        m.IsCurrent,
+		models.UserOccupationCols.Description:      m.Description,
+		models.UserOccupationCols.Responsibilities: m.Responsibilities,
+		models.UserOccupationCols.Achievements:     m.Achievements,
+		models.UserOccupationCols.SkillsUsed:       m.SkillsUsed,
+		models.UserOccupationCols.UpdatedAt:        m.UpdatedAt,
+		models.UserOccupationCols.DeletedAt:        m.DeletedAt,
 	}
 }

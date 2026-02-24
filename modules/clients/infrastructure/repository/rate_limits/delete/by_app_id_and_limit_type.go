@@ -2,6 +2,7 @@ package delete
 
 import (
 	"context"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/rate_limits"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
@@ -20,7 +21,7 @@ func (h *Handler) ByAppIDAndLimitType(ctx context.Context, appID uuid.UUID, limi
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return rate_limits.ErrRateLimitNotFound
+		return clientsErr.ErrRateLimitNotFound
 	}
 	return nil
 }

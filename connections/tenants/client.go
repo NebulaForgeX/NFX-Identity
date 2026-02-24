@@ -4,10 +4,10 @@ import (
 	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 	grouppb "nfxid/protos/gen/tenants/group"
 	invitationpb "nfxid/protos/gen/tenants/invitation"
-	membergrouppb "nfxid/protos/gen/tenants/member_group"
 	memberpb "nfxid/protos/gen/tenants/member"
-	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
+	membergrouppb "nfxid/protos/gen/tenants/member_group"
 	tenantpb "nfxid/protos/gen/tenants/tenant"
+	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
 	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
 )
 
@@ -37,11 +37,11 @@ func NewClient(
 	return &Client{
 		Tenant:             NewTenantClient(tenantClient),
 		TenantApplication:  NewTenantApplicationClient(tenantApplicationClient),
-		TenantSetting:     NewTenantSettingClient(tenantSettingClient),
-		Member:            NewMemberClient(memberClient),
-		Group:             NewGroupClient(groupClient),
-		Invitation:        NewInvitationClient(invitationClient),
-		MemberGroup:       NewMemberGroupClient(memberGroupClient),
+		TenantSetting:      NewTenantSettingClient(tenantSettingClient),
+		Member:             NewMemberClient(memberClient),
+		Group:              NewGroupClient(groupClient),
+		Invitation:         NewInvitationClient(invitationClient),
+		MemberGroup:        NewMemberGroupClient(memberGroupClient),
 		DomainVerification: NewDomainVerificationClient(domainVerificationClient),
 	}
 }

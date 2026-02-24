@@ -32,7 +32,9 @@ func (t *Tokenx) GenerateTokenPair(userID, username, email, phone, countryCode, 
 }
 
 // GenerateTokenPairWithRefreshID 生成 Token 对（refresh token 带 token_id/jti）
-func (t *Tokenx) GenerateTokenPairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID string) (accessToken, refreshToken string, err error) {
+func (t *Tokenx) GenerateTokenPairWithRefreshID(
+	userID, username, email, phone, countryCode, roleID, refreshTokenID string,
+) (accessToken, refreshToken string, err error) {
 	return t.generator.GenerateTokenPairWithRefreshID(userID, username, email, phone, countryCode, roleID, refreshTokenID)
 }
 

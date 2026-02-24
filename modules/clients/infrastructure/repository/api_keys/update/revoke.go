@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
 	"nfxid/enums"
-	"nfxid/modules/clients/domain/api_keys"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -20,21 +20,21 @@ func (h *Handler) Revoke(ctx context.Context, keyID string, revokedBy uuid.UUID,
 		Where("key_id = ?", keyID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return api_keys.ErrAPIKeyNotFound
+			return clientsErr.ErrAPIKeyNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.Status == enums.ClientsApiKeyStatusRevoked {
-		return api_keys.ErrAPIKeyAlreadyRevoked
+		return clientsErr.ErrAPIKeyAlreadyRevoked
 	}
 
 	now := time.Now().UTC()
 	updates := map[string]any{
-		models.ApiKeyCols.Status:      enums.ClientsApiKeyStatusRevoked,
-		models.ApiKeyCols.RevokedAt:   &now,
-		models.ApiKeyCols.RevokedBy:   &revokedBy,
+		models.ApiKeyCols.Status:       enums.ClientsApiKeyStatusRevoked,
+		models.ApiKeyCols.RevokedAt:    &now,
+		models.ApiKeyCols.RevokedBy:    &revokedBy,
 		models.ApiKeyCols.RevokeReason: &reason,
 	}
 

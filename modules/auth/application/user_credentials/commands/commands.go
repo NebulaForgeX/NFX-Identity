@@ -8,19 +8,19 @@ import (
 
 // CreateUserCredentialCmd 创建用户凭证命令
 type CreateUserCredentialCmd struct {
-	UserID            uuid.UUID
-	CredentialType    user_credentials.CredentialType
-	PasswordHash      *string
-	HashAlg           *string
-	HashParams        map[string]interface{}
-	Status            user_credentials.CredentialStatus
+	UserID             uuid.UUID
+	CredentialType     user_credentials.CredentialType
+	PasswordHash       *string
+	HashAlg            *string
+	HashParams         map[string]interface{}
+	Status             user_credentials.CredentialStatus
 	MustChangePassword bool
 }
 
 // UpdateUserCredentialCmd 更新用户凭证命令
 type UpdateUserCredentialCmd struct {
-	UserCredentialID uuid.UUID
-	Status           user_credentials.CredentialStatus
+	UserCredentialID   uuid.UUID
+	Status             user_credentials.CredentialStatus
 	MustChangePassword bool
 }
 

@@ -7,7 +7,7 @@ import (
 )
 
 type BadgeCreateRequestDTO struct {
-	Name        string  `json:"name" validate:"required"`
+	Name        string  `json:"name"                  validate:"required"`
 	Description *string `json:"description,omitempty"`
 	IconURL     *string `json:"icon_url,omitempty"`
 	Color       *string `json:"color,omitempty"`
@@ -17,11 +17,11 @@ type BadgeCreateRequestDTO struct {
 
 type BadgeUpdateRequestDTO struct {
 	ID          uuid.UUID `uri:"id" validate:"required,uuid"`
-	Name        string    `json:"name" validate:"required"`
-	Description *string   `json:"description,omitempty"`
-	IconURL     *string   `json:"icon_url,omitempty"`
-	Color       *string   `json:"color,omitempty"`
-	Category    *string   `json:"category,omitempty"`
+	Name        string    `         validate:"required"      json:"name"`
+	Description *string   `                                  json:"description,omitempty"`
+	IconURL     *string   `                                  json:"icon_url,omitempty"`
+	Color       *string   `                                  json:"color,omitempty"`
+	Category    *string   `                                  json:"category,omitempty"`
 }
 
 type BadgeByIDRequestDTO struct {

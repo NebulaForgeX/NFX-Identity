@@ -1,16 +1,20 @@
 package apps
 
-import "github.com/google/uuid"
+import (
+	clientsErr "nfxid/errors/src/clients"
+
+	"github.com/google/uuid"
+)
 
 func (a *App) Validate() error {
 	if a.AppID() == "" {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if a.Name() == "" {
-		return ErrNameRequired
+		return clientsErr.ErrNameRequired
 	}
 	if a.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return clientsErr.ErrTenantIDRequired
 	}
 	validTypes := map[AppType]struct{}{
 		AppTypeServer:     {},
@@ -20,7 +24,7 @@ func (a *App) Validate() error {
 		AppTypeThirdParty: {},
 	}
 	if _, ok := validTypes[a.Type()]; !ok {
-		return ErrInvalidAppType
+		return clientsErr.ErrInvalidAppType
 	}
 	validStatuses := map[AppStatus]struct{}{
 		AppStatusActive:    {},
@@ -29,7 +33,7 @@ func (a *App) Validate() error {
 		AppStatusPending:   {},
 	}
 	if _, ok := validStatuses[a.Status()]; !ok {
-		return ErrInvalidAppStatus
+		return clientsErr.ErrInvalidAppStatus
 	}
 	validEnvironments := map[Environment]struct{}{
 		EnvironmentProduction:  {},
@@ -38,7 +42,7 @@ func (a *App) Validate() error {
 		EnvironmentTest:        {},
 	}
 	if _, ok := validEnvironments[a.Environment()]; !ok {
-		return ErrInvalidEnvironment
+		return clientsErr.ErrInvalidEnvironment
 	}
 	return nil
 }

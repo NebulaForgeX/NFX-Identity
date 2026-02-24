@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/clients/infrastructure/rdb/models"
+	"time"
 )
 
 // UpdateLastUsed 更新最后使用时间，实现 client_credentials.Update 接口

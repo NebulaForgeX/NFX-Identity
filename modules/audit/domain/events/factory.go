@@ -1,37 +1,38 @@
 package events
 
 import (
+	auditErr "nfxid/errors/src/audit"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewEventParams struct {
-	EventID              string
-	OccurredAt           time.Time
-	TenantID             *uuid.UUID
-	AppID                *uuid.UUID
-	ActorType            ActorType
-	ActorID              uuid.UUID
-	ActorTenantMemberID  *uuid.UUID
-	Action               string
-	TargetType           *string
-	TargetID             *uuid.UUID
-	Result               ResultType
-	FailureReasonCode    *string
-	HTTPMethod           *string
-	HTTPPath             *string
-	HTTPStatus           *int
-	RequestID            *string
-	TraceID              *string
-	IP                   *string
-	UserAgent            *string
-	GeoCountry           *string
-	RiskLevel            RiskLevel
-	DataClassification   DataClassification
-	PrevHash             *string
-	EventHash            *string
-	Metadata             map[string]interface{}
+	EventID             string
+	OccurredAt          time.Time
+	TenantID            *uuid.UUID
+	AppID               *uuid.UUID
+	ActorType           ActorType
+	ActorID             uuid.UUID
+	ActorTenantMemberID *uuid.UUID
+	Action              string
+	TargetType          *string
+	TargetID            *uuid.UUID
+	Result              ResultType
+	FailureReasonCode   *string
+	HTTPMethod          *string
+	HTTPPath            *string
+	HTTPStatus          *int
+	RequestID           *string
+	TraceID             *string
+	IP                  *string
+	UserAgent           *string
+	GeoCountry          *string
+	RiskLevel           RiskLevel
+	DataClassification  DataClassification
+	PrevHash            *string
+	EventHash           *string
+	Metadata            map[string]interface{}
 }
 
 func NewEvent(p NewEventParams) (*Event, error) {
@@ -61,34 +62,34 @@ func NewEvent(p NewEventParams) (*Event, error) {
 	}
 
 	return NewEventFromState(EventState{
-		ID:                   id,
-		EventID:              p.EventID,
-		OccurredAt:           occurredAt,
-		ReceivedAt:           now,
-		TenantID:             p.TenantID,
-		AppID:                p.AppID,
-		ActorType:            p.ActorType,
-		ActorID:              p.ActorID,
-		ActorTenantMemberID:  p.ActorTenantMemberID,
-		Action:               p.Action,
-		TargetType:           p.TargetType,
-		TargetID:             p.TargetID,
-		Result:               p.Result,
-		FailureReasonCode:    p.FailureReasonCode,
-		HTTPMethod:           p.HTTPMethod,
-		HTTPPath:             p.HTTPPath,
-		HTTPStatus:           p.HTTPStatus,
-		RequestID:            p.RequestID,
-		TraceID:              p.TraceID,
-		IP:                   p.IP,
-		UserAgent:            p.UserAgent,
-		GeoCountry:           p.GeoCountry,
-		RiskLevel:            riskLevel,
-		DataClassification:   dataClassification,
-		PrevHash:             p.PrevHash,
-		EventHash:            p.EventHash,
-		Metadata:             p.Metadata,
-		CreatedAt:            now,
+		ID:                  id,
+		EventID:             p.EventID,
+		OccurredAt:          occurredAt,
+		ReceivedAt:          now,
+		TenantID:            p.TenantID,
+		AppID:               p.AppID,
+		ActorType:           p.ActorType,
+		ActorID:             p.ActorID,
+		ActorTenantMemberID: p.ActorTenantMemberID,
+		Action:              p.Action,
+		TargetType:          p.TargetType,
+		TargetID:            p.TargetID,
+		Result:              p.Result,
+		FailureReasonCode:   p.FailureReasonCode,
+		HTTPMethod:          p.HTTPMethod,
+		HTTPPath:            p.HTTPPath,
+		HTTPStatus:          p.HTTPStatus,
+		RequestID:           p.RequestID,
+		TraceID:             p.TraceID,
+		IP:                  p.IP,
+		UserAgent:           p.UserAgent,
+		GeoCountry:          p.GeoCountry,
+		RiskLevel:           riskLevel,
+		DataClassification:  dataClassification,
+		PrevHash:            p.PrevHash,
+		EventHash:           p.EventHash,
+		Metadata:            p.Metadata,
+		CreatedAt:           now,
 	}), nil
 }
 
@@ -98,10 +99,10 @@ func NewEventFromState(st EventState) *Event {
 
 func validateEventParams(p NewEventParams) error {
 	if p.EventID == "" {
-		return ErrEventIDRequired
+		return auditErr.ErrEventIDRequired
 	}
 	if p.ActorType == "" {
-		return ErrActorTypeRequired
+		return auditErr.ErrActorTypeRequired
 	}
 	validActorTypes := map[ActorType]struct{}{
 		ActorTypeUser:    {},
@@ -110,16 +111,16 @@ func validateEventParams(p NewEventParams) error {
 		ActorTypeAdmin:   {},
 	}
 	if _, ok := validActorTypes[p.ActorType]; !ok {
-		return ErrInvalidActorType
+		return auditErr.ErrInvalidActorType
 	}
 	if p.ActorID == uuid.Nil {
-		return ErrActorIDRequired
+		return auditErr.ErrActorIDRequired
 	}
 	if p.Action == "" {
-		return ErrActionRequired
+		return auditErr.ErrActionRequired
 	}
 	if p.Result == "" {
-		return ErrResultRequired
+		return auditErr.ErrResultRequired
 	}
 	validResultTypes := map[ResultType]struct{}{
 		ResultTypeSuccess: {},
@@ -128,7 +129,7 @@ func validateEventParams(p NewEventParams) error {
 		ResultTypeError:   {},
 	}
 	if _, ok := validResultTypes[p.Result]; !ok {
-		return ErrInvalidResultType
+		return auditErr.ErrInvalidResultType
 	}
 	if p.RiskLevel != "" {
 		validRiskLevels := map[RiskLevel]struct{}{
@@ -138,7 +139,7 @@ func validateEventParams(p NewEventParams) error {
 			RiskLevelCritical: {},
 		}
 		if _, ok := validRiskLevels[p.RiskLevel]; !ok {
-			return ErrInvalidRiskLevel
+			return auditErr.ErrInvalidRiskLevel
 		}
 	}
 	if p.DataClassification != "" {
@@ -149,7 +150,7 @@ func validateEventParams(p NewEventParams) error {
 			DataClassificationRestricted:   {},
 		}
 		if _, ok := validClassifications[p.DataClassification]; !ok {
-			return ErrInvalidDataClassification
+			return auditErr.ErrInvalidDataClassification
 		}
 	}
 	return nil

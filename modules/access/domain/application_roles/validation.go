@@ -1,6 +1,7 @@
 package application_roles
 
 import (
+	accessErr "nfxid/errors/src/access"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,10 +11,10 @@ func nowUTC() time.Time { return time.Now().UTC() }
 
 func (r *ApplicationRole) Validate() error {
 	if r.RoleKey() == "" {
-		return ErrApplicationRoleRoleKeyRequired
+		return accessErr.ErrApplicationRoleRoleKeyRequired
 	}
 	if r.ApplicationID() == uuid.Nil {
-		return ErrApplicationRoleApplicationIDRequired
+		return accessErr.ErrApplicationRoleApplicationIDRequired
 	}
 	return nil
 }

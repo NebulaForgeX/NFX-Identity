@@ -46,7 +46,13 @@ func (c *EventClient) GetEventByEventID(ctx context.Context, eventID string) (*e
 }
 
 // GetEventsByActor 根据操作者获取事件列表
-func (c *EventClient) GetEventsByActor(ctx context.Context, actorType eventpb.AuditActorType, actorID string, tenantID *string, limit *int32) ([]*eventpb.Event, error) {
+func (c *EventClient) GetEventsByActor(
+	ctx context.Context,
+	actorType eventpb.AuditActorType,
+	actorID string,
+	tenantID *string,
+	limit *int32,
+) ([]*eventpb.Event, error) {
 	req := &eventpb.GetEventsByActorRequest{
 		ActorType: actorType,
 		ActorId:   actorID,

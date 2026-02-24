@@ -13,12 +13,12 @@ import (
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
-	healthpb "nfxid/protos/gen/common/health"
-	schemapb "nfxid/protos/gen/common/schema"
 	applicationpb "nfxid/protos/gen/clients/application"
 	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
 	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
 	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
+	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 
 	"google.golang.org/grpc"
 )
@@ -53,7 +53,7 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "clients"))
-	
+
 	// Register schema service
 	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "clients"))
 

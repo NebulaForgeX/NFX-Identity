@@ -26,7 +26,7 @@ func (m UserUpdateMessage) Validate() error {
 
 // =============== Cache Invalidation Messages ===============
 // 当用户更新时，需要通知其他 7 个服务清除相关缓存
-// 
+//
 // 正确的方式：使用 Fanout Exchange 或 Topic Exchange
 // - 发送一条消息到一个 Exchange
 // - Exchange 自动将消息路由到所有绑定的 Queue
@@ -34,17 +34,17 @@ func (m UserUpdateMessage) Validate() error {
 
 // UserCacheInvalidateMessage 用户缓存清除消息（广播给所有服务）
 // MessageType 会自动从类型名生成: "user_cache_invalidate"
-// 
+//
 // 使用方式：
 // 1. 配置一个 Fanout Exchange（推荐用于广播）
 // 2. 所有服务的 Queue 都绑定到这个 Exchange
 // 3. 只发送一条消息，RabbitMQ 自动分发到所有绑定的 Queue
 type UserCacheInvalidateMessage struct {
-	UserID        string `json:"user_id"`         // 要清除缓存的用户 ID
-	Prefix        string `json:"prefix"`          // Cache prefix，例如 "user"
-	Namespace     string `json:"namespace"`       // Cache namespace，可选，例如 tenantId
-	Reason        string `json:"reason"`          // 清除原因，例如 "user_updated"
-	InvalidatedAt string `json:"invalidated_at"`  // 清除时间
+	UserID        string `json:"user_id"`        // 要清除缓存的用户 ID
+	Prefix        string `json:"prefix"`         // Cache prefix，例如 "user"
+	Namespace     string `json:"namespace"`      // Cache namespace，可选，例如 tenantId
+	Reason        string `json:"reason"`         // 清除原因，例如 "user_updated"
+	InvalidatedAt string `json:"invalidated_at"` // 清除时间
 }
 
 // RoutingKey 返回消息的路由键

@@ -1,15 +1,16 @@
 package tenants
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 )
 
 func (t *Tenant) Update(name string, displayName, primaryDomain *string, metadata map[string]interface{}) error {
 	if t.DeletedAt() != nil {
-		return ErrTenantNotFound
+		return tenantsErr.ErrTenantNotFound
 	}
 	if name == "" {
-		return ErrNameRequired
+		return tenantsErr.ErrNameRequired
 	}
 
 	t.state.Name = name
@@ -29,7 +30,7 @@ func (t *Tenant) Update(name string, displayName, primaryDomain *string, metadat
 
 func (t *Tenant) UpdateStatus(status TenantStatus) error {
 	if t.DeletedAt() != nil {
-		return ErrTenantNotFound
+		return tenantsErr.ErrTenantNotFound
 	}
 	validStatuses := map[TenantStatus]struct{}{
 		TenantStatusActive:    {},
@@ -38,7 +39,7 @@ func (t *Tenant) UpdateStatus(status TenantStatus) error {
 		TenantStatusPending:   {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidTenantStatus
+		return tenantsErr.ErrInvalidTenantStatus
 	}
 
 	t.state.Status = status

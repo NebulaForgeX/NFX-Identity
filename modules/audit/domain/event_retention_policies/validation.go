@@ -1,11 +1,15 @@
 package event_retention_policies
 
+import (
+	auditErr "nfxid/errors/src/audit"
+)
+
 func (erp *EventRetentionPolicy) Validate() error {
 	if erp.PolicyName() == "" {
-		return ErrPolicyNameRequired
+		return auditErr.ErrPolicyNameRequired
 	}
 	if erp.RetentionDays() <= 0 {
-		return ErrRetentionDaysRequired
+		return auditErr.ErrRetentionDaysRequired
 	}
 	validActions := map[RetentionAction]struct{}{
 		RetentionActionArchive: {},
@@ -13,7 +17,7 @@ func (erp *EventRetentionPolicy) Validate() error {
 		RetentionActionExport:  {},
 	}
 	if _, ok := validActions[erp.RetentionAction()]; !ok {
-		return ErrInvalidRetentionAction
+		return auditErr.ErrInvalidRetentionAction
 	}
 	return nil
 }

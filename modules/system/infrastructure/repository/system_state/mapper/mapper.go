@@ -77,6 +77,6 @@ func SystemStateModelToUpdates(m *models.SystemState) map[string]any {
 		models.SystemStateCols.LastResetBy:           m.LastResetBy,
 		models.SystemStateCols.ResetCount:            m.ResetCount,
 		models.SystemStateCols.Metadata:              metadata,
-		models.SystemStateCols.UpdatedAt:            m.UpdatedAt,
+		models.SystemStateCols.UpdatedAt:             m.UpdatedAt,
 	}
 }

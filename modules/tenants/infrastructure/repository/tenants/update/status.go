@@ -2,10 +2,10 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/tenants/domain/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/tenants/mapper"
+	"time"
 
 	"github.com/google/uuid"
 )

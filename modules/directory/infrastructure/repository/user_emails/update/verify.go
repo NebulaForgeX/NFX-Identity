@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/directory/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -14,7 +14,7 @@ func (h *Handler) Verify(ctx context.Context, id uuid.UUID) error {
 	updates := map[string]any{
 		models.UserEmailCols.IsVerified: true,
 		models.UserEmailCols.VerifiedAt: &now,
-		models.UserEmailCols.UpdatedAt:   now,
+		models.UserEmailCols.UpdatedAt:  now,
 	}
 
 	return h.db.WithContext(ctx).

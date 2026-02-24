@@ -6,10 +6,10 @@ import (
 
 // CreateClientScopeCmd 创建客户端作用域命令
 type CreateClientScopeCmd struct {
-	AppID      uuid.UUID
-	Scope      string
-	GrantedBy  *uuid.UUID
-	ExpiresAt  *string
+	AppID     uuid.UUID
+	Scope     string
+	GrantedBy *uuid.UUID
+	ExpiresAt *string
 }
 
 // RevokeClientScopeCmd 撤销客户端作用域命令

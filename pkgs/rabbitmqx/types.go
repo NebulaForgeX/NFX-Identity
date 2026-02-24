@@ -9,15 +9,15 @@ import (
 type Config struct {
 	// URI 是可选的，如果提供了 URI，则优先使用 URI
 	// 如果 URI 为空，则使用分开的配置字段（host, port, user, password, vhost）构建 URI
-	URI      string           `koanf:"uri"`
-	Host     string           `koanf:"host"`     // RabbitMQ 主机地址
-	Port     int              `koanf:"port"`     // RabbitMQ 端口，默认 5672
-	User     string           `koanf:"user"`     // 用户名
-	Password string           `koanf:"password"` // 密码
-	Vhost    string           `koanf:"vhost"`    // 虚拟主机，默认 "/"
-	ClientID string           `koanf:"client_id"`
-	Producer ProducerConfig   `koanf:"producer"`
-	Consumer ConsumerConfig   `koanf:"consumer"`
+	URI        string           `koanf:"uri"`
+	Host       string           `koanf:"host"`     // RabbitMQ 主机地址
+	Port       int              `koanf:"port"`     // RabbitMQ 端口，默认 5672
+	User       string           `koanf:"user"`     // 用户名
+	Password   string           `koanf:"password"` // 密码
+	Vhost      string           `koanf:"vhost"`    // 虚拟主机，默认 "/"
+	ClientID   string           `koanf:"client_id"`
+	Producer   ProducerConfig   `koanf:"producer"`
+	Consumer   ConsumerConfig   `koanf:"consumer"`
 	Connection ConnectionConfig `koanf:"connection"`
 	Exchange   ExchangeConfig   `koanf:"exchange"`
 	Queue      QueueConfig      `koanf:"queue"`
@@ -75,8 +75,8 @@ func (c *Config) BuildURI() (string, error) {
 
 // ProducerRouting 定义发布者的路由配置（Exchange、RoutingKey 和可选的 Exchange 类型）
 type ProducerRouting struct {
-	Exchange   string                `koanf:"exchange"`    // Exchange 名称，为空则使用 ExchangeConfig.Name 或根据事件键生成
-	RoutingKey string                `koanf:"routing_key"` // RoutingKey，为空则使用事件键作为 RoutingKey
+	Exchange   string                 `koanf:"exchange"`    // Exchange 名称，为空则使用 ExchangeConfig.Name 或根据事件键生成
+	RoutingKey string                 `koanf:"routing_key"` // RoutingKey，为空则使用事件键作为 RoutingKey
 	Type       messaging.ExchangeType `koanf:"type"`        // Exchange 类型（可选）。如果为空，使用全局 ExchangeConfig.Type
 }
 
@@ -151,12 +151,12 @@ type ReconnectConfig struct {
 }
 
 type ExchangeConfig struct {
-	Name       string                `koanf:"name"`        // 交换机名称，默认 ""（如果为空则根据 topic 生成，对应 ExchangeConfig.GenerateName）
+	Name       string                 `koanf:"name"`        // 交换机名称，默认 ""（如果为空则根据 topic 生成，对应 ExchangeConfig.GenerateName）
 	Type       messaging.ExchangeType `koanf:"type"`        // 交换机类型，默认 "topic"。支持基本类型和插件类型
-	Durable    bool                  `koanf:"durable"`     // 是否持久化，默认 true（对应 ExchangeConfig.Durable）
-	AutoDelete bool                  `koanf:"auto_delete"` // 是否自动删除，默认 false（对应 ExchangeConfig.AutoDeleted）
-	Internal   bool                  `koanf:"internal"`    // 是否内部交换机，默认 false（对应 ExchangeConfig.Internal）
-	NoWait     bool                  `koanf:"no_wait"`     // 不等待服务器响应，默认 false（对应 ExchangeConfig.NoWait）
+	Durable    bool                   `koanf:"durable"`     // 是否持久化，默认 true（对应 ExchangeConfig.Durable）
+	AutoDelete bool                   `koanf:"auto_delete"` // 是否自动删除，默认 false（对应 ExchangeConfig.AutoDeleted）
+	Internal   bool                   `koanf:"internal"`    // 是否内部交换机，默认 false（对应 ExchangeConfig.Internal）
+	NoWait     bool                   `koanf:"no_wait"`     // 不等待服务器响应，默认 false（对应 ExchangeConfig.NoWait）
 	// Arguments 可以通过 amqp.Table 设置，这里简化处理
 }
 

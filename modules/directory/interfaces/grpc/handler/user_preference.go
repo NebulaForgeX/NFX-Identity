@@ -6,8 +6,8 @@ import (
 	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
 	userPreferenceAppCommands "nfxid/modules/directory/application/user_preferences/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	userpreferencepb "nfxid/protos/gen/directory/user_preference"
 	"nfxid/pkgs/errx"
+	userpreferencepb "nfxid/protos/gen/directory/user_preference"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +24,10 @@ func NewUserPreferenceHandler(userPreferenceAppSvc *userPreferenceApp.Service) *
 }
 
 // CreateUserPreference 创建用户偏好
-func (h *UserPreferenceHandler) CreateUserPreference(ctx context.Context, req *userpreferencepb.CreateUserPreferenceRequest) (*userpreferencepb.CreateUserPreferenceResponse, error) {
+func (h *UserPreferenceHandler) CreateUserPreference(
+	ctx context.Context,
+	req *userpreferencepb.CreateUserPreferenceRequest,
+) (*userpreferencepb.CreateUserPreferenceResponse, error) {
 	// 解析用户ID（id 直接引用 users.id）
 	userID, err := uuid.Parse(req.Id)
 	if err != nil {
@@ -93,7 +96,10 @@ func (h *UserPreferenceHandler) CreateUserPreference(ctx context.Context, req *u
 }
 
 // GetUserPreferenceByID 根据ID获取用户偏好
-func (h *UserPreferenceHandler) GetUserPreferenceByID(ctx context.Context, req *userpreferencepb.GetUserPreferenceByIDRequest) (*userpreferencepb.GetUserPreferenceByIDResponse, error) {
+func (h *UserPreferenceHandler) GetUserPreferenceByID(
+	ctx context.Context,
+	req *userpreferencepb.GetUserPreferenceByIDRequest,
+) (*userpreferencepb.GetUserPreferenceByIDResponse, error) {
 	userPreferenceID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -109,7 +115,10 @@ func (h *UserPreferenceHandler) GetUserPreferenceByID(ctx context.Context, req *
 }
 
 // GetUserPreferenceByUserID 根据用户ID获取用户偏好
-func (h *UserPreferenceHandler) GetUserPreferenceByUserID(ctx context.Context, req *userpreferencepb.GetUserPreferenceByUserIDRequest) (*userpreferencepb.GetUserPreferenceByUserIDResponse, error) {
+func (h *UserPreferenceHandler) GetUserPreferenceByUserID(
+	ctx context.Context,
+	req *userpreferencepb.GetUserPreferenceByUserIDRequest,
+) (*userpreferencepb.GetUserPreferenceByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

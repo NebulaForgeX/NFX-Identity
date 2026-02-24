@@ -17,10 +17,10 @@ const (
 type DataClassification string
 
 const (
-	DataClassificationPublic        DataClassification = "public"
-	DataClassificationInternal      DataClassification = "internal"
-	DataClassificationConfidential  DataClassification = "confidential"
-	DataClassificationRestricted    DataClassification = "restricted"
+	DataClassificationPublic       DataClassification = "public"
+	DataClassificationInternal     DataClassification = "internal"
+	DataClassificationConfidential DataClassification = "confidential"
+	DataClassificationRestricted   DataClassification = "restricted"
 )
 
 type RiskLevel string
@@ -37,26 +37,28 @@ type EventRetentionPolicy struct {
 }
 
 type EventRetentionPolicyState struct {
-	ID                uuid.UUID
-	PolicyName        string
-	TenantID          *uuid.UUID
-	ActionPattern     *string
+	ID                 uuid.UUID
+	PolicyName         string
+	TenantID           *uuid.UUID
+	ActionPattern      *string
 	DataClassification *DataClassification
-	RiskLevel         *RiskLevel
-	RetentionDays     int
-	RetentionAction   RetentionAction
-	ArchiveLocation   *string
-	Status            string
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
-	CreatedBy         *uuid.UUID
+	RiskLevel          *RiskLevel
+	RetentionDays      int
+	RetentionAction    RetentionAction
+	ArchiveLocation    *string
+	Status             string
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
+	CreatedBy          *uuid.UUID
 }
 
-func (erp *EventRetentionPolicy) ID() uuid.UUID                    { return erp.state.ID }
-func (erp *EventRetentionPolicy) PolicyName() string               { return erp.state.PolicyName }
-func (erp *EventRetentionPolicy) TenantID() *uuid.UUID             { return erp.state.TenantID }
-func (erp *EventRetentionPolicy) ActionPattern() *string           { return erp.state.ActionPattern }
-func (erp *EventRetentionPolicy) DataClassification() *DataClassification { return erp.state.DataClassification }
+func (erp *EventRetentionPolicy) ID() uuid.UUID          { return erp.state.ID }
+func (erp *EventRetentionPolicy) PolicyName() string     { return erp.state.PolicyName }
+func (erp *EventRetentionPolicy) TenantID() *uuid.UUID   { return erp.state.TenantID }
+func (erp *EventRetentionPolicy) ActionPattern() *string { return erp.state.ActionPattern }
+func (erp *EventRetentionPolicy) DataClassification() *DataClassification {
+	return erp.state.DataClassification
+}
 func (erp *EventRetentionPolicy) RiskLevel() *RiskLevel            { return erp.state.RiskLevel }
 func (erp *EventRetentionPolicy) RetentionDays() int               { return erp.state.RetentionDays }
 func (erp *EventRetentionPolicy) RetentionAction() RetentionAction { return erp.state.RetentionAction }

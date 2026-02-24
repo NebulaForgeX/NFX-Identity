@@ -2,9 +2,10 @@ package client_scopes
 
 import (
 	"context"
-	"time"
+	clientsErr "nfxid/errors/src/clients"
 	clientScopeCommands "nfxid/modules/clients/application/client_scopes/commands"
 	clientScopeDomain "nfxid/modules/clients/domain/client_scopes"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +14,7 @@ import (
 func (s *Service) CreateClientScope(ctx context.Context, cmd clientScopeCommands.CreateClientScopeCmd) (uuid.UUID, error) {
 	// Check if scope already exists for this app
 	if exists, _ := s.clientScopeRepo.Check.ByAppIDAndScope(ctx, cmd.AppID, cmd.Scope); exists {
-		return uuid.Nil, clientScopeDomain.ErrClientScopeAlreadyExists
+		return uuid.Nil, clientsErr.ErrClientScopeAlreadyExists
 	}
 
 	// Parse expires_at if provided

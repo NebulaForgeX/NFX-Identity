@@ -1,15 +1,16 @@
 package sessions
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 )
 
 func (s *Session) UpdateLastSeen() error {
 	if s.RevokedAt() != nil {
-		return ErrSessionAlreadyRevoked
+		return authErr.ErrSessionAlreadyRevoked
 	}
 	if s.IsExpired() {
-		return ErrSessionExpired
+		return authErr.ErrSessionExpired
 	}
 
 	now := time.Now().UTC()
@@ -20,20 +21,20 @@ func (s *Session) UpdateLastSeen() error {
 
 func (s *Session) Revoke(reason SessionRevokeReason, revokedBy string) error {
 	if s.RevokedAt() != nil {
-		return ErrSessionAlreadyRevoked
+		return authErr.ErrSessionAlreadyRevoked
 	}
 	validReasons := map[SessionRevokeReason]struct{}{
-		SessionRevokeReasonUserLogout:      {},
-		SessionRevokeReasonAdminRevoke:     {},
-		SessionRevokeReasonPasswordChanged: {},
-		SessionRevokeReasonDeviceChanged:   {},
-		SessionRevokeReasonAccountLocked:   {},
+		SessionRevokeReasonUserLogout:         {},
+		SessionRevokeReasonAdminRevoke:        {},
+		SessionRevokeReasonPasswordChanged:    {},
+		SessionRevokeReasonDeviceChanged:      {},
+		SessionRevokeReasonAccountLocked:      {},
 		SessionRevokeReasonSuspiciousActivity: {},
-		SessionRevokeReasonSessionExpired:  {},
-		SessionRevokeReasonOther:           {},
+		SessionRevokeReasonSessionExpired:     {},
+		SessionRevokeReasonOther:              {},
 	}
 	if _, ok := validReasons[reason]; !ok {
-		return ErrInvalidRevokeReason
+		return authErr.ErrInvalidRevokeReason
 	}
 
 	now := time.Now().UTC()

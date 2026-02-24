@@ -36,12 +36,12 @@ func (t *TokenIssuer) VerifyRefreshToken(refreshToken string) (*authApp.TokenCla
 	if err != nil {
 		return nil, err
 	}
-	
+
 	tokenID := ""
 	if claims.ID != "" {
 		tokenID = claims.ID
 	}
-	
+
 	return &authApp.TokenClaims{
 		TokenID:     tokenID,
 		UserID:      claims.UserID,

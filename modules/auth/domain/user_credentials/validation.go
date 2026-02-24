@@ -1,10 +1,14 @@
 package user_credentials
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (uc *UserCredential) Validate() error {
 	if uc.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	validTypes := map[CredentialType]struct{}{
 		CredentialTypePassword:  {},
@@ -14,7 +18,7 @@ func (uc *UserCredential) Validate() error {
 		CredentialTypeLdap:      {},
 	}
 	if _, ok := validTypes[uc.CredentialType()]; !ok {
-		return ErrInvalidCredentialType
+		return authErr.ErrInvalidCredentialType
 	}
 	validStatuses := map[CredentialStatus]struct{}{
 		CredentialStatusActive:   {},
@@ -22,7 +26,7 @@ func (uc *UserCredential) Validate() error {
 		CredentialStatusExpired:  {},
 	}
 	if _, ok := validStatuses[uc.Status()]; !ok {
-		return ErrInvalidCredentialStatus
+		return authErr.ErrInvalidCredentialStatus
 	}
 	return nil
 }

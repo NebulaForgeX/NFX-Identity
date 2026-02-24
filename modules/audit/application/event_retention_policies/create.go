@@ -2,6 +2,7 @@ package event_retention_policies
 
 import (
 	"context"
+	auditErr "nfxid/errors/src/audit"
 	eventRetentionPolicyCommands "nfxid/modules/audit/application/event_retention_policies/commands"
 	eventRetentionPolicyDomain "nfxid/modules/audit/domain/event_retention_policies"
 
@@ -12,21 +13,21 @@ import (
 func (s *Service) CreateEventRetentionPolicy(ctx context.Context, cmd eventRetentionPolicyCommands.CreateEventRetentionPolicyCmd) (uuid.UUID, error) {
 	// Check if policy name already exists
 	if exists, _ := s.eventRetentionPolicyRepo.Check.ByPolicyName(ctx, cmd.PolicyName); exists {
-		return uuid.Nil, eventRetentionPolicyDomain.ErrPolicyNameAlreadyExists
+		return uuid.Nil, auditErr.ErrPolicyNameAlreadyExists
 	}
 
 	// Create domain entity
 	eventRetentionPolicy, err := eventRetentionPolicyDomain.NewEventRetentionPolicy(eventRetentionPolicyDomain.NewEventRetentionPolicyParams{
-		PolicyName:        cmd.PolicyName,
-		TenantID:          cmd.TenantID,
-		ActionPattern:     cmd.ActionPattern,
+		PolicyName:         cmd.PolicyName,
+		TenantID:           cmd.TenantID,
+		ActionPattern:      cmd.ActionPattern,
 		DataClassification: cmd.DataClassification,
-		RiskLevel:         cmd.RiskLevel,
-		RetentionDays:     cmd.RetentionDays,
-		RetentionAction:   cmd.RetentionAction,
-		ArchiveLocation:   cmd.ArchiveLocation,
-		Status:            cmd.Status,
-		CreatedBy:         cmd.CreatedBy,
+		RiskLevel:          cmd.RiskLevel,
+		RetentionDays:      cmd.RetentionDays,
+		RetentionAction:    cmd.RetentionAction,
+		ArchiveLocation:    cmd.ArchiveLocation,
+		Status:             cmd.Status,
+		CreatedBy:          cmd.CreatedBy,
 	})
 	if err != nil {
 		return uuid.Nil, err

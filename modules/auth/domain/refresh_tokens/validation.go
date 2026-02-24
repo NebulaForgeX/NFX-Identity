@@ -1,16 +1,20 @@
 package refresh_tokens
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (rt *RefreshToken) Validate() error {
 	if rt.TokenID() == "" {
-		return ErrTokenIDRequired
+		return authErr.ErrTokenIDRequired
 	}
 	if rt.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if rt.ExpiresAt().IsZero() {
-		return ErrExpiresAtRequired
+		return authErr.ErrExpiresAtRequired
 	}
 	return nil
 }

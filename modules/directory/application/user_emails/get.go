@@ -31,7 +31,7 @@ func (s *Service) GetUserEmailsByUserID(ctx context.Context, userID uuid.UUID) (
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]userEmailResult.UserEmailRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = userEmailResult.UserEmailMapper(entity)

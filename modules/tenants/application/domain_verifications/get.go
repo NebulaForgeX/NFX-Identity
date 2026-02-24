@@ -2,8 +2,8 @@ package domain_verifications
 
 import (
 	"context"
-	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
 	domainVerificationResult "nfxid/modules/tenants/application/domain_verifications/results"
+	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
 
 	"github.com/google/uuid"
 )
@@ -27,12 +27,16 @@ func (s *Service) GetDomainVerificationByDomain(ctx context.Context, domain stri
 }
 
 // GetDomainVerificationsByTenantID 根据租户ID获取域名验证列表
-func (s *Service) GetDomainVerificationsByTenantID(ctx context.Context, tenantID uuid.UUID, status *domainVerificationDomain.VerificationStatus) ([]domainVerificationResult.DomainVerificationRO, error) {
+func (s *Service) GetDomainVerificationsByTenantID(
+	ctx context.Context,
+	tenantID uuid.UUID,
+	status *domainVerificationDomain.VerificationStatus,
+) ([]domainVerificationResult.DomainVerificationRO, error) {
 	domainEntities, err := s.domainVerificationRepo.Get.ByTenantID(ctx, tenantID)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]domainVerificationResult.DomainVerificationRO, 0, len(domainEntities))
 	for _, entity := range domainEntities {
 		// 如果指定了status，进行过滤

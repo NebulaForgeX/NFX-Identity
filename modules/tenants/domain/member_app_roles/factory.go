@@ -1,6 +1,7 @@
 package member_app_roles
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -42,13 +43,13 @@ func NewMemberAppRoleFromState(st MemberAppRoleState) *MemberAppRole {
 
 func validateMemberAppRoleParams(p NewMemberAppRoleParams) error {
 	if p.MemberID == uuid.Nil {
-		return ErrMemberIDRequired
+		return tenantsErr.ErrMemberIDRequired
 	}
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return tenantsErr.ErrAppIDRequired
 	}
 	if p.RoleID == uuid.Nil {
-		return ErrRoleIDRequired
+		return tenantsErr.ErrRoleIDRequired
 	}
 	return nil
 }

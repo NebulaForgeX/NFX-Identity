@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/members"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return members.ErrMemberNotFound
+		return tenantsErr.ErrMemberNotFound
 	}
 	return nil
 }

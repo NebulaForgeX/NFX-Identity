@@ -1,12 +1,13 @@
 package user_emails
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
 func (ue *UserEmail) SetPrimary() error {
 	if ue.DeletedAt() != nil {
-		return ErrUserEmailNotFound
+		return dirErr.ErrUserEmailNotFound
 	}
 	ue.state.IsPrimary = true
 	ue.state.UpdatedAt = time.Now().UTC()
@@ -15,7 +16,7 @@ func (ue *UserEmail) SetPrimary() error {
 
 func (ue *UserEmail) SetNotPrimary() error {
 	if ue.DeletedAt() != nil {
-		return ErrUserEmailNotFound
+		return dirErr.ErrUserEmailNotFound
 	}
 	ue.state.IsPrimary = false
 	ue.state.UpdatedAt = time.Now().UTC()
@@ -24,7 +25,7 @@ func (ue *UserEmail) SetNotPrimary() error {
 
 func (ue *UserEmail) Verify() error {
 	if ue.DeletedAt() != nil {
-		return ErrUserEmailNotFound
+		return dirErr.ErrUserEmailNotFound
 	}
 
 	now := time.Now().UTC()
@@ -37,7 +38,7 @@ func (ue *UserEmail) Verify() error {
 
 func (ue *UserEmail) UpdateVerificationToken(token *string) error {
 	if ue.DeletedAt() != nil {
-		return ErrUserEmailNotFound
+		return dirErr.ErrUserEmailNotFound
 	}
 	ue.state.VerificationToken = token
 	ue.state.UpdatedAt = time.Now().UTC()

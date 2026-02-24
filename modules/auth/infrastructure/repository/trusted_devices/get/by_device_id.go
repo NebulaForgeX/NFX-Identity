@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/trusted_devices"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/trusted_devices/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByDeviceID(ctx context.Context, deviceID string) (*trusted_dev
 	var m models.TrustedDevice
 	if err := h.db.WithContext(ctx).Where("device_id = ?", deviceID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, trusted_devices.ErrTrustedDeviceNotFound
+			return nil, authErr.ErrTrustedDeviceNotFound
 		}
 		return nil, err
 	}

@@ -30,7 +30,7 @@ func DefaultServerOptions(verifier token.Verifier) []grpc.ServerOption {
 		// 设置为 30 秒可以更好地容忍多个客户端连接的情况
 		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
 			MinTime:             30 * time.Second, // 允许客户端每 30 秒发送一次 ping（更宽松，避免 too_many_pings 错误）
-			PermitWithoutStream: true,              // 允许无流时发送 ping
+			PermitWithoutStream: true,             // 允许无流时发送 ping
 		}),
 		grpc.ChainUnaryInterceptor(
 			logmw.UnaryLoggerInjectInterceptor(),

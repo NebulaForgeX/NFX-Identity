@@ -1,18 +1,26 @@
 package user_occupations
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
-func (uo *UserOccupation) Update(company, position string, department, industry, location, employmentType *string, startDate, endDate *time.Time, isCurrent bool, description, responsibilities, achievements *string, skillsUsed []string) error {
+func (uo *UserOccupation) Update(
+	company, position string,
+	department, industry, location, employmentType *string,
+	startDate, endDate *time.Time,
+	isCurrent bool,
+	description, responsibilities, achievements *string,
+	skillsUsed []string,
+) error {
 	if uo.DeletedAt() != nil {
-		return ErrUserOccupationNotFound
+		return dirErr.ErrUserOccupationNotFound
 	}
 	if company == "" {
-		return ErrCompanyRequired
+		return dirErr.ErrCompanyRequired
 	}
 	if position == "" {
-		return ErrPositionRequired
+		return dirErr.ErrPositionRequired
 	}
 
 	uo.state.Company = company

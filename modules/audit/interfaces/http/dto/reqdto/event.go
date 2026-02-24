@@ -8,17 +8,17 @@ import (
 )
 
 type EventCreateRequestDTO struct {
-	EventID             string                 `json:"event_id" validate:"required"`
-	OccurredAt          string                 `json:"occurred_at" validate:"required"`
+	EventID             string                 `json:"event_id"                         validate:"required"`
+	OccurredAt          string                 `json:"occurred_at"                      validate:"required"`
 	TenantID            *uuid.UUID             `json:"tenant_id,omitempty"`
 	AppID               *uuid.UUID             `json:"app_id,omitempty"`
-	ActorType           string                 `json:"actor_type" validate:"required"`
-	ActorID             uuid.UUID              `json:"actor_id" validate:"required"`
+	ActorType           string                 `json:"actor_type"                       validate:"required"`
+	ActorID             uuid.UUID              `json:"actor_id"                         validate:"required"`
 	ActorTenantMemberID *uuid.UUID             `json:"actor_tenant_member_id,omitempty"`
-	Action              string                 `json:"action" validate:"required"`
+	Action              string                 `json:"action"                           validate:"required"`
 	TargetType          *string                `json:"target_type,omitempty"`
 	TargetID            *uuid.UUID             `json:"target_id,omitempty"`
-	Result              string                 `json:"result" validate:"required"`
+	Result              string                 `json:"result"                           validate:"required"`
 	FailureReasonCode   *string                `json:"failure_reason_code,omitempty"`
 	HTTPMethod          *string                `json:"http_method,omitempty"`
 	HTTPPath            *string                `json:"http_path,omitempty"`

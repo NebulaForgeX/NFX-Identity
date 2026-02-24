@@ -31,7 +31,7 @@ func (s *Service) GetUserPhonesByUserID(ctx context.Context, userID uuid.UUID) (
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]userPhoneResult.UserPhoneRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = userPhoneResult.UserPhoneMapper(entity)

@@ -8,9 +8,9 @@ import (
 )
 
 type DomainVerificationCreateRequestDTO struct {
-	TenantID           uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
-	Domain             string                 `json:"domain" validate:"required"`
-	VerificationMethod string                 `json:"verification_method" validate:"required"`
+	TenantID           uuid.UUID              `json:"tenant_id"                    validate:"required,uuid"`
+	Domain             string                 `json:"domain"                       validate:"required"`
+	VerificationMethod string                 `json:"verification_method"          validate:"required"`
 	VerificationToken  *string                `json:"verification_token,omitempty"`
 	Status             string                 `json:"status,omitempty"`
 	ExpiresAt          *string                `json:"expires_at,omitempty"`

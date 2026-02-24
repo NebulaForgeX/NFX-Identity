@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/domain/domain_verifications"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/mapper"
@@ -18,7 +19,7 @@ func (h *Handler) ByTenantIDAndDomain(ctx context.Context, tenantID uuid.UUID, d
 		Where("tenant_id = ? AND domain = ?", tenantID, domain).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, domain_verifications.ErrDomainVerificationNotFound
+			return nil, tenantsErr.ErrDomainVerificationNotFound
 		}
 		return nil, err
 	}

@@ -3,10 +3,11 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/refresh_tokens"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/mapper"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -19,14 +20,14 @@ func (h *Handler) Revoke(ctx context.Context, tokenID string, reason refresh_tok
 		Where("token_id = ?", tokenID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return refresh_tokens.ErrRefreshTokenNotFound
+			return authErr.ErrRefreshTokenNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.RevokedAt != nil {
-		return refresh_tokens.ErrTokenAlreadyRevoked
+		return authErr.ErrTokenAlreadyRevoked
 	}
 
 	now := time.Now().UTC()
@@ -34,7 +35,7 @@ func (h *Handler) Revoke(ctx context.Context, tokenID string, reason refresh_tok
 	updates := map[string]any{
 		models.RefreshTokenCols.RevokedAt:    &now,
 		models.RefreshTokenCols.RevokeReason: &revokeReason,
-		models.RefreshTokenCols.UpdatedAt:   now,
+		models.RefreshTokenCols.UpdatedAt:    now,
 	}
 
 	return h.db.WithContext(ctx).

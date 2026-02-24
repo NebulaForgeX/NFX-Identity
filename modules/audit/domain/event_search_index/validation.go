@@ -1,13 +1,17 @@
 package event_search_index
 
-import "github.com/google/uuid"
+import (
+	auditErr "nfxid/errors/src/audit"
+
+	"github.com/google/uuid"
+)
 
 func (esi *EventSearchIndex) Validate() error {
 	if esi.EventID() == "" {
-		return ErrEventIDRequired
+		return auditErr.ErrEventIDRequired
 	}
 	if esi.ActorType() == "" {
-		return ErrActorTypeRequired
+		return auditErr.ErrActorTypeRequired
 	}
 	validActorTypes := map[ActorType]struct{}{
 		ActorTypeUser:    {},
@@ -16,16 +20,16 @@ func (esi *EventSearchIndex) Validate() error {
 		ActorTypeAdmin:   {},
 	}
 	if _, ok := validActorTypes[esi.ActorType()]; !ok {
-		return ErrInvalidActorType
+		return auditErr.ErrInvalidActorType
 	}
 	if esi.ActorID() == uuid.Nil {
-		return ErrActorIDRequired
+		return auditErr.ErrActorIDRequired
 	}
 	if esi.Action() == "" {
-		return ErrActionRequired
+		return auditErr.ErrActionRequired
 	}
 	if esi.Result() == "" {
-		return ErrResultRequired
+		return auditErr.ErrResultRequired
 	}
 	return nil
 }

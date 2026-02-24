@@ -5,8 +5,8 @@ import (
 
 	badgeApp "nfxid/modules/directory/application/badges"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	badgepb "nfxid/protos/gen/directory/badge"
 	"nfxid/pkgs/errx"
+	badgepb "nfxid/protos/gen/directory/badge"
 
 	"github.com/google/uuid"
 )

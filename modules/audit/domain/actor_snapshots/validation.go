@@ -1,10 +1,14 @@
 package actor_snapshots
 
-import "github.com/google/uuid"
+import (
+	auditErr "nfxid/errors/src/audit"
+
+	"github.com/google/uuid"
+)
 
 func (as *ActorSnapshot) Validate() error {
 	if as.ActorType() == "" {
-		return ErrActorTypeRequired
+		return auditErr.ErrActorTypeRequired
 	}
 	validActorTypes := map[ActorType]struct{}{
 		ActorTypeUser:    {},
@@ -13,10 +17,10 @@ func (as *ActorSnapshot) Validate() error {
 		ActorTypeAdmin:   {},
 	}
 	if _, ok := validActorTypes[as.ActorType()]; !ok {
-		return ErrInvalidActorType
+		return auditErr.ErrInvalidActorType
 	}
 	if as.ActorID() == uuid.Nil {
-		return ErrActorIDRequired
+		return auditErr.ErrActorIDRequired
 	}
 	return nil
 }

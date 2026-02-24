@@ -108,7 +108,13 @@ end
 return 0
 `)
 
-func (l *RedisLimiter) TryReserve(ctx context.Context, ns string, action Action, subject SubjectID, now time.Time) (Reservation, Decision, time.Duration, error) {
+func (l *RedisLimiter) TryReserve(
+	ctx context.Context,
+	ns string,
+	action Action,
+	subject SubjectID,
+	now time.Time,
+) (Reservation, Decision, time.Duration, error) {
 	p := l.ps.For(action)
 
 	token, err := l.genTok()

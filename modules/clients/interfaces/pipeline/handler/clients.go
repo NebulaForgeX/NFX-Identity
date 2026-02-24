@@ -31,7 +31,11 @@ func (h *ClientsHandler) OnAppsInvalidateCache(ctx context.Context, evt clients.
 }
 
 // OnClientCredentialsInvalidateCache 监听 ClientCredentials 缓存清除事件
-func (h *ClientsHandler) OnClientCredentialsInvalidateCache(ctx context.Context, evt clients.ClientCredentialsInvalidateCacheEvent, msg *message.Message) error {
+func (h *ClientsHandler) OnClientCredentialsInvalidateCache(
+	ctx context.Context,
+	evt clients.ClientCredentialsInvalidateCacheEvent,
+	msg *message.Message,
+) error {
 	logx.S().Infof("✅ [Clients Pipeline] 收到 ClientCredentials 缓存清除事件: id=%s, prefix=%s, namespace=%s",
 		evt.ID, evt.Prefix, evt.Namespace)
 	return nil

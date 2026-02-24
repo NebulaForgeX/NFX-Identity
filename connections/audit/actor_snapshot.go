@@ -32,7 +32,12 @@ func (c *ActorSnapshotClient) GetActorSnapshotByID(ctx context.Context, id strin
 }
 
 // GetActorSnapshotsByActor 根据操作者获取快照列表
-func (c *ActorSnapshotClient) GetActorSnapshotsByActor(ctx context.Context, actorType actorsnapshotpb.AuditActorType, actorID string, limit *int32) ([]*actorsnapshotpb.ActorSnapshot, error) {
+func (c *ActorSnapshotClient) GetActorSnapshotsByActor(
+	ctx context.Context,
+	actorType actorsnapshotpb.AuditActorType,
+	actorID string,
+	limit *int32,
+) ([]*actorsnapshotpb.ActorSnapshot, error) {
 	req := &actorsnapshotpb.GetActorSnapshotsByActorRequest{
 		ActorType: actorType,
 		ActorId:   actorID,

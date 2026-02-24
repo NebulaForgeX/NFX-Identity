@@ -1,26 +1,27 @@
 package event_search_index
 
 import (
+	auditErr "nfxid/errors/src/audit"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewEventSearchIndexParams struct {
-	EventID           string
-	TenantID          *uuid.UUID
-	AppID             *uuid.UUID
-	ActorType         ActorType
-	ActorID           uuid.UUID
-	Action            string
-	TargetType        *string
-	TargetID          *uuid.UUID
-	Result            ResultType
-	OccurredAt        time.Time
-	IP                *string
-	RiskLevel         RiskLevel
+	EventID            string
+	TenantID           *uuid.UUID
+	AppID              *uuid.UUID
+	ActorType          ActorType
+	ActorID            uuid.UUID
+	Action             string
+	TargetType         *string
+	TargetID           *uuid.UUID
+	Result             ResultType
+	OccurredAt         time.Time
+	IP                 *string
+	RiskLevel          RiskLevel
 	DataClassification DataClassification
-	Tags              []string
+	Tags               []string
 }
 
 func NewEventSearchIndex(p NewEventSearchIndexParams) (*EventSearchIndex, error) {
@@ -70,10 +71,10 @@ func NewEventSearchIndexFromState(st EventSearchIndexState) *EventSearchIndex {
 
 func validateEventSearchIndexParams(p NewEventSearchIndexParams) error {
 	if p.EventID == "" {
-		return ErrEventIDRequired
+		return auditErr.ErrEventIDRequired
 	}
 	if p.ActorType == "" {
-		return ErrActorTypeRequired
+		return auditErr.ErrActorTypeRequired
 	}
 	validActorTypes := map[ActorType]struct{}{
 		ActorTypeUser:    {},
@@ -82,16 +83,16 @@ func validateEventSearchIndexParams(p NewEventSearchIndexParams) error {
 		ActorTypeAdmin:   {},
 	}
 	if _, ok := validActorTypes[p.ActorType]; !ok {
-		return ErrInvalidActorType
+		return auditErr.ErrInvalidActorType
 	}
 	if p.ActorID == uuid.Nil {
-		return ErrActorIDRequired
+		return auditErr.ErrActorIDRequired
 	}
 	if p.Action == "" {
-		return ErrActionRequired
+		return auditErr.ErrActionRequired
 	}
 	if p.Result == "" {
-		return ErrResultRequired
+		return auditErr.ErrResultRequired
 	}
 	validResultTypes := map[ResultType]struct{}{
 		ResultTypeSuccess: {},
@@ -100,7 +101,7 @@ func validateEventSearchIndexParams(p NewEventSearchIndexParams) error {
 		ResultTypeError:   {},
 	}
 	if _, ok := validResultTypes[p.Result]; !ok {
-		return ErrInvalidResultType
+		return auditErr.ErrInvalidResultType
 	}
 	if p.RiskLevel != "" {
 		validRiskLevels := map[RiskLevel]struct{}{
@@ -110,7 +111,7 @@ func validateEventSearchIndexParams(p NewEventSearchIndexParams) error {
 			RiskLevelCritical: {},
 		}
 		if _, ok := validRiskLevels[p.RiskLevel]; !ok {
-			return ErrInvalidRiskLevel
+			return auditErr.ErrInvalidRiskLevel
 		}
 	}
 	if p.DataClassification != "" {
@@ -121,7 +122,7 @@ func validateEventSearchIndexParams(p NewEventSearchIndexParams) error {
 			DataClassificationRestricted:   {},
 		}
 		if _, ok := validClassifications[p.DataClassification]; !ok {
-			return ErrInvalidDataClassification
+			return auditErr.ErrInvalidDataClassification
 		}
 	}
 	return nil

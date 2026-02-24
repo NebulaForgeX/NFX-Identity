@@ -38,7 +38,11 @@ func (h *EventRetentionPolicyHandler) Create(c fiber.Ctx) error {
 		return err
 	}
 
-	return fiberx.Created(c, "Event retention policy created successfully", httpx.SuccessOptions{Data: respdto.EventRetentionPolicyROToDTO(&eventRetentionPolicyView)})
+	return fiberx.Created(
+		c,
+		"Event retention policy created successfully",
+		httpx.SuccessOptions{Data: respdto.EventRetentionPolicyROToDTO(&eventRetentionPolicyView)},
+	)
 }
 
 func (h *EventRetentionPolicyHandler) GetByID(c fiber.Ctx) error {

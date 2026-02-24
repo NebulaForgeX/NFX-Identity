@@ -7,9 +7,9 @@ import (
 )
 
 type PasswordHistoryCreateRequestDTO struct {
-	UserID       uuid.UUID `json:"user_id" validate:"required"`
-	TenantID     uuid.UUID `json:"tenant_id" validate:"required"`
-	PasswordHash string    `json:"password_hash" validate:"required"`
+	UserID       uuid.UUID `json:"user_id"            validate:"required"`
+	TenantID     uuid.UUID `json:"tenant_id"          validate:"required"`
+	PasswordHash string    `json:"password_hash"      validate:"required"`
 	HashAlg      *string   `json:"hash_alg,omitempty"`
 }
 

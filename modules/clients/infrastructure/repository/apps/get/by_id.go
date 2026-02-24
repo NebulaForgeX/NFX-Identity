@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/apps"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/apps/mapper"
@@ -16,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*apps.App, error) {
 	var m models.Application
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, apps.ErrAppNotFound
+			return nil, clientsErr.ErrAppNotFound
 		}
 		return nil, err
 	}

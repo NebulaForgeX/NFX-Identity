@@ -41,12 +41,12 @@ type httpDeps interface {
 
 func NewHTTPServer(d httpDeps) *fiber.App {
 	app := fiber.New(fiber.Config{
-		JSONEncoder:   json.Marshal,
-		JSONDecoder:   json.Unmarshal,
-		ErrorHandler:  fiberx.ErrorHandler,
-		ReadTimeout:   30 * time.Second,
-		WriteTimeout:  30 * time.Second,
-		IdleTimeout:   120 * time.Second,
+		JSONEncoder:  json.Marshal,
+		JSONDecoder:  json.Unmarshal,
+		ErrorHandler: fiberx.ErrorHandler,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	})
 
 	app.Use(cors.New(cors.Config{

@@ -5,8 +5,8 @@ import (
 
 	memberGroupApp "nfxid/modules/tenants/application/member_groups"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	membergrouppb "nfxid/protos/gen/tenants/member_group"
 	"nfxid/pkgs/errx"
+	membergrouppb "nfxid/protos/gen/tenants/member_group"
 
 	"github.com/google/uuid"
 )
@@ -23,7 +23,10 @@ func NewMemberGroupHandler(memberGroupAppSvc *memberGroupApp.Service) *MemberGro
 }
 
 // GetMemberGroupByID 根据ID获取成员组
-func (h *MemberGroupHandler) GetMemberGroupByID(ctx context.Context, req *membergrouppb.GetMemberGroupByIDRequest) (*membergrouppb.GetMemberGroupByIDResponse, error) {
+func (h *MemberGroupHandler) GetMemberGroupByID(
+	ctx context.Context,
+	req *membergrouppb.GetMemberGroupByIDRequest,
+) (*membergrouppb.GetMemberGroupByIDResponse, error) {
 	memberGroupID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -39,7 +42,10 @@ func (h *MemberGroupHandler) GetMemberGroupByID(ctx context.Context, req *member
 }
 
 // GetMemberGroupsByMemberID 根据成员ID获取成员组列表
-func (h *MemberGroupHandler) GetMemberGroupsByMemberID(ctx context.Context, req *membergrouppb.GetMemberGroupsByMemberIDRequest) (*membergrouppb.GetMemberGroupsByMemberIDResponse, error) {
+func (h *MemberGroupHandler) GetMemberGroupsByMemberID(
+	ctx context.Context,
+	req *membergrouppb.GetMemberGroupsByMemberIDRequest,
+) (*membergrouppb.GetMemberGroupsByMemberIDResponse, error) {
 	memberID, err := uuid.Parse(req.MemberId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -55,7 +61,10 @@ func (h *MemberGroupHandler) GetMemberGroupsByMemberID(ctx context.Context, req 
 }
 
 // GetMemberGroupsByGroupID 根据组ID获取成员组列表
-func (h *MemberGroupHandler) GetMemberGroupsByGroupID(ctx context.Context, req *membergrouppb.GetMemberGroupsByGroupIDRequest) (*membergrouppb.GetMemberGroupsByGroupIDResponse, error) {
+func (h *MemberGroupHandler) GetMemberGroupsByGroupID(
+	ctx context.Context,
+	req *membergrouppb.GetMemberGroupsByGroupIDRequest,
+) (*membergrouppb.GetMemberGroupsByGroupIDResponse, error) {
 	groupID, err := uuid.Parse(req.GroupId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

@@ -2,9 +2,9 @@ package domain_verifications
 
 import (
 	"context"
-	"time"
 	domainVerificationCommands "nfxid/modules/tenants/application/domain_verifications/commands"
 	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
+	"time"
 
 	"github.com/google/uuid"
 )

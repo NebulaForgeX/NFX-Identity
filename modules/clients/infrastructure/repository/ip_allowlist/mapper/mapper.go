@@ -13,19 +13,19 @@ func IPAllowlistDomainToModel(ip *ip_allowlist.IPAllowlist) *models.IpAllowlist 
 	}
 
 	return &models.IpAllowlist{
-		ID:           ip.ID(),
-		RuleID:       ip.RuleID(),
+		ID:            ip.ID(),
+		RuleID:        ip.RuleID(),
 		ApplicationID: ip.AppID(),
-		Cidr:         ip.CIDR(), // Model 使用 Cidr，Domain 使用 CIDR
-		Description:  ip.Description(),
-		Status:       allowlistStatusDomainToEnum(ip.Status()),
-		CreatedAt:    ip.CreatedAt(),
-		CreatedBy:    ip.CreatedBy(),
-		UpdatedAt:    ip.UpdatedAt(),
-		UpdatedBy:    ip.UpdatedBy(),
-		RevokedAt:    ip.RevokedAt(),
-		RevokedBy:    ip.RevokedBy(),
-		RevokeReason: ip.RevokeReason(),
+		Cidr:          ip.CIDR(), // Model 使用 Cidr，Domain 使用 CIDR
+		Description:   ip.Description(),
+		Status:        allowlistStatusDomainToEnum(ip.Status()),
+		CreatedAt:     ip.CreatedAt(),
+		CreatedBy:     ip.CreatedBy(),
+		UpdatedAt:     ip.UpdatedAt(),
+		UpdatedBy:     ip.UpdatedBy(),
+		RevokedAt:     ip.RevokedAt(),
+		RevokedBy:     ip.RevokedBy(),
+		RevokeReason:  ip.RevokeReason(),
 	}
 }
 
@@ -58,12 +58,12 @@ func IPAllowlistModelToDomain(m *models.IpAllowlist) *ip_allowlist.IPAllowlist {
 func IPAllowlistModelToUpdates(m *models.IpAllowlist) map[string]any {
 	return map[string]any{
 		models.IpAllowlistCols.Cidr:         m.Cidr,
-		models.IpAllowlistCols.Description: m.Description,
-		models.IpAllowlistCols.Status:      m.Status,
-		models.IpAllowlistCols.UpdatedAt:   m.UpdatedAt,
-		models.IpAllowlistCols.UpdatedBy:   m.UpdatedBy,
-		models.IpAllowlistCols.RevokedAt:   m.RevokedAt,
-		models.IpAllowlistCols.RevokedBy:   m.RevokedBy,
+		models.IpAllowlistCols.Description:  m.Description,
+		models.IpAllowlistCols.Status:       m.Status,
+		models.IpAllowlistCols.UpdatedAt:    m.UpdatedAt,
+		models.IpAllowlistCols.UpdatedBy:    m.UpdatedBy,
+		models.IpAllowlistCols.RevokedAt:    m.RevokedAt,
+		models.IpAllowlistCols.RevokedBy:    m.RevokedBy,
 		models.IpAllowlistCols.RevokeReason: m.RevokeReason,
 	}
 }

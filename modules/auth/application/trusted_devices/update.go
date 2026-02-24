@@ -2,8 +2,8 @@ package trusted_devices
 
 import (
 	"context"
-	"time"
 	trustedDeviceCommands "nfxid/modules/auth/application/trusted_devices/commands"
+	"time"
 )
 
 // UpdateLastUsed 更新最后使用时间

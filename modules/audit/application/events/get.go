@@ -2,9 +2,9 @@ package events
 
 import (
 	"context"
-	"time"
 	eventResult "nfxid/modules/audit/application/events/results"
 	eventDomain "nfxid/modules/audit/domain/events"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -28,7 +28,12 @@ func (s *Service) GetEventByEventID(ctx context.Context, eventID string) (eventR
 }
 
 // GetEventsByActor 根据操作者获取事件列表
-func (s *Service) GetEventsByActor(ctx context.Context, actorType eventDomain.ActorType, actorID uuid.UUID, startTime, endTime *time.Time) ([]eventResult.EventRO, error) {
+func (s *Service) GetEventsByActor(
+	ctx context.Context,
+	actorType eventDomain.ActorType,
+	actorID uuid.UUID,
+	startTime, endTime *time.Time,
+) ([]eventResult.EventRO, error) {
 	domainEntities, err := s.eventRepo.Get.ByActor(ctx, actorType, actorID, startTime, endTime)
 	if err != nil {
 		return nil, err

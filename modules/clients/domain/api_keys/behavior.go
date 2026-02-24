@@ -1,6 +1,7 @@
 package api_keys
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,10 +9,10 @@ import (
 
 func (ak *APIKey) UpdateLastUsed() error {
 	if ak.RevokedAt() != nil {
-		return ErrAPIKeyAlreadyRevoked
+		return clientsErr.ErrAPIKeyAlreadyRevoked
 	}
 	if ak.IsExpired() {
-		return ErrAPIKeyExpired
+		return clientsErr.ErrAPIKeyExpired
 	}
 
 	now := time.Now().UTC()
@@ -21,7 +22,7 @@ func (ak *APIKey) UpdateLastUsed() error {
 
 func (ak *APIKey) Revoke(revokedBy uuid.UUID, reason string) error {
 	if ak.RevokedAt() != nil {
-		return ErrAPIKeyAlreadyRevoked
+		return clientsErr.ErrAPIKeyAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

@@ -46,7 +46,11 @@ func (c *InvitationClient) GetInvitationByInvitationID(ctx context.Context, invi
 }
 
 // GetInvitationsByTenantID 根据租户ID获取邀请列表
-func (c *InvitationClient) GetInvitationsByTenantID(ctx context.Context, tenantID string, status *invitationpb.TenantsInvitationStatus) ([]*invitationpb.Invitation, error) {
+func (c *InvitationClient) GetInvitationsByTenantID(
+	ctx context.Context,
+	tenantID string,
+	status *invitationpb.TenantsInvitationStatus,
+) ([]*invitationpb.Invitation, error) {
 	req := &invitationpb.GetInvitationsByTenantIDRequest{
 		TenantId: tenantID,
 		Status:   status,

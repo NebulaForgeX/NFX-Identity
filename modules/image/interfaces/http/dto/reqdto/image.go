@@ -12,13 +12,13 @@ type ImageCreateRequestDTO struct {
 	TenantID         *uuid.UUID             `json:"tenant_id,omitempty"`
 	AppID            *uuid.UUID             `json:"app_id,omitempty"`
 	SourceDomain     *string                `json:"source_domain,omitempty"`
-	Filename         string                 `json:"filename" validate:"required"`
-	OriginalFilename string                 `json:"original_filename" validate:"required"`
-	MimeType         string                 `json:"mime_type" validate:"required"`
-	Size             int64                  `json:"size" validate:"required,min=1"`
+	Filename         string                 `json:"filename"                validate:"required"`
+	OriginalFilename string                 `json:"original_filename"       validate:"required"`
+	MimeType         string                 `json:"mime_type"               validate:"required"`
+	Size             int64                  `json:"size"                    validate:"required,min=1"`
 	Width            *int                   `json:"width,omitempty"`
 	Height           *int                   `json:"height,omitempty"`
-	StoragePath      string                 `json:"storage_path" validate:"required"`
+	StoragePath      string                 `json:"storage_path"            validate:"required"`
 	URL              *string                `json:"url,omitempty"`
 	IsPublic         bool                   `json:"is_public"`
 	Metadata         map[string]interface{} `json:"metadata,omitempty"`

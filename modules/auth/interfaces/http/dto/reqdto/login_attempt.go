@@ -8,7 +8,7 @@ import (
 )
 
 type LoginAttemptCreateRequestDTO struct {
-	Identifier        string  `json:"identifier" validate:"required"`
+	Identifier        string  `json:"identifier"                   validate:"required"`
 	UserID            *string `json:"user_id,omitempty"`
 	IP                *string `json:"ip,omitempty"`
 	UAHash            *string `json:"ua_hash,omitempty"`

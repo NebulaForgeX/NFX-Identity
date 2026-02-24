@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/domain/invitations"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/invitations/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByInviteID(ctx context.Context, inviteID string) (*invitations
 	var m models.Invitation
 	if err := h.db.WithContext(ctx).Where("invite_id = ?", inviteID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, invitations.ErrInvitationNotFound
+			return nil, tenantsErr.ErrInvitationNotFound
 		}
 		return nil, err
 	}

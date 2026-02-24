@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"nfxid/enums"
-	"nfxid/modules/tenants/domain/domain_verifications"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -19,7 +19,7 @@ func (h *Handler) Fail(ctx context.Context, id uuid.UUID) error {
 		Where("id = ?", id).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return domain_verifications.ErrDomainVerificationNotFound
+			return tenantsErr.ErrDomainVerificationNotFound
 		}
 		return err
 	}

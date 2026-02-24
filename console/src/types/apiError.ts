@@ -1,0 +1,114 @@
+/**
+ * API 错误类型 - 与后端 NFX-Identity errx + fiberx 错误响应一致
+ * 后端返回：{ status, err_code, message, details?, trace_id? }（axios-case-converter 转为 camelCase）
+ */
+
+/** 后端 errx 错误码，与 backend pkgs/errx 及 modules 内 domain/application errors 对齐 */
+export type ApiErrCode =
+  // Auth application
+  | "INVALID_CREDENTIALS"
+  | "INVALID_REFRESH_TOKEN"
+  | "ACCOUNT_LOCKED"
+  | "EMAIL_ALREADY_EXISTS"
+  | "EMAIL_ALREADY_VERIFIED"
+  | "INVALID_VERIFICATION_CODE"
+  // Auth HTTP / common
+  | "SERVICE_UNAVAILABLE"
+  | "INVALID_PARAMS"
+  | "USER_HAS_CREDENTIALS"
+  // Image
+  | "POSTGRES_NOT_INITIALIZED"
+  | "REDIS_NOT_INITIALIZED"
+  | "ID_REQUIRED"
+  | "IMAGE_ID_REQUIRED"
+  | "TARGET_TYPE_REQUIRED"
+  | "INVALID_TARGET_TYPE"
+  // Access
+  | "APPLICATION_ROLE_ASSIGNMENT_NOT_FOUND"
+  | "TENANT_ROLE_NOT_FOUND"
+  | "TENANT_ROLE_KEY_REQUIRED"
+  | "TENANT_ID_REQUIRED"
+  | "TENANT_ROLE_KEY_EXISTS_IN_TENANT"
+  | "APPLICATION_ROLE_NOT_FOUND"
+  | "APPLICATION_ID_REQUIRED"
+  | "ROLE_KEY_REQUIRED"
+  | "TENANT_ROLE_ASSIGNMENT_NOT_FOUND"
+  | "SUPER_ADMIN_NOT_FOUND"
+  | "USER_ID_REQUIRED"
+  // Directory
+  | "USER_NOT_FOUND"
+  | "USERNAME_REQUIRED"
+  | "USERNAME_ALREADY_EXISTS"
+  | "INVALID_USER_STATUS"
+  | "USER_CREDENTIAL_NOT_FOUND"
+  | "CREDENTIAL_TYPE_REQUIRED"
+  | "INVALID_CREDENTIAL_TYPE"
+  | "INVALID_CREDENTIAL_STATUS"
+  | "PASSWORD_HASH_REQUIRED"
+  | "USER_CREDENTIAL_ALREADY_EXISTS"
+  | "USER_PROFILE_NOT_FOUND"
+  | "USER_PREFERENCE_NOT_FOUND"
+  | "USER_EMAIL_NOT_FOUND"
+  | "USER_EMAIL_ALREADY_EXISTS"
+  | "USER_PHONE_NOT_FOUND"
+  | "USER_IMAGE_NOT_FOUND"
+  | "USER_AVATAR_NOT_FOUND"
+  | "IMAGE_NOT_FOUND"
+  | "BADGE_NOT_FOUND"
+  | "USER_BADGE_NOT_FOUND"
+  | "USER_OCCUPATION_NOT_FOUND"
+  | "USER_EDUCATION_NOT_FOUND"
+  // Tenants
+  | "TENANT_NOT_FOUND"
+  | "TENANT_SETTING_NOT_FOUND"
+  | "MEMBER_NOT_FOUND"
+  | "MEMBER_GROUP_NOT_FOUND"
+  | "GROUP_NOT_FOUND"
+  | "INVITATION_NOT_FOUND"
+  | "DOMAIN_VERIFICATION_NOT_FOUND"
+  | "TENANT_APPLICATION_NOT_FOUND"
+  | "GROUP_ID_REQUIRED"
+  | "NAME_REQUIRED"
+  | "TENANT_ID_REQUIRED"
+  | "GROUP_ID_ALREADY_EXISTS"
+  | "INVALID_GROUP_TYPE"
+  | "DOMAIN_REQUIRED"
+  | "DOMAIN_VERIFICATION_ALREADY_EXISTS"
+  | "INVALID_VERIFICATION_METHOD"
+  | "INVALID_VERIFICATION_STATUS"
+  | "DOMAIN_VERIFICATION_EXPIRED"
+  // Clients
+  | "APPLICATION_NOT_FOUND"
+  | "API_KEY_NOT_FOUND"
+  | "CLIENT_CREDENTIAL_NOT_FOUND"
+  | "RATE_LIMIT_NOT_FOUND"
+  | "IP_ALLOWLIST_NOT_FOUND"
+  // Audit
+  | "EVENT_NOT_FOUND"
+  | "ACTOR_SNAPSHOT_NOT_FOUND"
+  | "EVENT_RETENTION_POLICY_NOT_FOUND"
+  | "EVENT_SEARCH_INDEX_NOT_FOUND"
+  | "HASH_CHAIN_CHECKPOINT_NOT_FOUND"
+  // System
+  | "SYSTEM_STATE_NOT_FOUND"
+  | "UNIMPLEMENTED"
+  // HTTP / fiber 通用
+  | "METHOD_NOT_ALLOWED"
+  | "NOT_FOUND"
+  | "BAD_REQUEST"
+  | "INTERNAL"
+  | "VALIDATION_ERROR";
+
+/** Rex/NFX 风格 API 错误体（前端 camelCase，与 response.data 一致） */
+export interface ApiErrorBody {
+  status?: number;
+  errCode?: ApiErrCode;
+  message?: string;
+  details?: unknown;
+  traceId?: string;
+}
+
+/** 类型守卫：判断是否为已知错误码（用于 UI 分支） */
+export function isApiErrCode(code: string | undefined): code is ApiErrCode {
+  return typeof code === "string" && code.length > 0;
+}

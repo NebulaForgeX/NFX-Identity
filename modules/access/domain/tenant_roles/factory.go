@@ -1,6 +1,8 @@
 package tenant_roles
 
 import (
+	accessErr "nfxid/errors/src/access"
+
 	"github.com/google/uuid"
 )
 
@@ -36,10 +38,10 @@ func NewTenantRoleFromState(st TenantRoleState) *TenantRole {
 
 func validateNewParams(p NewTenantRoleParams) error {
 	if p.TenantID == uuid.Nil {
-		return ErrTenantRoleTenantIDRequired
+		return accessErr.ErrTenantRoleTenantIDRequired
 	}
 	if p.RoleKey == "" {
-		return ErrTenantRoleRoleKeyRequired
+		return accessErr.ErrTenantRoleRoleKeyRequired
 	}
 	return nil
 }

@@ -12,16 +12,16 @@ func ClientScopeDomainToModel(cs *client_scopes.ClientScope) *models.ClientScope
 	}
 
 	return &models.ClientScope{
-		ID:             cs.ID(),
-		ApplicationID:  cs.AppID(),
-		Scope:        cs.Scope(),
-		GrantedBy:    cs.GrantedBy(),
-		GrantedAt:    cs.GrantedAt(),
-		ExpiresAt:    cs.ExpiresAt(),
-		CreatedAt:    cs.CreatedAt(),
-		RevokedAt:    cs.RevokedAt(),
-		RevokedBy:    cs.RevokedBy(),
-		RevokeReason: cs.RevokeReason(),
+		ID:            cs.ID(),
+		ApplicationID: cs.AppID(),
+		Scope:         cs.Scope(),
+		GrantedBy:     cs.GrantedBy(),
+		GrantedAt:     cs.GrantedAt(),
+		ExpiresAt:     cs.ExpiresAt(),
+		CreatedAt:     cs.CreatedAt(),
+		RevokedAt:     cs.RevokedAt(),
+		RevokedBy:     cs.RevokedBy(),
+		RevokeReason:  cs.RevokeReason(),
 	}
 }
 

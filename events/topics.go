@@ -67,4 +67,3 @@ func (TenantsTopic) TopicKey() eventbus.TopicKey { return TKTenants }
 type ImageTopic struct{}
 
 func (ImageTopic) TopicKey() eventbus.TopicKey { return TKImage }
-

@@ -34,7 +34,7 @@ func NewSchemaChecker() *SchemaChecker {
 // initSchemaClients 初始化所有服务的 schema 清空客户端
 func initSchemaClients(grpcClients *GRPCClients, cfg *config.GRPCClientConfig, serverCfg *config.ServerConfig, tokenProvider servertoken.TokenProvider) error {
 	schemaChecker := NewSchemaChecker()
-	
+
 	// 构建 system 服务地址（自身）
 	systemAddr := fmt.Sprintf("%s:%d", serverCfg.Host, serverCfg.GRPCPort)
 
@@ -88,8 +88,8 @@ func (c *GRPCClients) ClearAllSchemas(ctx context.Context) (map[string]*schemapb
 			logx.S().Warnf("No schema clear client for service: %s", serviceName)
 			errMsg := fmt.Sprintf("schema clear client not found for service: %s", serviceName)
 			results[serviceName] = &schemapb.ClearSchemaResponse{
-				Success:      false,
-				ErrorMessage: &errMsg,
+				Success:       false,
+				ErrorMessage:  &errMsg,
 				TablesCleared: 0,
 			}
 			continue
@@ -104,8 +104,8 @@ func (c *GRPCClients) ClearAllSchemas(ctx context.Context) (map[string]*schemapb
 			logx.S().Warnf("Schema clear failed for %s: %v", serviceName, err)
 			errMsg := err.Error()
 			results[serviceName] = &schemapb.ClearSchemaResponse{
-				Success:      false,
-				ErrorMessage: &errMsg,
+				Success:       false,
+				ErrorMessage:  &errMsg,
 				TablesCleared: 0,
 			}
 		} else {

@@ -46,7 +46,10 @@ func (c *EventSearchIndexClient) GetEventSearchIndexByEventID(ctx context.Contex
 }
 
 // SearchEvents 搜索事件
-func (c *EventSearchIndexClient) SearchEvents(ctx context.Context, req *eventsearchindexpb.SearchEventsRequest) (*eventsearchindexpb.SearchEventsResponse, error) {
+func (c *EventSearchIndexClient) SearchEvents(
+	ctx context.Context,
+	req *eventsearchindexpb.SearchEventsRequest,
+) (*eventsearchindexpb.SearchEventsResponse, error) {
 	resp, err := c.client.SearchEvents(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("gRPC call failed: %w", err)

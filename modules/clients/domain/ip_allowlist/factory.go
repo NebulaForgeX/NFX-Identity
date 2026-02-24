@@ -1,6 +1,7 @@
 package ip_allowlist
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,13 +51,13 @@ func NewIPAllowlistFromState(st IPAllowlistState) *IPAllowlist {
 
 func validateIPAllowlistParams(p NewIPAllowlistParams) error {
 	if p.RuleID == "" {
-		return ErrRuleIDRequired
+		return clientsErr.ErrRuleIDRequired
 	}
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if p.CIDR == "" {
-		return ErrCIDRRequired
+		return clientsErr.ErrCIDRRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[AllowlistStatus]struct{}{
@@ -65,7 +66,7 @@ func validateIPAllowlistParams(p NewIPAllowlistParams) error {
 			AllowlistStatusRevoked:  {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidAllowlistStatus
+			return clientsErr.ErrInvalidAllowlistStatus
 		}
 	}
 	return nil

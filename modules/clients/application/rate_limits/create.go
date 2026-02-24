@@ -2,6 +2,7 @@ package rate_limits
 
 import (
 	"context"
+	clientsErr "nfxid/errors/src/clients"
 	rateLimitCommands "nfxid/modules/clients/application/rate_limits/commands"
 	rateLimitDomain "nfxid/modules/clients/domain/rate_limits"
 
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateRateLimit(ctx context.Context, cmd rateLimitCommands.CreateRateLimitCmd) (uuid.UUID, error) {
 	// Check if rate limit already exists for this app and limit type
 	if exists, _ := s.rateLimitRepo.Check.ByAppIDAndLimitType(ctx, cmd.AppID, cmd.LimitType); exists {
-		return uuid.Nil, rateLimitDomain.ErrRateLimitAlreadyExists
+		return uuid.Nil, clientsErr.ErrRateLimitAlreadyExists
 	}
 
 	// Create domain entity

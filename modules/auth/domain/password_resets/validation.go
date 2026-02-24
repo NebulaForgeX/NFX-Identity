@@ -1,32 +1,36 @@
 package password_resets
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (pr *PasswordReset) Validate() error {
 	if pr.ResetID() == "" {
-		return ErrResetIDRequired
+		return authErr.ErrResetIDRequired
 	}
 	if pr.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if pr.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if pr.Delivery() == "" {
-		return ErrDeliveryRequired
+		return authErr.ErrDeliveryRequired
 	}
 	validDeliveries := map[ResetDelivery]struct{}{
 		ResetDeliveryEmail: {},
 		ResetDeliverySMS:   {},
 	}
 	if _, ok := validDeliveries[pr.Delivery()]; !ok {
-		return ErrInvalidResetDelivery
+		return authErr.ErrInvalidResetDelivery
 	}
 	if pr.CodeHash() == "" {
-		return ErrCodeHashRequired
+		return authErr.ErrCodeHashRequired
 	}
 	if pr.ExpiresAt().IsZero() {
-		return ErrExpiresAtRequired
+		return authErr.ErrExpiresAtRequired
 	}
 	return nil
 }

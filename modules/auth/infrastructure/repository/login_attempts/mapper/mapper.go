@@ -70,10 +70,10 @@ func LoginAttemptModelToUpdates(m *models.LoginAttempt) map[string]any {
 		models.LoginAttemptCols.IP:                m.IP,
 		models.LoginAttemptCols.UaHash:            m.UaHash,
 		models.LoginAttemptCols.DeviceFingerprint: m.DeviceFingerprint,
-		models.LoginAttemptCols.Success:          m.Success,
-		models.LoginAttemptCols.FailureCode:      m.FailureCode,
-		models.LoginAttemptCols.MfaRequired:      m.MfaRequired,
-		models.LoginAttemptCols.MfaVerified:      m.MfaVerified,
+		models.LoginAttemptCols.Success:           m.Success,
+		models.LoginAttemptCols.FailureCode:       m.FailureCode,
+		models.LoginAttemptCols.MfaRequired:       m.MfaRequired,
+		models.LoginAttemptCols.MfaVerified:       m.MfaVerified,
 	}
 }
 

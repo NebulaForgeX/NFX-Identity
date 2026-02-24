@@ -19,7 +19,7 @@ func (d *CreateUserEmailDTO) ToCreateUserEmailRequest() *useremailpb.CreateUserE
 		UserId:            d.UserID,
 		Email:             d.Email,
 		IsPrimary:         d.IsPrimary,
-		IsVerified:         d.IsVerified,
+		IsVerified:        d.IsVerified,
 		VerificationToken: d.VerificationToken,
 	}
 }

@@ -1,6 +1,7 @@
 package system_state
 
 import (
+	systemErr "nfxid/errors/src/system"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (ss *SystemState) Initialize(version string) error {
 	if ss.Initialized() {
-		return ErrAlreadyInitialized
+		return systemErr.ErrAlreadyInitialized
 	}
 
 	now := time.Now().UTC()

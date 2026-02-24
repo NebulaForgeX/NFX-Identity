@@ -1,8 +1,12 @@
 package users
 
+import (
+	dirErr "nfxid/errors/src/directory"
+)
+
 func (u *User) Validate() error {
 	if u.Username() == "" {
-		return ErrUsernameRequired
+		return dirErr.ErrUsernameRequired
 	}
 	validStatuses := map[UserStatus]struct{}{
 		UserStatusPending:  {},
@@ -10,7 +14,7 @@ func (u *User) Validate() error {
 		UserStatusDeactive: {},
 	}
 	if _, ok := validStatuses[u.Status()]; !ok {
-		return ErrInvalidUserStatus
+		return dirErr.ErrInvalidUserStatus
 	}
 	return nil
 }

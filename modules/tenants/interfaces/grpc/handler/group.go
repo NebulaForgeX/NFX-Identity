@@ -5,8 +5,8 @@ import (
 
 	groupApp "nfxid/modules/tenants/application/groups"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	grouppb "nfxid/protos/gen/tenants/group"
 	"nfxid/pkgs/errx"
+	grouppb "nfxid/protos/gen/tenants/group"
 
 	"github.com/google/uuid"
 )

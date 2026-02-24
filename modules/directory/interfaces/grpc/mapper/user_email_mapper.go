@@ -14,13 +14,13 @@ func UserEmailROToProto(v *userEmailAppResult.UserEmailRO) *useremailpb.UserEmai
 	}
 
 	userEmail := &useremailpb.UserEmail{
-		Id:        v.ID.String(),
-		UserId:    v.UserID.String(),
-		Email:     v.Email,
-		IsPrimary: v.IsPrimary,
+		Id:         v.ID.String(),
+		UserId:     v.UserID.String(),
+		Email:      v.Email,
+		IsPrimary:  v.IsPrimary,
 		IsVerified: v.IsVerified,
-		CreatedAt: timestamppb.New(v.CreatedAt),
-		UpdatedAt: timestamppb.New(v.UpdatedAt),
+		CreatedAt:  timestamppb.New(v.CreatedAt),
+		UpdatedAt:  timestamppb.New(v.UpdatedAt),
 	}
 
 	if v.VerifiedAt != nil {

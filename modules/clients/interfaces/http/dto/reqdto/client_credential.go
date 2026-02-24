@@ -7,10 +7,10 @@ import (
 )
 
 type ClientCredentialCreateRequestDTO struct {
-	AppID      uuid.UUID  `json:"app_id" validate:"required"`
-	ClientID   string     `json:"client_id" validate:"required"`
-	SecretHash string     `json:"secret_hash" validate:"required"`
-	HashAlg    string     `json:"hash_alg" validate:"required"`
+	AppID      uuid.UUID  `json:"app_id"               validate:"required"`
+	ClientID   string     `json:"client_id"            validate:"required"`
+	SecretHash string     `json:"secret_hash"          validate:"required"`
+	HashAlg    string     `json:"hash_alg"             validate:"required"`
 	ExpiresAt  *string    `json:"expires_at,omitempty"`
 	CreatedBy  *uuid.UUID `json:"created_by,omitempty"`
 }

@@ -1,6 +1,7 @@
 package groups
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,10 +9,10 @@ import (
 
 func (g *Group) Update(name string, groupType GroupType, parentGroupID *uuid.UUID, description *string, metadata map[string]interface{}) error {
 	if g.DeletedAt() != nil {
-		return ErrGroupNotFound
+		return tenantsErr.ErrGroupNotFound
 	}
 	if name == "" {
-		return ErrNameRequired
+		return tenantsErr.ErrNameRequired
 	}
 	if groupType != "" {
 		validTypes := map[GroupType]struct{}{
@@ -21,7 +22,7 @@ func (g *Group) Update(name string, groupType GroupType, parentGroupID *uuid.UUI
 			GroupTypeOther:      {},
 		}
 		if _, ok := validTypes[groupType]; !ok {
-			return ErrInvalidGroupType
+			return tenantsErr.ErrInvalidGroupType
 		}
 		g.state.Type = groupType
 	}

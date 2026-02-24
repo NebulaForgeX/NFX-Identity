@@ -35,14 +35,14 @@ type AccountLockoutState struct {
 	UpdatedAt     time.Time
 }
 
-func (al *AccountLockout) UserID() uuid.UUID      { return al.state.UserID }
-func (al *AccountLockout) LockedUntil() *time.Time { return al.state.LockedUntil }
-func (al *AccountLockout) LockReason() LockReason { return al.state.LockReason }
-func (al *AccountLockout) LockedAt() time.Time    { return al.state.LockedAt }
-func (al *AccountLockout) LockedBy() *string      { return al.state.LockedBy }
-func (al *AccountLockout) ActorID() *uuid.UUID    { return al.state.ActorID }
-func (al *AccountLockout) UnlockedAt() *time.Time { return al.state.UnlockedAt }
-func (al *AccountLockout) UnlockedBy() *string    { return al.state.UnlockedBy }
+func (al *AccountLockout) UserID() uuid.UUID         { return al.state.UserID }
+func (al *AccountLockout) LockedUntil() *time.Time   { return al.state.LockedUntil }
+func (al *AccountLockout) LockReason() LockReason    { return al.state.LockReason }
+func (al *AccountLockout) LockedAt() time.Time       { return al.state.LockedAt }
+func (al *AccountLockout) LockedBy() *string         { return al.state.LockedBy }
+func (al *AccountLockout) ActorID() *uuid.UUID       { return al.state.ActorID }
+func (al *AccountLockout) UnlockedAt() *time.Time    { return al.state.UnlockedAt }
+func (al *AccountLockout) UnlockedBy() *string       { return al.state.UnlockedBy }
 func (al *AccountLockout) UnlockActorID() *uuid.UUID { return al.state.UnlockActorID }
-func (al *AccountLockout) CreatedAt() time.Time   { return al.state.CreatedAt }
-func (al *AccountLockout) UpdatedAt() time.Time   { return al.state.UpdatedAt }
+func (al *AccountLockout) CreatedAt() time.Time      { return al.state.CreatedAt }
+func (al *AccountLockout) UpdatedAt() time.Time      { return al.state.UpdatedAt }

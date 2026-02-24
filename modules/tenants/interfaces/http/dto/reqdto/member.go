@@ -8,8 +8,8 @@ import (
 )
 
 type MemberCreateRequestDTO struct {
-	TenantID    uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
-	UserID      uuid.UUID              `json:"user_id" validate:"required,uuid"`
+	TenantID    uuid.UUID              `json:"tenant_id"              validate:"required,uuid"`
+	UserID      uuid.UUID              `json:"user_id"                validate:"required,uuid"`
 	Status      string                 `json:"status,omitempty"`
 	Source      string                 `json:"source,omitempty"`
 	CreatedBy   *uuid.UUID             `json:"created_by,omitempty"`
@@ -19,7 +19,7 @@ type MemberCreateRequestDTO struct {
 
 type MemberUpdateStatusRequestDTO struct {
 	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
-	Status string    `json:"status" validate:"required"`
+	Status string    `         validate:"required"      json:"status"`
 }
 
 type MemberByIDRequestDTO struct {

@@ -6,8 +6,8 @@ import (
 	imageApp "nfxid/modules/image/application/images"
 	imageCommands "nfxid/modules/image/application/images/commands"
 	"nfxid/modules/image/interfaces/grpc/mapper"
-	imagepb "nfxid/protos/gen/image/image"
 	"nfxid/pkgs/errx"
+	imagepb "nfxid/protos/gen/image/image"
 
 	"github.com/google/uuid"
 )

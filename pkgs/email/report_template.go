@@ -55,4 +55,3 @@ func BuildReportEmailHTML(reportType, targetID, reportCategory, details string, 
 
 	return html
 }
-

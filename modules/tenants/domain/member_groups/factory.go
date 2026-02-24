@@ -1,6 +1,7 @@
 package member_groups
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,10 +39,10 @@ func NewMemberGroupFromState(st MemberGroupState) *MemberGroup {
 
 func validateMemberGroupParams(p NewMemberGroupParams) error {
 	if p.MemberID == uuid.Nil {
-		return ErrMemberIDRequired
+		return tenantsErr.ErrMemberIDRequired
 	}
 	if p.GroupID == uuid.Nil {
-		return ErrGroupIDRequired
+		return tenantsErr.ErrGroupIDRequired
 	}
 	return nil
 }

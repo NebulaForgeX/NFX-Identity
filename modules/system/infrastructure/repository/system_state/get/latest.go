@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	systemErr "nfxid/errors/src/system"
 	"nfxid/modules/system/domain/system_state"
 	"nfxid/modules/system/infrastructure/rdb/models"
 	"nfxid/modules/system/infrastructure/repository/system_state/mapper"
@@ -15,7 +17,7 @@ func (h *Handler) Latest(ctx context.Context) (*system_state.SystemState, error)
 	var m models.SystemState
 	if err := h.db.WithContext(ctx).Order("created_at DESC").First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, system_state.ErrSystemStateNotFound
+			return nil, systemErr.ErrSystemStateNotFound
 		}
 		return nil, err
 	}

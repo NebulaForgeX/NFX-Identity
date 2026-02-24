@@ -5,8 +5,8 @@ import (
 
 	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
 	"nfxid/modules/access/interfaces/grpc/mapper"
-	tenantrolepb "nfxid/protos/gen/access/tenant_role"
 	"nfxid/pkgs/errx"
+	tenantrolepb "nfxid/protos/gen/access/tenant_role"
 
 	"github.com/google/uuid"
 )
@@ -20,7 +20,10 @@ func NewTenantRoleHandler(svc *tenantrolesApp.Service) *TenantRoleHandler {
 	return &TenantRoleHandler{svc: svc}
 }
 
-func (h *TenantRoleHandler) GetTenantRoleByID(ctx context.Context, req *tenantrolepb.GetTenantRoleByIDRequest) (*tenantrolepb.GetTenantRoleByIDResponse, error) {
+func (h *TenantRoleHandler) GetTenantRoleByID(
+	ctx context.Context,
+	req *tenantrolepb.GetTenantRoleByIDRequest,
+) (*tenantrolepb.GetTenantRoleByIDResponse, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -34,7 +37,10 @@ func (h *TenantRoleHandler) GetTenantRoleByID(ctx context.Context, req *tenantro
 	}, nil
 }
 
-func (h *TenantRoleHandler) GetTenantRoleByTenantIDAndRoleKey(ctx context.Context, req *tenantrolepb.GetTenantRoleByTenantIDAndRoleKeyRequest) (*tenantrolepb.GetTenantRoleByTenantIDAndRoleKeyResponse, error) {
+func (h *TenantRoleHandler) GetTenantRoleByTenantIDAndRoleKey(
+	ctx context.Context,
+	req *tenantrolepb.GetTenantRoleByTenantIDAndRoleKeyRequest,
+) (*tenantrolepb.GetTenantRoleByTenantIDAndRoleKeyResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -48,7 +54,10 @@ func (h *TenantRoleHandler) GetTenantRoleByTenantIDAndRoleKey(ctx context.Contex
 	}, nil
 }
 
-func (h *TenantRoleHandler) ListTenantRolesByTenantID(ctx context.Context, req *tenantrolepb.ListTenantRolesByTenantIDRequest) (*tenantrolepb.ListTenantRolesByTenantIDResponse, error) {
+func (h *TenantRoleHandler) ListTenantRolesByTenantID(
+	ctx context.Context,
+	req *tenantrolepb.ListTenantRolesByTenantIDRequest,
+) (*tenantrolepb.ListTenantRolesByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -64,7 +73,10 @@ func (h *TenantRoleHandler) ListTenantRolesByTenantID(ctx context.Context, req *
 	return &tenantrolepb.ListTenantRolesByTenantIDResponse{TenantRoles: out}, nil
 }
 
-func (h *TenantRoleHandler) BatchGetTenantRoles(ctx context.Context, req *tenantrolepb.BatchGetTenantRolesRequest) (*tenantrolepb.BatchGetTenantRolesResponse, error) {
+func (h *TenantRoleHandler) BatchGetTenantRoles(
+	ctx context.Context,
+	req *tenantrolepb.BatchGetTenantRolesRequest,
+) (*tenantrolepb.BatchGetTenantRolesResponse, error) {
 	var out []*tenantrolepb.TenantRole
 	for _, idStr := range req.Ids {
 		id, err := uuid.Parse(idStr)

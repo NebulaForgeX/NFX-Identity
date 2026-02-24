@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	auditErr "nfxid/errors/src/audit"
 	"nfxid/modules/audit/domain/hash_chain_checkpoints"
 	"nfxid/modules/audit/infrastructure/rdb/models"
 	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByCheckpointID(ctx context.Context, checkpointID string) (*has
 	var m models.HashChainCheckpoint
 	if err := h.db.WithContext(ctx).Where("checkpoint_id = ?", checkpointID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, hash_chain_checkpoints.ErrHashChainCheckpointNotFound
+			return nil, auditErr.ErrHashChainCheckpointNotFound
 		}
 		return nil, err
 	}

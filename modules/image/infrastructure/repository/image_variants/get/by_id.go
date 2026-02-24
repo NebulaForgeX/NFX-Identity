@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	imageErr "nfxid/errors/src/image"
 	"nfxid/modules/image/domain/image_variants"
 	"nfxid/modules/image/infrastructure/rdb/models"
 	"nfxid/modules/image/infrastructure/repository/image_variants/mapper"
@@ -16,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*image_variants.Image
 	var m models.ImageVariant
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, image_variants.ErrImageVariantNotFound
+			return nil, imageErr.ErrImageVariantNotFound
 		}
 		return nil, err
 	}

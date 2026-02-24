@@ -28,7 +28,7 @@ func readAndSubstituteToml(path string) (string, error) {
 		value := os.Getenv(varName)
 		if value == "" {
 			missingVars[varName] = true // 记录缺失的变量
-			return match                 // 保持原样，稍后报错
+			return match                // 保持原样，稍后报错
 		}
 
 		return value

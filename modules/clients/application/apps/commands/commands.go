@@ -32,8 +32,8 @@ type UpdateAppCmd struct {
 
 // UpdateAppStatusCmd 更新应用状态命令
 type UpdateAppStatusCmd struct {
-	AppID   uuid.UUID
-	Status  apps.AppStatus
+	AppID  uuid.UUID
+	Status apps.AppStatus
 }
 
 // DeleteAppCmd 删除应用命令

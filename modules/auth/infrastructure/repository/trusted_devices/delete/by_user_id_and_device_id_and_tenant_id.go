@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/trusted_devices"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByUserIDAndDeviceIDAndTenantID(ctx context.Context, userID uui
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return trusted_devices.ErrTrustedDeviceNotFound
+		return authErr.ErrTrustedDeviceNotFound
 	}
 	return nil
 }

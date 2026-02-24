@@ -32,7 +32,10 @@ func (c *HashChainCheckpointClient) GetHashChainCheckpointByID(ctx context.Conte
 }
 
 // GetHashChainCheckpointByCheckpointID 根据检查点ID获取检查点
-func (c *HashChainCheckpointClient) GetHashChainCheckpointByCheckpointID(ctx context.Context, checkpointID string) (*hashchaincheckpointpb.HashChainCheckpoint, error) {
+func (c *HashChainCheckpointClient) GetHashChainCheckpointByCheckpointID(
+	ctx context.Context,
+	checkpointID string,
+) (*hashchaincheckpointpb.HashChainCheckpoint, error) {
 	req := &hashchaincheckpointpb.GetHashChainCheckpointByCheckpointIDRequest{
 		CheckpointId: checkpointID,
 	}

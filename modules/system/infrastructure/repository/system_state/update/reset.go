@@ -17,10 +17,10 @@ func (h *Handler) Reset(ctx context.Context, resetBy uuid.UUID) error {
 		Where("id = (SELECT id FROM system.system_state ORDER BY created_at DESC LIMIT 1)").
 		Updates(map[string]any{
 			models.SystemStateCols.Initialized:   false,
-			models.SystemStateCols.InitializedAt:  nil,
-			models.SystemStateCols.LastResetAt:    &now,
-			models.SystemStateCols.LastResetBy:    &resetBy,
-			models.SystemStateCols.ResetCount:     gorm.Expr("reset_count + 1"),
+			models.SystemStateCols.InitializedAt: nil,
+			models.SystemStateCols.LastResetAt:   &now,
+			models.SystemStateCols.LastResetBy:   &resetBy,
+			models.SystemStateCols.ResetCount:    gorm.Expr("reset_count + 1"),
 			models.SystemStateCols.UpdatedAt:     now,
 		}).Error
 }

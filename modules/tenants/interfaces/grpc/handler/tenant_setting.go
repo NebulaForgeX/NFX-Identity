@@ -5,8 +5,8 @@ import (
 
 	tenantSettingApp "nfxid/modules/tenants/application/tenant_settings"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
 	"nfxid/pkgs/errx"
+	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
 
 	"github.com/google/uuid"
 )
@@ -23,7 +23,10 @@ func NewTenantSettingHandler(tenantSettingAppSvc *tenantSettingApp.Service) *Ten
 }
 
 // GetTenantSettingByID 根据ID获取租户设置
-func (h *TenantSettingHandler) GetTenantSettingByID(ctx context.Context, req *tenantsettingpb.GetTenantSettingByIDRequest) (*tenantsettingpb.GetTenantSettingByIDResponse, error) {
+func (h *TenantSettingHandler) GetTenantSettingByID(
+	ctx context.Context,
+	req *tenantsettingpb.GetTenantSettingByIDRequest,
+) (*tenantsettingpb.GetTenantSettingByIDResponse, error) {
 	tenantSettingID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -39,7 +42,10 @@ func (h *TenantSettingHandler) GetTenantSettingByID(ctx context.Context, req *te
 }
 
 // GetTenantSettingByTenantID 根据租户ID获取租户设置
-func (h *TenantSettingHandler) GetTenantSettingByTenantID(ctx context.Context, req *tenantsettingpb.GetTenantSettingByTenantIDRequest) (*tenantsettingpb.GetTenantSettingByTenantIDResponse, error) {
+func (h *TenantSettingHandler) GetTenantSettingByTenantID(
+	ctx context.Context,
+	req *tenantsettingpb.GetTenantSettingByTenantIDRequest,
+) (*tenantsettingpb.GetTenantSettingByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

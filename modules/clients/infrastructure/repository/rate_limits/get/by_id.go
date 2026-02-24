@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/rate_limits"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*rate_limits.RateLimi
 	var m models.RateLimit
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, rate_limits.ErrRateLimitNotFound
+			return nil, clientsErr.ErrRateLimitNotFound
 		}
 		return nil, err
 	}

@@ -35,21 +35,15 @@ tasks:
       - go install github.com/segmentio/golines@latest
       - go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
       - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-      - go install github.com/bufbuild/buf/cmd/buf@v1.49.0
       - go install golang.org/x/tools/cmd/goimports@latest
     silent: false
-
-  proto:update:
-    desc: "Download buf dependencies"
-    dir: "{{.PROTO_SRC_DIR}}"
-    cmds:
-      - buf dep update
 
   proto:gen:
     desc: "Generate gRPC & Protobuf code using buf"
     deps: [proto:update]
     dir: "{{.PROTO_SRC_DIR}}"
     cmds:
+      - buf dep update
       - buf generate
     sources:
       - "{{.PROTO_SRC_DIR}}/**/*.proto"
@@ -62,9 +56,10 @@ tasks:
       - golangci-lint run --timeout=5m
 
   fmt:
-    desc: "Format Go code"
+    desc: "Format Go code (goimports + golines)"
     cmds:
-      - golines -m 120 -w .
+      - goimports -w .
+      - golines -m 160 -w .
     silent: true
 
   ci:

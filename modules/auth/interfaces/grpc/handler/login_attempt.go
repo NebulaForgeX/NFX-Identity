@@ -4,8 +4,8 @@ import (
 	"context"
 
 	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
-	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
 	"nfxid/pkgs/errx"
+	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
 )
 
 type LoginAttemptHandler struct {
@@ -20,6 +20,9 @@ func NewLoginAttemptHandler(loginAttemptAppSvc *loginAttemptApp.Service) *LoginA
 }
 
 // GetLoginAttemptByID 根据ID获取登录尝试
-func (h *LoginAttemptHandler) GetLoginAttemptByID(ctx context.Context, req *loginattemptpb.GetLoginAttemptByIDRequest) (*loginattemptpb.GetLoginAttemptByIDResponse, error) {
+func (h *LoginAttemptHandler) GetLoginAttemptByID(
+	ctx context.Context,
+	req *loginattemptpb.GetLoginAttemptByIDRequest,
+) (*loginattemptpb.GetLoginAttemptByIDResponse, error) {
 	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetLoginAttemptByID not implemented")
 }

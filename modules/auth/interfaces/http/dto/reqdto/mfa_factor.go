@@ -8,10 +8,10 @@ import (
 )
 
 type MFAFactorCreateRequestDTO struct {
-	FactorID          string    `json:"factor_id" validate:"required"`
-	TenantID          uuid.UUID `json:"tenant_id" validate:"required"`
-	UserID            uuid.UUID `json:"user_id" validate:"required"`
-	Type              string    `json:"type" validate:"required"`
+	FactorID          string    `json:"factor_id"                     validate:"required"`
+	TenantID          uuid.UUID `json:"tenant_id"                     validate:"required"`
+	UserID            uuid.UUID `json:"user_id"                       validate:"required"`
+	Type              string    `json:"type"                          validate:"required"`
 	SecretEncrypted   *string   `json:"secret_encrypted,omitempty"`
 	Phone             *string   `json:"phone,omitempty"`
 	Email             *string   `json:"email,omitempty"`

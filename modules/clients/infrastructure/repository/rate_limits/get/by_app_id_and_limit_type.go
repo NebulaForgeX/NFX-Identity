@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/rate_limits"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
@@ -19,7 +20,7 @@ func (h *Handler) ByAppIDAndLimitType(ctx context.Context, appID uuid.UUID, limi
 		Where("app_id = ? AND limit_type = ?", appID, limitTypeEnum).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, rate_limits.ErrRateLimitNotFound
+			return nil, clientsErr.ErrRateLimitNotFound
 		}
 		return nil, err
 	}

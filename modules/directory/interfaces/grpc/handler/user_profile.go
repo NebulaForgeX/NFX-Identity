@@ -6,8 +6,8 @@ import (
 	userProfileApp "nfxid/modules/directory/application/user_profiles"
 	userProfileAppCommands "nfxid/modules/directory/application/user_profiles/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	userprofilepb "nfxid/protos/gen/directory/user_profile"
 	"nfxid/pkgs/errx"
+	userprofilepb "nfxid/protos/gen/directory/user_profile"
 
 	"github.com/google/uuid"
 )
@@ -24,7 +24,10 @@ func NewUserProfileHandler(userProfileAppSvc *userProfileApp.Service) *UserProfi
 }
 
 // CreateUserProfile 创建用户资料
-func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userprofilepb.CreateUserProfileRequest) (*userprofilepb.CreateUserProfileResponse, error) {
+func (h *UserProfileHandler) CreateUserProfile(
+	ctx context.Context,
+	req *userprofilepb.CreateUserProfileRequest,
+) (*userprofilepb.CreateUserProfileResponse, error) {
 	// 解析用户ID（id 直接引用 users.id）
 	userID, err := uuid.Parse(req.Id)
 	if err != nil {
@@ -93,7 +96,10 @@ func (h *UserProfileHandler) CreateUserProfile(ctx context.Context, req *userpro
 }
 
 // GetUserProfileByID 根据ID获取用户资料
-func (h *UserProfileHandler) GetUserProfileByID(ctx context.Context, req *userprofilepb.GetUserProfileByIDRequest) (*userprofilepb.GetUserProfileByIDResponse, error) {
+func (h *UserProfileHandler) GetUserProfileByID(
+	ctx context.Context,
+	req *userprofilepb.GetUserProfileByIDRequest,
+) (*userprofilepb.GetUserProfileByIDResponse, error) {
 	userProfileID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -109,7 +115,10 @@ func (h *UserProfileHandler) GetUserProfileByID(ctx context.Context, req *userpr
 }
 
 // GetUserProfileByUserID 根据用户ID获取用户资料
-func (h *UserProfileHandler) GetUserProfileByUserID(ctx context.Context, req *userprofilepb.GetUserProfileByUserIDRequest) (*userprofilepb.GetUserProfileByUserIDResponse, error) {
+func (h *UserProfileHandler) GetUserProfileByUserID(
+	ctx context.Context,
+	req *userprofilepb.GetUserProfileByUserIDRequest,
+) (*userprofilepb.GetUserProfileByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -125,7 +134,10 @@ func (h *UserProfileHandler) GetUserProfileByUserID(ctx context.Context, req *us
 }
 
 // BatchGetUserProfiles 批量获取用户资料
-func (h *UserProfileHandler) BatchGetUserProfiles(ctx context.Context, req *userprofilepb.BatchGetUserProfilesRequest) (*userprofilepb.BatchGetUserProfilesResponse, error) {
+func (h *UserProfileHandler) BatchGetUserProfiles(
+	ctx context.Context,
+	req *userprofilepb.BatchGetUserProfilesRequest,
+) (*userprofilepb.BatchGetUserProfilesResponse, error) {
 	userProfileIDs := make([]uuid.UUID, 0, len(req.Ids))
 	for _, idStr := range req.Ids {
 		id, err := uuid.Parse(idStr)

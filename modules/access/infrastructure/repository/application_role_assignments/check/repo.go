@@ -2,6 +2,7 @@ package check
 
 import (
 	"nfxid/modules/access/domain/application_role_assignments"
+
 	"gorm.io/gorm"
 )
 

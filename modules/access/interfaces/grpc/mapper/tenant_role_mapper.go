@@ -3,6 +3,7 @@ package mapper
 import (
 	domain "nfxid/modules/access/domain/tenant_roles"
 	tenantrolepb "nfxid/protos/gen/access/tenant_role"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

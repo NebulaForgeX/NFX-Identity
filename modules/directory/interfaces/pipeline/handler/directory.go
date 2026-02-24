@@ -53,7 +53,11 @@ func (h *DirectoryHandler) OnUserEmailsInvalidateCache(ctx context.Context, evt 
 }
 
 // OnUserOccupationsInvalidateCache 监听 UserOccupations 缓存清除事件
-func (h *DirectoryHandler) OnUserOccupationsInvalidateCache(ctx context.Context, evt directory.UserOccupationsInvalidateCacheEvent, msg *message.Message) error {
+func (h *DirectoryHandler) OnUserOccupationsInvalidateCache(
+	ctx context.Context,
+	evt directory.UserOccupationsInvalidateCacheEvent,
+	msg *message.Message,
+) error {
 	logx.S().Infof("✅ [Directory Pipeline] 收到 UserOccupations 缓存清除事件: id=%s, prefix=%s, namespace=%s",
 		evt.ID, evt.Prefix, evt.Namespace)
 	return nil
@@ -67,7 +71,11 @@ func (h *DirectoryHandler) OnUserPhonesInvalidateCache(ctx context.Context, evt 
 }
 
 // OnUserPreferencesInvalidateCache 监听 UserPreferences 缓存清除事件
-func (h *DirectoryHandler) OnUserPreferencesInvalidateCache(ctx context.Context, evt directory.UserPreferencesInvalidateCacheEvent, msg *message.Message) error {
+func (h *DirectoryHandler) OnUserPreferencesInvalidateCache(
+	ctx context.Context,
+	evt directory.UserPreferencesInvalidateCacheEvent,
+	msg *message.Message,
+) error {
 	logx.S().Infof("✅ [Directory Pipeline] 收到 UserPreferences 缓存清除事件: id=%s, prefix=%s, namespace=%s",
 		evt.ID, evt.Prefix, evt.Namespace)
 	return nil

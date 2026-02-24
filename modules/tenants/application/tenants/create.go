@@ -4,6 +4,7 @@ import (
 	"context"
 	tenantCommands "nfxid/modules/tenants/application/tenants/commands"
 	tenantDomain "nfxid/modules/tenants/domain/tenants"
+	tenantsErr "nfxid/errors/src/tenants"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateTenant(ctx context.Context, cmd tenantCommands.CreateTenantCmd) (uuid.UUID, error) {
 	// Check if tenant ID already exists
 	if exists, _ := s.tenantRepo.Check.ByTenantID(ctx, cmd.TenantID); exists {
-		return uuid.Nil, tenantDomain.ErrTenantIDAlreadyExists
+		return uuid.Nil, tenantsErr.ErrTenantIDAlreadyExists
 	}
 
 	// Create domain entity

@@ -15,5 +15,5 @@ type SuperAdminState struct {
 	CreatedAt time.Time
 }
 
-func (s *SuperAdmin) UserID() uuid.UUID     { return s.state.UserID }
-func (s *SuperAdmin) CreatedAt() time.Time   { return s.state.CreatedAt }
+func (s *SuperAdmin) UserID() uuid.UUID    { return s.state.UserID }
+func (s *SuperAdmin) CreatedAt() time.Time { return s.state.CreatedAt }

@@ -28,7 +28,7 @@ func UserEducationDomainToModel(ue *user_educations.UserEducation) *models.UserE
 		Achievements: ue.Achievements(),
 		CreatedAt:    ue.CreatedAt(),
 		UpdatedAt:    ue.UpdatedAt(),
-		DeletedAt:   timex.TimeToGormDeletedAt(ue.DeletedAt()),
+		DeletedAt:    timex.TimeToGormDeletedAt(ue.DeletedAt()),
 	}
 }
 
@@ -76,6 +76,6 @@ func UserEducationModelToUpdates(m *models.UserEducation) map[string]any {
 		models.UserEducationCols.Activities:   m.Activities,
 		models.UserEducationCols.Achievements: m.Achievements,
 		models.UserEducationCols.UpdatedAt:    m.UpdatedAt,
-		models.UserEducationCols.DeletedAt:   m.DeletedAt,
+		models.UserEducationCols.DeletedAt:    m.DeletedAt,
 	}
 }

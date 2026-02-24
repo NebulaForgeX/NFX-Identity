@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/domain/tenant_role_assignments"
 	"nfxid/modules/access/infrastructure/rdb/models"
 	"nfxid/modules/access/infrastructure/repository/tenant_role_assignments/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*tenant_role_assignme
 	var m models.TenantRoleAssignment
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, tenant_role_assignments.ErrTenantRoleAssignmentNotFound
+			return nil, accessErr.ErrTenantRoleAssignmentNotFound
 		}
 		return nil, err
 	}

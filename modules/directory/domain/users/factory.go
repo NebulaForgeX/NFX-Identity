@@ -1,6 +1,7 @@
 package users
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -44,7 +45,7 @@ func NewUserFromState(st UserState) *User {
 
 func validateUserParams(p NewUserParams) error {
 	if p.Username == "" {
-		return ErrUsernameRequired
+		return dirErr.ErrUsernameRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[UserStatus]struct{}{
@@ -53,7 +54,7 @@ func validateUserParams(p NewUserParams) error {
 			UserStatusDeactive: {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidUserStatus
+			return dirErr.ErrInvalidUserStatus
 		}
 	}
 	return nil

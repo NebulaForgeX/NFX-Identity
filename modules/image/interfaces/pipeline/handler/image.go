@@ -5,8 +5,8 @@ import (
 
 	"nfxid/events/directory"
 	"nfxid/events/image"
-	imageCommands "nfxid/modules/image/application/images/commands"
 	imageApp "nfxid/modules/image/application/images"
+	imageCommands "nfxid/modules/image/application/images/commands"
 	"nfxid/pkgs/logx"
 
 	"github.com/ThreeDotsLabs/watermill/message"

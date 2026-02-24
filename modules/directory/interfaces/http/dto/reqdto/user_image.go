@@ -7,8 +7,8 @@ import (
 )
 
 type UserImageCreateRequestDTO struct {
-	UserID       uuid.UUID `json:"user_id" validate:"required,uuid"`
-	ImageID      uuid.UUID `json:"image_id" validate:"required,uuid"`
+	UserID       uuid.UUID `json:"user_id"                 validate:"required,uuid"`
+	ImageID      uuid.UUID `json:"image_id"                validate:"required,uuid"`
 	DisplayOrder int       `json:"display_order,omitempty"`
 }
 
@@ -27,7 +27,7 @@ type UserImageUpdateImageIDRequestDTO struct {
 
 // UserImagesDisplayOrderBatchItemRequestDTO 批量顺序项
 type UserImagesDisplayOrderBatchItemRequestDTO struct {
-	ID           uuid.UUID `json:"id" validate:"required,uuid"`
+	ID           uuid.UUID `json:"id"            validate:"required,uuid"`
 	DisplayOrder int       `json:"display_order" validate:"required"`
 }
 

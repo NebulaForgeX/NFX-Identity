@@ -1,6 +1,7 @@
 package user_avatars
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -31,10 +32,10 @@ func NewUserAvatarFromState(st UserAvatarState) *UserAvatar {
 
 func validateUserAvatarParams(p NewUserAvatarParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.ImageID == uuid.Nil {
-		return ErrImageIDRequired
+		return dirErr.ErrImageIDRequired
 	}
 	return nil
 }

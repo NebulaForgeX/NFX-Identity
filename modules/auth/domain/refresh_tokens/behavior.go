@@ -1,25 +1,26 @@
 package refresh_tokens
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 )
 
 func (rt *RefreshToken) Revoke(reason RevokeReason) error {
 	if rt.RevokedAt() != nil {
-		return ErrTokenAlreadyRevoked
+		return authErr.ErrTokenAlreadyRevoked
 	}
 	validReasons := map[RevokeReason]struct{}{
-		RevokeReasonUserLogout:      {},
-		RevokeReasonAdminRevoke:     {},
-		RevokeReasonPasswordChanged: {},
-		RevokeReasonRotation:        {},
-		RevokeReasonAccountLocked:   {},
-		RevokeReasonDeviceChanged:   {},
+		RevokeReasonUserLogout:         {},
+		RevokeReasonAdminRevoke:        {},
+		RevokeReasonPasswordChanged:    {},
+		RevokeReasonRotation:           {},
+		RevokeReasonAccountLocked:      {},
+		RevokeReasonDeviceChanged:      {},
 		RevokeReasonSuspiciousActivity: {},
-		RevokeReasonOther:           {},
+		RevokeReasonOther:              {},
 	}
 	if _, ok := validReasons[reason]; !ok {
-		return ErrInvalidRevokeReason
+		return authErr.ErrInvalidRevokeReason
 	}
 
 	now := time.Now().UTC()

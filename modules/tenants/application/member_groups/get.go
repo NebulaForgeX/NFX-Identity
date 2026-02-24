@@ -22,7 +22,7 @@ func (s *Service) GetMemberGroupsByMemberID(ctx context.Context, memberID uuid.U
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]memberGroupResult.MemberGroupRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = memberGroupResult.MemberGroupMapper(entity)
@@ -36,7 +36,7 @@ func (s *Service) GetMemberGroupsByGroupID(ctx context.Context, groupID uuid.UUI
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]memberGroupResult.MemberGroupRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = memberGroupResult.MemberGroupMapper(entity)

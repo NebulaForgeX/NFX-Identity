@@ -2,8 +2,10 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/access/domain/tenant_roles"
+
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/infrastructure/rdb/models"
+
 	"github.com/google/uuid"
 )
 
@@ -13,7 +15,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) error {
 		return res.Error
 	}
 	if res.RowsAffected == 0 {
-		return tenant_roles.ErrTenantRoleNotFound
+		return accessErr.ErrTenantRoleNotFound
 	}
 	return nil
 }

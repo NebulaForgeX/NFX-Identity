@@ -64,9 +64,9 @@ func (h *HealthHandler) GetHealth(ctx context.Context, req *healthpb.GetHealthRe
 	if kafkaErr != nil {
 		errMsg := kafkaErr.Error()
 		infra.Others["kafka"] = &healthpb.ResourceHealth{
-			Healthy:     false,
+			Healthy:      false,
 			ErrorMessage: &errMsg,
-			CheckedAt:   now,
+			CheckedAt:    now,
 		}
 		allHealthy = false
 	} else {
@@ -81,9 +81,9 @@ func (h *HealthHandler) GetHealth(ctx context.Context, req *healthpb.GetHealthRe
 	if rabbitMQErr != nil {
 		errMsg := rabbitMQErr.Error()
 		infra.Others["rabbitmq"] = &healthpb.ResourceHealth{
-			Healthy:     false,
+			Healthy:      false,
 			ErrorMessage: &errMsg,
-			CheckedAt:   now,
+			CheckedAt:    now,
 		}
 		allHealthy = false
 	} else {

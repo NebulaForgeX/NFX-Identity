@@ -7,7 +7,7 @@ import (
 )
 
 type UserAvatarCreateOrUpdateRequestDTO struct {
-	UserID  uuid.UUID `json:"user_id" validate:"required,uuid"`
+	UserID  uuid.UUID `json:"user_id"  validate:"required,uuid"`
 	ImageID uuid.UUID `json:"image_id" validate:"required,uuid"`
 }
 

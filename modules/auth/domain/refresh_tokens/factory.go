@@ -1,6 +1,7 @@
 package refresh_tokens
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
@@ -54,13 +55,13 @@ func NewRefreshTokenFromState(st RefreshTokenState) *RefreshToken {
 
 func validateRefreshTokenParams(p NewRefreshTokenParams) error {
 	if p.TokenID == "" {
-		return ErrTokenIDRequired
+		return authErr.ErrTokenIDRequired
 	}
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.ExpiresAt.IsZero() {
-		return ErrExpiresAtRequired
+		return authErr.ErrExpiresAtRequired
 	}
 	return nil
 }

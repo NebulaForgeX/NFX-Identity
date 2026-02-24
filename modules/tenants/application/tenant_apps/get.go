@@ -22,7 +22,7 @@ func (s *Service) GetTenantAppsByTenantID(ctx context.Context, tenantID uuid.UUI
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]tenantAppResult.TenantAppRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = tenantAppResult.TenantAppMapper(entity)
@@ -36,7 +36,7 @@ func (s *Service) GetTenantAppsByAppID(ctx context.Context, appID uuid.UUID) ([]
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]tenantAppResult.TenantAppRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = tenantAppResult.TenantAppMapper(entity)

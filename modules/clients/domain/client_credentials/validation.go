@@ -1,19 +1,23 @@
 package client_credentials
 
-import "github.com/google/uuid"
+import (
+	clientsErr "nfxid/errors/src/clients"
+
+	"github.com/google/uuid"
+)
 
 func (cc *ClientCredential) Validate() error {
 	if cc.ClientID() == "" {
-		return ErrClientIDRequired
+		return clientsErr.ErrClientIDRequired
 	}
 	if cc.AppID() == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if cc.SecretHash() == "" {
-		return ErrSecretHashRequired
+		return clientsErr.ErrSecretHashRequired
 	}
 	if cc.HashAlg() == "" {
-		return ErrHashAlgRequired
+		return clientsErr.ErrHashAlgRequired
 	}
 	validStatuses := map[CredentialStatus]struct{}{
 		CredentialStatusActive:   {},
@@ -22,7 +26,7 @@ func (cc *ClientCredential) Validate() error {
 		CredentialStatusRotating: {},
 	}
 	if _, ok := validStatuses[cc.Status()]; !ok {
-		return ErrInvalidCredentialStatus
+		return clientsErr.ErrInvalidCredentialStatus
 	}
 	return nil
 }

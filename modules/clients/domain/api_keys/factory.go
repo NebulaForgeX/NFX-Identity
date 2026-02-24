@@ -1,21 +1,22 @@
 package api_keys
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewAPIKeyParams struct {
-	KeyID      string
-	AppID      uuid.UUID
-	KeyHash    string
-	HashAlg    string
-	Name       string
-	Status     APIKeyStatus
-	ExpiresAt  *time.Time
-	CreatedBy  *uuid.UUID
-	Metadata   map[string]interface{}
+	KeyID     string
+	AppID     uuid.UUID
+	KeyHash   string
+	HashAlg   string
+	Name      string
+	Status    APIKeyStatus
+	ExpiresAt *time.Time
+	CreatedBy *uuid.UUID
+	Metadata  map[string]interface{}
 }
 
 func NewAPIKey(p NewAPIKeyParams) (*APIKey, error) {
@@ -35,17 +36,17 @@ func NewAPIKey(p NewAPIKeyParams) (*APIKey, error) {
 
 	now := time.Now().UTC()
 	return NewAPIKeyFromState(APIKeyState{
-		ID:         id,
-		KeyID:      p.KeyID,
-		AppID:      p.AppID,
-		KeyHash:    p.KeyHash,
-		HashAlg:    p.HashAlg,
-		Name:       p.Name,
-		Status:     status,
-		ExpiresAt:  p.ExpiresAt,
-		CreatedBy:  p.CreatedBy,
-		Metadata:   p.Metadata,
-		CreatedAt:  now,
+		ID:        id,
+		KeyID:     p.KeyID,
+		AppID:     p.AppID,
+		KeyHash:   p.KeyHash,
+		HashAlg:   p.HashAlg,
+		Name:      p.Name,
+		Status:    status,
+		ExpiresAt: p.ExpiresAt,
+		CreatedBy: p.CreatedBy,
+		Metadata:  p.Metadata,
+		CreatedAt: now,
 	}), nil
 }
 
@@ -55,19 +56,19 @@ func NewAPIKeyFromState(st APIKeyState) *APIKey {
 
 func validateAPIKeyParams(p NewAPIKeyParams) error {
 	if p.KeyID == "" {
-		return ErrKeyIDRequired
+		return clientsErr.ErrKeyIDRequired
 	}
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if p.KeyHash == "" {
-		return ErrKeyHashRequired
+		return clientsErr.ErrKeyHashRequired
 	}
 	if p.HashAlg == "" {
-		return ErrHashAlgRequired
+		return clientsErr.ErrHashAlgRequired
 	}
 	if p.Name == "" {
-		return ErrNameRequired
+		return clientsErr.ErrNameRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[APIKeyStatus]struct{}{
@@ -76,7 +77,7 @@ func validateAPIKeyParams(p NewAPIKeyParams) error {
 			APIKeyStatusExpired: {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidAPIKeyStatus
+			return clientsErr.ErrInvalidAPIKeyStatus
 		}
 	}
 	return nil

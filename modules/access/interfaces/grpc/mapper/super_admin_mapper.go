@@ -3,6 +3,7 @@ package mapper
 import (
 	domain "nfxid/modules/access/domain/super_admins"
 	superadminpb "nfxid/protos/gen/access/super_admin"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

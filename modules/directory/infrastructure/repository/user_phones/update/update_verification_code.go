@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/directory/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 )

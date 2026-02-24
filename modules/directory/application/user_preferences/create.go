@@ -2,6 +2,7 @@ package user_preferences
 
 import (
 	"context"
+	dirErr "nfxid/errors/src/directory"
 	userPreferenceCommands "nfxid/modules/directory/application/user_preferences/commands"
 	userPreferenceDomain "nfxid/modules/directory/domain/user_preferences"
 
@@ -12,19 +13,19 @@ import (
 func (s *Service) CreateUserPreference(ctx context.Context, cmd userPreferenceCommands.CreateUserPreferenceCmd) (uuid.UUID, error) {
 	// Check if user preference already exists
 	if exists, _ := s.userPreferenceRepo.Check.ByUserID(ctx, cmd.UserID); exists {
-		return uuid.Nil, userPreferenceDomain.ErrUserPreferenceAlreadyExists
+		return uuid.Nil, dirErr.ErrUserPreferenceAlreadyExists
 	}
 
 	// Create domain entity
 	userPreference, err := userPreferenceDomain.NewUserPreference(userPreferenceDomain.NewUserPreferenceParams{
 		UserID:        cmd.UserID,
-		Theme:        cmd.Theme,
-		Language:     cmd.Language,
-		Timezone:     cmd.Timezone,
+		Theme:         cmd.Theme,
+		Language:      cmd.Language,
+		Timezone:      cmd.Timezone,
 		Notifications: cmd.Notifications,
-		Privacy:      cmd.Privacy,
-		Display:      cmd.Display,
-		Other:        cmd.Other,
+		Privacy:       cmd.Privacy,
+		Display:       cmd.Display,
+		Other:         cmd.Other,
 	})
 	if err != nil {
 		return uuid.Nil, err

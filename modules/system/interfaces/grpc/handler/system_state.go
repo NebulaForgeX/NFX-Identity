@@ -5,8 +5,8 @@ import (
 
 	systemStateApp "nfxid/modules/system/application/system_state"
 	"nfxid/modules/system/interfaces/grpc/mapper"
-	systemstatepb "nfxid/protos/gen/system/system_state"
 	"nfxid/pkgs/errx"
+	systemstatepb "nfxid/protos/gen/system/system_state"
 
 	"github.com/google/uuid"
 )
@@ -23,7 +23,10 @@ func NewSystemStateHandler(appSvc *systemStateApp.Service) *SystemStateHandler {
 }
 
 // GetSystemStateByID 根据ID获取系统状态
-func (h *SystemStateHandler) GetSystemStateByID(ctx context.Context, req *systemstatepb.GetSystemStateByIDRequest) (*systemstatepb.GetSystemStateByIDResponse, error) {
+func (h *SystemStateHandler) GetSystemStateByID(
+	ctx context.Context,
+	req *systemstatepb.GetSystemStateByIDRequest,
+) (*systemstatepb.GetSystemStateByIDResponse, error) {
 	systemStateID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -39,7 +42,10 @@ func (h *SystemStateHandler) GetSystemStateByID(ctx context.Context, req *system
 }
 
 // GetSystemStateByKey 根据键获取系统状态（目前使用 Latest，因为 service 没有 ByKey 方法）
-func (h *SystemStateHandler) GetSystemStateByKey(ctx context.Context, req *systemstatepb.GetSystemStateByKeyRequest) (*systemstatepb.GetSystemStateByKeyResponse, error) {
+func (h *SystemStateHandler) GetSystemStateByKey(
+	ctx context.Context,
+	req *systemstatepb.GetSystemStateByKeyRequest,
+) (*systemstatepb.GetSystemStateByKeyResponse, error) {
 	// TODO: 如果 service 有 ByKey 方法，使用它；否则使用 Latest
 	systemStateView, err := h.appSvc.GetLatestSystemState(ctx)
 	if err != nil {
@@ -51,7 +57,10 @@ func (h *SystemStateHandler) GetSystemStateByKey(ctx context.Context, req *syste
 }
 
 // GetAllSystemStates 获取所有系统状态列表
-func (h *SystemStateHandler) GetAllSystemStates(ctx context.Context, req *systemstatepb.GetAllSystemStatesRequest) (*systemstatepb.GetAllSystemStatesResponse, error) {
+func (h *SystemStateHandler) GetAllSystemStates(
+	ctx context.Context,
+	req *systemstatepb.GetAllSystemStatesRequest,
+) (*systemstatepb.GetAllSystemStatesResponse, error) {
 	// TODO: 如果 service 有 GetAll 方法，使用它；否则返回错误
 	return nil, errx.FailedPrecond("UNIMPLEMENTED", "GetAllSystemStates not implemented yet")
 }

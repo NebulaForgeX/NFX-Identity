@@ -4,8 +4,8 @@ import (
 	"context"
 
 	passwordResetApp "nfxid/modules/auth/application/password_resets"
-	passwordresetpb "nfxid/protos/gen/auth/password_reset"
 	"nfxid/pkgs/errx"
+	passwordresetpb "nfxid/protos/gen/auth/password_reset"
 )
 
 type PasswordResetHandler struct {
@@ -20,6 +20,9 @@ func NewPasswordResetHandler(passwordResetAppSvc *passwordResetApp.Service) *Pas
 }
 
 // GetPasswordResetByID 根据ID获取密码重置
-func (h *PasswordResetHandler) GetPasswordResetByID(ctx context.Context, req *passwordresetpb.GetPasswordResetByIDRequest) (*passwordresetpb.GetPasswordResetByIDResponse, error) {
+func (h *PasswordResetHandler) GetPasswordResetByID(
+	ctx context.Context,
+	req *passwordresetpb.GetPasswordResetByIDRequest,
+) (*passwordresetpb.GetPasswordResetByIDResponse, error) {
 	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetPasswordResetByID not implemented")
 }

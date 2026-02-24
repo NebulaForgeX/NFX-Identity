@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/account_lockouts"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByUserIDAndTenantID(ctx context.Context, userID, tenantID uuid
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return account_lockouts.ErrAccountLockoutNotFound
+		return authErr.ErrAccountLockoutNotFound
 	}
 	return nil
 }

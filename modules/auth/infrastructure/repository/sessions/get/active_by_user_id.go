@@ -2,10 +2,10 @@ package get
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/domain/sessions"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/sessions/mapper"
+	"time"
 
 	"github.com/google/uuid"
 )

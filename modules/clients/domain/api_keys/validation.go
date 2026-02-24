@@ -1,22 +1,26 @@
 package api_keys
 
-import "github.com/google/uuid"
+import (
+	clientsErr "nfxid/errors/src/clients"
+
+	"github.com/google/uuid"
+)
 
 func (ak *APIKey) Validate() error {
 	if ak.KeyID() == "" {
-		return ErrKeyIDRequired
+		return clientsErr.ErrKeyIDRequired
 	}
 	if ak.AppID() == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if ak.KeyHash() == "" {
-		return ErrKeyHashRequired
+		return clientsErr.ErrKeyHashRequired
 	}
 	if ak.HashAlg() == "" {
-		return ErrHashAlgRequired
+		return clientsErr.ErrHashAlgRequired
 	}
 	if ak.Name() == "" {
-		return ErrNameRequired
+		return clientsErr.ErrNameRequired
 	}
 	validStatuses := map[APIKeyStatus]struct{}{
 		APIKeyStatusActive:  {},
@@ -24,7 +28,7 @@ func (ak *APIKey) Validate() error {
 		APIKeyStatusExpired: {},
 	}
 	if _, ok := validStatuses[ak.Status()]; !ok {
-		return ErrInvalidAPIKeyStatus
+		return clientsErr.ErrInvalidAPIKeyStatus
 	}
 	return nil
 }

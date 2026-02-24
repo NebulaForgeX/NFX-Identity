@@ -16,15 +16,15 @@ func InvitationROToProto(v *invitationAppResult.InvitationRO) *invitationpb.Invi
 	}
 
 	invitation := &invitationpb.Invitation{
-		Id:         v.ID.String(),
-		InviteId:   v.InviteID,
-		TenantId:   v.TenantID.String(),
-		Email:      v.Email,
-		TokenHash:  v.TokenHash,
-		ExpiresAt:  timestamppb.New(v.ExpiresAt),
-		Status:     invitationStatusToProto(v.Status),
-		InvitedBy:  v.InvitedBy.String(),
-		InvitedAt:  timestamppb.New(v.InvitedAt),
+		Id:        v.ID.String(),
+		InviteId:  v.InviteID,
+		TenantId:  v.TenantID.String(),
+		Email:     v.Email,
+		TokenHash: v.TokenHash,
+		ExpiresAt: timestamppb.New(v.ExpiresAt),
+		Status:    invitationStatusToProto(v.Status),
+		InvitedBy: v.InvitedBy.String(),
+		InvitedAt: timestamppb.New(v.InvitedAt),
 	}
 
 	if v.AcceptedByUserID != nil {

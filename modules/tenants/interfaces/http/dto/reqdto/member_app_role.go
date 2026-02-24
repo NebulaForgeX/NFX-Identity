@@ -7,17 +7,17 @@ import (
 )
 
 type MemberAppRoleCreateRequestDTO struct {
-	MemberID   uuid.UUID  `json:"member_id" validate:"required,uuid"`
-	AppID      uuid.UUID  `json:"app_id" validate:"required,uuid"`
-	RoleID     uuid.UUID  `json:"role_id" validate:"required,uuid"`
+	MemberID   uuid.UUID  `json:"member_id"             validate:"required,uuid"`
+	AppID      uuid.UUID  `json:"app_id"                validate:"required,uuid"`
+	RoleID     uuid.UUID  `json:"role_id"               validate:"required,uuid"`
 	AssignedBy *uuid.UUID `json:"assigned_by,omitempty"`
 	ExpiresAt  *string    `json:"expires_at,omitempty"`
 }
 
 type MemberAppRoleRevokeRequestDTO struct {
 	ID           uuid.UUID `uri:"id" validate:"required,uuid"`
-	RevokedBy    uuid.UUID `json:"revoked_by" validate:"required,uuid"`
-	RevokeReason string    `json:"revoke_reason"`
+	RevokedBy    uuid.UUID `         validate:"required,uuid" json:"revoked_by"`
+	RevokeReason string    `                                  json:"revoke_reason"`
 }
 
 func (r *MemberAppRoleCreateRequestDTO) ToCreateCmd() memberAppRoleAppCommands.CreateMemberAppRoleCmd {

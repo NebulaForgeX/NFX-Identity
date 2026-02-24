@@ -11,16 +11,16 @@ type SystemState struct {
 }
 
 type SystemStateState struct {
-	ID                   uuid.UUID
-	Initialized          bool
-	InitializedAt        *time.Time
+	ID                    uuid.UUID
+	Initialized           bool
+	InitializedAt         *time.Time
 	InitializationVersion *string
-	LastResetAt          *time.Time
-	LastResetBy          *uuid.UUID
-	ResetCount           int
-	Metadata             map[string]interface{}
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
+	LastResetAt           *time.Time
+	LastResetBy           *uuid.UUID
+	ResetCount            int
+	Metadata              map[string]interface{}
+	CreatedAt             time.Time
+	UpdatedAt             time.Time
 }
 
 func (ss *SystemState) ID() uuid.UUID                    { return ss.state.ID }

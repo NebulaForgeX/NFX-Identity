@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/infrastructure/rdb/models"
+	"time"
 )
 
 // Disable 禁用 MFAFactor，实现 mfa_factors.Update 接口

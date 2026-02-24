@@ -2,9 +2,10 @@ package user_profiles
 
 import (
 	"context"
-	"time"
+	dirErr "nfxid/errors/src/directory"
 	userProfileCommands "nfxid/modules/directory/application/user_profiles/commands"
 	userProfileDomain "nfxid/modules/directory/domain/user_profiles"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +14,7 @@ import (
 func (s *Service) CreateUserProfile(ctx context.Context, cmd userProfileCommands.CreateUserProfileCmd) (uuid.UUID, error) {
 	// Check if user profile already exists
 	if exists, _ := s.userProfileRepo.Check.ByUserID(ctx, cmd.UserID); exists {
-		return uuid.Nil, userProfileDomain.ErrUserProfileAlreadyExists
+		return uuid.Nil, dirErr.ErrUserProfileAlreadyExists
 	}
 
 	var birthday *time.Time

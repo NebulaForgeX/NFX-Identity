@@ -1,6 +1,7 @@
 package client_credentials
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -51,16 +52,16 @@ func NewClientCredentialFromState(st ClientCredentialState) *ClientCredential {
 
 func validateClientCredentialParams(p NewClientCredentialParams) error {
 	if p.ClientID == "" {
-		return ErrClientIDRequired
+		return clientsErr.ErrClientIDRequired
 	}
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if p.SecretHash == "" {
-		return ErrSecretHashRequired
+		return clientsErr.ErrSecretHashRequired
 	}
 	if p.HashAlg == "" {
-		return ErrHashAlgRequired
+		return clientsErr.ErrHashAlgRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[CredentialStatus]struct{}{
@@ -70,7 +71,7 @@ func validateClientCredentialParams(p NewClientCredentialParams) error {
 			CredentialStatusRotating: {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidCredentialStatus
+			return clientsErr.ErrInvalidCredentialStatus
 		}
 	}
 	return nil

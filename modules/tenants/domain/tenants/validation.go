@@ -1,11 +1,15 @@
 package tenants
 
+import (
+	tenantsErr "nfxid/errors/src/tenants"
+)
+
 func (t *Tenant) Validate() error {
 	if t.TenantID() == "" {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if t.Name() == "" {
-		return ErrNameRequired
+		return tenantsErr.ErrNameRequired
 	}
 	validStatuses := map[TenantStatus]struct{}{
 		TenantStatusActive:    {},
@@ -14,7 +18,7 @@ func (t *Tenant) Validate() error {
 		TenantStatusPending:   {},
 	}
 	if _, ok := validStatuses[t.Status()]; !ok {
-		return ErrInvalidTenantStatus
+		return tenantsErr.ErrInvalidTenantStatus
 	}
 	return nil
 }

@@ -1,13 +1,17 @@
 package user_emails
 
-import "github.com/google/uuid"
+import (
+	dirErr "nfxid/errors/src/directory"
+
+	"github.com/google/uuid"
+)
 
 func (ue *UserEmail) Validate() error {
 	if ue.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if ue.Email() == "" {
-		return ErrEmailRequired
+		return dirErr.ErrEmailRequired
 	}
 	return nil
 }

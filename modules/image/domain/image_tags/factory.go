@@ -1,6 +1,7 @@
 package image_tags
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,10 +39,10 @@ func NewImageTagFromState(st ImageTagState) *ImageTag {
 
 func validateImageTagParams(p NewImageTagParams) error {
 	if p.ImageID == uuid.Nil {
-		return ErrImageIDRequired
+		return imageErr.ErrImageIDRequired
 	}
 	if p.Tag == "" {
-		return ErrTagRequired
+		return imageErr.ErrTagRequired
 	}
 	return nil
 }

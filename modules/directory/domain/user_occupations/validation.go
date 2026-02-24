@@ -1,16 +1,20 @@
 package user_occupations
 
-import "github.com/google/uuid"
+import (
+	dirErr "nfxid/errors/src/directory"
+
+	"github.com/google/uuid"
+)
 
 func (uo *UserOccupation) Validate() error {
 	if uo.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if uo.Company() == "" {
-		return ErrCompanyRequired
+		return dirErr.ErrCompanyRequired
 	}
 	if uo.Position() == "" {
-		return ErrPositionRequired
+		return dirErr.ErrPositionRequired
 	}
 	return nil
 }

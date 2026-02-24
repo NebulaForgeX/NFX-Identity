@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"nfxid/enums"
-	"nfxid/modules/clients/domain/client_credentials"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"time"
 
@@ -20,14 +20,14 @@ func (h *Handler) Revoke(ctx context.Context, clientID string, revokedBy uuid.UU
 		Where("client_id = ?", clientID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return client_credentials.ErrClientCredentialNotFound
+			return clientsErr.ErrClientCredentialNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.Status == enums.ClientsCredentialStatusRevoked {
-		return client_credentials.ErrCredentialAlreadyRevoked
+		return clientsErr.ErrCredentialAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

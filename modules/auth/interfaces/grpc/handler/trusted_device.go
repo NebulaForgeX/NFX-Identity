@@ -4,8 +4,8 @@ import (
 	"context"
 
 	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
-	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
 	"nfxid/pkgs/errx"
+	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
 )
 
 type TrustedDeviceHandler struct {
@@ -20,6 +20,9 @@ func NewTrustedDeviceHandler(trustedDeviceAppSvc *trustedDeviceApp.Service) *Tru
 }
 
 // GetTrustedDeviceByID 根据ID获取受信任设备
-func (h *TrustedDeviceHandler) GetTrustedDeviceByID(ctx context.Context, req *trusteddevicepb.GetTrustedDeviceByIDRequest) (*trusteddevicepb.GetTrustedDeviceByIDResponse, error) {
+func (h *TrustedDeviceHandler) GetTrustedDeviceByID(
+	ctx context.Context,
+	req *trusteddevicepb.GetTrustedDeviceByIDRequest,
+) (*trusteddevicepb.GetTrustedDeviceByIDResponse, error) {
 	return nil, errx.FailedPrecond("UNIMPLEMENTED", "method GetTrustedDeviceByID not implemented")
 }

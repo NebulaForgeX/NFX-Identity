@@ -1,16 +1,17 @@
 package password_history
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewPasswordHistoryParams struct {
-	UserID      uuid.UUID
-	TenantID    uuid.UUID
+	UserID       uuid.UUID
+	TenantID     uuid.UUID
 	PasswordHash string
-	HashAlg     *string
+	HashAlg      *string
 }
 
 func NewPasswordHistory(p NewPasswordHistoryParams) (*PasswordHistory, error) {
@@ -40,13 +41,13 @@ func NewPasswordHistoryFromState(st PasswordHistoryState) *PasswordHistory {
 
 func validatePasswordHistoryParams(p NewPasswordHistoryParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if p.PasswordHash == "" {
-		return ErrPasswordHashRequired
+		return authErr.ErrPasswordHashRequired
 	}
 	return nil
 }

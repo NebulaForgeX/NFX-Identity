@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/infrastructure/rdb/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -12,7 +12,7 @@ import (
 func (h *Handler) IncrementAttemptCount(ctx context.Context, resetID string) error {
 	updates := map[string]any{
 		models.PasswordResetCols.AttemptCount: gorm.Expr("attempt_count + 1"),
-		models.PasswordResetCols.UpdatedAt:     time.Now().UTC(),
+		models.PasswordResetCols.UpdatedAt:    time.Now().UTC(),
 	}
 
 	return h.db.WithContext(ctx).

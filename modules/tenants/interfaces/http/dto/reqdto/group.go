@@ -8,10 +8,10 @@ import (
 )
 
 type GroupCreateRequestDTO struct {
-	GroupID       string                 `json:"group_id" validate:"required"`
-	TenantID      uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
-	Name          string                 `json:"name" validate:"required"`
-	Type          string                 `json:"type" validate:"required"`
+	GroupID       string                 `json:"group_id"                  validate:"required"`
+	TenantID      uuid.UUID              `json:"tenant_id"                 validate:"required,uuid"`
+	Name          string                 `json:"name"                      validate:"required"`
+	Type          string                 `json:"type"                      validate:"required"`
 	ParentGroupID *uuid.UUID             `json:"parent_group_id,omitempty"`
 	Description   *string                `json:"description,omitempty"`
 	CreatedBy     *uuid.UUID             `json:"created_by,omitempty"`
@@ -20,11 +20,11 @@ type GroupCreateRequestDTO struct {
 
 type GroupUpdateRequestDTO struct {
 	ID            uuid.UUID              `uri:"id" validate:"required,uuid"`
-	Name          string                 `json:"name" validate:"required"`
-	Type          string                 `json:"type" validate:"required"`
-	ParentGroupID *uuid.UUID             `json:"parent_group_id,omitempty"`
-	Description   *string                `json:"description,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	Name          string                 `         validate:"required"      json:"name"`
+	Type          string                 `         validate:"required"      json:"type"`
+	ParentGroupID *uuid.UUID             `                                  json:"parent_group_id,omitempty"`
+	Description   *string                `                                  json:"description,omitempty"`
+	Metadata      map[string]interface{} `                                  json:"metadata,omitempty"`
 }
 
 type GroupByIDRequestDTO struct {

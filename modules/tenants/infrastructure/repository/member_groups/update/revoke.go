@@ -3,9 +3,9 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
-	"nfxid/modules/tenants/domain/member_groups"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -19,14 +19,14 @@ func (h *Handler) Revoke(ctx context.Context, id uuid.UUID, revokedBy uuid.UUID)
 		Where("id = ?", id).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return member_groups.ErrMemberGroupNotFound
+			return tenantsErr.ErrMemberGroupNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.RevokedAt != nil {
-		return member_groups.ErrMemberGroupAlreadyRevoked
+		return tenantsErr.ErrMemberGroupAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

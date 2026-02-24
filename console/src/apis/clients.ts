@@ -6,6 +6,7 @@ import applyCaseMiddleware from "axios-case-converter";
 
 import { API_ENDPOINTS } from "@/apis/ip";
 import AuthStore from "@/stores/authStore";
+import type { ApiErrorBody } from "@/types/apiError";
 import { onceAsync } from "@/utils/promise";
 
 // 让 config._retry 有类型
@@ -63,16 +64,10 @@ protectedClient.defaults.transformRequest = [
   },
 ];
 
-// Rex 错误体类型（与后端 httpx.HTTPResp 错误时一致，snake_case 转 camelCase）
-type RexErrorData = {
-  message?: string;
-  errCode?: string;
-  status?: number;
-  details?: unknown;
-  traceId?: string;
-};
+// Rex/NFX 错误体类型（与后端 httpx.HTTPResp 错误时一致，camelCase）
+type RexErrorData = ApiErrorBody;
 
-/** 按 Rex 规范统一错误：把 response.data.message 写入 error.message，便于 UI 直接展示 */
+/** 按 Rex/NFX 规范统一错误：把 response.data.message 写入 error.message，便于 UI 直接展示 */
 function normalizeRexApiError(error: AxiosError<RexErrorData>): void {
   const errorData = error.response?.data;
   const msg = errorData?.message;

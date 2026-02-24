@@ -1,6 +1,7 @@
 package user_phones
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -48,10 +49,10 @@ func NewUserPhoneFromState(st UserPhoneState) *UserPhone {
 
 func validateUserPhoneParams(p NewUserPhoneParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.Phone == "" {
-		return ErrPhoneRequired
+		return dirErr.ErrPhoneRequired
 	}
 	return nil
 }

@@ -9,10 +9,10 @@ import (
 	"nfxid/pkgs/postgresqlx"
 	"nfxid/pkgs/security/token"
 	"nfxid/pkgs/security/token/servertoken"
-	healthpb "nfxid/protos/gen/common/health"
-	schemapb "nfxid/protos/gen/common/schema"
 	superadminpb "nfxid/protos/gen/access/super_admin"
 	tenantrolepb "nfxid/protos/gen/access/tenant_role"
+	healthpb "nfxid/protos/gen/common/health"
+	schemapb "nfxid/protos/gen/common/schema"
 
 	"google.golang.org/grpc"
 )

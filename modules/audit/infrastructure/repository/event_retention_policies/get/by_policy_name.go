@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	auditErr "nfxid/errors/src/audit"
 	"nfxid/modules/audit/domain/event_retention_policies"
 	"nfxid/modules/audit/infrastructure/rdb/models"
 	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByPolicyName(ctx context.Context, policyName string) (*event_r
 	var m models.EventRetentionPolicy
 	if err := h.db.WithContext(ctx).Where("policy_name = ?", policyName).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, event_retention_policies.ErrEventRetentionPolicyNotFound
+			return nil, auditErr.ErrEventRetentionPolicyNotFound
 		}
 		return nil, err
 	}

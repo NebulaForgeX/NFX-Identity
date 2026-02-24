@@ -22,7 +22,11 @@ func (h *AuditHandler) OnActorSnapshotsInvalidateCache(ctx context.Context, evt 
 	return nil
 }
 
-func (h *AuditHandler) OnEventRetentionPoliciesInvalidateCache(ctx context.Context, evt audit.EventRetentionPoliciesInvalidateCacheEvent, msg *message.Message) error {
+func (h *AuditHandler) OnEventRetentionPoliciesInvalidateCache(
+	ctx context.Context,
+	evt audit.EventRetentionPoliciesInvalidateCacheEvent,
+	msg *message.Message,
+) error {
 	logx.S().Infof("✅ [Audit Pipeline] 收到 EventRetentionPolicies 缓存清除事件: id=%s, prefix=%s, namespace=%s",
 		evt.ID, evt.Prefix, evt.Namespace)
 	return nil
@@ -40,7 +44,11 @@ func (h *AuditHandler) OnEventsInvalidateCache(ctx context.Context, evt audit.Ev
 	return nil
 }
 
-func (h *AuditHandler) OnHashChainCheckpointsInvalidateCache(ctx context.Context, evt audit.HashChainCheckpointsInvalidateCacheEvent, msg *message.Message) error {
+func (h *AuditHandler) OnHashChainCheckpointsInvalidateCache(
+	ctx context.Context,
+	evt audit.HashChainCheckpointsInvalidateCacheEvent,
+	msg *message.Message,
+) error {
 	logx.S().Infof("✅ [Audit Pipeline] 收到 HashChainCheckpoints 缓存清除事件: id=%s, prefix=%s, namespace=%s",
 		evt.ID, evt.Prefix, evt.Namespace)
 	return nil

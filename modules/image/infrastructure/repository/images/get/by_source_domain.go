@@ -19,7 +19,7 @@ func (h *Handler) BySourceDomain(ctx context.Context, sourceDomain string) ([]*i
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*images.Image, len(ms))
 	for i := range ms {
 		result[i] = mapper.ImageModelToDomain(&ms[i])

@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/password_resets"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 )
 
@@ -16,7 +16,7 @@ func (h *Handler) ByResetID(ctx context.Context, resetID string) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return password_resets.ErrPasswordResetNotFound
+		return authErr.ErrPasswordResetNotFound
 	}
 	return nil
 }

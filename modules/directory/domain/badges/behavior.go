@@ -1,15 +1,16 @@
 package badges
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
 func (b *Badge) Update(name string, description, iconURL, color, category *string) error {
 	if b.DeletedAt() != nil {
-		return ErrBadgeNotFound
+		return dirErr.ErrBadgeNotFound
 	}
 	if name == "" {
-		return ErrNameRequired
+		return dirErr.ErrNameRequired
 	}
 
 	b.state.Name = name
@@ -32,7 +33,7 @@ func (b *Badge) Update(name string, description, iconURL, color, category *strin
 
 func (b *Badge) Delete() error {
 	if b.IsSystem() {
-		return ErrBadgeNotFound // system badges cannot be deleted
+		return dirErr.ErrBadgeNotFound // system badges cannot be deleted
 	}
 	if b.DeletedAt() != nil {
 		return nil // idempotent

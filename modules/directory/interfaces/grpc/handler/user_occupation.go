@@ -5,8 +5,8 @@ import (
 
 	userOccupationApp "nfxid/modules/directory/application/user_occupations"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
 	"nfxid/pkgs/errx"
+	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
 
 	"github.com/google/uuid"
 )
@@ -23,7 +23,10 @@ func NewUserOccupationHandler(userOccupationAppSvc *userOccupationApp.Service) *
 }
 
 // GetUserOccupationByID 根据ID获取用户职业
-func (h *UserOccupationHandler) GetUserOccupationByID(ctx context.Context, req *useroccupationpb.GetUserOccupationByIDRequest) (*useroccupationpb.GetUserOccupationByIDResponse, error) {
+func (h *UserOccupationHandler) GetUserOccupationByID(
+	ctx context.Context,
+	req *useroccupationpb.GetUserOccupationByIDRequest,
+) (*useroccupationpb.GetUserOccupationByIDResponse, error) {
 	userOccupationID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -39,7 +42,10 @@ func (h *UserOccupationHandler) GetUserOccupationByID(ctx context.Context, req *
 }
 
 // GetUserOccupationsByUserID 根据用户ID获取用户职业列表
-func (h *UserOccupationHandler) GetUserOccupationsByUserID(ctx context.Context, req *useroccupationpb.GetUserOccupationsByUserIDRequest) (*useroccupationpb.GetUserOccupationsByUserIDResponse, error) {
+func (h *UserOccupationHandler) GetUserOccupationsByUserID(
+	ctx context.Context,
+	req *useroccupationpb.GetUserOccupationsByUserIDRequest,
+) (*useroccupationpb.GetUserOccupationsByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

@@ -1,12 +1,13 @@
 package user_phones
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
 func (up *UserPhone) SetPrimary() error {
 	if up.DeletedAt() != nil {
-		return ErrUserPhoneNotFound
+		return dirErr.ErrUserPhoneNotFound
 	}
 	up.state.IsPrimary = true
 	up.state.UpdatedAt = time.Now().UTC()
@@ -15,7 +16,7 @@ func (up *UserPhone) SetPrimary() error {
 
 func (up *UserPhone) SetNotPrimary() error {
 	if up.DeletedAt() != nil {
-		return ErrUserPhoneNotFound
+		return dirErr.ErrUserPhoneNotFound
 	}
 	up.state.IsPrimary = false
 	up.state.UpdatedAt = time.Now().UTC()
@@ -24,7 +25,7 @@ func (up *UserPhone) SetNotPrimary() error {
 
 func (up *UserPhone) Verify() error {
 	if up.DeletedAt() != nil {
-		return ErrUserPhoneNotFound
+		return dirErr.ErrUserPhoneNotFound
 	}
 
 	now := time.Now().UTC()
@@ -38,7 +39,7 @@ func (up *UserPhone) Verify() error {
 
 func (up *UserPhone) UpdateVerificationCode(code string, expiresAt time.Time) error {
 	if up.DeletedAt() != nil {
-		return ErrUserPhoneNotFound
+		return dirErr.ErrUserPhoneNotFound
 	}
 	up.state.VerificationCode = &code
 	up.state.VerificationExpiresAt = &expiresAt

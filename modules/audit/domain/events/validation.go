@@ -1,13 +1,17 @@
 package events
 
-import "github.com/google/uuid"
+import (
+	auditErr "nfxid/errors/src/audit"
+
+	"github.com/google/uuid"
+)
 
 func (e *Event) Validate() error {
 	if e.EventID() == "" {
-		return ErrEventIDRequired
+		return auditErr.ErrEventIDRequired
 	}
 	if e.ActorType() == "" {
-		return ErrActorTypeRequired
+		return auditErr.ErrActorTypeRequired
 	}
 	validActorTypes := map[ActorType]struct{}{
 		ActorTypeUser:    {},
@@ -16,16 +20,16 @@ func (e *Event) Validate() error {
 		ActorTypeAdmin:   {},
 	}
 	if _, ok := validActorTypes[e.ActorType()]; !ok {
-		return ErrInvalidActorType
+		return auditErr.ErrInvalidActorType
 	}
 	if e.ActorID() == uuid.Nil {
-		return ErrActorIDRequired
+		return auditErr.ErrActorIDRequired
 	}
 	if e.Action() == "" {
-		return ErrActionRequired
+		return auditErr.ErrActionRequired
 	}
 	if e.Result() == "" {
-		return ErrResultRequired
+		return auditErr.ErrResultRequired
 	}
 	return nil
 }

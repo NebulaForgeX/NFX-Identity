@@ -78,7 +78,7 @@ func TenantModelToUpdates(m *models.Tenant) map[string]any {
 		models.TenantCols.Status:        m.Status,
 		models.TenantCols.PrimaryDomain: m.PrimaryDomain,
 		models.TenantCols.UpdatedAt:     m.UpdatedAt,
-		models.TenantCols.DeletedAt:    m.DeletedAt,
+		models.TenantCols.DeletedAt:     m.DeletedAt,
 		models.TenantCols.Metadata:      metadata,
 	}
 }

@@ -1,6 +1,7 @@
 package user_emails
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -44,10 +45,10 @@ func NewUserEmailFromState(st UserEmailState) *UserEmail {
 
 func validateUserEmailParams(p NewUserEmailParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.Email == "" {
-		return ErrEmailRequired
+		return dirErr.ErrEmailRequired
 	}
 	return nil
 }

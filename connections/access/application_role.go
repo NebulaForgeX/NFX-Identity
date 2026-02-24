@@ -22,8 +22,14 @@ func (c *ApplicationRoleClient) GetApplicationRoleByID(ctx context.Context, id s
 	return resp.ApplicationRole, nil
 }
 
-func (c *ApplicationRoleClient) GetApplicationRoleByApplicationIDAndRoleKey(ctx context.Context, applicationID, roleKey string) (*applicationrolepb.ApplicationRole, error) {
-	resp, err := c.client.GetApplicationRoleByApplicationIDAndRoleKey(ctx, &applicationrolepb.GetApplicationRoleByApplicationIDAndRoleKeyRequest{ApplicationId: applicationID, RoleKey: roleKey})
+func (c *ApplicationRoleClient) GetApplicationRoleByApplicationIDAndRoleKey(
+	ctx context.Context,
+	applicationID, roleKey string,
+) (*applicationrolepb.ApplicationRole, error) {
+	resp, err := c.client.GetApplicationRoleByApplicationIDAndRoleKey(
+		ctx,
+		&applicationrolepb.GetApplicationRoleByApplicationIDAndRoleKeyRequest{ApplicationId: applicationID, RoleKey: roleKey},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("gRPC call failed: %w", err)
 	}

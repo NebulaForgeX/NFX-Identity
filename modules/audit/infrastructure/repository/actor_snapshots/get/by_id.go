@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	auditErr "nfxid/errors/src/audit"
 	"nfxid/modules/audit/domain/actor_snapshots"
 	"nfxid/modules/audit/infrastructure/rdb/models"
 	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*actor_snapshots.Acto
 	var m models.ActorSnapshot
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, actor_snapshots.ErrActorSnapshotNotFound
+			return nil, auditErr.ErrActorSnapshotNotFound
 		}
 		return nil, err
 	}

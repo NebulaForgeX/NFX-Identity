@@ -32,7 +32,10 @@ func (c *EventRetentionPolicyClient) GetEventRetentionPolicyByID(ctx context.Con
 }
 
 // GetEventRetentionPolicyByName 根据策略名称获取策略
-func (c *EventRetentionPolicyClient) GetEventRetentionPolicyByName(ctx context.Context, policyName string) (*eventretentionpolicypb.EventRetentionPolicy, error) {
+func (c *EventRetentionPolicyClient) GetEventRetentionPolicyByName(
+	ctx context.Context,
+	policyName string,
+) (*eventretentionpolicypb.EventRetentionPolicy, error) {
 	req := &eventretentionpolicypb.GetEventRetentionPolicyByNameRequest{
 		PolicyName: policyName,
 	}
@@ -46,7 +49,10 @@ func (c *EventRetentionPolicyClient) GetEventRetentionPolicyByName(ctx context.C
 }
 
 // GetAllEventRetentionPolicies 获取所有策略列表
-func (c *EventRetentionPolicyClient) GetAllEventRetentionPolicies(ctx context.Context, tenantID *string) ([]*eventretentionpolicypb.EventRetentionPolicy, error) {
+func (c *EventRetentionPolicyClient) GetAllEventRetentionPolicies(
+	ctx context.Context,
+	tenantID *string,
+) ([]*eventretentionpolicypb.EventRetentionPolicy, error) {
 	req := &eventretentionpolicypb.GetAllEventRetentionPoliciesRequest{
 		TenantId: tenantID,
 	}

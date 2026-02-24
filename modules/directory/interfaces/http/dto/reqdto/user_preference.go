@@ -7,10 +7,10 @@ import (
 )
 
 type UserPreferenceCreateRequestDTO struct {
-	UserID        uuid.UUID              `json:"user_id" validate:"required,uuid"`
-	Theme         string                 `json:"theme" validate:"required"`
-	Language      string                 `json:"language" validate:"required"`
-	Timezone      string                 `json:"timezone" validate:"required"`
+	UserID        uuid.UUID              `json:"user_id"                 validate:"required,uuid"`
+	Theme         string                 `json:"theme"                   validate:"required"`
+	Language      string                 `json:"language"                validate:"required"`
+	Timezone      string                 `json:"timezone"                validate:"required"`
 	Notifications map[string]interface{} `json:"notifications,omitempty"`
 	Privacy       map[string]interface{} `json:"privacy,omitempty"`
 	Display       map[string]interface{} `json:"display,omitempty"`
@@ -23,13 +23,13 @@ type UserPreferenceByIDRequestDTO struct {
 
 type UserPreferenceUpdateRequestDTO struct {
 	UserPreferenceID uuid.UUID              `uri:"user_preference_id" validate:"required,uuid"`
-	Theme         *string                `json:"theme,omitempty"`
-	Language      *string                `json:"language,omitempty"`
-	Timezone      *string                `json:"timezone,omitempty"`
-	Notifications map[string]interface{} `json:"notifications,omitempty"`
-	Privacy       map[string]interface{} `json:"privacy,omitempty"`
-	Display       map[string]interface{} `json:"display,omitempty"`
-	Other         map[string]interface{} `json:"other,omitempty"`
+	Theme            *string                `                                                  json:"theme,omitempty"`
+	Language         *string                `                                                  json:"language,omitempty"`
+	Timezone         *string                `                                                  json:"timezone,omitempty"`
+	Notifications    map[string]interface{} `                                                  json:"notifications,omitempty"`
+	Privacy          map[string]interface{} `                                                  json:"privacy,omitempty"`
+	Display          map[string]interface{} `                                                  json:"display,omitempty"`
+	Other            map[string]interface{} `                                                  json:"other,omitempty"`
 }
 
 func (r *UserPreferenceCreateRequestDTO) ToCreateCmd() userPreferenceAppCommands.CreateUserPreferenceCmd {

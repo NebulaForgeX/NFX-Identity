@@ -21,4 +21,3 @@ func IsAvailabilityError(err error) bool {
 	}
 	return true
 }
-

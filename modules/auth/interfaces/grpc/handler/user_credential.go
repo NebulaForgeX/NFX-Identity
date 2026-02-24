@@ -7,8 +7,8 @@ import (
 	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
 	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
 	"nfxid/modules/auth/interfaces/grpc/mapper"
-	usercredentialpb "nfxid/protos/gen/auth/user_credential"
 	"nfxid/pkgs/errx"
+	usercredentialpb "nfxid/protos/gen/auth/user_credential"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -23,7 +23,10 @@ func NewUserCredentialHandler(userCredentialAppSvc *userCredentialApp.Service) *
 	return &UserCredentialHandler{userCredentialAppSvc: userCredentialAppSvc}
 }
 
-func (h *UserCredentialHandler) CreateUserCredential(ctx context.Context, req *usercredentialpb.CreateUserCredentialRequest) (*usercredentialpb.CreateUserCredentialResponse, error) {
+func (h *UserCredentialHandler) CreateUserCredential(
+	ctx context.Context,
+	req *usercredentialpb.CreateUserCredentialRequest,
+) (*usercredentialpb.CreateUserCredentialResponse, error) {
 	userID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -78,7 +81,10 @@ func (h *UserCredentialHandler) CreateUserCredential(ctx context.Context, req *u
 	return &usercredentialpb.CreateUserCredentialResponse{UserCredential: userCredential}, nil
 }
 
-func (h *UserCredentialHandler) GetUserCredentialByID(ctx context.Context, req *usercredentialpb.GetUserCredentialByIDRequest) (*usercredentialpb.GetUserCredentialByIDResponse, error) {
+func (h *UserCredentialHandler) GetUserCredentialByID(
+	ctx context.Context,
+	req *usercredentialpb.GetUserCredentialByIDRequest,
+) (*usercredentialpb.GetUserCredentialByIDResponse, error) {
 	userCredentialID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -91,7 +97,10 @@ func (h *UserCredentialHandler) GetUserCredentialByID(ctx context.Context, req *
 	return &usercredentialpb.GetUserCredentialByIDResponse{UserCredential: userCredential}, nil
 }
 
-func (h *UserCredentialHandler) GetUserCredentialByUserID(ctx context.Context, req *usercredentialpb.GetUserCredentialByUserIDRequest) (*usercredentialpb.GetUserCredentialByUserIDResponse, error) {
+func (h *UserCredentialHandler) GetUserCredentialByUserID(
+	ctx context.Context,
+	req *usercredentialpb.GetUserCredentialByUserIDRequest,
+) (*usercredentialpb.GetUserCredentialByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

@@ -2,9 +2,9 @@ package sessions
 
 import (
 	"context"
-	"time"
 	sessionCommands "nfxid/modules/auth/application/sessions/commands"
 	sessionDomain "nfxid/modules/auth/domain/sessions"
+	"time"
 
 	"github.com/google/uuid"
 )

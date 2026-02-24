@@ -1,6 +1,7 @@
 package application_roles
 
 import (
+	accessErr "nfxid/errors/src/access"
 	"time"
 
 	"github.com/google/uuid"
@@ -35,10 +36,10 @@ func NewApplicationRoleFromState(st ApplicationRoleState) *ApplicationRole {
 
 func validateNewParams(p NewApplicationRoleParams) error {
 	if p.ApplicationID == uuid.Nil {
-		return ErrApplicationRoleApplicationIDRequired
+		return accessErr.ErrApplicationRoleApplicationIDRequired
 	}
 	if p.RoleKey == "" {
-		return ErrApplicationRoleRoleKeyRequired
+		return accessErr.ErrApplicationRoleRoleKeyRequired
 	}
 	return nil
 }

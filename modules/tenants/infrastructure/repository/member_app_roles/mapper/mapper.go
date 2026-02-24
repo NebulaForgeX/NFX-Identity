@@ -15,13 +15,13 @@ func MemberAppRoleDomainToModel(mar *member_app_roles.MemberAppRole) *models.Mem
 		ID:            mar.ID(),
 		MemberID:      mar.MemberID(),
 		ApplicationID: mar.AppID(),
-		RoleID:       mar.RoleID(),
-		AssignedAt:   mar.AssignedAt(),
-		AssignedBy:   mar.AssignedBy(),
-		ExpiresAt:    mar.ExpiresAt(),
-		RevokedAt:    mar.RevokedAt(),
-		RevokedBy:    mar.RevokedBy(),
-		RevokeReason: mar.RevokeReason(),
+		RoleID:        mar.RoleID(),
+		AssignedAt:    mar.AssignedAt(),
+		AssignedBy:    mar.AssignedBy(),
+		ExpiresAt:     mar.ExpiresAt(),
+		RevokedAt:     mar.RevokedAt(),
+		RevokedBy:     mar.RevokedBy(),
+		RevokeReason:  mar.RevokeReason(),
 	}
 }
 
@@ -52,12 +52,12 @@ func MemberAppRoleModelToUpdates(m *models.MemberAppRole) map[string]any {
 	return map[string]any{
 		models.MemberAppRoleCols.MemberID:      m.MemberID,
 		models.MemberAppRoleCols.ApplicationID: m.ApplicationID,
-		models.MemberAppRoleCols.RoleID:       m.RoleID,
-		models.MemberAppRoleCols.AssignedAt:   m.AssignedAt,
-		models.MemberAppRoleCols.AssignedBy:   m.AssignedBy,
-		models.MemberAppRoleCols.ExpiresAt:    m.ExpiresAt,
-		models.MemberAppRoleCols.RevokedAt:    m.RevokedAt,
-		models.MemberAppRoleCols.RevokedBy:    m.RevokedBy,
-		models.MemberAppRoleCols.RevokeReason: m.RevokeReason,
+		models.MemberAppRoleCols.RoleID:        m.RoleID,
+		models.MemberAppRoleCols.AssignedAt:    m.AssignedAt,
+		models.MemberAppRoleCols.AssignedBy:    m.AssignedBy,
+		models.MemberAppRoleCols.ExpiresAt:     m.ExpiresAt,
+		models.MemberAppRoleCols.RevokedAt:     m.RevokedAt,
+		models.MemberAppRoleCols.RevokedBy:     m.RevokedBy,
+		models.MemberAppRoleCols.RevokeReason:  m.RevokeReason,
 	}
 }

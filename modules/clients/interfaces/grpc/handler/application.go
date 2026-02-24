@@ -5,8 +5,8 @@ import (
 
 	appApp "nfxid/modules/clients/application/apps"
 	"nfxid/modules/clients/interfaces/grpc/mapper"
-	applicationpb "nfxid/protos/gen/clients/application"
 	"nfxid/pkgs/errx"
+	applicationpb "nfxid/protos/gen/clients/application"
 
 	"github.com/google/uuid"
 )
@@ -20,7 +20,10 @@ func NewApplicationHandler(appAppSvc *appApp.Service) *ApplicationHandler {
 	return &ApplicationHandler{appAppSvc: appAppSvc}
 }
 
-func (h *ApplicationHandler) GetApplicationByID(ctx context.Context, req *applicationpb.GetApplicationByIDRequest) (*applicationpb.GetApplicationByIDResponse, error) {
+func (h *ApplicationHandler) GetApplicationByID(
+	ctx context.Context,
+	req *applicationpb.GetApplicationByIDRequest,
+) (*applicationpb.GetApplicationByIDResponse, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -33,7 +36,10 @@ func (h *ApplicationHandler) GetApplicationByID(ctx context.Context, req *applic
 	return &applicationpb.GetApplicationByIDResponse{Application: app}, nil
 }
 
-func (h *ApplicationHandler) GetApplicationByApplicationID(ctx context.Context, req *applicationpb.GetApplicationByApplicationIDRequest) (*applicationpb.GetApplicationByApplicationIDResponse, error) {
+func (h *ApplicationHandler) GetApplicationByApplicationID(
+	ctx context.Context,
+	req *applicationpb.GetApplicationByApplicationIDRequest,
+) (*applicationpb.GetApplicationByApplicationIDResponse, error) {
 	ro, err := h.appAppSvc.GetAppByAppID(ctx, req.ApplicationId)
 	if err != nil {
 		return nil, err
@@ -42,7 +48,10 @@ func (h *ApplicationHandler) GetApplicationByApplicationID(ctx context.Context, 
 	return &applicationpb.GetApplicationByApplicationIDResponse{Application: app}, nil
 }
 
-func (h *ApplicationHandler) GetApplicationsByTenantID(ctx context.Context, req *applicationpb.GetApplicationsByTenantIDRequest) (*applicationpb.GetApplicationsByTenantIDResponse, error) {
+func (h *ApplicationHandler) GetApplicationsByTenantID(
+	ctx context.Context,
+	req *applicationpb.GetApplicationsByTenantIDRequest,
+) (*applicationpb.GetApplicationsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -55,7 +64,10 @@ func (h *ApplicationHandler) GetApplicationsByTenantID(ctx context.Context, req 
 	return &applicationpb.GetApplicationsByTenantIDResponse{Applications: apps}, nil
 }
 
-func (h *ApplicationHandler) BatchGetApplications(ctx context.Context, req *applicationpb.BatchGetApplicationsRequest) (*applicationpb.BatchGetApplicationsResponse, error) {
+func (h *ApplicationHandler) BatchGetApplications(
+	ctx context.Context,
+	req *applicationpb.BatchGetApplicationsRequest,
+) (*applicationpb.BatchGetApplicationsResponse, error) {
 	ids := make([]uuid.UUID, 0, len(req.Ids))
 	for _, idStr := range req.Ids {
 		id, err := uuid.Parse(idStr)

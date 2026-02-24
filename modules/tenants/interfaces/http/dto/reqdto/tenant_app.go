@@ -8,8 +8,8 @@ import (
 )
 
 type TenantAppCreateRequestDTO struct {
-	TenantID  uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
-	AppID     uuid.UUID              `json:"app_id" validate:"required,uuid"`
+	TenantID  uuid.UUID              `json:"tenant_id"            validate:"required,uuid"`
+	AppID     uuid.UUID              `json:"app_id"               validate:"required,uuid"`
 	Status    string                 `json:"status,omitempty"`
 	CreatedBy *uuid.UUID             `json:"created_by,omitempty"`
 	Settings  map[string]interface{} `json:"settings,omitempty"`
@@ -17,12 +17,12 @@ type TenantAppCreateRequestDTO struct {
 
 type TenantAppUpdateStatusRequestDTO struct {
 	ID     uuid.UUID `uri:"id" validate:"required,uuid"`
-	Status string    `json:"status" validate:"required"`
+	Status string    `         validate:"required"      json:"status"`
 }
 
 type TenantAppUpdateSettingsRequestDTO struct {
 	ID       uuid.UUID              `uri:"id" validate:"required,uuid"`
-	Settings map[string]interface{} `json:"settings" validate:"required"`
+	Settings map[string]interface{} `         validate:"required"      json:"settings"`
 }
 
 func (r *TenantAppCreateRequestDTO) ToCreateCmd() tenantAppAppCommands.CreateTenantAppCmd {

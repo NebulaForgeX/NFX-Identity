@@ -7,8 +7,8 @@ import (
 )
 
 type ImageTagCreateRequestDTO struct {
-	ImageID    uuid.UUID `json:"image_id" validate:"required,uuid"`
-	Tag        string    `json:"tag" validate:"required"`
+	ImageID    uuid.UUID `json:"image_id"             validate:"required,uuid"`
+	Tag        string    `json:"tag"                  validate:"required"`
 	Confidence *float64  `json:"confidence,omitempty"`
 }
 
@@ -17,7 +17,7 @@ type ImageTagByIDRequestDTO struct {
 }
 
 type ImageTagUpdateRequestDTO struct {
-	Tag        string   `json:"tag" validate:"required"`
+	Tag        string   `json:"tag"                  validate:"required"`
 	Confidence *float64 `json:"confidence,omitempty"`
 }
 

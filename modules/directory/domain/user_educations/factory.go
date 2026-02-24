@@ -1,23 +1,24 @@
 package user_educations
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewUserEducationParams struct {
-	UserID      uuid.UUID
-	School      string
-	Degree      *string
-	Major       *string
+	UserID       uuid.UUID
+	School       string
+	Degree       *string
+	Major        *string
 	FieldOfStudy *string
-	StartDate   *time.Time
-	EndDate     *time.Time
-	IsCurrent   bool
-	Description *string
-	Grade       *string
-	Activities  *string
+	StartDate    *time.Time
+	EndDate      *time.Time
+	IsCurrent    bool
+	Description  *string
+	Grade        *string
+	Activities   *string
 	Achievements *string
 }
 
@@ -57,10 +58,10 @@ func NewUserEducationFromState(st UserEducationState) *UserEducation {
 
 func validateUserEducationParams(p NewUserEducationParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.School == "" {
-		return ErrSchoolRequired
+		return dirErr.ErrSchoolRequired
 	}
 	return nil
 }

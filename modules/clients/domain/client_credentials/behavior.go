@@ -1,6 +1,7 @@
 package client_credentials
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,10 +9,10 @@ import (
 
 func (cc *ClientCredential) UpdateLastUsed() error {
 	if cc.RevokedAt() != nil {
-		return ErrCredentialAlreadyRevoked
+		return clientsErr.ErrCredentialAlreadyRevoked
 	}
 	if cc.IsExpired() {
-		return ErrCredentialExpired
+		return clientsErr.ErrCredentialExpired
 	}
 
 	now := time.Now().UTC()
@@ -21,7 +22,7 @@ func (cc *ClientCredential) UpdateLastUsed() error {
 
 func (cc *ClientCredential) Revoke(revokedBy uuid.UUID, reason string) error {
 	if cc.RevokedAt() != nil {
-		return ErrCredentialAlreadyRevoked
+		return clientsErr.ErrCredentialAlreadyRevoked
 	}
 
 	now := time.Now().UTC()
@@ -34,10 +35,10 @@ func (cc *ClientCredential) Revoke(revokedBy uuid.UUID, reason string) error {
 
 func (cc *ClientCredential) Rotate(newSecretHash, newHashAlg string) error {
 	if newSecretHash == "" {
-		return ErrSecretHashRequired
+		return clientsErr.ErrSecretHashRequired
 	}
 	if newHashAlg == "" {
-		return ErrHashAlgRequired
+		return clientsErr.ErrHashAlgRequired
 	}
 
 	now := time.Now().UTC()

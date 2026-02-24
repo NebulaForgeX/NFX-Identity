@@ -1,6 +1,7 @@
 package user_credentials
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
@@ -60,7 +61,7 @@ func NewUserCredentialFromState(st UserCredentialState) *UserCredential {
 
 func validateUserCredentialParams(p NewUserCredentialParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.CredentialType != "" {
 		validTypes := map[CredentialType]struct{}{
@@ -71,7 +72,7 @@ func validateUserCredentialParams(p NewUserCredentialParams) error {
 			CredentialTypeLdap:      {},
 		}
 		if _, ok := validTypes[p.CredentialType]; !ok {
-			return ErrInvalidCredentialType
+			return authErr.ErrInvalidCredentialType
 		}
 	}
 	if p.Status != "" {
@@ -81,7 +82,7 @@ func validateUserCredentialParams(p NewUserCredentialParams) error {
 			CredentialStatusExpired:  {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidCredentialStatus
+			return authErr.ErrInvalidCredentialStatus
 		}
 	}
 	return nil

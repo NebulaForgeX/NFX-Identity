@@ -1,12 +1,13 @@
 package mfa_factors
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 )
 
 func (mf *MFAFactor) Enable() error {
 	if mf.DeletedAt() != nil {
-		return ErrMFAFactorNotFound
+		return authErr.ErrMFAFactorNotFound
 	}
 	mf.state.Enabled = true
 	mf.state.UpdatedAt = time.Now().UTC()
@@ -15,7 +16,7 @@ func (mf *MFAFactor) Enable() error {
 
 func (mf *MFAFactor) Disable() error {
 	if mf.DeletedAt() != nil {
-		return ErrMFAFactorNotFound
+		return authErr.ErrMFAFactorNotFound
 	}
 	mf.state.Enabled = false
 	mf.state.UpdatedAt = time.Now().UTC()
@@ -24,7 +25,7 @@ func (mf *MFAFactor) Disable() error {
 
 func (mf *MFAFactor) UpdateLastUsed() error {
 	if mf.DeletedAt() != nil {
-		return ErrMFAFactorNotFound
+		return authErr.ErrMFAFactorNotFound
 	}
 	now := time.Now().UTC()
 	mf.state.LastUsedAt = &now
@@ -34,7 +35,7 @@ func (mf *MFAFactor) UpdateLastUsed() error {
 
 func (mf *MFAFactor) UpdateName(name *string) error {
 	if mf.DeletedAt() != nil {
-		return ErrMFAFactorNotFound
+		return authErr.ErrMFAFactorNotFound
 	}
 	mf.state.Name = name
 	mf.state.UpdatedAt = time.Now().UTC()
@@ -43,7 +44,7 @@ func (mf *MFAFactor) UpdateName(name *string) error {
 
 func (mf *MFAFactor) UpdateRecoveryCodesHash(hash *string) error {
 	if mf.DeletedAt() != nil {
-		return ErrMFAFactorNotFound
+		return authErr.ErrMFAFactorNotFound
 	}
 	mf.state.RecoveryCodesHash = hash
 	mf.state.UpdatedAt = time.Now().UTC()

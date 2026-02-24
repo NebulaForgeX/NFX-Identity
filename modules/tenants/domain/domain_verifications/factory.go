@@ -1,6 +1,7 @@
 package domain_verifications
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -58,10 +59,10 @@ func NewDomainVerificationFromState(st DomainVerificationState) *DomainVerificat
 
 func validateDomainVerificationParams(p NewDomainVerificationParams) error {
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if p.Domain == "" {
-		return ErrDomainRequired
+		return tenantsErr.ErrDomainRequired
 	}
 	if p.VerificationMethod != "" {
 		validMethods := map[VerificationMethod]struct{}{
@@ -71,7 +72,7 @@ func validateDomainVerificationParams(p NewDomainVerificationParams) error {
 			VerificationMethodFILE: {},
 		}
 		if _, ok := validMethods[p.VerificationMethod]; !ok {
-			return ErrInvalidVerificationMethod
+			return tenantsErr.ErrInvalidVerificationMethod
 		}
 	}
 	if p.Status != "" {
@@ -82,7 +83,7 @@ func validateDomainVerificationParams(p NewDomainVerificationParams) error {
 			VerificationStatusExpired:  {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidVerificationStatus
+			return tenantsErr.ErrInvalidVerificationStatus
 		}
 	}
 	return nil

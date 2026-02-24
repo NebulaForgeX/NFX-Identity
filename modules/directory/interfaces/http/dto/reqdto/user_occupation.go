@@ -7,9 +7,9 @@ import (
 )
 
 type UserOccupationCreateRequestDTO struct {
-	UserID           uuid.UUID `json:"user_id" validate:"required,uuid"`
-	Company          string    `json:"company" validate:"required"`
-	Position         string    `json:"position" validate:"required"`
+	UserID           uuid.UUID `json:"user_id"                    validate:"required,uuid"`
+	Company          string    `json:"company"                    validate:"required"`
+	Position         string    `json:"position"                   validate:"required"`
 	Department       *string   `json:"department,omitempty"`
 	Industry         *string   `json:"industry,omitempty"`
 	Location         *string   `json:"location,omitempty"`
@@ -29,19 +29,19 @@ type UserOccupationByIDRequestDTO struct {
 
 type UserOccupationUpdateRequestDTO struct {
 	UserOccupationID uuid.UUID `uri:"user_occupation_id" validate:"required,uuid"`
-	Company          string    `json:"company" validate:"required"`
-	Position         string    `json:"position" validate:"required"`
-	Department       *string   `json:"department,omitempty"`
-	Industry         *string   `json:"industry,omitempty"`
-	Location         *string   `json:"location,omitempty"`
-	EmploymentType   *string   `json:"employment_type,omitempty"`
-	StartDate        *string   `json:"start_date,omitempty"`
-	EndDate          *string   `json:"end_date,omitempty"`
-	IsCurrent        bool      `json:"is_current"`
-	Description      *string   `json:"description,omitempty"`
-	Responsibilities *string   `json:"responsibilities,omitempty"`
-	Achievements     *string   `json:"achievements,omitempty"`
-	SkillsUsed       []string  `json:"skills_used,omitempty"`
+	Company          string    `                         validate:"required"      json:"company"`
+	Position         string    `                         validate:"required"      json:"position"`
+	Department       *string   `                                                  json:"department,omitempty"`
+	Industry         *string   `                                                  json:"industry,omitempty"`
+	Location         *string   `                                                  json:"location,omitempty"`
+	EmploymentType   *string   `                                                  json:"employment_type,omitempty"`
+	StartDate        *string   `                                                  json:"start_date,omitempty"`
+	EndDate          *string   `                                                  json:"end_date,omitempty"`
+	IsCurrent        bool      `                                                  json:"is_current"`
+	Description      *string   `                                                  json:"description,omitempty"`
+	Responsibilities *string   `                                                  json:"responsibilities,omitempty"`
+	Achievements     *string   `                                                  json:"achievements,omitempty"`
+	SkillsUsed       []string  `                                                  json:"skills_used,omitempty"`
 }
 
 func (r *UserOccupationCreateRequestDTO) ToCreateCmd() userOccupationAppCommands.CreateUserOccupationCmd {

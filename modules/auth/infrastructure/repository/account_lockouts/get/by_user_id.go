@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/account_lockouts"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/account_lockouts/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByUserID(ctx context.Context, userID uuid.UUID) (*account_lock
 	var m models.AccountLockout
 	if err := h.db.WithContext(ctx).Where("user_id = ?", userID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, account_lockouts.ErrAccountLockoutNotFound
+			return nil, authErr.ErrAccountLockoutNotFound
 		}
 		return nil, err
 	}

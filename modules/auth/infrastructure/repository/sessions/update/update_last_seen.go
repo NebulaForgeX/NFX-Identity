@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/infrastructure/rdb/models"
+	"time"
 )
 
 // UpdateLastSeen 更新最后访问时间，实现 sessions.Update 接口

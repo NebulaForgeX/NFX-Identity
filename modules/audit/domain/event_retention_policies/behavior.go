@@ -1,10 +1,18 @@
 package event_retention_policies
 
 import (
+	auditErr "nfxid/errors/src/audit"
 	"time"
 )
 
-func (erp *EventRetentionPolicy) Update(actionPattern *string, dataClassification *DataClassification, riskLevel *RiskLevel, retentionDays int, retentionAction RetentionAction, archiveLocation *string) error {
+func (erp *EventRetentionPolicy) Update(
+	actionPattern *string,
+	dataClassification *DataClassification,
+	riskLevel *RiskLevel,
+	retentionDays int,
+	retentionAction RetentionAction,
+	archiveLocation *string,
+) error {
 	if actionPattern != nil {
 		erp.state.ActionPattern = actionPattern
 	}
@@ -24,7 +32,7 @@ func (erp *EventRetentionPolicy) Update(actionPattern *string, dataClassificatio
 			RetentionActionExport:  {},
 		}
 		if _, ok := validActions[retentionAction]; !ok {
-			return ErrInvalidRetentionAction
+			return auditErr.ErrInvalidRetentionAction
 		}
 		erp.state.RetentionAction = retentionAction
 	}
@@ -41,7 +49,7 @@ func (erp *EventRetentionPolicy) UpdateStatus(status string) error {
 		"disabled": {},
 	}
 	if _, ok := validStatuses[status]; !ok {
-		return ErrInvalidStatus
+		return auditErr.ErrInvalidStatus
 	}
 	erp.state.Status = status
 	erp.state.UpdatedAt = time.Now().UTC()

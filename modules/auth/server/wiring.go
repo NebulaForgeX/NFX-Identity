@@ -41,28 +41,28 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr              *health.Manager
-	cache                  *cachex.Connection
-	postgres               *postgresqlx.Connection
-	kafkaConfig            *kafkax.Config
-	busPublisher           *eventbus.BusPublisher
-	rabbitMQConfig         *rabbitmqx.Config
-	sessionAppSvc          *sessionApp.Service
-	userCredentialAppSvc   *userCredentialApp.Service
-	mfaFactorAppSvc        *mfaFactorApp.Service
-	refreshTokenAppSvc     *refreshTokenApp.Service
-	passwordResetAppSvc    *passwordResetApp.Service
-	passwordHistoryAppSvc  *passwordHistoryApp.Service
-	loginAttemptAppSvc     *loginAttemptApp.Service
-	accountLockoutAppSvc   *accountLockoutApp.Service
-	trustedDeviceAppSvc    *trustedDeviceApp.Service
-	userTokenVerifier      token.Verifier // 用于 HTTP 中间件（用户 token）
-	serverTokenVerifier    token.Verifier // 用于 gRPC 拦截器（服务间通信）
-	resourceSvc            *resourceApp.Service
-	tokenxInstance         *tokenx.Tokenx
-	authAppSvc             *authApp.Service
-	grpcClients            *authGrpc.GRPCClients
-	emailService           *email.EmailService
+	healthMgr             *health.Manager
+	cache                 *cachex.Connection
+	postgres              *postgresqlx.Connection
+	kafkaConfig           *kafkax.Config
+	busPublisher          *eventbus.BusPublisher
+	rabbitMQConfig        *rabbitmqx.Config
+	sessionAppSvc         *sessionApp.Service
+	userCredentialAppSvc  *userCredentialApp.Service
+	mfaFactorAppSvc       *mfaFactorApp.Service
+	refreshTokenAppSvc    *refreshTokenApp.Service
+	passwordResetAppSvc   *passwordResetApp.Service
+	passwordHistoryAppSvc *passwordHistoryApp.Service
+	loginAttemptAppSvc    *loginAttemptApp.Service
+	accountLockoutAppSvc  *accountLockoutApp.Service
+	trustedDeviceAppSvc   *trustedDeviceApp.Service
+	userTokenVerifier     token.Verifier // 用于 HTTP 中间件（用户 token）
+	serverTokenVerifier   token.Verifier // 用于 gRPC 拦截器（服务间通信）
+	resourceSvc           *resourceApp.Service
+	tokenxInstance        *tokenx.Tokenx
+	authAppSvc            *authApp.Service
+	grpcClients           *authGrpc.GRPCClients
+	emailService          *email.EmailService
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -130,8 +130,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	accountLockoutRepoInstance := accountLockoutRepo.NewRepo(postgres.DB())
 	trustedDeviceRepoInstance := trustedDeviceRepo.NewRepo(postgres.DB())
 
-
-
 	//! === gRPC Clients ===
 	grpcClientsInstance, err := authGrpc.NewGRPCClients(ctx, &cfg.GRPCClient, &cfg.Server, &cfg.Token)
 	if err != nil {
@@ -150,18 +148,18 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	trustedDeviceAppSvc := trustedDeviceApp.NewService(trustedDeviceRepoInstance)
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 	authAppSvc := authApp.NewService(
-			userCredentialRepoInstance,
-			loginAttemptRepoInstance,
-			accountLockoutRepoInstance,
-			refreshTokenRepoInstance,
-			grpcClientsInstance,
-			tokenIssuer,
-			int64(cfg.Token.AccessTokenTTL.Seconds()),
-			int64(cfg.Token.RefreshTokenTTL.Seconds()),
-			emailService,
-			cacheConn,
-			userCredentialAppSvc,
-		)
+		userCredentialRepoInstance,
+		loginAttemptRepoInstance,
+		accountLockoutRepoInstance,
+		refreshTokenRepoInstance,
+		grpcClientsInstance,
+		tokenIssuer,
+		int64(cfg.Token.AccessTokenTTL.Seconds()),
+		int64(cfg.Token.RefreshTokenTTL.Seconds()),
+		emailService,
+		cacheConn,
+		userCredentialAppSvc,
+	)
 
 	return &Dependencies{
 		healthMgr:             healthMgr,
@@ -180,12 +178,12 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		accountLockoutAppSvc:  accountLockoutAppSvc,
 		trustedDeviceAppSvc:   trustedDeviceAppSvc,
 		userTokenVerifier:     userTokenVerifier,
-		serverTokenVerifier:    serverTokenVerifier,
-		resourceSvc:         resourceSvc,
-		tokenxInstance:      tokenxInstance,
-		authAppSvc:          authAppSvc,
-		grpcClients:         grpcClientsInstance,
-		emailService:        emailService,
+		serverTokenVerifier:   serverTokenVerifier,
+		resourceSvc:           resourceSvc,
+		tokenxInstance:        tokenxInstance,
+		authAppSvc:            authAppSvc,
+		grpcClients:           grpcClientsInstance,
+		emailService:          emailService,
 	}, nil
 }
 
@@ -199,26 +197,32 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) SessionAppSvc() *sessionApp.Service              { return d.sessionAppSvc }
-func (d *Dependencies) UserCredentialAppSvc() *userCredentialApp.Service { return d.userCredentialAppSvc }
-func (d *Dependencies) MFAFactorAppSvc() *mfaFactorApp.Service          { return d.mfaFactorAppSvc }
+func (d *Dependencies) SessionAppSvc() *sessionApp.Service { return d.sessionAppSvc }
+func (d *Dependencies) UserCredentialAppSvc() *userCredentialApp.Service {
+	return d.userCredentialAppSvc
+}
+func (d *Dependencies) MFAFactorAppSvc() *mfaFactorApp.Service         { return d.mfaFactorAppSvc }
 func (d *Dependencies) RefreshTokenAppSvc() *refreshTokenApp.Service   { return d.refreshTokenAppSvc }
-func (d *Dependencies) PasswordResetAppSvc() *passwordResetApp.Service   { return d.passwordResetAppSvc }
-func (d *Dependencies) PasswordHistoryAppSvc() *passwordHistoryApp.Service { return d.passwordHistoryAppSvc }
-func (d *Dependencies) LoginAttemptAppSvc() *loginAttemptApp.Service     { return d.loginAttemptAppSvc }
-func (d *Dependencies) AccountLockoutAppSvc() *accountLockoutApp.Service { return d.accountLockoutAppSvc }
-func (d *Dependencies) TrustedDeviceAppSvc() *trustedDeviceApp.Service    { return d.trustedDeviceAppSvc }
-func (d *Dependencies) HealthMgr() *health.Manager                       { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection         { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier               { return d.userTokenVerifier }
+func (d *Dependencies) PasswordResetAppSvc() *passwordResetApp.Service { return d.passwordResetAppSvc }
+func (d *Dependencies) PasswordHistoryAppSvc() *passwordHistoryApp.Service {
+	return d.passwordHistoryAppSvc
+}
+func (d *Dependencies) LoginAttemptAppSvc() *loginAttemptApp.Service { return d.loginAttemptAppSvc }
+func (d *Dependencies) AccountLockoutAppSvc() *accountLockoutApp.Service {
+	return d.accountLockoutAppSvc
+}
+func (d *Dependencies) TrustedDeviceAppSvc() *trustedDeviceApp.Service { return d.trustedDeviceAppSvc }
+func (d *Dependencies) HealthMgr() *health.Manager                     { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service              { return d.resourceSvc }
+func (d *Dependencies) Postgres() *postgresqlx.Connection              { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier              { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier            { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                       { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher             { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config                { return d.rabbitMQConfig }
-func (d *Dependencies) AuthAppSvc() *authApp.Service                     { return d.authAppSvc }
-func (d *Dependencies) EmailService() *email.EmailService                { return d.emailService }
-func (d *Dependencies) Cache() *cachex.Connection                        { return d.cache }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                    { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher           { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config              { return d.rabbitMQConfig }
+func (d *Dependencies) AuthAppSvc() *authApp.Service                   { return d.authAppSvc }
+func (d *Dependencies) EmailService() *email.EmailService              { return d.emailService }
+func (d *Dependencies) Cache() *cachex.Connection                      { return d.cache }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

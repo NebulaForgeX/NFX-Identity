@@ -4,8 +4,8 @@ import (
 	"context"
 
 	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
-	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
 	"nfxid/pkgs/errx"
+	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
 )
 
 type MFAFactorHandler struct {

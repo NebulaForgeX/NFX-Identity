@@ -16,17 +16,17 @@ func EventROToProto(v *auditAppResult.EventRO) *eventpb.Event {
 	}
 
 	event := &eventpb.Event{
-		Id:          v.ID.String(),
-		EventId:     v.EventID,
-		OccurredAt:  timestamppb.New(v.OccurredAt),
-		ReceivedAt:  timestamppb.New(v.ReceivedAt),
-		ActorType:   actorTypeToProto(v.ActorType),
-		ActorId:     v.ActorID.String(),
-		Action:      v.Action,
-		Result:      resultTypeToProto(v.Result),
-		RiskLevel:   riskLevelToProto(v.RiskLevel),
+		Id:                 v.ID.String(),
+		EventId:            v.EventID,
+		OccurredAt:         timestamppb.New(v.OccurredAt),
+		ReceivedAt:         timestamppb.New(v.ReceivedAt),
+		ActorType:          actorTypeToProto(v.ActorType),
+		ActorId:            v.ActorID.String(),
+		Action:             v.Action,
+		Result:             resultTypeToProto(v.Result),
+		RiskLevel:          riskLevelToProto(v.RiskLevel),
 		DataClassification: dataClassificationToProto(v.DataClassification),
-		CreatedAt:   timestamppb.New(v.CreatedAt),
+		CreatedAt:          timestamppb.New(v.CreatedAt),
 	}
 
 	if v.TenantID != nil {

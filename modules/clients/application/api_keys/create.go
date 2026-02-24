@@ -2,9 +2,10 @@ package api_keys
 
 import (
 	"context"
-	"time"
+	clientsErr "nfxid/errors/src/clients"
 	apiKeyCommands "nfxid/modules/clients/application/api_keys/commands"
 	apiKeyDomain "nfxid/modules/clients/domain/api_keys"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +14,7 @@ import (
 func (s *Service) CreateAPIKey(ctx context.Context, cmd apiKeyCommands.CreateAPIKeyCmd) (uuid.UUID, error) {
 	// Check if key_id already exists
 	if exists, _ := s.apiKeyRepo.Check.ByKeyID(ctx, cmd.KeyID); exists {
-		return uuid.Nil, apiKeyDomain.ErrKeyIDAlreadyExists
+		return uuid.Nil, clientsErr.ErrKeyIDAlreadyExists
 	}
 
 	// Parse expires_at if provided

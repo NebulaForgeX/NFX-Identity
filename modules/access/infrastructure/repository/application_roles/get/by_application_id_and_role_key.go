@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/domain/application_roles"
 	"nfxid/modules/access/infrastructure/rdb/models"
 	"nfxid/modules/access/infrastructure/repository/application_roles/mapper"
@@ -19,7 +20,7 @@ func (h *Handler) ByApplicationIDAndRoleKey(ctx context.Context, applicationID u
 		Where("application_id = ? AND role_key = ?", applicationID, roleKey).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, application_roles.ErrApplicationRoleNotFound
+			return nil, accessErr.ErrApplicationRoleNotFound
 		}
 		return nil, err
 	}

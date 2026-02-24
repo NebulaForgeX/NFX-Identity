@@ -1,8 +1,12 @@
 package image_types
 
+import (
+	imageErr "nfxid/errors/src/image"
+)
+
 func (it *ImageType) Validate() error {
 	if it.Key() == "" {
-		return ErrKeyRequired
+		return imageErr.ErrKeyRequired
 	}
 	return nil
 }

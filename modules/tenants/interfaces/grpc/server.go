@@ -8,10 +8,10 @@ import (
 	memberGroupApp "nfxid/modules/tenants/application/member_groups"
 	memberRoleApp "nfxid/modules/tenants/application/member_roles"
 	membersApp "nfxid/modules/tenants/application/members"
-	tenantApp "nfxid/modules/tenants/application/tenants"
+	resourceApp "nfxid/modules/tenants/application/resource"
 	tenantAppApp "nfxid/modules/tenants/application/tenant_apps"
 	tenantSettingApp "nfxid/modules/tenants/application/tenant_settings"
-	resourceApp "nfxid/modules/tenants/application/resource"
+	tenantApp "nfxid/modules/tenants/application/tenants"
 	grpcHandler "nfxid/modules/tenants/interfaces/grpc/handler"
 	"nfxid/pkgs/grpcx/interceptor"
 	"nfxid/pkgs/postgresqlx"
@@ -22,11 +22,11 @@ import (
 	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
 	grouppb "nfxid/protos/gen/tenants/group"
 	invitationpb "nfxid/protos/gen/tenants/invitation"
-	membergrouppb "nfxid/protos/gen/tenants/member_group"
 	memberpb "nfxid/protos/gen/tenants/member"
+	membergrouppb "nfxid/protos/gen/tenants/member_group"
+	tenantpb "nfxid/protos/gen/tenants/tenant"
 	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
 	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
-	tenantpb "nfxid/protos/gen/tenants/tenant"
 
 	"google.golang.org/grpc"
 )
@@ -69,7 +69,7 @@ func NewServer(d Deps) *grpc.Server {
 
 	// Register health check service
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "tenants"))
-	
+
 	// Register schema service
 	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "tenants"))
 

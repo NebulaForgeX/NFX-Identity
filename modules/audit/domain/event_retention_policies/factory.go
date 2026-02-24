@@ -1,22 +1,23 @@
 package event_retention_policies
 
 import (
+	auditErr "nfxid/errors/src/audit"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewEventRetentionPolicyParams struct {
-	PolicyName        string
-	TenantID          *uuid.UUID
-	ActionPattern     *string
+	PolicyName         string
+	TenantID           *uuid.UUID
+	ActionPattern      *string
 	DataClassification *DataClassification
-	RiskLevel         *RiskLevel
-	RetentionDays     int
-	RetentionAction   RetentionAction
-	ArchiveLocation   *string
-	Status            string
-	CreatedBy         *uuid.UUID
+	RiskLevel          *RiskLevel
+	RetentionDays      int
+	RetentionAction    RetentionAction
+	ArchiveLocation    *string
+	Status             string
+	CreatedBy          *uuid.UUID
 }
 
 func NewEventRetentionPolicy(p NewEventRetentionPolicyParams) (*EventRetentionPolicy, error) {
@@ -63,10 +64,10 @@ func NewEventRetentionPolicyFromState(st EventRetentionPolicyState) *EventRetent
 
 func validateEventRetentionPolicyParams(p NewEventRetentionPolicyParams) error {
 	if p.PolicyName == "" {
-		return ErrPolicyNameRequired
+		return auditErr.ErrPolicyNameRequired
 	}
 	if p.RetentionDays <= 0 {
-		return ErrRetentionDaysRequired
+		return auditErr.ErrRetentionDaysRequired
 	}
 	if p.RetentionAction != "" {
 		validActions := map[RetentionAction]struct{}{
@@ -75,7 +76,7 @@ func validateEventRetentionPolicyParams(p NewEventRetentionPolicyParams) error {
 			RetentionActionExport:  {},
 		}
 		if _, ok := validActions[p.RetentionAction]; !ok {
-			return ErrInvalidRetentionAction
+			return auditErr.ErrInvalidRetentionAction
 		}
 	}
 	return nil

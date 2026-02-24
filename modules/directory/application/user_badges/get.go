@@ -22,7 +22,7 @@ func (s *Service) GetUserBadgesByUserID(ctx context.Context, userID uuid.UUID) (
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]userBadgeResult.UserBadgeRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = userBadgeResult.UserBadgeMapper(entity)
@@ -36,7 +36,7 @@ func (s *Service) GetUserBadgesByBadgeID(ctx context.Context, badgeID uuid.UUID)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]userBadgeResult.UserBadgeRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = userBadgeResult.UserBadgeMapper(entity)

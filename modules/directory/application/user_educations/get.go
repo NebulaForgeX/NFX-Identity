@@ -22,7 +22,7 @@ func (s *Service) GetUserEducationsByUserID(ctx context.Context, userID uuid.UUI
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]userEducationResult.UserEducationRO, len(domainEntities))
 	for i, entity := range domainEntities {
 		results[i] = userEducationResult.UserEducationMapper(entity)

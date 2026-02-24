@@ -14,15 +14,15 @@ func ApplicationROToProto(v *appAppResult.AppRO) *applicationpb.Application {
 		return nil
 	}
 	app := &applicationpb.Application{
-		Id:          v.ID.String(),
+		Id:            v.ID.String(),
 		ApplicationId: v.AppID,
-		TenantId:    v.TenantID.String(),
-		Name:        v.Name,
-		Type:        applicationTypeToProto(v.Type),
-		Status:      applicationStatusToProto(v.Status),
-		Environment: environmentToProto(v.Environment),
-		CreatedAt:   timestamppb.New(v.CreatedAt),
-		UpdatedAt:   timestamppb.New(v.UpdatedAt),
+		TenantId:      v.TenantID.String(),
+		Name:          v.Name,
+		Type:          applicationTypeToProto(v.Type),
+		Status:        applicationStatusToProto(v.Status),
+		Environment:   environmentToProto(v.Environment),
+		CreatedAt:     timestamppb.New(v.CreatedAt),
+		UpdatedAt:     timestamppb.New(v.UpdatedAt),
 	}
 	if v.Description != nil {
 		app.Description = v.Description

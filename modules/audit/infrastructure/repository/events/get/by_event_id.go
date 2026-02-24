@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	auditErr "nfxid/errors/src/audit"
 	"nfxid/modules/audit/domain/events"
 	"nfxid/modules/audit/infrastructure/rdb/models"
 	"nfxid/modules/audit/infrastructure/repository/events/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByEventID(ctx context.Context, eventID string) (*events.Event,
 	var m models.Event
 	if err := h.db.WithContext(ctx).Where("event_id = ?", eventID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, events.ErrEventNotFound
+			return nil, auditErr.ErrEventNotFound
 		}
 		return nil, err
 	}

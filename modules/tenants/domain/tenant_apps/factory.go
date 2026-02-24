@@ -1,6 +1,7 @@
 package tenant_apps
 
 import (
+	tenantsErr "nfxid/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"
@@ -48,10 +49,10 @@ func NewTenantAppFromState(st TenantAppState) *TenantApp {
 
 func validateTenantAppParams(p NewTenantAppParams) error {
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return tenantsErr.ErrAppIDRequired
 	}
 	if p.Status != "" {
 		validStatuses := map[TenantAppStatus]struct{}{
@@ -60,7 +61,7 @@ func validateTenantAppParams(p NewTenantAppParams) error {
 			TenantAppStatusSuspended: {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidTenantAppStatus
+			return tenantsErr.ErrInvalidTenantAppStatus
 		}
 	}
 	return nil

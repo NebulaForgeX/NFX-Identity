@@ -54,12 +54,12 @@ func AccountLockoutModelToDomain(m *models.AccountLockout) *account_lockouts.Acc
 func AccountLockoutModelToUpdates(m *models.AccountLockout) map[string]any {
 	return map[string]any{
 		models.AccountLockoutCols.LockedUntil:   m.LockedUntil,
-		models.AccountLockoutCols.LockReason:   m.LockReason,
-		models.AccountLockoutCols.LockedAt:     m.LockedAt,
-		models.AccountLockoutCols.LockedBy:     m.LockedBy,
-		models.AccountLockoutCols.ActorID:      m.ActorID,
-		models.AccountLockoutCols.UnlockedAt:   m.UnlockedAt,
-		models.AccountLockoutCols.UnlockedBy:   m.UnlockedBy,
+		models.AccountLockoutCols.LockReason:    m.LockReason,
+		models.AccountLockoutCols.LockedAt:      m.LockedAt,
+		models.AccountLockoutCols.LockedBy:      m.LockedBy,
+		models.AccountLockoutCols.ActorID:       m.ActorID,
+		models.AccountLockoutCols.UnlockedAt:    m.UnlockedAt,
+		models.AccountLockoutCols.UnlockedBy:    m.UnlockedBy,
 		models.AccountLockoutCols.UnlockActorID: m.UnlockActorID,
 		models.AccountLockoutCols.UpdatedAt:     m.UpdatedAt,
 	}

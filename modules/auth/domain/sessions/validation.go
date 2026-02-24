@@ -1,19 +1,23 @@
 package sessions
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (s *Session) Validate() error {
 	if s.SessionID() == "" {
-		return ErrSessionIDRequired
+		return authErr.ErrSessionIDRequired
 	}
 	if s.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if s.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if s.ExpiresAt().IsZero() {
-		return ErrExpiresAtRequired
+		return authErr.ErrExpiresAtRequired
 	}
 	return nil
 }

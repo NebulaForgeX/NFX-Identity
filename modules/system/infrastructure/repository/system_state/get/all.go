@@ -19,7 +19,7 @@ func (h *Handler) All(ctx context.Context) ([]*system_state.SystemState, error) 
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*system_state.SystemState, len(ms))
 	for i := range ms {
 		result[i] = mapper.SystemStateModelToDomain(&ms[i])

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/domain/tenant_roles"
 	"nfxid/modules/access/infrastructure/rdb/models"
 	"nfxid/modules/access/infrastructure/repository/tenant_roles/mapper"
@@ -19,7 +20,7 @@ func (h *Handler) ByTenantIDAndRoleKey(ctx context.Context, tenantID uuid.UUID, 
 		Where("tenant_id = ? AND role_key = ?", tenantID, roleKey).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, tenant_roles.ErrTenantRoleNotFound
+			return nil, accessErr.ErrTenantRoleNotFound
 		}
 		return nil, err
 	}

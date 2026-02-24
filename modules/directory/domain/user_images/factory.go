@@ -1,6 +1,7 @@
 package user_images
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -39,10 +40,10 @@ func NewUserImageFromState(st UserImageState) *UserImage {
 
 func validateUserImageParams(p NewUserImageParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.ImageID == uuid.Nil {
-		return ErrImageIDRequired
+		return dirErr.ErrImageIDRequired
 	}
 	return nil
 }

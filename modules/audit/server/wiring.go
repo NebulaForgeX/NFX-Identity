@@ -29,21 +29,21 @@ import (
 )
 
 type Dependencies struct {
-	healthMgr                    *health.Manager
-	cache                        *cachex.Connection
-	postgres                     *postgresqlx.Connection
-	kafkaConfig                  *kafkax.Config
-	busPublisher                 *eventbus.BusPublisher
-	rabbitMQConfig               *rabbitmqx.Config
-	eventAppSvc                  *eventApp.Service
-	actorSnapshotAppSvc          *actorSnapshotApp.Service
-	eventRetentionPolicyAppSvc   *eventRetentionPolicyApp.Service
-	eventSearchIndexAppSvc       *eventSearchIndexApp.Service
-	hashChainCheckpointAppSvc    *hashChainCheckpointApp.Service
-	userTokenVerifier            token.Verifier
-	serverTokenVerifier          token.Verifier
-	resourceSvc         *resourceApp.Service
-	tokenxInstance               *tokenx.Tokenx
+	healthMgr                  *health.Manager
+	cache                      *cachex.Connection
+	postgres                   *postgresqlx.Connection
+	kafkaConfig                *kafkax.Config
+	busPublisher               *eventbus.BusPublisher
+	rabbitMQConfig             *rabbitmqx.Config
+	eventAppSvc                *eventApp.Service
+	actorSnapshotAppSvc        *actorSnapshotApp.Service
+	eventRetentionPolicyAppSvc *eventRetentionPolicyApp.Service
+	eventSearchIndexAppSvc     *eventSearchIndexApp.Service
+	hashChainCheckpointAppSvc  *hashChainCheckpointApp.Service
+	userTokenVerifier          token.Verifier
+	serverTokenVerifier        token.Verifier
+	resourceSvc                *resourceApp.Service
+	tokenxInstance             *tokenx.Tokenx
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -122,7 +122,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		hashChainCheckpointAppSvc:  hashChainCheckpointAppSvc,
 		userTokenVerifier:          userTokenVerifier,
 		serverTokenVerifier:        serverTokenVerifier,
-		resourceSvc:         resourceSvc,
+		resourceSvc:                resourceSvc,
 		tokenxInstance:             tokenxInstance,
 	}, nil
 }
@@ -134,19 +134,25 @@ func (d *Dependencies) Cleanup() {
 }
 
 // Getter methods for interfaces
-func (d *Dependencies) HealthMgr() *health.Manager                           { return d.healthMgr }
-func (d *Dependencies) ResourceSvc() *resourceApp.Service { return d.resourceSvc }
-func (d *Dependencies) EventAppSvc() *eventApp.Service                        { return d.eventAppSvc }
-func (d *Dependencies) ActorSnapshotAppSvc() *actorSnapshotApp.Service       { return d.actorSnapshotAppSvc }
-func (d *Dependencies) EventRetentionPolicyAppSvc() *eventRetentionPolicyApp.Service { return d.eventRetentionPolicyAppSvc }
-func (d *Dependencies) EventSearchIndexAppSvc() *eventSearchIndexApp.Service  { return d.eventSearchIndexAppSvc }
-func (d *Dependencies) HashChainCheckpointAppSvc() *hashChainCheckpointApp.Service { return d.hashChainCheckpointAppSvc }
-func (d *Dependencies) Postgres() *postgresqlx.Connection                    { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier                    { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier                  { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                          { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher                 { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config                    { return d.rabbitMQConfig }
+func (d *Dependencies) HealthMgr() *health.Manager                     { return d.healthMgr }
+func (d *Dependencies) ResourceSvc() *resourceApp.Service              { return d.resourceSvc }
+func (d *Dependencies) EventAppSvc() *eventApp.Service                 { return d.eventAppSvc }
+func (d *Dependencies) ActorSnapshotAppSvc() *actorSnapshotApp.Service { return d.actorSnapshotAppSvc }
+func (d *Dependencies) EventRetentionPolicyAppSvc() *eventRetentionPolicyApp.Service {
+	return d.eventRetentionPolicyAppSvc
+}
+func (d *Dependencies) EventSearchIndexAppSvc() *eventSearchIndexApp.Service {
+	return d.eventSearchIndexAppSvc
+}
+func (d *Dependencies) HashChainCheckpointAppSvc() *hashChainCheckpointApp.Service {
+	return d.hashChainCheckpointAppSvc
+}
+func (d *Dependencies) Postgres() *postgresqlx.Connection    { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
+func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
+func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config    { return d.rabbitMQConfig }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

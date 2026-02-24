@@ -2,6 +2,7 @@ package apps
 
 import (
 	"context"
+	clientsErr "nfxid/errors/src/clients"
 	appCommands "nfxid/modules/clients/application/apps/commands"
 	appDomain "nfxid/modules/clients/domain/apps"
 
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateApp(ctx context.Context, cmd appCommands.CreateAppCmd) (uuid.UUID, error) {
 	// Check if app_id already exists
 	if exists, _ := s.appRepo.Check.ByAppID(ctx, cmd.AppID); exists {
-		return uuid.Nil, appDomain.ErrAppIDAlreadyExists
+		return uuid.Nil, clientsErr.ErrAppIDAlreadyExists
 	}
 
 	// Create domain entity

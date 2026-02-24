@@ -2,9 +2,9 @@ package user_educations
 
 import (
 	"context"
-	"time"
 	userEducationCommands "nfxid/modules/directory/application/user_educations/commands"
 	userEducationDomain "nfxid/modules/directory/domain/user_educations"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -28,17 +28,17 @@ func (s *Service) CreateUserEducation(ctx context.Context, cmd userEducationComm
 
 	// Create domain entity
 	userEducation, err := userEducationDomain.NewUserEducation(userEducationDomain.NewUserEducationParams{
-		UserID:      cmd.UserID,
-		School:      cmd.School,
-		Degree:      cmd.Degree,
-		Major:       cmd.Major,
+		UserID:       cmd.UserID,
+		School:       cmd.School,
+		Degree:       cmd.Degree,
+		Major:        cmd.Major,
 		FieldOfStudy: cmd.FieldOfStudy,
-		StartDate:   startDate,
-		EndDate:     endDate,
-		IsCurrent:   cmd.IsCurrent,
-		Description: cmd.Description,
-		Grade:       cmd.Grade,
-		Activities:  cmd.Activities,
+		StartDate:    startDate,
+		EndDate:      endDate,
+		IsCurrent:    cmd.IsCurrent,
+		Description:  cmd.Description,
+		Grade:        cmd.Grade,
+		Activities:   cmd.Activities,
 		Achievements: cmd.Achievements,
 	})
 	if err != nil {

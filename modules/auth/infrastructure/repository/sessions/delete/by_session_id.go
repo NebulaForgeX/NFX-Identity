@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/sessions"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 )
 
@@ -16,7 +16,7 @@ func (h *Handler) BySessionID(ctx context.Context, sessionID string) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return sessions.ErrSessionNotFound
+		return authErr.ErrSessionNotFound
 	}
 	return nil
 }

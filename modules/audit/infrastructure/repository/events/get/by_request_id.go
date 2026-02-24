@@ -19,7 +19,7 @@ func (h *Handler) ByRequestID(ctx context.Context, requestID string) ([]*events.
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*events.Event, len(ms))
 	for i := range ms {
 		result[i] = mapper.EventModelToDomain(&ms[i])

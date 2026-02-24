@@ -2,9 +2,10 @@ package user_phones
 
 import (
 	"context"
-	"time"
+	dirErr "nfxid/errors/src/directory"
 	userPhoneCommands "nfxid/modules/directory/application/user_phones/commands"
 	userPhoneDomain "nfxid/modules/directory/domain/user_phones"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -14,7 +15,7 @@ func (s *Service) CreateUserPhone(ctx context.Context, cmd userPhoneCommands.Cre
 	// Check if phone already exists (必须提供 countryCode)
 	if cmd.CountryCode != nil && *cmd.CountryCode != "" {
 		if exists, _ := s.userPhoneRepo.Check.ByCountryCodeAndPhone(ctx, *cmd.CountryCode, cmd.Phone); exists {
-			return uuid.Nil, userPhoneDomain.ErrPhoneAlreadyExists
+			return uuid.Nil, dirErr.ErrPhoneAlreadyExists
 		}
 	}
 

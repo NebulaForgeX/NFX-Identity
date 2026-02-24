@@ -1,16 +1,20 @@
 package image_variants
 
-import "github.com/google/uuid"
+import (
+	imageErr "nfxid/errors/src/image"
+
+	"github.com/google/uuid"
+)
 
 func (iv *ImageVariant) Validate() error {
 	if iv.ImageID() == uuid.Nil {
-		return ErrImageIDRequired
+		return imageErr.ErrImageIDRequired
 	}
 	if iv.VariantKey() == "" {
-		return ErrVariantKeyRequired
+		return imageErr.ErrVariantKeyRequired
 	}
 	if iv.StoragePath() == "" {
-		return ErrStoragePathRequired
+		return imageErr.ErrStoragePathRequired
 	}
 	return nil
 }

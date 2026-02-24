@@ -30,7 +30,8 @@ func NewPublisher(cfg *Config) (*messaging.BusPublisher, error) {
 	if defaultExchangeType == "" {
 		defaultExchangeType = messaging.DefaultExchangeType
 	}
-	logx.S().Infof("🔄 Initializing RabbitMQ Publisher with URI: %s (default exchange: %s, type: %s)", maskURI(uri), defaultExchange, defaultExchangeType.String())
+	logx.S().
+		Infof("🔄 Initializing RabbitMQ Publisher with URI: %s (default exchange: %s, type: %s)", maskURI(uri), defaultExchange, defaultExchangeType.String())
 
 	// 使用支持优先级的 Marshaler（总是启用，以便支持 WithPriority 选项）
 	amqpConfig.Marshaler = &PriorityMarshaler{}
@@ -138,21 +139,21 @@ func declareExchanges(_ *amqp.Publisher, exchanges map[string]messaging.Exchange
 	for name, exchangeType := range exchanges {
 		// 对于插件类型（如 x-delayed-message），可能需要额外的 arguments
 		arguments := make(amqp091.Table)
-		
+
 		// x-delayed-message 需要指定 x-delayed-type
 		if exchangeType == messaging.ExchangeTypeDelayedMessage {
 			// 默认使用 topic 作为底层类型，可以通过配置覆盖
 			arguments["x-delayed-type"] = messaging.DefaultExchangeType.String()
 		}
-		
+
 		err := ch.ExchangeDeclare(
-			name,                    // name
-			exchangeType.String(),   // type
-			durable,                 // durable
-			autoDelete,              // auto-deleted
-			false,                   // internal
-			false,                   // no-wait
-			arguments,               // arguments（用于插件类型）
+			name,                  // name
+			exchangeType.String(), // type
+			durable,               // durable
+			autoDelete,            // auto-deleted
+			false,                 // internal
+			false,                 // no-wait
+			arguments,             // arguments（用于插件类型）
 		)
 		if err != nil {
 			return fmt.Errorf("failed to declare exchange %s (type: %s): %w", name, exchangeType, err)

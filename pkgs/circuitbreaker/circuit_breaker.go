@@ -70,4 +70,3 @@ func (m *Manager) get(key string) *gobreaker.CircuitBreaker {
 func IsCircuitBreakerError(err error) bool {
 	return errors.Is(err, gobreaker.ErrOpenState) || errors.Is(err, gobreaker.ErrTooManyRequests)
 }
-

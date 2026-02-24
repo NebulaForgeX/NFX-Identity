@@ -9,11 +9,11 @@ import (
 )
 
 type TenantRoleDTO struct {
-	ID        uuid.UUID  `json:"id"`
-	TenantID  uuid.UUID  `json:"tenant_id"`
-	RoleKey   string     `json:"role_key"`
-	Name      *string    `json:"name,omitempty"`
-	CreatedAt time.Time  `json:"created_at"`
+	ID        uuid.UUID `json:"id"`
+	TenantID  uuid.UUID `json:"tenant_id"`
+	RoleKey   string    `json:"role_key"`
+	Name      *string   `json:"name,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func TenantRoleToDTO(r *domain.TenantRole) *TenantRoleDTO {

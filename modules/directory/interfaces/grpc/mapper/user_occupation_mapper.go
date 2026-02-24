@@ -14,14 +14,14 @@ func UserOccupationROToProto(v *userOccupationAppResult.UserOccupationRO) *usero
 	}
 
 	userOccupation := &useroccupationpb.UserOccupation{
-		Id:        v.ID.String(),
-		UserId:    v.UserID.String(),
-		Company:   v.Company,
-		Position:  v.Position,
-		IsCurrent: v.IsCurrent,
+		Id:         v.ID.String(),
+		UserId:     v.UserID.String(),
+		Company:    v.Company,
+		Position:   v.Position,
+		IsCurrent:  v.IsCurrent,
 		SkillsUsed: v.SkillsUsed,
-		CreatedAt: timestamppb.New(v.CreatedAt),
-		UpdatedAt: timestamppb.New(v.UpdatedAt),
+		CreatedAt:  timestamppb.New(v.CreatedAt),
+		UpdatedAt:  timestamppb.New(v.UpdatedAt),
 	}
 
 	if v.Department != nil {

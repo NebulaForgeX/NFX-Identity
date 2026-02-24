@@ -9,16 +9,16 @@ import (
 )
 
 type ClientScope struct {
-	ID           uuid.UUID  `gorm:"type:uuid;primaryKey"`
+	ID            uuid.UUID  `gorm:"type:uuid;primaryKey"`
 	ApplicationID uuid.UUID  `gorm:"type:uuid"`
-	Scope        string     `gorm:"type:varchar(255)"`
-	GrantedBy    *uuid.UUID `gorm:"type:uuid"`
-	GrantedAt    time.Time  `gorm:"type:timestamp"`
-	ExpiresAt    *time.Time `gorm:"type:timestamp"`
-	CreatedAt    time.Time  `gorm:"autoCreateTime"`
-	RevokedAt    *time.Time `gorm:"type:timestamp"`
-	RevokedBy    *uuid.UUID `gorm:"type:uuid"`
-	RevokeReason *string    `gorm:"type:text"`
+	Scope         string     `gorm:"type:varchar(255)"`
+	GrantedBy     *uuid.UUID `gorm:"type:uuid"`
+	GrantedAt     time.Time  `gorm:"type:timestamp"`
+	ExpiresAt     *time.Time `gorm:"type:timestamp"`
+	CreatedAt     time.Time  `gorm:"autoCreateTime"`
+	RevokedAt     *time.Time `gorm:"type:timestamp"`
+	RevokedBy     *uuid.UUID `gorm:"type:uuid"`
+	RevokeReason  *string    `gorm:"type:text"`
 }
 
 func (ClientScope) TableName() string { return "clients.client_scopes" }

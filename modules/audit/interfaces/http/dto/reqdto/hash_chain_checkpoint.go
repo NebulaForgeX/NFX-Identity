@@ -7,12 +7,12 @@ import (
 )
 
 type HashChainCheckpointCreateRequestDTO struct {
-	CheckpointID       string     `json:"checkpoint_id" validate:"required"`
+	CheckpointID       string     `json:"checkpoint_id"                  validate:"required"`
 	TenantID           *uuid.UUID `json:"tenant_id,omitempty"`
-	PartitionDate      string     `json:"partition_date" validate:"required"`
-	CheckpointHash     string     `json:"checkpoint_hash" validate:"required"`
+	PartitionDate      string     `json:"partition_date"                 validate:"required"`
+	CheckpointHash     string     `json:"checkpoint_hash"                validate:"required"`
 	PrevCheckpointHash *string    `json:"prev_checkpoint_hash,omitempty"`
-	EventCount         int        `json:"event_count" validate:"required"`
+	EventCount         int        `json:"event_count"                    validate:"required"`
 	FirstEventID       *string    `json:"first_event_id,omitempty"`
 	LastEventID        *string    `json:"last_event_id,omitempty"`
 	CreatedBy          *string    `json:"created_by,omitempty"`

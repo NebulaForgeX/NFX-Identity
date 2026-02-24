@@ -2,6 +2,7 @@ package badges
 
 import (
 	"context"
+	dirErr "nfxid/errors/src/directory"
 	badgeCommands "nfxid/modules/directory/application/badges/commands"
 	badgeDomain "nfxid/modules/directory/domain/badges"
 
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateBadge(ctx context.Context, cmd badgeCommands.CreateBadgeCmd) (uuid.UUID, error) {
 	// Check if badge name already exists
 	if exists, _ := s.badgeRepo.Check.ByName(ctx, cmd.Name); exists {
-		return uuid.Nil, badgeDomain.ErrNameAlreadyExists
+		return uuid.Nil, dirErr.ErrNameAlreadyExists
 	}
 
 	// Create domain entity

@@ -1,13 +1,17 @@
 package members
 
-import "github.com/google/uuid"
+import (
+	tenantsErr "nfxid/errors/src/tenants"
+
+	"github.com/google/uuid"
+)
 
 func (m *Member) Validate() error {
 	if m.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	if m.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return tenantsErr.ErrUserIDRequired
 	}
 	validStatuses := map[MemberStatus]struct{}{
 		MemberStatusInvited:   {},
@@ -16,7 +20,7 @@ func (m *Member) Validate() error {
 		MemberStatusRemoved:   {},
 	}
 	if _, ok := validStatuses[m.Status()]; !ok {
-		return ErrInvalidMemberStatus
+		return tenantsErr.ErrInvalidMemberStatus
 	}
 	validSources := map[MemberSource]struct{}{
 		MemberSourceManual: {},
@@ -27,7 +31,7 @@ func (m *Member) Validate() error {
 		MemberSourceImport: {},
 	}
 	if _, ok := validSources[m.Source()]; !ok {
-		return ErrInvalidMemberSource
+		return tenantsErr.ErrInvalidMemberSource
 	}
 	return nil
 }

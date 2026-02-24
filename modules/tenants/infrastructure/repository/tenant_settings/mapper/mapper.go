@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"strings"
 	"nfxid/modules/tenants/domain/tenant_settings"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"strings"
 
 	"gorm.io/datatypes"
 )
@@ -43,7 +43,7 @@ func TenantSettingDomainToModel(ts *tenant_settings.TenantSetting) *models.Tenan
 	}
 
 	return &models.TenantSetting{
-		ID:                  ts.ID(), // id 直接引用 tenants.id
+		ID:                  ts.ID(),         // id 直接引用 tenants.id
 		EnforceMfa:          ts.EnforceMFA(), // Model 使用 EnforceMfa，Domain 使用 EnforceMFA
 		AllowedEmailDomains: allowedEmailDomains,
 		SessionTtlMinutes:   ts.SessionTTLMinutes(), // Model 使用 SessionTtlMinutes，Domain 使用 SessionTTLMinutes
@@ -83,17 +83,17 @@ func TenantSettingModelToDomain(m *models.TenantSetting) *tenant_settings.Tenant
 	}
 
 	state := tenant_settings.TenantSettingState{
-		ID:                 m.ID, // id 直接引用 tenants.id
-		TenantID:           m.ID, // TenantID 从 ID 获取（一对一关系）
-		EnforceMFA:         m.EnforceMfa, // Model 使用 EnforceMfa，Domain 使用 EnforceMFA
+		ID:                  m.ID,         // id 直接引用 tenants.id
+		TenantID:            m.ID,         // TenantID 从 ID 获取（一对一关系）
+		EnforceMFA:          m.EnforceMfa, // Model 使用 EnforceMfa，Domain 使用 EnforceMFA
 		AllowedEmailDomains: allowedEmailDomains,
-		SessionTTLMinutes:  m.SessionTtlMinutes, // Model 使用 SessionTtlMinutes，Domain 使用 SessionTTLMinutes
-		PasswordPolicy:     passwordPolicy,
-		LoginPolicy:        loginPolicy,
-		MFAPolicy:          mfaPolicy, // Model 使用 MfaPolicy，Domain 使用 MFAPolicy
-		CreatedAt:          m.CreatedAt,
-		UpdatedAt:          m.UpdatedAt,
-		UpdatedBy:          m.UpdatedBy,
+		SessionTTLMinutes:   m.SessionTtlMinutes, // Model 使用 SessionTtlMinutes，Domain 使用 SessionTTLMinutes
+		PasswordPolicy:      passwordPolicy,
+		LoginPolicy:         loginPolicy,
+		MFAPolicy:           mfaPolicy, // Model 使用 MfaPolicy，Domain 使用 MFAPolicy
+		CreatedAt:           m.CreatedAt,
+		UpdatedAt:           m.UpdatedAt,
+		UpdatedBy:           m.UpdatedBy,
 	}
 
 	return tenant_settings.NewTenantSettingFromState(state)
@@ -118,11 +118,11 @@ func TenantSettingModelToUpdates(m *models.TenantSetting) map[string]any {
 
 	return map[string]any{
 		// 注意：TenantID 不再存在，id 直接引用 tenants.id
-		models.TenantSettingCols.EnforceMfa:         m.EnforceMfa,
+		models.TenantSettingCols.EnforceMfa:          m.EnforceMfa,
 		models.TenantSettingCols.AllowedEmailDomains: m.AllowedEmailDomains,
 		models.TenantSettingCols.SessionTtlMinutes:   m.SessionTtlMinutes,
-		models.TenantSettingCols.PasswordPolicy:     passwordPolicy,
-		models.TenantSettingCols.LoginPolicy:        loginPolicy,
+		models.TenantSettingCols.PasswordPolicy:      passwordPolicy,
+		models.TenantSettingCols.LoginPolicy:         loginPolicy,
 		models.TenantSettingCols.MfaPolicy:           mfaPolicy,
 		models.TenantSettingCols.UpdatedAt:           m.UpdatedAt,
 		models.TenantSettingCols.UpdatedBy:           m.UpdatedBy,

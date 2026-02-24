@@ -46,9 +46,13 @@ func (c *ClientCredentialClient) GetClientCredentialByClientID(ctx context.Conte
 }
 
 // GetClientCredentialsByAppID 根据应用ID获取客户端凭证列表
-func (c *ClientCredentialClient) GetClientCredentialsByAppID(ctx context.Context, appID string, status *clientcredentialpb.ClientsCredentialStatus) ([]*clientcredentialpb.ClientCredential, error) {
+func (c *ClientCredentialClient) GetClientCredentialsByAppID(
+	ctx context.Context,
+	appID string,
+	status *clientcredentialpb.ClientsCredentialStatus,
+) ([]*clientcredentialpb.ClientCredential, error) {
 	req := &clientcredentialpb.GetClientCredentialsByAppIDRequest{
-		AppId: appID,
+		AppId:  appID,
 		Status: status,
 	}
 

@@ -1,6 +1,7 @@
 package image_variants
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 )
 
@@ -25,7 +26,7 @@ func (iv *ImageVariant) Update(width, height *int, size *int64, mimeType, storag
 	}
 	if storagePath != nil {
 		if *storagePath == "" {
-			return ErrStoragePathRequired
+			return imageErr.ErrStoragePathRequired
 		}
 		iv.state.StoragePath = *storagePath
 	}

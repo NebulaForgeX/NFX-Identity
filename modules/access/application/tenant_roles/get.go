@@ -4,6 +4,7 @@ import (
 	"context"
 
 	domain "nfxid/modules/access/domain/tenant_roles"
+
 	"github.com/google/uuid"
 )
 

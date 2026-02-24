@@ -10,7 +10,7 @@ type MessageKey = string
 // 用于在消息键（MessageKey）和 Exchange + RoutingKey 之间进行映射。
 type ExchangeResolver struct {
 	KeyToExchange map[MessageKey]ExchangeRouting // 消息键到 Exchange + RoutingKey 的映射
-	ExchangeToKey map[string]MessageKey         // Exchange+RoutingKey 组合到消息键的映射（用于反向查找）
+	ExchangeToKey map[string]MessageKey          // Exchange+RoutingKey 组合到消息键的映射（用于反向查找）
 }
 
 // ExchangeRouting 包含 Exchange 名称和 RoutingKey

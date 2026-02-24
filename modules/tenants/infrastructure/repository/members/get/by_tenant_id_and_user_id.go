@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/domain/members"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 	"nfxid/modules/tenants/infrastructure/repository/members/mapper"
@@ -18,7 +19,7 @@ func (h *Handler) ByTenantIDAndUserID(ctx context.Context, tenantID, userID uuid
 		Where("tenant_id = ? AND user_id = ?", tenantID, userID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, members.ErrMemberNotFound
+			return nil, tenantsErr.ErrMemberNotFound
 		}
 		return nil, err
 	}

@@ -2,6 +2,7 @@ package ip_allowlist
 
 import (
 	"context"
+	clientsErr "nfxid/errors/src/clients"
 	ipAllowlistCommands "nfxid/modules/clients/application/ip_allowlist/commands"
 	ipAllowlistDomain "nfxid/modules/clients/domain/ip_allowlist"
 
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateIPAllowlist(ctx context.Context, cmd ipAllowlistCommands.CreateIPAllowlistCmd) (uuid.UUID, error) {
 	// Check if rule_id already exists
 	if exists, _ := s.ipAllowlistRepo.Check.ByRuleID(ctx, cmd.RuleID); exists {
-		return uuid.Nil, ipAllowlistDomain.ErrRuleIDAlreadyExists
+		return uuid.Nil, clientsErr.ErrRuleIDAlreadyExists
 	}
 
 	// Create domain entity

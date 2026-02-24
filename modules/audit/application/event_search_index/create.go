@@ -2,9 +2,9 @@ package event_search_index
 
 import (
 	"context"
-	"time"
 	eventSearchIndexCommands "nfxid/modules/audit/application/event_search_index/commands"
 	eventSearchIndexDomain "nfxid/modules/audit/domain/event_search_index"
+	"time"
 
 	"github.com/google/uuid"
 )

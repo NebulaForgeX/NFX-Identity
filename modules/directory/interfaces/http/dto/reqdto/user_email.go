@@ -7,8 +7,8 @@ import (
 )
 
 type UserEmailCreateRequestDTO struct {
-	UserID            uuid.UUID `json:"user_id" validate:"required,uuid"`
-	Email             string    `json:"email" validate:"required,email"`
+	UserID            uuid.UUID `json:"user_id"                      validate:"required,uuid"`
+	Email             string    `json:"email"                        validate:"required,email"`
 	IsPrimary         bool      `json:"is_primary,omitempty"`
 	IsVerified        bool      `json:"is_verified,omitempty"`
 	VerificationToken *string   `json:"verification_token,omitempty"`

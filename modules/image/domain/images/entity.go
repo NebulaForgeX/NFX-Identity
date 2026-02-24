@@ -11,25 +11,25 @@ type Image struct {
 }
 
 type ImageState struct {
-	ID              uuid.UUID
-	TypeID          *uuid.UUID
-	UserID          *uuid.UUID
-	TenantID        *uuid.UUID
-	AppID           *uuid.UUID
-	SourceDomain    *string
-	Filename        string
+	ID               uuid.UUID
+	TypeID           *uuid.UUID
+	UserID           *uuid.UUID
+	TenantID         *uuid.UUID
+	AppID            *uuid.UUID
+	SourceDomain     *string
+	Filename         string
 	OriginalFilename string
-	MimeType        string
-	Size            int64
-	Width           *int
-	Height          *int
-	StoragePath     string
-	URL             *string
-	IsPublic        bool
-	Metadata        map[string]interface{}
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	DeletedAt       *time.Time
+	MimeType         string
+	Size             int64
+	Width            *int
+	Height           *int
+	StoragePath      string
+	URL              *string
+	IsPublic         bool
+	Metadata         map[string]interface{}
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
+	DeletedAt        *time.Time
 }
 
 func (i *Image) ID() uuid.UUID                    { return i.state.ID }

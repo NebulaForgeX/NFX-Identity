@@ -1,6 +1,7 @@
 package client_scopes
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -41,10 +42,10 @@ func NewClientScopeFromState(st ClientScopeState) *ClientScope {
 
 func validateClientScopeParams(p NewClientScopeParams) error {
 	if p.AppID == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if p.Scope == "" {
-		return ErrScopeRequired
+		return clientsErr.ErrScopeRequired
 	}
 	return nil
 }

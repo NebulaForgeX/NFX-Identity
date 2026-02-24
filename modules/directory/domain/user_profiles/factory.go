@@ -1,6 +1,7 @@
 package user_profiles
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -59,7 +60,7 @@ func NewUserProfileFromState(st UserProfileState) *UserProfile {
 
 func validateUserProfileParams(p NewUserProfileParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	return nil
 }

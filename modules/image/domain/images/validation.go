@@ -1,20 +1,24 @@
 package images
 
+import (
+	imageErr "nfxid/errors/src/image"
+)
+
 func (i *Image) Validate() error {
 	if i.Filename() == "" {
-		return ErrFilenameRequired
+		return imageErr.ErrFilenameRequired
 	}
 	if i.OriginalFilename() == "" {
-		return ErrOriginalFilenameRequired
+		return imageErr.ErrOriginalFilenameRequired
 	}
 	if i.MimeType() == "" {
-		return ErrMimeTypeRequired
+		return imageErr.ErrMimeTypeRequired
 	}
 	if i.StoragePath() == "" {
-		return ErrStoragePathRequired
+		return imageErr.ErrStoragePathRequired
 	}
 	if i.Size() <= 0 {
-		return ErrSizeRequired
+		return imageErr.ErrSizeRequired
 	}
 	return nil
 }

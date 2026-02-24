@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/member_roles"
+	tenantsErr "nfxid/errors/src/tenants"
 	"nfxid/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -18,7 +18,7 @@ func (h *Handler) ByTenantIDAndMemberIDAndRoleID(ctx context.Context, tenantID, 
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return member_roles.ErrMemberRoleNotFound
+		return tenantsErr.ErrMemberRoleNotFound
 	}
 	return nil
 }

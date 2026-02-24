@@ -7,8 +7,8 @@ import (
 )
 
 type UserBadgeCreateRequestDTO struct {
-	UserID      uuid.UUID `json:"user_id" validate:"required,uuid"`
-	BadgeID     uuid.UUID `json:"badge_id" validate:"required,uuid"`
+	UserID      uuid.UUID `json:"user_id"             validate:"required,uuid"`
+	BadgeID     uuid.UUID `json:"badge_id"            validate:"required,uuid"`
 	Description string    `json:"description"`
 	Level       int       `json:"level"`
 	EarnedAt    *string   `json:"earned_at,omitempty"`

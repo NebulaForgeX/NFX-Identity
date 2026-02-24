@@ -1,13 +1,17 @@
 package account_lockouts
 
-import "github.com/google/uuid"
+import (
+	authErr "nfxid/errors/src/auth"
+
+	"github.com/google/uuid"
+)
 
 func (al *AccountLockout) Validate() error {
 	if al.UserID() == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if al.LockReason() == "" {
-		return ErrLockReasonRequired
+		return authErr.ErrLockReasonRequired
 	}
 	validReasons := map[LockReason]struct{}{
 		LockReasonTooManyAttempts:    {},
@@ -18,7 +22,7 @@ func (al *AccountLockout) Validate() error {
 		LockReasonOther:              {},
 	}
 	if _, ok := validReasons[al.LockReason()]; !ok {
-		return ErrInvalidLockReason
+		return authErr.ErrInvalidLockReason
 	}
 	return nil
 }

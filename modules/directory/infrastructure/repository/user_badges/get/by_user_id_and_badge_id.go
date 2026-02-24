@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	dirErr "nfxid/errors/src/directory"
 	"nfxid/modules/directory/domain/user_badges"
 	"nfxid/modules/directory/infrastructure/rdb/models"
 	"nfxid/modules/directory/infrastructure/repository/user_badges/mapper"
@@ -18,7 +20,7 @@ func (h *Handler) ByUserIDAndBadgeID(ctx context.Context, userID, badgeID uuid.U
 		Where("user_id = ? AND badge_id = ?", userID, badgeID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, user_badges.ErrUserBadgeNotFound
+			return nil, dirErr.ErrUserBadgeNotFound
 		}
 		return nil, err
 	}

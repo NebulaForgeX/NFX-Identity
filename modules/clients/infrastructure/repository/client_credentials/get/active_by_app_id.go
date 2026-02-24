@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"nfxid/enums"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/client_credentials"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/client_credentials/mapper"
@@ -19,7 +20,7 @@ func (h *Handler) ActiveByAppID(ctx context.Context, appID uuid.UUID) (*client_c
 		Where("app_id = ? AND status = ?", appID, enums.ClientsCredentialStatusActive).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, client_credentials.ErrClientCredentialNotFound
+			return nil, clientsErr.ErrClientCredentialNotFound
 		}
 		return nil, err
 	}

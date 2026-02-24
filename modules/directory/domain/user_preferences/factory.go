@@ -1,6 +1,7 @@
 package user_preferences
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -60,7 +61,7 @@ func NewUserPreferenceFromState(st UserPreferenceState) *UserPreference {
 
 func validateUserPreferenceParams(p NewUserPreferenceParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	return nil
 }

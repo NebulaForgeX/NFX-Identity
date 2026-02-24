@@ -6,8 +6,8 @@ import (
 
 	eventApp "nfxid/modules/audit/application/events"
 	"nfxid/modules/audit/interfaces/grpc/mapper"
-	eventpb "nfxid/protos/gen/audit/event"
 	"nfxid/pkgs/errx"
+	eventpb "nfxid/protos/gen/audit/event"
 
 	"github.com/google/uuid"
 )

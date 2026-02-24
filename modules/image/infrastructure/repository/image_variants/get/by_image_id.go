@@ -20,7 +20,7 @@ func (h *Handler) ByImageID(ctx context.Context, imageID uuid.UUID) ([]*image_va
 		}
 		return nil, err
 	}
-	
+
 	result := make([]*image_variants.ImageVariant, len(ms))
 	for i := range ms {
 		result[i] = mapper.ImageVariantModelToDomain(&ms[i])

@@ -5,8 +5,8 @@ import (
 )
 
 type TenantRoleCreateRequestDTO struct {
-	TenantID string  `json:"tenant_id" validate:"required,uuid"`
-	RoleKey  string  `json:"role_key" validate:"required"`
+	TenantID string  `json:"tenant_id"      validate:"required,uuid"`
+	RoleKey  string  `json:"role_key"       validate:"required"`
 	Name     *string `json:"name,omitempty"`
 }
 
@@ -20,11 +20,11 @@ type TenantRoleByTenantIDRequestDTO struct {
 
 type TenantRoleByTenantIDAndRoleKeyRequestDTO struct {
 	TenantID uuid.UUID `uri:"tenant_id" validate:"required,uuid"`
-	RoleKey  string    `uri:"role_key" validate:"required"`
+	RoleKey  string    `uri:"role_key"  validate:"required"`
 }
 
 type TenantRoleUpdateBodyRequestDTO struct {
-	RoleKey string  `json:"role_key" validate:"required"`
+	RoleKey string  `json:"role_key"       validate:"required"`
 	Name    *string `json:"name,omitempty"`
 }
 

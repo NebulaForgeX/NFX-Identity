@@ -32,12 +32,12 @@ func (s *Service) GetAllBadges(ctx context.Context, category *string, isSystem *
 	if category == nil {
 		return []badgeResult.BadgeRO{}, nil
 	}
-	
+
 	domainEntities, err := s.badgeRepo.Get.ByCategory(ctx, *category)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	results := make([]badgeResult.BadgeRO, 0, len(domainEntities))
 	for _, entity := range domainEntities {
 		// 如果指定了isSystem，进行过滤

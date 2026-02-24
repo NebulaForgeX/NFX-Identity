@@ -6,8 +6,8 @@ import (
 	userImageApp "nfxid/modules/directory/application/user_images"
 	userImageAppCommands "nfxid/modules/directory/application/user_images/commands"
 	"nfxid/modules/directory/interfaces/grpc/mapper"
-	userimagepb "nfxid/protos/gen/directory/user_image"
 	"nfxid/pkgs/errx"
+	userimagepb "nfxid/protos/gen/directory/user_image"
 
 	"github.com/google/uuid"
 )
@@ -77,7 +77,10 @@ func (h *UserImageHandler) GetUserImageByID(ctx context.Context, req *userimagep
 }
 
 // GetUserImagesByUserID 根据用户ID获取用户图片列表
-func (h *UserImageHandler) GetUserImagesByUserID(ctx context.Context, req *userimagepb.GetUserImagesByUserIDRequest) (*userimagepb.GetUserImagesByUserIDResponse, error) {
+func (h *UserImageHandler) GetUserImagesByUserID(
+	ctx context.Context,
+	req *userimagepb.GetUserImagesByUserIDRequest,
+) (*userimagepb.GetUserImagesByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -93,7 +96,10 @@ func (h *UserImageHandler) GetUserImagesByUserID(ctx context.Context, req *useri
 }
 
 // GetUserImagesByImageID 根据图片ID获取用户图片列表
-func (h *UserImageHandler) GetUserImagesByImageID(ctx context.Context, req *userimagepb.GetUserImagesByImageIDRequest) (*userimagepb.GetUserImagesByImageIDResponse, error) {
+func (h *UserImageHandler) GetUserImagesByImageID(
+	ctx context.Context,
+	req *userimagepb.GetUserImagesByImageIDRequest,
+) (*userimagepb.GetUserImagesByImageIDResponse, error) {
 	imageID, err := uuid.Parse(req.ImageId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -109,7 +115,10 @@ func (h *UserImageHandler) GetUserImagesByImageID(ctx context.Context, req *user
 }
 
 // GetCurrentUserImageByUserID 获取用户当前图片（display_order = 0）
-func (h *UserImageHandler) GetCurrentUserImageByUserID(ctx context.Context, req *userimagepb.GetCurrentUserImageByUserIDRequest) (*userimagepb.GetCurrentUserImageByUserIDResponse, error) {
+func (h *UserImageHandler) GetCurrentUserImageByUserID(
+	ctx context.Context,
+	req *userimagepb.GetCurrentUserImageByUserIDRequest,
+) (*userimagepb.GetCurrentUserImageByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -125,14 +134,17 @@ func (h *UserImageHandler) GetCurrentUserImageByUserID(ctx context.Context, req 
 }
 
 // UpdateUserImageDisplayOrder 更新用户图片显示顺序
-func (h *UserImageHandler) UpdateUserImageDisplayOrder(ctx context.Context, req *userimagepb.UpdateUserImageDisplayOrderRequest) (*userimagepb.UpdateUserImageDisplayOrderResponse, error) {
+func (h *UserImageHandler) UpdateUserImageDisplayOrder(
+	ctx context.Context,
+	req *userimagepb.UpdateUserImageDisplayOrderRequest,
+) (*userimagepb.UpdateUserImageDisplayOrderResponse, error) {
 	userImageID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := userImageAppCommands.UpdateUserImageDisplayOrderCmd{
-		UserImageID: userImageID,
+		UserImageID:  userImageID,
 		DisplayOrder: int(req.DisplayOrder),
 	}
 
@@ -151,7 +163,10 @@ func (h *UserImageHandler) UpdateUserImageDisplayOrder(ctx context.Context, req 
 }
 
 // UpdateUserImageImageID 更新用户图片ID
-func (h *UserImageHandler) UpdateUserImageImageID(ctx context.Context, req *userimagepb.UpdateUserImageImageIDRequest) (*userimagepb.UpdateUserImageImageIDResponse, error) {
+func (h *UserImageHandler) UpdateUserImageImageID(
+	ctx context.Context,
+	req *userimagepb.UpdateUserImageImageIDRequest,
+) (*userimagepb.UpdateUserImageImageIDResponse, error) {
 	userImageID, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

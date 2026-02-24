@@ -15,13 +15,13 @@ func SessionROToProto(v *sessionAppResult.SessionRO) *sessionpb.Session {
 	}
 
 	session := &sessionpb.Session{
-		Id:        v.ID.String(),
-		SessionId: v.SessionID,
-		UserId:    v.UserID.String(),
-		CreatedAt: timestamppb.New(v.CreatedAt),
+		Id:         v.ID.String(),
+		SessionId:  v.SessionID,
+		UserId:     v.UserID.String(),
+		CreatedAt:  timestamppb.New(v.CreatedAt),
 		LastSeenAt: timestamppb.New(v.LastSeenAt),
-		ExpiresAt: timestamppb.New(v.ExpiresAt),
-		UpdatedAt: timestamppb.New(v.UpdatedAt),
+		ExpiresAt:  timestamppb.New(v.ExpiresAt),
+		UpdatedAt:  timestamppb.New(v.UpdatedAt),
 	}
 
 	if v.AppID != nil {

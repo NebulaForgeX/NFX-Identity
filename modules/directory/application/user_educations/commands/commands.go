@@ -6,17 +6,17 @@ import (
 
 // CreateUserEducationCmd 创建用户教育经历命令
 type CreateUserEducationCmd struct {
-	UserID      uuid.UUID
-	School      string
-	Degree      *string
-	Major       *string
+	UserID       uuid.UUID
+	School       string
+	Degree       *string
+	Major        *string
 	FieldOfStudy *string
-	StartDate   *string
-	EndDate     *string
-	IsCurrent   bool
-	Description *string
-	Grade       *string
-	Activities  *string
+	StartDate    *string
+	EndDate      *string
+	IsCurrent    bool
+	Description  *string
+	Grade        *string
+	Activities   *string
 	Achievements *string
 }
 

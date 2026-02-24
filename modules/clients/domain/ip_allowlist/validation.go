@@ -1,16 +1,20 @@
 package ip_allowlist
 
-import "github.com/google/uuid"
+import (
+	clientsErr "nfxid/errors/src/clients"
+
+	"github.com/google/uuid"
+)
 
 func (ip *IPAllowlist) Validate() error {
 	if ip.RuleID() == "" {
-		return ErrRuleIDRequired
+		return clientsErr.ErrRuleIDRequired
 	}
 	if ip.AppID() == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if ip.CIDR() == "" {
-		return ErrCIDRRequired
+		return clientsErr.ErrCIDRRequired
 	}
 	validStatuses := map[AllowlistStatus]struct{}{
 		AllowlistStatusActive:   {},
@@ -18,7 +22,7 @@ func (ip *IPAllowlist) Validate() error {
 		AllowlistStatusRevoked:  {},
 	}
 	if _, ok := validStatuses[ip.Status()]; !ok {
-		return ErrInvalidAllowlistStatus
+		return clientsErr.ErrInvalidAllowlistStatus
 	}
 	return nil
 }

@@ -8,19 +8,19 @@ import (
 )
 
 type UserCreateRequestDTO struct {
-	Username   string `json:"username" validate:"required"`
+	Username   string `json:"username"              validate:"required"`
 	Status     string `json:"status,omitempty"`
 	IsVerified bool   `json:"is_verified,omitempty"`
 }
 
 type UserUpdateStatusRequestDTO struct {
 	UserID uuid.UUID `uri:"user_id" validate:"required,uuid"`
-	Status string    `json:"status" validate:"required"`
+	Status string    `              validate:"required"      json:"status"`
 }
 
 type UserUpdateUsernameRequestDTO struct {
 	UserID   uuid.UUID `uri:"user_id" validate:"required,uuid"`
-	Username string    `json:"username" validate:"required"`
+	Username string    `              validate:"required"      json:"username"`
 }
 
 type UserVerifyRequestDTO struct {

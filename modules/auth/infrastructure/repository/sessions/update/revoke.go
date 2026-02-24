@@ -3,10 +3,11 @@ package update
 import (
 	"context"
 	"errors"
-	"time"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/sessions"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/sessions/mapper"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -19,14 +20,14 @@ func (h *Handler) Revoke(ctx context.Context, sessionID string, reason sessions.
 		Where("session_id = ?", sessionID).
 		First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return sessions.ErrSessionNotFound
+			return authErr.ErrSessionNotFound
 		}
 		return err
 	}
 
 	// 检查是否已经撤销
 	if m.RevokedAt != nil {
-		return sessions.ErrSessionAlreadyRevoked
+		return authErr.ErrSessionAlreadyRevoked
 	}
 
 	now := time.Now().UTC()

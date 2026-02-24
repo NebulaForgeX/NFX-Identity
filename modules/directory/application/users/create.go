@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	dirErr "nfxid/errors/src/directory"
 	userCommands "nfxid/modules/directory/application/users/commands"
 	userDomain "nfxid/modules/directory/domain/users"
 
@@ -12,7 +13,7 @@ import (
 func (s *Service) CreateUser(ctx context.Context, cmd userCommands.CreateUserCmd) (uuid.UUID, error) {
 	// Check if username already exists
 	if exists, _ := s.userRepo.Check.ByUsername(ctx, cmd.Username); exists {
-		return uuid.Nil, userDomain.ErrUsernameAlreadyExists
+		return uuid.Nil, dirErr.ErrUsernameAlreadyExists
 	}
 
 	// Create domain entity

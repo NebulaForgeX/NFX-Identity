@@ -1,16 +1,20 @@
 package groups
 
-import "github.com/google/uuid"
+import (
+	tenantsErr "nfxid/errors/src/tenants"
+
+	"github.com/google/uuid"
+)
 
 func (g *Group) Validate() error {
 	if g.GroupID() == "" {
-		return ErrGroupIDRequired
+		return tenantsErr.ErrGroupIDRequired
 	}
 	if g.Name() == "" {
-		return ErrNameRequired
+		return tenantsErr.ErrNameRequired
 	}
 	if g.TenantID() == uuid.Nil {
-		return ErrTenantIDRequired
+		return tenantsErr.ErrTenantIDRequired
 	}
 	validTypes := map[GroupType]struct{}{
 		GroupTypeDepartment: {},
@@ -19,7 +23,7 @@ func (g *Group) Validate() error {
 		GroupTypeOther:      {},
 	}
 	if _, ok := validTypes[g.Type()]; !ok {
-		return ErrInvalidGroupType
+		return tenantsErr.ErrInvalidGroupType
 	}
 	return nil
 }

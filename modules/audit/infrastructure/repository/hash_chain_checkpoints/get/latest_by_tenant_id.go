@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	auditErr "nfxid/errors/src/audit"
 	"nfxid/modules/audit/domain/hash_chain_checkpoints"
 	"nfxid/modules/audit/infrastructure/rdb/models"
 	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/mapper"
@@ -15,16 +16,16 @@ import (
 func (h *Handler) LatestByTenantID(ctx context.Context, tenantID *uuid.UUID) (*hash_chain_checkpoints.HashChainCheckpoint, error) {
 	var m models.HashChainCheckpoint
 	query := h.db.WithContext(ctx)
-	
+
 	if tenantID != nil {
 		query = query.Where("tenant_id = ?", *tenantID)
 	} else {
 		query = query.Where("tenant_id IS NULL")
 	}
-	
+
 	if err := query.Order("partition_date DESC, created_at DESC").First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, hash_chain_checkpoints.ErrHashChainCheckpointNotFound
+			return nil, auditErr.ErrHashChainCheckpointNotFound
 		}
 		return nil, err
 	}

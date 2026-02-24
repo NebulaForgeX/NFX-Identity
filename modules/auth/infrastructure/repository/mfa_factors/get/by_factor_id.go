@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/mfa_factors"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/mfa_factors/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByFactorID(ctx context.Context, factorID string) (*mfa_factors
 	var m models.MfaFactor
 	if err := h.db.WithContext(ctx).Where("factor_id = ?", factorID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, mfa_factors.ErrMFAFactorNotFound
+			return nil, authErr.ErrMFAFactorNotFound
 		}
 		return nil, err
 	}

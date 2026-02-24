@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/mfa_factors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 )
 
@@ -16,7 +16,7 @@ func (h *Handler) ByFactorID(ctx context.Context, factorID string) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return mfa_factors.ErrMFAFactorNotFound
+		return authErr.ErrMFAFactorNotFound
 	}
 	return nil
 }

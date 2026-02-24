@@ -5,8 +5,8 @@ import (
 
 	superadminsApp "nfxid/modules/access/application/super_admins"
 	"nfxid/modules/access/interfaces/grpc/mapper"
-	superadminpb "nfxid/protos/gen/access/super_admin"
 	"nfxid/pkgs/errx"
+	superadminpb "nfxid/protos/gen/access/super_admin"
 
 	"github.com/google/uuid"
 )
@@ -20,7 +20,10 @@ func NewSuperAdminHandler(svc *superadminsApp.Service) *SuperAdminHandler {
 	return &SuperAdminHandler{svc: svc}
 }
 
-func (h *SuperAdminHandler) GetSuperAdminByUserID(ctx context.Context, req *superadminpb.GetSuperAdminByUserIDRequest) (*superadminpb.GetSuperAdminByUserIDResponse, error) {
+func (h *SuperAdminHandler) GetSuperAdminByUserID(
+	ctx context.Context,
+	req *superadminpb.GetSuperAdminByUserIDRequest,
+) (*superadminpb.GetSuperAdminByUserIDResponse, error) {
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

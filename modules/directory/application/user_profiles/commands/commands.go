@@ -26,20 +26,20 @@ type CreateUserProfileCmd struct {
 // UpdateUserProfileCmd 更新用户资料命令
 type UpdateUserProfileCmd struct {
 	UserProfileID uuid.UUID
-	Role           *string
-	FirstName      *string
-	LastName       *string
-	Nickname       *string
-	DisplayName    *string
-	Bio            *string
-	Birthday       *string
-	Age            *int
-	Gender         *string
-	Location       *string
-	Website        *string
-	Github         *string
-	SocialLinks    map[string]interface{}
-	Skills         map[string]interface{}
+	Role          *string
+	FirstName     *string
+	LastName      *string
+	Nickname      *string
+	DisplayName   *string
+	Bio           *string
+	Birthday      *string
+	Age           *int
+	Gender        *string
+	Location      *string
+	Website       *string
+	Github        *string
+	SocialLinks   map[string]interface{}
+	Skills        map[string]interface{}
 }
 
 // DeleteUserProfileCmd 删除用户资料命令

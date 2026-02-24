@@ -3,7 +3,7 @@ package delete
 import (
 	"context"
 
-	"nfxid/modules/access/domain/super_admins"
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
@@ -15,7 +15,7 @@ func (h *Handler) ByUserID(ctx context.Context, userID uuid.UUID) error {
 		return res.Error
 	}
 	if res.RowsAffected == 0 {
-		return super_admins.ErrSuperAdminNotFound
+		return accessErr.ErrSuperAdminNotFound
 	}
 	return nil
 }

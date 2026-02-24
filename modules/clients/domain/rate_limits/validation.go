@@ -1,13 +1,17 @@
 package rate_limits
 
-import "github.com/google/uuid"
+import (
+	clientsErr "nfxid/errors/src/clients"
+
+	"github.com/google/uuid"
+)
 
 func (rl *RateLimit) Validate() error {
 	if rl.AppID() == uuid.Nil {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if rl.LimitType() == "" {
-		return ErrLimitTypeRequired
+		return clientsErr.ErrLimitTypeRequired
 	}
 	validTypes := map[RateLimitType]struct{}{
 		RateLimitTypeRequestsPerSecond: {},
@@ -16,13 +20,13 @@ func (rl *RateLimit) Validate() error {
 		RateLimitTypeRequestsPerDay:    {},
 	}
 	if _, ok := validTypes[rl.LimitType()]; !ok {
-		return ErrInvalidRateLimitType
+		return clientsErr.ErrInvalidRateLimitType
 	}
 	if rl.LimitValue() <= 0 {
-		return ErrLimitValueRequired
+		return clientsErr.ErrLimitValueRequired
 	}
 	if rl.WindowSeconds() <= 0 {
-		return ErrWindowSecondsRequired
+		return clientsErr.ErrWindowSecondsRequired
 	}
 	return nil
 }

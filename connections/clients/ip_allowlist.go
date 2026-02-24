@@ -46,9 +46,13 @@ func (c *IpAllowlistClient) GetIpAllowlistByRuleID(ctx context.Context, ruleID s
 }
 
 // GetIpAllowlistsByAppID 根据应用ID获取IP白名单列表
-func (c *IpAllowlistClient) GetIpAllowlistsByAppID(ctx context.Context, appID string, status *ipallowlistpb.ClientsAllowlistStatus) ([]*ipallowlistpb.IpAllowlist, error) {
+func (c *IpAllowlistClient) GetIpAllowlistsByAppID(
+	ctx context.Context,
+	appID string,
+	status *ipallowlistpb.ClientsAllowlistStatus,
+) ([]*ipallowlistpb.IpAllowlist, error) {
 	req := &ipallowlistpb.GetIpAllowlistsByAppIDRequest{
-		AppId: appID,
+		AppId:  appID,
 		Status: status,
 	}
 

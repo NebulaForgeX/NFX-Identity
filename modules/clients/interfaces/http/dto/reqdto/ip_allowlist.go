@@ -8,9 +8,9 @@ import (
 )
 
 type IPAllowlistCreateRequestDTO struct {
-	RuleID      string     `json:"rule_id" validate:"required"`
-	AppID       uuid.UUID  `json:"app_id" validate:"required"`
-	CIDR        string     `json:"cidr" validate:"required"`
+	RuleID      string     `json:"rule_id"               validate:"required"`
+	AppID       uuid.UUID  `json:"app_id"                validate:"required"`
+	CIDR        string     `json:"cidr"                  validate:"required"`
 	Description *string    `json:"description,omitempty"`
 	Status      string     `json:"status,omitempty"`
 	CreatedBy   *uuid.UUID `json:"created_by,omitempty"`

@@ -8,13 +8,13 @@ import (
 )
 
 type EventRetentionPolicyCreateRequestDTO struct {
-	PolicyName         string     `json:"policy_name" validate:"required"`
+	PolicyName         string     `json:"policy_name"                   validate:"required"`
 	TenantID           *uuid.UUID `json:"tenant_id,omitempty"`
 	ActionPattern      *string    `json:"action_pattern,omitempty"`
 	DataClassification *string    `json:"data_classification,omitempty"`
 	RiskLevel          *string    `json:"risk_level,omitempty"`
-	RetentionDays      int        `json:"retention_days" validate:"required"`
-	RetentionAction    string     `json:"retention_action" validate:"required"`
+	RetentionDays      int        `json:"retention_days"                validate:"required"`
+	RetentionAction    string     `json:"retention_action"              validate:"required"`
 	ArchiveLocation    *string    `json:"archive_location,omitempty"`
 	Status             string     `json:"status,omitempty"`
 	CreatedBy          *uuid.UUID `json:"created_by,omitempty"`
@@ -22,12 +22,12 @@ type EventRetentionPolicyCreateRequestDTO struct {
 
 type EventRetentionPolicyUpdateRequestDTO struct {
 	ID                 uuid.UUID `uri:"id" validate:"required,uuid"`
-	ActionPattern      *string   `json:"action_pattern,omitempty"`
-	DataClassification *string   `json:"data_classification,omitempty"`
-	RiskLevel          *string   `json:"risk_level,omitempty"`
-	RetentionDays      int       `json:"retention_days" validate:"required"`
-	RetentionAction    string    `json:"retention_action" validate:"required"`
-	ArchiveLocation    *string   `json:"archive_location,omitempty"`
+	ActionPattern      *string   `                                  json:"action_pattern,omitempty"`
+	DataClassification *string   `                                  json:"data_classification,omitempty"`
+	RiskLevel          *string   `                                  json:"risk_level,omitempty"`
+	RetentionDays      int       `         validate:"required"      json:"retention_days"`
+	RetentionAction    string    `         validate:"required"      json:"retention_action"`
+	ArchiveLocation    *string   `                                  json:"archive_location,omitempty"`
 }
 
 type EventRetentionPolicyByIDRequestDTO struct {

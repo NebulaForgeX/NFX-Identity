@@ -23,7 +23,7 @@ func NewSystemState(p NewSystemStateParams) (*SystemState, error) {
 	}
 
 	now := time.Now().UTC()
-	
+
 	// 如果未初始化，InitializedAt 应该为 nil
 	// 如果已初始化但没有提供 InitializedAt，使用当前时间
 	var initializedAt *time.Time
@@ -39,16 +39,16 @@ func NewSystemState(p NewSystemStateParams) (*SystemState, error) {
 	}
 
 	return NewSystemStateFromState(SystemStateState{
-		ID:                   id,
-		Initialized:          p.Initialized,
-		InitializedAt:        initializedAt,
+		ID:                    id,
+		Initialized:           p.Initialized,
+		InitializedAt:         initializedAt,
 		InitializationVersion: p.InitializationVersion,
-		LastResetAt:          p.LastResetAt,
-		LastResetBy:          p.LastResetBy,
-		ResetCount:           p.ResetCount,
-		Metadata:             p.Metadata,
-		CreatedAt:            now,
-		UpdatedAt:            now,
+		LastResetAt:           p.LastResetAt,
+		LastResetBy:           p.LastResetBy,
+		ResetCount:            p.ResetCount,
+		Metadata:              p.Metadata,
+		CreatedAt:             now,
+		UpdatedAt:             now,
 	}), nil
 }
 

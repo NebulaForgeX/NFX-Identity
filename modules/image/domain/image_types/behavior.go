@@ -1,12 +1,13 @@
 package image_types
 
 import (
+	imageErr "nfxid/errors/src/image"
 	"time"
 )
 
 func (it *ImageType) Update(key string, description *string, maxWidth, maxHeight *int, aspectRatio *string) error {
 	if key == "" {
-		return ErrKeyRequired
+		return imageErr.ErrKeyRequired
 	}
 
 	it.state.Key = key

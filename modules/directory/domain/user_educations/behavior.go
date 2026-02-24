@@ -1,15 +1,22 @@
 package user_educations
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
-func (ue *UserEducation) Update(school string, degree, major, fieldOfStudy *string, startDate, endDate *time.Time, isCurrent bool, description, grade, activities, achievements *string) error {
+func (ue *UserEducation) Update(
+	school string,
+	degree, major, fieldOfStudy *string,
+	startDate, endDate *time.Time,
+	isCurrent bool,
+	description, grade, activities, achievements *string,
+) error {
 	if ue.DeletedAt() != nil {
-		return ErrUserEducationNotFound
+		return dirErr.ErrUserEducationNotFound
 	}
 	if school == "" {
-		return ErrSchoolRequired
+		return dirErr.ErrSchoolRequired
 	}
 
 	ue.state.School = school

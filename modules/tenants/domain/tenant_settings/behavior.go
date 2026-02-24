@@ -6,7 +6,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func (ts *TenantSetting) Update(enforceMFA *bool, allowedEmailDomains []string, sessionTTLMinutes *int, passwordPolicy, loginPolicy, mfaPolicy map[string]interface{}, updatedBy *uuid.UUID) error {
+func (ts *TenantSetting) Update(
+	enforceMFA *bool,
+	allowedEmailDomains []string,
+	sessionTTLMinutes *int,
+	passwordPolicy, loginPolicy, mfaPolicy map[string]interface{},
+	updatedBy *uuid.UUID,
+) error {
 	if enforceMFA != nil {
 		ts.state.EnforceMFA = *enforceMFA
 	}

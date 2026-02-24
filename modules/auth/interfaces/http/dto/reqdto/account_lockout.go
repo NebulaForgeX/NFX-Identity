@@ -8,16 +8,16 @@ import (
 )
 
 type AccountLockoutCreateRequestDTO struct {
-	UserID      string  `json:"user_id" validate:"required"`
+	UserID      string  `json:"user_id"                validate:"required"`
 	LockedUntil *string `json:"locked_until,omitempty"`
-	LockReason  string  `json:"lock_reason" validate:"required"`
+	LockReason  string  `json:"lock_reason"            validate:"required"`
 	LockedBy    *string `json:"locked_by,omitempty"`
 	ActorID     *string `json:"actor_id,omitempty"`
 }
 
 type AccountLockoutUnlockRequestDTO struct {
-	UserID        string  `json:"user_id" validate:"required"`
-	UnlockedBy    string  `json:"unlocked_by" validate:"required"`
+	UserID        string  `json:"user_id"                   validate:"required"`
+	UnlockedBy    string  `json:"unlocked_by"               validate:"required"`
 	UnlockActorID *string `json:"unlock_actor_id,omitempty"`
 }
 

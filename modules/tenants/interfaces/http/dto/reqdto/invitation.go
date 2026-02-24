@@ -8,26 +8,26 @@ import (
 )
 
 type InvitationCreateRequestDTO struct {
-	InviteID  string                 `json:"invite_id" validate:"required"`
-	TenantID  uuid.UUID              `json:"tenant_id" validate:"required,uuid"`
-	Email     string                 `json:"email" validate:"required,email"`
-	TokenHash string                 `json:"token_hash" validate:"required"`
-	ExpiresAt string                 `json:"expires_at" validate:"required"`
+	InviteID  string                 `json:"invite_id"          validate:"required"`
+	TenantID  uuid.UUID              `json:"tenant_id"          validate:"required,uuid"`
+	Email     string                 `json:"email"              validate:"required,email"`
+	TokenHash string                 `json:"token_hash"         validate:"required"`
+	ExpiresAt string                 `json:"expires_at"         validate:"required"`
 	Status    string                 `json:"status,omitempty"`
-	InvitedBy uuid.UUID              `json:"invited_by" validate:"required,uuid"`
+	InvitedBy uuid.UUID              `json:"invited_by"         validate:"required,uuid"`
 	RoleIDs   []uuid.UUID            `json:"role_ids,omitempty"`
 	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 type InvitationAcceptRequestDTO struct {
 	InviteID string    `uri:"invite_id" validate:"required"`
-	UserID   uuid.UUID `json:"user_id" validate:"required,uuid"`
+	UserID   uuid.UUID `                validate:"required,uuid" json:"user_id"`
 }
 
 type InvitationRevokeRequestDTO struct {
 	InviteID     string    `uri:"invite_id" validate:"required"`
-	RevokedBy    uuid.UUID `json:"revoked_by" validate:"required,uuid"`
-	RevokeReason string    `json:"revoke_reason,omitempty"`
+	RevokedBy    uuid.UUID `                validate:"required,uuid" json:"revoked_by"`
+	RevokeReason string    `                                         json:"revoke_reason,omitempty"`
 }
 
 type InvitationByIDRequestDTO struct {

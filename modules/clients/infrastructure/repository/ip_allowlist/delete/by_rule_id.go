@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/ip_allowlist"
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 )
 
@@ -16,7 +16,7 @@ func (h *Handler) ByRuleID(ctx context.Context, ruleID string) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		return ip_allowlist.ErrIPAllowlistNotFound
+		return clientsErr.ErrIPAllowlistNotFound
 	}
 	return nil
 }

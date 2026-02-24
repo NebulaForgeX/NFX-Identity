@@ -1,6 +1,7 @@
 package user_images
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 func (ui *UserImage) UpdateDisplayOrder(displayOrder int) error {
 	if ui.DeletedAt() != nil {
-		return ErrUserImageNotFound
+		return dirErr.ErrUserImageNotFound
 	}
 	ui.state.DisplayOrder = displayOrder
 	ui.state.UpdatedAt = time.Now().UTC()
@@ -17,10 +18,10 @@ func (ui *UserImage) UpdateDisplayOrder(displayOrder int) error {
 
 func (ui *UserImage) UpdateImageID(imageID uuid.UUID) error {
 	if ui.DeletedAt() != nil {
-		return ErrUserImageNotFound
+		return dirErr.ErrUserImageNotFound
 	}
 	if imageID == uuid.Nil {
-		return ErrImageIDRequired
+		return dirErr.ErrImageIDRequired
 	}
 	ui.state.ImageID = imageID
 	ui.state.UpdatedAt = time.Now().UTC()

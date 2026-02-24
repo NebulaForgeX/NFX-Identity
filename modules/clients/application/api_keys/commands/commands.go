@@ -6,14 +6,14 @@ import (
 
 // CreateAPIKeyCmd 创建API密钥命令
 type CreateAPIKeyCmd struct {
-	KeyID       string
-	AppID       uuid.UUID
-	KeyHash     string
-	HashAlg     string
-	Name        string
-	ExpiresAt   *string
-	CreatedBy   *uuid.UUID
-	Metadata    map[string]interface{}
+	KeyID     string
+	AppID     uuid.UUID
+	KeyHash   string
+	HashAlg   string
+	Name      string
+	ExpiresAt *string
+	CreatedBy *uuid.UUID
+	Metadata  map[string]interface{}
 }
 
 // RevokeAPIKeyCmd 撤销API密钥命令

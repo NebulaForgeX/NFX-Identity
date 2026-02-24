@@ -1,6 +1,7 @@
 package user_badges
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"
@@ -53,10 +54,10 @@ func NewUserBadgeFromState(st UserBadgeState) *UserBadge {
 
 func validateUserBadgeParams(p NewUserBadgeParams) error {
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return dirErr.ErrUserIDRequired
 	}
 	if p.BadgeID == uuid.Nil {
-		return ErrBadgeIDRequired
+		return dirErr.ErrBadgeIDRequired
 	}
 	return nil
 }

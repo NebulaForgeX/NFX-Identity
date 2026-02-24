@@ -1,20 +1,21 @@
 package trusted_devices
 
 import (
+	authErr "nfxid/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type NewTrustedDeviceParams struct {
-	DeviceID             string
-	UserID               uuid.UUID
-	TenantID             uuid.UUID
+	DeviceID              string
+	UserID                uuid.UUID
+	TenantID              uuid.UUID
 	DeviceFingerprintHash string
-	DeviceName           *string
-	TrustedUntil         time.Time
-	IP                   *string
-	UAHash               *string
+	DeviceName            *string
+	TrustedUntil          time.Time
+	IP                    *string
+	UAHash                *string
 }
 
 func NewTrustedDevice(p NewTrustedDeviceParams) (*TrustedDevice, error) {
@@ -29,18 +30,18 @@ func NewTrustedDevice(p NewTrustedDeviceParams) (*TrustedDevice, error) {
 
 	now := time.Now().UTC()
 	return NewTrustedDeviceFromState(TrustedDeviceState{
-		ID:                   id,
-		DeviceID:             p.DeviceID,
-		UserID:               p.UserID,
-		TenantID:             p.TenantID,
+		ID:                    id,
+		DeviceID:              p.DeviceID,
+		UserID:                p.UserID,
+		TenantID:              p.TenantID,
 		DeviceFingerprintHash: p.DeviceFingerprintHash,
-		DeviceName:           p.DeviceName,
-		TrustedUntil:         p.TrustedUntil,
-		LastUsedAt:           now,
-		IP:                   p.IP,
-		UAHash:               p.UAHash,
-		CreatedAt:            now,
-		UpdatedAt:            now,
+		DeviceName:            p.DeviceName,
+		TrustedUntil:          p.TrustedUntil,
+		LastUsedAt:            now,
+		IP:                    p.IP,
+		UAHash:                p.UAHash,
+		CreatedAt:             now,
+		UpdatedAt:             now,
 	}), nil
 }
 
@@ -50,19 +51,19 @@ func NewTrustedDeviceFromState(st TrustedDeviceState) *TrustedDevice {
 
 func validateTrustedDeviceParams(p NewTrustedDeviceParams) error {
 	if p.DeviceID == "" {
-		return ErrDeviceIDRequired
+		return authErr.ErrDeviceIDRequired
 	}
 	if p.UserID == uuid.Nil {
-		return ErrUserIDRequired
+		return authErr.ErrUserIDRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return authErr.ErrTenantIDRequired
 	}
 	if p.DeviceFingerprintHash == "" {
-		return ErrDeviceFingerprintHashRequired
+		return authErr.ErrDeviceFingerprintHashRequired
 	}
 	if p.TrustedUntil.IsZero() {
-		return ErrTrustedUntilRequired
+		return authErr.ErrTrustedUntilRequired
 	}
 	return nil
 }

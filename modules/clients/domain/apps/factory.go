@@ -1,6 +1,7 @@
 package apps
 
 import (
+	clientsErr "nfxid/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"
@@ -66,13 +67,13 @@ func NewAppFromState(st AppState) *App {
 
 func validateAppParams(p NewAppParams) error {
 	if p.AppID == "" {
-		return ErrAppIDRequired
+		return clientsErr.ErrAppIDRequired
 	}
 	if p.Name == "" {
-		return ErrNameRequired
+		return clientsErr.ErrNameRequired
 	}
 	if p.TenantID == uuid.Nil {
-		return ErrTenantIDRequired
+		return clientsErr.ErrTenantIDRequired
 	}
 	if p.Type != "" {
 		validTypes := map[AppType]struct{}{
@@ -83,7 +84,7 @@ func validateAppParams(p NewAppParams) error {
 			AppTypeThirdParty: {},
 		}
 		if _, ok := validTypes[p.Type]; !ok {
-			return ErrInvalidAppType
+			return clientsErr.ErrInvalidAppType
 		}
 	}
 	if p.Status != "" {
@@ -94,7 +95,7 @@ func validateAppParams(p NewAppParams) error {
 			AppStatusPending:   {},
 		}
 		if _, ok := validStatuses[p.Status]; !ok {
-			return ErrInvalidAppStatus
+			return clientsErr.ErrInvalidAppStatus
 		}
 	}
 	if p.Environment != "" {
@@ -105,7 +106,7 @@ func validateAppParams(p NewAppParams) error {
 			EnvironmentTest:        {},
 		}
 		if _, ok := validEnvironments[p.Environment]; !ok {
-			return ErrInvalidEnvironment
+			return clientsErr.ErrInvalidEnvironment
 		}
 	}
 	return nil

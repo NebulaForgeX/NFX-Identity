@@ -38,7 +38,11 @@ func (h *HashChainCheckpointHandler) Create(c fiber.Ctx) error {
 		return err
 	}
 
-	return fiberx.Created(c, "Hash chain checkpoint created successfully", httpx.SuccessOptions{Data: respdto.HashChainCheckpointROToDTO(&hashChainCheckpointView)})
+	return fiberx.Created(
+		c,
+		"Hash chain checkpoint created successfully",
+		httpx.SuccessOptions{Data: respdto.HashChainCheckpointROToDTO(&hashChainCheckpointView)},
+	)
 }
 
 func (h *HashChainCheckpointHandler) GetByID(c fiber.Ctx) error {

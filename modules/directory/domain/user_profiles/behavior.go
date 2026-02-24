@@ -1,12 +1,19 @@
 package user_profiles
 
 import (
+	dirErr "nfxid/errors/src/directory"
 	"time"
 )
 
-func (up *UserProfile) Update(role, firstName, lastName, nickname, displayName *string, bio, gender, location, website, github *string, birthday *time.Time, age *int, socialLinks, skills map[string]interface{}) error {
+func (up *UserProfile) Update(
+	role, firstName, lastName, nickname, displayName *string,
+	bio, gender, location, website, github *string,
+	birthday *time.Time,
+	age *int,
+	socialLinks, skills map[string]interface{},
+) error {
 	if up.DeletedAt() != nil {
-		return ErrUserProfileNotFound
+		return dirErr.ErrUserProfileNotFound
 	}
 
 	if role != nil {

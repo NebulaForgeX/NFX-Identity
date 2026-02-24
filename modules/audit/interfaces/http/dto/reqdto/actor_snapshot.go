@@ -8,13 +8,13 @@ import (
 )
 
 type ActorSnapshotCreateRequestDTO struct {
-	ActorType    string                 `json:"actor_type" validate:"required"`
-	ActorID      uuid.UUID              `json:"actor_id" validate:"required"`
+	ActorType    string                 `json:"actor_type"              validate:"required"`
+	ActorID      uuid.UUID              `json:"actor_id"                validate:"required"`
 	DisplayName  *string                `json:"display_name,omitempty"`
 	Email        *string                `json:"email,omitempty"`
 	ClientName   *string                `json:"client_name,omitempty"`
 	TenantID     *uuid.UUID             `json:"tenant_id,omitempty"`
-	SnapshotAt   string                 `json:"snapshot_at" validate:"required"`
+	SnapshotAt   string                 `json:"snapshot_at"             validate:"required"`
 	SnapshotData map[string]interface{} `json:"snapshot_data,omitempty"`
 }
 

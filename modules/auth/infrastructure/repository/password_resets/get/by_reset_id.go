@@ -3,6 +3,7 @@ package get
 import (
 	"context"
 	"errors"
+	authErr "nfxid/errors/src/auth"
 	"nfxid/modules/auth/domain/password_resets"
 	"nfxid/modules/auth/infrastructure/rdb/models"
 	"nfxid/modules/auth/infrastructure/repository/password_resets/mapper"
@@ -15,7 +16,7 @@ func (h *Handler) ByResetID(ctx context.Context, resetID string) (*password_rese
 	var m models.PasswordReset
 	if err := h.db.WithContext(ctx).Where("reset_id = ?", resetID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, password_resets.ErrPasswordResetNotFound
+			return nil, authErr.ErrPasswordResetNotFound
 		}
 		return nil, err
 	}

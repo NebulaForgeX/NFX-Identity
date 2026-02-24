@@ -5,8 +5,8 @@ import (
 
 	tenantAppApp "nfxid/modules/tenants/application/tenant_apps"
 	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
 	"nfxid/pkgs/errx"
+	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
 
 	"github.com/google/uuid"
 )
@@ -20,7 +20,10 @@ func NewTenantApplicationHandler(tenantAppAppSvc *tenantAppApp.Service) *TenantA
 	return &TenantApplicationHandler{tenantAppAppSvc: tenantAppAppSvc}
 }
 
-func (h *TenantApplicationHandler) GetTenantApplicationByID(ctx context.Context, req *tenantapplicationpb.GetTenantApplicationByIDRequest) (*tenantapplicationpb.GetTenantApplicationByIDResponse, error) {
+func (h *TenantApplicationHandler) GetTenantApplicationByID(
+	ctx context.Context,
+	req *tenantapplicationpb.GetTenantApplicationByIDRequest,
+) (*tenantapplicationpb.GetTenantApplicationByIDResponse, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -33,7 +36,10 @@ func (h *TenantApplicationHandler) GetTenantApplicationByID(ctx context.Context,
 	return &tenantapplicationpb.GetTenantApplicationByIDResponse{TenantApplication: ta}, nil
 }
 
-func (h *TenantApplicationHandler) GetTenantApplicationsByTenantID(ctx context.Context, req *tenantapplicationpb.GetTenantApplicationsByTenantIDRequest) (*tenantapplicationpb.GetTenantApplicationsByTenantIDResponse, error) {
+func (h *TenantApplicationHandler) GetTenantApplicationsByTenantID(
+	ctx context.Context,
+	req *tenantapplicationpb.GetTenantApplicationsByTenantIDRequest,
+) (*tenantapplicationpb.GetTenantApplicationsByTenantIDResponse, error) {
 	tenantID, err := uuid.Parse(req.TenantId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)
@@ -46,7 +52,10 @@ func (h *TenantApplicationHandler) GetTenantApplicationsByTenantID(ctx context.C
 	return &tenantapplicationpb.GetTenantApplicationsByTenantIDResponse{TenantApplications: tas}, nil
 }
 
-func (h *TenantApplicationHandler) GetTenantApplicationsByApplicationID(ctx context.Context, req *tenantapplicationpb.GetTenantApplicationsByApplicationIDRequest) (*tenantapplicationpb.GetTenantApplicationsByApplicationIDResponse, error) {
+func (h *TenantApplicationHandler) GetTenantApplicationsByApplicationID(
+	ctx context.Context,
+	req *tenantapplicationpb.GetTenantApplicationsByApplicationIDRequest,
+) (*tenantapplicationpb.GetTenantApplicationsByApplicationIDResponse, error) {
 	applicationID, err := uuid.Parse(req.ApplicationId)
 	if err != nil {
 		return nil, errx.ErrInvalidParams.WithCause(err)

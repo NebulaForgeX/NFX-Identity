@@ -2,8 +2,8 @@ package user_educations
 
 import (
 	"context"
-	"time"
 	userEducationCommands "nfxid/modules/directory/application/user_educations/commands"
+	"time"
 )
 
 // UpdateUserEducation 更新用户教育经历

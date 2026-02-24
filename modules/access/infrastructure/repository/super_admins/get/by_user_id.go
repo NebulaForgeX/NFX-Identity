@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	accessErr "nfxid/errors/src/access"
 	"nfxid/modules/access/domain/super_admins"
 	"nfxid/modules/access/infrastructure/rdb/models"
 	"nfxid/modules/access/infrastructure/repository/super_admins/mapper"
@@ -16,7 +17,7 @@ func (h *Handler) ByUserID(ctx context.Context, userID uuid.UUID) (*super_admins
 	var m models.SuperAdmin
 	if err := h.db.WithContext(ctx).Where("user_id = ?", userID).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, super_admins.ErrSuperAdminNotFound
+			return nil, accessErr.ErrSuperAdminNotFound
 		}
 		return nil, err
 	}

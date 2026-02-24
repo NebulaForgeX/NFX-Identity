@@ -3,6 +3,8 @@ package get
 import (
 	"context"
 	"errors"
+
+	clientsErr "nfxid/errors/src/clients"
 	"nfxid/modules/clients/domain/client_scopes"
 	"nfxid/modules/clients/infrastructure/rdb/models"
 	"nfxid/modules/clients/infrastructure/repository/client_scopes/mapper"
@@ -16,7 +18,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*client_scopes.Client
 	var m models.ClientScope
 	if err := h.db.WithContext(ctx).Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, client_scopes.ErrClientScopeNotFound
+			return nil, clientsErr.ErrClientScopeNotFound
 		}
 		return nil, err
 	}

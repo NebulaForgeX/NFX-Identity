@@ -35,7 +35,12 @@ func (c *ApplicationClient) GetApplicationByApplicationID(ctx context.Context, a
 }
 
 // GetApplicationsByTenantID 根据租户ID获取应用列表
-func (c *ApplicationClient) GetApplicationsByTenantID(ctx context.Context, tenantID string, env *applicationpb.ClientsEnvironment, status *applicationpb.ClientsAppStatus) ([]*applicationpb.Application, error) {
+func (c *ApplicationClient) GetApplicationsByTenantID(
+	ctx context.Context,
+	tenantID string,
+	env *applicationpb.ClientsEnvironment,
+	status *applicationpb.ClientsAppStatus,
+) ([]*applicationpb.Application, error) {
 	req := &applicationpb.GetApplicationsByTenantIDRequest{TenantId: tenantID}
 	if env != nil {
 		req.Environment = env

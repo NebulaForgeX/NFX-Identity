@@ -2,8 +2,8 @@ package check
 
 import (
 	"context"
-	"time"
 	"nfxid/modules/auth/infrastructure/rdb/models"
+	"time"
 
 	"github.com/google/uuid"
 )
