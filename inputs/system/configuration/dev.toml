@@ -184,9 +184,9 @@
     refresh_token_ttl = "${TOKEN_REFRESH_TTL}"
     algorithm = "${TOKEN_ALGORITHM}"
 
-# 错误码翻译 JSON 目录（挂载路径，与 data 一样外部更新即生效）
+# 错误码：源码 errors/src，生成的 i18n JSON 挂载到 errors/langs（与 docker volume 一致）
 [i18n]
-    errors_langs_path = "./errors/langs"
+    errors_langs_path = "errors/langs"
 
 [grpc_client]
     auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"

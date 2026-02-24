@@ -24,6 +24,8 @@ vars:
   ATLAS_MIGRATIONS_DIR: "{{if eq .ATLAS_ENV \"prod\"}}{{.ATLAS_MIGRATIONS_DIR_PROD}}{{else}}{{.ATLAS_MIGRATIONS_DIR_DEV}}{{end}}"
   # Resources docker-compose.yml path (relative to Identity-Backend directory)
   RESOURCES_DOCKER_COMPOSE: "../Resources/docker-compose.yml"
+  # 错误：源码 errors/src，生成 errors/langs；与 docker-compose watch/volume 一致
+  ERRORS_DIR: errors
 
 tasks:
   install:
@@ -179,17 +181,17 @@ tasks:
   errors:add-templates:
     desc: "Add /* */ translation template block to .go files in errors/src that don't have it"
     cmds:
-      - go run ./errors/cmd/add_templates/ ./errors
+      - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
 
   errors:gen-langs:
     desc: "Clear errors/langs then generate frontend i18n JSON from /* */ blocks in errors/src"
     cmds:
-      - go run ./errors/cmd/gen_langs/ ./errors
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}}
 
   errors:add-templates:
     desc: "Add /* */ translation template block to .go files in errors/src that don't have it"
     cmds:
-      - go run ./errors/cmd/add_templates/ ./errors
+      - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
 
   console:
     desc: "Run console dev server"

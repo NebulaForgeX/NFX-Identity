@@ -50,6 +50,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -65,8 +66,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -121,6 +122,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -136,8 +138,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -192,6 +194,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -207,8 +210,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -263,6 +266,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -278,8 +282,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -334,6 +338,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -349,8 +354,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -405,6 +410,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -420,8 +426,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -492,8 +498,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
@@ -548,6 +554,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync
@@ -563,8 +570,8 @@ services:
           path: enums
           target: /app/enums
         - action: sync
-          path: errors
-          target: /app/errors
+          path: errors/src
+          target: /app/errors/src
         - action: sync
           path: events
           target: /app/events
