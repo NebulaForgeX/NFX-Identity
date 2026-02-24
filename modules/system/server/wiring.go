@@ -36,6 +36,7 @@ type Dependencies struct {
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
 	tokenxInstance      *tokenx.Tokenx
+	errorsLangsPath     string
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -98,6 +99,11 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	bootstrapSvc := bootstrapApp.NewService(systemStateRepoInstance, grpcClientsInstance)
 	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
 
+	errorsLangsPath := cfg.I18n.ErrorsLangsPath
+	if errorsLangsPath == "" {
+		errorsLangsPath = "./errors/langs"
+	}
+
 	return &Dependencies{
 		healthMgr:           healthMgr,
 		postgres:            postgres,
@@ -112,6 +118,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier:   userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
 		tokenxInstance:      tokenxInstance,
+		errorsLangsPath:     errorsLangsPath,
 	}, nil
 }
 
@@ -135,6 +142,7 @@ func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.ka
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
 func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
 func (d *Dependencies) Postgres() *postgresqlx.Connection          { return d.postgres }
+func (d *Dependencies) ErrorsLangsPath() string                     { return d.errorsLangsPath }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

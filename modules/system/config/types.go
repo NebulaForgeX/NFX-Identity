@@ -20,6 +20,12 @@ type Config struct {
 	RabbitMQConfig rabbitmqx.Config   `koanf:"rabbitmq"`
 	GRPCClient     GRPCClientConfig   `koanf:"grpc_client"`
 	Token          tokenx.Config      `koanf:"token"`
+	I18n           I18nConfig         `koanf:"i18n"`
+}
+
+// I18nConfig 错误码翻译 JSON 目录（挂载路径，外部更新即生效）
+type I18nConfig struct {
+	ErrorsLangsPath string `koanf:"errors_langs_path"` // 如 ./data/errors/langs，与 data 一样可挂载
 }
 
 type GRPCClientConfig struct {

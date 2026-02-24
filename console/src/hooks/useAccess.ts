@@ -60,6 +60,7 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { accessEventEmitter, accessEvents } from "@/events/access";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 import {
   ACCESS_ACTION,
@@ -108,7 +109,7 @@ export const useCreateRole = () => {
       showSuccess("角色创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateRole] error"));
     },
   });
 };
@@ -125,7 +126,7 @@ export const useUpdateRole = () => {
       showSuccess("角色更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateRole] error"));
     },
   });
 };
@@ -142,7 +143,7 @@ export const useDeleteRole = () => {
       showSuccess("角色删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteRole] error"));
     },
   });
 };
@@ -188,7 +189,7 @@ export const useCreatePermission = () => {
       showSuccess("权限创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建权限失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreatePermission] error"));
     },
   });
 };
@@ -207,7 +208,7 @@ export const useUpdatePermission = () => {
       showSuccess("权限更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新权限失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdatePermission] error"));
     },
   });
 };
@@ -226,7 +227,7 @@ export const useDeletePermission = () => {
       showSuccess("权限删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除权限失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeletePermission] error"));
     },
   });
 };
@@ -259,7 +260,7 @@ export const useCreateScope = () => {
       showSuccess("作用域创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建作用域失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateScope] error"));
     },
   });
 };
@@ -278,7 +279,7 @@ export const useUpdateScope = () => {
       showSuccess("作用域更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新作用域失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateScope] error"));
     },
   });
 };
@@ -297,7 +298,7 @@ export const useDeleteScope = () => {
       showSuccess("作用域删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除作用域失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteScope] error"));
     },
   });
 };
@@ -351,7 +352,7 @@ export const useCreateGrant = () => {
       showSuccess("授权创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建授权失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateGrant] error"));
     },
   });
 };
@@ -370,7 +371,7 @@ export const useUpdateGrant = () => {
       showSuccess("授权更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新授权失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateGrant] error"));
     },
   });
 };
@@ -389,7 +390,7 @@ export const useDeleteGrant = () => {
       showSuccess("授权删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除授权失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteGrant] error"));
     },
   });
 };
@@ -437,7 +438,7 @@ export const useCreateRolePermission = () => {
       showSuccess("角色权限关联创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建角色权限关联失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateRolePermission] error"));
     },
   });
 };
@@ -458,7 +459,7 @@ export const useDeleteRolePermission = () => {
       showSuccess("角色权限关联删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除角色权限关联失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteRolePermission] error"));
     },
   });
 };
@@ -491,7 +492,7 @@ export const useCreateScopePermission = () => {
       showSuccess("作用域权限关联创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建作用域权限关联失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateScopePermission] error"));
     },
   });
 };
@@ -510,7 +511,7 @@ export const useDeleteScopePermission = () => {
       showSuccess("作用域权限关联删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除作用域权限关联失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteScopePermission] error"));
     },
   });
 };
@@ -547,7 +548,7 @@ export const useCreateAction = () => {
       showSuccess("Action 创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建 Action 失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateAction] error"));
     },
   });
 };
@@ -579,7 +580,7 @@ export const useCreateActionRequirement = () => {
       showSuccess("Action 关联权限创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建 Action 关联权限失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateActionRequirement] error"));
     },
   });
 };
@@ -596,7 +597,7 @@ export const useDeleteActionRequirement = () => {
       showSuccess("Action 关联权限删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除 Action 关联权限失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteActionRequirement] error"));
     },
   });
 };

@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
+import type { DashboardBackgroundType } from "@/types";
 
 import { memo, useMemo } from "react";
 
-import { WaveBackground, SquareBackground, LetterGlitchBackground, PixelBlastBackground } from "@/animations";
+import { LetterGlitchBackground, PixelBlastBackground, SquareBackground, WaveBackground } from "@/animations";
 import { useUserPreferenceNormal } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import type { DashboardBackgroundType } from "@/types";
 import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
 
 import styles from "./styles.module.css";
@@ -21,7 +21,7 @@ const Background = memo(({ children }: BackgroundProps) => {
   // Get user preference for dashboard background
   const shouldFetch = !!currentUserId && isAuthValid;
   const { data: preference } = useUserPreferenceNormal({
-    id: currentUserId || "00000000-0000-0000-0000-000000000000",
+    id: currentUserId,
     options: {
       enabled: shouldFetch && !!currentUserId,
     },

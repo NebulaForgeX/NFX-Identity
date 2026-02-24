@@ -26,4 +26,7 @@ func (r *Router) RegisterRoutes() {
 	// 公开路由（system-base 等服务会调用）
 	system.Get("/system-state/latest", r.handlers.SystemState.GetLatest)
 	system.Post("/system-state/initialize", r.handlers.SystemState.Initialize)
+
+	// 错误码翻译 JSON（从挂载目录读取，外部更新即生效）
+	system.Get("/i18n/errors/:lang", r.handlers.I18n.GetErrorTranslations)
 }

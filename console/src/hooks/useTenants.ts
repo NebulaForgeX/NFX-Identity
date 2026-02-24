@@ -83,6 +83,7 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { tenantsEventEmitter, tenantsEvents } from "@/events/tenants";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import {
   TENANTS_TENANT,
   TENANTS_GROUP,
@@ -136,7 +137,7 @@ export const useCreateTenant = () => {
       showSuccess("租户创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建租户失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateTenant] error"));
     },
   });
 };
@@ -153,7 +154,7 @@ export const useUpdateTenant = () => {
       showSuccess("租户更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新租户失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateTenant] error"));
     },
   });
 };
@@ -170,7 +171,7 @@ export const useUpdateTenantStatus = () => {
       showSuccess("租户状态更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新租户状态失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateTenantStatus] error"));
     },
   });
 };
@@ -187,7 +188,7 @@ export const useDeleteTenant = () => {
       showSuccess("租户删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除租户失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteTenant] error"));
     },
   });
 };
@@ -218,7 +219,7 @@ export const useCreateGroup = () => {
       showSuccess("组创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建组失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateGroup] error"));
     },
   });
 };
@@ -235,7 +236,7 @@ export const useUpdateGroup = () => {
       showSuccess("组更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新组失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateGroup] error"));
     },
   });
 };
@@ -252,7 +253,7 @@ export const useDeleteGroup = () => {
       showSuccess("组删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除组失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteGroup] error"));
     },
   });
 };
@@ -283,7 +284,7 @@ export const useCreateMember = () => {
       showSuccess("成员创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建成员失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateMember] error"));
     },
   });
 };
@@ -300,7 +301,7 @@ export const useUpdateMember = () => {
       showSuccess("成员更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新成员失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateMember] error"));
     },
   });
 };
@@ -317,7 +318,7 @@ export const useDeleteMember = () => {
       showSuccess("成员删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除成员失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteMember] error"));
     },
   });
 };
@@ -361,7 +362,7 @@ export const useCreateInvitation = () => {
       showSuccess("邀请创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建邀请失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateInvitation] error"));
     },
   });
 };
@@ -378,7 +379,7 @@ export const useAcceptInvitation = () => {
       showSuccess("邀请接受成功！");
     },
     onError: (error: AxiosError) => {
-      showError("接受邀请失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useAcceptInvitation] error"));
     },
   });
 };
@@ -395,7 +396,7 @@ export const useRevokeInvitation = () => {
       showSuccess("邀请撤销成功！");
     },
     onError: (error: AxiosError) => {
-      showError("撤销邀请失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useRevokeInvitation] error"));
     },
   });
 };
@@ -412,7 +413,7 @@ export const useDeleteInvitation = () => {
       showSuccess("邀请删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除邀请失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteInvitation] error"));
     },
   });
 };
@@ -443,7 +444,7 @@ export const useCreateTenantApp = () => {
       showSuccess("租户应用创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建租户应用失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateTenantApplication] error"));
     },
   });
 };
@@ -460,7 +461,7 @@ export const useUpdateTenantApp = () => {
       showSuccess("租户应用更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新租户应用失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateTenantApplication] error"));
     },
   });
 };
@@ -477,7 +478,7 @@ export const useDeleteTenantApp = () => {
       showSuccess("租户应用删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除租户应用失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteTenantApplication] error"));
     },
   });
 };
@@ -508,7 +509,7 @@ export const useCreateTenantSetting = () => {
       showSuccess("租户设置创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建租户设置失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateTenantSetting] error"));
     },
   });
 };
@@ -525,7 +526,7 @@ export const useUpdateTenantSetting = () => {
       showSuccess("租户设置更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新租户设置失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateTenantSetting] error"));
     },
   });
 };
@@ -542,7 +543,7 @@ export const useDeleteTenantSetting = () => {
       showSuccess("租户设置删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除租户设置失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteTenantSetting] error"));
     },
   });
 };
@@ -573,7 +574,7 @@ export const useCreateDomainVerification = () => {
       showSuccess("域名验证创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建域名验证失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateDomainVerification] error"));
     },
   });
 };
@@ -590,7 +591,7 @@ export const useUpdateDomainVerification = () => {
       showSuccess("域名验证更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新域名验证失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateDomainVerification] error"));
     },
   });
 };
@@ -607,7 +608,7 @@ export const useDeleteDomainVerification = () => {
       showSuccess("域名验证删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除域名验证失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteDomainVerification] error"));
     },
   });
 };
@@ -639,7 +640,7 @@ export const useCreateMemberRole = () => {
       showSuccess("成员角色创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建成员角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateMemberRole] error"));
     },
   });
 };
@@ -657,7 +658,7 @@ export const useRevokeMemberRole = () => {
       showSuccess("成员角色撤销成功！");
     },
     onError: (error: AxiosError) => {
-      showError("撤销成员角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useRevokeMemberRole] error"));
     },
   });
 };
@@ -675,7 +676,7 @@ export const useDeleteMemberRole = () => {
       showSuccess("成员角色删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除成员角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteMemberRole] error"));
     },
   });
 };
@@ -707,7 +708,7 @@ export const useCreateMemberGroup = () => {
       showSuccess("成员组创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建成员组失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateMemberGroup] error"));
     },
   });
 };
@@ -725,7 +726,7 @@ export const useRevokeMemberGroup = () => {
       showSuccess("成员组撤销成功！");
     },
     onError: (error: AxiosError) => {
-      showError("撤销成员组失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useRevokeMemberGroup] error"));
     },
   });
 };
@@ -743,7 +744,7 @@ export const useDeleteMemberGroup = () => {
       showSuccess("成员组删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除成员组失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteMemberGroup] error"));
     },
   });
 };
@@ -775,7 +776,7 @@ export const useCreateMemberAppRole = () => {
       showSuccess("成员应用角色创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建成员应用角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateMemberApplicationRole] error"));
     },
   });
 };
@@ -793,7 +794,7 @@ export const useRevokeMemberAppRole = () => {
       showSuccess("成员应用角色撤销成功！");
     },
     onError: (error: AxiosError) => {
-      showError("撤销成员应用角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useRevokeMemberApplicationRole] error"));
     },
   });
 };
@@ -811,7 +812,7 @@ export const useDeleteMemberAppRole = () => {
       showSuccess("成员应用角色删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除成员应用角色失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteMemberApplicationRole] error"));
     },
   });
 };

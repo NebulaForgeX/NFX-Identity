@@ -100,9 +100,11 @@ import type {
   UserPreference,
   UserProfile,
 } from "@/types";
+import type { ApiErrorBody } from "@/types/apiError";
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { directoryEventEmitter, directoryEvents } from "@/events/directory";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import {
   DIRECTORY_USER,
   DIRECTORY_BADGE,
@@ -162,7 +164,7 @@ export const useCreateUser = () => {
       showSuccess("用户创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUser] error"));
     },
   });
 };
@@ -179,7 +181,7 @@ export const useUpdateUserStatus = () => {
       showSuccess("用户状态更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户状态失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserState] error"));
     },
   });
 };
@@ -196,7 +198,7 @@ export const useUpdateUserUsername = () => {
       showSuccess("用户名更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户名失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUsername] error"));
     },
   });
 };
@@ -213,7 +215,7 @@ export const useVerifyUser = () => {
       showSuccess("用户验证成功！");
     },
     onError: (error: AxiosError) => {
-      showError("验证用户失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useVerifyUser] error"));
     },
   });
 };
@@ -230,7 +232,7 @@ export const useDeleteUser = () => {
       showSuccess("用户删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUser] error"));
     },
   });
 };
@@ -274,7 +276,7 @@ export const useCreateBadge = () => {
       showSuccess("徽章创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建徽章失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateBadge] error"));
     },
   });
 };
@@ -291,7 +293,7 @@ export const useUpdateBadge = () => {
       showSuccess("徽章更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新徽章失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateBadge] error"));
     },
   });
 };
@@ -308,7 +310,7 @@ export const useDeleteBadge = () => {
       showSuccess("徽章删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除徽章失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteBadge] error"));
     },
   });
 };
@@ -340,7 +342,7 @@ export const useCreateUserBadge = () => {
       showSuccess("用户徽章创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户徽章失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserBadge] error"));
     },
   });
 };
@@ -358,7 +360,7 @@ export const useDeleteUserBadge = () => {
       showSuccess("用户徽章删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户徽章失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserBadge] error"));
     },
   });
 };
@@ -402,7 +404,7 @@ export const useCreateUserEducation = () => {
       showSuccess("用户教育创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户教育失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserEducation] error"));
     },
   });
 };
@@ -419,7 +421,7 @@ export const useUpdateUserEducation = () => {
       showSuccess("用户教育更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户教育失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserEducation] error"));
     },
   });
 };
@@ -436,7 +438,7 @@ export const useDeleteUserEducation = () => {
       showSuccess("用户教育删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户教育失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserEducation] error"));
     },
   });
 };
@@ -480,7 +482,7 @@ export const useCreateUserEmail = () => {
       showSuccess("用户邮箱创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户邮箱失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserEmail] error"));
     },
   });
 };
@@ -497,7 +499,7 @@ export const useUpdateUserEmail = () => {
       showSuccess("用户邮箱更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户邮箱失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserEmail] error"));
     },
   });
 };
@@ -514,7 +516,7 @@ export const useSetPrimaryUserEmail = () => {
       showSuccess("主邮箱设置成功！");
     },
     onError: (error: AxiosError) => {
-      showError("设置主邮箱失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useSetPrimaryUserEmail] error"));
     },
   });
 };
@@ -531,7 +533,7 @@ export const useVerifyUserEmail = () => {
       showSuccess("用户邮箱验证成功！");
     },
     onError: (error: AxiosError) => {
-      showError("验证用户邮箱失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useVerifyUserEmail] error"));
     },
   });
 };
@@ -548,7 +550,7 @@ export const useDeleteUserEmail = () => {
       showSuccess("用户邮箱删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户邮箱失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserEmail] error"));
     },
   });
 };
@@ -592,7 +594,7 @@ export const useCreateUserOccupation = () => {
       showSuccess("用户职业创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户职业失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserOccupation] error"));
     },
   });
 };
@@ -609,7 +611,7 @@ export const useUpdateUserOccupation = () => {
       showSuccess("用户职业更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户职业失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserOccupation] error"));
     },
   });
 };
@@ -626,7 +628,7 @@ export const useDeleteUserOccupation = () => {
       showSuccess("用户职业删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户职业失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserOccupation] error"));
     },
   });
 };
@@ -670,7 +672,7 @@ export const useCreateUserPhone = () => {
       showSuccess("用户电话创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户电话失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserPhone] error"));
     },
   });
 };
@@ -687,7 +689,7 @@ export const useUpdateUserPhone = () => {
       showSuccess("用户电话更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户电话失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserPhone] error"));
     },
   });
 };
@@ -704,7 +706,7 @@ export const useSetPrimaryUserPhone = () => {
       showSuccess("主电话设置成功！");
     },
     onError: (error: AxiosError) => {
-      showError("设置主电话失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useSetPrimaryUserPhone] error"));
     },
   });
 };
@@ -721,7 +723,7 @@ export const useVerifyUserPhone = () => {
       showSuccess("用户电话验证成功！");
     },
     onError: (error: AxiosError) => {
-      showError("验证用户电话失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useVerifyUserPhone] error"));
     },
   });
 };
@@ -738,7 +740,7 @@ export const useDeleteUserPhone = () => {
       showSuccess("用户电话删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户电话失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserPhone] error"));
     },
   });
 };
@@ -786,7 +788,7 @@ export const useCreateUserPreference = () => {
       showSuccess("用户偏好创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户偏好失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserPreference] error"));
     },
   });
 };
@@ -807,7 +809,7 @@ export const useUpdateUserPreference = (options?: { silent?: boolean }) => {
     },
     onError: (error: AxiosError) => {
       if (!silent) {
-        showError("更新用户偏好失败，请稍后重试。" + error.message);
+        showError(getApiErrorMessage(error, "[useUpdateUserPreference] error"));
       }
     },
   });
@@ -825,7 +827,7 @@ export const useDeleteUserPreference = () => {
       showSuccess("用户偏好删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户偏好失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserPreference] error"));
     },
   });
 };
@@ -856,7 +858,7 @@ export const useCreateUserProfile = () => {
       showSuccess("用户资料创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户资料失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserProfile] error"));
     },
   });
 };
@@ -873,7 +875,7 @@ export const useUpdateUserProfile = () => {
       showSuccess("用户资料更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户资料失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserProfile] error"));
     },
   });
 };
@@ -890,7 +892,7 @@ export const useDeleteUserProfile = () => {
       showSuccess("用户资料删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户资料失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserProfile] error"));
     },
   });
 };
@@ -902,9 +904,15 @@ export const useUserAvatar = (params: UnifiedQueryParams<UserAvatar> & { userId:
   const { userId, options, postProcess } = params;
   const makeQuery = makeUnifiedQuery(
     async (params: { userId: string }) => {
-      const avatar = await GetUserAvatar(params.userId);
-      // 如果返回 null，返回一个默认的空对象，避免 suspense 错误
-      return avatar || { userId: params.userId, imageId: "", createdAt: "", updatedAt: "" };
+      try {
+        return await GetUserAvatar(params.userId);
+      } catch (e) {
+        const ax = e as AxiosError<ApiErrorBody>;
+        if (ax.response?.status === 404) {
+          return { userId: params.userId, imageId: "", createdAt: "", updatedAt: "" } as UserAvatar;
+        }
+        throw e;
+      }
     },
     "suspense",
     postProcess,
@@ -924,7 +932,7 @@ export const useCreateOrUpdateUserAvatar = () => {
       showSuccess("用户头像设置成功！");
     },
     onError: (error: AxiosError) => {
-      showError("设置用户头像失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateOrUpdateUserAvatar] error"));
     },
   });
 };
@@ -941,7 +949,7 @@ export const useUpdateUserAvatar = () => {
       showSuccess("用户头像更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户头像失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserAvatar] error"));
     },
   });
 };
@@ -958,7 +966,7 @@ export const useDeleteUserAvatar = () => {
       showSuccess("用户头像删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户头像失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserAvatar] error"));
     },
   });
 };
@@ -996,9 +1004,15 @@ export const useCurrentUserImageByUserID = (params: UnifiedQueryParams<UserImage
   const { userId, options, postProcess } = params;
   const makeQuery = makeUnifiedQuery(
     async (params: { userId: string }) => {
-      const image = await GetCurrentUserImageByUserID(params.userId);
-      // 如果返回 null，返回一个默认的空对象，避免 suspense 错误
-      return image || { id: "", userId: params.userId, imageId: "", displayOrder: 0, createdAt: "", updatedAt: "" };
+      try {
+        return await GetCurrentUserImageByUserID(params.userId);
+      } catch (e) {
+        const ax = e as AxiosError<ApiErrorBody>;
+        if (ax.response?.status === 404) {
+          return { id: "", userId: params.userId, imageId: "", displayOrder: 0, createdAt: "", updatedAt: "" } as UserImage;
+        }
+        throw e;
+      }
     },
     "suspense",
     postProcess,
@@ -1018,7 +1032,7 @@ export const useCreateUserImage = () => {
       showSuccess("用户图片创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建用户图片失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateUserImage] error"));
     },
   });
 };
@@ -1035,7 +1049,7 @@ export const useUpdateUserImage = () => {
       showSuccess("用户图片更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户图片失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserImage] error"));
     },
   });
 };
@@ -1052,7 +1066,7 @@ export const useSetPrimaryUserImage = () => {
       showSuccess("主图设置成功！");
     },
     onError: (error: AxiosError) => {
-      showError("设置主图失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useSetPrimaryUserImage] error"));
     },
   });
 };
@@ -1069,7 +1083,7 @@ export const useUpdateUserImageDisplayOrder = () => {
       showSuccess("用户图片顺序更新成功！");
     },
     onError: (error: AxiosError) => {
-      showError("更新用户图片顺序失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateUserImageOrder] error"));
     },
   });
 };
@@ -1085,7 +1099,7 @@ export const useUpdateUserImagesDisplayOrderBatch = () => {
       showSuccess("顺序已保存！");
     },
     onError: (error: AxiosError) => {
-      showError("保存顺序失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useSaveUserImageOrder] error"));
     },
   });
 };
@@ -1102,7 +1116,7 @@ export const useDeleteUserImage = () => {
       showSuccess("用户图片删除成功！");
     },
     onError: (error: AxiosError) => {
-      showError("删除用户图片失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteUserImage] error"));
     },
   });
 };

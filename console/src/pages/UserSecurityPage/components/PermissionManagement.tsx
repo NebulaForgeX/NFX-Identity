@@ -13,6 +13,7 @@ import {
 } from "@/hooks/useAccess";
 import { GetPermissionByKey, GetRoleByKey } from "@/apis";
 import { showError } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 import styles from "../styles.module.css";
 
@@ -41,15 +42,7 @@ const PermissionManagement = memo(() => {
     if (!roleKey.trim() || !permissionKey.trim()) return;
     try {
       const roleRes = await GetRoleByKey(roleKey.trim());
-      if (!roleRes) {
-        showError(t("notFoundRole"));
-        return;
-      }
       const permRes = await GetPermissionByKey(permissionKey.trim());
-      if (!permRes) {
-        showError(t("notFoundPermission"));
-        return;
-      }
       await createRolePermission.mutateAsync({
         roleId: roleRes.id,
         permissionId: permRes.id,
@@ -58,7 +51,7 @@ const PermissionManagement = memo(() => {
       setPermissionKey("");
       if (lookupRoleKey === roleKey) setLookupRoleKey(""); // force refetch if viewing same role
     } catch (e) {
-      // useCreateRolePermission onError already shows error
+      showError(getApiErrorMessage(e as Error, "[handleAssignPermission] error"));
     }
   };
 

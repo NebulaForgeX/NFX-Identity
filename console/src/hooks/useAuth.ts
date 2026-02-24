@@ -1,5 +1,33 @@
-import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import type {
+  AccountLockout,
+  CreateAccountLockoutRequest,
+  CreateLoginAttemptRequest,
+  CreateMFAFactorRequest,
+  CreatePasswordHistoryRequest,
+  CreatePasswordResetRequest,
+  CreateRefreshTokenRequest,
+  CreateSessionRequest,
+  CreateTrustedDeviceRequest,
+  CreateUserCredentialRequest,
+  LoginAttempt,
+  MFAFactor,
+  PasswordHistory,
+  PasswordReset,
+  RefreshToken,
+  RevokeSessionRequest,
+  Session,
+  TrustedDevice,
+  UpdateAccountLockoutRequest,
+  UpdateMFAFactorRequest,
+  UpdatePasswordResetRequest,
+  UpdateRefreshTokenRequest,
+  UpdateUserCredentialRequest,
+  UserCredential,
+} from "@/types";
+import type { UnifiedQueryParams } from "./core/type";
+
+import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -40,49 +68,22 @@ import {
   UpdateRefreshToken,
   UpdateUserCredential,
 } from "@/apis/auth.api";
-import type {
-  AccountLockout,
-  CreateAccountLockoutRequest,
-  CreateLoginAttemptRequest,
-  CreateMFAFactorRequest,
-  CreatePasswordHistoryRequest,
-  CreatePasswordResetRequest,
-  CreateRefreshTokenRequest,
-  CreateSessionRequest,
-  CreateTrustedDeviceRequest,
-  CreateUserCredentialRequest,
-  LoginAttempt,
-  MFAFactor,
-  PasswordHistory,
-  PasswordReset,
-  RefreshToken,
-  RevokeSessionRequest,
-  Session,
-  TrustedDevice,
-  UpdateAccountLockoutRequest,
-  UpdateMFAFactorRequest,
-  UpdatePasswordResetRequest,
-  UpdateRefreshTokenRequest,
-  UpdateUserCredentialRequest,
-  UserCredential,
-} from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
-import { authEventEmitter, authEvents } from "@/events/auth";
-import { showError, showSuccess } from "@/stores/modalStore";
-import AuthStore from "@/stores/authStore";
-import { getApiError, getApiErrorMessage } from "@/utils/apiError";
 import {
-  AUTH_SESSION,
-  AUTH_USER_CREDENTIAL,
-  AUTH_MFA_FACTOR,
-  AUTH_REFRESH_TOKEN,
-  AUTH_PASSWORD_RESET,
-  AUTH_PASSWORD_HISTORY,
-  AUTH_LOGIN_ATTEMPT,
   AUTH_ACCOUNT_LOCKOUT,
+  AUTH_LOGIN_ATTEMPT,
+  AUTH_MFA_FACTOR,
+  AUTH_PASSWORD_HISTORY,
+  AUTH_PASSWORD_RESET,
+  AUTH_REFRESH_TOKEN,
+  AUTH_SESSION,
   AUTH_TRUSTED_DEVICE,
+  AUTH_USER_CREDENTIAL,
 } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
+import { authEventEmitter, authEvents } from "@/events/auth";
+import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import AuthStore from "@/stores/authStore";
+import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiError, getApiErrorMessage } from "@/utils/apiError";
 
 // ========== Session 相关 ==========
 
@@ -111,7 +112,7 @@ export const useCreateSession = () => {
       showSuccess(t("session.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("session.createError")));
+      showError(getApiErrorMessage(error, "[useCreateSession] error"));
     },
   });
 };
@@ -129,7 +130,7 @@ export const useRevokeSession = () => {
       showSuccess(t("session.revokeSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("session.revokeError")));
+      showError(getApiErrorMessage(error, "[useRevokeSession] error"));
     },
   });
 };
@@ -147,7 +148,7 @@ export const useDeleteSession = () => {
       showSuccess(t("session.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("session.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteSession] error"));
     },
   });
 };
@@ -179,7 +180,7 @@ export const useCreateUserCredential = () => {
       showSuccess(t("userCredential.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("userCredential.createError")));
+      showError(getApiErrorMessage(error, "[useCreateUserCredential] error"));
     },
   });
 };
@@ -197,7 +198,7 @@ export const useUpdateUserCredential = () => {
       showSuccess(t("userCredential.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("userCredential.updateError")));
+      showError(getApiErrorMessage(error, "[useUpdateUserCredential] error"));
     },
   });
 };
@@ -215,7 +216,7 @@ export const useDeleteUserCredential = () => {
       showSuccess(t("userCredential.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("userCredential.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteUserCredential] error"));
     },
   });
 };
@@ -247,7 +248,7 @@ export const useCreateMFAFactor = () => {
       showSuccess(t("mfaFactor.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("mfaFactor.createError")));
+      showError(getApiErrorMessage(error, "[useCreateMfaFactor] error"));
     },
   });
 };
@@ -265,7 +266,7 @@ export const useUpdateMFAFactor = () => {
       showSuccess(t("mfaFactor.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("mfaFactor.updateError")));
+      showError(getApiErrorMessage(error, "[useUpdateMfaFactor] error"));
     },
   });
 };
@@ -283,7 +284,7 @@ export const useDeleteMFAFactor = () => {
       showSuccess(t("mfaFactor.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("mfaFactor.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteMfaFactor] error"));
     },
   });
 };
@@ -315,7 +316,7 @@ export const useCreateRefreshToken = () => {
       showSuccess(t("refreshToken.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("refreshToken.createError")));
+      showError(getApiErrorMessage(error, "[useCreateRefreshToken] error"));
     },
   });
 };
@@ -333,7 +334,7 @@ export const useUpdateRefreshToken = () => {
       showSuccess(t("refreshToken.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("refreshToken.updateError")));
+      showError(getApiErrorMessage(error, "[useUpdateRefreshToken] error"));
     },
   });
 };
@@ -351,7 +352,7 @@ export const useDeleteRefreshToken = () => {
       showSuccess(t("refreshToken.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("refreshToken.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteRefreshToken] error"));
     },
   });
 };
@@ -383,7 +384,7 @@ export const useCreatePasswordReset = () => {
       showSuccess(t("passwordReset.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("passwordReset.createError")));
+      showError(getApiErrorMessage(error, "[useCreatePasswordReset] error"));
     },
   });
 };
@@ -401,7 +402,7 @@ export const useUpdatePasswordReset = () => {
       showSuccess(t("passwordReset.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("passwordReset.updateError")));
+      showError(getApiErrorMessage(error, "[useUpdatePasswordReset] error"));
     },
   });
 };
@@ -419,7 +420,7 @@ export const useDeletePasswordReset = () => {
       showSuccess(t("passwordReset.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("passwordReset.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeletePasswordReset] error"));
     },
   });
 };
@@ -451,7 +452,7 @@ export const useCreatePasswordHistory = () => {
       showSuccess(t("passwordHistory.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("passwordHistory.createError")));
+      showError(getApiErrorMessage(error, "[useCreatePasswordHistory] error"));
     },
   });
 };
@@ -483,7 +484,7 @@ export const useCreateLoginAttempt = () => {
       showSuccess(t("loginAttempt.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("loginAttempt.createError")));
+      showError(getApiErrorMessage(error, "[useCreateLoginAttempt] error"));
     },
   });
 };
@@ -501,7 +502,7 @@ export const useDeleteLoginAttempt = () => {
       showSuccess(t("loginAttempt.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("loginAttempt.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteLoginAttempt] error"));
     },
   });
 };
@@ -533,7 +534,7 @@ export const useCreateAccountLockout = () => {
       showSuccess(t("accountLockout.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("accountLockout.createError")));
+      showError(getApiErrorMessage(error, "[useCreateAccountLockout] error"));
     },
   });
 };
@@ -551,7 +552,7 @@ export const useUpdateAccountLockout = () => {
       showSuccess(t("accountLockout.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("accountLockout.updateError")));
+      showError(getApiErrorMessage(error, "[useUpdateAccountLockout] error"));
     },
   });
 };
@@ -569,7 +570,7 @@ export const useDeleteAccountLockout = () => {
       showSuccess(t("accountLockout.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("accountLockout.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteAccountLockout] error"));
     },
   });
 };
@@ -601,7 +602,7 @@ export const useCreateTrustedDevice = () => {
       showSuccess(t("trustedDevice.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("trustedDevice.createError")));
+      showError(getApiErrorMessage(error, "[useCreateTrustedDevice] error"));
     },
   });
 };
@@ -619,7 +620,7 @@ export const useDeleteTrustedDevice = () => {
       showSuccess(t("trustedDevice.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(getApiErrorMessage(error, t("trustedDevice.deleteError")));
+      showError(getApiErrorMessage(error, "[useDeleteTrustedDevice] error"));
     },
   });
 };
@@ -635,17 +636,17 @@ export const useLoginByEmail = () => {
         email: params.email,
         password: params.password,
       });
-      
+
       // 设置tokens
       AuthStore.getState().setTokens({
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       });
-      
+
       // 设置用户ID和认证状态
       AuthStore.getState().setCurrentUserId(response.userId);
       AuthStore.getState().setIsAuthValid(true);
-      
+
       return response;
     },
     onSuccess: () => {
@@ -660,7 +661,7 @@ export const useLoginByEmail = () => {
       } else if (body?.errCode === "INVALID_CREDENTIALS") {
         showError(t("login.invalidCredentials"));
       } else {
-        showError(body?.message ?? t("login.failed"));
+        showError(getApiErrorMessage(error, "[useLogin] error"));
       }
     },
   });
@@ -679,17 +680,17 @@ export const useLoginByPhone = () => {
         phone: params.phone,
         password: params.password,
       });
-      
+
       // 设置tokens
       AuthStore.getState().setTokens({
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       });
-      
+
       // 设置用户ID和认证状态
       AuthStore.getState().setCurrentUserId(response.userId);
       AuthStore.getState().setIsAuthValid(true);
-      
+
       return response;
     },
     onSuccess: () => {
@@ -704,7 +705,7 @@ export const useLoginByPhone = () => {
       } else if (body?.errCode === "INVALID_CREDENTIALS") {
         showError(t("login.invalidPhoneCredentials"));
       } else {
-        showError(body?.message ?? t("login.failed"));
+        showError(getApiErrorMessage(error, "[useLogin] error"));
       }
     },
   });
@@ -723,8 +724,7 @@ export const useSendVerificationCode = () => {
       showSuccess(t("verificationCode.sendSuccess"));
     },
     onError: (error: AxiosError) => {
-      const body = getApiError(error);
-      showError(body?.message ?? t("verificationCode.sendError"));
+      showError(getApiErrorMessage(error, "[useSendVerificationCode] error"));
     },
   });
 };
@@ -733,11 +733,7 @@ export const useSendVerificationCode = () => {
 export const useSignup = () => {
   const { t } = useTranslation("hooks.auth");
   return useMutation({
-    mutationFn: async (params: {
-      email: string;
-      password: string;
-      verificationCode: string;
-    }) => {
+    mutationFn: async (params: { email: string; password: string; verificationCode: string }) => {
       return await Signup(params);
     },
     onSuccess: (data) => {
@@ -754,8 +750,7 @@ export const useSignup = () => {
       authEventEmitter.emit(authEvents.LOGIN_SUCCESS);
     },
     onError: (error: AxiosError) => {
-      const body = getApiError(error);
-      showError(body?.message ?? t("signup.error"));
+      showError(getApiErrorMessage(error, "[useSignup] error"));
     },
   });
 };

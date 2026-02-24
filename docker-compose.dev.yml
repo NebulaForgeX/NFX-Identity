@@ -476,6 +476,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     develop:
       watch:
         - action: sync

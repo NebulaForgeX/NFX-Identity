@@ -64,25 +64,9 @@ protectedClient.defaults.transformRequest = [
   },
 ];
 
-// Rex/NFX 错误体类型（与后端 httpx.HTTPResp 错误时一致，camelCase）
-type RexErrorData = ApiErrorBody;
-
-/** 按 Rex/NFX 规范统一错误：把 response.data.message 写入 error.message，便于 UI 直接展示 */
-function normalizeRexApiError(error: AxiosError<RexErrorData>): void {
+/** 响应错误时打日志（Rex 字段：message, errCode, status）。UI 展示统一用 getApiErrorMessage，不改写 error.message。 */
+function logRexApiError(error: AxiosError<ApiErrorBody>): void {
   const errorData = error.response?.data;
-  const msg = errorData?.message;
-  if (msg && typeof msg === "string") {
-    try {
-      Object.defineProperty(error, "message", { value: msg, configurable: true });
-    } catch {
-      (error as unknown as Record<string, string>).message = msg;
-    }
-  }
-}
-
-/** 响应错误时打日志（Rex 字段：message, errCode, status） */
-function logRexApiError(error: AxiosError<RexErrorData>): void {
-  const errorData = error.response?.data as RexErrorData | undefined;
   const msg = errorData?.message;
   if (msg) {
     console.log("❌ API Error:", {
@@ -101,14 +85,13 @@ function logRexApiError(error: AxiosError<RexErrorData>): void {
   }
 }
 
-// 4) 响应拦截器：按 Rex-Backend 错误体统一处理（status, err_code, message, details, trace_id）
+// 4) 响应拦截器：按 Rex-Backend 错误体处理，仅打日志；UI 展示统一用 getApiErrorMessage(error, fallback)
 protectedClient.interceptors.response.use(
   (response) => response,
   async (error: unknown) => {
     if (!(error instanceof AxiosError)) {
       return Promise.reject(error);
     }
-    normalizeRexApiError(error);
     logRexApiError(error);
 
     if (error.response?.status === 401 && error.config && !error.config._retry) {
@@ -141,12 +124,11 @@ protectedClient.interceptors.response.use(
   },
 );
 
-// 4b) publicClient 同样按 Rex 错误体统一 error.message（登录/注册/验证码等）
+// 4b) publicClient：同上，仅打日志；UI 展示统一用 getApiErrorMessage
 publicClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (error instanceof AxiosError) {
-      normalizeRexApiError(error);
       logRexApiError(error);
     }
     return Promise.reject(error);

@@ -36,6 +36,7 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { auditEventEmitter, auditEvents } from "@/events/audit";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import {
   AUDIT_EVENT,
   AUDIT_ACTOR_SNAPSHOT,
@@ -72,7 +73,7 @@ export const useCreateEvent = () => {
       showSuccess(t("event.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("event.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateEvent] error"));
     },
   });
 };
@@ -90,7 +91,7 @@ export const useDeleteEvent = () => {
       showSuccess(t("event.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("event.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteEvent] error"));
     },
   });
 };
@@ -122,7 +123,7 @@ export const useCreateActorSnapshot = () => {
       showSuccess(t("actorSnapshot.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("actorSnapshot.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateActorSnapshot] error"));
     },
   });
 };
@@ -140,7 +141,7 @@ export const useDeleteActorSnapshot = () => {
       showSuccess(t("actorSnapshot.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("actorSnapshot.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteActorSnapshot] error"));
     },
   });
 };
@@ -172,7 +173,7 @@ export const useCreateEventRetentionPolicy = () => {
       showSuccess(t("eventRetentionPolicy.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("eventRetentionPolicy.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateEventRetentionPolicy] error"));
     },
   });
 };
@@ -190,7 +191,7 @@ export const useUpdateEventRetentionPolicy = () => {
       showSuccess(t("eventRetentionPolicy.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("eventRetentionPolicy.updateError") + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateEventRetentionPolicy] error"));
     },
   });
 };
@@ -208,7 +209,7 @@ export const useDeleteEventRetentionPolicy = () => {
       showSuccess(t("eventRetentionPolicy.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("eventRetentionPolicy.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteEventRetentionPolicy] error"));
     },
   });
 };
@@ -240,7 +241,7 @@ export const useCreateEventSearchIndex = () => {
       showSuccess(t("eventSearchIndex.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("eventSearchIndex.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateEventSearchIndex] error"));
     },
   });
 };
@@ -258,7 +259,7 @@ export const useDeleteEventSearchIndex = () => {
       showSuccess(t("eventSearchIndex.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("eventSearchIndex.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteEventSearchIndex] error"));
     },
   });
 };
@@ -290,7 +291,7 @@ export const useCreateHashChainCheckpoint = () => {
       showSuccess(t("hashChainCheckpoint.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("hashChainCheckpoint.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateHashChainCheckpoint] error"));
     },
   });
 };
@@ -308,7 +309,7 @@ export const useDeleteHashChainCheckpoint = () => {
       showSuccess(t("hashChainCheckpoint.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("hashChainCheckpoint.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteHashChainCheckpoint] error"));
     },
   });
 };

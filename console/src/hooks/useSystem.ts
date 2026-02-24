@@ -14,6 +14,7 @@ import type { InitializeSystemStateRequest, ResetSystemStateRequest, SystemState
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { systemEventEmitter, systemEvents } from "@/events/system";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { SYSTEM_SYSTEM_STATE, SYSTEM_SYSTEM_STATE_LATEST, SYSTEM_SYSTEM_STATE_INIT } from "@/constants";
 import type { UnifiedQueryParams } from "./core/type";
 
@@ -70,7 +71,7 @@ export const useInitializeSystemState = () => {
       showSuccess(t("systemState.initializeSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("systemState.initializeError") + error.message);
+      showError(getApiErrorMessage(error, "[useInitializeSystemState] error"));
     },
   });
 };
@@ -87,7 +88,7 @@ export const useResetSystemState = () => {
       showSuccess(t("systemState.resetSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("systemState.resetError") + error.message);
+      showError(getApiErrorMessage(error, "[useResetSystemState] error"));
     },
   });
 };
@@ -105,7 +106,7 @@ export const useDeleteSystemState = () => {
       showSuccess(t("systemState.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("systemState.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteSystemState] error"));
     },
   });
 };

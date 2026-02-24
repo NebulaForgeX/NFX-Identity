@@ -7,7 +7,7 @@ interface AuthState {
   isAuthValid: boolean;
   accessToken: string | null;
   refreshToken: string | null;
-  currentUserId: string | null;
+  currentUserId: string;
   setIsAuthValid: (isAuthValid: boolean) => void;
   setTokens: (tokens: Tokens) => void;
   setRefreshToken: (refreshToken: string) => void;
@@ -23,7 +23,7 @@ export const AuthStore = createStore<AuthState>()(
         isAuthValid: false,
         accessToken: null,
         refreshToken: null,
-        currentUserId: null,
+        currentUserId: "00000000-0000-0000-0000-000000000000",
 
         setIsAuthValid: (isAuthValid) => set({ isAuthValid }),
 
@@ -44,7 +44,7 @@ export const AuthStore = createStore<AuthState>()(
             isAuthValid: false,
             accessToken: null,
             refreshToken: null,
-            currentUserId: null,
+            currentUserId: "00000000-0000-0000-0000-000000000000",
           }),
       }),
       {

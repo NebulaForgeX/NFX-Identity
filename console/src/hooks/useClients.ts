@@ -42,6 +42,7 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { clientsEventEmitter, clientsEvents } from "@/events/clients";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import {
   CLIENTS_APP,
   CLIENTS_API_KEY,
@@ -92,7 +93,7 @@ export const useCreateApp = () => {
       showSuccess(t("app.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("app.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateApp] error"));
     },
   });
 };
@@ -110,7 +111,7 @@ export const useUpdateApp = () => {
       showSuccess(t("app.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("app.updateError") + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateApp] error"));
     },
   });
 };
@@ -128,7 +129,7 @@ export const useDeleteApp = () => {
       showSuccess(t("app.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("app.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteApp] error"));
     },
   });
 };
@@ -160,7 +161,7 @@ export const useCreateAPIKey = () => {
       showSuccess(t("apiKey.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("apiKey.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateApiKey] error"));
     },
   });
 };
@@ -178,7 +179,7 @@ export const useDeleteAPIKeyByKeyID = () => {
       showSuccess(t("apiKey.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("apiKey.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteApiKey] error"));
     },
   });
 };
@@ -209,7 +210,7 @@ export const useCreateClientCredential = () => {
       showSuccess("Client Credential 创建成功！");
     },
     onError: (error: AxiosError) => {
-      showError("创建 Client Credential 失败，请稍后重试。" + error.message);
+      showError(getApiErrorMessage(error, "[useCreateClientCredential] error"));
     },
   });
 };
@@ -227,7 +228,7 @@ export const useDeleteClientCredentialByClientID = () => {
       showSuccess(t("clientCredential.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("clientCredential.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteClientCredential] error"));
     },
   });
 };
@@ -259,7 +260,7 @@ export const useCreateClientScope = () => {
       showSuccess(t("clientScope.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("clientScope.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateClientScope] error"));
     },
   });
 };
@@ -277,7 +278,7 @@ export const useDeleteClientScope = () => {
       showSuccess(t("clientScope.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("clientScope.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteClientScope] error"));
     },
   });
 };
@@ -309,7 +310,7 @@ export const useCreateIPAllowlist = () => {
       showSuccess(t("ipAllowlist.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("ipAllowlist.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateIpAllowlist] error"));
     },
   });
 };
@@ -327,7 +328,7 @@ export const useDeleteIPAllowlistByRuleID = () => {
       showSuccess(t("ipAllowlist.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("ipAllowlist.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteIpAllowlist] error"));
     },
   });
 };
@@ -359,7 +360,7 @@ export const useCreateRateLimit = () => {
       showSuccess(t("rateLimit.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("rateLimit.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateRateLimit] error"));
     },
   });
 };
@@ -377,7 +378,7 @@ export const useDeleteRateLimit = () => {
       showSuccess(t("rateLimit.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("rateLimit.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteRateLimit] error"));
     },
   });
 };

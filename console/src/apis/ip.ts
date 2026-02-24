@@ -1,316 +1,220 @@
 /*
- * prettier-ignore
- * This file contains constants for the backend API endpoints and WebSocket URLs.
- * API endpoints are based on NFX-ID routes.
+ * API path tree: base paths + dynamic segments via path().
+ * path("/a", { b: "/b", c: path("/c", { d: "/d" }) }) => b="/a/b", c="/a/c", c.d="/a/c/d"
  */
 
+const [BASE, CHILDREN] = [Symbol(), Symbol()];
+
+// Recursive type: each key maps to string (leaf), function (dynamic path), or nested PathNode
+type PathNode<T> = string & {
+  [K in keyof T]: T[K] extends (...args: infer A) => infer R
+    ? R extends object
+      ? (...args: A) => PathNode<R> // function returning path
+      : (...args: A) => string // function returning string
+    : T[K] extends object
+      ? PathNode<T[K]>
+      : string;
+};
+
+const path = <T extends Record<string, unknown>>(base: string, children: T): PathNode<T> =>
+  Object.assign(
+    Object.defineProperties(new String(base), {
+      [BASE]: { value: base },
+      [CHILDREN]: { value: children },
+      toString: { value: () => base },
+      valueOf: { value: () => base },
+      [Symbol.toPrimitive]: { value: () => base },
+    }),
+    Object.fromEntries(
+      Object.entries(children).map(([k, v]) => [
+        k,
+        typeof v === "function"
+          ? (...args: unknown[]) => {
+              const result = (v as (...args: unknown[]) => unknown)(...args);
+              return BASE in Object(result)
+                ? path(
+                    `${base}${(result as Record<symbol, string>)[BASE]}`,
+                    (result as Record<symbol, Record<string, unknown>>)[CHILDREN] ?? {},
+                  )
+                : `${base}${result}`;
+            }
+          : BASE in Object(v)
+            ? path(
+                `${base}${(v as Record<symbol, string>)[BASE]}`,
+                (v as Record<symbol, Record<string, unknown>>)[CHILDREN] ?? {},
+              )
+            : `${base}${v}`,
+      ]),
+    ),
+  ) as PathNode<T>;
+
 // 从环境变量获取配置
-// 通过 Traefik 反向代理访问：10166 是 Traefik 的 HTTP 端口
 const HTTP_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:10166";
 const WS_BASE_URL = import.meta.env.VITE_WS_URL || "ws://localhost:10166";
 
-// 图片服务 URL（独立配置）
-// 通过 Traefik 反向代理访问
-// API路由定义 - 通过 Traefik 反向代理，路径前缀为 /access, /audit, /auth, /clients, /directory, /image, /system, /tenants
 export const URL_PATHS = {
-  // Access 模块 - /access/auth
-  ACCESS: {
-    // 角色相关 - 需要认证
-    CREATE_ROLE: "/access/auth/roles",
-    GET_ROLE: "/access/auth/roles/:role_id",
-    GET_ROLE_BY_KEY: "/access/auth/roles/key/:key",
-    UPDATE_ROLE: "/access/auth/roles/:role_id",
-    DELETE_ROLE: "/access/auth/roles/:role_id",
-    // 权限相关 - 需要认证
-    CREATE_PERMISSION: "/access/auth/permissions",
-    GET_PERMISSION: "/access/auth/permissions/:permission_id",
-    GET_PERMISSION_BY_KEY: "/access/auth/permissions/key/:key",
-    UPDATE_PERMISSION: "/access/auth/permissions/:permission_id",
-    DELETE_PERMISSION: "/access/auth/permissions/:permission_id",
-    // 作用域相关 - 需要认证
-    CREATE_SCOPE: "/access/auth/scopes",
-    GET_SCOPE: "/access/auth/scopes/:scope",
-    UPDATE_SCOPE: "/access/auth/scopes/:scope",
-    DELETE_SCOPE: "/access/auth/scopes/:scope",
-    // 授权相关 - 需要认证
-    CREATE_GRANT: "/access/auth/grants",
-    GET_GRANTS_BY_SUBJECT: "/access/auth/grants",
-    GET_GRANT: "/access/auth/grants/:grant_id",
-    UPDATE_GRANT: "/access/auth/grants/:grant_id",
-    DELETE_GRANT: "/access/auth/grants/:grant_id",
-    // 角色权限关联相关 - 需要认证
-    CREATE_ROLE_PERMISSION: "/access/auth/role-permissions",
-    GET_ROLE_PERMISSIONS_BY_ROLE: "/access/auth/role-permissions/role/:role_id",
-    GET_ROLE_PERMISSION: "/access/auth/role-permissions/:role_permission_id",
-    DELETE_ROLE_PERMISSION: "/access/auth/role-permissions/:role_permission_id",
-    // 作用域权限关联相关 - 需要认证
-    CREATE_SCOPE_PERMISSION: "/access/auth/scope-permissions",
-    GET_SCOPE_PERMISSION: "/access/auth/scope-permissions/:id",
-    DELETE_SCOPE_PERMISSION: "/access/auth/scope-permissions/:id",
-    // Action 相关 - 需要认证
-    CREATE_ACTION: "/access/auth/actions",
-    GET_ACTION: "/access/auth/actions/:action_id",
-    GET_ACTION_BY_KEY: "/access/auth/actions/key/:key",
-    // ActionRequirement 相关（Permission 关联的 Action）- 需要认证
-    CREATE_ACTION_REQUIREMENT: "/access/auth/action-requirements",
-    GET_ACTION_REQUIREMENT: "/access/auth/action-requirements/:action_requirement_id",
-    GET_ACTION_REQUIREMENTS_BY_PERMISSION: "/access/auth/action-requirements/permission/:permission_id",
-    DELETE_ACTION_REQUIREMENT: "/access/auth/action-requirements/:action_requirement_id",
-  },
-  // Audit 模块 - /audit/auth
-  AUDIT: {
-    // 事件相关 - 需要认证
-    CREATE_EVENT: "/audit/auth/events",
-    GET_EVENT: "/audit/auth/events/:id",
-    DELETE_EVENT: "/audit/auth/events/:id",
-    // Actor Snapshot 相关 - 需要认证
-    CREATE_ACTOR_SNAPSHOT: "/audit/auth/actor-snapshots",
-    GET_ACTOR_SNAPSHOT: "/audit/auth/actor-snapshots/:id",
-    DELETE_ACTOR_SNAPSHOT: "/audit/auth/actor-snapshots/:id",
-    // Event Retention Policy 相关 - 需要认证
-    CREATE_EVENT_RETENTION_POLICY: "/audit/auth/event-retention-policies",
-    GET_EVENT_RETENTION_POLICY: "/audit/auth/event-retention-policies/:id",
-    UPDATE_EVENT_RETENTION_POLICY: "/audit/auth/event-retention-policies/:id",
-    DELETE_EVENT_RETENTION_POLICY: "/audit/auth/event-retention-policies/:id",
-    // Event Search Index 相关 - 需要认证
-    CREATE_EVENT_SEARCH_INDEX: "/audit/auth/event-search-index",
-    GET_EVENT_SEARCH_INDEX: "/audit/auth/event-search-index/:id",
-    DELETE_EVENT_SEARCH_INDEX: "/audit/auth/event-search-index/:id",
-    // Hash Chain Checkpoint 相关 - 需要认证
-    CREATE_HASH_CHAIN_CHECKPOINT: "/audit/auth/hash-chain-checkpoints",
-    GET_HASH_CHAIN_CHECKPOINT: "/audit/auth/hash-chain-checkpoints/:id",
-    DELETE_HASH_CHAIN_CHECKPOINT: "/audit/auth/hash-chain-checkpoints/:id",
-  },
-  // Auth 模块 - /auth/auth
+  ACCESS: path("/access/auth", {
+    roles: path("/roles", { byId: (id: string) => `/${id}`, byKey: (key: string) => `/key/${key}` }),
+    permissions: path("/permissions", {
+      byId: (id: string) => `/${id}`,
+      byKey: (key: string) => `/key/${key}`,
+    }),
+    scopes: path("/scopes", { byScope: (scope: string) => `/${scope}` }),
+    grants: path("/grants", { byId: (id: string) => `/${id}` }),
+    rolePermissions: path("/role-permissions", {
+      byRole: (roleId: string) => `/role/${roleId}`,
+      byId: (id: string) => `/${id}`,
+    }),
+    scopePermissions: path("/scope-permissions", { byId: (id: string) => `/${id}` }),
+    actions: path("/actions", { byId: (id: string) => `/${id}`, byKey: (key: string) => `/key/${key}` }),
+    actionRequirements: path("/action-requirements", {
+      byId: (id: string) => `/${id}`,
+      byPermission: (permissionId: string) => `/permission/${permissionId}`,
+    }),
+  }),
+
+  AUDIT: path("/audit/auth", {
+    events: path("/events", { byId: (id: string) => `/${id}` }),
+    actorSnapshots: path("/actor-snapshots", { byId: (id: string) => `/${id}` }),
+    eventRetentionPolicies: path("/event-retention-policies", { byId: (id: string) => `/${id}` }),
+    eventSearchIndex: path("/event-search-index", { byId: (id: string) => `/${id}` }),
+    hashChainCheckpoints: path("/hash-chain-checkpoints", { byId: (id: string) => `/${id}` }),
+  }),
+
   AUTH: {
-    // 会话相关 - 需要认证
-    CREATE_SESSION: "/auth/auth/sessions",
-    GET_SESSION: "/auth/auth/sessions/:id",
-    REVOKE_SESSION: "/auth/auth/sessions/:session_id/revoke",
-    DELETE_SESSION: "/auth/auth/sessions/:id",
-    // 用户凭证相关 - 需要认证
-    CREATE_USER_CREDENTIAL: "/auth/auth/user-credentials",
-    GET_USER_CREDENTIAL: "/auth/auth/user-credentials/:id",
-    UPDATE_USER_CREDENTIAL: "/auth/auth/user-credentials/:id",
-    DELETE_USER_CREDENTIAL: "/auth/auth/user-credentials/:id",
-    // MFA 因子相关 - 需要认证
-    CREATE_MFA_FACTOR: "/auth/auth/mfa-factors",
-    GET_MFA_FACTOR: "/auth/auth/mfa-factors/:id",
-    UPDATE_MFA_FACTOR: "/auth/auth/mfa-factors/:id",
-    DELETE_MFA_FACTOR: "/auth/auth/mfa-factors/:id",
-    // 刷新令牌相关 - 需要认证
-    CREATE_REFRESH_TOKEN: "/auth/auth/refresh-tokens",
-    GET_REFRESH_TOKEN: "/auth/auth/refresh-tokens/:id",
-    UPDATE_REFRESH_TOKEN: "/auth/auth/refresh-tokens/:id",
-    DELETE_REFRESH_TOKEN: "/auth/auth/refresh-tokens/:id",
-    // 密码重置相关 - 需要认证
-    CREATE_PASSWORD_RESET: "/auth/auth/password-resets",
-    GET_PASSWORD_RESET: "/auth/auth/password-resets/:id",
-    UPDATE_PASSWORD_RESET: "/auth/auth/password-resets/:id",
-    DELETE_PASSWORD_RESET: "/auth/auth/password-resets/:id",
-    // 密码历史相关 - 需要认证
-    CREATE_PASSWORD_HISTORY: "/auth/auth/password-history",
-    GET_PASSWORD_HISTORY: "/auth/auth/password-history/:id",
-    // 登录尝试相关 - 需要认证
-    CREATE_LOGIN_ATTEMPT: "/auth/auth/login-attempts",
-    GET_LOGIN_ATTEMPT: "/auth/auth/login-attempts/:id",
-    DELETE_LOGIN_ATTEMPT: "/auth/auth/login-attempts/:id",
-    // 账户锁定相关 - 需要认证
-    CREATE_ACCOUNT_LOCKOUT: "/auth/auth/account-lockouts",
-    GET_ACCOUNT_LOCKOUT: "/auth/auth/account-lockouts/:id",
-    UPDATE_ACCOUNT_LOCKOUT: "/auth/auth/account-lockouts/:id",
-    DELETE_ACCOUNT_LOCKOUT: "/auth/auth/account-lockouts/:id",
-    // 受信任设备相关 - 需要认证
-    CREATE_TRUSTED_DEVICE: "/auth/auth/trusted-devices",
-    GET_TRUSTED_DEVICE: "/auth/auth/trusted-devices/:id",
-    DELETE_TRUSTED_DEVICE: "/auth/auth/trusted-devices/:id",
+    login: path("/auth/login", { email: "/email", phone: "/phone" }),
+    refresh: "/auth/refresh",
+    sendVerificationCode: "/auth/send-verification-code",
+    signup: "/auth/signup",
+    ...(path("/auth/auth", {
+      sessions: path("/sessions", {
+        byId: (id: string) => `/${id}`,
+        revoke: (sessionId: string) => `/${sessionId}/revoke`,
+      }),
+      userCredentials: path("/user-credentials", { byId: (id: string) => `/${id}` }),
+      mfaFactors: path("/mfa-factors", { byId: (id: string) => `/${id}` }),
+      refreshTokens: path("/refresh-tokens", { byId: (id: string) => `/${id}` }),
+      passwordResets: path("/password-resets", { byId: (id: string) => `/${id}` }),
+      passwordHistory: path("/password-history", { byId: (id: string) => `/${id}` }),
+      loginAttempts: path("/login-attempts", { byId: (id: string) => `/${id}` }),
+      accountLockouts: path("/account-lockouts", { byId: (id: string) => `/${id}` }),
+      trustedDevices: path("/trusted-devices", { byId: (id: string) => `/${id}` }),
+    }) as unknown as Record<string, unknown>),
   },
-  // Clients 模块 - /clients/auth
-  CLIENTS: {
-    // 应用相关 - 需要认证
-    CREATE_APP: "/clients/auth/apps",
-    GET_APP: "/clients/auth/apps/:id",
-    GET_APP_BY_APP_ID: "/clients/auth/apps/app-id/:app_id",
-    UPDATE_APP: "/clients/auth/apps/:id",
-    DELETE_APP: "/clients/auth/apps/:id",
-    // API Key 相关 - 需要认证
-    CREATE_API_KEY: "/clients/auth/api-keys",
-    GET_API_KEY: "/clients/auth/api-keys/:id",
-    DELETE_API_KEY_BY_KEY_ID: "/clients/auth/api-keys/key-id/:key_id",
-    // Client Credential 相关 - 需要认证
-    CREATE_CLIENT_CREDENTIAL: "/clients/auth/client-credentials",
-    GET_CLIENT_CREDENTIAL: "/clients/auth/client-credentials/:id",
-    DELETE_CLIENT_CREDENTIAL_BY_CLIENT_ID: "/clients/auth/client-credentials/client-id/:client_id",
-    // Client Scope 相关 - 需要认证
-    CREATE_CLIENT_SCOPE: "/clients/auth/client-scopes",
-    GET_CLIENT_SCOPE: "/clients/auth/client-scopes/:id",
-    DELETE_CLIENT_SCOPE: "/clients/auth/client-scopes/:id",
-    // IP Allowlist 相关 - 需要认证
-    CREATE_IP_ALLOWLIST: "/clients/auth/ip-allowlist",
-    GET_IP_ALLOWLIST: "/clients/auth/ip-allowlist/:id",
-    DELETE_IP_ALLOWLIST_BY_RULE_ID: "/clients/auth/ip-allowlist/rule-id/:rule_id",
-    // Rate Limit 相关 - 需要认证
-    CREATE_RATE_LIMIT: "/clients/auth/rate-limits",
-    GET_RATE_LIMIT: "/clients/auth/rate-limits/:id",
-    DELETE_RATE_LIMIT: "/clients/auth/rate-limits/:id",
-  },
-  // Directory 模块 - /directory/auth（Rex 规范：:user_id, :user_education_id 等）
-  DIRECTORY: {
-    CREATE_USER: "/directory/auth/users",
-    GET_USER: "/directory/auth/users/:user_id",
-    GET_USER_BY_USERNAME: "/directory/auth/users/username/:username",
-    UPDATE_USER_STATUS: "/directory/auth/users/:user_id/status",
-    UPDATE_USER_USERNAME: "/directory/auth/users/:user_id/username",
-    VERIFY_USER: "/directory/auth/users/:user_id/verify",
-    DELETE_USER: "/directory/auth/users/:user_id",
-    CREATE_BADGE: "/directory/auth/badges",
-    GET_BADGE: "/directory/auth/badges/:id",
-    GET_BADGE_BY_NAME: "/directory/auth/badges/name/:name",
-    UPDATE_BADGE: "/directory/auth/badges/:id",
-    DELETE_BADGE: "/directory/auth/badges/:id",
-    CREATE_USER_BADGE: "/directory/auth/user-badges",
-    GET_USER_BADGE: "/directory/auth/user-badges/:id",
-    DELETE_USER_BADGE: "/directory/auth/user-badges/:id",
-    CREATE_USER_EDUCATION: "/directory/auth/user-educations",
-    GET_USER_EDUCATION: "/directory/auth/user-educations/:user_education_id",
-    UPDATE_USER_EDUCATION: "/directory/auth/user-educations/:user_education_id",
-    DELETE_USER_EDUCATION: "/directory/auth/user-educations/:user_education_id",
-    CREATE_USER_EMAIL: "/directory/auth/user-emails",
-    GET_USER_EMAIL: "/directory/auth/user-emails/:user_email_id",
-    GET_USER_EMAILS_BY_USER_ID: "/directory/auth/users/:user_id/user-emails",
-    GET_USER_PHONES_BY_USER_ID: "/directory/auth/users/:user_id/user-phones",
-    GET_USER_EDUCATIONS_BY_USER_ID: "/directory/auth/users/:user_id/user-educations",
-    GET_USER_OCCUPATIONS_BY_USER_ID: "/directory/auth/users/:user_id/user-occupations",
-    UPDATE_USER_EMAIL: "/directory/auth/user-emails/:user_email_id",
-    SET_PRIMARY_USER_EMAIL: "/directory/auth/user-emails/:user_email_id/set-primary",
-    VERIFY_USER_EMAIL: "/directory/auth/user-emails/:user_email_id/verify",
-    DELETE_USER_EMAIL: "/directory/auth/user-emails/:user_email_id",
-    CREATE_USER_OCCUPATION: "/directory/auth/user-occupations",
-    GET_USER_OCCUPATION: "/directory/auth/user-occupations/:user_occupation_id",
-    UPDATE_USER_OCCUPATION: "/directory/auth/user-occupations/:user_occupation_id",
-    DELETE_USER_OCCUPATION: "/directory/auth/user-occupations/:user_occupation_id",
-    CREATE_USER_PHONE: "/directory/auth/user-phones",
-    GET_USER_PHONE: "/directory/auth/user-phones/:user_phone_id",
-    UPDATE_USER_PHONE: "/directory/auth/user-phones/:user_phone_id",
-    SET_PRIMARY_USER_PHONE: "/directory/auth/user-phones/:user_phone_id/set-primary",
-    VERIFY_USER_PHONE: "/directory/auth/user-phones/:user_phone_id/verify",
-    DELETE_USER_PHONE: "/directory/auth/user-phones/:user_phone_id",
-    CREATE_USER_PREFERENCE: "/directory/auth/user-preferences",
-    GET_USER_PREFERENCE: "/directory/auth/user-preferences/:user_preference_id",
-    UPDATE_USER_PREFERENCE: "/directory/auth/user-preferences/:user_preference_id",
-    DELETE_USER_PREFERENCE: "/directory/auth/user-preferences/:user_preference_id",
-    CREATE_USER_PROFILE: "/directory/auth/user-profiles",
-    GET_USER_PROFILE: "/directory/auth/user-profiles/:user_profile_id",
-    UPDATE_USER_PROFILE: "/directory/auth/user-profiles/:user_profile_id",
-    DELETE_USER_PROFILE: "/directory/auth/user-profiles/:user_profile_id",
-    CREATE_OR_UPDATE_USER_AVATAR: "/directory/auth/user-avatars",
-    GET_USER_AVATAR: "/directory/auth/user-avatars/user/:user_id",
-    UPDATE_USER_AVATAR: "/directory/auth/user-avatars/:user_id",
-    DELETE_USER_AVATAR: "/directory/auth/user-avatars/:user_id",
-    CREATE_USER_IMAGE: "/directory/auth/user-images",
-    GET_USER_IMAGE: "/directory/auth/user-images/:user_image_id",
-    GET_USER_IMAGES_BY_USER_ID: "/directory/auth/users/:user_id/user-images",
-    GET_CURRENT_USER_IMAGE_BY_USER_ID: "/directory/auth/users/:user_id/user-images/current",
-    UPDATE_USER_IMAGE: "/directory/auth/user-images/:user_image_id",
-    SET_PRIMARY_USER_IMAGE: "/directory/auth/user-images/:user_image_id/set-primary",
-    UPDATE_USER_IMAGE_DISPLAY_ORDER: "/directory/auth/user-images/:user_image_id/display-order",
-    UPDATE_USER_IMAGES_DISPLAY_ORDER_BATCH: "/directory/auth/users/:user_id/user-images/display-order",
-    DELETE_USER_IMAGE: "/directory/auth/user-images/:user_image_id",
-  },
-  // Image 模块 - /image/auth
-  IMAGE: {
-    // 图片上传相关 - 需要认证
-    UPLOAD_IMAGE: "/image/auth/upload",
-    MOVE_IMAGE: "/image/auth/images/:id/move",
-    // 图片相关 - 需要认证
-    CREATE_IMAGE: "/image/auth/images",
-    GET_IMAGE: "/image/auth/images/:id",
-    UPDATE_IMAGE: "/image/auth/images/:id",
-    DELETE_IMAGE: "/image/auth/images/:id",
-    // 图片类型相关 - 需要认证
-    CREATE_IMAGE_TYPE: "/image/auth/image-types",
-    GET_IMAGE_TYPE: "/image/auth/image-types/:id",
-    UPDATE_IMAGE_TYPE: "/image/auth/image-types/:id",
-    DELETE_IMAGE_TYPE: "/image/auth/image-types/:id",
-    // 图片变体相关 - 需要认证
-    CREATE_IMAGE_VARIANT: "/image/auth/image-variants",
-    GET_IMAGE_VARIANT: "/image/auth/image-variants/:id",
-    UPDATE_IMAGE_VARIANT: "/image/auth/image-variants/:id",
-    DELETE_IMAGE_VARIANT: "/image/auth/image-variants/:id",
-    // 图片标签相关 - 需要认证
-    CREATE_IMAGE_TAG: "/image/auth/image-tags",
-    GET_IMAGE_TAG: "/image/auth/image-tags/:id",
-    UPDATE_IMAGE_TAG: "/image/auth/image-tags/:id",
-    DELETE_IMAGE_TAG: "/image/auth/image-tags/:id",
-  },
-  // System 模块 - /system
+
+  CLIENTS: path("/clients/auth", {
+    apps: path("/apps", {
+      byId: (id: string) => `/${id}`,
+      byAppId: (appId: string) => `/app-id/${appId}`,
+    }),
+    apiKeys: path("/api-keys", {
+      byId: (id: string) => `/${id}`,
+      byKeyId: (keyId: string) => `/key-id/${keyId}`,
+    }),
+    clientCredentials: path("/client-credentials", {
+      byId: (id: string) => `/${id}`,
+      byClientId: (clientId: string) => `/client-id/${clientId}`,
+    }),
+    clientScopes: path("/client-scopes", { byId: (id: string) => `/${id}` }),
+    ipAllowlist: path("/ip-allowlist", {
+      byId: (id: string) => `/${id}`,
+      byRuleId: (ruleId: string) => `/rule-id/${ruleId}`,
+    }),
+    rateLimits: path("/rate-limits", { byId: (id: string) => `/${id}` }),
+  }),
+
+  DIRECTORY: path("/directory/auth", {
+    users: path("/users", {
+      byId: (userId: string) =>
+        path(`/${userId}`, {
+          status: "/status",
+          username: "/username",
+          verify: "/verify",
+          userEmails: "/user-emails",
+          userPhones: "/user-phones",
+          userEducations: "/user-educations",
+          userOccupations: "/user-occupations",
+          userImages: "/user-images",
+          currentImage: "/user-images/current",
+          imagesDisplayOrder: "/user-images/display-order",
+        }),
+      byUsername: (username: string) => `/username/${username}`,
+    }),
+    badges: path("/badges", { byId: (id: string) => `/${id}`, byName: (name: string) => `/name/${name}` }),
+    userBadges: path("/user-badges", { byId: (id: string) => `/${id}` }),
+    userEducations: path("/user-educations", { byId: (id: string) => `/${id}` }),
+    userEmails: path("/user-emails", {
+      byId: (id: string) => `/${id}`,
+      setPrimary: (id: string) => `/${id}/set-primary`,
+      verify: (id: string) => `/${id}/verify`,
+    }),
+    userOccupations: path("/user-occupations", { byId: (id: string) => `/${id}` }),
+    userPhones: path("/user-phones", {
+      byId: (id: string) => `/${id}`,
+      setPrimary: (id: string) => `/${id}/set-primary`,
+      verify: (id: string) => `/${id}/verify`,
+    }),
+    userPreferences: path("/user-preferences", { byId: (id: string) => `/${id}` }),
+    userProfiles: path("/user-profiles", { byId: (id: string) => `/${id}` }),
+    userAvatars: path("/user-avatars", { byUserId: (userId: string) => `/user/${userId}` }),
+    userImages: path("/user-images", {
+      byId: (id: string) => `/${id}`,
+      setPrimary: (id: string) => `/${id}/set-primary`,
+      displayOrder: (id: string) => `/${id}/display-order`,
+    }),
+  }),
+
+  IMAGE: path("/image/auth", {
+    upload: "/upload",
+    images: path("/images", {
+      byId: (id: string) => `/${id}`,
+      move: (id: string) => `/${id}/move`,
+    }),
+    imageTypes: path("/image-types", { byId: (id: string) => `/${id}` }),
+    imageVariants: path("/image-variants", { byId: (id: string) => `/${id}` }),
+    imageTags: path("/image-tags", { byId: (id: string) => `/${id}` }),
+  }),
+
   SYSTEM: {
-    // 系统状态相关 - 公开接口（不需要认证）
-    GET_SYSTEM_STATE_LATEST: "/system/system-state/latest",
-    INITIALIZE_SYSTEM_STATE: "/system/system-state/initialize",
-    // 系统状态相关 - 需要认证
-    GET_SYSTEM_STATE: "/system/auth/system-state/:id",
-    RE_INITIALIZE_SYSTEM_STATE: "/system/auth/system-state/initialize",
-    RESET_SYSTEM_STATE: "/system/auth/system-state/reset",
-    DELETE_SYSTEM_STATE: "/system/auth/system-state/:id",
+    systemState: path("/system/system-state", {
+      latest: "/latest",
+      initialize: "/initialize",
+      byId: (id: string) => `/${id}`,
+    }),
+    systemStateAuth: path("/system/auth/system-state", {
+      byId: (id: string) => `/${id}`,
+      initialize: "/initialize",
+      reset: "/reset",
+    }),
+    i18nErrors: path("/system/i18n/errors", { byLang: (lang: string) => `/${lang}` }),
   },
-  // Tenants 模块 - /tenants/auth
-  TENANTS: {
-    // 租户相关 - 需要认证
-    CREATE_TENANT: "/tenants/auth/",
-    GET_TENANT: "/tenants/auth/:id",
-    GET_TENANT_BY_TENANT_ID: "/tenants/auth/tenant-id/:tenant_id",
-    UPDATE_TENANT: "/tenants/auth/:id",
-    UPDATE_TENANT_STATUS: "/tenants/auth/:id/status",
-    DELETE_TENANT: "/tenants/auth/:id",
-    // 组相关 - 需要认证
-    CREATE_GROUP: "/tenants/auth/groups",
-    GET_GROUP: "/tenants/auth/groups/:id",
-    UPDATE_GROUP: "/tenants/auth/groups/:id",
-    DELETE_GROUP: "/tenants/auth/groups/:id",
-    // 成员相关 - 需要认证
-    CREATE_MEMBER: "/tenants/auth/members",
-    GET_MEMBER: "/tenants/auth/members/:id",
-    UPDATE_MEMBER: "/tenants/auth/members/:id",
-    DELETE_MEMBER: "/tenants/auth/members/:id",
-    // 邀请相关 - 需要认证
-    CREATE_INVITATION: "/tenants/auth/invitations",
-    GET_INVITATION: "/tenants/auth/invitations/:id",
-    GET_INVITATION_BY_INVITE_ID: "/tenants/auth/invitations/invite-id/:invite_id",
-    ACCEPT_INVITATION: "/tenants/auth/invitations/invite-id/:invite_id/accept",
-    REVOKE_INVITATION: "/tenants/auth/invitations/invite-id/:invite_id/revoke",
-    DELETE_INVITATION: "/tenants/auth/invitations/:id",
-    // 租户应用相关 - 需要认证
-    CREATE_TENANT_APP: "/tenants/auth/tenant-apps",
-    GET_TENANT_APP: "/tenants/auth/tenant-apps/:id",
-    UPDATE_TENANT_APP: "/tenants/auth/tenant-apps/:id",
-    DELETE_TENANT_APP: "/tenants/auth/tenant-apps/:id",
-    // 租户设置相关 - 需要认证
-    CREATE_TENANT_SETTING: "/tenants/auth/tenant-settings",
-    GET_TENANT_SETTING: "/tenants/auth/tenant-settings/:id",
-    UPDATE_TENANT_SETTING: "/tenants/auth/tenant-settings/:id",
-    DELETE_TENANT_SETTING: "/tenants/auth/tenant-settings/:id",
-    // 域名验证相关 - 需要认证
-    CREATE_DOMAIN_VERIFICATION: "/tenants/auth/domain-verifications",
-    GET_DOMAIN_VERIFICATION: "/tenants/auth/domain-verifications/:id",
-    UPDATE_DOMAIN_VERIFICATION: "/tenants/auth/domain-verifications/:id",
-    DELETE_DOMAIN_VERIFICATION: "/tenants/auth/domain-verifications/:id",
-    // 成员角色相关 - 需要认证
-    CREATE_MEMBER_ROLE: "/tenants/auth/member-roles",
-    GET_MEMBER_ROLE: "/tenants/auth/member-roles/:id",
-    REVOKE_MEMBER_ROLE: "/tenants/auth/member-roles/:id/revoke",
-    DELETE_MEMBER_ROLE: "/tenants/auth/member-roles/:id",
-    // 成员组相关 - 需要认证
-    CREATE_MEMBER_GROUP: "/tenants/auth/member-groups",
-    GET_MEMBER_GROUP: "/tenants/auth/member-groups/:id",
-    REVOKE_MEMBER_GROUP: "/tenants/auth/member-groups/:id/revoke",
-    DELETE_MEMBER_GROUP: "/tenants/auth/member-groups/:id",
-    // 成员应用角色相关 - 需要认证
-    CREATE_MEMBER_APP_ROLE: "/tenants/auth/member-app-roles",
-    GET_MEMBER_APP_ROLE: "/tenants/auth/member-app-roles/:id",
-    REVOKE_MEMBER_APP_ROLE: "/tenants/auth/member-app-roles/:id/revoke",
-    DELETE_MEMBER_APP_ROLE: "/tenants/auth/member-app-roles/:id",
-  },
+
+  TENANTS: path("/tenants/auth", {
+    tenants: path("/", {
+      byId: (id: string) => `/${id}`,
+      byTenantId: (tenantId: string) => `/tenant-id/${tenantId}`,
+      status: (id: string) => `/${id}/status`,
+    }),
+    groups: path("/groups", { byId: (id: string) => `/${id}` }),
+    members: path("/members", { byId: (id: string) => `/${id}` }),
+    invitations: path("/invitations", {
+      byId: (id: string) => `/${id}`,
+      byInviteId: (inviteId: string) =>
+        path(`/invite-id/${inviteId}`, {
+          accept: "/accept",
+          revoke: "/revoke",
+        }),
+    }),
+    tenantApps: path("/tenant-apps", { byId: (id: string) => `/${id}` }),
+    tenantSettings: path("/tenant-settings", { byId: (id: string) => `/${id}` }),
+    domainVerifications: path("/domain-verifications", { byId: (id: string) => `/${id}` }),
+    memberRoles: path("/member-roles", { byId: (id: string) => `/${id}`, revoke: (id: string) => `/${id}/revoke` }),
+    memberGroups: path("/member-groups", { byId: (id: string) => `/${id}`, revoke: (id: string) => `/${id}/revoke` }),
+    memberAppRoles: path("/member-app-roles", {
+      byId: (id: string) => `/${id}`,
+      revoke: (id: string) => `/${id}/revoke`,
+    }),
+  }),
 } as const;
 
 export const API_ENDPOINTS = {
@@ -318,6 +222,5 @@ export const API_ENDPOINTS = {
   WS: WS_BASE_URL,
 } as const;
 
-// 类型定义
 export type URL_PATHS_TYPE = typeof URL_PATHS;
 export type API_ENDPOINTS_TYPE = typeof API_ENDPOINTS;

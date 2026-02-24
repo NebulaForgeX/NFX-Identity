@@ -1,5 +1,6 @@
 package httpx
 
+// HTTPResp 为统一响应体。错误响应经 fiberx.Error/ErrorFromErrx 使用 BuildErrorResp，字段：status, err_code, message, details?, trace_id?
 type HTTPResp struct {
 	Status  int            `json:"status"`
 	ErrCode string         `json:"err_code,omitempty"`

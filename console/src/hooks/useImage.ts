@@ -38,6 +38,7 @@ import type {
 import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
 import { imageEventEmitter, imageEvents } from "@/events/image";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { IMAGE_IMAGE, IMAGE_IMAGE_TYPE, IMAGE_IMAGE_VARIANT, IMAGE_IMAGE_TAG } from "@/constants";
 import type { UnifiedQueryParams } from "./core/type";
 
@@ -54,7 +55,7 @@ export const useUploadImage = () => {
       showSuccess(t("uploadSuccess", "Image uploaded."));
     },
     onError: (error: AxiosError) => {
-      showError(t("uploadError", "Failed to upload image.") + (error.message ?? ""));
+      showError(getApiErrorMessage(error, "[useUploadImage] error"));
     },
   });
 };
@@ -84,7 +85,7 @@ export const useCreateImage = () => {
       showSuccess(t("image.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("image.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateImage] error"));
     },
   });
 };
@@ -102,7 +103,7 @@ export const useUpdateImage = () => {
       showSuccess(t("image.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("image.updateError") + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateImage] error"));
     },
   });
 };
@@ -120,7 +121,7 @@ export const useDeleteImage = () => {
       showSuccess(t("image.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("image.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteImage] error"));
     },
   });
 };
@@ -152,7 +153,7 @@ export const useCreateImageType = () => {
       showSuccess(t("imageType.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageType.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateImageType] error"));
     },
   });
 };
@@ -170,7 +171,7 @@ export const useUpdateImageType = () => {
       showSuccess(t("imageType.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageType.updateError") + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateImageType] error"));
     },
   });
 };
@@ -188,7 +189,7 @@ export const useDeleteImageType = () => {
       showSuccess(t("imageType.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageType.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteImageType] error"));
     },
   });
 };
@@ -220,7 +221,7 @@ export const useCreateImageVariant = () => {
       showSuccess(t("imageVariant.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageVariant.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateImageVariant] error"));
     },
   });
 };
@@ -238,7 +239,7 @@ export const useUpdateImageVariant = () => {
       showSuccess(t("imageVariant.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageVariant.updateError") + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateImageVariant] error"));
     },
   });
 };
@@ -256,7 +257,7 @@ export const useDeleteImageVariant = () => {
       showSuccess(t("imageVariant.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageVariant.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteImageVariant] error"));
     },
   });
 };
@@ -288,7 +289,7 @@ export const useCreateImageTag = () => {
       showSuccess(t("imageTag.createSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageTag.createError") + error.message);
+      showError(getApiErrorMessage(error, "[useCreateImageTag] error"));
     },
   });
 };
@@ -306,7 +307,7 @@ export const useUpdateImageTag = () => {
       showSuccess(t("imageTag.updateSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageTag.updateError") + error.message);
+      showError(getApiErrorMessage(error, "[useUpdateImageTag] error"));
     },
   });
 };
@@ -324,7 +325,7 @@ export const useDeleteImageTag = () => {
       showSuccess(t("imageTag.deleteSuccess"));
     },
     onError: (error: AxiosError) => {
-      showError(t("imageTag.deleteError") + error.message);
+      showError(getApiErrorMessage(error, "[useDeleteImageTag] error"));
     },
   });
 };

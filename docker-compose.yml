@@ -651,6 +651,7 @@ services:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
+      - ./errors/langs:/app/errors/langs
     depends_on:
       - reverse-proxy
     networks:

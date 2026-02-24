@@ -18,6 +18,7 @@ type httpDeps interface {
 	SystemStateAppSvc() *systemStateApp.Service
 	BootstrapSvc() *bootstrapApp.Service
 	UserTokenVerifier() token.Verifier
+	ErrorsLangsPath() string
 }
 
 func NewHTTPServer(d httpDeps) *fiber.App {
@@ -41,7 +42,7 @@ func NewHTTPServer(d httpDeps) *fiber.App {
 
 	app.Use(middleware.Logger(), middleware.Recover())
 
-	reg := NewRegistry(d.SystemStateAppSvc(), d.BootstrapSvc())
+	reg := NewRegistry(d.SystemStateAppSvc(), d.BootstrapSvc(), d.ErrorsLangsPath())
 
 	router := NewRouter(app, d.UserTokenVerifier(), reg)
 	router.RegisterRoutes()

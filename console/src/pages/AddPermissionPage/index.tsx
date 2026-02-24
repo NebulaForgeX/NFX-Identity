@@ -13,6 +13,7 @@ import {
 } from "@/hooks/useAccess";
 import { GetActionByKey, GetPermissionByKey, GetRoleByKey } from "@/apis";
 import { showError } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { ROUTES } from "@/types/navigation";
 
 import RolePermissionsLookupContent from "./components/RolePermissionsLookupContent";
@@ -43,15 +44,7 @@ const AddPermissionPage = memo(() => {
     if (!roleKey.trim() || !permissionKey.trim()) return;
     try {
       const roleRes = await GetRoleByKey(roleKey.trim());
-      if (!roleRes) {
-        showError(t("notFoundRole"));
-        return;
-      }
       const permRes = await GetPermissionByKey(permissionKey.trim());
-      if (!permRes) {
-        showError(t("notFoundPermission"));
-        return;
-      }
       await createRolePermission.mutateAsync({
         roleId: roleRes.id,
         permissionId: permRes.id,
@@ -59,8 +52,8 @@ const AddPermissionPage = memo(() => {
       setRoleKey("");
       setPermissionKey("");
       if (lookupRoleKey === roleKey) setLookupRoleKey("");
-    } catch {
-      // onError handled by mutation
+    } catch (e) {
+      showError(getApiErrorMessage(e as Error, "[handleAssignPermission] error"));
     }
   };
 
@@ -87,22 +80,14 @@ const AddPermissionPage = memo(() => {
     if (!lookupActionConfigKey.trim() || !actionKeyToAdd.trim()) return;
     try {
       const permission = await GetPermissionByKey(lookupActionConfigKey.trim());
-      if (!permission) {
-        showError(t("notFoundPermission"));
-        return;
-      }
       const action = await GetActionByKey(actionKeyToAdd.trim());
-      if (!action) {
-        showError(t("notFoundAction"));
-        return;
-      }
       await createActionRequirement.mutateAsync({
         permissionId: permission.id,
         actionId: action.id,
       });
       setActionKeyToAdd("");
-    } catch {
-      // onError handled by mutation
+    } catch (e) {
+      showError(getApiErrorMessage(e as Error, "[handleAddActionRequirement] error"));
     }
   };
 

@@ -1,11 +1,13 @@
-import { useEffect, useCallback, useRef } from "react";
-import { useAuthStore } from "@/stores/authStore";
-import { useUpdateUserPreference, useUserPreferenceNormal } from "@/hooks/useDirectory";
-import { useTheme } from "@/providers/ThemeProvider/useTheme";
-import { useLayout } from "@/providers/LayoutProvider/useLayout";
+import type { Language } from "@/assets/languages/i18nResources";
+
+import { useCallback, useEffect, useRef } from "react";
+
 import { ChangeLanguage } from "@/assets/languages/i18n";
 import { LANGUAGE } from "@/assets/languages/i18nResources";
-import type { Language } from "@/assets/languages/i18nResources";
+import { useUpdateUserPreference, useUserPreferenceNormal } from "@/hooks/useDirectory";
+import { useLayout } from "@/providers/LayoutProvider/useLayout";
+import { useTheme } from "@/providers/ThemeProvider/useTheme";
+import { useAuthStore } from "@/stores/authStore";
 
 /**
  * Hook to sync theme preference with backend
@@ -20,7 +22,7 @@ export const useThemeSync = () => {
   const shouldFetch = !!currentUserId && isAuthValid;
 
   const { data: preference } = useUserPreferenceNormal({
-    id: currentUserId || "00000000-0000-0000-0000-000000000000",
+    id: currentUserId,
     options: {
       enabled: shouldFetch && !!currentUserId,
     },
@@ -65,7 +67,7 @@ export const useThemeSync = () => {
         console.error("Failed to sync theme preference:", error);
       }
     },
-    [currentUserId, isAuthValid, updatePreference]
+    [currentUserId, isAuthValid, updatePreference],
   );
 
   return { syncTheme };
@@ -83,7 +85,7 @@ export const useLanguageSync = () => {
   const shouldFetch = !!currentUserId && isAuthValid;
 
   const { data: preference } = useUserPreferenceNormal({
-    id: currentUserId || "00000000-0000-0000-0000-000000000000",
+    id: currentUserId,
     options: {
       enabled: shouldFetch && !!currentUserId,
     },
@@ -139,7 +141,7 @@ export const useLanguageSync = () => {
         console.error("Failed to sync language preference:", error);
       }
     },
-    [currentUserId, isAuthValid, updatePreference]
+    [currentUserId, isAuthValid, updatePreference],
   );
 
   return { syncLanguage };
@@ -158,7 +160,7 @@ export const useLayoutSync = () => {
   const shouldFetch = !!currentUserId && isAuthValid;
 
   const { data: preference } = useUserPreferenceNormal({
-    id: currentUserId || "00000000-0000-0000-0000-000000000000",
+    id: currentUserId,
     options: {
       enabled: shouldFetch && !!currentUserId,
     },
@@ -209,21 +211,23 @@ export const useLayoutSync = () => {
       // Fire and forget - don't wait for response, failure is OK
       // Local state is already updated, this is just for backend persistence
       const currentDisplay = preference?.display as Record<string, unknown> | undefined;
-      updatePreference.mutateAsync({
-        id: currentUserId,
-        data: {
-          display: {
-            ...currentDisplay,
-            layoutMode,
+      updatePreference
+        .mutateAsync({
+          id: currentUserId,
+          data: {
+            display: {
+              ...currentDisplay,
+              layoutMode,
+            },
           },
-        },
-      }).catch((error) => {
-        // Silent error - only log to console, don't show error toast
-        // Failure doesn't matter, local state is already updated
-        console.error("Failed to sync layout preference (non-critical):", error);
-      });
+        })
+        .catch((error) => {
+          // Silent error - only log to console, don't show error toast
+          // Failure doesn't matter, local state is already updated
+          console.error("Failed to sync layout preference (non-critical):", error);
+        });
     },
-    [currentUserId, isAuthValid, updatePreference, preference]
+    [currentUserId, isAuthValid, updatePreference, preference],
   );
 
   return { syncLayout };

@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { InitializeSystemState } from "@/apis/system.api";
 import { hideLoading, showError, showLoading, showSuccess } from "@/stores/modalStore";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 export const useSubmitBootstrap = () => {
   const { t } = useTranslation("elements.bootstrap");
@@ -39,7 +40,7 @@ export const useSubmitBootstrap = () => {
     },
     onError: (error: Error) => {
       hideLoading();
-      showError(error.message || t("messages.init_failed_unknown"), t("messages.init_failed_title"));
+      showError(getApiErrorMessage(error, "[useSubmitBootstrap] error"), t("messages.init_failed_title"));
     },
   });
 
