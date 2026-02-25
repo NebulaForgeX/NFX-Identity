@@ -41,6 +41,7 @@ export const useSubmitPreference = (preference?: UserPreference) => {
             id: preference.id,
             data: {
               theme: values.theme,
+              base: values.base,
               language: values.language,
               timezone: values.timezone,
               notifications: values.notifications,
@@ -54,6 +55,7 @@ export const useSubmitPreference = (preference?: UserPreference) => {
           await createPreference.mutateAsync({
             userId: currentUserId,
             theme: values.theme,
+            base: values.base,
             language: values.language,
             timezone: values.timezone,
             notifications: values.notifications,

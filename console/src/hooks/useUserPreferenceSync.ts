@@ -16,7 +16,7 @@ import { useAuthStore } from "@/stores/authStore";
 export const useThemeSync = () => {
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
-  const { themeName, setTheme } = useTheme();
+  const { themeName, baseName, setTheme, setBase } = useTheme();
   const updatePreference = useUpdateUserPreference({ silent: true });
 
   const shouldFetch = !!currentUserId && isAuthValid;
@@ -31,7 +31,7 @@ export const useThemeSync = () => {
   const lastPreferenceId = useRef<string | null>(null);
   const isInitialized = useRef(false);
 
-  // Apply theme preference ONLY on initial load/login
+  // Apply theme and base preference ONLY on initial load/login
   useEffect(() => {
     if (!shouldFetch || !preference || !isAuthValid || !currentUserId) {
       isInitialized.current = false;
@@ -44,20 +44,20 @@ export const useThemeSync = () => {
       return;
     }
 
-    // Apply theme (only if different)
     if (preference.theme && preference.theme !== themeName) {
-      setTheme(preference.theme as any);
+      setTheme(preference.theme as Parameters<typeof setTheme>[0]);
+    }
+    if (preference.base && preference.base !== baseName) {
+      setBase(preference.base as Parameters<typeof setBase>[0]);
     }
 
     isInitialized.current = true;
     lastPreferenceId.current = preference.id;
-  }, [preference, isAuthValid, currentUserId, themeName, setTheme, shouldFetch]);
+  }, [preference, isAuthValid, currentUserId, themeName, baseName, setTheme, setBase, shouldFetch]);
 
-  // Sync theme changes to backend
   const syncTheme = useCallback(
     async (theme: string) => {
       if (!currentUserId || !isAuthValid) return;
-
       try {
         await updatePreference.mutateAsync({
           id: currentUserId,
@@ -70,7 +70,22 @@ export const useThemeSync = () => {
     [currentUserId, isAuthValid, updatePreference],
   );
 
-  return { syncTheme };
+  const syncBase = useCallback(
+    async (base: string) => {
+      if (!currentUserId || !isAuthValid) return;
+      try {
+        await updatePreference.mutateAsync({
+          id: currentUserId,
+          data: { base },
+        });
+      } catch (error) {
+        console.error("Failed to sync base preference:", error);
+      }
+    },
+    [currentUserId, isAuthValid, updatePreference],
+  );
+
+  return { syncTheme, syncBase };
 };
 
 /**

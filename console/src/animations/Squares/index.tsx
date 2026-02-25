@@ -168,7 +168,7 @@ const SquareBackground: React.FC<Omit<SquaresProps, 'borderColor' | 'hoverFillCo
 
   // 从主题中获取边框颜色
   const borderColor = useMemo(() => {
-    const borderColorValue = currentTheme.variables.border5 || currentTheme.variables.fg || '#271E37';
+    const borderColorValue = currentTheme.colors.variables.border5 || currentTheme.colors.variables.fg || '#271E37';
     if (borderColorValue.startsWith('#')) {
       return borderColorValue;
     }
@@ -184,7 +184,7 @@ const SquareBackground: React.FC<Omit<SquaresProps, 'borderColor' | 'hoverFillCo
 
   // 从主题中获取悬停填充颜色
   const hoverFillColor = useMemo(() => {
-    const baseColor = currentTheme.variables.bg3 || currentTheme.variables.border3 || '#222222';
+    const baseColor = currentTheme.colors.variables.bg3 || currentTheme.colors.variables.border3 || '#222222';
     
     const darkenColor = (r: number, g: number, b: number, factor: number = 0.3) => {
       const newR = Math.round(r * (1 - factor));

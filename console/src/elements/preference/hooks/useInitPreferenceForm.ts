@@ -10,6 +10,7 @@ export const useInitPreferenceForm = (defaultValues?: Partial<PreferenceFormValu
   // 动态创建 schema
   const PreferenceFormSchema = z.object({
     theme: z.string().optional(),
+    base: z.string().optional(),
     language: z.string().optional(),
     timezone: z.string().optional(),
     dashboardBackground: z.enum(DASHBOARD_BACKGROUND_VALUES as [DashboardBackgroundType, ...DashboardBackgroundType[]]).optional(),
@@ -24,6 +25,7 @@ export const useInitPreferenceForm = (defaultValues?: Partial<PreferenceFormValu
     mode: "onChange",
     defaultValues: {
       theme: defaultValues?.theme || "",
+      base: defaultValues?.base || "",
       language: defaultValues?.language || "",
       timezone: defaultValues?.timezone || "",
       dashboardBackground: defaultValues?.dashboardBackground || DEFAULT_DASHBOARD_BACKGROUND,

@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import type { Theme, ThemeName } from "@/assets/themes/types";
+import type { BaseName } from "@/assets/themes/types";
 
 /**
  * 将主题变量注入到 CSS Variables 并保存到 localStorage
  */
-const useThemeVariables = (currentTheme: Theme, themeName: ThemeName) => {
+const useThemeVariables = (currentTheme: Theme, themeName: ThemeName, baseName: BaseName) => {
   useEffect(() => {
-    // 将主题变量注入到 CSS Variables
     const root = document.documentElement;
-    const vars = currentTheme.variables;
+    const vars = currentTheme.colors.variables;
+    const base = currentTheme.base.variables;
 
     // 基础颜色
     root.style.setProperty("--color-primary", vars.primary);
@@ -52,15 +53,20 @@ const useThemeVariables = (currentTheme: Theme, themeName: ThemeName) => {
     root.style.setProperty("--echarts-split-line-color", vars.echarts.splitLineColor);
     root.style.setProperty("--echarts-item-hover-shadow-color", vars.echarts.itemHoverShadowColor);
     root.style.setProperty("--echarts-tooltip-bg-color", vars.echarts.tooltipBackgroundColor);
-    root.style.setProperty("--echarts-area-opacity", vars.echarts.areaOpacity);
 
     // ChartJS 颜色
     root.style.setProperty("--chartjs-axis-line-color", vars.chartjs.axisLineColor);
     root.style.setProperty("--chartjs-text-color", vars.chartjs.textColor);
 
+    // 基础变量（圆角）
+    root.style.setProperty("--radius-button", `${base.buttonRadius}px`);
+    root.style.setProperty("--radius-card", `${base.cardRadius}px`);
+    root.style.setProperty("--radius-input", `${base.inputRadius}px`);
+
     // 保存到 localStorage
     localStorage.setItem("theme", themeName);
-  }, [themeName, currentTheme]);
+    localStorage.setItem("base", baseName);
+  }, [themeName, baseName, currentTheme]);
 };
 
 

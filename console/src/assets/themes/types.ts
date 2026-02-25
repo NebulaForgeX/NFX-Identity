@@ -1,6 +1,5 @@
-// 基础颜色变量类型
-export interface BaseThemeVariables {
-  // 主要颜色
+// 颜色变量（主题色、背景、边框、文字、图表等一切与颜色相关）
+export interface ColorVariables {
   primary: string;
   primaryLight: string;
   primaryFg: string;
@@ -13,31 +12,23 @@ export interface BaseThemeVariables {
   danger: string;
   dangerLight: string;
 
-  // 背景色
   bg: string;
   bg2: string;
   bg3: string;
   bg4: string;
 
-  // 边框色
   border: string;
   border2: string;
   border3: string;
   border4: string;
   border5: string;
 
-  // 文字色
   fg: string;
   fgText: string;
   fgHeading: string;
   fgHighlight: string;
-
-  // 分隔符
   separator: string;
-}
 
-// 扩展颜色变量（图表等）
-export interface ExtendedThemeVariables extends BaseThemeVariables {
   temperature: {
     arcFill: string[];
     arcEmpty: string;
@@ -50,18 +41,14 @@ export interface ExtendedThemeVariables extends BaseThemeVariables {
     gradientRight: string;
     shadowColor: string;
     secondSeriesFill: string;
-    radius: [string, string];
   };
 
   traffic: {
     tooltipBg: string;
     tooltipBorderColor: string;
-    tooltipExtraCss: string;
     tooltipTextColor: string;
-    tooltipFontWeight: string;
     yAxisSplitLine: string;
     lineBg: string;
-    lineShadowBlur: string;
     itemColor: string;
     itemBorderColor: string;
     itemEmphasisBorderColor: string;
@@ -74,17 +61,12 @@ export interface ExtendedThemeVariables extends BaseThemeVariables {
   electricity: {
     tooltipBg: string;
     tooltipLineColor: string;
-    tooltipLineWidth: string;
     tooltipBorderColor: string;
-    tooltipExtraCss: string;
     tooltipTextColor: string;
-    tooltipFontWeight: string;
     axisLineColor: string;
     xAxisTextColor: string;
     yAxisSplitLine: string;
     itemBorderColor: string;
-    lineStyle: string;
-    lineWidth: string;
     lineGradFrom: string;
     lineGradTo: string;
     lineShadow: string;
@@ -100,7 +82,6 @@ export interface ExtendedThemeVariables extends BaseThemeVariables {
     splitLineColor: string;
     itemHoverShadowColor: string;
     tooltipBackgroundColor: string;
-    areaOpacity: string;
   };
 
   chartjs: {
@@ -109,19 +90,39 @@ export interface ExtendedThemeVariables extends BaseThemeVariables {
   };
 }
 
-// 主题配置
-export interface Theme {
-  name: string;
-  displayName: string;
-  variables: ExtendedThemeVariables;
+// 非颜色变量（圆角等，可随平台不同）
+export interface BaseVariables {
+  buttonRadius: number;
+  cardRadius: number;
+  inputRadius: number;
 }
 
-// 主题枚举（单一数据源，与语言 LANGUAGE 一致）
+/** 颜色主题 */
+export interface ColorTheme {
+  name: string;
+  displayName: string;
+  variables: ColorVariables;
+}
+
+/** 基础主题 */
+export interface BaseTheme {
+  name: string;
+  displayName: string;
+  variables: BaseVariables;
+}
+
+/** 完整主题 = 颜色主题 + 基础主题 */
+export interface Theme {
+  colors: ColorTheme;
+  base: BaseTheme;
+}
+
+// 主题枚举（const 风格，与现有一致）
 export const ThemeEnum = {
   DEFAULT: "default",
   LIGHT: "light",
   CORPORATE: "corporate",
-  FRESH: "fresh",
+  FOREST: "forest",
   DARK: "dark",
   COSMIC: "cosmic",
   COFFEE: "coffee",
@@ -129,6 +130,18 @@ export const ThemeEnum = {
 } as const;
 
 export type ThemeName = (typeof ThemeEnum)[keyof typeof ThemeEnum];
-
-/** 所有可选主题列表，用于 ThemeProvider / 主题切换器 */
 export const THEME_VALUES: ThemeName[] = Object.values(ThemeEnum);
+export const DEFAULT_THEME = ThemeEnum.DEFAULT;
+
+// 基础主题枚举
+export const BaseEnum = {
+  DEFAULT: "default",
+  IOS: "ios",
+  ANDROID: "android",
+  WINDOWS: "windows",
+  LINUX: "linux",
+} as const;
+
+export type BaseName = (typeof BaseEnum)[keyof typeof BaseEnum];
+export const BASE_VALUES: BaseName[] = Object.values(BaseEnum);
+export const DEFAULT_BASE = BaseEnum.DEFAULT;

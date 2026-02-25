@@ -4,9 +4,12 @@ export {
   darkTheme,
   cosmicTheme,
   corporateTheme,
-  freshTheme,
+  forestTheme,
   coffeeTheme,
   wineTheme,
-} from "./base";
-export type { Theme, ThemeName, BaseThemeVariables, ExtendedThemeVariables } from "./types";
-export { ThemeEnum, THEME_VALUES } from "./types";
+} from "./colors";
+export type { Theme, ThemeName, ColorTheme, BaseTheme, ColorVariables, BaseVariables } from "./types";
+export { ThemeEnum, DEFAULT_THEME, THEME_VALUES } from "./types";
+export { BaseEnum, DEFAULT_BASE, BASE_VALUES } from "./types";
+export type { BaseName } from "./types";
+export { bases } from "./bases";

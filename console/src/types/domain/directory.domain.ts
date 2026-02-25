@@ -107,6 +107,7 @@ export interface UserPreference {
   id: string;
   userId: string;
   theme?: string;
+  base?: string;
   language?: string;
   timezone?: string;
   dashboardBackground?: DashboardBackgroundType;

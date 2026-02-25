@@ -97,6 +97,10 @@
       "label": "主题",
       "placeholder": "请选择主题"
     },
+    "base": {
+      "label": "基础",
+      "placeholder": "请选择基础"
+    },
     "language": {
       "label": "语言",
       "placeholder": "请选择语言"

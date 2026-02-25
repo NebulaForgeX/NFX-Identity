@@ -266,9 +266,9 @@ const LetterGlitchBackground: React.FC<Omit<LetterGlitchProps, 'glitchColors'>> 
 
   // 从主题中获取故障颜色数组
   const glitchColors = useMemo(() => {
-    const primary = currentTheme.variables.primary || '#FA1E16';
-    const info = currentTheme.variables.info || '#0095ff';
-    const success = currentTheme.variables.success || '#00d68f';
+    const primary = currentTheme.colors.variables.primary || '#FA1E16';
+    const info = currentTheme.colors.variables.info || '#0095ff';
+    const success = currentTheme.colors.variables.success || '#00d68f';
     
     const toHex = (color: string): string => {
       if (color.startsWith('#')) {

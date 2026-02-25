@@ -145,6 +145,7 @@ export interface UpdateUserPhoneRequest {
 export interface CreateUserPreferenceRequest {
   userId: string;
   theme?: string;
+  base?: string;
   language?: string;
   timezone?: string;
   dashboardBackground?: string;
@@ -156,6 +157,7 @@ export interface CreateUserPreferenceRequest {
 
 export interface UpdateUserPreferenceRequest {
   theme?: string;
+  base?: string;
   language?: string;
   timezone?: string;
   dashboardBackground?: string;

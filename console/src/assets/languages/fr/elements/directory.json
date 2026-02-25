@@ -124,6 +124,10 @@
       "label": "Thème",
       "placeholder": "Sélectionnez un thème"
     },
+    "base": {
+      "label": "Base",
+      "placeholder": "Sélectionnez une base"
+    },
     "language": {
       "label": "Langue",
       "placeholder": "Sélectionnez une langue"

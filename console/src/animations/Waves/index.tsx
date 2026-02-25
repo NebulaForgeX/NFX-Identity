@@ -405,7 +405,7 @@ const WaveBackground: React.FC<Omit<WavesProps, 'lineColor' | 'backgroundColor'>
   // 从主题中获取线条颜色，降低颜色深度（变浅）
   const lineColor = useMemo(() => {
     // 尝试从主题变量中获取主色，如果没有则使用默认值
-    const primary = currentTheme.variables.primary || 'rgb(59, 130, 246)';
+    const primary = currentTheme.colors.variables.primary || 'rgb(59, 130, 246)';
     
     // 将颜色变浅的函数：向白色混合
     const lightenColor = (r: number, g: number, b: number, factor: number = 0.4) => {

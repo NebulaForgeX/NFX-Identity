@@ -725,7 +725,7 @@ const PixelBlastBackground: React.FC<Omit<PixelBlastProps, 'color'>> = memo((pro
 
   // 从主题中获取颜色
   const color = useMemo(() => {
-    const primary = currentTheme.variables.primary || '#B19EEF';
+    const primary = currentTheme.colors.variables.primary || '#B19EEF';
     
     const toHex = (color: string): string => {
       if (color.startsWith('#')) {

@@ -7,6 +7,7 @@ import { ArrowLeft as ArrowLeftIcon } from "@/assets/icons/lucide";
 import {
   useInitPreferenceForm,
   ThemeController,
+  BaseController,
   LanguageController,
   TimezoneController,
   DashboardBackgroundController,
@@ -60,7 +61,7 @@ EditPreferencePage.displayName = "EditPreferencePage";
 
 const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
   const { data: preference } = useUserPreference({ id: userId });
-  const { setTheme } = useTheme();
+  const { setTheme, setBase } = useTheme();
   const updatePreference = useUpdateUserPreference({ silent: true });
   const createPreference = useCreateUserPreference();
 
@@ -68,6 +69,7 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
     preference
       ? {
           theme: preference.theme,
+          base: preference.base,
           language: preference.language,
           timezone: preference.timezone,
           dashboardBackground: ((preference.other as Record<string, unknown>)?.dashboardBackground as DashboardBackgroundType | undefined) || DEFAULT_DASHBOARD_BACKGROUND,
@@ -101,6 +103,7 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
           await createPreference.mutateAsync({
             userId,
             theme: payload.theme ?? values.theme,
+            base: payload.base ?? values.base,
             language: payload.language ?? values.language,
             timezone: payload.timezone ?? values.timezone,
             notifications: values.notifications,
@@ -110,18 +113,20 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
           });
         }
         if (payload.theme) setTheme(payload.theme as Parameters<typeof setTheme>[0]);
+        if (payload.base) setBase(payload.base as Parameters<typeof setBase>[0]);
         if (payload.language) ChangeLanguage(payload.language as Parameters<typeof ChangeLanguage>[0]);
       } catch (e) {
         console.error("Failed to save preference:", e);
       }
     },
-    [preference, form, userId, updatePreference, createPreference, setTheme],
+    [preference, form, userId, updatePreference, createPreference, setTheme, setBase],
   );
 
   return (
     <FormProvider {...form}>
       <div className={styles.form}>
         <ThemeController onApply={(p) => handleApply(p)} />
+        <BaseController onApply={(p) => handleApply(p)} />
         <LanguageController onApply={(p) => handleApply(p)} />
         <TimezoneController onApply={(p) => handleApply(p)} />
         <DashboardBackgroundController onApply={(p) => handleApply(p)} />
