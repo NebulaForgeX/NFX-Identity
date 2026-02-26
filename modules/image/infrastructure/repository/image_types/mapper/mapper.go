@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/image/domain/image_types"
-	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/domain/image_types"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
 )
 
 // ImageTypeDomainToModel 将 Domain ImageType 转换为 Model ImageType

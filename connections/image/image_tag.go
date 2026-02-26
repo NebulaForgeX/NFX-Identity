@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	imagetagpb "nfxid/protos/gen/image/image_tag"
+	imagetagpb "nfxidentity/protos/gen/image/image_tag"
 )
 
 // ImageTagClient ImageTag 客户端

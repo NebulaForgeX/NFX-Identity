@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/domain/domain_verifications"
 
 	"github.com/google/uuid"
 )

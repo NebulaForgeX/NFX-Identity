@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"nfxid/constants"
-	dirErr "nfxid/errors/src/directory"
-	userImageCommands "nfxid/modules/directory/application/user_images/commands"
-	userImageDomain "nfxid/modules/directory/domain/user_images"
+	"nfxidentity/constants"
+	dirErr "nfxidentity/errors/src/directory"
+	userImageCommands "nfxidentity/modules/directory/application/user_images/commands"
+	userImageDomain "nfxidentity/modules/directory/domain/user_images"
 
 	"github.com/google/uuid"
 )

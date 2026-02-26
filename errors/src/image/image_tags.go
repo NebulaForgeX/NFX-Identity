@@ -1,6 +1,6 @@
 package image
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeImageTagNotFound      = "IMAGE_TAG_NOT_FOUND"

@@ -1,13 +1,13 @@
 package handler
 
 import (
-	eventSearchIndexApp "nfxid/modules/audit/application/event_search_index"
-	eventSearchIndexAppCommands "nfxid/modules/audit/application/event_search_index/commands"
-	"nfxid/modules/audit/interfaces/http/dto/reqdto"
-	"nfxid/modules/audit/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	eventSearchIndexApp "nfxidentity/modules/audit/application/event_search_index"
+	eventSearchIndexAppCommands "nfxidentity/modules/audit/application/event_search_index/commands"
+	"nfxidentity/modules/audit/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/audit/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

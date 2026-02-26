@@ -1,13 +1,13 @@
 package handler
 
 import (
-	userAvatarApp "nfxid/modules/directory/application/user_avatars"
-	userAvatarAppCommands "nfxid/modules/directory/application/user_avatars/commands"
-	"nfxid/modules/directory/interfaces/http/dto/reqdto"
-	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	userAvatarApp "nfxidentity/modules/directory/application/user_avatars"
+	userAvatarAppCommands "nfxidentity/modules/directory/application/user_avatars/commands"
+	"nfxidentity/modules/directory/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/directory/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

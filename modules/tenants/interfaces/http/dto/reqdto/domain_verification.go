@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	domainVerificationAppCommands "nfxid/modules/tenants/application/domain_verifications/commands"
-	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
+	domainVerificationAppCommands "nfxidentity/modules/tenants/application/domain_verifications/commands"
+	domainVerificationDomain "nfxidentity/modules/tenants/domain/domain_verifications"
 
 	"github.com/google/uuid"
 )

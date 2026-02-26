@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeMFAFactorNotFound     = "MFA_FACTOR_NOT_FOUND"

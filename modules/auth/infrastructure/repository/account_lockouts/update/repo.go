@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/auth/domain/account_lockouts"
+	"nfxidentity/modules/auth/domain/account_lockouts"
 
 	"gorm.io/gorm"
 )

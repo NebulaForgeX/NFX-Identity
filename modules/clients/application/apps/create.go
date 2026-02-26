@@ -2,9 +2,9 @@ package apps
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	appCommands "nfxid/modules/clients/application/apps/commands"
-	appDomain "nfxid/modules/clients/domain/apps"
+	clientsErr "nfxidentity/errors/src/clients"
+	appCommands "nfxidentity/modules/clients/application/apps/commands"
+	appDomain "nfxidentity/modules/clients/domain/apps"
 
 	"github.com/google/uuid"
 )

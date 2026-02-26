@@ -1,7 +1,7 @@
 package client_scopes
 
 import (
-	clientScopeDomain "nfxid/modules/clients/domain/client_scopes"
+	clientScopeDomain "nfxidentity/modules/clients/domain/client_scopes"
 )
 
 type Service struct {

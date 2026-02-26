@@ -1,7 +1,7 @@
 package system_state
 
 import (
-	systemErr "nfxid/errors/src/system"
+	systemErr "nfxidentity/errors/src/system"
 	"time"
 
 	"github.com/google/uuid"

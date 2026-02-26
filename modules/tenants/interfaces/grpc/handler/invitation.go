@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	invitationApp "nfxid/modules/tenants/application/invitations"
-	invitationDomain "nfxid/modules/tenants/domain/invitations"
-	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	invitationpb "nfxid/protos/gen/tenants/invitation"
+	invitationApp "nfxidentity/modules/tenants/application/invitations"
+	invitationDomain "nfxidentity/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	invitationpb "nfxidentity/protos/gen/tenants/invitation"
 
 	"github.com/google/uuid"
 )

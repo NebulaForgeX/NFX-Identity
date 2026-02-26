@@ -1,7 +1,7 @@
 package trusted_devices
 
 import (
-	trustedDeviceDomain "nfxid/modules/auth/domain/trusted_devices"
+	trustedDeviceDomain "nfxidentity/modules/auth/domain/trusted_devices"
 )
 
 type Service struct {

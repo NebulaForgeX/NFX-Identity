@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/mapper"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/mapper"
 
 	"github.com/google/uuid"
 )

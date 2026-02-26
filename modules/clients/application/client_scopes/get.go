@@ -2,7 +2,7 @@ package client_scopes
 
 import (
 	"context"
-	clientScopeResult "nfxid/modules/clients/application/client_scopes/results"
+	clientScopeResult "nfxidentity/modules/clients/application/client_scopes/results"
 
 	"github.com/google/uuid"
 )

@@ -3,9 +3,9 @@ package grpc
 import (
 	"fmt"
 
-	"nfxid/pkgs/grpcx"
-	"nfxid/pkgs/security/token/servertoken"
-	"nfxid/pkgs/tokenx"
+	"nfxidentity/pkgs/grpcx"
+	"nfxidentity/pkgs/security/token/servertoken"
+	"nfxidentity/pkgs/tokenx"
 
 	"google.golang.org/grpc"
 )

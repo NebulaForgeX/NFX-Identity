@@ -1,7 +1,7 @@
 package user_phones
 
 import (
-	userPhoneDomain "nfxid/modules/directory/domain/user_phones"
+	userPhoneDomain "nfxidentity/modules/directory/domain/user_phones"
 )
 
 type Service struct {

@@ -1,7 +1,7 @@
 package create
 
 import (
-	"nfxid/modules/access/domain/tenant_roles"
+	"nfxidentity/modules/access/domain/tenant_roles"
 
 	"gorm.io/gorm"
 )

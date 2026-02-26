@@ -1,6 +1,6 @@
 package directory
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeUserEducationNotFound = "USER_EDUCATION_NOT_FOUND"

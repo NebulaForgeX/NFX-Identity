@@ -599,7 +599,7 @@ const file_directory_user_proto_rawDesc = "" +
 	"CreateUser\x12\x17.user.CreateUserRequest\x1a\x18.user.CreateUserResponse\x12B\n" +
 	"\vGetUserByID\x12\x18.user.GetUserByIDRequest\x1a\x19.user.GetUserByIDResponse\x12T\n" +
 	"\x11GetUserByUsername\x12\x1e.user.GetUserByUsernameRequest\x1a\x1f.user.GetUserByUsernameResponse\x12H\n" +
-	"\rBatchGetUsers\x12\x1a.user.BatchGetUsersRequest\x1a\x1b.user.BatchGetUsersResponseB(Z&nfxid/protos/gen/directory/user;userpbb\x06proto3"
+	"\rBatchGetUsers\x12\x1a.user.BatchGetUsersRequest\x1a\x1b.user.BatchGetUsersResponseB(Z&nfxidentity/protos/gen/directory/user;userpbb\x06proto3"
 
 var (
 	file_directory_user_proto_rawDescOnce sync.Once

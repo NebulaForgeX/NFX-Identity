@@ -2,7 +2,7 @@ package user_preferences
 
 import (
 	"context"
-	userPreferenceCommands "nfxid/modules/directory/application/user_preferences/commands"
+	userPreferenceCommands "nfxidentity/modules/directory/application/user_preferences/commands"
 )
 
 // UpdateUserPreference 更新用户偏好

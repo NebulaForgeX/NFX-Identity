@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/members"
-	"nfxid/modules/tenants/infrastructure/repository/members/mapper"
+	"nfxidentity/modules/tenants/domain/members"
+	"nfxidentity/modules/tenants/infrastructure/repository/members/mapper"
 )
 
 // New 创建新的 Member，实现 members.Create 接口

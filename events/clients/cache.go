@@ -1,7 +1,7 @@
 package clients
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // APIKeysInvalidateCacheEvent APIKeys 缓存清除事件

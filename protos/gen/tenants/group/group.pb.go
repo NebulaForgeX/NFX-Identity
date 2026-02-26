@@ -538,7 +538,7 @@ const file_tenants_group_proto_rawDesc = "" +
 	"\fGroupService\x12G\n" +
 	"\fGetGroupByID\x12\x1a.group.GetGroupByIDRequest\x1a\x1b.group.GetGroupByIDResponse\x12\\\n" +
 	"\x13GetGroupsByTenantID\x12!.group.GetGroupsByTenantIDRequest\x1a\".group.GetGroupsByTenantIDResponse\x12M\n" +
-	"\x0eBatchGetGroups\x12\x1c.group.BatchGetGroupsRequest\x1a\x1d.group.BatchGetGroupsResponseB(Z&nfxid/protos/gen/tenants/group;grouppbb\x06proto3"
+	"\x0eBatchGetGroups\x12\x1c.group.BatchGetGroupsRequest\x1a\x1d.group.BatchGetGroupsResponseB(Z&nfxidentity/protos/gen/tenants/group;grouppbb\x06proto3"
 
 var (
 	file_tenants_group_proto_rawDescOnce sync.Once

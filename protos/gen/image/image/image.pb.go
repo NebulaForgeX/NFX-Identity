@@ -817,7 +817,7 @@ const file_image_image_proto_rawDesc = "" +
 	"\x0eBatchGetImages\x12\x1c.image.BatchGetImagesRequest\x1a\x1d.image.BatchGetImagesResponse\x12>\n" +
 	"\tMoveImage\x12\x17.image.MoveImageRequest\x1a\x18.image.MoveImageResponse\x12D\n" +
 	"\vDeleteImage\x12\x19.image.DeleteImageRequest\x1a\x1a.image.DeleteImageResponse\x12S\n" +
-	"\x10ClearStorageData\x12\x1e.image.ClearStorageDataRequest\x1a\x1f.image.ClearStorageDataResponseB&Z$nfxid/protos/gen/image/image;imagepbb\x06proto3"
+	"\x10ClearStorageData\x12\x1e.image.ClearStorageDataRequest\x1a\x1f.image.ClearStorageDataResponseB&Z$nfxidentity/protos/gen/image/image;imagepbb\x06proto3"
 
 var (
 	file_image_image_proto_rawDescOnce sync.Once

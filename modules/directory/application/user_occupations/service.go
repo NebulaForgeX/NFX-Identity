@@ -1,7 +1,7 @@
 package user_occupations
 
 import (
-	userOccupationDomain "nfxid/modules/directory/domain/user_occupations"
+	userOccupationDomain "nfxidentity/modules/directory/domain/user_occupations"
 )
 
 type Service struct {

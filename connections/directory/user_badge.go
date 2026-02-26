@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	userbadgepb "nfxid/protos/gen/directory/user_badge"
+	userbadgepb "nfxidentity/protos/gen/directory/user_badge"
 )
 
 // UserBadgeClient UserBadge 客户端

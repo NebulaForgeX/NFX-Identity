@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/image/domain/image_types"
-	"nfxid/modules/image/infrastructure/rdb/models"
-	"nfxid/modules/image/infrastructure/repository/image_types/mapper"
+	"nfxidentity/modules/image/domain/image_types"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/mapper"
 )
 
 // Generic 通用更新 ImageType，实现 image_types.Update 接口

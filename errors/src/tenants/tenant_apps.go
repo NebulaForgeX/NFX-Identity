@@ -1,6 +1,6 @@
 package tenants
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeTenantAppNotFound      = "TENANT_APP_NOT_FOUND"

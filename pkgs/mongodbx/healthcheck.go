@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"nfxid/pkgs/health"
+	"nfxidentity/pkgs/health"
 )
 
 var _ health.Resource = (*Client)(nil)

@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_phones"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/mapper"
+	"nfxidentity/modules/directory/domain/user_phones"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/mapper"
 )
 
 // Generic 通用更新 UserPhone，实现 user_phones.Update 接口

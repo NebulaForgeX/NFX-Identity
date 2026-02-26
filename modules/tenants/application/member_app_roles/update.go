@@ -2,7 +2,7 @@ package member_app_roles
 
 import (
 	"context"
-	memberAppRoleCommands "nfxid/modules/tenants/application/member_app_roles/commands"
+	memberAppRoleCommands "nfxidentity/modules/tenants/application/member_app_roles/commands"
 )
 
 // RevokeMemberAppRole 撤销成员应用角色

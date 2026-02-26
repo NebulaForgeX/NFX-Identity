@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	trustedDeviceAppResult "nfxid/modules/auth/application/trusted_devices/results"
+	trustedDeviceAppResult "nfxidentity/modules/auth/application/trusted_devices/results"
 
 	"github.com/google/uuid"
 )

@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/domain_verifications"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/mapper"
+	"nfxidentity/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/mapper"
 )
 
 // ByStatus 根据 Status 获取 DomainVerification 列表，实现 domain_verifications.Get 接口

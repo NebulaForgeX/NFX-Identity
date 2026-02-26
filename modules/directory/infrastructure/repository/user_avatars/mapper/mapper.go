@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/directory/domain/user_avatars"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/domain/user_avatars"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // UserAvatarDomainToModel 将 Domain UserAvatar 转换为 Model UserAvatar

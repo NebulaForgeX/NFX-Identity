@@ -1,13 +1,13 @@
 package handler
 
 import (
-	passwordResetApp "nfxid/modules/auth/application/password_resets"
-	passwordResetAppCommands "nfxid/modules/auth/application/password_resets/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	passwordResetApp "nfxidentity/modules/auth/application/password_resets"
+	passwordResetAppCommands "nfxidentity/modules/auth/application/password_resets/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"

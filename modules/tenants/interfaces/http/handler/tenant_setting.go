@@ -1,13 +1,13 @@
 package handler
 
 import (
-	tenantSettingApp "nfxid/modules/tenants/application/tenant_settings"
-	tenantSettingAppCommands "nfxid/modules/tenants/application/tenant_settings/commands"
-	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
-	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	tenantSettingApp "nfxidentity/modules/tenants/application/tenant_settings"
+	tenantSettingAppCommands "nfxidentity/modules/tenants/application/tenant_settings/commands"
+	"nfxidentity/modules/tenants/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/tenants/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

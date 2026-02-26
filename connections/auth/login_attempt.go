@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
+	loginattemptpb "nfxidentity/protos/gen/auth/login_attempt"
 )
 
 // LoginAttemptClient LoginAttempt 客户端

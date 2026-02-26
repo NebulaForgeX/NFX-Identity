@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	eventRetentionPolicyAppResult "nfxid/modules/audit/application/event_retention_policies/results"
+	eventRetentionPolicyAppResult "nfxidentity/modules/audit/application/event_retention_policies/results"
 
 	"github.com/google/uuid"
 )

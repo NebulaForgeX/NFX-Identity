@@ -437,7 +437,7 @@ const file_clients_rate_limit_proto_rawDesc = "" +
 	"(CLIENTS_RATE_LIMIT_TYPE_REQUESTS_PER_DAY\x10\x042\xdc\x01\n" +
 	"\x10RateLimitService\x12]\n" +
 	"\x10GetRateLimitByID\x12#.rate_limit.GetRateLimitByIDRequest\x1a$.rate_limit.GetRateLimitByIDResponse\x12i\n" +
-	"\x14GetRateLimitsByAppID\x12'.rate_limit.GetRateLimitsByAppIDRequest\x1a(.rate_limit.GetRateLimitsByAppIDResponseB1Z/nfxid/protos/gen/clients/rate_limit;ratelimitpbb\x06proto3"
+	"\x14GetRateLimitsByAppID\x12'.rate_limit.GetRateLimitsByAppIDRequest\x1a(.rate_limit.GetRateLimitsByAppIDResponseB1Z/nfxidentity/protos/gen/clients/rate_limit;ratelimitpbb\x06proto3"
 
 var (
 	file_clients_rate_limit_proto_rawDescOnce sync.Once

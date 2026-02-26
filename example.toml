@@ -215,7 +215,7 @@
     brokers = ["${KAFKA_BROKERS}"]
     
     # Client ID for Kafka connections
-    client_id = "nfxid-<module>-service"
+    client_id = "nfxidentity-<module>-service"
 
     # Network configuration
     [kafka.network]
@@ -245,7 +245,7 @@
     # Consumer configuration
     [kafka.consumer]
         # Consumer group ID (must be unique per service)
-        group_id = "<module>-service-group"
+        group_id = "nfxidentity-<module>"
         
         # Initial offset: "earliest" (from beginning) | "latest" (from end)
         initial_offset = "latest"
@@ -286,15 +286,15 @@
     # Format: message_key = "topic-name"
     [kafka.producer_topics]
         # Example:
-        # <module> = "nfxid.<module>"
-        # <module>_poison = "nfxid.<module>_poison"
+        # <module> = "nfxidentity.<module>"
+        # <module>_poison = "nfxidentity.<module>_poison"
 
     # Consumer topics: map message keys to topic names
     # Format: message_key = "topic-name"
     [kafka.consumer_topics]
         # Example:
-        # <module> = "nfxid.<module>"
-        # <module>_poison = "nfxid.<module>_poison"
+        # <module> = "nfxidentity.<module>"
+        # <module>_poison = "nfxidentity.<module>_poison"
 
 # ============================================================================
 # RabbitMQ Message Broker Configuration
@@ -309,7 +309,7 @@
     vhost = "${RABBITMQ_VHOST}"
     
     # Client ID for RabbitMQ connections
-    client_id = "nfxid-<module>-service"
+    client_id = "nfxidentity-<module>-service"
 
     # Producer configuration
     [rabbitmq.producer]
@@ -343,7 +343,7 @@
         queue_name = ""
         
         # Consumer tag identifier
-        consumer_tag = "nfxid-<module>-consumer"
+        consumer_tag = "nfxidentity-<module>-consumer"
         
         # Automatically acknowledge messages (not recommended)
         auto_ack = false

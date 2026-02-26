@@ -1,7 +1,7 @@
 package user_credentials
 
 import (
-	authErr "nfxid/errors/src/auth"
+	authErr "nfxidentity/errors/src/auth"
 
 	"github.com/google/uuid"
 )

@@ -1,7 +1,7 @@
 package create
 
 import (
-	"nfxid/modules/directory/domain/user_profiles"
+	"nfxidentity/modules/directory/domain/user_profiles"
 
 	"gorm.io/gorm"
 )

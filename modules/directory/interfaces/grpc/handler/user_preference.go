@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	userPreferenceApp "nfxid/modules/directory/application/user_preferences"
-	userPreferenceAppCommands "nfxid/modules/directory/application/user_preferences/commands"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	userpreferencepb "nfxid/protos/gen/directory/user_preference"
+	userPreferenceApp "nfxidentity/modules/directory/application/user_preferences"
+	userPreferenceAppCommands "nfxidentity/modules/directory/application/user_preferences/commands"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	userpreferencepb "nfxidentity/protos/gen/directory/user_preference"
 
 	"github.com/google/uuid"
 )

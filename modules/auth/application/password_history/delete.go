@@ -2,7 +2,7 @@ package password_history
 
 import (
 	"context"
-	passwordHistoryCommands "nfxid/modules/auth/application/password_history/commands"
+	passwordHistoryCommands "nfxidentity/modules/auth/application/password_history/commands"
 )
 
 // DeletePasswordHistory 删除密码历史

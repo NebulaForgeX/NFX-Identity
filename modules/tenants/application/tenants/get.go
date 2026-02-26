@@ -2,7 +2,7 @@ package tenants
 
 import (
 	"context"
-	tenantResult "nfxid/modules/tenants/application/tenants/results"
+	tenantResult "nfxidentity/modules/tenants/application/tenants/results"
 
 	"github.com/google/uuid"
 )

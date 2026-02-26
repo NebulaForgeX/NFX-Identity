@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/image/domain/images"
+	"nfxidentity/modules/image/domain/images"
 
 	"gorm.io/gorm"
 )

@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	dirErr "nfxid/errors/src/directory"
-	"nfxid/modules/directory/domain/user_occupations"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/mapper"
+	dirErr "nfxidentity/errors/src/directory"
+	"nfxidentity/modules/directory/domain/user_occupations"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

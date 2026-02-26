@@ -2,7 +2,7 @@ package badges
 
 import (
 	"context"
-	badgeCommands "nfxid/modules/directory/application/badges/commands"
+	badgeCommands "nfxidentity/modules/directory/application/badges/commands"
 )
 
 // DeleteBadge 删除徽章（软删除）

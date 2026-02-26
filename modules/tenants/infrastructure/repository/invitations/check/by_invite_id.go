@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 )
 
 // ByInviteID 根据 InviteID 检查 Invitation 是否存在，实现 invitations.Check 接口

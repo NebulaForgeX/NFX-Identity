@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/logx"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"

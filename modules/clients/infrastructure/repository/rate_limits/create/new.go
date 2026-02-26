@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/rate_limits"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
+	"nfxidentity/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/mapper"
 )
 
 // New 创建新的 RateLimit，实现 rate_limits.Create 接口

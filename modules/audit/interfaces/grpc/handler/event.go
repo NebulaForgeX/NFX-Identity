@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	eventApp "nfxid/modules/audit/application/events"
-	"nfxid/modules/audit/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	eventpb "nfxid/protos/gen/audit/event"
+	eventApp "nfxidentity/modules/audit/application/events"
+	"nfxidentity/modules/audit/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	eventpb "nfxidentity/protos/gen/audit/event"
 
 	"github.com/google/uuid"
 )

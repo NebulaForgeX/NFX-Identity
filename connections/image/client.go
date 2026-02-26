@@ -1,10 +1,10 @@
 package image
 
 import (
-	imagepb "nfxid/protos/gen/image/image"
-	imagetagpb "nfxid/protos/gen/image/image_tag"
-	imagetypepb "nfxid/protos/gen/image/image_type"
-	imagevariantpb "nfxid/protos/gen/image/image_variant"
+	imagepb "nfxidentity/protos/gen/image/image"
+	imagetagpb "nfxidentity/protos/gen/image/image_tag"
+	imagetypepb "nfxidentity/protos/gen/image/image_type"
+	imagevariantpb "nfxidentity/protos/gen/image/image_variant"
 )
 
 // Client Image 服务客户端

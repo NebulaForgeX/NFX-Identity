@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	userOccupationApp "nfxid/modules/directory/application/user_occupations"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
+	userOccupationApp "nfxidentity/modules/directory/application/user_occupations"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	useroccupationpb "nfxidentity/protos/gen/directory/user_occupation"
 
 	"github.com/google/uuid"
 )

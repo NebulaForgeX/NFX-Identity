@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
+	trusteddevicepb "nfxidentity/protos/gen/auth/trusted_device"
 )
 
 // TrustedDeviceClient TrustedDevice 客户端

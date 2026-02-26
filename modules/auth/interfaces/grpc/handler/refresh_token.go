@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	refreshTokenApp "nfxid/modules/auth/application/refresh_tokens"
-	"nfxid/pkgs/errx"
-	refreshtokenpb "nfxid/protos/gen/auth/refresh_token"
+	refreshTokenApp "nfxidentity/modules/auth/application/refresh_tokens"
+	"nfxidentity/pkgs/errx"
+	refreshtokenpb "nfxidentity/protos/gen/auth/refresh_token"
 )
 
 type RefreshTokenHandler struct {

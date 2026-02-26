@@ -1,7 +1,7 @@
 package domain_verifications
 
 import (
-	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
+	domainVerificationDomain "nfxidentity/modules/tenants/domain/domain_verifications"
 )
 
 type Service struct {

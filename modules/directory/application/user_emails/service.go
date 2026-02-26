@@ -1,7 +1,7 @@
 package user_emails
 
 import (
-	userEmailDomain "nfxid/modules/directory/domain/user_emails"
+	userEmailDomain "nfxidentity/modules/directory/domain/user_emails"
 )
 
 type Service struct {

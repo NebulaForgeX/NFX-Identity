@@ -2,8 +2,8 @@ package mfa_factors
 
 import (
 	"context"
-	mfaFactorCommands "nfxid/modules/auth/application/mfa_factors/commands"
-	mfaFactorDomain "nfxid/modules/auth/domain/mfa_factors"
+	mfaFactorCommands "nfxidentity/modules/auth/application/mfa_factors/commands"
+	mfaFactorDomain "nfxidentity/modules/auth/domain/mfa_factors"
 
 	"github.com/google/uuid"
 )

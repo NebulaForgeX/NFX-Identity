@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/mapper"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/mapper"
 )
 
 // New 创建新的 RefreshToken，实现 refresh_tokens.Create 接口

@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	passwordResetAppResult "nfxid/modules/auth/application/password_resets/results"
+	passwordResetAppResult "nfxidentity/modules/auth/application/password_resets/results"
 
 	"github.com/google/uuid"
 )

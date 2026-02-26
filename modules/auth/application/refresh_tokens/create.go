@@ -2,8 +2,8 @@ package refresh_tokens
 
 import (
 	"context"
-	refreshTokenCommands "nfxid/modules/auth/application/refresh_tokens/commands"
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
+	refreshTokenCommands "nfxidentity/modules/auth/application/refresh_tokens/commands"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
 	"time"
 
 	"github.com/google/uuid"

@@ -3,10 +3,10 @@ package update
 import (
 	"context"
 	"errors"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/mapper"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/mapper"
 	"time"
 
 	"gorm.io/gorm"

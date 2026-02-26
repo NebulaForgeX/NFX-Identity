@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/account_lockouts"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/mapper"
+	"nfxidentity/modules/auth/domain/account_lockouts"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/mapper"
 
 	"github.com/google/uuid"
 )

@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/auth/domain/trusted_devices"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/domain/trusted_devices"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // TrustedDeviceDomainToModel 将 Domain TrustedDevice 转换为 Model TrustedDevice

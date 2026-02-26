@@ -1,7 +1,7 @@
 package system
 
 import (
-	systemstatepb "nfxid/protos/gen/system/system_state"
+	systemstatepb "nfxidentity/protos/gen/system/system_state"
 )
 
 // Client System 服务客户端

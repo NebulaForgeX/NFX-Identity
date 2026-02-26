@@ -1,6 +1,6 @@
 package clients
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeClientCredentialNotFound = "CLIENT_CREDENTIAL_NOT_FOUND"

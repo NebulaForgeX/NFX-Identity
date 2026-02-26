@@ -550,7 +550,7 @@ const file_directory_badge_proto_rawDesc = "" +
 	"\fGetBadgeByID\x12\x1a.badge.GetBadgeByIDRequest\x1a\x1b.badge.GetBadgeByIDResponse\x12M\n" +
 	"\x0eGetBadgeByName\x12\x1c.badge.GetBadgeByNameRequest\x1a\x1d.badge.GetBadgeByNameResponse\x12G\n" +
 	"\fGetAllBadges\x12\x1a.badge.GetAllBadgesRequest\x1a\x1b.badge.GetAllBadgesResponse\x12M\n" +
-	"\x0eBatchGetBadges\x12\x1c.badge.BatchGetBadgesRequest\x1a\x1d.badge.BatchGetBadgesResponseB*Z(nfxid/protos/gen/directory/badge;badgepbb\x06proto3"
+	"\x0eBatchGetBadges\x12\x1c.badge.BatchGetBadgesRequest\x1a\x1d.badge.BatchGetBadgesResponseB*Z(nfxidentity/protos/gen/directory/badge;badgepbb\x06proto3"
 
 var (
 	file_directory_badge_proto_rawDescOnce sync.Once

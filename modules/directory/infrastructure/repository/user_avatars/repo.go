@@ -1,12 +1,12 @@
 package user_avatars
 
 import (
-	"nfxid/modules/directory/domain/user_avatars"
-	"nfxid/modules/directory/infrastructure/repository/user_avatars/check"
-	"nfxid/modules/directory/infrastructure/repository/user_avatars/create"
-	"nfxid/modules/directory/infrastructure/repository/user_avatars/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_avatars/get"
-	"nfxid/modules/directory/infrastructure/repository/user_avatars/update"
+	"nfxidentity/modules/directory/domain/user_avatars"
+	"nfxidentity/modules/directory/infrastructure/repository/user_avatars/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_avatars/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_avatars/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_avatars/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_avatars/update"
 
 	"gorm.io/gorm"
 )

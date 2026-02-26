@@ -1,7 +1,7 @@
 package tenant_apps
 
 import (
-	tenantAppDomain "nfxid/modules/tenants/domain/tenant_apps"
+	tenantAppDomain "nfxidentity/modules/tenants/domain/tenant_apps"
 )
 
 type Service struct {

@@ -2,7 +2,7 @@ package hash_chain_checkpoints
 
 import (
 	"context"
-	hashChainCheckpointCommands "nfxid/modules/audit/application/hash_chain_checkpoints/commands"
+	hashChainCheckpointCommands "nfxidentity/modules/audit/application/hash_chain_checkpoints/commands"
 )
 
 // DeleteHashChainCheckpoint 删除哈希链检查点

@@ -2,8 +2,8 @@ package actor_snapshots
 
 import (
 	"context"
-	actorSnapshotCommands "nfxid/modules/audit/application/actor_snapshots/commands"
-	actorSnapshotDomain "nfxid/modules/audit/domain/actor_snapshots"
+	actorSnapshotCommands "nfxidentity/modules/audit/application/actor_snapshots/commands"
+	actorSnapshotDomain "nfxidentity/modules/audit/domain/actor_snapshots"
 	"time"
 
 	"github.com/google/uuid"

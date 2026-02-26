@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	clientCredentialAppCommands "nfxid/modules/clients/application/client_credentials/commands"
+	clientCredentialAppCommands "nfxidentity/modules/clients/application/client_credentials/commands"
 
 	"github.com/google/uuid"
 )

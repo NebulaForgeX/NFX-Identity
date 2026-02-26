@@ -2,7 +2,7 @@ package user_occupations
 
 import (
 	"context"
-	userOccupationCommands "nfxid/modules/directory/application/user_occupations/commands"
+	userOccupationCommands "nfxidentity/modules/directory/application/user_occupations/commands"
 	"time"
 )
 

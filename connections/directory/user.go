@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	userpb "nfxid/protos/gen/directory/user"
+	userpb "nfxidentity/protos/gen/directory/user"
 )
 
 // UserClient User 客户端

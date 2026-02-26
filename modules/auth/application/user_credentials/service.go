@@ -1,7 +1,7 @@
 package user_credentials
 
 import (
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
 )
 
 type Service struct {

@@ -3,12 +3,12 @@ package handler
 import (
 	"context"
 
-	userCredentialApp "nfxid/modules/auth/application/user_credentials"
-	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
-	"nfxid/modules/auth/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	usercredentialpb "nfxid/protos/gen/auth/user_credential"
+	userCredentialApp "nfxidentity/modules/auth/application/user_credentials"
+	userCredentialAppCommands "nfxidentity/modules/auth/application/user_credentials/commands"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
+	"nfxidentity/modules/auth/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	usercredentialpb "nfxidentity/protos/gen/auth/user_credential"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

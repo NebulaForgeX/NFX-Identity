@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/system/domain/system_state"
-	"nfxid/modules/system/infrastructure/rdb/models"
-	"nfxid/modules/system/infrastructure/repository/system_state/mapper"
+	"nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/modules/system/infrastructure/rdb/models"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/mapper"
 )
 
 // Generic 通用更新 SystemState，实现 system_state.Update 接口

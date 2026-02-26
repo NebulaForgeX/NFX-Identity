@@ -2,7 +2,7 @@ package user_phones
 
 import (
 	"context"
-	userPhoneCommands "nfxid/modules/directory/application/user_phones/commands"
+	userPhoneCommands "nfxidentity/modules/directory/application/user_phones/commands"
 	"time"
 )
 

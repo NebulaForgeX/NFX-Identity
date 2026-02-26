@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	passwordHistoryApp "nfxid/modules/auth/application/password_history"
-	"nfxid/pkgs/errx"
-	passwordhistorypb "nfxid/protos/gen/auth/password_history"
+	passwordHistoryApp "nfxidentity/modules/auth/application/password_history"
+	"nfxidentity/pkgs/errx"
+	passwordhistorypb "nfxidentity/protos/gen/auth/password_history"
 )
 
 type PasswordHistoryHandler struct {

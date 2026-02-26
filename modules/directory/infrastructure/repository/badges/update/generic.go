@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/badges"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/badges/mapper"
+	"nfxidentity/modules/directory/domain/badges"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/badges/mapper"
 )
 
 // Generic 通用更新 Badge，实现 badges.Update 接口

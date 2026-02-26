@@ -1,12 +1,12 @@
 package apps
 
 import (
-	"nfxid/modules/clients/domain/apps"
-	"nfxid/modules/clients/infrastructure/repository/apps/check"
-	"nfxid/modules/clients/infrastructure/repository/apps/create"
-	"nfxid/modules/clients/infrastructure/repository/apps/delete"
-	"nfxid/modules/clients/infrastructure/repository/apps/get"
-	"nfxid/modules/clients/infrastructure/repository/apps/update"
+	"nfxidentity/modules/clients/domain/apps"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/check"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/create"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/delete"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/get"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/update"
 
 	"gorm.io/gorm"
 )

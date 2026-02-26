@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/events"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/events/mapper"
+	"nfxidentity/modules/audit/domain/events"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/events/mapper"
 )
 
 // Generic 通用更新 Event，实现 events.Update 接口

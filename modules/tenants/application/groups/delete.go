@@ -2,7 +2,7 @@ package groups
 
 import (
 	"context"
-	groupCommands "nfxid/modules/tenants/application/groups/commands"
+	groupCommands "nfxidentity/modules/tenants/application/groups/commands"
 )
 
 // DeleteGroup 删除组（软删除）

@@ -2,7 +2,7 @@ package ip_allowlist
 
 import (
 	"context"
-	ipAllowlistResult "nfxid/modules/clients/application/ip_allowlist/results"
+	ipAllowlistResult "nfxidentity/modules/clients/application/ip_allowlist/results"
 
 	"github.com/google/uuid"
 )

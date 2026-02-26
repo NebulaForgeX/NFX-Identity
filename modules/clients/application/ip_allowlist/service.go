@@ -1,7 +1,7 @@
 package ip_allowlist
 
 import (
-	ipAllowlistDomain "nfxid/modules/clients/domain/ip_allowlist"
+	ipAllowlistDomain "nfxidentity/modules/clients/domain/ip_allowlist"
 )
 
 type Service struct {

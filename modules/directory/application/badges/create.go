@@ -2,9 +2,9 @@ package badges
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	badgeCommands "nfxid/modules/directory/application/badges/commands"
-	badgeDomain "nfxid/modules/directory/domain/badges"
+	dirErr "nfxidentity/errors/src/directory"
+	badgeCommands "nfxidentity/modules/directory/application/badges/commands"
+	badgeDomain "nfxidentity/modules/directory/domain/badges"
 
 	"github.com/google/uuid"
 )

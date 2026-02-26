@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
+	userEmailAppCommands "nfxidentity/modules/directory/application/user_emails/commands"
 
 	"github.com/google/uuid"
 )

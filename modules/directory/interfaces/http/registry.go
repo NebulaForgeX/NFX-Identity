@@ -1,7 +1,7 @@
 package http
 
 import (
-	"nfxid/modules/directory/interfaces/http/handler"
+	"nfxidentity/modules/directory/interfaces/http/handler"
 )
 
 type Registry struct {

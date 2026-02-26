@@ -2,7 +2,7 @@ package mfa_factors
 
 import (
 	"context"
-	mfaFactorResult "nfxid/modules/auth/application/mfa_factors/results"
+	mfaFactorResult "nfxidentity/modules/auth/application/mfa_factors/results"
 
 	"github.com/google/uuid"
 )

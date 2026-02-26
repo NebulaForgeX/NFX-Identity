@@ -2,7 +2,7 @@ package sessions
 
 import (
 	"context"
-	sessionResult "nfxid/modules/auth/application/sessions/results"
+	sessionResult "nfxidentity/modules/auth/application/sessions/results"
 
 	"github.com/google/uuid"
 )

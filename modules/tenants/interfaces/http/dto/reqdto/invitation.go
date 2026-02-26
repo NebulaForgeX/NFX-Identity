@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	invitationAppCommands "nfxid/modules/tenants/application/invitations/commands"
-	invitationDomain "nfxid/modules/tenants/domain/invitations"
+	invitationAppCommands "nfxidentity/modules/tenants/application/invitations/commands"
+	invitationDomain "nfxidentity/modules/tenants/domain/invitations"
 
 	"github.com/google/uuid"
 )

@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/groups"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/groups/mapper"
+	"nfxidentity/modules/tenants/domain/groups"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/mapper"
 )
 
 // ByType 根据 Type 获取 Group 列表，实现 groups.Get 接口

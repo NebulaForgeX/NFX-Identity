@@ -1,7 +1,7 @@
 package rate_limits
 
 import (
-	rateLimitDomain "nfxid/modules/clients/domain/rate_limits"
+	rateLimitDomain "nfxidentity/modules/clients/domain/rate_limits"
 )
 
 type Service struct {

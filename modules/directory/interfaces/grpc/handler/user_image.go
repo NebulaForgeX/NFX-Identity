@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	userImageApp "nfxid/modules/directory/application/user_images"
-	userImageAppCommands "nfxid/modules/directory/application/user_images/commands"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	userimagepb "nfxid/protos/gen/directory/user_image"
+	userImageApp "nfxidentity/modules/directory/application/user_images"
+	userImageAppCommands "nfxidentity/modules/directory/application/user_images/commands"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	userimagepb "nfxidentity/protos/gen/directory/user_image"
 
 	"github.com/google/uuid"
 )

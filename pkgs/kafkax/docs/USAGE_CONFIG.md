@@ -7,7 +7,7 @@
 ```toml
 [kafka]
     brokers = ["localhost:9092", "localhost:9093"]
-    client_id = "nfxid-service"
+    client_id = "nfxidentity-service"
 
     [kafka.producer]
         acks = "all"
@@ -18,7 +18,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "nfxid-consumer-group"
+        group_id = "nfxidentity-consumer-group"
         initial_offset = "latest"
         session_timeout_ms = 30000
         heartbeat_interval_ms = 3000
@@ -52,6 +52,7 @@
 ### 基础配置
 
 #### `brokers`
+
 - **类型**：`[]string`
 - **说明**：Kafka Broker 地址列表
 - **格式**：`["host1:port1", "host2:port2"]`
@@ -59,6 +60,7 @@
 - **必填**：是
 
 #### `client_id`
+
 - **类型**：`string`
 - **说明**：客户端标识符
 - **用途**：用于日志和监控，标识客户端应用
@@ -67,6 +69,7 @@
 ### Producer 配置
 
 #### `acks`
+
 - **类型**：`string`
 - **默认值**：`"all"`
 - **可选值**：`"0"`, `"1"`, `"all"`
@@ -76,6 +79,7 @@
   - `"all"`：等待所有 ISR（In-Sync Replicas）确认，最可靠但性能较低
 
 #### `compression`
+
 - **类型**：`string`
 - **默认值**：`""`（无压缩）
 - **可选值**：`"gzip"`, `"snappy"`, `"lz4"`, `"zstd"`
@@ -86,24 +90,28 @@
   - `"zstd"`：压缩率和性能都很好（推荐）
 
 #### `retries`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：重试次数，0 表示不重试
 - **建议**：生产环境建议设置为 3-5
 
 #### `batch_bytes`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：批次大小（字节），0 表示不限制
 - **建议**：根据消息大小设置，如 1MB (1048576)
 
 #### `linger_ms`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：等待批次填满的时间（毫秒），0 表示立即发送
 - **建议**：10-100ms，平衡延迟和吞吐量
 
 #### `idempotent`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否启用幂等性，确保消息不重复
@@ -112,6 +120,7 @@
 ### Consumer 配置
 
 #### `group_id`
+
 - **类型**：`string`
 - **说明**：Consumer Group ID
 - **用途**：用于负载均衡和偏移量管理
@@ -119,6 +128,7 @@
 - **注意**：同一个 Group ID 的消费者会共享分区，实现负载均衡
 
 #### `initial_offset`
+
 - **类型**：`string`
 - **默认值**：`"latest"`
 - **可选值**：`"earliest"`, `"latest"`
@@ -127,30 +137,35 @@
   - `"latest"`：从最新的消息开始消费（只消费新消息）
 
 #### `session_timeout_ms`
+
 - **类型**：`int`
 - **默认值**：`30000`（30 秒）
 - **说明**：会话超时时间（毫秒）
 - **注意**：如果消费者在此时间内没有发送心跳，会被认为已失效
 
 #### `heartbeat_interval_ms`
+
 - **类型**：`int`
 - **默认值**：`3000`（3 秒）
 - **说明**：心跳间隔（毫秒）
 - **建议**：通常设置为 `session_timeout_ms` 的 1/3
 
 #### `fetch_min_bytes`
+
 - **类型**：`int`
 - **默认值**：`1024`（1KB）
 - **说明**：最小拉取字节数
 - **用途**：减少网络往返次数，提高吞吐量
 
 #### `fetch_max_bytes`
+
 - **类型**：`int`
 - **默认值**：`10485760`（10MB）
 - **说明**：最大拉取字节数
 - **注意**：受 Broker 的 `message.max.bytes` 限制
 
 #### `return_errors`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否返回错误到错误通道
@@ -159,6 +174,7 @@
 ### Network 配置
 
 #### `max_open_requests`
+
 - **类型**：`int`
 - **默认值**：`5`
 - **说明**：最大并发请求数
@@ -167,11 +183,13 @@
 ### Security 配置
 
 #### `enabled`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否启用 SASL 认证
 
 #### `mechanism`
+
 - **类型**：`string`
 - **默认值**：`"PLAIN"`
 - **可选值**：`"PLAIN"`, `"SCRAM-SHA-256"`, `"SCRAM-SHA-512"`
@@ -181,16 +199,19 @@
   - `"SCRAM-SHA-512"`：SCRAM-SHA-512 认证
 
 #### `username`
+
 - **类型**：`string`
 - **说明**：SASL 用户名
 - **必填**：启用 Security 时必填
 
 #### `password`
+
 - **类型**：`string`
 - **说明**：SASL 密码
 - **必填**：启用 Security 时必填
 
 #### `tls_insecure_skip_verify`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否跳过 TLS 证书验证（仅用于开发环境）
@@ -199,6 +220,7 @@
 ### Topic 配置
 
 #### `producer_topics`
+
 - **类型**：`map[string]string`
 - **说明**：映射事件键（TopicKey）到实际 Topic 名称
 - **格式**：
@@ -210,6 +232,7 @@
 - **用途**：发布事件时，根据事件的 `TopicKey()` 找到对应的 Topic
 
 #### `consumer_topics`
+
 - **类型**：`map[string]string`
 - **说明**：映射事件键（TopicKey）到实际 Topic 名称
 - **格式**：
@@ -227,7 +250,7 @@
 ```toml
 [kafka]
     brokers = ["localhost:9092"]
-    client_id = "nfxid-dev"
+    client_id = "nfxidentity-dev"
 
     [kafka.producer]
         acks = "1"
@@ -235,7 +258,7 @@
         retries = 1
 
     [kafka.consumer]
-        group_id = "nfxid-dev-group"
+        group_id = "nfxidentity-dev-group"
         initial_offset = "latest"
 ```
 
@@ -244,7 +267,7 @@
 ```toml
 [kafka]
     brokers = ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
-    client_id = "nfxid-prod"
+    client_id = "nfxidentity-prod"
 
     [kafka.producer]
         acks = "all"
@@ -255,7 +278,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "nfxid-prod-group"
+        group_id = "nfxidentity-prod-group"
         initial_offset = "earliest"
         session_timeout_ms = 30000
         heartbeat_interval_ms = 3000
@@ -275,7 +298,7 @@
 ```toml
 [kafka]
     brokers = ["kafka1:9092", "kafka2:9092"]
-    client_id = "nfxid-high-throughput"
+    client_id = "nfxidentity-high-throughput"
 
     [kafka.producer]
         acks = "1"  # 降低确认要求，提高吞吐量
@@ -285,7 +308,7 @@
         idempotent = false  # 关闭幂等性以提高性能
 
     [kafka.consumer]
-        group_id = "nfxid-high-throughput-group"
+        group_id = "nfxidentity-high-throughput-group"
         fetch_min_bytes = 5120  # 5KB
         fetch_max_bytes = 52428800  # 50MB
 ```
@@ -295,7 +318,7 @@
 ```toml
 [kafka]
     brokers = ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
-    client_id = "nfxid-high-reliability"
+    client_id = "nfxidentity-high-reliability"
 
     [kafka.producer]
         acks = "all"  # 等待所有副本确认
@@ -304,7 +327,7 @@
         idempotent = true  # 启用幂等性
 
     [kafka.consumer]
-        group_id = "nfxid-high-reliability-group"
+        group_id = "nfxidentity-high-reliability-group"
         initial_offset = "earliest"  # 从最早开始，不丢失消息
         return_errors = true  # 返回错误以便处理
 ```

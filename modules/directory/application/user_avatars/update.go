@@ -2,7 +2,7 @@ package user_avatars
 
 import (
 	"context"
-	userAvatarCommands "nfxid/modules/directory/application/user_avatars/commands"
+	userAvatarCommands "nfxidentity/modules/directory/application/user_avatars/commands"
 )
 
 // UpdateUserAvatarImageID 更新用户头像图片ID

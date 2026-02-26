@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeLoginAttemptNotFound = "LOGIN_ATTEMPT_NOT_FOUND"

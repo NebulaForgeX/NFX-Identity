@@ -1,12 +1,12 @@
 package event_retention_policies
 
 import (
-	"nfxid/modules/audit/domain/event_retention_policies"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/check"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/create"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/delete"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/get"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/update"
+	"nfxidentity/modules/audit/domain/event_retention_policies"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/check"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/create"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/delete"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/get"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/update"
 
 	"gorm.io/gorm"
 )

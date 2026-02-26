@@ -1,7 +1,7 @@
 package ip_allowlist
 
 import (
-	clientsErr "nfxid/errors/src/clients"
+	clientsErr "nfxidentity/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"

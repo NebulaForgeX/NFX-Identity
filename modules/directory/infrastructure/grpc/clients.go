@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"sync"
 
-	"nfxid/connections/image"
-	"nfxid/modules/directory/config"
-	"nfxid/pkgs/tokenx"
+	"nfxidentity/connections/image"
+	"nfxidentity/modules/directory/config"
+	"nfxidentity/pkgs/tokenx"
 
-	imagepb "nfxid/protos/gen/image/image"
+	imagepb "nfxidentity/protos/gen/image/image"
 
 	"google.golang.org/grpc"
 )

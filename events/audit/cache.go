@@ -1,7 +1,7 @@
 package audit
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // ActorSnapshotsInvalidateCacheEvent ActorSnapshots 缓存清除事件

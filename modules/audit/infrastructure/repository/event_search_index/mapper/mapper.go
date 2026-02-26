@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/audit/domain/event_search_index"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/audit/domain/event_search_index"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 	"strings"
 )
 

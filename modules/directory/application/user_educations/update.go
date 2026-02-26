@@ -2,7 +2,7 @@ package user_educations
 
 import (
 	"context"
-	userEducationCommands "nfxid/modules/directory/application/user_educations/commands"
+	userEducationCommands "nfxidentity/modules/directory/application/user_educations/commands"
 	"time"
 )
 

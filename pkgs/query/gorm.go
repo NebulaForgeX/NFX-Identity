@@ -3,7 +3,7 @@ package query
 import (
 	"context"
 	"fmt"
-	"nfxid/pkgs/utils/filter"
+	"nfxidentity/pkgs/utils/filter"
 	"strings"
 
 	"golang.org/x/sync/errgroup"

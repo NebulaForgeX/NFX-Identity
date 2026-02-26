@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"nfxid/pkgs/httpx"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/httpx"
+	"nfxidentity/pkgs/logx"
 
 	fiberzap "github.com/gofiber/contrib/v3/zap"
 	"github.com/gofiber/fiber/v3"

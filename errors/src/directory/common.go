@@ -1,6 +1,6 @@
 package directory
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 // Shared codes and errors used by multiple directory domains.
 const (

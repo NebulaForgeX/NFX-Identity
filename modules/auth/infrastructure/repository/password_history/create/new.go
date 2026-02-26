@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/password_history"
-	"nfxid/modules/auth/infrastructure/repository/password_history/mapper"
+	"nfxidentity/modules/auth/domain/password_history"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/mapper"
 )
 
 // New 创建新的 PasswordHistory，实现 password_history.Create 接口

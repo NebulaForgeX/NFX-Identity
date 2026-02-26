@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 
-	"nfxid/events/directory"
-	"nfxid/pkgs/logx"
+	"nfxidentity/events/directory"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/ThreeDotsLabs/watermill/message"
 )

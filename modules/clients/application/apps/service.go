@@ -1,7 +1,7 @@
 package apps
 
 import (
-	appDomain "nfxid/modules/clients/domain/apps"
+	appDomain "nfxidentity/modules/clients/domain/apps"
 )
 
 type Service struct {

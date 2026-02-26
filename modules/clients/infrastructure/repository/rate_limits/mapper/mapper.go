@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/clients/domain/rate_limits"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // RateLimitDomainToModel 将 Domain RateLimit 转换为 Model RateLimit

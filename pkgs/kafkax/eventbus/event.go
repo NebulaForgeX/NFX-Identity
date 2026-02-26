@@ -15,7 +15,7 @@
 //
 //	package access
 //
-//	import "nfxid/events"
+//	import "nfxidentity/events"
 //
 //	// GrantsInvalidateCacheEvent 会自动生成 EventType: "access.grants_invalidate_cache"
 //	type GrantsInvalidateCacheEvent struct {
@@ -35,7 +35,7 @@
 //
 //	package custom
 //
-//	import "nfxid/events"
+//	import "nfxidentity/events"
 //
 //	type UserCreatedEvent struct {
 //	    UserID string `json:"user_id"`
@@ -62,8 +62,8 @@
 //	package example
 //
 //	import (
-//	    "nfxid/events"
-//	    "nfxid/pkgs/kafkax/eventbus"
+//	    "nfxidentity/events"
+//	    "nfxidentity/pkgs/kafkax/eventbus"
 //	)
 //
 //	type DynamicEvent struct {

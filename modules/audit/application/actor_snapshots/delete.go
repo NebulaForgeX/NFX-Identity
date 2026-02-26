@@ -2,7 +2,7 @@ package actor_snapshots
 
 import (
 	"context"
-	actorSnapshotCommands "nfxid/modules/audit/application/actor_snapshots/commands"
+	actorSnapshotCommands "nfxidentity/modules/audit/application/actor_snapshots/commands"
 )
 
 // DeleteActorSnapshot 删除参与者快照

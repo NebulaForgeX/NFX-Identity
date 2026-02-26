@@ -1,6 +1,6 @@
 package tenants
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeMemberGroupNotFound       = "MEMBER_GROUP_NOT_FOUND"

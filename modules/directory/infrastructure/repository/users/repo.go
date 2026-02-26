@@ -1,12 +1,12 @@
 package users
 
 import (
-	"nfxid/modules/directory/domain/users"
-	"nfxid/modules/directory/infrastructure/repository/users/check"
-	"nfxid/modules/directory/infrastructure/repository/users/create"
-	"nfxid/modules/directory/infrastructure/repository/users/delete"
-	"nfxid/modules/directory/infrastructure/repository/users/get"
-	"nfxid/modules/directory/infrastructure/repository/users/update"
+	"nfxidentity/modules/directory/domain/users"
+	"nfxidentity/modules/directory/infrastructure/repository/users/check"
+	"nfxidentity/modules/directory/infrastructure/repository/users/create"
+	"nfxidentity/modules/directory/infrastructure/repository/users/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/users/get"
+	"nfxidentity/modules/directory/infrastructure/repository/users/update"
 
 	"gorm.io/gorm"
 )

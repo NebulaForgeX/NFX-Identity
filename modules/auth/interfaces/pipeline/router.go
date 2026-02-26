@@ -3,8 +3,8 @@ package pipeline
 import (
 	"context"
 
-	"nfxid/pkgs/kafkax/eventbus"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/kafkax/eventbus"
+	"nfxidentity/pkgs/logx"
 )
 
 type Router struct {

@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 )
 
 // ByTenantID 根据 TenantID 检查 Tenant 是否存在，实现 tenants.Check 接口

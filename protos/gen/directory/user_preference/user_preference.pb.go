@@ -533,7 +533,7 @@ const file_directory_user_preference_proto_rawDesc = "" +
 	"\x15UserPreferenceService\x12s\n" +
 	"\x14CreateUserPreference\x12,.user_preference.CreateUserPreferenceRequest\x1a-.user_preference.CreateUserPreferenceResponse\x12v\n" +
 	"\x15GetUserPreferenceByID\x12-.user_preference.GetUserPreferenceByIDRequest\x1a..user_preference.GetUserPreferenceByIDResponse\x12\x82\x01\n" +
-	"\x19GetUserPreferenceByUserID\x121.user_preference.GetUserPreferenceByUserIDRequest\x1a2.user_preference.GetUserPreferenceByUserIDResponseB=Z;nfxid/protos/gen/directory/user_preference;userpreferencepbb\x06proto3"
+	"\x19GetUserPreferenceByUserID\x121.user_preference.GetUserPreferenceByUserIDRequest\x1a2.user_preference.GetUserPreferenceByUserIDResponseB=Z;nfxidentity/protos/gen/directory/user_preference;userpreferencepbb\x06proto3"
 
 var (
 	file_directory_user_preference_proto_rawDescOnce sync.Once

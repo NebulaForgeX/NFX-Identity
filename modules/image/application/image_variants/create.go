@@ -2,8 +2,8 @@ package image_variants
 
 import (
 	"context"
-	imageVariantCommands "nfxid/modules/image/application/image_variants/commands"
-	imageVariantDomain "nfxid/modules/image/domain/image_variants"
+	imageVariantCommands "nfxidentity/modules/image/application/image_variants/commands"
+	imageVariantDomain "nfxidentity/modules/image/domain/image_variants"
 
 	"github.com/google/uuid"
 )

@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/tenants"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/mapper"
+	"nfxidentity/modules/tenants/domain/tenants"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/mapper"
 	"time"
 
 	"github.com/google/uuid"

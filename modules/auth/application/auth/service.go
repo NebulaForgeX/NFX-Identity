@@ -1,15 +1,15 @@
 package auth
 
 import (
-	"nfxid/constants"
-	userCredentialApp "nfxid/modules/auth/application/user_credentials"
-	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
-	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
-	grpcClients "nfxid/modules/auth/infrastructure/grpc"
-	"nfxid/pkgs/cachex"
-	emailPkg "nfxid/pkgs/email"
+	"nfxidentity/constants"
+	userCredentialApp "nfxidentity/modules/auth/application/user_credentials"
+	accountLockoutDomain "nfxidentity/modules/auth/domain/account_lockouts"
+	loginAttemptDomain "nfxidentity/modules/auth/domain/login_attempts"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
+	grpcClients "nfxidentity/modules/auth/infrastructure/grpc"
+	"nfxidentity/pkgs/cachex"
+	emailPkg "nfxidentity/pkgs/email"
 )
 
 // Service 认证应用服务（登录、刷新 Token、注册）

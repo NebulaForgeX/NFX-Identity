@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/access/domain/super_admins"
+	"nfxidentity/modules/access/domain/super_admins"
 
 	"gorm.io/gorm"
 )

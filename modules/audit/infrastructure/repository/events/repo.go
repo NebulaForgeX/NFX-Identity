@@ -1,12 +1,12 @@
 package events
 
 import (
-	"nfxid/modules/audit/domain/events"
-	"nfxid/modules/audit/infrastructure/repository/events/check"
-	"nfxid/modules/audit/infrastructure/repository/events/create"
-	"nfxid/modules/audit/infrastructure/repository/events/delete"
-	"nfxid/modules/audit/infrastructure/repository/events/get"
-	"nfxid/modules/audit/infrastructure/repository/events/update"
+	"nfxidentity/modules/audit/domain/events"
+	"nfxidentity/modules/audit/infrastructure/repository/events/check"
+	"nfxidentity/modules/audit/infrastructure/repository/events/create"
+	"nfxidentity/modules/audit/infrastructure/repository/events/delete"
+	"nfxidentity/modules/audit/infrastructure/repository/events/get"
+	"nfxidentity/modules/audit/infrastructure/repository/events/update"
 
 	"gorm.io/gorm"
 )

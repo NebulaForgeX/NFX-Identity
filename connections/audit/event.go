@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	eventpb "nfxid/protos/gen/audit/event"
+	eventpb "nfxidentity/protos/gen/audit/event"
 )
 
 // EventClient Event 客户端

@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	badgeAppResult "nfxid/modules/directory/application/badges/results"
-	badgepb "nfxid/protos/gen/directory/badge"
+	badgeAppResult "nfxidentity/modules/directory/application/badges/results"
+	badgepb "nfxidentity/protos/gen/directory/badge"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

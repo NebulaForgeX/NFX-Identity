@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/event_retention_policies"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/mapper"
+	"nfxidentity/modules/audit/domain/event_retention_policies"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/mapper"
 )
 
 // Generic 通用更新 EventRetentionPolicy，实现 event_retention_policies.Update 接口

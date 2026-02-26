@@ -1,7 +1,7 @@
 package application_roles
 
 import (
-	accessErr "nfxid/errors/src/access"
+	accessErr "nfxidentity/errors/src/access"
 )
 
 func (r *ApplicationRole) UpdateName(name *string) {

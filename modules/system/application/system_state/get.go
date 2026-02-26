@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	systemErr "nfxid/errors/src/system"
-	systemStateResult "nfxid/modules/system/application/system_state/results"
+	systemErr "nfxidentity/errors/src/system"
+	systemStateResult "nfxidentity/modules/system/application/system_state/results"
 
 	"github.com/google/uuid"
 )

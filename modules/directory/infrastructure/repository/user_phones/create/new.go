@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_phones"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/mapper"
+	"nfxidentity/modules/directory/domain/user_phones"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/mapper"
 )
 
 // New 创建新的 UserPhone，实现 user_phones.Create 接口

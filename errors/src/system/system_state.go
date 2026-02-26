@@ -1,6 +1,6 @@
 package system
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeSystemStateNotFound      = "SYSTEM_STATE_NOT_FOUND"

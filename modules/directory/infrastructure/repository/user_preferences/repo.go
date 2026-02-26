@@ -1,12 +1,12 @@
 package user_preferences
 
 import (
-	"nfxid/modules/directory/domain/user_preferences"
-	"nfxid/modules/directory/infrastructure/repository/user_preferences/check"
-	"nfxid/modules/directory/infrastructure/repository/user_preferences/create"
-	"nfxid/modules/directory/infrastructure/repository/user_preferences/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_preferences/get"
-	"nfxid/modules/directory/infrastructure/repository/user_preferences/update"
+	"nfxidentity/modules/directory/domain/user_preferences"
+	"nfxidentity/modules/directory/infrastructure/repository/user_preferences/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_preferences/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_preferences/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_preferences/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_preferences/update"
 
 	"gorm.io/gorm"
 )

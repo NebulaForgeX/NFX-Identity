@@ -3,10 +3,10 @@ package get
 import (
 	"context"
 	"errors"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/domain/password_history"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/password_history/mapper"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/domain/password_history"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

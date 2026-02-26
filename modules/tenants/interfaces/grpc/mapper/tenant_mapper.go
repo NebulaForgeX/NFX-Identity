@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	tenantAppResult "nfxid/modules/tenants/application/tenants/results"
-	tenantDomain "nfxid/modules/tenants/domain/tenants"
-	tenantpb "nfxid/protos/gen/tenants/tenant"
+	tenantAppResult "nfxidentity/modules/tenants/application/tenants/results"
+	tenantDomain "nfxidentity/modules/tenants/domain/tenants"
+	tenantpb "nfxidentity/protos/gen/tenants/tenant"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

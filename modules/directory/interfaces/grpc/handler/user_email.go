@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	userEmailApp "nfxid/modules/directory/application/user_emails"
-	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	useremailpb "nfxid/protos/gen/directory/user_email"
+	userEmailApp "nfxidentity/modules/directory/application/user_emails"
+	userEmailAppCommands "nfxidentity/modules/directory/application/user_emails/commands"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	useremailpb "nfxidentity/protos/gen/directory/user_email"
 
 	"github.com/google/uuid"
 )

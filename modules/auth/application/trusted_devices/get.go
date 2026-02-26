@@ -2,7 +2,7 @@ package trusted_devices
 
 import (
 	"context"
-	trustedDeviceResult "nfxid/modules/auth/application/trusted_devices/results"
+	trustedDeviceResult "nfxidentity/modules/auth/application/trusted_devices/results"
 
 	"github.com/google/uuid"
 )

@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/enums"
-	"nfxid/modules/clients/domain/api_keys"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/clients/domain/api_keys"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 
 	"gorm.io/datatypes"
 )

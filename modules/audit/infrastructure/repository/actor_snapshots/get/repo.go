@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
 
 	"gorm.io/gorm"
 )

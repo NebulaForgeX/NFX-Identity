@@ -1,7 +1,7 @@
 package hash_chain_checkpoints
 
 import (
-	hashChainCheckpointDomain "nfxid/modules/audit/domain/hash_chain_checkpoints"
+	hashChainCheckpointDomain "nfxidentity/modules/audit/domain/hash_chain_checkpoints"
 )
 
 type Service struct {

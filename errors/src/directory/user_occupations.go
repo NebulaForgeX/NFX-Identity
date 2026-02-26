@@ -1,6 +1,6 @@
 package directory
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeUserOccupationNotFound = "USER_OCCUPATION_NOT_FOUND"

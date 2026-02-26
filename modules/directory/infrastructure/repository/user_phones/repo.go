@@ -1,12 +1,12 @@
 package user_phones
 
 import (
-	"nfxid/modules/directory/domain/user_phones"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/check"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/create"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/get"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/update"
+	"nfxidentity/modules/directory/domain/user_phones"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/update"
 
 	"gorm.io/gorm"
 )

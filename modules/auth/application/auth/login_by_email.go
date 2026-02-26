@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"nfxid/constants"
-	authCommands "nfxid/modules/auth/application/auth/commands"
-	authResults "nfxid/modules/auth/application/auth/results"
-	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
-	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
+	"nfxidentity/constants"
+	authCommands "nfxidentity/modules/auth/application/auth/commands"
+	authResults "nfxidentity/modules/auth/application/auth/results"
+	accountLockoutDomain "nfxidentity/modules/auth/domain/account_lockouts"
+	loginAttemptDomain "nfxidentity/modules/auth/domain/login_attempts"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

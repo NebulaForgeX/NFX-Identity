@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/auth/domain/password_resets"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // PasswordResetDomainToModel 将 Domain PasswordReset 转换为 Model PasswordReset

@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/password_resets"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/mapper"
+	"nfxidentity/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/mapper"
 )
 
 // New 创建新的 PasswordReset，实现 password_resets.Create 接口

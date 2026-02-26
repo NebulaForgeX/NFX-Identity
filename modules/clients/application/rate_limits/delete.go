@@ -2,7 +2,7 @@ package rate_limits
 
 import (
 	"context"
-	rateLimitCommands "nfxid/modules/clients/application/rate_limits/commands"
+	rateLimitCommands "nfxidentity/modules/clients/application/rate_limits/commands"
 )
 
 // DeleteRateLimit 删除速率限制

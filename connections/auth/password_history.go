@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	passwordhistorypb "nfxid/protos/gen/auth/password_history"
+	passwordhistorypb "nfxidentity/protos/gen/auth/password_history"
 )
 
 // PasswordHistoryClient PasswordHistory 客户端

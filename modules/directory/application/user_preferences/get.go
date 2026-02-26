@@ -2,7 +2,7 @@ package user_preferences
 
 import (
 	"context"
-	userPreferenceResult "nfxid/modules/directory/application/user_preferences/results"
+	userPreferenceResult "nfxidentity/modules/directory/application/user_preferences/results"
 
 	"github.com/google/uuid"
 )

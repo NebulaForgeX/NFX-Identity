@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	userAvatarAppCommands "nfxid/modules/directory/application/user_avatars/commands"
+	userAvatarAppCommands "nfxidentity/modules/directory/application/user_avatars/commands"
 
 	"github.com/google/uuid"
 )

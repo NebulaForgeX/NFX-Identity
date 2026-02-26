@@ -1,7 +1,7 @@
 package password_history
 
 import (
-	passwordHistoryDomain "nfxid/modules/auth/domain/password_history"
+	passwordHistoryDomain "nfxidentity/modules/auth/domain/password_history"
 )
 
 type Service struct {

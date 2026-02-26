@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/audit/domain/hash_chain_checkpoints"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/domain/hash_chain_checkpoints"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 )
 
 // HashChainCheckpointDomainToModel 将 Domain HashChainCheckpoint 转换为 Model HashChainCheckpoint

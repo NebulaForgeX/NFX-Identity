@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/domain/domain_verifications"
 
 	"gorm.io/gorm"
 )

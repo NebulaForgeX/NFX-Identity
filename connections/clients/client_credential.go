@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
+	clientcredentialpb "nfxidentity/protos/gen/clients/client_credential"
 )
 
 // ClientCredentialClient ClientCredential 客户端

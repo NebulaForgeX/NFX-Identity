@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/password_resets"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/mapper"
+	"nfxidentity/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/mapper"
 	"time"
 )
 

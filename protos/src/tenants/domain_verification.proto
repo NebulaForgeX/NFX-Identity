@@ -1,7 +1,7 @@
 syntax = "proto3";
 package domain_verification;
 
-option go_package = "nfxid/protos/gen/tenants/domain_verification;domainverificationpb";
+option go_package = "nfxidentity/protos/gen/tenants/domain_verification;domainverificationpb";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";

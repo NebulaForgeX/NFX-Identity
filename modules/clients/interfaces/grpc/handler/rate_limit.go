@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	rateLimitApp "nfxid/modules/clients/application/rate_limits"
-	"nfxid/pkgs/errx"
-	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
+	rateLimitApp "nfxidentity/modules/clients/application/rate_limits"
+	"nfxidentity/pkgs/errx"
+	ratelimitpb "nfxidentity/protos/gen/clients/rate_limit"
 )
 
 type RateLimitHandler struct {

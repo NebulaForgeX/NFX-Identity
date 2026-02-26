@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	domainVerificationAppResult "nfxid/modules/tenants/application/domain_verifications/results"
-	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
-	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
+	domainVerificationAppResult "nfxidentity/modules/tenants/application/domain_verifications/results"
+	domainVerificationDomain "nfxidentity/modules/tenants/domain/domain_verifications"
+	domainverificationpb "nfxidentity/protos/gen/tenants/domain_verification"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

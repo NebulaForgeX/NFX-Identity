@@ -1,6 +1,6 @@
 package audit
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeEventSearchIndexNotFound = "EVENT_SEARCH_INDEX_NOT_FOUND"

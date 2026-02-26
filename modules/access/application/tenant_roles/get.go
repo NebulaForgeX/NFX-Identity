@@ -3,7 +3,7 @@ package tenant_roles
 import (
 	"context"
 
-	domain "nfxid/modules/access/domain/tenant_roles"
+	domain "nfxidentity/modules/access/domain/tenant_roles"
 
 	"github.com/google/uuid"
 )

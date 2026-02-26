@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/api_keys"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/mapper"
+	"nfxidentity/modules/clients/domain/api_keys"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/mapper"
 )
 
 // New 创建新的 APIKey，实现 api_keys.Create 接口

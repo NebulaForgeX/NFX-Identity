@@ -2,8 +2,8 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/actor_snapshots"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 	"time"
 
 	"github.com/google/uuid"

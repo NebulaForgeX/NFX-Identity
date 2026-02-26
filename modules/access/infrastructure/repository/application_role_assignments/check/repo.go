@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/access/domain/application_role_assignments"
+	"nfxidentity/modules/access/domain/application_role_assignments"
 
 	"gorm.io/gorm"
 )

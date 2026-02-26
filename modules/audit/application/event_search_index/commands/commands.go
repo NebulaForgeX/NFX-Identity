@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/audit/domain/event_search_index"
+	"nfxidentity/modules/audit/domain/event_search_index"
 
 	"github.com/google/uuid"
 )

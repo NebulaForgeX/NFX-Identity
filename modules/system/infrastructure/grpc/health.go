@@ -6,12 +6,12 @@ import (
 	"sync"
 	"time"
 
-	"nfxid/connections/common"
-	"nfxid/constants"
-	"nfxid/modules/system/config"
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/security/token/servertoken"
-	healthpb "nfxid/protos/gen/common/health"
+	"nfxidentity/connections/common"
+	"nfxidentity/constants"
+	"nfxidentity/modules/system/config"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/security/token/servertoken"
+	healthpb "nfxidentity/protos/gen/common/health"
 
 	"google.golang.org/grpc"
 )

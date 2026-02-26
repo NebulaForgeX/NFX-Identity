@@ -1,7 +1,7 @@
 package usertoken
 
 import (
-	"nfxid/pkgs/security/token"
+	"nfxidentity/pkgs/security/token"
 	"strings"
 
 	fiberWebSocket "github.com/gofiber/contrib/v3/websocket"

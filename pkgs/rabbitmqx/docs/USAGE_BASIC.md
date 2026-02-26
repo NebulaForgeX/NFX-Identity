@@ -7,7 +7,7 @@
 ```toml
 [rabbitmq]
     uri = "amqp://guest:guest@localhost:5672/"
-    client_id = "nfxid-service"
+    client_id = "nfxidentity-service"
 
     [rabbitmq.producer]
         confirm_delivery = true
@@ -15,7 +15,7 @@
 
     [rabbitmq.consumer]
         queue_name = ""
-        consumer_tag = "nfxid-consumer"
+        consumer_tag = "nfxidentity-consumer"
         prefetch_count = 10
 
     [rabbitmq.exchange]
@@ -44,8 +44,8 @@
 package main
 
 import (
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 func createPublisher(cfg *rabbitmqx.Config) (*messaging.BusPublisher, error) {
@@ -88,7 +88,7 @@ func createSubscriber(cfg *rabbitmqx.Config) (*messaging.BusSubscriber, error) {
 ```go
 package access
 
-import "nfxid/pkgs/rabbitmqx/messaging"
+import "nfxidentity/pkgs/rabbitmqx/messaging"
 
 // 方式一：自动生成 MessageType（推荐）
 type GrantsInvalidateCacheMessage struct {
@@ -121,7 +121,7 @@ package main
 
 import (
     "context"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 func publishMessage(ctx context.Context, publisher *messaging.BusPublisher) error {
@@ -147,9 +147,9 @@ package eventbus
 import (
     "context"
     "time"
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
-    "nfxid/pkgs/logx"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/logx"
     wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"
 )
 
@@ -230,8 +230,8 @@ package server
 
 import (
     "context"
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 type Deps struct {

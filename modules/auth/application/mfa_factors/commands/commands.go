@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/auth/domain/mfa_factors"
+	"nfxidentity/modules/auth/domain/mfa_factors"
 
 	"github.com/google/uuid"
 )

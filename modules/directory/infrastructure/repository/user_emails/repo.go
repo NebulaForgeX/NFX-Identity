@@ -1,12 +1,12 @@
 package user_emails
 
 import (
-	"nfxid/modules/directory/domain/user_emails"
-	"nfxid/modules/directory/infrastructure/repository/user_emails/check"
-	"nfxid/modules/directory/infrastructure/repository/user_emails/create"
-	"nfxid/modules/directory/infrastructure/repository/user_emails/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_emails/get"
-	"nfxid/modules/directory/infrastructure/repository/user_emails/update"
+	"nfxidentity/modules/directory/domain/user_emails"
+	"nfxidentity/modules/directory/infrastructure/repository/user_emails/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_emails/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_emails/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_emails/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_emails/update"
 
 	"gorm.io/gorm"
 )

@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/auth/domain/account_lockouts"
+	"nfxidentity/modules/auth/domain/account_lockouts"
 
 	"github.com/google/uuid"
 )

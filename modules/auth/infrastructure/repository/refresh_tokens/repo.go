@@ -1,12 +1,12 @@
 package refresh_tokens
 
 import (
-	"nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/check"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/create"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/delete"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/get"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/update"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/check"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/create"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/get"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/update"
 
 	"gorm.io/gorm"
 )

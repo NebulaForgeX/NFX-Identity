@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userProfileAppResult "nfxid/modules/directory/application/user_profiles/results"
-	userprofilepb "nfxid/protos/gen/directory/user_profile"
+	userProfileAppResult "nfxidentity/modules/directory/application/user_profiles/results"
+	userprofilepb "nfxidentity/protos/gen/directory/user_profile"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

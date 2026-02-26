@@ -286,7 +286,7 @@ const file_common_health_proto_rawDesc = "" +
 	"\n" +
 	"checked_at\x18\x04 \x01(\x03R\tcheckedAt2_\n" +
 	"\rHealthService\x12N\n" +
-	"\tGetHealth\x12\x1f.common.health.GetHealthRequest\x1a .common.health.GetHealthResponseB)Z'nfxid/protos/gen/common/health;healthpbb\x06proto3"
+	"\tGetHealth\x12\x1f.common.health.GetHealthRequest\x1a .common.health.GetHealthResponseB)Z'nfxidentity/protos/gen/common/health;healthpbb\x06proto3"
 
 var (
 	file_common_health_proto_rawDescOnce sync.Once

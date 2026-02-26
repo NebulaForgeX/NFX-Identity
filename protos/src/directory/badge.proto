@@ -1,7 +1,7 @@
 syntax = "proto3";
 package badge;
 
-option go_package = "nfxid/protos/gen/directory/badge;badgepb";
+option go_package = "nfxidentity/protos/gen/directory/badge;badgepb";
 
 import "google/protobuf/timestamp.proto";
 

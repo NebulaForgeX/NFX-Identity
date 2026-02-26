@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/domain/password_resets"
 
 	"github.com/google/uuid"
 )

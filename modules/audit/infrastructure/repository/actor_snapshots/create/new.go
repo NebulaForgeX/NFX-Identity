@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/actor_snapshots"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/mapper"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/mapper"
 )
 
 // New 创建新的 ActorSnapshot，实现 actor_snapshots.Create 接口

@@ -1,7 +1,7 @@
 package image_tags
 
 import (
-	imageErr "nfxid/errors/src/image"
+	imageErr "nfxidentity/errors/src/image"
 	"time"
 
 	"github.com/google/uuid"

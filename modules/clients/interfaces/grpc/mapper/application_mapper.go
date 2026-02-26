@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	appAppResult "nfxid/modules/clients/application/apps/results"
-	appDomain "nfxid/modules/clients/domain/apps"
-	applicationpb "nfxid/protos/gen/clients/application"
+	appAppResult "nfxidentity/modules/clients/application/apps/results"
+	appDomain "nfxidentity/modules/clients/domain/apps"
+	applicationpb "nfxidentity/protos/gen/clients/application"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

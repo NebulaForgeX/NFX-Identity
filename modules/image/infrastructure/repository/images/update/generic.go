@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/image/domain/images"
-	"nfxid/modules/image/infrastructure/rdb/models"
-	"nfxid/modules/image/infrastructure/repository/images/mapper"
+	"nfxidentity/modules/image/domain/images"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/infrastructure/repository/images/mapper"
 )
 
 // Generic 通用更新 Image，实现 images.Update 接口

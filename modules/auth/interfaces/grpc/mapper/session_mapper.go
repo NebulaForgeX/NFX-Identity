@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	sessionAppResult "nfxid/modules/auth/application/sessions/results"
-	sessionDomain "nfxid/modules/auth/domain/sessions"
-	sessionpb "nfxid/protos/gen/auth/session"
+	sessionAppResult "nfxidentity/modules/auth/application/sessions/results"
+	sessionDomain "nfxidentity/modules/auth/domain/sessions"
+	sessionpb "nfxidentity/protos/gen/auth/session"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

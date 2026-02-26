@@ -1,12 +1,12 @@
 package user_badges
 
 import (
-	"nfxid/modules/directory/domain/user_badges"
-	"nfxid/modules/directory/infrastructure/repository/user_badges/check"
-	"nfxid/modules/directory/infrastructure/repository/user_badges/create"
-	"nfxid/modules/directory/infrastructure/repository/user_badges/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_badges/get"
-	"nfxid/modules/directory/infrastructure/repository/user_badges/update"
+	"nfxidentity/modules/directory/domain/user_badges"
+	"nfxidentity/modules/directory/infrastructure/repository/user_badges/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_badges/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_badges/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_badges/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_badges/update"
 
 	"gorm.io/gorm"
 )

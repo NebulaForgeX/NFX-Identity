@@ -1,12 +1,12 @@
 package members
 
 import (
-	"nfxid/modules/tenants/domain/members"
-	"nfxid/modules/tenants/infrastructure/repository/members/check"
-	"nfxid/modules/tenants/infrastructure/repository/members/create"
-	"nfxid/modules/tenants/infrastructure/repository/members/delete"
-	"nfxid/modules/tenants/infrastructure/repository/members/get"
-	"nfxid/modules/tenants/infrastructure/repository/members/update"
+	"nfxidentity/modules/tenants/domain/members"
+	"nfxidentity/modules/tenants/infrastructure/repository/members/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/members/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/members/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/members/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/members/update"
 
 	"gorm.io/gorm"
 )

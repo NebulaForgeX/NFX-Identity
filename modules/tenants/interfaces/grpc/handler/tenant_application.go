@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	tenantAppApp "nfxid/modules/tenants/application/tenant_apps"
-	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
+	tenantAppApp "nfxidentity/modules/tenants/application/tenant_apps"
+	"nfxidentity/modules/tenants/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	tenantapplicationpb "nfxidentity/protos/gen/tenants/tenant_application"
 
 	"github.com/google/uuid"
 )

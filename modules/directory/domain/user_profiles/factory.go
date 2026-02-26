@@ -1,7 +1,7 @@
 package user_profiles
 
 import (
-	dirErr "nfxid/errors/src/directory"
+	dirErr "nfxidentity/errors/src/directory"
 	"time"
 
 	"github.com/google/uuid"

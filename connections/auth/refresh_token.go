@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	refreshtokenpb "nfxid/protos/gen/auth/refresh_token"
+	refreshtokenpb "nfxidentity/protos/gen/auth/refresh_token"
 )
 
 // RefreshTokenClient RefreshToken 客户端

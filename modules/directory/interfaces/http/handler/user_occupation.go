@@ -1,13 +1,13 @@
 package handler
 
 import (
-	userOccupationApp "nfxid/modules/directory/application/user_occupations"
-	userOccupationAppCommands "nfxid/modules/directory/application/user_occupations/commands"
-	"nfxid/modules/directory/interfaces/http/dto/reqdto"
-	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	userOccupationApp "nfxidentity/modules/directory/application/user_occupations"
+	userOccupationAppCommands "nfxidentity/modules/directory/application/user_occupations/commands"
+	"nfxidentity/modules/directory/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/directory/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

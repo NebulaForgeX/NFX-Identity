@@ -3,8 +3,8 @@ package delete
 import (
 	"context"
 
-	tenantsErr "nfxid/errors/src/tenants"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	tenantsErr "nfxidentity/errors/src/tenants"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 )

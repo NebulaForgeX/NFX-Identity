@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	groupAppCommands "nfxid/modules/tenants/application/groups/commands"
-	groupDomain "nfxid/modules/tenants/domain/groups"
+	groupAppCommands "nfxidentity/modules/tenants/application/groups/commands"
+	groupDomain "nfxidentity/modules/tenants/domain/groups"
 
 	"github.com/google/uuid"
 )

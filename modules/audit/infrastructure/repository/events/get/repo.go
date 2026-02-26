@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/audit/domain/events"
+	"nfxidentity/modules/audit/domain/events"
 
 	"gorm.io/gorm"
 )

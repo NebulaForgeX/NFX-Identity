@@ -1,11 +1,11 @@
 package audit
 
 import (
-	actorsnapshotpb "nfxid/protos/gen/audit/actor_snapshot"
-	eventpb "nfxid/protos/gen/audit/event"
-	eventretentionpolicypb "nfxid/protos/gen/audit/event_retention_policy"
-	eventsearchindexpb "nfxid/protos/gen/audit/event_search_index"
-	hashchaincheckpointpb "nfxid/protos/gen/audit/hash_chain_checkpoint"
+	actorsnapshotpb "nfxidentity/protos/gen/audit/actor_snapshot"
+	eventpb "nfxidentity/protos/gen/audit/event"
+	eventretentionpolicypb "nfxidentity/protos/gen/audit/event_retention_policy"
+	eventsearchindexpb "nfxidentity/protos/gen/audit/event_search_index"
+	hashchaincheckpointpb "nfxidentity/protos/gen/audit/hash_chain_checkpoint"
 )
 
 // Client Audit 服务客户端

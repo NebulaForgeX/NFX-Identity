@@ -1,7 +1,7 @@
 package tenant_roles
 
 import (
-	accessErr "nfxid/errors/src/access"
+	accessErr "nfxidentity/errors/src/access"
 )
 
 // UpdateName 更新名称

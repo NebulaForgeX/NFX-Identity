@@ -4,8 +4,8 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/retry"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/retry"
 	"sync"
 	"time"
 

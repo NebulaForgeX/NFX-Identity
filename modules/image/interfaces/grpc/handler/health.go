@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"nfxid/modules/image/application/resource"
-	healthpb "nfxid/protos/gen/common/health"
+	"nfxidentity/modules/image/application/resource"
+	healthpb "nfxidentity/protos/gen/common/health"
 )
 
 // HealthHandler 健康检查处理器

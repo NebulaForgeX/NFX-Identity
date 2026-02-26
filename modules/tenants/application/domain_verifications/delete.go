@@ -2,7 +2,7 @@ package domain_verifications
 
 import (
 	"context"
-	domainVerificationCommands "nfxid/modules/tenants/application/domain_verifications/commands"
+	domainVerificationCommands "nfxidentity/modules/tenants/application/domain_verifications/commands"
 )
 
 // DeleteDomainVerification 删除域名验证

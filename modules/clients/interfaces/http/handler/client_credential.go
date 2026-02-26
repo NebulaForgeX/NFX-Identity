@@ -1,13 +1,13 @@
 package handler
 
 import (
-	clientCredentialApp "nfxid/modules/clients/application/client_credentials"
-	clientCredentialAppCommands "nfxid/modules/clients/application/client_credentials/commands"
-	"nfxid/modules/clients/interfaces/http/dto/reqdto"
-	"nfxid/modules/clients/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	clientCredentialApp "nfxidentity/modules/clients/application/client_credentials"
+	clientCredentialAppCommands "nfxidentity/modules/clients/application/client_credentials/commands"
+	"nfxidentity/modules/clients/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/clients/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

@@ -12,6 +12,7 @@ RabbitMQ 支持消息优先级，优先级高的消息会优先被消费。
 ```
 
 **注意**：
+
 - `max_priority` 必须大于 0 才能使用优先级功能
 - 优先级范围：0-255，数值越大优先级越高
 - 如果队列未配置优先级（`max_priority = 0`），消息优先级会被忽略
@@ -23,7 +24,7 @@ RabbitMQ 支持消息优先级，优先级高的消息会优先被消费。
 ```go
 import (
     "context"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 // 发布高优先级消息
@@ -78,8 +79,8 @@ package main
 
 import (
     "context"
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 type NotificationMessage struct {
@@ -164,11 +165,13 @@ messaging.RegisterHandler(router, func(ctx context.Context, msg NotificationMess
 ## 最佳实践
 
 1. **合理设置优先级范围**：
+
    ```toml
    max_priority = 10  # 使用 0-10 的范围，而不是 0-255
    ```
 
 2. **定义优先级常量**：
+
    ```go
    const (
        PriorityUrgent = 10

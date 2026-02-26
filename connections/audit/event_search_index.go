@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	eventsearchindexpb "nfxid/protos/gen/audit/event_search_index"
+	eventsearchindexpb "nfxidentity/protos/gen/audit/event_search_index"
 )
 
 // EventSearchIndexClient EventSearchIndex 客户端

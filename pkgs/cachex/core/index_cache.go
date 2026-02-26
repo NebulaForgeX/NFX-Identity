@@ -3,8 +3,8 @@ package core
 import (
 	"context"
 
-	"nfxid/pkgs/cachex/config"
-	"nfxid/pkgs/utils/id"
+	"nfxidentity/pkgs/cachex/config"
+	"nfxidentity/pkgs/utils/id"
 
 	"golang.org/x/sync/singleflight"
 )

@@ -3,7 +3,7 @@ package users
 import (
 	"time"
 
-	dirErr "nfxid/errors/src/directory"
+	dirErr "nfxidentity/errors/src/directory"
 )
 
 func (u *User) UpdateStatus(status UserStatus) error {

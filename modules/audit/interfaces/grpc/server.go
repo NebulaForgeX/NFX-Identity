@@ -1,16 +1,16 @@
 package grpc
 
 import (
-	eventApp "nfxid/modules/audit/application/events"
-	resourceApp "nfxid/modules/audit/application/resource"
-	grpcHandler "nfxid/modules/audit/interfaces/grpc/handler"
-	"nfxid/pkgs/grpcx/interceptor"
-	"nfxid/pkgs/postgresqlx"
-	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/servertoken"
-	eventpb "nfxid/protos/gen/audit/event"
-	healthpb "nfxid/protos/gen/common/health"
-	schemapb "nfxid/protos/gen/common/schema"
+	eventApp "nfxidentity/modules/audit/application/events"
+	resourceApp "nfxidentity/modules/audit/application/resource"
+	grpcHandler "nfxidentity/modules/audit/interfaces/grpc/handler"
+	"nfxidentity/pkgs/grpcx/interceptor"
+	"nfxidentity/pkgs/postgresqlx"
+	"nfxidentity/pkgs/security/token"
+	"nfxidentity/pkgs/security/token/servertoken"
+	eventpb "nfxidentity/protos/gen/audit/event"
+	healthpb "nfxidentity/protos/gen/common/health"
+	schemapb "nfxidentity/protos/gen/common/schema"
 
 	"google.golang.org/grpc"
 )

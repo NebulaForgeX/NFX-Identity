@@ -1,12 +1,12 @@
 package password_resets
 
 import (
-	"nfxid/modules/auth/domain/password_resets"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/check"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/create"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/delete"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/get"
-	"nfxid/modules/auth/infrastructure/repository/password_resets/update"
+	"nfxidentity/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/check"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/create"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/get"
+	"nfxidentity/modules/auth/infrastructure/repository/password_resets/update"
 
 	"gorm.io/gorm"
 )

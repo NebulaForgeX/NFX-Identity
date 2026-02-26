@@ -3,10 +3,10 @@ package get
 import (
 	"context"
 	"errors"
-	tenantsErr "nfxid/errors/src/tenants"
-	"nfxid/modules/tenants/domain/member_app_roles"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/mapper"
+	tenantsErr "nfxidentity/errors/src/tenants"
+	"nfxidentity/modules/tenants/domain/member_app_roles"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

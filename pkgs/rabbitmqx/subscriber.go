@@ -1,8 +1,8 @@
 package rabbitmqx
 
 import (
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 
 	"github.com/ThreeDotsLabs/watermill-amqp/v3/pkg/amqp"
 )

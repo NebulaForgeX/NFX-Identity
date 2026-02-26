@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userOccupationAppResult "nfxid/modules/directory/application/user_occupations/results"
-	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
+	userOccupationAppResult "nfxidentity/modules/directory/application/user_occupations/results"
+	useroccupationpb "nfxidentity/protos/gen/directory/user_occupation"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

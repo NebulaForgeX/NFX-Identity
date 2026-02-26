@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	sessionpb "nfxid/protos/gen/auth/session"
+	sessionpb "nfxidentity/protos/gen/auth/session"
 )
 
 // SessionClient Session 客户端

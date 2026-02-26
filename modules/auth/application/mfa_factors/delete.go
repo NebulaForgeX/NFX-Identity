@@ -2,7 +2,7 @@ package mfa_factors
 
 import (
 	"context"
-	mfaFactorCommands "nfxid/modules/auth/application/mfa_factors/commands"
+	mfaFactorCommands "nfxidentity/modules/auth/application/mfa_factors/commands"
 )
 
 // DeleteMFAFactor 删除MFA因子（软删除）

@@ -1,8 +1,8 @@
 package query
 
 import (
-	"nfxid/pkgs/utils/filter"
-	"nfxid/pkgs/utils/slice"
+	"nfxidentity/pkgs/utils/filter"
+	"nfxidentity/pkgs/utils/slice"
 	"strings"
 )
 

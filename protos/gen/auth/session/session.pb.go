@@ -694,7 +694,7 @@ const file_auth_session_proto_rawDesc = "" +
 	"\x0eGetSessionByID\x12\x1e.session.GetSessionByIDRequest\x1a\x1f.session.GetSessionByIDResponse\x12f\n" +
 	"\x15GetSessionBySessionID\x12%.session.GetSessionBySessionIDRequest\x1a&.session.GetSessionBySessionIDResponse\x12`\n" +
 	"\x13GetSessionsByUserID\x12#.session.GetSessionsByUserIDRequest\x1a$.session.GetSessionsByUserIDResponse\x12W\n" +
-	"\x10BatchGetSessions\x12 .session.BatchGetSessionsRequest\x1a!.session.BatchGetSessionsResponseB)Z'nfxid/protos/gen/auth/session;sessionpbb\x06proto3"
+	"\x10BatchGetSessions\x12 .session.BatchGetSessionsRequest\x1a!.session.BatchGetSessionsResponseB)Z'nfxidentity/protos/gen/auth/session;sessionpbb\x06proto3"
 
 var (
 	file_auth_session_proto_rawDescOnce sync.Once

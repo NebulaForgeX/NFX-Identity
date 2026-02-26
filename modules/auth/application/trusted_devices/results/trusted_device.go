@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/auth/domain/trusted_devices"
+	"nfxidentity/modules/auth/domain/trusted_devices"
 
 	"github.com/google/uuid"
 )

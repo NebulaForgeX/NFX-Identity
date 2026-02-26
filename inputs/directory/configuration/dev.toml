@@ -58,7 +58,7 @@
 
 [kafka]
     brokers = ["${KAFKA_BROKERS}"]
-    client_id = "nfxid-directory-service"
+    client_id = "nfxidentity-directory-service"
 
     [kafka.network]
         max_open_requests = 1
@@ -72,7 +72,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "directory-service-group"
+        group_id = "nfxidentity-directory"
         initial_offset = "latest"
         session_timeout_ms = 10000
         heartbeat_interval_ms = 3000
@@ -81,12 +81,12 @@
         return_errors = true
 
     [kafka.producer_topics]
-        directory = "nfxid.directory"
-        directory_poison = "nfxid.directory_poison"
+        directory = "nfxidentity.directory"
+        directory_poison = "nfxidentity.directory_poison"
 
     [kafka.consumer_topics]
-        directory = "nfxid.directory"
-        directory_poison = "nfxid.directory_poison"
+        directory = "nfxidentity.directory"
+        directory_poison = "nfxidentity.directory_poison"
 
     [kafka.security]
         enabled = false
@@ -101,7 +101,7 @@
     user = "${RABBITMQ_USER}"
     password = "${RABBITMQ_PASSWORD}"
     vhost = "/"
-    client_id = "nfxid-directory-service"
+    client_id = "nfxidentity-directory-service"
 
     [rabbitmq.producer]
         mandatory = false
@@ -115,7 +115,7 @@
 
     [rabbitmq.consumer]
         queue_name = ""
-        consumer_tag = "nfxid-directory-consumer"
+        consumer_tag = "nfxidentity-directory-consumer"
         auto_ack = false
         exclusive = false
         no_local = false

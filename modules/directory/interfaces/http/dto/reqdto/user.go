@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	userAppCommands "nfxid/modules/directory/application/users/commands"
-	userDomain "nfxid/modules/directory/domain/users"
+	userAppCommands "nfxidentity/modules/directory/application/users/commands"
+	userDomain "nfxidentity/modules/directory/domain/users"
 
 	"github.com/google/uuid"
 )

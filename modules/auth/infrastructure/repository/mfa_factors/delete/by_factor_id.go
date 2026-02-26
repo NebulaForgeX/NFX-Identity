@@ -2,8 +2,8 @@ package delete
 
 import (
 	"context"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // ByFactorID 根据 FactorID 删除 MFAFactor，实现 mfa_factors.Delete 接口

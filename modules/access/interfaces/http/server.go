@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"time"
 
-	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
-	"nfxid/modules/access/interfaces/http/handler"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/fiberx/middleware"
-	"nfxid/pkgs/httpx"
-	"nfxid/pkgs/security/token"
+	tenantrolesApp "nfxidentity/modules/access/application/tenant_roles"
+	"nfxidentity/modules/access/interfaces/http/handler"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/fiberx/middleware"
+	"nfxidentity/pkgs/httpx"
+	"nfxidentity/pkgs/security/token"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"

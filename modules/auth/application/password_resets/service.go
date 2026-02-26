@@ -1,7 +1,7 @@
 package password_resets
 
 import (
-	passwordResetDomain "nfxid/modules/auth/domain/password_resets"
+	passwordResetDomain "nfxidentity/modules/auth/domain/password_resets"
 )
 
 type Service struct {

@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/directory/domain/user_phones"
+	"nfxidentity/modules/directory/domain/user_phones"
 
 	"gorm.io/gorm"
 )

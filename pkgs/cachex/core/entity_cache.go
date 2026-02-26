@@ -5,9 +5,9 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"maps"
-	"nfxid/pkgs/cachex/config"
-	"nfxid/pkgs/utils/id"
-	"nfxid/pkgs/utils/slice"
+	"nfxidentity/pkgs/cachex/config"
+	"nfxidentity/pkgs/utils/id"
+	"nfxidentity/pkgs/utils/slice"
 	"sort"
 	"strings"
 

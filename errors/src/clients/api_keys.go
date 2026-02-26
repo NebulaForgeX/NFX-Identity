@@ -1,6 +1,6 @@
 package clients
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeAPIKeyNotFound       = "API_KEY_NOT_FOUND"

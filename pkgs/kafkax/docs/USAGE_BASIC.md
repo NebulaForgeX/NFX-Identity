@@ -7,7 +7,7 @@
 ```toml
 [kafka]
     brokers = ["localhost:9092"]
-    client_id = "nfxid-service"
+    client_id = "nfxidentity-service"
 
     [kafka.producer]
         acks = "all"
@@ -18,7 +18,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "nfxid-consumer-group"
+        group_id = "nfxidentity-consumer-group"
         initial_offset = "latest"
         session_timeout_ms = 30000
         heartbeat_interval_ms = 3000
@@ -55,8 +55,8 @@
 package main
 
 import (
-    "nfxid/pkgs/kafkax"
-    "nfxid/pkgs/kafkax/eventbus"
+    "nfxidentity/pkgs/kafkax"
+    "nfxidentity/pkgs/kafkax/eventbus"
 )
 
 func createPublisher(cfg *kafkax.Config) (*eventbus.BusPublisher, error) {
@@ -99,7 +99,7 @@ func createSubscriber(cfg *kafkax.Config) (*eventbus.BusSubscriber, error) {
 ```go
 package access
 
-import "nfxid/pkgs/kafkax/eventbus"
+import "nfxidentity/pkgs/kafkax/eventbus"
 
 // 方式一：自动生成 EventType（推荐）
 type GrantsInvalidateCacheEvent struct {
@@ -132,7 +132,7 @@ package main
 
 import (
     "context"
-    "nfxid/pkgs/kafkax/eventbus"
+    "nfxidentity/pkgs/kafkax/eventbus"
 )
 
 func publishEvent(ctx context.Context, publisher *eventbus.BusPublisher) error {
@@ -158,9 +158,9 @@ package eventbus
 import (
     "context"
     "time"
-    "nfxid/pkgs/kafkax"
-    "nfxid/pkgs/kafkax/eventbus"
-    "nfxid/pkgs/logx"
+    "nfxidentity/pkgs/kafkax"
+    "nfxidentity/pkgs/kafkax/eventbus"
+    "nfxidentity/pkgs/logx"
     wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"
 )
 
@@ -241,8 +241,8 @@ package server
 
 import (
     "context"
-    "nfxid/pkgs/kafkax"
-    "nfxid/pkgs/kafkax/eventbus"
+    "nfxidentity/pkgs/kafkax"
+    "nfxidentity/pkgs/kafkax/eventbus"
 )
 
 type Deps struct {

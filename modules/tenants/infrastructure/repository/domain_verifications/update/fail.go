@@ -3,9 +3,9 @@ package update
 import (
 	"context"
 	"errors"
-	"nfxid/enums"
-	tenantsErr "nfxid/errors/src/tenants"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	tenantsErr "nfxidentity/errors/src/tenants"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

@@ -2,7 +2,7 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 )

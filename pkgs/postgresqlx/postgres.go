@@ -3,8 +3,8 @@ package postgresqlx
 import (
 	"context"
 	"fmt"
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/retry"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/retry"
 	"sync"
 	"time"
 

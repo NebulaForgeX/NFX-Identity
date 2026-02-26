@@ -2,8 +2,8 @@ package password_resets
 
 import (
 	"context"
-	passwordResetCommands "nfxid/modules/auth/application/password_resets/commands"
-	passwordResetDomain "nfxid/modules/auth/domain/password_resets"
+	passwordResetCommands "nfxidentity/modules/auth/application/password_resets/commands"
+	passwordResetDomain "nfxidentity/modules/auth/domain/password_resets"
 	"time"
 
 	"github.com/google/uuid"

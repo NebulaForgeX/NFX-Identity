@@ -1,12 +1,12 @@
 package client_scopes
 
 import (
-	"nfxid/modules/clients/domain/client_scopes"
-	"nfxid/modules/clients/infrastructure/repository/client_scopes/check"
-	"nfxid/modules/clients/infrastructure/repository/client_scopes/create"
-	"nfxid/modules/clients/infrastructure/repository/client_scopes/delete"
-	"nfxid/modules/clients/infrastructure/repository/client_scopes/get"
-	"nfxid/modules/clients/infrastructure/repository/client_scopes/update"
+	"nfxidentity/modules/clients/domain/client_scopes"
+	"nfxidentity/modules/clients/infrastructure/repository/client_scopes/check"
+	"nfxidentity/modules/clients/infrastructure/repository/client_scopes/create"
+	"nfxidentity/modules/clients/infrastructure/repository/client_scopes/delete"
+	"nfxidentity/modules/clients/infrastructure/repository/client_scopes/get"
+	"nfxidentity/modules/clients/infrastructure/repository/client_scopes/update"
 
 	"gorm.io/gorm"
 )

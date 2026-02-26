@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	apiKeyAppResult "nfxid/modules/clients/application/api_keys/results"
+	apiKeyAppResult "nfxidentity/modules/clients/application/api_keys/results"
 
 	"github.com/google/uuid"
 )

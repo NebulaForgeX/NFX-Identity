@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	systemstatepb "nfxid/protos/gen/system/system_state"
+	systemstatepb "nfxidentity/protos/gen/system/system_state"
 )
 
 // SystemStateClient SystemState 客户端

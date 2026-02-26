@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/sessions"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/sessions/mapper"
+	"nfxidentity/modules/auth/domain/sessions"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/mapper"
 
 	"github.com/google/uuid"
 )

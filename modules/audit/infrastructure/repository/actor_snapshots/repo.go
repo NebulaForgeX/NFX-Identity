@@ -1,12 +1,12 @@
 package actor_snapshots
 
 import (
-	"nfxid/modules/audit/domain/actor_snapshots"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/check"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/create"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/delete"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/get"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/update"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/check"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/create"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/delete"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/get"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/update"
 
 	"gorm.io/gorm"
 )

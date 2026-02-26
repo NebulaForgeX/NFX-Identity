@@ -2,8 +2,8 @@ package trusted_devices
 
 import (
 	"context"
-	trustedDeviceCommands "nfxid/modules/auth/application/trusted_devices/commands"
-	trustedDeviceDomain "nfxid/modules/auth/domain/trusted_devices"
+	trustedDeviceCommands "nfxidentity/modules/auth/application/trusted_devices/commands"
+	trustedDeviceDomain "nfxidentity/modules/auth/domain/trusted_devices"
 	"time"
 
 	"github.com/google/uuid"

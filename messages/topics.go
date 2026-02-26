@@ -1,6 +1,6 @@
 package messages
 
-import "nfxid/pkgs/rabbitmqx/messaging"
+import "nfxidentity/pkgs/rabbitmqx/messaging"
 
 const (
 	// =============== Access ===============

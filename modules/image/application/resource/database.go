@@ -3,7 +3,7 @@ package resource
 import (
 	"context"
 
-	"nfxid/pkgs/errx"
+	"nfxidentity/pkgs/errx"
 )
 
 // CheckMySQL 检查 MySQL 数据库连接的健康状态

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"nfxid/pkgs/utils/file"
+	"nfxidentity/pkgs/utils/file"
 )
 
 // loadEnvFile 从项目根目录加载 .env 文件到环境变量

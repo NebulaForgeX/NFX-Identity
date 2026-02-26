@@ -2,9 +2,9 @@ package user_preferences
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	userPreferenceCommands "nfxid/modules/directory/application/user_preferences/commands"
-	userPreferenceDomain "nfxid/modules/directory/domain/user_preferences"
+	dirErr "nfxidentity/errors/src/directory"
+	userPreferenceCommands "nfxidentity/modules/directory/application/user_preferences/commands"
+	userPreferenceDomain "nfxidentity/modules/directory/domain/user_preferences"
 
 	"github.com/google/uuid"
 )

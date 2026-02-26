@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 	"errors"
-	"nfxid/modules/audit/domain/events"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/events/mapper"
+	"nfxidentity/modules/audit/domain/events"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/events/mapper"
 	"time"
 
 	"github.com/google/uuid"

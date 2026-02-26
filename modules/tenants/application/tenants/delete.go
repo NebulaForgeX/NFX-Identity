@@ -2,7 +2,7 @@ package tenants
 
 import (
 	"context"
-	tenantCommands "nfxid/modules/tenants/application/tenants/commands"
+	tenantCommands "nfxidentity/modules/tenants/application/tenants/commands"
 )
 
 // DeleteTenant 删除租户（软删除）

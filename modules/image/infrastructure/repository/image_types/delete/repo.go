@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/image/domain/image_types"
+	"nfxidentity/modules/image/domain/image_types"
 
 	"gorm.io/gorm"
 )

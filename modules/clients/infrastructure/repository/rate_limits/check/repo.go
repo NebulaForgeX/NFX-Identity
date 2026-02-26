@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/domain/rate_limits"
 
 	"gorm.io/gorm"
 )

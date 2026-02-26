@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/auth/domain/user_credentials"
+	"nfxidentity/modules/auth/domain/user_credentials"
 
 	"github.com/google/uuid"
 )

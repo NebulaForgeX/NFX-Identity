@@ -2,7 +2,7 @@ package password_resets
 
 import (
 	"context"
-	passwordResetResult "nfxid/modules/auth/application/password_resets/results"
+	passwordResetResult "nfxidentity/modules/auth/application/password_resets/results"
 
 	"github.com/google/uuid"
 )

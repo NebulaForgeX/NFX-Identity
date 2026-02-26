@@ -1,13 +1,13 @@
 package handler
 
 import (
-	rateLimitApp "nfxid/modules/clients/application/rate_limits"
-	rateLimitAppCommands "nfxid/modules/clients/application/rate_limits/commands"
-	"nfxid/modules/clients/interfaces/http/dto/reqdto"
-	"nfxid/modules/clients/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	rateLimitApp "nfxidentity/modules/clients/application/rate_limits"
+	rateLimitAppCommands "nfxidentity/modules/clients/application/rate_limits/commands"
+	"nfxidentity/modules/clients/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/clients/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

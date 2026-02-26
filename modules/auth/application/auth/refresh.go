@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	authResults "nfxid/modules/auth/application/auth/results"
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
+	authResults "nfxidentity/modules/auth/application/auth/results"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
 
 	"github.com/google/uuid"
 )

@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/directory/domain/user_avatars"
+	"nfxidentity/modules/directory/domain/user_avatars"
 
 	"gorm.io/gorm"
 )

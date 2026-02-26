@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // ByEmail 根据 Email 删除 UserEmail，实现 user_emails.Delete 接口

@@ -2,7 +2,7 @@ package user_emails
 
 import (
 	"context"
-	userEmailResult "nfxid/modules/directory/application/user_emails/results"
+	userEmailResult "nfxidentity/modules/directory/application/user_emails/results"
 
 	"github.com/google/uuid"
 )

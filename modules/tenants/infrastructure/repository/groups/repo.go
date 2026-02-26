@@ -1,12 +1,12 @@
 package groups
 
 import (
-	"nfxid/modules/tenants/domain/groups"
-	"nfxid/modules/tenants/infrastructure/repository/groups/check"
-	"nfxid/modules/tenants/infrastructure/repository/groups/create"
-	"nfxid/modules/tenants/infrastructure/repository/groups/delete"
-	"nfxid/modules/tenants/infrastructure/repository/groups/get"
-	"nfxid/modules/tenants/infrastructure/repository/groups/update"
+	"nfxidentity/modules/tenants/domain/groups"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/update"
 
 	"gorm.io/gorm"
 )

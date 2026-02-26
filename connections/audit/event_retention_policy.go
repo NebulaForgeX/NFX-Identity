@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	eventretentionpolicypb "nfxid/protos/gen/audit/event_retention_policy"
+	eventretentionpolicypb "nfxidentity/protos/gen/audit/event_retention_policy"
 )
 
 // EventRetentionPolicyClient EventRetentionPolicy 客户端

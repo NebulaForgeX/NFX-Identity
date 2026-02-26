@@ -1,4 +1,4 @@
-// Atlas configuration for nfxid service using PostgreSQL.
+// Atlas configuration for nfxidentity service using PostgreSQL.
 // Using Docker Atlas toolchain.
 
 // === Public variables ===

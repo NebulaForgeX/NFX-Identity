@@ -2,7 +2,7 @@ package apps
 
 import (
 	"context"
-	appCommands "nfxid/modules/clients/application/apps/commands"
+	appCommands "nfxidentity/modules/clients/application/apps/commands"
 )
 
 // DeleteApp 删除应用（软删除）

@@ -1,7 +1,7 @@
 package http
 
 import (
-	"nfxid/pkgs/security/token"
+	"nfxidentity/pkgs/security/token"
 
 	"github.com/gofiber/fiber/v3"
 )

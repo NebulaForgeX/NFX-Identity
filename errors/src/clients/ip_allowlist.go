@@ -1,6 +1,6 @@
 package clients
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeIPAllowlistNotFound       = "IP_ALLOWLIST_NOT_FOUND"

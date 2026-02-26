@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_preferences"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_preferences/mapper"
+	"nfxidentity/modules/directory/domain/user_preferences"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_preferences/mapper"
 )
 
 // Generic 通用更新 UserPreference，实现 user_preferences.Update 接口

@@ -3,7 +3,7 @@ package connection
 import (
 	"context"
 	"fmt"
-	"nfxid/pkgs/health"
+	"nfxidentity/pkgs/health"
 	"time"
 )
 

@@ -1,8 +1,8 @@
 package token
 
 import (
-	"nfxid/pkgs/utils/mapx"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/pkgs/utils/mapx"
+	"nfxidentity/pkgs/utils/timex"
 
 	"github.com/golang-jwt/jwt/v5"
 )

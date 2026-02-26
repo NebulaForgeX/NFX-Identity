@@ -6,10 +6,10 @@ import (
 	"runtime/debug"
 	"time"
 
-	"nfxid/pkgs/logx"
-	logmw "nfxid/pkgs/logx/middleware"
-	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/servertoken"
+	"nfxidentity/pkgs/logx"
+	logmw "nfxidentity/pkgs/logx/middleware"
+	"nfxidentity/pkgs/security/token"
+	"nfxidentity/pkgs/security/token/servertoken"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"

@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/tenants/domain/member_groups"
+	"nfxidentity/modules/tenants/domain/member_groups"
 
 	"gorm.io/gorm"
 )

@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/badges"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/badges/mapper"
+	"nfxidentity/modules/directory/domain/badges"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/badges/mapper"
 )
 
 // ByCategory 根据 Category 获取 Badge 列表，实现 badges.Get 接口

@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	userEducationApp "nfxid/modules/directory/application/user_educations"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	usereducationpb "nfxid/protos/gen/directory/user_education"
+	userEducationApp "nfxidentity/modules/directory/application/user_educations"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	usereducationpb "nfxidentity/protos/gen/directory/user_education"
 
 	"github.com/google/uuid"
 )

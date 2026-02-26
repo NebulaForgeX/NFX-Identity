@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/event_search_index"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/mapper"
+	"nfxidentity/modules/audit/domain/event_search_index"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/mapper"
 )
 
 // Generic 通用更新 EventSearchIndex，实现 event_search_index.Update 接口

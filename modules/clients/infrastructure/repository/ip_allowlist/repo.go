@@ -1,12 +1,12 @@
 package ip_allowlist
 
 import (
-	"nfxid/modules/clients/domain/ip_allowlist"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/check"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/create"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/delete"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/get"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/update"
+	"nfxidentity/modules/clients/domain/ip_allowlist"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/check"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/create"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/delete"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/get"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/update"
 
 	"gorm.io/gorm"
 )

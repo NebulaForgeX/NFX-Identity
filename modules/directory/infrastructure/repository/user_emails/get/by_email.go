@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	dirErr "nfxid/errors/src/directory"
-	"nfxid/modules/directory/domain/user_emails"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_emails/mapper"
+	dirErr "nfxidentity/errors/src/directory"
+	"nfxidentity/modules/directory/domain/user_emails"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_emails/mapper"
 
 	"gorm.io/gorm"
 )

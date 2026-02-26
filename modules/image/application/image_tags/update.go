@@ -2,8 +2,8 @@ package image_tags
 
 import (
 	"context"
-	imageTagCommands "nfxid/modules/image/application/image_tags/commands"
-	imageTagDomain "nfxid/modules/image/domain/image_tags"
+	imageTagCommands "nfxidentity/modules/image/application/image_tags/commands"
+	imageTagDomain "nfxidentity/modules/image/domain/image_tags"
 )
 
 // UpdateImageTag 更新图片标签

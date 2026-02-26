@@ -1,7 +1,7 @@
 package events
 
 import (
-	eventDomain "nfxid/modules/audit/domain/events"
+	eventDomain "nfxidentity/modules/audit/domain/events"
 )
 
 type Service struct {

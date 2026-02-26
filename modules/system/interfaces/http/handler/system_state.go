@@ -1,13 +1,13 @@
 package handler
 
 import (
-	bootstrapApp "nfxid/modules/system/application/bootstrap"
-	systemStateApp "nfxid/modules/system/application/system_state"
-	systemStateCommands "nfxid/modules/system/application/system_state/commands"
-	"nfxid/modules/system/interfaces/http/dto/reqdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	bootstrapApp "nfxidentity/modules/system/application/bootstrap"
+	systemStateApp "nfxidentity/modules/system/application/system_state"
+	systemStateCommands "nfxidentity/modules/system/application/system_state/commands"
+	"nfxidentity/modules/system/interfaces/http/dto/reqdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

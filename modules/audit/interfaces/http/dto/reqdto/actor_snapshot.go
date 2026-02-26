@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	actorSnapshotAppCommands "nfxid/modules/audit/application/actor_snapshots/commands"
-	actorSnapshotDomain "nfxid/modules/audit/domain/actor_snapshots"
+	actorSnapshotAppCommands "nfxidentity/modules/audit/application/actor_snapshots/commands"
+	actorSnapshotDomain "nfxidentity/modules/audit/domain/actor_snapshots"
 
 	"github.com/google/uuid"
 )

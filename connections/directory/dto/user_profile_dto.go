@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	userprofilepb "nfxid/protos/gen/directory/user_profile"
+	userprofilepb "nfxidentity/protos/gen/directory/user_profile"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

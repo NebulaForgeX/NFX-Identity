@@ -1,12 +1,12 @@
 package image_variants
 
 import (
-	"nfxid/modules/image/domain/image_variants"
-	"nfxid/modules/image/infrastructure/repository/image_variants/check"
-	"nfxid/modules/image/infrastructure/repository/image_variants/create"
-	"nfxid/modules/image/infrastructure/repository/image_variants/delete"
-	"nfxid/modules/image/infrastructure/repository/image_variants/get"
-	"nfxid/modules/image/infrastructure/repository/image_variants/update"
+	"nfxidentity/modules/image/domain/image_variants"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/check"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/create"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/delete"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/get"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/update"
 
 	"gorm.io/gorm"
 )

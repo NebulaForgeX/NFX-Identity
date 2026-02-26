@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/image/domain/image_variants"
-	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/domain/image_variants"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
 )
 
 // ImageVariantDomainToModel 将 Domain ImageVariant 转换为 Model ImageVariant

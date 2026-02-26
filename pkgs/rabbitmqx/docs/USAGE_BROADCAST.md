@@ -36,12 +36,13 @@ Publisher → Fanout Exchange → Queue1 (所有绑定的队列)
 [rabbitmq.consumer_queues]
     # 服务 A 的队列
     notification = { queue = "service-a-notification-queue", binding_key = "" }
-    
+
     # 服务 B 的队列（需要单独配置）
     # 注意：这里需要为每个服务创建不同的配置
 ```
 
 **注意**：由于配置的限制，如果需要多个服务订阅同一个广播 Exchange，每个服务需要：
+
 1. 使用相同的 Exchange 名称
 2. 使用不同的 Queue 名称
 3. 在各自的配置中设置 `consumer_queues`
@@ -76,8 +77,8 @@ package main
 
 import (
     "context"
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 type SystemNotificationMessage struct {
@@ -164,8 +165,8 @@ package service_a
 
 import (
     "context"
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 func setupBroadcastSubscriber(cfg *rabbitmqx.Config) error {
@@ -246,34 +247,37 @@ messaging.PublishMessage(ctx, publisher, CacheInvalidationMessage{
 
 ## 与其他 Exchange 类型的对比
 
-| Exchange 类型 | 路由方式 | 使用场景 |
-|--------------|---------|---------|
-| **Fanout** | 忽略 RoutingKey，广播到所有队列 | 系统通知、配置更新、缓存失效 |
-| **Topic** | 根据 RoutingKey 模式匹配 | 灵活路由、按消息类型路由 |
-| **Direct** | 精确匹配 RoutingKey | 点对点通信、精确路由 |
-| **Headers** | 根据消息头匹配 | 复杂的路由规则 |
+| Exchange 类型 | 路由方式                        | 使用场景                     |
+| ------------- | ------------------------------- | ---------------------------- |
+| **Fanout**    | 忽略 RoutingKey，广播到所有队列 | 系统通知、配置更新、缓存失效 |
+| **Topic**     | 根据 RoutingKey 模式匹配        | 灵活路由、按消息类型路由     |
+| **Direct**    | 精确匹配 RoutingKey             | 点对点通信、精确路由         |
+| **Headers**   | 根据消息头匹配                  | 复杂的路由规则               |
 
 ## 最佳实践
 
 1. **使用有意义的 Exchange 名称**：
+
    ```toml
    name = "system-notifications"  # 而不是 "exchange1"
    ```
 
 2. **每个服务使用独立的 Queue**：
+
    ```toml
    # 服务 A
    queue = "service-a-notification-queue"
-   
+
    # 服务 B
    queue = "service-b-notification-queue"
    ```
 
 3. **启用持久化**：
+
    ```toml
    [rabbitmq.exchange]
        durable = true
-   
+
    [rabbitmq.queue]
        durable = true
    ```

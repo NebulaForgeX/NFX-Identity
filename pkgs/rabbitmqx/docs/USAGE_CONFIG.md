@@ -8,15 +8,15 @@
 [rabbitmq]
     # 方式1：直接提供完整 URI（可选）
     # uri = "amqp://guest:guest@localhost:5672/"
-    
+
     # 方式2：分开配置（推荐，与 PostgreSQL 配置方式一致）
     host = "localhost"
     port = 5672
     user = "guest"
     password = "guest"
     vhost = "/"
-    
-    client_id = "nfxid-service"
+
+    client_id = "nfxidentity-service"
 
     [rabbitmq.producer]
         mandatory = false
@@ -30,7 +30,7 @@
 
     [rabbitmq.consumer]
         queue_name = ""
-        consumer_tag = "nfxid-consumer"
+        consumer_tag = "nfxidentity-consumer"
         auto_ack = false
         exclusive = false
         no_local = false
@@ -101,6 +101,7 @@
 ### 基础配置
 
 #### `uri`（可选）
+
 - **类型**：`string`
 - **说明**：RabbitMQ 连接 URI（完整连接字符串）
 - **格式**：`amqp://user:password@host:port/vhost`
@@ -108,31 +109,37 @@
 - **注意**：如果提供了 `uri`，则优先使用 `uri`；如果 `uri` 为空，则使用分开的配置字段（`host`, `port`, `user`, `password`, `vhost`）构建 URI
 
 #### `host`（可选，当 `uri` 为空时必需）
+
 - **类型**：`string`
 - **说明**：RabbitMQ 主机地址
 - **默认值**：`localhost`
 
 #### `port`（可选，当 `uri` 为空时可选）
+
 - **类型**：`int`
 - **说明**：RabbitMQ 端口
 - **默认值**：`5672`（标准 AMQP 端口）
 
 #### `user`（可选，当 `uri` 为空时可选）
+
 - **类型**：`string`
 - **说明**：RabbitMQ 用户名
 - **默认值**：`guest`
 
 #### `password`（可选，当 `uri` 为空时可选）
+
 - **类型**：`string`
 - **说明**：RabbitMQ 密码
 - **默认值**：空字符串
 
 #### `vhost`（可选，当 `uri` 为空时可选）
+
 - **类型**：`string`
 - **说明**：RabbitMQ 虚拟主机
 - **默认值**：`/`
 
 #### `client_id`
+
 - **类型**：`string`
 - **说明**：客户端标识符
 - **用途**：用于日志和监控
@@ -140,26 +147,31 @@
 ### Producer 配置
 
 #### `mandatory`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：如果为 true，消息无法路由时会返回错误
 
 #### `immediate`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：如果为 true，消息无法立即投递给消费者时会返回错误
 
 #### `confirm_delivery`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否等待服务器确认（Publisher Confirms）
 
 #### `channel_pool_size`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：通道池大小，0 表示不池化
 
 #### `default_priority`
+
 - **类型**：`uint8`
 - **默认值**：`0`
 - **说明**：默认消息优先级（0-255），0 表示不设置优先级
@@ -167,21 +179,25 @@
 ### Consumer 配置
 
 #### `queue_name`
+
 - **类型**：`string`
 - **默认值**：`""`
 - **说明**：队列名称，如果为空则根据消息键自动生成
 
 #### `prefetch_count`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：预取数量，0 表示不限制
 
 #### `prefetch_size`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：预取大小（字节），0 表示不限制
 
 #### `qos_global`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：QOS 是否全局应用
@@ -189,11 +205,13 @@
 ### Exchange 配置
 
 #### `name`
+
 - **类型**：`string`
 - **默认值**：`""`
 - **说明**：Exchange 名称，如果为空则根据消息键自动生成
 
 #### `type`
+
 - **类型**：`messaging.ExchangeType`（在配置文件中使用字符串）
 - **默认值**：`"topic"`
 - **可选值**：
@@ -203,11 +221,13 @@
 - **注意**：插件类型需要安装对应的 RabbitMQ 插件才能使用
 
 #### `durable`
+
 - **类型**：`bool`
 - **默认值**：`true`
 - **说明**：是否持久化，服务器重启后仍然存在
 
 #### `auto_delete`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：当没有绑定队列时自动删除
@@ -215,36 +235,43 @@
 ### Queue 配置
 
 #### `durable`
+
 - **类型**：`bool`
 - **默认值**：`true`
 - **说明**：是否持久化
 
 #### `max_priority`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：队列最大优先级（0-255），0 表示不启用优先级队列
 
 #### `message_ttl`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：消息 TTL（毫秒），0 表示不设置 TTL
 
 #### `max_length`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：队列最大消息数，0 表示不限制
 
 #### `max_length_bytes`
+
 - **类型**：`int`
 - **默认值**：`0`
 - **说明**：队列最大字节数，0 表示不限制
 
 #### `dead_letter_exchange`
+
 - **类型**：`string`
 - **默认值**：`""`
 - **说明**：死信交换机名称
 
 #### `dead_letter_routing_key`
+
 - **类型**：`string`
 - **默认值**：`""`
 - **说明**：死信路由键
@@ -252,19 +279,21 @@
 ### 路由配置
 
 #### `producer_exchanges`
+
 - **类型**：`map[string]ProducerRouting`
 - **说明**：映射消息键到 Exchange、RoutingKey 和可选的 Exchange 类型
 - **格式**：
   ```toml
   [rabbitmq.producer_exchanges]
-      message_key = { 
-          exchange = "exchange-name", 
+      message_key = {
+          exchange = "exchange-name",
           routing_key = "routing.key",
           type = "topic"  # ✅ 可选，指定 Exchange 类型
       }
   ```
 
 **ProducerRouting 字段**：
+
 - `exchange`：Exchange 名称，为空则使用 `ExchangeConfig.Name` 或根据消息键生成
 - `routing_key`：RoutingKey，为空则使用消息键作为 RoutingKey
 - `type`：**Exchange 类型（可选）**，支持：
@@ -273,22 +302,23 @@
   - 如果为空，使用全局 `ExchangeConfig.Type`
 
 **示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     # Topic Exchange（默认）
-    directory = { 
-        exchange = "nfxid-events", 
+    directory = {
+        exchange = "nfxidentity-events",
         routing_key = "directory.user.update",
         type = "topic"
     }
-    
+
     # Fanout Exchange（广播）
-    cache_invalidate = { 
-        exchange = "cache-broadcast", 
+    cache_invalidate = {
+        exchange = "cache-broadcast",
         routing_key = "",
         type = "fanout"
     }
-    
+
     # 延迟消息 Exchange（需要插件）
     delayed_notification = {
         exchange = "delayed-events",
@@ -298,6 +328,7 @@
 ```
 
 #### `consumer_queues`
+
 - **类型**：`map[string]ConsumerBinding`
 - **说明**：映射消息键到 Queue 和 BindingKey
 - **格式**：
@@ -309,11 +340,13 @@
 ### TLS 配置
 
 #### `enabled`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否启用 TLS
 
 #### `insecure_skip_verify`
+
 - **类型**：`bool`
 - **默认值**：`false`
 - **说明**：是否跳过证书验证（仅用于开发环境）
@@ -321,16 +354,19 @@
 ### 重连配置
 
 #### `enabled`
+
 - **类型**：`bool`
 - **默认值**：`true`
 - **说明**：是否启用自动重连
 
 #### `initial_interval`
+
 - **类型**：`string`
 - **默认值**：`"1s"`
 - **说明**：初始重连间隔
 
 #### `max_interval`
+
 - **类型**：`string`
 - **默认值**：`"30s"`
 - **说明**：最大重连间隔

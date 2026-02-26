@@ -1,10 +1,10 @@
 package resource
 
 import (
-	"nfxid/pkgs/cachex"
-	"nfxid/pkgs/kafkax"
-	"nfxid/pkgs/postgresqlx"
-	"nfxid/pkgs/rabbitmqx"
+	"nfxidentity/pkgs/cachex"
+	"nfxidentity/pkgs/kafkax"
+	"nfxidentity/pkgs/postgresqlx"
+	"nfxidentity/pkgs/rabbitmqx"
 )
 
 // Service 资源健康检查服务

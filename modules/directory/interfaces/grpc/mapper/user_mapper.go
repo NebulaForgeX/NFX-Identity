@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	userAppResult "nfxid/modules/directory/application/users/results"
-	userDomain "nfxid/modules/directory/domain/users"
-	userpb "nfxid/protos/gen/directory/user"
+	userAppResult "nfxidentity/modules/directory/application/users/results"
+	userDomain "nfxidentity/modules/directory/domain/users"
+	userpb "nfxidentity/protos/gen/directory/user"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

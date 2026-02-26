@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	badgepb "nfxid/protos/gen/directory/badge"
+	badgepb "nfxidentity/protos/gen/directory/badge"
 )
 
 // BadgeClient Badge 客户端

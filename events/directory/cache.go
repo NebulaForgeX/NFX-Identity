@@ -1,7 +1,7 @@
 package directory
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // BadgesInvalidateCacheEvent Badges 缓存清除事件

@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
 
 	"gorm.io/gorm"
 )

@@ -1,13 +1,13 @@
 package handler
 
 import (
-	imageVariantApp "nfxid/modules/image/application/image_variants"
-	imageVariantAppCommands "nfxid/modules/image/application/image_variants/commands"
-	"nfxid/modules/image/interfaces/http/dto/reqdto"
-	"nfxid/modules/image/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	imageVariantApp "nfxidentity/modules/image/application/image_variants"
+	imageVariantAppCommands "nfxidentity/modules/image/application/image_variants/commands"
+	"nfxidentity/modules/image/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/image/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

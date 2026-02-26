@@ -2,8 +2,8 @@ package events
 
 import (
 	"context"
-	eventCommands "nfxid/modules/audit/application/events/commands"
-	eventDomain "nfxid/modules/audit/domain/events"
+	eventCommands "nfxidentity/modules/audit/application/events/commands"
+	eventDomain "nfxidentity/modules/audit/domain/events"
 	"time"
 
 	"github.com/google/uuid"

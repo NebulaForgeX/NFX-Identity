@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userPhoneAppResult "nfxid/modules/directory/application/user_phones/results"
-	userphonepb "nfxid/protos/gen/directory/user_phone"
+	userPhoneAppResult "nfxidentity/modules/directory/application/user_phones/results"
+	userphonepb "nfxidentity/protos/gen/directory/user_phone"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

@@ -1,12 +1,12 @@
 package handler
 
 import (
-	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	accountLockoutApp "nfxidentity/modules/auth/application/account_lockouts"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"

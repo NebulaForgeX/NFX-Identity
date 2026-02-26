@@ -1,6 +1,6 @@
 syntax = "proto3";
 package tenant_application;
-option go_package = "nfxid/protos/gen/tenants/tenant_application;tenantapplicationpb";
+option go_package = "nfxidentity/protos/gen/tenants/tenant_application;tenantapplicationpb";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 

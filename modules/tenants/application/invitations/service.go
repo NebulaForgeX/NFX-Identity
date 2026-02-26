@@ -1,7 +1,7 @@
 package invitations
 
 import (
-	invitationDomain "nfxid/modules/tenants/domain/invitations"
+	invitationDomain "nfxidentity/modules/tenants/domain/invitations"
 )
 
 type Service struct {

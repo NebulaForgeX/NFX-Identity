@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/image/domain/image_tags"
+	"nfxidentity/modules/image/domain/image_tags"
 
 	"github.com/google/uuid"
 )

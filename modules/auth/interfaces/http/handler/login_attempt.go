@@ -1,13 +1,13 @@
 package handler
 
 import (
-	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
-	loginAttemptAppCommands "nfxid/modules/auth/application/login_attempts/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	loginAttemptApp "nfxidentity/modules/auth/application/login_attempts"
+	loginAttemptAppCommands "nfxidentity/modules/auth/application/login_attempts/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

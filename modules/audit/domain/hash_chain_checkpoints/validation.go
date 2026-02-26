@@ -1,7 +1,7 @@
 package hash_chain_checkpoints
 
 import (
-	auditErr "nfxid/errors/src/audit"
+	auditErr "nfxidentity/errors/src/audit"
 )
 
 func (hcc *HashChainCheckpoint) Validate() error {

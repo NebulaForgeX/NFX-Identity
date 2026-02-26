@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	usercredentialpb "nfxid/protos/gen/auth/user_credential"
+	usercredentialpb "nfxidentity/protos/gen/auth/user_credential"
 )
 
 // UserCredentialClient UserCredential 客户端

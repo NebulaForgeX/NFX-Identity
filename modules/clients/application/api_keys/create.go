@@ -2,9 +2,9 @@ package api_keys
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	apiKeyCommands "nfxid/modules/clients/application/api_keys/commands"
-	apiKeyDomain "nfxid/modules/clients/domain/api_keys"
+	clientsErr "nfxidentity/errors/src/clients"
+	apiKeyCommands "nfxidentity/modules/clients/application/api_keys/commands"
+	apiKeyDomain "nfxidentity/modules/clients/domain/api_keys"
 	"time"
 
 	"github.com/google/uuid"

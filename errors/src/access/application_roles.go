@@ -1,6 +1,6 @@
 package access
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeApplicationRoleNotFound = "APPLICATION_ROLE_NOT_FOUND"

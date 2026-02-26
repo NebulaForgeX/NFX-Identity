@@ -1,12 +1,12 @@
 package user_educations
 
 import (
-	"nfxid/modules/directory/domain/user_educations"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/check"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/create"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/get"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/update"
+	"nfxidentity/modules/directory/domain/user_educations"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/update"
 
 	"gorm.io/gorm"
 )

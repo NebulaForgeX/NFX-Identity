@@ -1,16 +1,16 @@
 package grpc
 
 import (
-	resourceApp "nfxid/modules/system/application/resource"
-	systemStateApp "nfxid/modules/system/application/system_state"
-	grpcHandler "nfxid/modules/system/interfaces/grpc/handler"
-	"nfxid/pkgs/grpcx/interceptor"
-	"nfxid/pkgs/postgresqlx"
-	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/servertoken"
-	healthpb "nfxid/protos/gen/common/health"
-	schemapb "nfxid/protos/gen/common/schema"
-	systemstatepb "nfxid/protos/gen/system/system_state"
+	resourceApp "nfxidentity/modules/system/application/resource"
+	systemStateApp "nfxidentity/modules/system/application/system_state"
+	grpcHandler "nfxidentity/modules/system/interfaces/grpc/handler"
+	"nfxidentity/pkgs/grpcx/interceptor"
+	"nfxidentity/pkgs/postgresqlx"
+	"nfxidentity/pkgs/security/token"
+	"nfxidentity/pkgs/security/token/servertoken"
+	healthpb "nfxidentity/protos/gen/common/health"
+	schemapb "nfxidentity/protos/gen/common/schema"
+	systemstatepb "nfxidentity/protos/gen/system/system_state"
 
 	"google.golang.org/grpc"
 )

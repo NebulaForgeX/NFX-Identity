@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"nfxid/constants"
-	imageAppCommands "nfxid/modules/image/application/images/commands"
-	imageAppResult "nfxid/modules/image/application/images/results"
+	"nfxidentity/constants"
+	imageAppCommands "nfxidentity/modules/image/application/images/commands"
+	imageAppResult "nfxidentity/modules/image/application/images/results"
 
 	"github.com/google/uuid"
 )

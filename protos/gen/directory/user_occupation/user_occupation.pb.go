@@ -445,7 +445,7 @@ const file_directory_user_occupation_proto_rawDesc = "" +
 	"\x10user_occupations\x18\x01 \x03(\v2\x1f.user_occupation.UserOccupationR\x0fuserOccupations2\x97\x02\n" +
 	"\x15UserOccupationService\x12v\n" +
 	"\x15GetUserOccupationByID\x12-.user_occupation.GetUserOccupationByIDRequest\x1a..user_occupation.GetUserOccupationByIDResponse\x12\x85\x01\n" +
-	"\x1aGetUserOccupationsByUserID\x122.user_occupation.GetUserOccupationsByUserIDRequest\x1a3.user_occupation.GetUserOccupationsByUserIDResponseB=Z;nfxid/protos/gen/directory/user_occupation;useroccupationpbb\x06proto3"
+	"\x1aGetUserOccupationsByUserID\x122.user_occupation.GetUserOccupationsByUserIDRequest\x1a3.user_occupation.GetUserOccupationsByUserIDResponseB=Z;nfxidentity/protos/gen/directory/user_occupation;useroccupationpbb\x06proto3"
 
 var (
 	file_directory_user_occupation_proto_rawDescOnce sync.Once

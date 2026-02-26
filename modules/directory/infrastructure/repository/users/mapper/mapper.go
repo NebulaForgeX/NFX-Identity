@@ -1,10 +1,10 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/directory/domain/users"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/enums"
+	"nfxidentity/modules/directory/domain/users"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 )
 
 // UserDomainToModel 将 Domain User 转换为 Model User

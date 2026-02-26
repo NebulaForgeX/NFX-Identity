@@ -2,7 +2,7 @@ package event_search_index
 
 import (
 	"context"
-	eventSearchIndexCommands "nfxid/modules/audit/application/event_search_index/commands"
+	eventSearchIndexCommands "nfxidentity/modules/audit/application/event_search_index/commands"
 )
 
 // DeleteEventSearchIndex 删除事件搜索索引

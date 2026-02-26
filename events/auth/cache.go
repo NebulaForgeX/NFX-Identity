@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // AccountLockoutsInvalidateCacheEvent AccountLockouts 缓存清除事件

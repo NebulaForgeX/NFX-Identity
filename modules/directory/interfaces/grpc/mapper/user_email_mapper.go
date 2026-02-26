@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userEmailAppResult "nfxid/modules/directory/application/user_emails/results"
-	useremailpb "nfxid/protos/gen/directory/user_email"
+	userEmailAppResult "nfxidentity/modules/directory/application/user_emails/results"
+	useremailpb "nfxidentity/protos/gen/directory/user_email"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

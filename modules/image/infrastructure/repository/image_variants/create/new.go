@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/image/domain/image_variants"
-	"nfxid/modules/image/infrastructure/repository/image_variants/mapper"
+	"nfxidentity/modules/image/domain/image_variants"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/mapper"
 )
 
 // New 创建新的 ImageVariant，实现 image_variants.Create 接口

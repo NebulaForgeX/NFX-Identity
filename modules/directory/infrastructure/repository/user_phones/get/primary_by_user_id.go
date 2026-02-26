@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	dirErr "nfxid/errors/src/directory"
-	"nfxid/modules/directory/domain/user_phones"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_phones/mapper"
+	dirErr "nfxidentity/errors/src/directory"
+	"nfxidentity/modules/directory/domain/user_phones"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_phones/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

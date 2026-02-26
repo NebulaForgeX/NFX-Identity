@@ -2,7 +2,7 @@ package user_profiles
 
 import (
 	"context"
-	userProfileResult "nfxid/modules/directory/application/user_profiles/results"
+	userProfileResult "nfxidentity/modules/directory/application/user_profiles/results"
 
 	"github.com/google/uuid"
 )

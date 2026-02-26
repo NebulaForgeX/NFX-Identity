@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	groupAppResult "nfxid/modules/tenants/application/groups/results"
-	groupDomain "nfxid/modules/tenants/domain/groups"
-	grouppb "nfxid/protos/gen/tenants/group"
+	groupAppResult "nfxidentity/modules/tenants/application/groups/results"
+	groupDomain "nfxidentity/modules/tenants/domain/groups"
+	grouppb "nfxidentity/protos/gen/tenants/group"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

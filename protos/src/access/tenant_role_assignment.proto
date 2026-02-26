@@ -1,7 +1,7 @@
 syntax = "proto3";
 package tenant_role_assignment;
 
-option go_package = "nfxid/protos/gen/access/tenant_role_assignment;tenantroleassignmentpb";
+option go_package = "nfxidentity/protos/gen/access/tenant_role_assignment;tenantroleassignmentpb";
 
 import "google/protobuf/timestamp.proto";
 

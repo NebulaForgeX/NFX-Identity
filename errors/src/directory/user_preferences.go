@@ -1,6 +1,6 @@
 package directory
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeUserPreferenceNotFound      = "USER_PREFERENCE_NOT_FOUND"

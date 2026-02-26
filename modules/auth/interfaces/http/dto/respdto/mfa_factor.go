@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	mfaFactorAppResult "nfxid/modules/auth/application/mfa_factors/results"
+	mfaFactorAppResult "nfxidentity/modules/auth/application/mfa_factors/results"
 
 	"github.com/google/uuid"
 )

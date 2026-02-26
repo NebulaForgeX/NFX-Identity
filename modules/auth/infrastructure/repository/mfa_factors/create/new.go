@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/mfa_factors"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/mapper"
+	"nfxidentity/modules/auth/domain/mfa_factors"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/mapper"
 )
 
 // New 创建新的 MFAFactor，实现 mfa_factors.Create 接口

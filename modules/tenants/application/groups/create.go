@@ -2,9 +2,9 @@ package groups
 
 import (
 	"context"
-	groupCommands "nfxid/modules/tenants/application/groups/commands"
-	groupDomain "nfxid/modules/tenants/domain/groups"
-	tenantsErr "nfxid/errors/src/tenants"
+	groupCommands "nfxidentity/modules/tenants/application/groups/commands"
+	groupDomain "nfxidentity/modules/tenants/domain/groups"
+	tenantsErr "nfxidentity/errors/src/tenants"
 
 	"github.com/google/uuid"
 )

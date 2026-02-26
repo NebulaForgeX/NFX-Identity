@@ -1,13 +1,13 @@
 package handler
 
 import (
-	groupApp "nfxid/modules/tenants/application/groups"
-	groupAppCommands "nfxid/modules/tenants/application/groups/commands"
-	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
-	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	groupApp "nfxidentity/modules/tenants/application/groups"
+	groupAppCommands "nfxidentity/modules/tenants/application/groups/commands"
+	"nfxidentity/modules/tenants/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/tenants/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

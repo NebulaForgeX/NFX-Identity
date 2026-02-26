@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // ByName 根据 Name 检查 Badge 是否存在，实现 badges.Check 接口

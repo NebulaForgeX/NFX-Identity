@@ -1,7 +1,7 @@
 package event_retention_policies
 
 import (
-	eventRetentionPolicyDomain "nfxid/modules/audit/domain/event_retention_policies"
+	eventRetentionPolicyDomain "nfxidentity/modules/audit/domain/event_retention_policies"
 )
 
 type Service struct {

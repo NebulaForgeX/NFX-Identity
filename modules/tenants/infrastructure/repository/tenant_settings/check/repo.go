@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/tenants/domain/tenant_settings"
+	"nfxidentity/modules/tenants/domain/tenant_settings"
 
 	"gorm.io/gorm"
 )

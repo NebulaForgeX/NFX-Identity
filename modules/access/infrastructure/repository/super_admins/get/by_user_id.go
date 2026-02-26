@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	accessErr "nfxid/errors/src/access"
-	"nfxid/modules/access/domain/super_admins"
-	"nfxid/modules/access/infrastructure/rdb/models"
-	"nfxid/modules/access/infrastructure/repository/super_admins/mapper"
+	accessErr "nfxidentity/errors/src/access"
+	"nfxidentity/modules/access/domain/super_admins"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/infrastructure/repository/super_admins/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

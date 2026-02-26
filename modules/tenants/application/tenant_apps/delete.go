@@ -2,7 +2,7 @@ package tenant_apps
 
 import (
 	"context"
-	tenantAppCommands "nfxid/modules/tenants/application/tenant_apps/commands"
+	tenantAppCommands "nfxidentity/modules/tenants/application/tenant_apps/commands"
 )
 
 // DeleteTenantApp 删除租户应用

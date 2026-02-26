@@ -3,8 +3,8 @@ package delete
 import (
 	"context"
 
-	accessErr "nfxid/errors/src/access"
-	"nfxid/modules/access/infrastructure/rdb/models"
+	accessErr "nfxidentity/errors/src/access"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 )

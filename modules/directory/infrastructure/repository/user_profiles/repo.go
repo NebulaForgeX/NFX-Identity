@@ -1,12 +1,12 @@
 package user_profiles
 
 import (
-	"nfxid/modules/directory/domain/user_profiles"
-	"nfxid/modules/directory/infrastructure/repository/user_profiles/check"
-	"nfxid/modules/directory/infrastructure/repository/user_profiles/create"
-	"nfxid/modules/directory/infrastructure/repository/user_profiles/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_profiles/get"
-	"nfxid/modules/directory/infrastructure/repository/user_profiles/update"
+	"nfxidentity/modules/directory/domain/user_profiles"
+	"nfxidentity/modules/directory/infrastructure/repository/user_profiles/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_profiles/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_profiles/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_profiles/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_profiles/update"
 
 	"gorm.io/gorm"
 )

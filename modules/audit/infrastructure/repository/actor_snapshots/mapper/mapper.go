@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/enums"
-	"nfxid/modules/audit/domain/actor_snapshots"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 
 	"gorm.io/datatypes"
 )

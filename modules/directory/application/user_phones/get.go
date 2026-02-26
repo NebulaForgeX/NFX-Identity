@@ -2,7 +2,7 @@ package user_phones
 
 import (
 	"context"
-	userPhoneResult "nfxid/modules/directory/application/user_phones/results"
+	userPhoneResult "nfxidentity/modules/directory/application/user_phones/results"
 
 	"github.com/google/uuid"
 )

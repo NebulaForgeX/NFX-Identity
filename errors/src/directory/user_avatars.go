@@ -1,6 +1,6 @@
 package directory
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeUserAvatarNotFound = "USER_AVATAR_NOT_FOUND"

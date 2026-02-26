@@ -2,7 +2,7 @@ package tenants
 
 import (
 	"context"
-	tenantCommands "nfxid/modules/tenants/application/tenants/commands"
+	tenantCommands "nfxidentity/modules/tenants/application/tenants/commands"
 )
 
 // UpdateTenant 更新租户

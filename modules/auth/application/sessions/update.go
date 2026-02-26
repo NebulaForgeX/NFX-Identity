@@ -2,7 +2,7 @@ package sessions
 
 import (
 	"context"
-	sessionCommands "nfxid/modules/auth/application/sessions/commands"
+	sessionCommands "nfxidentity/modules/auth/application/sessions/commands"
 )
 
 // UpdateSessionLastSeen 更新会话最后访问时间

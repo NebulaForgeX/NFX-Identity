@@ -1,6 +1,6 @@
 package clients
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeAppNotFound        = "APP_NOT_FOUND"

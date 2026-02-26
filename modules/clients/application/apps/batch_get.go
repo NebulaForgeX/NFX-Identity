@@ -2,7 +2,7 @@ package apps
 
 import (
 	"context"
-	appResult "nfxid/modules/clients/application/apps/results"
+	appResult "nfxidentity/modules/clients/application/apps/results"
 
 	"github.com/google/uuid"
 )

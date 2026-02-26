@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/rate_limits"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
+	"nfxidentity/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/mapper"
 )
 
 // Generic 通用更新 RateLimit，实现 rate_limits.Update 接口

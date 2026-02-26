@@ -1,13 +1,13 @@
 package handler
 
 import (
-	memberRoleApp "nfxid/modules/tenants/application/member_roles"
-	memberRoleAppCommands "nfxid/modules/tenants/application/member_roles/commands"
-	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
-	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	memberRoleApp "nfxidentity/modules/tenants/application/member_roles"
+	memberRoleAppCommands "nfxidentity/modules/tenants/application/member_roles/commands"
+	"nfxidentity/modules/tenants/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/tenants/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

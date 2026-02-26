@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/auth/domain/password_history"
+	"nfxidentity/modules/auth/domain/password_history"
 
 	"gorm.io/gorm"
 )

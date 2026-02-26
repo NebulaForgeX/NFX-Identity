@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/invitations"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/mapper"
+	"nfxidentity/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/mapper"
 )
 
 // ByStatus 根据 Status 获取 Invitation 列表，实现 invitations.Get 接口

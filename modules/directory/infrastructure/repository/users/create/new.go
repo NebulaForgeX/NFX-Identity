@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/users"
-	"nfxid/modules/directory/infrastructure/repository/users/mapper"
+	"nfxidentity/modules/directory/domain/users"
+	"nfxidentity/modules/directory/infrastructure/repository/users/mapper"
 )
 
 // New 创建新的 User，实现 users.Create 接口

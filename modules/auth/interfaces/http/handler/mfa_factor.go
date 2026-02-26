@@ -1,13 +1,13 @@
 package handler
 
 import (
-	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
-	mfaFactorAppCommands "nfxid/modules/auth/application/mfa_factors/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	mfaFactorApp "nfxidentity/modules/auth/application/mfa_factors"
+	mfaFactorAppCommands "nfxidentity/modules/auth/application/mfa_factors/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"

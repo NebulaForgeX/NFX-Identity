@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/access/domain/super_admins"
-	"nfxid/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/domain/super_admins"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
 )
 
 func SuperAdminDomainToModel(s *super_admins.SuperAdmin) *models.SuperAdmin {

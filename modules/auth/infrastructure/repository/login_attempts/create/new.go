@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/login_attempts"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/mapper"
+	"nfxidentity/modules/auth/domain/login_attempts"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/mapper"
 )
 
 // New 创建新的 LoginAttempt，实现 login_attempts.Create 接口

@@ -2,9 +2,9 @@ package event_retention_policies
 
 import (
 	"context"
-	auditErr "nfxid/errors/src/audit"
-	eventRetentionPolicyCommands "nfxid/modules/audit/application/event_retention_policies/commands"
-	eventRetentionPolicyDomain "nfxid/modules/audit/domain/event_retention_policies"
+	auditErr "nfxidentity/errors/src/audit"
+	eventRetentionPolicyCommands "nfxidentity/modules/audit/application/event_retention_policies/commands"
+	eventRetentionPolicyDomain "nfxidentity/modules/audit/domain/event_retention_policies"
 
 	"github.com/google/uuid"
 )

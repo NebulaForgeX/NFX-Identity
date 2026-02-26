@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 	"errors"
-	"nfxid/modules/audit/domain/hash_chain_checkpoints"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/mapper"
+	"nfxidentity/modules/audit/domain/hash_chain_checkpoints"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/hash_chain_checkpoints/mapper"
 	"time"
 
 	"gorm.io/gorm"

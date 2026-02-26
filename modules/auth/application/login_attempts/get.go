@@ -2,7 +2,7 @@ package login_attempts
 
 import (
 	"context"
-	loginAttemptResult "nfxid/modules/auth/application/login_attempts/results"
+	loginAttemptResult "nfxidentity/modules/auth/application/login_attempts/results"
 
 	"github.com/google/uuid"
 )

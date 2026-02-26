@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_educations"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/mapper"
+	"nfxidentity/modules/directory/domain/user_educations"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/mapper"
 )
 
 // Generic 通用更新 UserEducation，实现 user_educations.Update 接口

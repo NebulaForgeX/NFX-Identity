@@ -2,7 +2,7 @@ package members
 
 import (
 	"context"
-	memberCommands "nfxid/modules/tenants/application/members/commands"
+	memberCommands "nfxidentity/modules/tenants/application/members/commands"
 )
 
 // UpdateMemberStatus 更新成员状态

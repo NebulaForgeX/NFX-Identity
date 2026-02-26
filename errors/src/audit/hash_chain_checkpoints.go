@@ -1,6 +1,6 @@
 package audit
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeHashChainCheckpointNotFound = "HASH_CHAIN_CHECKPOINT_NOT_FOUND"

@@ -1,7 +1,7 @@
 package dto
 
 import (
-	useremailpb "nfxid/protos/gen/directory/user_email"
+	useremailpb "nfxidentity/protos/gen/directory/user_email"
 )
 
 // CreateUserEmailDTO 创建用户邮箱的 DTO

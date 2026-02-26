@@ -2,7 +2,7 @@ package users
 
 import (
 	"context"
-	userCommands "nfxid/modules/directory/application/users/commands"
+	userCommands "nfxidentity/modules/directory/application/users/commands"
 )
 
 // UpdateUserStatus 更新用户状态

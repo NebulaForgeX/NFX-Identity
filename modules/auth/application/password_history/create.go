@@ -2,8 +2,8 @@ package password_history
 
 import (
 	"context"
-	passwordHistoryCommands "nfxid/modules/auth/application/password_history/commands"
-	passwordHistoryDomain "nfxid/modules/auth/domain/password_history"
+	passwordHistoryCommands "nfxidentity/modules/auth/application/password_history/commands"
+	passwordHistoryDomain "nfxidentity/modules/auth/domain/password_history"
 
 	"github.com/google/uuid"
 )

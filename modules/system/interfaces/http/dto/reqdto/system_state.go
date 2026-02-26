@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	bootstrapCommands "nfxid/modules/system/application/bootstrap/commands"
-	systemStateCommands "nfxid/modules/system/application/system_state/commands"
+	bootstrapCommands "nfxidentity/modules/system/application/bootstrap/commands"
+	systemStateCommands "nfxidentity/modules/system/application/system_state/commands"
 
 	"github.com/google/uuid"
 )

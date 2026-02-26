@@ -1,4 +1,4 @@
-module nfxid
+module nfxidentity
 
 go 1.25.0
 

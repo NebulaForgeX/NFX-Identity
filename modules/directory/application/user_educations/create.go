@@ -2,8 +2,8 @@ package user_educations
 
 import (
 	"context"
-	userEducationCommands "nfxid/modules/directory/application/user_educations/commands"
-	userEducationDomain "nfxid/modules/directory/domain/user_educations"
+	userEducationCommands "nfxidentity/modules/directory/application/user_educations/commands"
+	userEducationDomain "nfxidentity/modules/directory/domain/user_educations"
 	"time"
 
 	"github.com/google/uuid"

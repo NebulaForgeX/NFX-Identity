@@ -1,8 +1,8 @@
 package fiberx
 
 import (
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/validatorx"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/validatorx"
 
 	"github.com/go-playground/validator/v10"
 )

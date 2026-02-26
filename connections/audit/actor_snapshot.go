@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	actorsnapshotpb "nfxid/protos/gen/audit/actor_snapshot"
+	actorsnapshotpb "nfxidentity/protos/gen/audit/actor_snapshot"
 )
 
 // ActorSnapshotClient ActorSnapshot 客户端

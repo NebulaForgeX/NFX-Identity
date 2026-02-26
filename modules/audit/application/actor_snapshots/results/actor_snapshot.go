@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
 
 	"github.com/google/uuid"
 )

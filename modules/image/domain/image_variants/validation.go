@@ -1,7 +1,7 @@
 package image_variants
 
 import (
-	imageErr "nfxid/errors/src/image"
+	imageErr "nfxidentity/errors/src/image"
 
 	"github.com/google/uuid"
 )

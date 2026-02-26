@@ -1,7 +1,7 @@
 package account_lockouts
 
 import (
-	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
+	accountLockoutDomain "nfxidentity/modules/auth/domain/account_lockouts"
 )
 
 type Service struct {

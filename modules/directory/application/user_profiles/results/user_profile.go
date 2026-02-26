@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/directory/domain/user_profiles"
+	"nfxidentity/modules/directory/domain/user_profiles"
 
 	"github.com/google/uuid"
 )

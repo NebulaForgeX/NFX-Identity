@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	userAvatarApp "nfxid/modules/directory/application/user_avatars"
-	userAvatarAppCommands "nfxid/modules/directory/application/user_avatars/commands"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	useravatarpb "nfxid/protos/gen/directory/user_avatar"
+	userAvatarApp "nfxidentity/modules/directory/application/user_avatars"
+	userAvatarAppCommands "nfxidentity/modules/directory/application/user_avatars/commands"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	useravatarpb "nfxidentity/protos/gen/directory/user_avatar"
 
 	"github.com/google/uuid"
 )

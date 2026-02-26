@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"nfxid/modules/auth/config"
-	"nfxid/pkgs/tokenx"
+	"nfxidentity/modules/auth/config"
+	"nfxidentity/pkgs/tokenx"
 
 	"google.golang.org/grpc"
 )

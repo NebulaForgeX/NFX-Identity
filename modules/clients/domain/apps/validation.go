@@ -1,7 +1,7 @@
 package apps
 
 import (
-	clientsErr "nfxid/errors/src/clients"
+	clientsErr "nfxidentity/errors/src/clients"
 
 	"github.com/google/uuid"
 )

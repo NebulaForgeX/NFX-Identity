@@ -2,7 +2,7 @@ package trusted_devices
 
 import (
 	"context"
-	trustedDeviceCommands "nfxid/modules/auth/application/trusted_devices/commands"
+	trustedDeviceCommands "nfxidentity/modules/auth/application/trusted_devices/commands"
 )
 
 // DeleteTrustedDevice 删除受信任设备

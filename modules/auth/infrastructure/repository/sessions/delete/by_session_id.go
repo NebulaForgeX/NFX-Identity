@@ -2,8 +2,8 @@ package delete
 
 import (
 	"context"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // BySessionID 根据 SessionID 删除 Session，实现 sessions.Delete 接口

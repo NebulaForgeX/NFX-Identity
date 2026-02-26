@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/tenants/domain/tenant_apps"
+	"nfxidentity/modules/tenants/domain/tenant_apps"
 
 	"gorm.io/gorm"
 )

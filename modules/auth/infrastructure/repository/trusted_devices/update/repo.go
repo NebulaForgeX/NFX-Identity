@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/auth/domain/trusted_devices"
+	"nfxidentity/modules/auth/domain/trusted_devices"
 
 	"gorm.io/gorm"
 )

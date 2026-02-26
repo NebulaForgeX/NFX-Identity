@@ -2,7 +2,7 @@ package user_credentials
 
 import (
 	"context"
-	userCredentialResult "nfxid/modules/auth/application/user_credentials/results"
+	userCredentialResult "nfxidentity/modules/auth/application/user_credentials/results"
 
 	"github.com/google/uuid"
 )

@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/clients/domain/client_credentials"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/clients/domain/client_credentials"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ClientCredentialDomainToModel 将 Domain ClientCredential 转换为 Model ClientCredential

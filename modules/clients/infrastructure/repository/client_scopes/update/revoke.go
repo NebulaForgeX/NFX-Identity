@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

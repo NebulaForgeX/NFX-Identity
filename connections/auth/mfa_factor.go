@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
+	mfafactorpb "nfxidentity/protos/gen/auth/mfa_factor"
 )
 
 // MfaFactorClient MfaFactor 客户端

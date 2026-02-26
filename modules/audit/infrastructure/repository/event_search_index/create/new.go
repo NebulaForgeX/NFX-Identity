@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/event_search_index"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/mapper"
+	"nfxidentity/modules/audit/domain/event_search_index"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/mapper"
 )
 
 // New 创建新的 EventSearchIndex，实现 event_search_index.Create 接口

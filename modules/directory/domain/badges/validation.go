@@ -1,7 +1,7 @@
 package badges
 
 import (
-	dirErr "nfxid/errors/src/directory"
+	dirErr "nfxidentity/errors/src/directory"
 )
 
 func (b *Badge) Validate() error {

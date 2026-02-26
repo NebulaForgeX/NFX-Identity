@@ -1,7 +1,7 @@
 package api_keys
 
 import (
-	apiKeyDomain "nfxid/modules/clients/domain/api_keys"
+	apiKeyDomain "nfxidentity/modules/clients/domain/api_keys"
 )
 
 type Service struct {

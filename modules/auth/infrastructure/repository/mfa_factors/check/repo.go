@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/auth/domain/mfa_factors"
+	"nfxidentity/modules/auth/domain/mfa_factors"
 
 	"gorm.io/gorm"
 )

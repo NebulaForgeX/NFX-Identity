@@ -3,10 +3,10 @@ package get
 import (
 	"context"
 	"errors"
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/domain/client_credentials"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/mapper"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/domain/client_credentials"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/mapper"
 
 	"gorm.io/gorm"
 )

@@ -1,7 +1,7 @@
 package user_educations
 
 import (
-	userEducationDomain "nfxid/modules/directory/domain/user_educations"
+	userEducationDomain "nfxidentity/modules/directory/domain/user_educations"
 )
 
 type Service struct {

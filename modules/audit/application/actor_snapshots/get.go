@@ -2,7 +2,7 @@ package actor_snapshots
 
 import (
 	"context"
-	actorSnapshotResult "nfxid/modules/audit/application/actor_snapshots/results"
+	actorSnapshotResult "nfxidentity/modules/audit/application/actor_snapshots/results"
 
 	"github.com/google/uuid"
 )

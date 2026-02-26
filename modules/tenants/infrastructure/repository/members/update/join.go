@@ -2,8 +2,8 @@ package update
 
 import (
 	"context"
-	"nfxid/enums"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 	"time"
 
 	"github.com/google/uuid"

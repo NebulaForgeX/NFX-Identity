@@ -2,8 +2,8 @@ package fiberx
 
 import (
 	"errors"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"

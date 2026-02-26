@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	userphonepb "nfxid/protos/gen/directory/user_phone"
+	userphonepb "nfxidentity/protos/gen/directory/user_phone"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

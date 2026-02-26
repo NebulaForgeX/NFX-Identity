@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	tenantAppCommands "nfxid/modules/tenants/application/tenants/commands"
-	tenantDomain "nfxid/modules/tenants/domain/tenants"
+	tenantAppCommands "nfxidentity/modules/tenants/application/tenants/commands"
+	tenantDomain "nfxidentity/modules/tenants/domain/tenants"
 
 	"github.com/google/uuid"
 )

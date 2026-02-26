@@ -1,12 +1,12 @@
 package password_history
 
 import (
-	"nfxid/modules/auth/domain/password_history"
-	"nfxid/modules/auth/infrastructure/repository/password_history/check"
-	"nfxid/modules/auth/infrastructure/repository/password_history/create"
-	"nfxid/modules/auth/infrastructure/repository/password_history/delete"
-	"nfxid/modules/auth/infrastructure/repository/password_history/get"
-	"nfxid/modules/auth/infrastructure/repository/password_history/update"
+	"nfxidentity/modules/auth/domain/password_history"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/check"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/create"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/get"
+	"nfxidentity/modules/auth/infrastructure/repository/password_history/update"
 
 	"gorm.io/gorm"
 )

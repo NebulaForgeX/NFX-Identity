@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	imageCommands "nfxid/modules/image/application/images/commands"
+	imageCommands "nfxidentity/modules/image/application/images/commands"
 )
 
 // DeleteImage 删除图片（先删磁盘文件，再删数据库记录）

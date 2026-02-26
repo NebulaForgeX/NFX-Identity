@@ -2,7 +2,7 @@ package member_groups
 
 import (
 	"context"
-	memberGroupCommands "nfxid/modules/tenants/application/member_groups/commands"
+	memberGroupCommands "nfxidentity/modules/tenants/application/member_groups/commands"
 )
 
 // DeleteMemberGroup 删除成员组

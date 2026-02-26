@@ -22,12 +22,14 @@ type ExchangeType string
 **值**：`"direct"`
 
 **特点**：
+
 - 精确匹配 RoutingKey
 - 完全匹配才路由
 
 **使用场景**：点对点通信、精确路由
 
 **示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     order_paid = {
@@ -42,6 +44,7 @@ type ExchangeType string
 **值**：`"topic"`
 
 **特点**：
+
 - 支持通配符匹配（`*` 和 `#`）
 - `*` 匹配一个单词
 - `#` 匹配零个或多个单词
@@ -50,6 +53,7 @@ type ExchangeType string
 **使用场景**：需要灵活路由、按消息类型路由
 
 **示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     user_events = {
@@ -64,6 +68,7 @@ type ExchangeType string
 **值**：`"fanout"`
 
 **特点**：
+
 - 忽略 RoutingKey
 - 广播到所有绑定的队列
 - 一条消息 → 所有队列
@@ -71,6 +76,7 @@ type ExchangeType string
 **使用场景**：系统通知、配置更新、缓存失效
 
 **示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     cache_invalidate = {
@@ -87,6 +93,7 @@ type ExchangeType string
 **值**：`"headers"`
 
 **特点**：
+
 - 根据消息头（Headers）匹配
 - 忽略 RoutingKey
 - 支持 `x-match` 参数（`all` 或 `any`）
@@ -94,6 +101,7 @@ type ExchangeType string
 **使用场景**：基于消息头进行复杂路由
 
 **示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     header_routed = {
@@ -112,16 +120,19 @@ type ExchangeType string
 **需要插件**：`rabbitmq-delayed-message-exchange`
 
 **安装**：
+
 ```bash
 rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 ```
 
 **特点**：
+
 - 支持延迟消息投递
 - 通过 `x-delay` 消息头指定延迟时间（毫秒）
 - 底层使用其他 Exchange 类型（默认 topic）
 
 **配置示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     delayed_notification = {
@@ -132,6 +143,7 @@ rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 ```
 
 **使用示例**：
+
 ```go
 // 发布延迟 5 秒的消息
 messaging.PublishMessage(ctx, publisher, msg,
@@ -148,16 +160,19 @@ messaging.PublishMessage(ctx, publisher, msg,
 **需要插件**：`rabbitmq-consistent-hash-exchange`
 
 **安装**：
+
 ```bash
 rabbitmq-plugins enable rabbitmq_consistent_hash_exchange
 ```
 
 **特点**：
+
 - 根据 RoutingKey 的哈希值路由消息
 - 实现负载均衡
 - 相同 RoutingKey 总是路由到同一个队列
 
 **配置示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     load_balanced = {
@@ -174,15 +189,18 @@ rabbitmq-plugins enable rabbitmq_consistent_hash_exchange
 **需要插件**：`rabbitmq-sharding`
 
 **安装**：
+
 ```bash
 rabbitmq-plugins enable rabbitmq_sharding
 ```
 
 **特点**：
+
 - 将消息分片到多个队列
 - 提高并发处理能力
 
 **配置示例**：
+
 ```toml
 [rabbitmq.producer_exchanges]
     sharded = {
@@ -229,8 +247,8 @@ rabbitmq-plugins enable rabbitmq_sharding
 ```go
 import (
     "context"
-    "nfxid/messages/directory"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/messages/directory"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 // 发送到 Fanout Exchange（广播）
@@ -251,6 +269,7 @@ err := messaging.PublishMessage(ctx, publisher, delayedMsg,
 ```
 
 **优点**：
+
 - ✅ **灵活性最高**：每次发送消息时可以指定不同的 Exchange 类型
 - ✅ **不需要预先配置**：不需要在配置文件中指定 Exchange 类型
 - ✅ **自动声明**：如果 Exchange 不存在，自动创建（使用指定的类型）
@@ -262,21 +281,21 @@ err := messaging.PublishMessage(ctx, publisher, delayedMsg,
 
 ```toml
 [rabbitmq.exchange]
-    name = "nfxid-events"
+    name = "nfxidentity-events"
     type = "topic"  # 默认类型
     durable = true
 
 [rabbitmq.producer_exchanges]
     # 使用 Topic Exchange
-    directory = { 
-        exchange = "nfxid-events", 
+    directory = {
+        exchange = "nfxidentity-events",
         routing_key = "directory.user.update",
         type = "topic"  # ✅ 可选，指定 Exchange 类型
     }
-    
+
     # 使用 Fanout Exchange（广播）
-    user_cache_invalidate = { 
-        exchange = "cache-broadcast", 
+    user_cache_invalidate = {
+        exchange = "cache-broadcast",
         routing_key = "",
         type = "fanout"  # ✅ 指定为 Fanout Exchange
     }
@@ -306,6 +325,7 @@ err := messaging.PublishMessage(ctx, publisher, delayedMsg,
 ### 自动声明 Exchange
 
 **发送时动态声明**（推荐）：
+
 ```go
 // 第一次发送消息时，自动声明 Exchange
 err := messaging.PublishMessage(ctx, publisher, msg,
@@ -315,6 +335,7 @@ err := messaging.PublishMessage(ctx, publisher, msg,
 ```
 
 **预先声明**（可选）：
+
 ```go
 publisher, err := rabbitmqx.NewPublisher(cfg)
 // ✅ 可选：预先声明所有配置中的 Exchange
@@ -364,9 +385,9 @@ if exchangeType.IsBasicType() {
 ```go
 import (
     "context"
-    "nfxid/messages/directory"
-    "nfxid/pkgs/rabbitmqx"
-    "nfxid/pkgs/rabbitmqx/messaging"
+    "nfxidentity/messages/directory"
+    "nfxidentity/pkgs/rabbitmqx"
+    "nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 // 配置中只需要指定 Exchange 名称和 RoutingKey，不需要指定 type
@@ -377,7 +398,7 @@ cfg := &rabbitmqx.Config{
     },
     ProducerExchanges: map[messaging.MessageKey]rabbitmqx.ProducerRouting{
         "directory": {
-            Exchange:   "nfxid-events",
+            Exchange:   "nfxidentity-events",
             RoutingKey: "directory.user.update",
             // ✅ 不需要指定 type，在发送时指定
         },
@@ -419,38 +440,38 @@ err = messaging.PublishMessage(ctx, publisher, delayedMsg,
 ```toml
 [rabbitmq]
     uri = "amqp://guest:guest@localhost:5672/"
-    client_id = "nfxid-service"
-    
+    client_id = "nfxidentity-service"
+
     # 全局 Exchange 配置（用于默认 Exchange）
     [rabbitmq.exchange]
-        name = "nfxid-events"
+        name = "nfxidentity-events"
         type = "topic"  # 默认类型
         durable = true
         auto_delete = false
-    
+
     # 为不同的消息配置不同的 Exchange 类型
     [rabbitmq.producer_exchanges]
         # Topic Exchange（用于普通消息）
-        directory = { 
-            exchange = "nfxid-events", 
+        directory = {
+            exchange = "nfxidentity-events",
             routing_key = "directory.user.update",
             type = "topic"  # ✅ 可选，覆盖全局配置
         }
-        
+
         # Fanout Exchange（用于广播缓存清除）
-        user_cache_invalidate = { 
-            exchange = "cache-broadcast", 
+        user_cache_invalidate = {
+            exchange = "cache-broadcast",
             routing_key = "",
             type = "fanout"  # ✅ 指定为 Fanout Exchange
         }
-        
+
         # Direct Exchange（用于精确路由）
         order_paid = {
             exchange = "order-events",
             routing_key = "order.paid",
             type = "direct"  # ✅ 指定为 Direct Exchange
         }
-        
+
         # 延迟消息 Exchange（需要插件）
         delayed_notification = {
             exchange = "delayed-events",
@@ -464,6 +485,7 @@ err = messaging.PublishMessage(ctx, publisher, delayedMsg,
 ## 最佳实践
 
 1. **✅ 在发送消息时指定 Exchange 类型**（推荐）：
+
    ```go
    // 每次发送时可以指定不同的 Exchange 类型
    messaging.PublishMessage(ctx, publisher, msg,

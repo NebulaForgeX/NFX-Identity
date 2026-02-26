@@ -2,8 +2,8 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/modules/system/domain/system_state"
-	"nfxid/modules/system/infrastructure/rdb/models"
+	"nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/modules/system/infrastructure/rdb/models"
 
 	"gorm.io/datatypes"
 )

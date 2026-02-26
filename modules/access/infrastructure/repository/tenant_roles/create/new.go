@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/access/domain/tenant_roles"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/mapper"
+	"nfxidentity/modules/access/domain/tenant_roles"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/mapper"
 )
 
 func (h *Handler) New(ctx context.Context, r *tenant_roles.TenantRole) error {

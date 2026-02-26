@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/login_attempts"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/mapper"
+	"nfxidentity/modules/auth/domain/login_attempts"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/mapper"
 )
 
 // Generic 通用更新 LoginAttempt，实现 login_attempts.Update 接口

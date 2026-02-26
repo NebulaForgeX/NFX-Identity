@@ -2,7 +2,7 @@ package ip_allowlist
 
 import (
 	"context"
-	ipAllowlistCommands "nfxid/modules/clients/application/ip_allowlist/commands"
+	ipAllowlistCommands "nfxidentity/modules/clients/application/ip_allowlist/commands"
 )
 
 // DeleteIPAllowlist 删除IP白名单

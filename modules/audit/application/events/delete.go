@@ -2,7 +2,7 @@ package events
 
 import (
 	"context"
-	eventCommands "nfxid/modules/audit/application/events/commands"
+	eventCommands "nfxidentity/modules/audit/application/events/commands"
 )
 
 // DeleteEvent 删除事件

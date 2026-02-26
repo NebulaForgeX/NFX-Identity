@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_occupations"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/mapper"
+	"nfxidentity/modules/directory/domain/user_occupations"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/mapper"
 )
 
 // New 创建新的 UserOccupation，实现 user_occupations.Create 接口

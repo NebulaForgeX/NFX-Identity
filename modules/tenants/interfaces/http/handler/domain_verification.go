@@ -1,13 +1,13 @@
 package handler
 
 import (
-	domainVerificationApp "nfxid/modules/tenants/application/domain_verifications"
-	domainVerificationAppCommands "nfxid/modules/tenants/application/domain_verifications/commands"
-	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
-	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	domainVerificationApp "nfxidentity/modules/tenants/application/domain_verifications"
+	domainVerificationAppCommands "nfxidentity/modules/tenants/application/domain_verifications/commands"
+	"nfxidentity/modules/tenants/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/tenants/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

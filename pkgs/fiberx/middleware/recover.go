@@ -3,7 +3,7 @@ package middleware
 import (
 	"runtime/debug"
 
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/gofiber/fiber/v3"
 	fiberrecover "github.com/gofiber/fiber/v3/middleware/recover"

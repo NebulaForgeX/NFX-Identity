@@ -2,7 +2,7 @@ package image_types
 
 import (
 	"context"
-	imageTypeResult "nfxid/modules/image/application/image_types/results"
+	imageTypeResult "nfxidentity/modules/image/application/image_types/results"
 
 	"github.com/google/uuid"
 )

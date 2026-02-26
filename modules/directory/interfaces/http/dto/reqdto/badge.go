@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	badgeAppCommands "nfxid/modules/directory/application/badges/commands"
+	badgeAppCommands "nfxidentity/modules/directory/application/badges/commands"
 
 	"github.com/google/uuid"
 )

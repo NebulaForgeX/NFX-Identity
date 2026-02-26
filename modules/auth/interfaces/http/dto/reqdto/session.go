@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	sessionAppCommands "nfxid/modules/auth/application/sessions/commands"
-	sessionDomain "nfxid/modules/auth/domain/sessions"
+	sessionAppCommands "nfxidentity/modules/auth/application/sessions/commands"
+	sessionDomain "nfxidentity/modules/auth/domain/sessions"
 
 	"github.com/google/uuid"
 )

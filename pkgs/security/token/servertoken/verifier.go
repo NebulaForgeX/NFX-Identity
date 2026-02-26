@@ -3,7 +3,7 @@ package servertoken
 import (
 	"context"
 	"fmt"
-	"nfxid/pkgs/security/token"
+	"nfxidentity/pkgs/security/token"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

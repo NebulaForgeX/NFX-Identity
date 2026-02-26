@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	mfaFactorApp "nfxid/modules/auth/application/mfa_factors"
-	"nfxid/pkgs/errx"
-	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
+	mfaFactorApp "nfxidentity/modules/auth/application/mfa_factors"
+	"nfxidentity/pkgs/errx"
+	mfafactorpb "nfxidentity/protos/gen/auth/mfa_factor"
 )
 
 type MFAFactorHandler struct {

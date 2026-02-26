@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/tenants/domain/member_groups"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/domain/member_groups"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 )
 
 // MemberGroupDomainToModel 将 Domain MemberGroup 转换为 Model MemberGroup

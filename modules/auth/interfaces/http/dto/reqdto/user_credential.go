@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
+	userCredentialAppCommands "nfxidentity/modules/auth/application/user_credentials/commands"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
 
 	"github.com/google/uuid"
 )

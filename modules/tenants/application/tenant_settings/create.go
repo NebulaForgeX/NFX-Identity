@@ -2,9 +2,9 @@ package tenant_settings
 
 import (
 	"context"
-	tenantSettingCommands "nfxid/modules/tenants/application/tenant_settings/commands"
-	tenantSettingDomain "nfxid/modules/tenants/domain/tenant_settings"
-	tenantsErr "nfxid/errors/src/tenants"
+	tenantSettingCommands "nfxidentity/modules/tenants/application/tenant_settings/commands"
+	tenantSettingDomain "nfxidentity/modules/tenants/domain/tenant_settings"
+	tenantsErr "nfxidentity/errors/src/tenants"
 
 	"github.com/google/uuid"
 )

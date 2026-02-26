@@ -1,7 +1,7 @@
 package application_role_assignments
 
 import (
-	accessErr "nfxid/errors/src/access"
+	accessErr "nfxidentity/errors/src/access"
 
 	"github.com/google/uuid"
 )

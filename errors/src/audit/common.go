@@ -1,6 +1,6 @@
 package audit
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 // Shared codes and errors used by multiple audit domains.
 const (

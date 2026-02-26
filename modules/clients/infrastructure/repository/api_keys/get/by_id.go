@@ -3,10 +3,10 @@ package get
 import (
 	"context"
 	"errors"
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/domain/api_keys"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/mapper"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/domain/api_keys"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

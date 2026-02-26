@@ -1,7 +1,7 @@
 package image
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // ImageTagsInvalidateCacheEvent ImageTags 缓存清除事件

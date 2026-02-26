@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	systemStateDomain "nfxid/modules/system/domain/system_state"
-	grpcClients "nfxid/modules/system/infrastructure/grpc"
+	systemStateDomain "nfxidentity/modules/system/domain/system_state"
+	grpcClients "nfxidentity/modules/system/infrastructure/grpc"
 )
 
 // Service 系统初始化服务

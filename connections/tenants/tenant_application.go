@@ -3,7 +3,7 @@ package tenants
 import (
 	"context"
 	"fmt"
-	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
+	tenantapplicationpb "nfxidentity/protos/gen/tenants/tenant_application"
 )
 
 type TenantApplicationClient struct {

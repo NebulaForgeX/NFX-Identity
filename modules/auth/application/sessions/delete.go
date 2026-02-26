@@ -2,7 +2,7 @@ package sessions
 
 import (
 	"context"
-	sessionCommands "nfxid/modules/auth/application/sessions/commands"
+	sessionCommands "nfxidentity/modules/auth/application/sessions/commands"
 )
 
 // DeleteSession 删除会话

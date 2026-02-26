@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	userProfileAppCommands "nfxid/modules/directory/application/user_profiles/commands"
+	userProfileAppCommands "nfxidentity/modules/directory/application/user_profiles/commands"
 
 	"github.com/google/uuid"
 )

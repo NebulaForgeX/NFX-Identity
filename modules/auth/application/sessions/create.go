@@ -2,8 +2,8 @@ package sessions
 
 import (
 	"context"
-	sessionCommands "nfxid/modules/auth/application/sessions/commands"
-	sessionDomain "nfxid/modules/auth/domain/sessions"
+	sessionCommands "nfxidentity/modules/auth/application/sessions/commands"
+	sessionDomain "nfxidentity/modules/auth/domain/sessions"
 	"time"
 
 	"github.com/google/uuid"

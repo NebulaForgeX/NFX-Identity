@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 	"errors"
-	"nfxid/modules/image/domain/image_tags"
-	"nfxid/modules/image/infrastructure/rdb/models"
-	"nfxid/modules/image/infrastructure/repository/image_tags/mapper"
+	"nfxidentity/modules/image/domain/image_tags"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

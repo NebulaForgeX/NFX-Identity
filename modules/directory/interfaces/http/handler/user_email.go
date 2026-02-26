@@ -1,13 +1,13 @@
 package handler
 
 import (
-	userEmailApp "nfxid/modules/directory/application/user_emails"
-	userEmailAppCommands "nfxid/modules/directory/application/user_emails/commands"
-	"nfxid/modules/directory/interfaces/http/dto/reqdto"
-	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	userEmailApp "nfxidentity/modules/directory/application/user_emails"
+	userEmailAppCommands "nfxidentity/modules/directory/application/user_emails/commands"
+	"nfxidentity/modules/directory/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/directory/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

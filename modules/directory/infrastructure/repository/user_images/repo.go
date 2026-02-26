@@ -1,12 +1,12 @@
 package user_images
 
 import (
-	"nfxid/modules/directory/domain/user_images"
-	"nfxid/modules/directory/infrastructure/repository/user_images/check"
-	"nfxid/modules/directory/infrastructure/repository/user_images/create"
-	"nfxid/modules/directory/infrastructure/repository/user_images/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_images/get"
-	"nfxid/modules/directory/infrastructure/repository/user_images/update"
+	"nfxidentity/modules/directory/domain/user_images"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/update"
 
 	"gorm.io/gorm"
 )

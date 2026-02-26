@@ -2,7 +2,7 @@ package groups
 
 import (
 	"context"
-	groupResult "nfxid/modules/tenants/application/groups/results"
+	groupResult "nfxidentity/modules/tenants/application/groups/results"
 
 	"github.com/google/uuid"
 )

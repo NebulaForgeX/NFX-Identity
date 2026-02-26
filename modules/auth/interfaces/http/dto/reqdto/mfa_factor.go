@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	mfaFactorAppCommands "nfxid/modules/auth/application/mfa_factors/commands"
-	mfaFactorDomain "nfxid/modules/auth/domain/mfa_factors"
+	mfaFactorAppCommands "nfxidentity/modules/auth/application/mfa_factors/commands"
+	mfaFactorDomain "nfxidentity/modules/auth/domain/mfa_factors"
 
 	"github.com/google/uuid"
 )

@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/image/domain/image_tags"
-	"nfxid/modules/image/infrastructure/repository/image_tags/mapper"
+	"nfxidentity/modules/image/domain/image_tags"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/mapper"
 )
 
 // New 创建新的 ImageTag，实现 image_tags.Create 接口

@@ -3,7 +3,7 @@ package update
 import (
 	"context"
 	"encoding/json"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 	"time"
 
 	"github.com/google/uuid"

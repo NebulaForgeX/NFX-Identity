@@ -2,7 +2,7 @@ package event_retention_policies
 
 import (
 	"context"
-	eventRetentionPolicyCommands "nfxid/modules/audit/application/event_retention_policies/commands"
+	eventRetentionPolicyCommands "nfxidentity/modules/audit/application/event_retention_policies/commands"
 )
 
 // UpdateEventRetentionPolicy 更新事件保留策略

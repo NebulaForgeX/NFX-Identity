@@ -1,11 +1,11 @@
 package access
 
 import (
-	applicationrolepb "nfxid/protos/gen/access/application_role"
-	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
-	superadminpb "nfxid/protos/gen/access/super_admin"
-	tenantrolepb "nfxid/protos/gen/access/tenant_role"
-	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
+	applicationrolepb "nfxidentity/protos/gen/access/application_role"
+	applicationroleassignmentpb "nfxidentity/protos/gen/access/application_role_assignment"
+	superadminpb "nfxidentity/protos/gen/access/super_admin"
+	tenantrolepb "nfxidentity/protos/gen/access/tenant_role"
+	tenantroleassignmentpb "nfxidentity/protos/gen/access/tenant_role_assignment"
 )
 
 // Client Access 服务 gRPC 客户端聚合

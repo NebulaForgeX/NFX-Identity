@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	imagevariantpb "nfxid/protos/gen/image/image_variant"
+	imagevariantpb "nfxidentity/protos/gen/image/image_variant"
 )
 
 // ImageVariantClient ImageVariant 客户端

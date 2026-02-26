@@ -2,8 +2,8 @@ package delete
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ByRuleID 根据 RuleID 删除 IPAllowlist，实现 ip_allowlist.Delete 接口

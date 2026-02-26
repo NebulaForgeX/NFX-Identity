@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/auth/domain/account_lockouts"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/domain/account_lockouts"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // AccountLockoutDomainToModel 将 Domain AccountLockout 转换为 Model AccountLockout

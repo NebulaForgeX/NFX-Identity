@@ -3,8 +3,8 @@ package tenant_roles
 import (
 	"context"
 
-	accessErr "nfxid/errors/src/access"
-	domain "nfxid/modules/access/domain/tenant_roles"
+	accessErr "nfxidentity/errors/src/access"
+	domain "nfxidentity/modules/access/domain/tenant_roles"
 
 	"github.com/google/uuid"
 )

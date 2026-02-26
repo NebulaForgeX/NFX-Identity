@@ -1,12 +1,12 @@
 package domain_verifications
 
 import (
-	"nfxid/modules/tenants/domain/domain_verifications"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/check"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/create"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/delete"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/get"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/update"
+	"nfxidentity/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/update"
 
 	"gorm.io/gorm"
 )

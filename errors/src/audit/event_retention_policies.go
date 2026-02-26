@@ -1,6 +1,6 @@
 package audit
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeEventRetentionPolicyNotFound = "EVENT_RETENTION_POLICY_NOT_FOUND"

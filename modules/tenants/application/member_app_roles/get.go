@@ -2,8 +2,8 @@ package member_app_roles
 
 import (
 	"context"
-	memberAppRoleResult "nfxid/modules/tenants/application/member_app_roles/results"
-	memberAppRoleDomain "nfxid/modules/tenants/domain/member_app_roles"
+	memberAppRoleResult "nfxidentity/modules/tenants/application/member_app_roles/results"
+	memberAppRoleDomain "nfxidentity/modules/tenants/domain/member_app_roles"
 
 	"github.com/google/uuid"
 )

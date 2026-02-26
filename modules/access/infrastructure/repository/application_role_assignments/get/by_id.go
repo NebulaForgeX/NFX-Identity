@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	accessErr "nfxid/errors/src/access"
-	"nfxid/modules/access/domain/application_role_assignments"
-	"nfxid/modules/access/infrastructure/rdb/models"
-	"nfxid/modules/access/infrastructure/repository/application_role_assignments/mapper"
+	accessErr "nfxidentity/errors/src/access"
+	"nfxidentity/modules/access/domain/application_role_assignments"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/infrastructure/repository/application_role_assignments/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

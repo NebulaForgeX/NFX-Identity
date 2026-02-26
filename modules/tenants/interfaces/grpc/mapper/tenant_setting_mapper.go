@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	tenantSettingAppResult "nfxid/modules/tenants/application/tenant_settings/results"
-	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
+	tenantSettingAppResult "nfxidentity/modules/tenants/application/tenant_settings/results"
+	tenantsettingpb "nfxidentity/protos/gen/tenants/tenant_setting"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

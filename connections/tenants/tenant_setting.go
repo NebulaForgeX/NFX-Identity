@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
+	tenantsettingpb "nfxidentity/protos/gen/tenants/tenant_setting"
 )
 
 // TenantSettingClient TenantSetting 客户端

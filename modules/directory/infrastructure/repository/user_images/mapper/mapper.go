@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/modules/directory/domain/user_images"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/modules/directory/domain/user_images"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 )
 
 // UserImageDomainToModel 将 Domain UserImage 转换为 Model UserImage

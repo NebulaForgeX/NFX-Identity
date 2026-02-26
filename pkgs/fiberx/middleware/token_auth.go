@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/security/token"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/security/token"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"

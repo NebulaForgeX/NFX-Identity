@@ -1,7 +1,7 @@
 package tenant_roles
 
 import (
-	domain "nfxid/modules/access/domain/tenant_roles"
+	domain "nfxidentity/modules/access/domain/tenant_roles"
 )
 
 type Service struct {

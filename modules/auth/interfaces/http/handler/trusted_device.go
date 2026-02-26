@@ -1,13 +1,13 @@
 package handler
 
 import (
-	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
-	trustedDeviceAppCommands "nfxid/modules/auth/application/trusted_devices/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	trustedDeviceApp "nfxidentity/modules/auth/application/trusted_devices"
+	trustedDeviceAppCommands "nfxidentity/modules/auth/application/trusted_devices/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"

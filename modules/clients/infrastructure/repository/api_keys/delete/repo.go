@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/clients/domain/api_keys"
+	"nfxidentity/modules/clients/domain/api_keys"
 
 	"gorm.io/gorm"
 )

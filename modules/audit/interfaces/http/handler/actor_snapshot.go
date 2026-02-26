@@ -1,13 +1,13 @@
 package handler
 
 import (
-	actorSnapshotApp "nfxid/modules/audit/application/actor_snapshots"
-	actorSnapshotAppCommands "nfxid/modules/audit/application/actor_snapshots/commands"
-	"nfxid/modules/audit/interfaces/http/dto/reqdto"
-	"nfxid/modules/audit/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	actorSnapshotApp "nfxidentity/modules/audit/application/actor_snapshots"
+	actorSnapshotAppCommands "nfxidentity/modules/audit/application/actor_snapshots/commands"
+	"nfxidentity/modules/audit/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/audit/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

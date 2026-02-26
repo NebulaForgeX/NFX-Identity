@@ -1,14 +1,14 @@
 package tenants
 
 import (
-	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
-	grouppb "nfxid/protos/gen/tenants/group"
-	invitationpb "nfxid/protos/gen/tenants/invitation"
-	memberpb "nfxid/protos/gen/tenants/member"
-	membergrouppb "nfxid/protos/gen/tenants/member_group"
-	tenantpb "nfxid/protos/gen/tenants/tenant"
-	tenantapplicationpb "nfxid/protos/gen/tenants/tenant_application"
-	tenantsettingpb "nfxid/protos/gen/tenants/tenant_setting"
+	domainverificationpb "nfxidentity/protos/gen/tenants/domain_verification"
+	grouppb "nfxidentity/protos/gen/tenants/group"
+	invitationpb "nfxidentity/protos/gen/tenants/invitation"
+	memberpb "nfxidentity/protos/gen/tenants/member"
+	membergrouppb "nfxidentity/protos/gen/tenants/member_group"
+	tenantpb "nfxidentity/protos/gen/tenants/tenant"
+	tenantapplicationpb "nfxidentity/protos/gen/tenants/tenant_application"
+	tenantsettingpb "nfxidentity/protos/gen/tenants/tenant_setting"
 )
 
 // Client Tenants 服务 gRPC 客户端聚合

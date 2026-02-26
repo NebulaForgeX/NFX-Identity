@@ -2,7 +2,7 @@ package retry
 
 import (
 	"context"
-	"nfxid/pkgs/utils/contextx"
+	"nfxidentity/pkgs/utils/contextx"
 	"time"
 
 	"github.com/cenkalti/backoff/v5"

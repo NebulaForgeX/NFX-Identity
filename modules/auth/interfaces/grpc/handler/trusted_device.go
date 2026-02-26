@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	trustedDeviceApp "nfxid/modules/auth/application/trusted_devices"
-	"nfxid/pkgs/errx"
-	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
+	trustedDeviceApp "nfxidentity/modules/auth/application/trusted_devices"
+	"nfxidentity/pkgs/errx"
+	trusteddevicepb "nfxidentity/protos/gen/auth/trusted_device"
 )
 
 type TrustedDeviceHandler struct {

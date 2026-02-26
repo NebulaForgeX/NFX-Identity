@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	grouppb "nfxid/protos/gen/tenants/group"
+	grouppb "nfxidentity/protos/gen/tenants/group"
 )
 
 // GroupClient Group 客户端

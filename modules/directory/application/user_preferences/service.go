@@ -1,7 +1,7 @@
 package user_preferences
 
 import (
-	userPreferenceDomain "nfxid/modules/directory/domain/user_preferences"
+	userPreferenceDomain "nfxidentity/modules/directory/domain/user_preferences"
 )
 
 type Service struct {

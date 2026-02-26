@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/domain/password_resets"
 
 	"gorm.io/gorm"
 )

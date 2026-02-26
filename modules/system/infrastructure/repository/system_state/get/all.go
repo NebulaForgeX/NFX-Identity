@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 	"errors"
-	"nfxid/modules/system/domain/system_state"
-	"nfxid/modules/system/infrastructure/rdb/models"
-	"nfxid/modules/system/infrastructure/repository/system_state/mapper"
+	"nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/modules/system/infrastructure/rdb/models"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/mapper"
 
 	"gorm.io/gorm"
 )

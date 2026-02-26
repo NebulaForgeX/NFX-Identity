@@ -1,8 +1,8 @@
 package fiberx
 
 import (
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/httpx"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 	fiberutils "github.com/gofiber/utils/v2"

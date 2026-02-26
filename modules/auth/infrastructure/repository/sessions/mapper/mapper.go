@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/auth/domain/sessions"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/domain/sessions"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // SessionDomainToModel 将 Domain Session 转换为 Model Session

@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 )
 
 // ByEventID 根据 EventID 检查 Event 是否存在，实现 events.Check 接口

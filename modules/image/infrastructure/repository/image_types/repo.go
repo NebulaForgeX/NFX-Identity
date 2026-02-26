@@ -1,12 +1,12 @@
 package image_types
 
 import (
-	"nfxid/modules/image/domain/image_types"
-	"nfxid/modules/image/infrastructure/repository/image_types/check"
-	"nfxid/modules/image/infrastructure/repository/image_types/create"
-	"nfxid/modules/image/infrastructure/repository/image_types/delete"
-	"nfxid/modules/image/infrastructure/repository/image_types/get"
-	"nfxid/modules/image/infrastructure/repository/image_types/update"
+	"nfxidentity/modules/image/domain/image_types"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/check"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/create"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/delete"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/get"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/update"
 
 	"gorm.io/gorm"
 )

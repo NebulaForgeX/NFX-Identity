@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // ByCountryCodeAndPhone 根据国家代码和手机号检查 UserPhone 是否存在，实现 user_phones.Check 接口

@@ -1,7 +1,7 @@
 package users
 
 import (
-	userDomain "nfxid/modules/directory/domain/users"
+	userDomain "nfxidentity/modules/directory/domain/users"
 )
 
 type Service struct {

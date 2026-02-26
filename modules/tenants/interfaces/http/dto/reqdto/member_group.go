@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	memberGroupAppCommands "nfxid/modules/tenants/application/member_groups/commands"
+	memberGroupAppCommands "nfxidentity/modules/tenants/application/member_groups/commands"
 
 	"github.com/google/uuid"
 )

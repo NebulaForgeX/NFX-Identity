@@ -1,14 +1,14 @@
 package config
 
 import (
-	"nfxid/pkgs/cachex"
-	"nfxid/pkgs/env"
-	"nfxid/pkgs/httpx"
-	"nfxid/pkgs/kafkax"
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/postgresqlx"
-	"nfxid/pkgs/rabbitmqx"
-	"nfxid/pkgs/tokenx"
+	"nfxidentity/pkgs/cachex"
+	"nfxidentity/pkgs/env"
+	"nfxidentity/pkgs/httpx"
+	"nfxidentity/pkgs/kafkax"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/postgresqlx"
+	"nfxidentity/pkgs/rabbitmqx"
+	"nfxidentity/pkgs/tokenx"
 )
 
 type Config struct {

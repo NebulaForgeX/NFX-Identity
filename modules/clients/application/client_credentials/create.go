@@ -2,9 +2,9 @@ package client_credentials
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	clientCredentialCommands "nfxid/modules/clients/application/client_credentials/commands"
-	clientCredentialDomain "nfxid/modules/clients/domain/client_credentials"
+	clientsErr "nfxidentity/errors/src/clients"
+	clientCredentialCommands "nfxidentity/modules/clients/application/client_credentials/commands"
+	clientCredentialDomain "nfxidentity/modules/clients/domain/client_credentials"
 	"time"
 
 	"github.com/google/uuid"

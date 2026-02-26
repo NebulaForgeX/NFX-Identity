@@ -1,10 +1,10 @@
 package pipeline
 
 import (
-	"nfxid/modules/access/interfaces/pipeline/handler"
-	"nfxid/pkgs/kafkax"
-	"nfxid/pkgs/kafkax/eventbus"
-	"nfxid/pkgs/logx"
+	"nfxidentity/modules/access/interfaces/pipeline/handler"
+	"nfxidentity/pkgs/kafkax"
+	"nfxidentity/pkgs/kafkax/eventbus"
+	"nfxidentity/pkgs/logx"
 	"time"
 
 	wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"

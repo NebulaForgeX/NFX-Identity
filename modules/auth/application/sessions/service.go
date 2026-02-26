@@ -1,7 +1,7 @@
 package sessions
 
 import (
-	sessionDomain "nfxid/modules/auth/domain/sessions"
+	sessionDomain "nfxidentity/modules/auth/domain/sessions"
 )
 
 type Service struct {

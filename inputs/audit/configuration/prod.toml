@@ -58,7 +58,7 @@
 
 [kafka]
     brokers = ["${KAFKA_BROKERS}"]
-    client_id = "nfxid-audit-service"
+    client_id = "nfxidentity-audit-service"
 
     [kafka.network]
         max_open_requests = 1
@@ -72,7 +72,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "audit-service-group"
+        group_id = "nfxidentity-audit"
         initial_offset = "latest"
         session_timeout_ms = 10000
         heartbeat_interval_ms = 3000
@@ -81,12 +81,12 @@
         return_errors = true
 
     [kafka.producer_topics]
-        audit = "nfxid.audit"
-        audit_poison = "nfxid.audit_poison"
+        audit = "nfxidentity.audit"
+        audit_poison = "nfxidentity.audit_poison"
 
     [kafka.consumer_topics]
-        audit = "nfxid.audit"
-        audit_poison = "nfxid.audit_poison"
+        audit = "nfxidentity.audit"
+        audit_poison = "nfxidentity.audit_poison"
 
     [kafka.security]
         enabled = false
@@ -101,7 +101,7 @@
     user = "${RABBITMQ_USER}"
     password = "${RABBITMQ_PASSWORD}"
     vhost = "/"
-    client_id = "nfxid-audit-service"
+    client_id = "nfxidentity-audit-service"
 
     [rabbitmq.producer]
         mandatory = false
@@ -115,7 +115,7 @@
 
     [rabbitmq.consumer]
         queue_name = ""
-        consumer_tag = "nfxid-audit-consumer"
+        consumer_tag = "nfxidentity-audit-consumer"
         auto_ack = false
         exclusive = false
         no_local = false

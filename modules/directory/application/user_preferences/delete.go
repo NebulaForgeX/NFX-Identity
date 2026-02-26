@@ -2,7 +2,7 @@ package user_preferences
 
 import (
 	"context"
-	userPreferenceCommands "nfxid/modules/directory/application/user_preferences/commands"
+	userPreferenceCommands "nfxidentity/modules/directory/application/user_preferences/commands"
 )
 
 // DeleteUserPreference 删除用户偏好（软删除）

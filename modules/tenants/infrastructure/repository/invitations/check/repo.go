@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/domain/invitations"
 
 	"gorm.io/gorm"
 )

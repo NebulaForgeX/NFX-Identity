@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	accountLockoutAppResult "nfxid/modules/auth/application/account_lockouts/results"
+	accountLockoutAppResult "nfxidentity/modules/auth/application/account_lockouts/results"
 
 	"github.com/google/uuid"
 )

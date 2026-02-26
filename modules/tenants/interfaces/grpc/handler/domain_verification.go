@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	domainVerificationApp "nfxid/modules/tenants/application/domain_verifications"
-	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
-	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
+	domainVerificationApp "nfxidentity/modules/tenants/application/domain_verifications"
+	domainVerificationDomain "nfxidentity/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	domainverificationpb "nfxidentity/protos/gen/tenants/domain_verification"
 
 	"github.com/google/uuid"
 )

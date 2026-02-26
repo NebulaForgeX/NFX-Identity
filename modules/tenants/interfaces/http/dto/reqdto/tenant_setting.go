@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	tenantSettingAppCommands "nfxid/modules/tenants/application/tenant_settings/commands"
+	tenantSettingAppCommands "nfxidentity/modules/tenants/application/tenant_settings/commands"
 
 	"github.com/google/uuid"
 )

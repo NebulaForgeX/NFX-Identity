@@ -1,10 +1,10 @@
 package clients
 
 import (
-	applicationpb "nfxid/protos/gen/clients/application"
-	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
-	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
-	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
+	applicationpb "nfxidentity/protos/gen/clients/application"
+	clientcredentialpb "nfxidentity/protos/gen/clients/client_credential"
+	ipallowlistpb "nfxidentity/protos/gen/clients/ip_allowlist"
+	ratelimitpb "nfxidentity/protos/gen/clients/rate_limit"
 )
 
 // Client Clients 服务 gRPC 客户端聚合

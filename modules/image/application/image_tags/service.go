@@ -1,7 +1,7 @@
 package image_tags
 
 import (
-	imageTagDomain "nfxid/modules/image/domain/image_tags"
+	imageTagDomain "nfxidentity/modules/image/domain/image_tags"
 )
 
 type Service struct {

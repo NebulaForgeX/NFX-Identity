@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"nfxid/connections/directory/dto"
-	userphonepb "nfxid/protos/gen/directory/user_phone"
+	"nfxidentity/connections/directory/dto"
+	userphonepb "nfxidentity/protos/gen/directory/user_phone"
 )
 
 // UserPhoneClient UserPhone 客户端

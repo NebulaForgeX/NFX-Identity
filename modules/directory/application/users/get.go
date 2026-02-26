@@ -2,7 +2,7 @@ package users
 
 import (
 	"context"
-	userResult "nfxid/modules/directory/application/users/results"
+	userResult "nfxidentity/modules/directory/application/users/results"
 
 	"github.com/google/uuid"
 )

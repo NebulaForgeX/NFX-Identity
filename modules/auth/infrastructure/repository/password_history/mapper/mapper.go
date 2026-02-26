@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/auth/domain/password_history"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/domain/password_history"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // PasswordHistoryDomainToModel 将 Domain PasswordHistory 转换为 Model PasswordHistory

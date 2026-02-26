@@ -2,9 +2,9 @@ package client_scopes
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	clientScopeCommands "nfxid/modules/clients/application/client_scopes/commands"
-	clientScopeDomain "nfxid/modules/clients/domain/client_scopes"
+	clientsErr "nfxidentity/errors/src/clients"
+	clientScopeCommands "nfxidentity/modules/clients/application/client_scopes/commands"
+	clientScopeDomain "nfxidentity/modules/clients/domain/client_scopes"
 	"time"
 
 	"github.com/google/uuid"

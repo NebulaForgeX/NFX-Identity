@@ -1,11 +1,11 @@
 package pipeline
 
 import (
-	imageApp "nfxid/modules/image/application/images"
-	"nfxid/modules/image/interfaces/pipeline/handler"
-	"nfxid/pkgs/kafkax"
-	"nfxid/pkgs/kafkax/eventbus"
-	"nfxid/pkgs/logx"
+	imageApp "nfxidentity/modules/image/application/images"
+	"nfxidentity/modules/image/interfaces/pipeline/handler"
+	"nfxidentity/pkgs/kafkax"
+	"nfxidentity/pkgs/kafkax/eventbus"
+	"nfxidentity/pkgs/logx"
 	"time"
 
 	wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"

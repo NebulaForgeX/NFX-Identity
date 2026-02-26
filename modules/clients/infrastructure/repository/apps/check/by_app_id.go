@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ByAppID 根据 AppID 检查 App 是否存在，实现 apps.Check 接口

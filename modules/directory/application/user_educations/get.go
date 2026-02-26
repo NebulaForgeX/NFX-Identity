@@ -2,7 +2,7 @@ package user_educations
 
 import (
 	"context"
-	userEducationResult "nfxid/modules/directory/application/user_educations/results"
+	userEducationResult "nfxidentity/modules/directory/application/user_educations/results"
 
 	"github.com/google/uuid"
 )

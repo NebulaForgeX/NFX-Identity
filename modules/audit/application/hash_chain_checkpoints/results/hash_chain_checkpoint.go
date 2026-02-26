@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/audit/domain/hash_chain_checkpoints"
+	"nfxidentity/modules/audit/domain/hash_chain_checkpoints"
 
 	"github.com/google/uuid"
 )

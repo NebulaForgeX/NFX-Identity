@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/directory/domain/user_emails"
+	"nfxidentity/modules/directory/domain/user_emails"
 
 	"gorm.io/gorm"
 )

@@ -1,6 +1,6 @@
 package access
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeTenantRoleAssignmentNotFound = "TENANT_ROLE_ASSIGNMENT_NOT_FOUND"

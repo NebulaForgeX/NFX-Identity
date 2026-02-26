@@ -8,10 +8,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"nfxid/modules/directory/config"
-	"nfxid/modules/directory/server"
-	"nfxid/pkgs/env"
-	"nfxid/pkgs/logx"
+	"nfxidentity/modules/directory/config"
+	"nfxidentity/modules/directory/server"
+	"nfxidentity/pkgs/env"
+	"nfxidentity/pkgs/logx"
 
 	"go.uber.org/zap"
 )

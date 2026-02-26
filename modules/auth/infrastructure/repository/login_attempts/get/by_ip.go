@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/login_attempts"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/mapper"
+	"nfxidentity/modules/auth/domain/login_attempts"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/mapper"
 )
 
 // ByIP 根据 IP 获取 LoginAttempt 列表，实现 login_attempts.Get 接口

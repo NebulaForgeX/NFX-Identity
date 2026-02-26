@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"nfxid/connections/directory/dto"
-	userpreferencepb "nfxid/protos/gen/directory/user_preference"
+	"nfxidentity/connections/directory/dto"
+	userpreferencepb "nfxidentity/protos/gen/directory/user_preference"
 )
 
 // UserPreferenceClient UserPreference 客户端

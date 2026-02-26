@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeRefreshTokenNotFound = "REFRESH_TOKEN_NOT_FOUND"

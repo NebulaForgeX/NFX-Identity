@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	superadminsApp "nfxid/modules/access/application/super_admins"
-	"nfxid/modules/access/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	superadminpb "nfxid/protos/gen/access/super_admin"
+	superadminsApp "nfxidentity/modules/access/application/super_admins"
+	"nfxidentity/modules/access/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	superadminpb "nfxidentity/protos/gen/access/super_admin"
 
 	"github.com/google/uuid"
 )

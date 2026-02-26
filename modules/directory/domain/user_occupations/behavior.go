@@ -1,7 +1,7 @@
 package user_occupations
 
 import (
-	dirErr "nfxid/errors/src/directory"
+	dirErr "nfxidentity/errors/src/directory"
 	"time"
 )
 

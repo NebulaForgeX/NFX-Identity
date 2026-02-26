@@ -2,8 +2,8 @@ package delete
 
 import (
 	"context"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // ByTokenID 根据 TokenID 删除 RefreshToken，实现 refresh_tokens.Delete 接口

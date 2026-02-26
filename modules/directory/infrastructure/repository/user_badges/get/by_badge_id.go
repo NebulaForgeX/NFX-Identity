@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_badges"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_badges/mapper"
+	"nfxidentity/modules/directory/domain/user_badges"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_badges/mapper"
 
 	"github.com/google/uuid"
 )

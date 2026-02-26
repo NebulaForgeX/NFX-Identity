@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // ByCountryCodeAndPhone 根据国家代码和手机号删除 UserPhone，实现 user_phones.Delete 接口

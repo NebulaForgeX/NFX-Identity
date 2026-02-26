@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/auth/domain/password_resets"
+	"nfxidentity/modules/auth/domain/password_resets"
 
 	"github.com/google/uuid"
 )

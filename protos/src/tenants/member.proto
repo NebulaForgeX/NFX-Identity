@@ -1,7 +1,7 @@
 syntax = "proto3";
 package member;
 
-option go_package = "nfxid/protos/gen/tenants/member;memberpb";
+option go_package = "nfxidentity/protos/gen/tenants/member;memberpb";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";

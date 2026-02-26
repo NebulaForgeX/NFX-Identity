@@ -1,12 +1,12 @@
 package invitations
 
 import (
-	"nfxid/modules/tenants/domain/invitations"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/check"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/create"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/delete"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/get"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/update"
+	"nfxidentity/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/update"
 
 	"gorm.io/gorm"
 )

@@ -2,7 +2,7 @@ package event_search_index
 
 import (
 	"context"
-	eventSearchIndexResult "nfxid/modules/audit/application/event_search_index/results"
+	eventSearchIndexResult "nfxidentity/modules/audit/application/event_search_index/results"
 
 	"github.com/google/uuid"
 )

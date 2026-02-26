@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	accountLockoutAppCommands "nfxid/modules/auth/application/account_lockouts/commands"
-	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
+	accountLockoutAppCommands "nfxidentity/modules/auth/application/account_lockouts/commands"
+	accountLockoutDomain "nfxidentity/modules/auth/domain/account_lockouts"
 
 	"github.com/google/uuid"
 )

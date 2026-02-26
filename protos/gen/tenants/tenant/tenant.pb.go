@@ -507,7 +507,7 @@ const file_tenants_tenant_proto_rawDesc = "" +
 	"\rTenantService\x12L\n" +
 	"\rGetTenantByID\x12\x1c.tenant.GetTenantByIDRequest\x1a\x1d.tenant.GetTenantByIDResponse\x12^\n" +
 	"\x13GetTenantByTenantID\x12\".tenant.GetTenantByTenantIDRequest\x1a#.tenant.GetTenantByTenantIDResponse\x12R\n" +
-	"\x0fBatchGetTenants\x12\x1e.tenant.BatchGetTenantsRequest\x1a\x1f.tenant.BatchGetTenantsResponseB*Z(nfxid/protos/gen/tenants/tenant;tenantpbb\x06proto3"
+	"\x0fBatchGetTenants\x12\x1e.tenant.BatchGetTenantsRequest\x1a\x1f.tenant.BatchGetTenantsResponseB*Z(nfxidentity/protos/gen/tenants/tenant;tenantpbb\x06proto3"
 
 var (
 	file_tenants_tenant_proto_rawDescOnce sync.Once

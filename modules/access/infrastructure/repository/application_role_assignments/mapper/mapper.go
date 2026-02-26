@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/access/domain/application_role_assignments"
-	"nfxid/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/domain/application_role_assignments"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
 )
 
 func ApplicationRoleAssignmentDomainToModel(a *application_role_assignments.ApplicationRoleAssignment) *models.ApplicationRoleAssignment {

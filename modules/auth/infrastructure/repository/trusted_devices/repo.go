@@ -1,12 +1,12 @@
 package trusted_devices
 
 import (
-	"nfxid/modules/auth/domain/trusted_devices"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/check"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/create"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/delete"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/get"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/update"
+	"nfxidentity/modules/auth/domain/trusted_devices"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/check"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/create"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/get"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/update"
 
 	"gorm.io/gorm"
 )

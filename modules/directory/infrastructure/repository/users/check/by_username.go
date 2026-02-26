@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // ByUsername 根据 Username 检查 User 是否存在，实现 users.Check 接口

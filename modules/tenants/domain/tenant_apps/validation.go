@@ -1,7 +1,7 @@
 package tenant_apps
 
 import (
-	tenantsErr "nfxid/errors/src/tenants"
+	tenantsErr "nfxidentity/errors/src/tenants"
 
 	"github.com/google/uuid"
 )

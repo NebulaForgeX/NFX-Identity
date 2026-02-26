@@ -1,7 +1,7 @@
 package groups
 
 import (
-	groupDomain "nfxid/modules/tenants/domain/groups"
+	groupDomain "nfxidentity/modules/tenants/domain/groups"
 )
 
 type Service struct {

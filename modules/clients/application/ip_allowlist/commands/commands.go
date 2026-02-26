@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/clients/domain/ip_allowlist"
+	"nfxidentity/modules/clients/domain/ip_allowlist"
 
 	"github.com/google/uuid"
 )

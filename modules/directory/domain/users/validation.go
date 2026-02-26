@@ -1,7 +1,7 @@
 package users
 
 import (
-	dirErr "nfxid/errors/src/directory"
+	dirErr "nfxidentity/errors/src/directory"
 )
 
 func (u *User) Validate() error {

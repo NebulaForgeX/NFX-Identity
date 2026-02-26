@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/access/domain/tenant_roles"
-	"nfxid/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/domain/tenant_roles"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
 )
 
 func TenantRoleDomainToModel(r *tenant_roles.TenantRole) *models.TenantRole {

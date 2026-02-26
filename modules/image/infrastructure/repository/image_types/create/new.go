@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/image/domain/image_types"
-	"nfxid/modules/image/infrastructure/repository/image_types/mapper"
+	"nfxidentity/modules/image/domain/image_types"
+	"nfxidentity/modules/image/infrastructure/repository/image_types/mapper"
 )
 
 // New 创建新的 ImageType，实现 image_types.Create 接口

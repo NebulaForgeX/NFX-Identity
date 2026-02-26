@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 
-	"nfxid/modules/access/domain/super_admins"
-	"nfxid/modules/access/infrastructure/rdb/models"
-	"nfxid/modules/access/infrastructure/repository/super_admins/mapper"
+	"nfxidentity/modules/access/domain/super_admins"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/infrastructure/repository/super_admins/mapper"
 )
 
 func (h *Handler) All(ctx context.Context, limit, offset int) ([]*super_admins.SuperAdmin, error) {

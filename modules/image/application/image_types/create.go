@@ -2,8 +2,8 @@ package image_types
 
 import (
 	"context"
-	imageTypeCommands "nfxid/modules/image/application/image_types/commands"
-	imageTypeDomain "nfxid/modules/image/domain/image_types"
+	imageTypeCommands "nfxidentity/modules/image/application/image_types/commands"
+	imageTypeDomain "nfxidentity/modules/image/domain/image_types"
 
 	"github.com/google/uuid"
 )

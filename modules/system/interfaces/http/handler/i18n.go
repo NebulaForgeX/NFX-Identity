@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"nfxid/pkgs/errx"
+	"nfxidentity/pkgs/errx"
 
 	"github.com/gofiber/fiber/v3"
 )

@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	systemErr "nfxid/errors/src/system"
-	"nfxid/modules/system/domain/system_state"
-	"nfxid/modules/system/infrastructure/rdb/models"
-	"nfxid/modules/system/infrastructure/repository/system_state/mapper"
+	systemErr "nfxidentity/errors/src/system"
+	"nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/modules/system/infrastructure/rdb/models"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/mapper"
 
 	"gorm.io/gorm"
 )

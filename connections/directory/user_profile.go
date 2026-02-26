@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"nfxid/connections/directory/dto"
-	userprofilepb "nfxid/protos/gen/directory/user_profile"
+	"nfxidentity/connections/directory/dto"
+	userprofilepb "nfxidentity/protos/gen/directory/user_profile"
 )
 
 // UserProfileClient UserProfile 客户端

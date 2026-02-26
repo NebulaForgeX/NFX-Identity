@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	loginAttemptAppResult "nfxid/modules/auth/application/login_attempts/results"
+	loginAttemptAppResult "nfxidentity/modules/auth/application/login_attempts/results"
 
 	"github.com/google/uuid"
 )

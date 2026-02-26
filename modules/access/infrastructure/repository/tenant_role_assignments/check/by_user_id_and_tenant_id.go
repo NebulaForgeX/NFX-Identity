@@ -3,7 +3,7 @@ package check
 import (
 	"context"
 
-	"nfxid/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 )

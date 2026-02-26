@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	imageAppResult "nfxid/modules/image/application/images/results"
-	imagepb "nfxid/protos/gen/image/image"
+	imageAppResult "nfxidentity/modules/image/application/images/results"
+	imagepb "nfxidentity/protos/gen/image/image"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

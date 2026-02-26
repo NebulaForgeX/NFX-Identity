@@ -2,9 +2,9 @@ package user_badges
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	userBadgeCommands "nfxid/modules/directory/application/user_badges/commands"
-	userBadgeDomain "nfxid/modules/directory/domain/user_badges"
+	dirErr "nfxidentity/errors/src/directory"
+	userBadgeCommands "nfxidentity/modules/directory/application/user_badges/commands"
+	userBadgeDomain "nfxidentity/modules/directory/domain/user_badges"
 	"time"
 
 	"github.com/google/uuid"

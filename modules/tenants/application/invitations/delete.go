@@ -2,7 +2,7 @@ package invitations
 
 import (
 	"context"
-	invitationCommands "nfxid/modules/tenants/application/invitations/commands"
+	invitationCommands "nfxidentity/modules/tenants/application/invitations/commands"
 )
 
 // DeleteInvitation 删除邀请

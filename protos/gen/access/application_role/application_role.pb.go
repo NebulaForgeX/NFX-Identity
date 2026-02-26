@@ -494,7 +494,7 @@ const file_access_application_role_proto_rawDesc = "" +
 	"\x16GetApplicationRoleByID\x12/.application_role.GetApplicationRoleByIDRequest\x1a0.application_role.GetApplicationRoleByIDResponse\x12\xba\x01\n" +
 	"+GetApplicationRoleByApplicationIDAndRoleKey\x12D.application_role.GetApplicationRoleByApplicationIDAndRoleKeyRequest\x1aE.application_role.GetApplicationRoleByApplicationIDAndRoleKeyResponse\x12\xa2\x01\n" +
 	"#ListApplicationRolesByApplicationID\x12<.application_role.ListApplicationRolesByApplicationIDRequest\x1a=.application_role.ListApplicationRolesByApplicationIDResponse\x12\x81\x01\n" +
-	"\x18BatchGetApplicationRoles\x121.application_role.BatchGetApplicationRolesRequest\x1a2.application_role.BatchGetApplicationRolesResponseB<Z:nfxid/protos/gen/access/application_role;applicationrolepbb\x06proto3"
+	"\x18BatchGetApplicationRoles\x121.application_role.BatchGetApplicationRolesRequest\x1a2.application_role.BatchGetApplicationRolesResponseB<Z:nfxidentity/protos/gen/access/application_role;applicationrolepbb\x06proto3"
 
 var (
 	file_access_application_role_proto_rawDescOnce sync.Once

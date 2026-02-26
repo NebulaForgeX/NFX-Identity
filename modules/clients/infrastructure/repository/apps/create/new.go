@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/apps"
-	"nfxid/modules/clients/infrastructure/repository/apps/mapper"
+	"nfxidentity/modules/clients/domain/apps"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/mapper"
 )
 
 // New 创建新的 App，实现 apps.Create 接口

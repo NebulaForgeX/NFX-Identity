@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	clientScopeAppCommands "nfxid/modules/clients/application/client_scopes/commands"
+	clientScopeAppCommands "nfxidentity/modules/clients/application/client_scopes/commands"
 
 	"github.com/google/uuid"
 )

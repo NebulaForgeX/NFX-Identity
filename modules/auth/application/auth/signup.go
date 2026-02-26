@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	"nfxid/connections/directory/dto"
-	authCommands "nfxid/modules/auth/application/auth/commands"
-	authResults "nfxid/modules/auth/application/auth/results"
-	userCredentialAppCommands "nfxid/modules/auth/application/user_credentials/commands"
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
+	"nfxidentity/connections/directory/dto"
+	authCommands "nfxidentity/modules/auth/application/auth/commands"
+	authResults "nfxidentity/modules/auth/application/auth/results"
+	userCredentialAppCommands "nfxidentity/modules/auth/application/user_credentials/commands"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -76,12 +76,12 @@ func (s *Service) Signup(ctx context.Context, cmd authCommands.SignupCmd) (authR
 		// 验证码已经验证了邮箱的所有权，所以我们可以继续流程
 	} else {
 		// 邮箱不存在，创建新用户
-		// 生成唯一用户名（使用 nfxid-<uuid> 格式避免邮箱前缀重复）
+		// 生成唯一用户名（使用 nfxidentity-<uuid> 格式避免邮箱前缀重复）
 		userUUID, err := uuid.NewV7()
 		if err != nil {
 			return authResults.SignupResult{}, fmt.Errorf("failed to generate user UUID: %w", err)
 		}
-		username = fmt.Sprintf("nfxid-%s", userUUID.String())
+		username = fmt.Sprintf("nfxidentity-%s", userUUID.String())
 
 		// 1. 创建用户（新用户，状态为 active，已验证）
 		userIDStr, err = s.grpcClients.DirectoryClient.User.CreateUser(ctx, username, "active", true)

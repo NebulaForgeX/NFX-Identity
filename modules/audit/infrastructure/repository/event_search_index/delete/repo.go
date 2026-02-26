@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/audit/domain/event_search_index"
+	"nfxidentity/modules/audit/domain/event_search_index"
 
 	"gorm.io/gorm"
 )

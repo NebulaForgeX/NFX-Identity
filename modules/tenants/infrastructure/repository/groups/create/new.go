@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/groups"
-	"nfxid/modules/tenants/infrastructure/repository/groups/mapper"
+	"nfxidentity/modules/tenants/domain/groups"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/mapper"
 )
 
 // New 创建新的 Group，实现 groups.Create 接口

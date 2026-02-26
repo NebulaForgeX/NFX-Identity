@@ -1,13 +1,13 @@
 package handler
 
 import (
-	userProfileApp "nfxid/modules/directory/application/user_profiles"
-	userProfileAppCommands "nfxid/modules/directory/application/user_profiles/commands"
-	"nfxid/modules/directory/interfaces/http/dto/reqdto"
-	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	userProfileApp "nfxidentity/modules/directory/application/user_profiles"
+	userProfileAppCommands "nfxidentity/modules/directory/application/user_profiles/commands"
+	"nfxidentity/modules/directory/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/directory/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

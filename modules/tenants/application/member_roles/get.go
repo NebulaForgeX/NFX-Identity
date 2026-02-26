@@ -2,7 +2,7 @@ package member_roles
 
 import (
 	"context"
-	memberRoleResult "nfxid/modules/tenants/application/member_roles/results"
+	memberRoleResult "nfxidentity/modules/tenants/application/member_roles/results"
 
 	"github.com/google/uuid"
 )

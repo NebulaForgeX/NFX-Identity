@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	eventRetentionPolicyAppCommands "nfxid/modules/audit/application/event_retention_policies/commands"
-	eventRetentionPolicyDomain "nfxid/modules/audit/domain/event_retention_policies"
+	eventRetentionPolicyAppCommands "nfxidentity/modules/audit/application/event_retention_policies/commands"
+	eventRetentionPolicyDomain "nfxidentity/modules/audit/domain/event_retention_policies"
 
 	"github.com/google/uuid"
 )

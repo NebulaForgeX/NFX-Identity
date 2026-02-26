@@ -1,6 +1,6 @@
 package image
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeImageTypeNotFound      = "IMAGE_TYPE_NOT_FOUND"

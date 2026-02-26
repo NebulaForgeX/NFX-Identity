@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	userPhoneAppCommands "nfxid/modules/directory/application/user_phones/commands"
+	userPhoneAppCommands "nfxidentity/modules/directory/application/user_phones/commands"
 
 	"github.com/google/uuid"
 )

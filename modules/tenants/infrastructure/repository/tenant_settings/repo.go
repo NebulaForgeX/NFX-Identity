@@ -1,12 +1,12 @@
 package tenant_settings
 
 import (
-	"nfxid/modules/tenants/domain/tenant_settings"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_settings/check"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_settings/create"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_settings/delete"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_settings/get"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_settings/update"
+	"nfxidentity/modules/tenants/domain/tenant_settings"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_settings/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_settings/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_settings/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_settings/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_settings/update"
 
 	"gorm.io/gorm"
 )

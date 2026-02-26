@@ -2,8 +2,8 @@ package invitations
 
 import (
 	"context"
-	invitationResult "nfxid/modules/tenants/application/invitations/results"
-	invitationDomain "nfxid/modules/tenants/domain/invitations"
+	invitationResult "nfxidentity/modules/tenants/application/invitations/results"
+	invitationDomain "nfxidentity/modules/tenants/domain/invitations"
 
 	"github.com/google/uuid"
 )

@@ -2,7 +2,7 @@ package tenant_settings
 
 import (
 	"context"
-	tenantSettingCommands "nfxid/modules/tenants/application/tenant_settings/commands"
+	tenantSettingCommands "nfxidentity/modules/tenants/application/tenant_settings/commands"
 )
 
 // DeleteTenantSetting 删除租户设置

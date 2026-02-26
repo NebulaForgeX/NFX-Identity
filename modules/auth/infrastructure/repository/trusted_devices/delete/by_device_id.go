@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // ByDeviceID 根据 DeviceID 删除 TrustedDevice，实现 trusted_devices.Delete 接口

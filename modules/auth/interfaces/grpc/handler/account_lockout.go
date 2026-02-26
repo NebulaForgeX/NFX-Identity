@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	accountLockoutApp "nfxid/modules/auth/application/account_lockouts"
-	"nfxid/pkgs/errx"
-	accountlockoutpb "nfxid/protos/gen/auth/account_lockout"
+	accountLockoutApp "nfxidentity/modules/auth/application/account_lockouts"
+	"nfxidentity/pkgs/errx"
+	accountlockoutpb "nfxidentity/protos/gen/auth/account_lockout"
 )
 
 type AccountLockoutHandler struct {

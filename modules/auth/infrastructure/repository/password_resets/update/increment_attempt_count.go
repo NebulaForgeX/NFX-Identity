@@ -2,7 +2,7 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 	"time"
 
 	"gorm.io/gorm"

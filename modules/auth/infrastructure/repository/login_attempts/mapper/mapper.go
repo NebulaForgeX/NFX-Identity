@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/auth/domain/login_attempts"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/domain/login_attempts"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // LoginAttemptDomainToModel 将 Domain LoginAttempt 转换为 Model LoginAttempt

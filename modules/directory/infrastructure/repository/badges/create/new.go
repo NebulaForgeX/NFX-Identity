@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/badges"
-	"nfxid/modules/directory/infrastructure/repository/badges/mapper"
+	"nfxidentity/modules/directory/domain/badges"
+	"nfxidentity/modules/directory/infrastructure/repository/badges/mapper"
 )
 
 // New 创建新的 Badge，实现 badges.Create 接口

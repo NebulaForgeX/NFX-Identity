@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	hashChainCheckpointAppCommands "nfxid/modules/audit/application/hash_chain_checkpoints/commands"
+	hashChainCheckpointAppCommands "nfxidentity/modules/audit/application/hash_chain_checkpoints/commands"
 
 	"github.com/google/uuid"
 )

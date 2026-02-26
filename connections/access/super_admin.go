@@ -3,7 +3,7 @@ package access
 import (
 	"context"
 	"fmt"
-	superadminpb "nfxid/protos/gen/access/super_admin"
+	superadminpb "nfxidentity/protos/gen/access/super_admin"
 )
 
 type SuperAdminClient struct {

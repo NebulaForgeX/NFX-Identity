@@ -2,7 +2,7 @@ package refresh_tokens
 
 import (
 	"context"
-	refreshTokenCommands "nfxid/modules/auth/application/refresh_tokens/commands"
+	refreshTokenCommands "nfxidentity/modules/auth/application/refresh_tokens/commands"
 )
 
 // RevokeRefreshToken 撤销刷新令牌

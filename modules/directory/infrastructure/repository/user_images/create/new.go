@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_images"
-	"nfxid/modules/directory/infrastructure/repository/user_images/mapper"
+	"nfxidentity/modules/directory/domain/user_images"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/mapper"
 )
 
 // New 创建新的 UserImage，实现 user_images.Create 接口

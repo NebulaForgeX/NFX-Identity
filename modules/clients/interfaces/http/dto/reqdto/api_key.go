@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	apiKeyAppCommands "nfxid/modules/clients/application/api_keys/commands"
+	apiKeyAppCommands "nfxidentity/modules/clients/application/api_keys/commands"
 
 	"github.com/google/uuid"
 )

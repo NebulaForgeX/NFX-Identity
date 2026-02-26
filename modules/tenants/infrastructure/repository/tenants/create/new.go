@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/tenants"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/mapper"
+	"nfxidentity/modules/tenants/domain/tenants"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/mapper"
 )
 
 // New 创建新的 Tenant，实现 tenants.Create 接口

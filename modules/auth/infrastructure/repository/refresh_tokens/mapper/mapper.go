@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // RefreshTokenDomainToModel 将 Domain RefreshToken 转换为 Model RefreshToken

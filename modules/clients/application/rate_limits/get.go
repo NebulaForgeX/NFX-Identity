@@ -2,7 +2,7 @@ package rate_limits
 
 import (
 	"context"
-	rateLimitResult "nfxid/modules/clients/application/rate_limits/results"
+	rateLimitResult "nfxidentity/modules/clients/application/rate_limits/results"
 
 	"github.com/google/uuid"
 )

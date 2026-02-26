@@ -1,12 +1,12 @@
 package user_occupations
 
 import (
-	"nfxid/modules/directory/domain/user_occupations"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/check"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/create"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/delete"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/get"
-	"nfxid/modules/directory/infrastructure/repository/user_occupations/update"
+	"nfxidentity/modules/directory/domain/user_occupations"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/check"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/create"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/delete"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/get"
+	"nfxidentity/modules/directory/infrastructure/repository/user_occupations/update"
 
 	"gorm.io/gorm"
 )

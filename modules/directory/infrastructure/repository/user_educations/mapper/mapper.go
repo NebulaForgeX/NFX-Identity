@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/modules/directory/domain/user_educations"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/modules/directory/domain/user_educations"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 )
 
 // UserEducationDomainToModel 将 Domain UserEducation 转换为 Model UserEducation

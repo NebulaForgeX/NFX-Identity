@@ -2,7 +2,7 @@ package user_credentials
 
 import (
 	"context"
-	userCredentialCommands "nfxid/modules/auth/application/user_credentials/commands"
+	userCredentialCommands "nfxidentity/modules/auth/application/user_credentials/commands"
 )
 
 // UpdateUserCredential 更新用户凭证

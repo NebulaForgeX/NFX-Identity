@@ -2,7 +2,7 @@ package login_attempts
 
 import (
 	"context"
-	loginAttemptCommands "nfxid/modules/auth/application/login_attempts/commands"
+	loginAttemptCommands "nfxidentity/modules/auth/application/login_attempts/commands"
 )
 
 // DeleteLoginAttempt 删除登录尝试（如果需要清理历史记录）

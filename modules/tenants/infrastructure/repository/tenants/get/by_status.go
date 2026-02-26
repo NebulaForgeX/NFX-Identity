@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/tenants"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/mapper"
+	"nfxidentity/modules/tenants/domain/tenants"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/mapper"
 )
 
 // ByStatus 根据 Status 获取 Tenant 列表，实现 tenants.Get 接口

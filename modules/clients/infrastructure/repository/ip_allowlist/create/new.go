@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/ip_allowlist"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/mapper"
+	"nfxidentity/modules/clients/domain/ip_allowlist"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/mapper"
 )
 
 // New 创建新的 IPAllowlist，实现 ip_allowlist.Create 接口

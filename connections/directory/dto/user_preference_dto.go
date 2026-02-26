@@ -1,7 +1,7 @@
 package dto
 
 import (
-	userpreferencepb "nfxid/protos/gen/directory/user_preference"
+	userpreferencepb "nfxidentity/protos/gen/directory/user_preference"
 
 	"google.golang.org/protobuf/types/known/structpb"
 )

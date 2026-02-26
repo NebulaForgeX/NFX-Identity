@@ -2,10 +2,10 @@ package delete
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/domain/rate_limits"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/mapper"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/mapper"
 
 	"github.com/google/uuid"
 )

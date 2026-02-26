@@ -719,7 +719,7 @@ const file_tenants_member_proto_rawDesc = "" +
 	"\rGetMemberByID\x12\x1c.member.GetMemberByIDRequest\x1a\x1d.member.GetMemberByIDResponse\x12X\n" +
 	"\x11GetMemberByUserID\x12 .member.GetMemberByUserIDRequest\x1a!.member.GetMemberByUserIDResponse\x12a\n" +
 	"\x14GetMembersByTenantID\x12#.member.GetMembersByTenantIDRequest\x1a$.member.GetMembersByTenantIDResponse\x12R\n" +
-	"\x0fBatchGetMembers\x12\x1e.member.BatchGetMembersRequest\x1a\x1f.member.BatchGetMembersResponseB*Z(nfxid/protos/gen/tenants/member;memberpbb\x06proto3"
+	"\x0fBatchGetMembers\x12\x1e.member.BatchGetMembersRequest\x1a\x1f.member.BatchGetMembersResponseB*Z(nfxidentity/protos/gen/tenants/member;memberpbb\x06proto3"
 
 var (
 	file_tenants_member_proto_rawDescOnce sync.Once

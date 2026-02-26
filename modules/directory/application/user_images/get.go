@@ -2,7 +2,7 @@ package user_images
 
 import (
 	"context"
-	userImageResult "nfxid/modules/directory/application/user_images/results"
+	userImageResult "nfxidentity/modules/directory/application/user_images/results"
 
 	"github.com/google/uuid"
 )

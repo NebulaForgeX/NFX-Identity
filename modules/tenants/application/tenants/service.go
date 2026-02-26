@@ -1,7 +1,7 @@
 package tenants
 
 import (
-	tenantDomain "nfxid/modules/tenants/domain/tenants"
+	tenantDomain "nfxidentity/modules/tenants/domain/tenants"
 )
 
 type Service struct {

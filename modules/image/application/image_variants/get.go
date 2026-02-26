@@ -2,7 +2,7 @@ package image_variants
 
 import (
 	"context"
-	imageVariantResult "nfxid/modules/image/application/image_variants/results"
+	imageVariantResult "nfxidentity/modules/image/application/image_variants/results"
 
 	"github.com/google/uuid"
 )

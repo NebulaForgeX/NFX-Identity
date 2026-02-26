@@ -2,8 +2,8 @@ package directory
 
 import (
 	"errors"
-	"nfxid/messages"
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/messages"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 // UserUpdateMessage 用户更新消息

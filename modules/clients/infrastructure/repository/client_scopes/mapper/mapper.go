@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/clients/domain/client_scopes"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/domain/client_scopes"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ClientScopeDomainToModel 将 Domain ClientScope 转换为 Model ClientScope

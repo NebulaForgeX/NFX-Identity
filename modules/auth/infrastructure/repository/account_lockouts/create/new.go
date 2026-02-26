@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/account_lockouts"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/mapper"
+	"nfxidentity/modules/auth/domain/account_lockouts"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/mapper"
 )
 
 // New 创建新的 AccountLockout，实现 account_lockouts.Create 接口

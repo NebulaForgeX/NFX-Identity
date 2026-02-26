@@ -2,9 +2,9 @@ package ip_allowlist
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	ipAllowlistCommands "nfxid/modules/clients/application/ip_allowlist/commands"
-	ipAllowlistDomain "nfxid/modules/clients/domain/ip_allowlist"
+	clientsErr "nfxidentity/errors/src/clients"
+	ipAllowlistCommands "nfxidentity/modules/clients/application/ip_allowlist/commands"
+	ipAllowlistDomain "nfxidentity/modules/clients/domain/ip_allowlist"
 
 	"github.com/google/uuid"
 )

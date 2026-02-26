@@ -2,9 +2,9 @@ package member_app_roles
 
 import (
 	"context"
-	memberAppRoleCommands "nfxid/modules/tenants/application/member_app_roles/commands"
-	memberAppRoleDomain "nfxid/modules/tenants/domain/member_app_roles"
-	tenantsErr "nfxid/errors/src/tenants"
+	memberAppRoleCommands "nfxidentity/modules/tenants/application/member_app_roles/commands"
+	memberAppRoleDomain "nfxidentity/modules/tenants/domain/member_app_roles"
+	tenantsErr "nfxidentity/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"

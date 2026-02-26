@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	passwordHistoryAppCommands "nfxid/modules/auth/application/password_history/commands"
+	passwordHistoryAppCommands "nfxidentity/modules/auth/application/password_history/commands"
 
 	"github.com/google/uuid"
 )

@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"nfxid/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/domain/rate_limits"
 
 	"github.com/google/uuid"
 )

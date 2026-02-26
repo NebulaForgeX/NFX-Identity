@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 	"errors"
-	"nfxid/modules/audit/domain/actor_snapshots"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/actor_snapshots/mapper"
+	"nfxidentity/modules/audit/domain/actor_snapshots"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/actor_snapshots/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

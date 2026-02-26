@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"time"
 
-	bootstrapApp "nfxid/modules/system/application/bootstrap"
-	systemStateApp "nfxid/modules/system/application/system_state"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/fiberx/middleware"
-	"nfxid/pkgs/httpx"
-	"nfxid/pkgs/security/token"
+	bootstrapApp "nfxidentity/modules/system/application/bootstrap"
+	systemStateApp "nfxidentity/modules/system/application/system_state"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/fiberx/middleware"
+	"nfxidentity/pkgs/httpx"
+	"nfxidentity/pkgs/security/token"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"

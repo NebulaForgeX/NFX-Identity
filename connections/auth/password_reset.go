@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	passwordresetpb "nfxid/protos/gen/auth/password_reset"
+	passwordresetpb "nfxidentity/protos/gen/auth/password_reset"
 )
 
 // PasswordResetClient PasswordReset 客户端

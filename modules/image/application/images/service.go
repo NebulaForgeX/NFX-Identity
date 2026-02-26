@@ -1,8 +1,8 @@
 package images
 
 import (
-	"nfxid/constants"
-	imageDomain "nfxid/modules/image/domain/images"
+	"nfxidentity/constants"
+	imageDomain "nfxidentity/modules/image/domain/images"
 )
 
 type Service struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
+	useroccupationpb "nfxidentity/protos/gen/directory/user_occupation"
 )
 
 // UserOccupationClient UserOccupation 客户端

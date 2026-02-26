@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 var (
 	ErrInvalidCredentials      = errx.Unauthorized("INVALID_CREDENTIALS", "invalid email or password")

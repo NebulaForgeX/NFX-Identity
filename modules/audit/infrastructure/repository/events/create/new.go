@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/events"
-	"nfxid/modules/audit/infrastructure/repository/events/mapper"
+	"nfxidentity/modules/audit/domain/events"
+	"nfxidentity/modules/audit/infrastructure/repository/events/mapper"
 )
 
 // New 创建新的 Event，实现 events.Create 接口

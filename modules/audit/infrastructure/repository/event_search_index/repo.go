@@ -1,12 +1,12 @@
 package event_search_index
 
 import (
-	"nfxid/modules/audit/domain/event_search_index"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/check"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/create"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/delete"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/get"
-	"nfxid/modules/audit/infrastructure/repository/event_search_index/update"
+	"nfxidentity/modules/audit/domain/event_search_index"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/check"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/create"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/delete"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/get"
+	"nfxidentity/modules/audit/infrastructure/repository/event_search_index/update"
 
 	"gorm.io/gorm"
 )

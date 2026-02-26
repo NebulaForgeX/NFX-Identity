@@ -2,7 +2,7 @@ package badges
 
 import (
 	"context"
-	badgeResult "nfxid/modules/directory/application/badges/results"
+	badgeResult "nfxidentity/modules/directory/application/badges/results"
 
 	"github.com/google/uuid"
 )

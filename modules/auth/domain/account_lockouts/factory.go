@@ -1,7 +1,7 @@
 package account_lockouts
 
 import (
-	authErr "nfxid/errors/src/auth"
+	authErr "nfxidentity/errors/src/auth"
 	"time"
 
 	"github.com/google/uuid"

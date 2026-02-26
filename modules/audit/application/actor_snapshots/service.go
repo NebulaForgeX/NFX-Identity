@@ -1,7 +1,7 @@
 package actor_snapshots
 
 import (
-	actorSnapshotDomain "nfxid/modules/audit/domain/actor_snapshots"
+	actorSnapshotDomain "nfxidentity/modules/audit/domain/actor_snapshots"
 )
 
 type Service struct {

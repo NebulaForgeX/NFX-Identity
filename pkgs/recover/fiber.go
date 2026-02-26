@@ -5,9 +5,9 @@ import (
 	"os"
 	"runtime/debug"
 
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"

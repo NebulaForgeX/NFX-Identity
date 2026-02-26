@@ -2,7 +2,7 @@ package user_images
 
 import (
 	"context"
-	userImageCommands "nfxid/modules/directory/application/user_images/commands"
+	userImageCommands "nfxidentity/modules/directory/application/user_images/commands"
 )
 
 // SetPrimaryUserImage 将指定用户图片设为主图（display_order = 0），其余按原顺序重排为 1, 2, ...

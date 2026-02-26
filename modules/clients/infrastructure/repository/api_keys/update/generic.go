@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/api_keys"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/mapper"
+	"nfxidentity/modules/clients/domain/api_keys"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/mapper"
 )
 
 // Generic 通用更新 APIKey，实现 api_keys.Update 接口

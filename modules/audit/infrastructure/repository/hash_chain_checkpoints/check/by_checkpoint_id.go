@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 )
 
 // ByCheckpointID 根据 CheckpointID 检查 HashChainCheckpoint 是否存在，实现 hash_chain_checkpoints.Check 接口

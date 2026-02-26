@@ -1,10 +1,10 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/auth/domain/mfa_factors"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/domain/mfa_factors"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 )
 
 // MFAFactorDomainToModel 将 Domain MFAFactor 转换为 Model MfaFactor

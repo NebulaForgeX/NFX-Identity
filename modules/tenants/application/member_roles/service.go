@@ -1,7 +1,7 @@
 package member_roles
 
 import (
-	memberRoleDomain "nfxid/modules/tenants/domain/member_roles"
+	memberRoleDomain "nfxidentity/modules/tenants/domain/member_roles"
 )
 
 type Service struct {

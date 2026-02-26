@@ -1,6 +1,6 @@
 package events
 
-import "nfxid/pkgs/kafkax/eventbus"
+import "nfxidentity/pkgs/kafkax/eventbus"
 
 const (
 	// =============== Access ===============

@@ -2,7 +2,7 @@ package member_groups
 
 import (
 	"context"
-	memberGroupResult "nfxid/modules/tenants/application/member_groups/results"
+	memberGroupResult "nfxidentity/modules/tenants/application/member_groups/results"
 
 	"github.com/google/uuid"
 )

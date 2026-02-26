@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	domainverificationpb "nfxid/protos/gen/tenants/domain_verification"
+	domainverificationpb "nfxidentity/protos/gen/tenants/domain_verification"
 )
 
 // DomainVerificationClient DomainVerification 客户端

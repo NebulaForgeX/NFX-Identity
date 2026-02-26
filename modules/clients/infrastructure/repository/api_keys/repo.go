@@ -1,12 +1,12 @@
 package api_keys
 
 import (
-	"nfxid/modules/clients/domain/api_keys"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/check"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/create"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/delete"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/get"
-	"nfxid/modules/clients/infrastructure/repository/api_keys/update"
+	"nfxidentity/modules/clients/domain/api_keys"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/check"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/create"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/delete"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/get"
+	"nfxidentity/modules/clients/infrastructure/repository/api_keys/update"
 
 	"gorm.io/gorm"
 )

@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodePasswordResetNotFound = "PASSWORD_RESET_NOT_FOUND"

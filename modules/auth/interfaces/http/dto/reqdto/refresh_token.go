@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	refreshTokenAppCommands "nfxid/modules/auth/application/refresh_tokens/commands"
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
+	refreshTokenAppCommands "nfxidentity/modules/auth/application/refresh_tokens/commands"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
 
 	"github.com/google/uuid"
 )

@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_educations"
-	"nfxid/modules/directory/infrastructure/repository/user_educations/mapper"
+	"nfxidentity/modules/directory/domain/user_educations"
+	"nfxidentity/modules/directory/infrastructure/repository/user_educations/mapper"
 )
 
 // New 创建新的 UserEducation，实现 user_educations.Create 接口

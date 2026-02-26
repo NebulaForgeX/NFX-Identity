@@ -659,7 +659,7 @@ const file_auth_mfa_factor_proto_rawDesc = "" +
 	"\x10GetMfaFactorByID\x12#.mfa_factor.GetMfaFactorByIDRequest\x1a$.mfa_factor.GetMfaFactorByIDResponse\x12o\n" +
 	"\x16GetMfaFactorByFactorID\x12).mfa_factor.GetMfaFactorByFactorIDRequest\x1a*.mfa_factor.GetMfaFactorByFactorIDResponse\x12l\n" +
 	"\x15GetMfaFactorsByUserID\x12(.mfa_factor.GetMfaFactorsByUserIDRequest\x1a).mfa_factor.GetMfaFactorsByUserIDResponse\x12c\n" +
-	"\x12BatchGetMfaFactors\x12%.mfa_factor.BatchGetMfaFactorsRequest\x1a&.mfa_factor.BatchGetMfaFactorsResponseB.Z,nfxid/protos/gen/auth/mfa_factor;mfafactorpbb\x06proto3"
+	"\x12BatchGetMfaFactors\x12%.mfa_factor.BatchGetMfaFactorsRequest\x1a&.mfa_factor.BatchGetMfaFactorsResponseB.Z,nfxidentity/protos/gen/auth/mfa_factor;mfafactorpbb\x06proto3"
 
 var (
 	file_auth_mfa_factor_proto_rawDescOnce sync.Once

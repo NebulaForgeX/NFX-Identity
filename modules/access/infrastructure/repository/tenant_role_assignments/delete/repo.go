@@ -1,7 +1,7 @@
 package delete
 
 import (
-	"nfxid/modules/access/domain/tenant_role_assignments"
+	"nfxidentity/modules/access/domain/tenant_role_assignments"
 
 	"gorm.io/gorm"
 )

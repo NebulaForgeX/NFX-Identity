@@ -1,12 +1,12 @@
 package hash_chain_checkpoints
 
 import (
-	"nfxid/modules/audit/domain/hash_chain_checkpoints"
-	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/check"
-	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/create"
-	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/delete"
-	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/get"
-	"nfxid/modules/audit/infrastructure/repository/hash_chain_checkpoints/update"
+	"nfxidentity/modules/audit/domain/hash_chain_checkpoints"
+	"nfxidentity/modules/audit/infrastructure/repository/hash_chain_checkpoints/check"
+	"nfxidentity/modules/audit/infrastructure/repository/hash_chain_checkpoints/create"
+	"nfxidentity/modules/audit/infrastructure/repository/hash_chain_checkpoints/delete"
+	"nfxidentity/modules/audit/infrastructure/repository/hash_chain_checkpoints/get"
+	"nfxidentity/modules/audit/infrastructure/repository/hash_chain_checkpoints/update"
 
 	"gorm.io/gorm"
 )

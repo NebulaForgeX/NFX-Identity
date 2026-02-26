@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	invitationpb "nfxid/protos/gen/tenants/invitation"
+	invitationpb "nfxidentity/protos/gen/tenants/invitation"
 )
 
 // InvitationClient Invitation 客户端

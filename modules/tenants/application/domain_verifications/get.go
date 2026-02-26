@@ -2,8 +2,8 @@ package domain_verifications
 
 import (
 	"context"
-	domainVerificationResult "nfxid/modules/tenants/application/domain_verifications/results"
-	domainVerificationDomain "nfxid/modules/tenants/domain/domain_verifications"
+	domainVerificationResult "nfxidentity/modules/tenants/application/domain_verifications/results"
+	domainVerificationDomain "nfxidentity/modules/tenants/domain/domain_verifications"
 
 	"github.com/google/uuid"
 )

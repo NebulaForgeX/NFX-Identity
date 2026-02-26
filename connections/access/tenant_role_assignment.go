@@ -3,7 +3,7 @@ package access
 import (
 	"context"
 	"fmt"
-	tenantroleassignmentpb "nfxid/protos/gen/access/tenant_role_assignment"
+	tenantroleassignmentpb "nfxidentity/protos/gen/access/tenant_role_assignment"
 )
 
 type TenantRoleAssignmentClient struct {

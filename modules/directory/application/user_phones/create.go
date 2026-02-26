@@ -2,9 +2,9 @@ package user_phones
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	userPhoneCommands "nfxid/modules/directory/application/user_phones/commands"
-	userPhoneDomain "nfxid/modules/directory/domain/user_phones"
+	dirErr "nfxidentity/errors/src/directory"
+	userPhoneCommands "nfxidentity/modules/directory/application/user_phones/commands"
+	userPhoneDomain "nfxidentity/modules/directory/domain/user_phones"
 	"time"
 
 	"github.com/google/uuid"

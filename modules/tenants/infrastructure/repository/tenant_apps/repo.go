@@ -1,12 +1,12 @@
 package tenant_apps
 
 import (
-	"nfxid/modules/tenants/domain/tenant_apps"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_apps/check"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_apps/create"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_apps/delete"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_apps/get"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_apps/update"
+	"nfxidentity/modules/tenants/domain/tenant_apps"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_apps/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_apps/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_apps/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_apps/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_apps/update"
 
 	"gorm.io/gorm"
 )

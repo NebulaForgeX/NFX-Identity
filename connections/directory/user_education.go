@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	usereducationpb "nfxid/protos/gen/directory/user_education"
+	usereducationpb "nfxidentity/protos/gen/directory/user_education"
 )
 
 // UserEducationClient UserEducation 客户端

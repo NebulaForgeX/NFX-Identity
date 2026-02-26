@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"nfxid/connections/directory/dto"
-	useremailpb "nfxid/protos/gen/directory/user_email"
+	"nfxidentity/connections/directory/dto"
+	useremailpb "nfxidentity/protos/gen/directory/user_email"
 )
 
 // UserEmailClient UserEmail 客户端

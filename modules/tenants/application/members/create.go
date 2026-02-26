@@ -2,9 +2,9 @@ package members
 
 import (
 	"context"
-	memberCommands "nfxid/modules/tenants/application/members/commands"
-	memberDomain "nfxid/modules/tenants/domain/members"
-	tenantsErr "nfxid/errors/src/tenants"
+	memberCommands "nfxidentity/modules/tenants/application/members/commands"
+	memberDomain "nfxidentity/modules/tenants/domain/members"
+	tenantsErr "nfxidentity/errors/src/tenants"
 
 	"github.com/google/uuid"
 )

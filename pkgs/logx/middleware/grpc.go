@@ -3,7 +3,7 @@ package middleware
 import (
 	"context"
 	"net"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/logx"
 	"strconv"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"

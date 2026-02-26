@@ -3,7 +3,7 @@ package messaging
 import (
 	"context"
 
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 type Service struct {

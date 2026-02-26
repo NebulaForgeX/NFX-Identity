@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	trustedDeviceAppCommands "nfxid/modules/auth/application/trusted_devices/commands"
+	trustedDeviceAppCommands "nfxidentity/modules/auth/application/trusted_devices/commands"
 
 	"github.com/google/uuid"
 )

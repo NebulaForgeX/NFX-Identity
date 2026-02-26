@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	userProfileAppResult "nfxid/modules/directory/application/user_profiles/results"
+	userProfileAppResult "nfxidentity/modules/directory/application/user_profiles/results"
 
 	"github.com/google/uuid"
 )

@@ -1,7 +1,7 @@
 package login_attempts
 
 import (
-	authErr "nfxid/errors/src/auth"
+	authErr "nfxidentity/errors/src/auth"
 )
 
 func (la *LoginAttempt) Validate() error {

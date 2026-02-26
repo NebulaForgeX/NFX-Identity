@@ -1,12 +1,12 @@
 package system_state
 
 import (
-	"nfxid/modules/system/domain/system_state"
-	"nfxid/modules/system/infrastructure/repository/system_state/check"
-	"nfxid/modules/system/infrastructure/repository/system_state/create"
-	"nfxid/modules/system/infrastructure/repository/system_state/delete"
-	"nfxid/modules/system/infrastructure/repository/system_state/get"
-	"nfxid/modules/system/infrastructure/repository/system_state/update"
+	"nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/check"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/create"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/delete"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/get"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/update"
 
 	"gorm.io/gorm"
 )

@@ -1,7 +1,7 @@
 package mfa_factors
 
 import (
-	authErr "nfxid/errors/src/auth"
+	authErr "nfxidentity/errors/src/auth"
 	"time"
 )
 

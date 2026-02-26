@@ -3,10 +3,10 @@ package get
 import (
 	"context"
 	"errors"
-	auditErr "nfxid/errors/src/audit"
-	"nfxid/modules/audit/domain/event_retention_policies"
-	"nfxid/modules/audit/infrastructure/rdb/models"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/mapper"
+	auditErr "nfxidentity/errors/src/audit"
+	"nfxidentity/modules/audit/domain/event_retention_policies"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/mapper"
 
 	"gorm.io/gorm"
 )

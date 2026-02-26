@@ -1,7 +1,7 @@
 package user_badges
 
 import (
-	userBadgeDomain "nfxid/modules/directory/domain/user_badges"
+	userBadgeDomain "nfxidentity/modules/directory/domain/user_badges"
 )
 
 type Service struct {

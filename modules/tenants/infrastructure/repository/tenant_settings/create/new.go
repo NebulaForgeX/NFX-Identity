@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/tenant_settings"
-	"nfxid/modules/tenants/infrastructure/repository/tenant_settings/mapper"
+	"nfxidentity/modules/tenants/domain/tenant_settings"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenant_settings/mapper"
 )
 
 // New 创建新的 TenantSetting，实现 tenant_settings.Create 接口

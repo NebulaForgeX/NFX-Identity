@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 )
 
 // ByPolicyName 根据 PolicyName 检查 EventRetentionPolicy 是否存在，实现 event_retention_policies.Check 接口

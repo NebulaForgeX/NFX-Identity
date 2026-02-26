@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	ratelimitpb "nfxid/protos/gen/clients/rate_limit"
+	ratelimitpb "nfxidentity/protos/gen/clients/rate_limit"
 )
 
 // RateLimitClient RateLimit 客户端

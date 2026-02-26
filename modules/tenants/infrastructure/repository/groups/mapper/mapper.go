@@ -2,10 +2,10 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/enums"
-	"nfxid/modules/tenants/domain/groups"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/enums"
+	"nfxidentity/modules/tenants/domain/groups"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 
 	"gorm.io/datatypes"
 )

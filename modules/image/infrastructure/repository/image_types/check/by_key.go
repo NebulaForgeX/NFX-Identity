@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
 )
 
 // ByKey 根据 Key 检查 ImageType 是否存在，实现 image_types.Check 接口

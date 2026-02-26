@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	ipAllowlistAppResult "nfxid/modules/clients/application/ip_allowlist/results"
+	ipAllowlistAppResult "nfxidentity/modules/clients/application/ip_allowlist/results"
 
 	"github.com/google/uuid"
 )

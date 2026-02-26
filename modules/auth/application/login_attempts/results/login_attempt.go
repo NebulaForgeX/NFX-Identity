@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/auth/domain/login_attempts"
+	"nfxidentity/modules/auth/domain/login_attempts"
 
 	"github.com/google/uuid"
 )

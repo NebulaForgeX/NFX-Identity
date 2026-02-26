@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/modules/image/domain/images"
-	"nfxid/modules/image/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/modules/image/domain/images"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 
 	"gorm.io/datatypes"
 )

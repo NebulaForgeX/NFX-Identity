@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/directory/domain/user_badges"
-	"nfxid/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/domain/user_badges"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
 )
 
 // UserBadgeDomainToModel 将 Domain UserBadge 转换为 Model UserBadge

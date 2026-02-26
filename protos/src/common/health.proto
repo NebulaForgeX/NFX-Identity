@@ -1,7 +1,7 @@
 syntax = "proto3";
 package common.health;
 
-option go_package = "nfxid/protos/gen/common/health;healthpb";
+option go_package = "nfxidentity/protos/gen/common/health;healthpb";
 
 // ResourceHealth 单个资源的健康状态
 message ResourceHealth {

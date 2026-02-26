@@ -5,7 +5,7 @@ import (
 	"flag"
 	"os"
 
-	"nfxid/pkgs/utils/file"
+	"nfxidentity/pkgs/utils/file"
 )
 
 func resolvePath(explicit string) (string, error) {

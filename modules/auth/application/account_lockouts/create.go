@@ -2,9 +2,9 @@ package account_lockouts
 
 import (
 	"context"
-	authErr "nfxid/errors/src/auth"
-	accountLockoutCommands "nfxid/modules/auth/application/account_lockouts/commands"
-	accountLockoutDomain "nfxid/modules/auth/domain/account_lockouts"
+	authErr "nfxidentity/errors/src/auth"
+	accountLockoutCommands "nfxidentity/modules/auth/application/account_lockouts/commands"
+	accountLockoutDomain "nfxidentity/modules/auth/domain/account_lockouts"
 	"time"
 )
 

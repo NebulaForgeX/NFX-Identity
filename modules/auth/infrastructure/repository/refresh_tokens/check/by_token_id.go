@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // ByTokenID 根据 TokenID 检查 RefreshToken 是否存在，实现 refresh_tokens.Check 接口

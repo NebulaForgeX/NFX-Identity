@@ -2,7 +2,7 @@ package account_lockouts
 
 import (
 	"context"
-	accountLockoutResult "nfxid/modules/auth/application/account_lockouts/results"
+	accountLockoutResult "nfxidentity/modules/auth/application/account_lockouts/results"
 
 	"github.com/google/uuid"
 )

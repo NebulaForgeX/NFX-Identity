@@ -1,12 +1,12 @@
 package account_lockouts
 
 import (
-	"nfxid/modules/auth/domain/account_lockouts"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/check"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/create"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/delete"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/get"
-	"nfxid/modules/auth/infrastructure/repository/account_lockouts/update"
+	"nfxidentity/modules/auth/domain/account_lockouts"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/check"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/create"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/get"
+	"nfxidentity/modules/auth/infrastructure/repository/account_lockouts/update"
 
 	"gorm.io/gorm"
 )

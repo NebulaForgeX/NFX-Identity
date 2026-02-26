@@ -2,7 +2,7 @@ package password_history
 
 import (
 	"context"
-	passwordHistoryResult "nfxid/modules/auth/application/password_history/results"
+	passwordHistoryResult "nfxidentity/modules/auth/application/password_history/results"
 
 	"github.com/google/uuid"
 )

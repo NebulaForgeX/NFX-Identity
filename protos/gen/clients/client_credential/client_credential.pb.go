@@ -560,7 +560,7 @@ const file_clients_client_credential_proto_rawDesc = "" +
 	"\x17ClientCredentialService\x12\x80\x01\n" +
 	"\x17GetClientCredentialByID\x121.client_credential.GetClientCredentialByIDRequest\x1a2.client_credential.GetClientCredentialByIDResponse\x12\x92\x01\n" +
 	"\x1dGetClientCredentialByClientID\x127.client_credential.GetClientCredentialByClientIDRequest\x1a8.client_credential.GetClientCredentialByClientIDResponse\x12\x8c\x01\n" +
-	"\x1bGetClientCredentialsByAppID\x125.client_credential.GetClientCredentialsByAppIDRequest\x1a6.client_credential.GetClientCredentialsByAppIDResponseB?Z=nfxid/protos/gen/clients/client_credential;clientcredentialpbb\x06proto3"
+	"\x1bGetClientCredentialsByAppID\x125.client_credential.GetClientCredentialsByAppIDRequest\x1a6.client_credential.GetClientCredentialsByAppIDResponseB?Z=nfxidentity/protos/gen/clients/client_credential;clientcredentialpbb\x06proto3"
 
 var (
 	file_clients_client_credential_proto_rawDescOnce sync.Once

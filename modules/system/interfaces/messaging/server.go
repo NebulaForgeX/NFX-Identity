@@ -3,9 +3,9 @@ package messaging
 import (
 	"context"
 
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/rabbitmqx"
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/rabbitmqx"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 	"time"
 
 	wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"

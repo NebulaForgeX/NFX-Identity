@@ -2,7 +2,7 @@ package api_keys
 
 import (
 	"context"
-	apiKeyResult "nfxid/modules/clients/application/api_keys/results"
+	apiKeyResult "nfxidentity/modules/clients/application/api_keys/results"
 
 	"github.com/google/uuid"
 )

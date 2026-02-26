@@ -2,7 +2,7 @@ package password_resets
 
 import (
 	"context"
-	passwordResetCommands "nfxid/modules/auth/application/password_resets/commands"
+	passwordResetCommands "nfxidentity/modules/auth/application/password_resets/commands"
 )
 
 // MarkAsUsed 标记密码重置为已使用

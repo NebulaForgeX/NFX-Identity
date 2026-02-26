@@ -1,7 +1,7 @@
 syntax = "proto3";
 package ip_allowlist;
 
-option go_package = "nfxid/protos/gen/clients/ip_allowlist;ipallowlistpb";
+option go_package = "nfxidentity/protos/gen/clients/ip_allowlist;ipallowlistpb";
 
 import "google/protobuf/timestamp.proto";
 

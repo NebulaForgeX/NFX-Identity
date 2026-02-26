@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodePasswordHistoryNotFound = "PASSWORD_HISTORY_NOT_FOUND"

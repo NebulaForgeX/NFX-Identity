@@ -1,7 +1,7 @@
 package create
 
 import (
-	"nfxid/modules/tenants/domain/groups"
+	"nfxidentity/modules/tenants/domain/groups"
 
 	"gorm.io/gorm"
 )

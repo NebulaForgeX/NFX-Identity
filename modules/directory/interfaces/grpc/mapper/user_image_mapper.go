@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userImageAppResult "nfxid/modules/directory/application/user_images/results"
-	userimagepb "nfxid/protos/gen/directory/user_image"
+	userImageAppResult "nfxidentity/modules/directory/application/user_images/results"
+	userimagepb "nfxidentity/protos/gen/directory/user_image"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

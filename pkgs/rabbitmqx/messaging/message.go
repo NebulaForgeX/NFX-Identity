@@ -15,7 +15,7 @@
 //
 //	package access
 //
-//	import "nfxid/pkgs/rabbitmqx/messaging"
+//	import "nfxidentity/pkgs/rabbitmqx/messaging"
 //
 //	// GrantsInvalidateCacheMessage 会自动生成 MessageType: "grants_invalidate_cache"
 //	type GrantsInvalidateCacheMessage struct {
@@ -35,7 +35,7 @@
 //
 //	package custom
 //
-//	import "nfxid/pkgs/rabbitmqx/messaging"
+//	import "nfxidentity/pkgs/rabbitmqx/messaging"
 //
 //	type UserCreatedMessage struct {
 //	    UserID string `json:"user_id"`
@@ -61,7 +61,7 @@
 //
 //	package example
 //
-//	import "nfxid/pkgs/rabbitmqx/messaging"
+//	import "nfxidentity/pkgs/rabbitmqx/messaging"
 //
 //	type DynamicMessage struct {
 //	    messaging.BaseMessage

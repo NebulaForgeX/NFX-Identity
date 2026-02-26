@@ -1,12 +1,12 @@
 package login_attempts
 
 import (
-	"nfxid/modules/auth/domain/login_attempts"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/check"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/create"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/delete"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/get"
-	"nfxid/modules/auth/infrastructure/repository/login_attempts/update"
+	"nfxidentity/modules/auth/domain/login_attempts"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/check"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/create"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/get"
+	"nfxidentity/modules/auth/infrastructure/repository/login_attempts/update"
 
 	"gorm.io/gorm"
 )

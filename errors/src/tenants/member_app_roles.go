@@ -1,6 +1,6 @@
 package tenants
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeMemberAppRoleNotFound       = "MEMBER_APP_ROLE_NOT_FOUND"

@@ -3,7 +3,7 @@ package common
 import (
 	"context"
 
-	schemapb "nfxid/protos/gen/common/schema"
+	schemapb "nfxidentity/protos/gen/common/schema"
 )
 
 // SchemaClient schema 清空客户端

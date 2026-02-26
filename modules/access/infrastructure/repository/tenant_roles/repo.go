@@ -1,12 +1,12 @@
 package tenant_roles
 
 import (
-	"nfxid/modules/access/domain/tenant_roles"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/check"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/create"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/delete"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/get"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/update"
+	"nfxidentity/modules/access/domain/tenant_roles"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/check"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/create"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/delete"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/get"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/update"
 
 	"gorm.io/gorm"
 )

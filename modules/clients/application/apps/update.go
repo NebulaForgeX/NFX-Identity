@@ -2,7 +2,7 @@ package apps
 
 import (
 	"context"
-	appCommands "nfxid/modules/clients/application/apps/commands"
+	appCommands "nfxidentity/modules/clients/application/apps/commands"
 )
 
 // UpdateApp 更新应用

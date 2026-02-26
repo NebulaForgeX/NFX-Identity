@@ -2,9 +2,9 @@ package user_emails
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	userEmailCommands "nfxid/modules/directory/application/user_emails/commands"
-	userEmailDomain "nfxid/modules/directory/domain/user_emails"
+	dirErr "nfxidentity/errors/src/directory"
+	userEmailCommands "nfxidentity/modules/directory/application/user_emails/commands"
+	userEmailDomain "nfxidentity/modules/directory/domain/user_emails"
 
 	"github.com/google/uuid"
 )

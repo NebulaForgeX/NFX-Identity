@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	tenantsErr "nfxid/errors/src/tenants"
-	"nfxid/modules/tenants/domain/tenants"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/mapper"
+	tenantsErr "nfxidentity/errors/src/tenants"
+	"nfxidentity/modules/tenants/domain/tenants"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

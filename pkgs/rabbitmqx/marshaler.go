@@ -3,7 +3,7 @@ package rabbitmqx
 import (
 	"strconv"
 
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 
 	"github.com/ThreeDotsLabs/watermill-amqp/v3/pkg/amqp"
 	"github.com/ThreeDotsLabs/watermill/message"

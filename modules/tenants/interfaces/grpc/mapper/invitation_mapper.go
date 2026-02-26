@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	invitationAppResult "nfxid/modules/tenants/application/invitations/results"
-	invitationDomain "nfxid/modules/tenants/domain/invitations"
-	invitationpb "nfxid/protos/gen/tenants/invitation"
+	invitationAppResult "nfxidentity/modules/tenants/application/invitations/results"
+	invitationDomain "nfxidentity/modules/tenants/domain/invitations"
+	invitationpb "nfxidentity/protos/gen/tenants/invitation"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

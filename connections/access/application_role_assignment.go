@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	applicationroleassignmentpb "nfxid/protos/gen/access/application_role_assignment"
+	applicationroleassignmentpb "nfxidentity/protos/gen/access/application_role_assignment"
 )
 
 // ApplicationRoleAssignmentClient 应用角色分配 gRPC 客户端

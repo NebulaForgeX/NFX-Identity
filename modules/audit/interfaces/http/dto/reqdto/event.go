@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	auditAppCommands "nfxid/modules/audit/application/events/commands"
-	auditDomain "nfxid/modules/audit/domain/events"
+	auditAppCommands "nfxidentity/modules/audit/application/events/commands"
+	auditDomain "nfxidentity/modules/audit/domain/events"
 
 	"github.com/google/uuid"
 )

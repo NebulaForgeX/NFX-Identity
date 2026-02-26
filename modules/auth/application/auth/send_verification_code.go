@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"time"
 
-	authCommands "nfxid/modules/auth/application/auth/commands"
-	emailPkg "nfxid/pkgs/email"
+	authCommands "nfxidentity/modules/auth/application/auth/commands"
+	emailPkg "nfxidentity/pkgs/email"
 )
 
 func init() {

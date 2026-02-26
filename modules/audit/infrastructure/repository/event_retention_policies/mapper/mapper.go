@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/audit/domain/event_retention_policies"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/audit/domain/event_retention_policies"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 )
 
 // EventRetentionPolicyDomainToModel 将 Domain EventRetentionPolicy 转换为 Model EventRetentionPolicy

@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/client_scopes"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/client_scopes/mapper"
+	"nfxidentity/modules/clients/domain/client_scopes"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/client_scopes/mapper"
 
 	"github.com/google/uuid"
 )

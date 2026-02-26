@@ -1,7 +1,7 @@
 syntax = "proto3";
 package event_retention_policy;
 
-option go_package = "nfxid/protos/gen/audit/event_retention_policy;eventretentionpolicypb";
+option go_package = "nfxidentity/protos/gen/audit/event_retention_policy;eventretentionpolicypb";
 
 import "google/protobuf/timestamp.proto";
 

@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/enums"
-	"nfxid/modules/tenants/domain/domain_verifications"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 
 	"gorm.io/datatypes"
 )

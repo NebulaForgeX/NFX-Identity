@@ -1,6 +1,6 @@
 package tenants
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeDomainVerificationNotFound      = "DOMAIN_VERIFICATION_NOT_FOUND"

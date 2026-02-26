@@ -2,7 +2,7 @@ package password_resets
 
 import (
 	"context"
-	passwordResetCommands "nfxid/modules/auth/application/password_resets/commands"
+	passwordResetCommands "nfxidentity/modules/auth/application/password_resets/commands"
 )
 
 // DeletePasswordReset 删除密码重置

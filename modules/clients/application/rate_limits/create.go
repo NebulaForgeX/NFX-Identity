@@ -2,9 +2,9 @@ package rate_limits
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	rateLimitCommands "nfxid/modules/clients/application/rate_limits/commands"
-	rateLimitDomain "nfxid/modules/clients/domain/rate_limits"
+	clientsErr "nfxidentity/errors/src/clients"
+	rateLimitCommands "nfxidentity/modules/clients/application/rate_limits/commands"
+	rateLimitDomain "nfxidentity/modules/clients/domain/rate_limits"
 
 	"github.com/google/uuid"
 )

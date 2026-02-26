@@ -3,7 +3,7 @@ package clients
 import (
 	"context"
 	"fmt"
-	applicationpb "nfxid/protos/gen/clients/application"
+	applicationpb "nfxidentity/protos/gen/clients/application"
 )
 
 // ApplicationClient 应用 gRPC 客户端

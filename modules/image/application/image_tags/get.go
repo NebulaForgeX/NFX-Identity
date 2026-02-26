@@ -2,7 +2,7 @@ package image_tags
 
 import (
 	"context"
-	imageTagResult "nfxid/modules/image/application/image_tags/results"
+	imageTagResult "nfxidentity/modules/image/application/image_tags/results"
 
 	"github.com/google/uuid"
 )

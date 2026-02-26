@@ -3,9 +3,9 @@ package update
 import (
 	"context"
 	"errors"
-	"nfxid/enums"
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 	"time"
 
 	"github.com/google/uuid"

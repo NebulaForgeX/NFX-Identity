@@ -1,13 +1,13 @@
 package handler
 
 import (
-	hashChainCheckpointApp "nfxid/modules/audit/application/hash_chain_checkpoints"
-	hashChainCheckpointAppCommands "nfxid/modules/audit/application/hash_chain_checkpoints/commands"
-	"nfxid/modules/audit/interfaces/http/dto/reqdto"
-	"nfxid/modules/audit/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	hashChainCheckpointApp "nfxidentity/modules/audit/application/hash_chain_checkpoints"
+	hashChainCheckpointAppCommands "nfxidentity/modules/audit/application/hash_chain_checkpoints/commands"
+	"nfxidentity/modules/audit/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/audit/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	userCredentialAppResult "nfxid/modules/auth/application/user_credentials/results"
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
-	usercredentialpb "nfxid/protos/gen/auth/user_credential"
+	userCredentialAppResult "nfxidentity/modules/auth/application/user_credentials/results"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
+	usercredentialpb "nfxidentity/protos/gen/auth/user_credential"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

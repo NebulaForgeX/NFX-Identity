@@ -1,13 +1,13 @@
 package handler
 
 import (
-	apiKeyApp "nfxid/modules/clients/application/api_keys"
-	apiKeyAppCommands "nfxid/modules/clients/application/api_keys/commands"
-	"nfxid/modules/clients/interfaces/http/dto/reqdto"
-	"nfxid/modules/clients/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	apiKeyApp "nfxidentity/modules/clients/application/api_keys"
+	apiKeyAppCommands "nfxidentity/modules/clients/application/api_keys/commands"
+	"nfxidentity/modules/clients/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/clients/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

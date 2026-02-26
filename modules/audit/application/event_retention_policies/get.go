@@ -2,7 +2,7 @@ package event_retention_policies
 
 import (
 	"context"
-	eventRetentionPolicyResult "nfxid/modules/audit/application/event_retention_policies/results"
+	eventRetentionPolicyResult "nfxidentity/modules/audit/application/event_retention_policies/results"
 
 	"github.com/google/uuid"
 )

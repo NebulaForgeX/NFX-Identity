@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"nfxid/modules/auth/config"
-	grpcInterfaces "nfxid/modules/auth/interfaces/grpc"
-	httpInterfaces "nfxid/modules/auth/interfaces/http"
-	messagingInterfaces "nfxid/modules/auth/interfaces/messaging"
-	eventbusInterfaces "nfxid/modules/auth/interfaces/pipeline"
-	"nfxid/pkgs/logx"
+	"nfxidentity/modules/auth/config"
+	grpcInterfaces "nfxidentity/modules/auth/interfaces/grpc"
+	httpInterfaces "nfxidentity/modules/auth/interfaces/http"
+	messagingInterfaces "nfxidentity/modules/auth/interfaces/messaging"
+	eventbusInterfaces "nfxidentity/modules/auth/interfaces/pipeline"
+	"nfxidentity/pkgs/logx"
 
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"

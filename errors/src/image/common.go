@@ -1,6 +1,6 @@
 package image
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 // Shared codes and errors used by multiple image domains.
 const (

@@ -1,7 +1,7 @@
 syntax = "proto3";
 package invitation;
 
-option go_package = "nfxid/protos/gen/tenants/invitation;invitationpb";
+option go_package = "nfxidentity/protos/gen/tenants/invitation;invitationpb";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";

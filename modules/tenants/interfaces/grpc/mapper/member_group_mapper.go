@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	memberGroupAppResult "nfxid/modules/tenants/application/member_groups/results"
-	membergrouppb "nfxid/protos/gen/tenants/member_group"
+	memberGroupAppResult "nfxidentity/modules/tenants/application/member_groups/results"
+	membergrouppb "nfxidentity/protos/gen/tenants/member_group"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

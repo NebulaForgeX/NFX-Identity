@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
-	"nfxid/modules/access/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	tenantrolepb "nfxid/protos/gen/access/tenant_role"
+	tenantrolesApp "nfxidentity/modules/access/application/tenant_roles"
+	"nfxidentity/modules/access/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	tenantrolepb "nfxidentity/protos/gen/access/tenant_role"
 
 	"github.com/google/uuid"
 )

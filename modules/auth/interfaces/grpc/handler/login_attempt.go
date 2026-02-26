@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	loginAttemptApp "nfxid/modules/auth/application/login_attempts"
-	"nfxid/pkgs/errx"
-	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
+	loginAttemptApp "nfxidentity/modules/auth/application/login_attempts"
+	"nfxidentity/pkgs/errx"
+	loginattemptpb "nfxidentity/protos/gen/auth/login_attempt"
 )
 
 type LoginAttemptHandler struct {

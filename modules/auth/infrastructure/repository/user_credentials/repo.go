@@ -1,12 +1,12 @@
 package user_credentials
 
 import (
-	"nfxid/modules/auth/domain/user_credentials"
-	"nfxid/modules/auth/infrastructure/repository/user_credentials/check"
-	"nfxid/modules/auth/infrastructure/repository/user_credentials/create"
-	"nfxid/modules/auth/infrastructure/repository/user_credentials/delete"
-	"nfxid/modules/auth/infrastructure/repository/user_credentials/get"
-	"nfxid/modules/auth/infrastructure/repository/user_credentials/update"
+	"nfxidentity/modules/auth/domain/user_credentials"
+	"nfxidentity/modules/auth/infrastructure/repository/user_credentials/check"
+	"nfxidentity/modules/auth/infrastructure/repository/user_credentials/create"
+	"nfxidentity/modules/auth/infrastructure/repository/user_credentials/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/user_credentials/get"
+	"nfxidentity/modules/auth/infrastructure/repository/user_credentials/update"
 
 	"gorm.io/gorm"
 )

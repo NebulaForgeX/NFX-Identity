@@ -443,7 +443,7 @@ const file_image_image_type_proto_rawDesc = "" +
 	"\x10ImageTypeService\x12]\n" +
 	"\x10GetImageTypeByID\x12#.image_type.GetImageTypeByIDRequest\x1a$.image_type.GetImageTypeByIDResponse\x12c\n" +
 	"\x12GetImageTypeByName\x12%.image_type.GetImageTypeByNameRequest\x1a&.image_type.GetImageTypeByNameResponse\x12]\n" +
-	"\x10GetAllImageTypes\x12#.image_type.GetAllImageTypesRequest\x1a$.image_type.GetAllImageTypesResponseB/Z-nfxid/protos/gen/image/image_type;imagetypepbb\x06proto3"
+	"\x10GetAllImageTypes\x12#.image_type.GetAllImageTypesRequest\x1a$.image_type.GetAllImageTypesResponseB/Z-nfxidentity/protos/gen/image/image_type;imagetypepbb\x06proto3"
 
 var (
 	file_image_image_type_proto_rawDescOnce sync.Once

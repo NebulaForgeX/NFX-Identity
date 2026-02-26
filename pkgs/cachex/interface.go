@@ -1,8 +1,8 @@
 package cachex
 
 import (
-	"nfxid/pkgs/cachex/core"
-	"nfxid/pkgs/utils/id"
+	"nfxidentity/pkgs/cachex/core"
+	"nfxidentity/pkgs/utils/id"
 )
 
 // exported interfaces

@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/refresh_tokens"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/refresh_tokens/mapper"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/refresh_tokens/mapper"
 )
 
 // Generic 通用更新 RefreshToken，实现 refresh_tokens.Update 接口

@@ -3,7 +3,7 @@ package access
 import (
 	"context"
 	"fmt"
-	applicationrolepb "nfxid/protos/gen/access/application_role"
+	applicationrolepb "nfxidentity/protos/gen/access/application_role"
 )
 
 type ApplicationRoleClient struct {

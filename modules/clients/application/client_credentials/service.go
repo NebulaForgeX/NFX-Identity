@@ -1,7 +1,7 @@
 package client_credentials
 
 import (
-	clientCredentialDomain "nfxid/modules/clients/domain/client_credentials"
+	clientCredentialDomain "nfxidentity/modules/clients/domain/client_credentials"
 )
 
 type Service struct {

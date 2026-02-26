@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	rateLimitAppResult "nfxid/modules/clients/application/rate_limits/results"
+	rateLimitAppResult "nfxidentity/modules/clients/application/rate_limits/results"
 
 	"github.com/google/uuid"
 )

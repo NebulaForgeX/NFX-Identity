@@ -2,7 +2,7 @@ package delete
 
 import (
 	"context"
-	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 )

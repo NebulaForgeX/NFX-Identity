@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/member_app_roles"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/mapper"
+	"nfxidentity/modules/tenants/domain/member_app_roles"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/mapper"
 )
 
 // New 创建新的 MemberAppRole，实现 member_app_roles.Create 接口

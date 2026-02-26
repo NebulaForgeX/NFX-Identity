@@ -2,8 +2,8 @@ package hash_chain_checkpoints
 
 import (
 	"context"
-	hashChainCheckpointCommands "nfxid/modules/audit/application/hash_chain_checkpoints/commands"
-	hashChainCheckpointDomain "nfxid/modules/audit/domain/hash_chain_checkpoints"
+	hashChainCheckpointCommands "nfxidentity/modules/audit/application/hash_chain_checkpoints/commands"
+	hashChainCheckpointDomain "nfxidentity/modules/audit/domain/hash_chain_checkpoints"
 	"time"
 
 	"github.com/google/uuid"

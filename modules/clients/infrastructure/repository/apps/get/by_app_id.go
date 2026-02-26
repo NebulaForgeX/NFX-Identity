@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/domain/apps"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/apps/mapper"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/domain/apps"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/apps/mapper"
 
 	"gorm.io/gorm"
 )

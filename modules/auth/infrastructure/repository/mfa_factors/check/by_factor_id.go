@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // ByFactorID 根据 FactorID 检查 MFAFactor 是否存在，实现 mfa_factors.Check 接口

@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeTrustedDeviceNotFound         = "TRUSTED_DEVICE_NOT_FOUND"

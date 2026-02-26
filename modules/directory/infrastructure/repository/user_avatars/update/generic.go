@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_avatars"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_avatars/mapper"
+	"nfxidentity/modules/directory/domain/user_avatars"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_avatars/mapper"
 )
 
 // Generic 通用更新 UserAvatar，实现 user_avatars.Update 接口

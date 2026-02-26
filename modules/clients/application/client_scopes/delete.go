@@ -2,7 +2,7 @@ package client_scopes
 
 import (
 	"context"
-	clientScopeCommands "nfxid/modules/clients/application/client_scopes/commands"
+	clientScopeCommands "nfxidentity/modules/clients/application/client_scopes/commands"
 )
 
 // DeleteClientScope 删除客户端作用域

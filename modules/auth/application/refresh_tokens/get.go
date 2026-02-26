@@ -2,7 +2,7 @@ package refresh_tokens
 
 import (
 	"context"
-	refreshTokenResult "nfxid/modules/auth/application/refresh_tokens/results"
+	refreshTokenResult "nfxidentity/modules/auth/application/refresh_tokens/results"
 
 	"github.com/google/uuid"
 )

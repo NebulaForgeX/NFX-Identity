@@ -1,12 +1,12 @@
 package mfa_factors
 
 import (
-	"nfxid/modules/auth/domain/mfa_factors"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/check"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/create"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/delete"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/get"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/update"
+	"nfxidentity/modules/auth/domain/mfa_factors"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/check"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/create"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/get"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/update"
 
 	"gorm.io/gorm"
 )

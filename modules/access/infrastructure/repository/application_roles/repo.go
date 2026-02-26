@@ -1,12 +1,12 @@
 package application_roles
 
 import (
-	dom "nfxid/modules/access/domain/application_roles"
-	"nfxid/modules/access/infrastructure/repository/application_roles/check"
-	"nfxid/modules/access/infrastructure/repository/application_roles/create"
-	"nfxid/modules/access/infrastructure/repository/application_roles/delete"
-	"nfxid/modules/access/infrastructure/repository/application_roles/get"
-	"nfxid/modules/access/infrastructure/repository/application_roles/update"
+	dom "nfxidentity/modules/access/domain/application_roles"
+	"nfxidentity/modules/access/infrastructure/repository/application_roles/check"
+	"nfxidentity/modules/access/infrastructure/repository/application_roles/create"
+	"nfxidentity/modules/access/infrastructure/repository/application_roles/delete"
+	"nfxidentity/modules/access/infrastructure/repository/application_roles/get"
+	"nfxidentity/modules/access/infrastructure/repository/application_roles/update"
 
 	"gorm.io/gorm"
 )

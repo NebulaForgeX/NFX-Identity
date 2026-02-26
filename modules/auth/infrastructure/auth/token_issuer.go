@@ -1,8 +1,8 @@
 package auth
 
 import (
-	authApp "nfxid/modules/auth/application/auth"
-	"nfxid/pkgs/tokenx"
+	authApp "nfxidentity/modules/auth/application/auth"
+	"nfxidentity/pkgs/tokenx"
 )
 
 // TokenIssuer 实现 application/auth.TokenIssuer，委托 tokenx

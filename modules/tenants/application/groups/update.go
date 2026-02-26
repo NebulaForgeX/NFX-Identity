@@ -2,7 +2,7 @@ package groups
 
 import (
 	"context"
-	groupCommands "nfxid/modules/tenants/application/groups/commands"
+	groupCommands "nfxidentity/modules/tenants/application/groups/commands"
 )
 
 // UpdateGroup 更新组

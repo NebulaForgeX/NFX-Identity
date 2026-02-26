@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	systemErr "nfxid/errors/src/system"
-	bootstrapCommands "nfxid/modules/system/application/bootstrap/commands"
-	systemStateDomain "nfxid/modules/system/domain/system_state"
-	"nfxid/pkgs/logx"
+	systemErr "nfxidentity/errors/src/system"
+	bootstrapCommands "nfxidentity/modules/system/application/bootstrap/commands"
+	systemStateDomain "nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/google/uuid"
 )

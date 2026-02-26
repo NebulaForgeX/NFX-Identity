@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/domain_verifications"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/domain_verifications/mapper"
+	"nfxidentity/modules/tenants/domain/domain_verifications"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/domain_verifications/mapper"
 )
 
 // Generic 通用更新 DomainVerification，实现 domain_verifications.Update 接口

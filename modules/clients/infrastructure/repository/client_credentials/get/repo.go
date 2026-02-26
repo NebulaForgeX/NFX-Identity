@@ -1,7 +1,7 @@
 package get
 
 import (
-	"nfxid/modules/clients/domain/client_credentials"
+	"nfxidentity/modules/clients/domain/client_credentials"
 
 	"gorm.io/gorm"
 )

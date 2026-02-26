@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	"nfxid/events/directory"
-	"nfxid/events/image"
-	imageApp "nfxid/modules/image/application/images"
-	imageCommands "nfxid/modules/image/application/images/commands"
-	"nfxid/pkgs/logx"
+	"nfxidentity/events/directory"
+	"nfxidentity/events/image"
+	imageApp "nfxidentity/modules/image/application/images"
+	imageCommands "nfxidentity/modules/image/application/images/commands"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/google/uuid"

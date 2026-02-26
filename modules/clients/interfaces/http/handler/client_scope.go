@@ -1,13 +1,13 @@
 package handler
 
 import (
-	clientScopeApp "nfxid/modules/clients/application/client_scopes"
-	clientScopeAppCommands "nfxid/modules/clients/application/client_scopes/commands"
-	"nfxid/modules/clients/interfaces/http/dto/reqdto"
-	"nfxid/modules/clients/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	clientScopeApp "nfxidentity/modules/clients/application/client_scopes"
+	clientScopeAppCommands "nfxidentity/modules/clients/application/client_scopes/commands"
+	"nfxidentity/modules/clients/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/clients/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

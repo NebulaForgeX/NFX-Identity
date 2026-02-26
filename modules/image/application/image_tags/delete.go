@@ -2,7 +2,7 @@ package image_tags
 
 import (
 	"context"
-	imageTagCommands "nfxid/modules/image/application/image_tags/commands"
+	imageTagCommands "nfxidentity/modules/image/application/image_tags/commands"
 )
 
 // DeleteImageTag 删除图片标签

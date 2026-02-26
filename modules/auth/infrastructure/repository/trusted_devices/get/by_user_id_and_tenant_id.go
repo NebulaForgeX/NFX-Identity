@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/trusted_devices"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/mapper"
+	"nfxidentity/modules/auth/domain/trusted_devices"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/mapper"
 
 	"github.com/google/uuid"
 )

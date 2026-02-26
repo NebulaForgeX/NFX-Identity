@@ -2,9 +2,9 @@ package user_profiles
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	userProfileCommands "nfxid/modules/directory/application/user_profiles/commands"
-	userProfileDomain "nfxid/modules/directory/domain/user_profiles"
+	dirErr "nfxidentity/errors/src/directory"
+	userProfileCommands "nfxidentity/modules/directory/application/user_profiles/commands"
+	userProfileDomain "nfxidentity/modules/directory/domain/user_profiles"
 	"time"
 
 	"github.com/google/uuid"

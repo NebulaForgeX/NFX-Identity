@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	userEducationAppCommands "nfxid/modules/directory/application/user_educations/commands"
+	userEducationAppCommands "nfxidentity/modules/directory/application/user_educations/commands"
 
 	"github.com/google/uuid"
 )

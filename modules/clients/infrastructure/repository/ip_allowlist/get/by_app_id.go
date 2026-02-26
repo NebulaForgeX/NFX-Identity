@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/ip_allowlist"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/ip_allowlist/mapper"
+	"nfxidentity/modules/clients/domain/ip_allowlist"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/ip_allowlist/mapper"
 
 	"github.com/google/uuid"
 )

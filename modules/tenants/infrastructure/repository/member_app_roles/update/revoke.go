@@ -3,8 +3,8 @@ package update
 import (
 	"context"
 	"errors"
-	tenantsErr "nfxid/errors/src/tenants"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	tenantsErr "nfxidentity/errors/src/tenants"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 	"time"
 
 	"github.com/google/uuid"

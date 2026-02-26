@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	eventSearchIndexAppCommands "nfxid/modules/audit/application/event_search_index/commands"
-	eventSearchIndexDomain "nfxid/modules/audit/domain/event_search_index"
+	eventSearchIndexAppCommands "nfxidentity/modules/audit/application/event_search_index/commands"
+	eventSearchIndexDomain "nfxidentity/modules/audit/domain/event_search_index"
 
 	"github.com/google/uuid"
 )

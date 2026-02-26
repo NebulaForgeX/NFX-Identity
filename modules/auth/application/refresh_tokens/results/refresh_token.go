@@ -3,7 +3,7 @@ package results
 import (
 	"time"
 
-	"nfxid/modules/auth/domain/refresh_tokens"
+	"nfxidentity/modules/auth/domain/refresh_tokens"
 
 	"github.com/google/uuid"
 )

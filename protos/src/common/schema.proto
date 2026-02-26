@@ -1,7 +1,7 @@
 syntax = "proto3";
 package common.schema;
 
-option go_package = "nfxid/protos/gen/common/schema;schemapb";
+option go_package = "nfxidentity/protos/gen/common/schema;schemapb";
 
 // ClearSchemaRequest 清空 schema 请求
 message ClearSchemaRequest {

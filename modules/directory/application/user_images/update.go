@@ -2,7 +2,7 @@ package user_images
 
 import (
 	"context"
-	userImageCommands "nfxid/modules/directory/application/user_images/commands"
+	userImageCommands "nfxidentity/modules/directory/application/user_images/commands"
 )
 
 // UpdateUserImageDisplayOrder 更新用户图片显示顺序

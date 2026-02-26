@@ -61,7 +61,7 @@
 
 [kafka]
     brokers = ["${KAFKA_BROKERS}"]
-    client_id = "nfxid-image-service"
+    client_id = "nfxidentity-image-service"
 
     [kafka.network]
         max_open_requests = 1
@@ -75,7 +75,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "image-service-group"
+        group_id = "nfxidentity-image"
         initial_offset = "latest"
         session_timeout_ms = 10000
         heartbeat_interval_ms = 3000
@@ -84,14 +84,14 @@
         return_errors = true
 
     [kafka.producer_topics]
-        image = "nfxid.image"
-        image_poison = "nfxid.image_poison"
+        image = "nfxidentity.image"
+        image_poison = "nfxidentity.image_poison"
 
     [kafka.consumer_topics]
-        image = "nfxid.image"
-        image_poison = "nfxid.image_poison"
-        directory = "nfxid.directory"
-        directory_poison = "nfxid.directory_poison"
+        image = "nfxidentity.image"
+        image_poison = "nfxidentity.image_poison"
+        directory = "nfxidentity.directory"
+        directory_poison = "nfxidentity.directory_poison"
 
     [kafka.security]
         enabled = false
@@ -106,7 +106,7 @@
     user = "${RABBITMQ_USER}"
     password = "${RABBITMQ_PASSWORD}"
     vhost = "/"
-    client_id = "nfxid-image-service"
+    client_id = "nfxidentity-image-service"
 
     [rabbitmq.producer]
         mandatory = false
@@ -120,7 +120,7 @@
 
     [rabbitmq.consumer]
         queue_name = ""
-        consumer_tag = "nfxid-image-consumer"
+        consumer_tag = "nfxidentity-image-consumer"
         auto_ack = false
         exclusive = false
         no_local = false

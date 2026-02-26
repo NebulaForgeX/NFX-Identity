@@ -1,11 +1,11 @@
 package application_role_assignments
 
 import (
-	dom "nfxid/modules/access/domain/application_role_assignments"
-	"nfxid/modules/access/infrastructure/repository/application_role_assignments/check"
-	"nfxid/modules/access/infrastructure/repository/application_role_assignments/create"
-	"nfxid/modules/access/infrastructure/repository/application_role_assignments/delete"
-	"nfxid/modules/access/infrastructure/repository/application_role_assignments/get"
+	dom "nfxidentity/modules/access/domain/application_role_assignments"
+	"nfxidentity/modules/access/infrastructure/repository/application_role_assignments/check"
+	"nfxidentity/modules/access/infrastructure/repository/application_role_assignments/create"
+	"nfxidentity/modules/access/infrastructure/repository/application_role_assignments/delete"
+	"nfxidentity/modules/access/infrastructure/repository/application_role_assignments/get"
 
 	"gorm.io/gorm"
 )

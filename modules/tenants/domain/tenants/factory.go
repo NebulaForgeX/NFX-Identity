@@ -1,7 +1,7 @@
 package tenants
 
 import (
-	tenantsErr "nfxid/errors/src/tenants"
+	tenantsErr "nfxidentity/errors/src/tenants"
 	"time"
 
 	"github.com/google/uuid"

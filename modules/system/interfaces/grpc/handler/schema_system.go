@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"nfxid/pkgs/postgresqlx"
-	schemapb "nfxid/protos/gen/common/schema"
+	"nfxidentity/pkgs/postgresqlx"
+	schemapb "nfxidentity/protos/gen/common/schema"
 
 	"gorm.io/gorm"
 )

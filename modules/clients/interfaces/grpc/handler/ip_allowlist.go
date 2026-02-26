@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
-	"nfxid/pkgs/errx"
-	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
+	ipAllowlistApp "nfxidentity/modules/clients/application/ip_allowlist"
+	"nfxidentity/pkgs/errx"
+	ipallowlistpb "nfxidentity/protos/gen/clients/ip_allowlist"
 )
 
 type IPAllowlistHandler struct {

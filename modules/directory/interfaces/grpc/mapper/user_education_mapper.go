@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userEducationAppResult "nfxid/modules/directory/application/user_educations/results"
-	usereducationpb "nfxid/protos/gen/directory/user_education"
+	userEducationAppResult "nfxidentity/modules/directory/application/user_educations/results"
+	usereducationpb "nfxidentity/protos/gen/directory/user_education"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

@@ -58,7 +58,7 @@
 
 [kafka]
     brokers = ["${KAFKA_BROKERS}"]
-    client_id = "nfxid-system-service"
+    client_id = "nfxidentity-system-service"
 
     [kafka.network]
         max_open_requests = 1
@@ -72,7 +72,7 @@
         idempotent = true
 
     [kafka.consumer]
-        group_id = "system-service-group"
+        group_id = "nfxidentity-system"
         initial_offset = "latest"
         session_timeout_ms = 10000
         heartbeat_interval_ms = 3000
@@ -81,12 +81,12 @@
         return_errors = true
 
     [kafka.producer_topics]
-        system = "nfxid.system"
-        system_poison = "nfxid.system_poison"
+        system = "nfxidentity.system"
+        system_poison = "nfxidentity.system_poison"
 
     [kafka.consumer_topics]
-        system = "nfxid.system"
-        system_poison = "nfxid.system_poison"
+        system = "nfxidentity.system"
+        system_poison = "nfxidentity.system_poison"
 
     [kafka.security]
         enabled = false
@@ -101,7 +101,7 @@
     user = "${RABBITMQ_USER}"
     password = "${RABBITMQ_PASSWORD}"
     vhost = "/"
-    client_id = "nfxid-system-service"
+    client_id = "nfxidentity-system-service"
 
     [rabbitmq.producer]
         mandatory = false
@@ -115,7 +115,7 @@
 
     [rabbitmq.consumer]
         queue_name = ""
-        consumer_tag = "nfxid-system-consumer"
+        consumer_tag = "nfxidentity-system-consumer"
         auto_ack = false
         exclusive = false
         no_local = false

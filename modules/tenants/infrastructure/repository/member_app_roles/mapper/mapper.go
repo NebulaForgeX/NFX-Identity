@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/tenants/domain/member_app_roles"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/domain/member_app_roles"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 )
 
 // MemberAppRoleDomainToModel 将 Domain MemberAppRole 转换为 Model MemberAppRole

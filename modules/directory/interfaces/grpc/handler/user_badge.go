@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	userBadgeApp "nfxid/modules/directory/application/user_badges"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	userbadgepb "nfxid/protos/gen/directory/user_badge"
+	userBadgeApp "nfxidentity/modules/directory/application/user_badges"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	userbadgepb "nfxidentity/protos/gen/directory/user_badge"
 
 	"github.com/google/uuid"
 )

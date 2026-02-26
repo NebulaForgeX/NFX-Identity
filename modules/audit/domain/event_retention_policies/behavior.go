@@ -1,7 +1,7 @@
 package event_retention_policies
 
 import (
-	auditErr "nfxid/errors/src/audit"
+	auditErr "nfxidentity/errors/src/audit"
 	"time"
 )
 

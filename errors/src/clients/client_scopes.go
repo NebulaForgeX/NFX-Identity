@@ -1,6 +1,6 @@
 package clients
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeClientScopeNotFound       = "CLIENT_SCOPE_NOT_FOUND"

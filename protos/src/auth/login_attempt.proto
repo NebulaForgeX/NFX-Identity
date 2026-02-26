@@ -1,7 +1,7 @@
 syntax = "proto3";
 package login_attempt;
 
-option go_package = "nfxid/protos/gen/auth/login_attempt;loginattemptpb";
+option go_package = "nfxidentity/protos/gen/auth/login_attempt;loginattemptpb";
 
 import "google/protobuf/timestamp.proto";
 

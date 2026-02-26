@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	memberGroupApp "nfxid/modules/tenants/application/member_groups"
-	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	membergrouppb "nfxid/protos/gen/tenants/member_group"
+	memberGroupApp "nfxidentity/modules/tenants/application/member_groups"
+	"nfxidentity/modules/tenants/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	membergrouppb "nfxidentity/protos/gen/tenants/member_group"
 
 	"github.com/google/uuid"
 )

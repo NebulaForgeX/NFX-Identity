@@ -2,7 +2,7 @@ package domain_verifications
 
 import (
 	"context"
-	domainVerificationCommands "nfxid/modules/tenants/application/domain_verifications/commands"
+	domainVerificationCommands "nfxidentity/modules/tenants/application/domain_verifications/commands"
 )
 
 // VerifyDomain 验证域名

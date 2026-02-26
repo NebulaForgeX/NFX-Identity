@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"nfxid/constants"
-	"nfxid/events/directory"
-	userAvatarCommands "nfxid/modules/directory/application/user_avatars/commands"
-	userAvatarDomain "nfxid/modules/directory/domain/user_avatars"
-	"nfxid/pkgs/kafkax/eventbus"
+	"nfxidentity/constants"
+	"nfxidentity/events/directory"
+	userAvatarCommands "nfxidentity/modules/directory/application/user_avatars/commands"
+	userAvatarDomain "nfxidentity/modules/directory/domain/user_avatars"
+	"nfxidentity/pkgs/kafkax/eventbus"
 )
 
 // CreateOrUpdateUserAvatar 创建或更新用户头像

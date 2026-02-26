@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	imageAppResult "nfxid/modules/image/application/images/results"
+	imageAppResult "nfxidentity/modules/image/application/images/results"
 
 	"github.com/google/uuid"
 )

@@ -1,12 +1,12 @@
 package sessions
 
 import (
-	"nfxid/modules/auth/domain/sessions"
-	"nfxid/modules/auth/infrastructure/repository/sessions/check"
-	"nfxid/modules/auth/infrastructure/repository/sessions/create"
-	"nfxid/modules/auth/infrastructure/repository/sessions/delete"
-	"nfxid/modules/auth/infrastructure/repository/sessions/get"
-	"nfxid/modules/auth/infrastructure/repository/sessions/update"
+	"nfxidentity/modules/auth/domain/sessions"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/check"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/create"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/delete"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/get"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/update"
 
 	"gorm.io/gorm"
 )

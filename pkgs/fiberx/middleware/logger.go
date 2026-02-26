@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/logx"
 
 	"github.com/gofiber/fiber/v3"
 	"go.uber.org/zap"

@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // ByResetID 根据 ResetID 检查 PasswordReset 是否存在，实现 password_resets.Check 接口

@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	memberApp "nfxid/modules/tenants/application/members"
-	memberDomain "nfxid/modules/tenants/domain/members"
-	"nfxid/modules/tenants/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	memberpb "nfxid/protos/gen/tenants/member"
+	memberApp "nfxidentity/modules/tenants/application/members"
+	memberDomain "nfxidentity/modules/tenants/domain/members"
+	"nfxidentity/modules/tenants/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	memberpb "nfxidentity/protos/gen/tenants/member"
 
 	"github.com/google/uuid"
 )

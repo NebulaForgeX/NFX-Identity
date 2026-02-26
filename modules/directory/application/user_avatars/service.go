@@ -1,9 +1,9 @@
 package user_avatars
 
 import (
-	userAvatarDomain "nfxid/modules/directory/domain/user_avatars"
-	directoryGrpc "nfxid/modules/directory/infrastructure/grpc"
-	"nfxid/pkgs/kafkax/eventbus"
+	userAvatarDomain "nfxidentity/modules/directory/domain/user_avatars"
+	directoryGrpc "nfxidentity/modules/directory/infrastructure/grpc"
+	"nfxidentity/pkgs/kafkax/eventbus"
 )
 
 type Service struct {

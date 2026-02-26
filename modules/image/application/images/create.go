@@ -2,8 +2,8 @@ package images
 
 import (
 	"context"
-	imageCommands "nfxid/modules/image/application/images/commands"
-	imageDomain "nfxid/modules/image/domain/images"
+	imageCommands "nfxidentity/modules/image/application/images/commands"
+	imageDomain "nfxidentity/modules/image/domain/images"
 
 	"github.com/google/uuid"
 )

@@ -1,7 +1,7 @@
 package tenants
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // DomainVerificationsInvalidateCacheEvent DomainVerifications 缓存清除事件

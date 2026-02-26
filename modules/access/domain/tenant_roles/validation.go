@@ -3,7 +3,7 @@ package tenant_roles
 import (
 	"time"
 
-	accessErr "nfxid/errors/src/access"
+	accessErr "nfxidentity/errors/src/access"
 
 	"github.com/google/uuid"
 )

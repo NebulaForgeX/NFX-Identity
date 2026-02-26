@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/audit/domain/event_retention_policies"
-	"nfxid/modules/audit/infrastructure/repository/event_retention_policies/mapper"
+	"nfxidentity/modules/audit/domain/event_retention_policies"
+	"nfxidentity/modules/audit/infrastructure/repository/event_retention_policies/mapper"
 )
 
 // New 创建新的 EventRetentionPolicy，实现 event_retention_policies.Create 接口

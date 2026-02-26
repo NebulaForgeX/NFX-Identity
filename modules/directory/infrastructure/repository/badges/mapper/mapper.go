@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/modules/directory/domain/badges"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/modules/directory/domain/badges"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 )
 
 // BadgeDomainToModel 将 Domain Badge 转换为 Model Badge

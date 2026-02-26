@@ -1,7 +1,7 @@
 package mfa_factors
 
 import (
-	mfaFactorDomain "nfxid/modules/auth/domain/mfa_factors"
+	mfaFactorDomain "nfxidentity/modules/auth/domain/mfa_factors"
 )
 
 type Service struct {

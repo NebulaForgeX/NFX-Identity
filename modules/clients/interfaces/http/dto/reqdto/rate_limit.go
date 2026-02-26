@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	rateLimitAppCommands "nfxid/modules/clients/application/rate_limits/commands"
-	rateLimitDomain "nfxid/modules/clients/domain/rate_limits"
+	rateLimitAppCommands "nfxidentity/modules/clients/application/rate_limits/commands"
+	rateLimitDomain "nfxidentity/modules/clients/domain/rate_limits"
 
 	"github.com/google/uuid"
 )

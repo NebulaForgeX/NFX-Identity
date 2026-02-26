@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	imageTagAppCommands "nfxid/modules/image/application/image_tags/commands"
+	imageTagAppCommands "nfxidentity/modules/image/application/image_tags/commands"
 
 	"github.com/google/uuid"
 )

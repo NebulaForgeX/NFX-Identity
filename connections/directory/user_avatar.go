@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	useravatarpb "nfxid/protos/gen/directory/user_avatar"
+	useravatarpb "nfxidentity/protos/gen/directory/user_avatar"
 )
 
 // UserAvatarClient UserAvatar 客户端

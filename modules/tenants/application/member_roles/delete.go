@@ -2,7 +2,7 @@ package member_roles
 
 import (
 	"context"
-	memberRoleCommands "nfxid/modules/tenants/application/member_roles/commands"
+	memberRoleCommands "nfxidentity/modules/tenants/application/member_roles/commands"
 )
 
 // DeleteMemberRole 删除成员角色

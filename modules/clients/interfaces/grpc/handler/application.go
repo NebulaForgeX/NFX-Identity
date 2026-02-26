@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	appApp "nfxid/modules/clients/application/apps"
-	"nfxid/modules/clients/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	applicationpb "nfxid/protos/gen/clients/application"
+	appApp "nfxidentity/modules/clients/application/apps"
+	"nfxidentity/modules/clients/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	applicationpb "nfxidentity/protos/gen/clients/application"
 
 	"github.com/google/uuid"
 )

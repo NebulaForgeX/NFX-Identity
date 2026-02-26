@@ -1,7 +1,7 @@
 package cachex
 
 import (
-	"nfxid/pkgs/utils/id"
+	"nfxidentity/pkgs/utils/id"
 	"sync"
 	"time"
 )

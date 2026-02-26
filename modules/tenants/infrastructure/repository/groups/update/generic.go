@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/groups"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/groups/mapper"
+	"nfxidentity/modules/tenants/domain/groups"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/groups/mapper"
 )
 
 // Generic 通用更新 Group，实现 groups.Update 接口

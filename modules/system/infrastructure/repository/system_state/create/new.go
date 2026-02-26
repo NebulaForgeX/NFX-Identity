@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/system/domain/system_state"
-	"nfxid/modules/system/infrastructure/repository/system_state/mapper"
+	"nfxidentity/modules/system/domain/system_state"
+	"nfxidentity/modules/system/infrastructure/repository/system_state/mapper"
 )
 
 // New 创建新的 SystemState，实现 system_state.Create 接口

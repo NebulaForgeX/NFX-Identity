@@ -1006,7 +1006,7 @@ const file_audit_event_proto_rawDesc = "" +
 	"\fGetEventByID\x12\x1a.event.GetEventByIDRequest\x1a\x1b.event.GetEventByIDResponse\x12V\n" +
 	"\x11GetEventByEventID\x12\x1f.event.GetEventByEventIDRequest\x1a .event.GetEventByEventIDResponse\x12S\n" +
 	"\x10GetEventsByActor\x12\x1e.event.GetEventsByActorRequest\x1a\x1f.event.GetEventsByActorResponse\x12M\n" +
-	"\x0eBatchGetEvents\x12\x1c.event.BatchGetEventsRequest\x1a\x1d.event.BatchGetEventsResponseB&Z$nfxid/protos/gen/audit/event;eventpbb\x06proto3"
+	"\x0eBatchGetEvents\x12\x1c.event.BatchGetEventsRequest\x1a\x1d.event.BatchGetEventsResponseB&Z$nfxidentity/protos/gen/audit/event;eventpbb\x06proto3"
 
 var (
 	file_audit_event_proto_rawDescOnce sync.Once

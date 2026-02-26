@@ -1,12 +1,12 @@
 package tenants
 
 import (
-	"nfxid/modules/tenants/domain/tenants"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/check"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/create"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/delete"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/get"
-	"nfxid/modules/tenants/infrastructure/repository/tenants/update"
+	"nfxidentity/modules/tenants/domain/tenants"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/tenants/update"
 
 	"gorm.io/gorm"
 )

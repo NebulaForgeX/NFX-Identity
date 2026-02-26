@@ -2,9 +2,9 @@ package mapper
 
 import (
 	"encoding/json"
-	"nfxid/enums"
-	"nfxid/modules/tenants/domain/invitations"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 	"gorm.io/datatypes"

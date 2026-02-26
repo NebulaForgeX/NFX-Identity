@@ -2,8 +2,8 @@ package delete
 
 import (
 	"context"
-	clientsErr "nfxid/errors/src/clients"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	clientsErr "nfxidentity/errors/src/clients"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ByClientID 根据 ClientID 删除 ClientCredential，实现 client_credentials.Delete 接口

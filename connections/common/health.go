@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	healthpb "nfxid/protos/gen/common/health"
+	healthpb "nfxidentity/protos/gen/common/health"
 )
 
 // HealthClient 健康检查客户端

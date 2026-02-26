@@ -2,8 +2,8 @@ package system_state
 
 import (
 	"context"
-	systemStateCommands "nfxid/modules/system/application/system_state/commands"
-	systemStateDomain "nfxid/modules/system/domain/system_state"
+	systemStateCommands "nfxidentity/modules/system/application/system_state/commands"
+	systemStateDomain "nfxidentity/modules/system/domain/system_state"
 )
 
 type Service struct {

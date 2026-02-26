@@ -1,12 +1,12 @@
 package images
 
 import (
-	"nfxid/modules/image/domain/images"
-	"nfxid/modules/image/infrastructure/repository/images/check"
-	"nfxid/modules/image/infrastructure/repository/images/create"
-	"nfxid/modules/image/infrastructure/repository/images/delete"
-	"nfxid/modules/image/infrastructure/repository/images/get"
-	"nfxid/modules/image/infrastructure/repository/images/update"
+	"nfxidentity/modules/image/domain/images"
+	"nfxidentity/modules/image/infrastructure/repository/images/check"
+	"nfxidentity/modules/image/infrastructure/repository/images/create"
+	"nfxidentity/modules/image/infrastructure/repository/images/delete"
+	"nfxidentity/modules/image/infrastructure/repository/images/get"
+	"nfxidentity/modules/image/infrastructure/repository/images/update"
 
 	"gorm.io/gorm"
 )

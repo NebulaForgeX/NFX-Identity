@@ -1,13 +1,13 @@
 package handler
 
 import (
-	invitationApp "nfxid/modules/tenants/application/invitations"
-	invitationAppCommands "nfxid/modules/tenants/application/invitations/commands"
-	"nfxid/modules/tenants/interfaces/http/dto/reqdto"
-	"nfxid/modules/tenants/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	invitationApp "nfxidentity/modules/tenants/application/invitations"
+	invitationAppCommands "nfxidentity/modules/tenants/application/invitations/commands"
+	"nfxidentity/modules/tenants/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/tenants/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

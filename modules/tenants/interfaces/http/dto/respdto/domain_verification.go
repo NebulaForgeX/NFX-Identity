@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	domainVerificationAppResult "nfxid/modules/tenants/application/domain_verifications/results"
+	domainVerificationAppResult "nfxidentity/modules/tenants/application/domain_verifications/results"
 
 	"github.com/google/uuid"
 )

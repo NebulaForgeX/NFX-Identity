@@ -1,15 +1,15 @@
 package auth
 
 import (
-	accountlockoutpb "nfxid/protos/gen/auth/account_lockout"
-	loginattemptpb "nfxid/protos/gen/auth/login_attempt"
-	mfafactorpb "nfxid/protos/gen/auth/mfa_factor"
-	passwordhistorypb "nfxid/protos/gen/auth/password_history"
-	passwordresetpb "nfxid/protos/gen/auth/password_reset"
-	refreshtokenpb "nfxid/protos/gen/auth/refresh_token"
-	sessionpb "nfxid/protos/gen/auth/session"
-	trusteddevicepb "nfxid/protos/gen/auth/trusted_device"
-	usercredentialpb "nfxid/protos/gen/auth/user_credential"
+	accountlockoutpb "nfxidentity/protos/gen/auth/account_lockout"
+	loginattemptpb "nfxidentity/protos/gen/auth/login_attempt"
+	mfafactorpb "nfxidentity/protos/gen/auth/mfa_factor"
+	passwordhistorypb "nfxidentity/protos/gen/auth/password_history"
+	passwordresetpb "nfxidentity/protos/gen/auth/password_reset"
+	refreshtokenpb "nfxidentity/protos/gen/auth/refresh_token"
+	sessionpb "nfxidentity/protos/gen/auth/session"
+	trusteddevicepb "nfxidentity/protos/gen/auth/trusted_device"
+	usercredentialpb "nfxidentity/protos/gen/auth/user_credential"
 )
 
 // Client Auth 服务客户端

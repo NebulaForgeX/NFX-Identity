@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	sessionApp "nfxid/modules/auth/application/sessions"
-	"nfxid/modules/auth/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	sessionpb "nfxid/protos/gen/auth/session"
+	sessionApp "nfxidentity/modules/auth/application/sessions"
+	"nfxidentity/modules/auth/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	sessionpb "nfxidentity/protos/gen/auth/session"
 
 	"github.com/google/uuid"
 )

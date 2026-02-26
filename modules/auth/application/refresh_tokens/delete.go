@@ -2,7 +2,7 @@ package refresh_tokens
 
 import (
 	"context"
-	refreshTokenCommands "nfxid/modules/auth/application/refresh_tokens/commands"
+	refreshTokenCommands "nfxidentity/modules/auth/application/refresh_tokens/commands"
 )
 
 // DeleteRefreshToken 删除刷新令牌

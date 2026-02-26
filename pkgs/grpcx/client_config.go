@@ -3,10 +3,10 @@ package grpcx
 import (
 	"time"
 
-	"nfxid/pkgs/circuitbreaker"
-	"nfxid/pkgs/logx"
-	"nfxid/pkgs/retry"
-	"nfxid/pkgs/security/token/servertoken"
+	"nfxidentity/pkgs/circuitbreaker"
+	"nfxidentity/pkgs/logx"
+	"nfxidentity/pkgs/retry"
+	"nfxidentity/pkgs/security/token/servertoken"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

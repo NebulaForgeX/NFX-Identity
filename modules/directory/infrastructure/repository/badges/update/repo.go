@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/directory/domain/badges"
+	"nfxidentity/modules/directory/domain/badges"
 
 	"gorm.io/gorm"
 )

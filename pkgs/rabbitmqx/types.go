@@ -3,7 +3,7 @@ package rabbitmqx
 import (
 	"fmt"
 	"net/url"
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 )
 
 type Config struct {

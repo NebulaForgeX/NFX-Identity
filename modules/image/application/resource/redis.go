@@ -3,7 +3,7 @@ package resource
 import (
 	"context"
 
-	"nfxid/pkgs/errx"
+	"nfxidentity/pkgs/errx"
 )
 
 // CheckRedis 检查 Redis 连接的健康状态

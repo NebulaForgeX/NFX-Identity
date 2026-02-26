@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	clientCredentialApp "nfxid/modules/clients/application/client_credentials"
-	"nfxid/pkgs/errx"
-	clientcredentialpb "nfxid/protos/gen/clients/client_credential"
+	clientCredentialApp "nfxidentity/modules/clients/application/client_credentials"
+	"nfxidentity/pkgs/errx"
+	clientcredentialpb "nfxidentity/protos/gen/clients/client_credential"
 )
 
 type ClientCredentialHandler struct {

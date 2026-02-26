@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	memberAppRoleAppCommands "nfxid/modules/tenants/application/member_app_roles/commands"
+	memberAppRoleAppCommands "nfxidentity/modules/tenants/application/member_app_roles/commands"
 
 	"github.com/google/uuid"
 )

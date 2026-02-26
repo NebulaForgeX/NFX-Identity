@@ -1,7 +1,7 @@
 package reqdto
 
 import (
-	imageTypeAppCommands "nfxid/modules/image/application/image_types/commands"
+	imageTypeAppCommands "nfxidentity/modules/image/application/image_types/commands"
 
 	"github.com/google/uuid"
 )

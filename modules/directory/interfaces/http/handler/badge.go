@@ -1,13 +1,13 @@
 package handler
 
 import (
-	badgeApp "nfxid/modules/directory/application/badges"
-	badgeAppCommands "nfxid/modules/directory/application/badges/commands"
-	"nfxid/modules/directory/interfaces/http/dto/reqdto"
-	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	badgeApp "nfxidentity/modules/directory/application/badges"
+	badgeAppCommands "nfxidentity/modules/directory/application/badges/commands"
+	"nfxidentity/modules/directory/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/directory/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

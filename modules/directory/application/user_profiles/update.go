@@ -2,7 +2,7 @@ package user_profiles
 
 import (
 	"context"
-	userProfileCommands "nfxid/modules/directory/application/user_profiles/commands"
+	userProfileCommands "nfxidentity/modules/directory/application/user_profiles/commands"
 	"time"
 )
 

@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/auth/domain/user_credentials"
+	"nfxidentity/modules/auth/domain/user_credentials"
 
 	"gorm.io/gorm"
 )

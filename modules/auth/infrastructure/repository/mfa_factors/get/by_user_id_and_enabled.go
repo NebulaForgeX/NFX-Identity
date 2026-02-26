@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/mfa_factors"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/mfa_factors/mapper"
+	"nfxidentity/modules/auth/domain/mfa_factors"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/mfa_factors/mapper"
 
 	"github.com/google/uuid"
 )

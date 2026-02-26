@@ -3,11 +3,11 @@ package handler
 import (
 	"context"
 
-	userApp "nfxid/modules/directory/application/users"
-	userAppCommands "nfxid/modules/directory/application/users/commands"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	userpb "nfxid/protos/gen/directory/user"
+	userApp "nfxidentity/modules/directory/application/users"
+	userAppCommands "nfxidentity/modules/directory/application/users/commands"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	userpb "nfxidentity/protos/gen/directory/user"
 
 	"github.com/google/uuid"
 )

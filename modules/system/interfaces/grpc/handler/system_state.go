@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	systemStateApp "nfxid/modules/system/application/system_state"
-	"nfxid/modules/system/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	systemstatepb "nfxid/protos/gen/system/system_state"
+	systemStateApp "nfxidentity/modules/system/application/system_state"
+	"nfxidentity/modules/system/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	systemstatepb "nfxidentity/protos/gen/system/system_state"
 
 	"github.com/google/uuid"
 )

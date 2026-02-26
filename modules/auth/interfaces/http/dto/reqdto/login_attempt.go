@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	loginAttemptAppCommands "nfxid/modules/auth/application/login_attempts/commands"
-	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
+	loginAttemptAppCommands "nfxidentity/modules/auth/application/login_attempts/commands"
+	loginAttemptDomain "nfxidentity/modules/auth/domain/login_attempts"
 
 	"github.com/google/uuid"
 )

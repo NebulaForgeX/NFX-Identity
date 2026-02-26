@@ -2,7 +2,7 @@ package api_keys
 
 import (
 	"context"
-	apiKeyCommands "nfxid/modules/clients/application/api_keys/commands"
+	apiKeyCommands "nfxidentity/modules/clients/application/api_keys/commands"
 )
 
 // DeleteAPIKey 删除API密钥

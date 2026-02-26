@@ -2,7 +2,7 @@ package hash_chain_checkpoints
 
 import (
 	"context"
-	hashChainCheckpointResult "nfxid/modules/audit/application/hash_chain_checkpoints/results"
+	hashChainCheckpointResult "nfxidentity/modules/audit/application/hash_chain_checkpoints/results"
 
 	"github.com/google/uuid"
 )

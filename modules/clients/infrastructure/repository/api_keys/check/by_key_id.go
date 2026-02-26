@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ByKeyID 根据 KeyID 检查 APIKey 是否存在，实现 api_keys.Check 接口

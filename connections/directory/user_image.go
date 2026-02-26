@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	userimagepb "nfxid/protos/gen/directory/user_image"
+	userimagepb "nfxidentity/protos/gen/directory/user_image"
 )
 
 // UserImageClient UserImage 客户端

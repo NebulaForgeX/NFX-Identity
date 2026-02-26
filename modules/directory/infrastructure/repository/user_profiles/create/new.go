@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_profiles"
-	"nfxid/modules/directory/infrastructure/repository/user_profiles/mapper"
+	"nfxidentity/modules/directory/domain/user_profiles"
+	"nfxidentity/modules/directory/infrastructure/repository/user_profiles/mapper"
 )
 
 // New 创建新的 UserProfile，实现 user_profiles.Create 接口

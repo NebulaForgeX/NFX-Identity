@@ -3,8 +3,8 @@ package usertoken
 import (
 	"context"
 	"errors"
-	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/utils/mapx"
+	"nfxidentity/pkgs/security/token"
+	"nfxidentity/pkgs/utils/mapx"
 	"time"
 
 	"github.com/MicahParks/keyfunc/v3"

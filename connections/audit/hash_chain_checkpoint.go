@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	hashchaincheckpointpb "nfxid/protos/gen/audit/hash_chain_checkpoint"
+	hashchaincheckpointpb "nfxidentity/protos/gen/audit/hash_chain_checkpoint"
 )
 
 // HashChainCheckpointClient HashChainCheckpoint 客户端

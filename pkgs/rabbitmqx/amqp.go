@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	"nfxid/pkgs/rabbitmqx/messaging"
+	"nfxidentity/pkgs/rabbitmqx/messaging"
 
 	"github.com/ThreeDotsLabs/watermill-amqp/v3/pkg/amqp"
 	amqp091 "github.com/rabbitmq/amqp091-go"

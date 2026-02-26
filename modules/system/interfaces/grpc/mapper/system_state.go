@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	systemStateApp "nfxid/modules/system/application/system_state/results"
-	systemstatepb "nfxid/protos/gen/system/system_state"
+	systemStateApp "nfxidentity/modules/system/application/system_state/results"
+	systemstatepb "nfxidentity/protos/gen/system/system_state"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

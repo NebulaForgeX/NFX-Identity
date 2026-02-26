@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/audit/infrastructure/rdb/models"
+	"nfxidentity/modules/audit/infrastructure/rdb/models"
 
 	"github.com/google/uuid"
 )

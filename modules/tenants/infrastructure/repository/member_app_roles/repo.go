@@ -1,12 +1,12 @@
 package member_app_roles
 
 import (
-	"nfxid/modules/tenants/domain/member_app_roles"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/check"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/create"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/delete"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/get"
-	"nfxid/modules/tenants/infrastructure/repository/member_app_roles/update"
+	"nfxidentity/modules/tenants/domain/member_app_roles"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/check"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/create"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/delete"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/get"
+	"nfxidentity/modules/tenants/infrastructure/repository/member_app_roles/update"
 
 	"gorm.io/gorm"
 )

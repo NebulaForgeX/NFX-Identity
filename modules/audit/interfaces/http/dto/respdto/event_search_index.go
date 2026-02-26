@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	eventSearchIndexAppResult "nfxid/modules/audit/application/event_search_index/results"
+	eventSearchIndexAppResult "nfxidentity/modules/audit/application/event_search_index/results"
 
 	"github.com/google/uuid"
 )

@@ -2,7 +2,7 @@ package image_types
 
 import (
 	"context"
-	imageTypeCommands "nfxid/modules/image/application/image_types/commands"
+	imageTypeCommands "nfxidentity/modules/image/application/image_types/commands"
 )
 
 // UpdateImageType 更新图片类型

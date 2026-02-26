@@ -1,13 +1,13 @@
 package handler
 
 import (
-	ipAllowlistApp "nfxid/modules/clients/application/ip_allowlist"
-	ipAllowlistAppCommands "nfxid/modules/clients/application/ip_allowlist/commands"
-	"nfxid/modules/clients/interfaces/http/dto/reqdto"
-	"nfxid/modules/clients/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	ipAllowlistApp "nfxidentity/modules/clients/application/ip_allowlist"
+	ipAllowlistAppCommands "nfxidentity/modules/clients/application/ip_allowlist/commands"
+	"nfxidentity/modules/clients/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/clients/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

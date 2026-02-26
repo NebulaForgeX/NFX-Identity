@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	passwordResetApp "nfxid/modules/auth/application/password_resets"
-	"nfxid/pkgs/errx"
-	passwordresetpb "nfxid/protos/gen/auth/password_reset"
+	passwordResetApp "nfxidentity/modules/auth/application/password_resets"
+	"nfxidentity/pkgs/errx"
+	passwordresetpb "nfxidentity/protos/gen/auth/password_reset"
 )
 
 type PasswordResetHandler struct {

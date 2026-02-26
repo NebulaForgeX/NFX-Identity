@@ -2,9 +2,9 @@ package users
 
 import (
 	"context"
-	dirErr "nfxid/errors/src/directory"
-	userCommands "nfxid/modules/directory/application/users/commands"
-	userDomain "nfxid/modules/directory/domain/users"
+	dirErr "nfxidentity/errors/src/directory"
+	userCommands "nfxidentity/modules/directory/application/users/commands"
+	userDomain "nfxidentity/modules/directory/domain/users"
 
 	"github.com/google/uuid"
 )

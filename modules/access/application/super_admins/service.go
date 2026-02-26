@@ -3,7 +3,7 @@ package super_admins
 import (
 	"context"
 
-	domain "nfxid/modules/access/domain/super_admins"
+	domain "nfxidentity/modules/access/domain/super_admins"
 
 	"github.com/google/uuid"
 )

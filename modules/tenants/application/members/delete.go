@@ -2,7 +2,7 @@ package members
 
 import (
 	"context"
-	memberCommands "nfxid/modules/tenants/application/members/commands"
+	memberCommands "nfxidentity/modules/tenants/application/members/commands"
 )
 
 // DeleteMember 删除成员

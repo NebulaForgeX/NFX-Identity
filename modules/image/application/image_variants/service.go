@@ -1,7 +1,7 @@
 package image_variants
 
 import (
-	imageVariantDomain "nfxid/modules/image/domain/image_variants"
+	imageVariantDomain "nfxidentity/modules/image/domain/image_variants"
 )
 
 type Service struct {

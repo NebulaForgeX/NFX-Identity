@@ -481,7 +481,7 @@ const file_tenants_tenant_application_proto_rawDesc = "" +
 	"\x18TenantApplicationService\x12\x85\x01\n" +
 	"\x18GetTenantApplicationByID\x123.tenant_application.GetTenantApplicationByIDRequest\x1a4.tenant_application.GetTenantApplicationByIDResponse\x12\x9a\x01\n" +
 	"\x1fGetTenantApplicationsByTenantID\x12:.tenant_application.GetTenantApplicationsByTenantIDRequest\x1a;.tenant_application.GetTenantApplicationsByTenantIDResponse\x12\xa9\x01\n" +
-	"$GetTenantApplicationsByApplicationID\x12?.tenant_application.GetTenantApplicationsByApplicationIDRequest\x1a@.tenant_application.GetTenantApplicationsByApplicationIDResponseBAZ?nfxid/protos/gen/tenants/tenant_application;tenantapplicationpbb\x06proto3"
+	"$GetTenantApplicationsByApplicationID\x12?.tenant_application.GetTenantApplicationsByApplicationIDRequest\x1a@.tenant_application.GetTenantApplicationsByApplicationIDResponseBAZ?nfxidentity/protos/gen/tenants/tenant_application;tenantapplicationpbb\x06proto3"
 
 var (
 	file_tenants_tenant_application_proto_rawDescOnce sync.Once

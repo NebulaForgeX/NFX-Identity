@@ -1,9 +1,9 @@
 package cachex
 
 import (
-	"nfxid/pkgs/cachex/config"
-	"nfxid/pkgs/cachex/core"
-	"nfxid/pkgs/utils/id"
+	"nfxidentity/pkgs/cachex/config"
+	"nfxidentity/pkgs/cachex/core"
+	"nfxidentity/pkgs/utils/id"
 	"time"
 
 	"github.com/redis/go-redis/v9"

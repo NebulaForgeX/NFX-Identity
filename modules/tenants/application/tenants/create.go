@@ -2,9 +2,9 @@ package tenants
 
 import (
 	"context"
-	tenantCommands "nfxid/modules/tenants/application/tenants/commands"
-	tenantDomain "nfxid/modules/tenants/domain/tenants"
-	tenantsErr "nfxid/errors/src/tenants"
+	tenantCommands "nfxidentity/modules/tenants/application/tenants/commands"
+	tenantDomain "nfxidentity/modules/tenants/domain/tenants"
+	tenantsErr "nfxidentity/errors/src/tenants"
 
 	"github.com/google/uuid"
 )

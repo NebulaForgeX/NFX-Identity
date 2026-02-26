@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	auditAppResult "nfxid/modules/audit/application/events/results"
-	auditDomain "nfxid/modules/audit/domain/events"
-	eventpb "nfxid/protos/gen/audit/event"
+	auditAppResult "nfxidentity/modules/audit/application/events/results"
+	auditDomain "nfxidentity/modules/audit/domain/events"
+	eventpb "nfxidentity/protos/gen/audit/event"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

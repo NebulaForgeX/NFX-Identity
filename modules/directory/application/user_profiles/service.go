@@ -1,7 +1,7 @@
 package user_profiles
 
 import (
-	userProfileDomain "nfxid/modules/directory/domain/user_profiles"
+	userProfileDomain "nfxidentity/modules/directory/domain/user_profiles"
 )
 
 type Service struct {

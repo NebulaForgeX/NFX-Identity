@@ -1,6 +1,6 @@
 package access
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeSuperAdminNotFound = "SUPER_ADMIN_NOT_FOUND"

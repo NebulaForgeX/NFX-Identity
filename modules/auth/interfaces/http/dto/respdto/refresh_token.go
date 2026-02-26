@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	refreshTokenAppResult "nfxid/modules/auth/application/refresh_tokens/results"
+	refreshTokenAppResult "nfxidentity/modules/auth/application/refresh_tokens/results"
 
 	"github.com/google/uuid"
 )

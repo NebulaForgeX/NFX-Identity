@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	passwordHistoryAppResult "nfxid/modules/auth/application/password_history/results"
+	passwordHistoryAppResult "nfxidentity/modules/auth/application/password_history/results"
 
 	"github.com/google/uuid"
 )

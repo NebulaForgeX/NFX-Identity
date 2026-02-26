@@ -7,7 +7,7 @@
 ### 安装
 
 ```bash
-go get nfxid/pkgs/kafkax
+go get nfxidentity/pkgs/kafkax
 ```
 
 ### 基本用法
@@ -42,8 +42,8 @@ Kafka 和 RabbitMQ 的核心区别请参考：[USAGE_TOPIC.md](./docs/USAGE_TOPI
 ```go
 import (
     "context"
-    "nfxid/pkgs/kafkax"
-    "nfxid/pkgs/kafkax/eventbus"
+    "nfxidentity/pkgs/kafkax"
+    "nfxidentity/pkgs/kafkax/eventbus"
 )
 
 // 创建 Publisher

@@ -1,7 +1,7 @@
 package event_search_index
 
 import (
-	auditErr "nfxid/errors/src/audit"
+	auditErr "nfxidentity/errors/src/audit"
 	"time"
 
 	"github.com/google/uuid"

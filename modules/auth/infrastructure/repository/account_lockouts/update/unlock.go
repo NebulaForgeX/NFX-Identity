@@ -3,8 +3,8 @@ package update
 import (
 	"context"
 	"errors"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 	"time"
 
 	"github.com/google/uuid"

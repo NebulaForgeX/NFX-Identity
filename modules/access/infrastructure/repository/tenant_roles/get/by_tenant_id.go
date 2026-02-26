@@ -3,9 +3,9 @@ package get
 import (
 	"context"
 
-	"nfxid/modules/access/domain/tenant_roles"
-	"nfxid/modules/access/infrastructure/rdb/models"
-	"nfxid/modules/access/infrastructure/repository/tenant_roles/mapper"
+	"nfxidentity/modules/access/domain/tenant_roles"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/infrastructure/repository/tenant_roles/mapper"
 
 	"github.com/google/uuid"
 )

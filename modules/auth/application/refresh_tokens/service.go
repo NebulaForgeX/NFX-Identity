@@ -1,7 +1,7 @@
 package refresh_tokens
 
 import (
-	refreshTokenDomain "nfxid/modules/auth/domain/refresh_tokens"
+	refreshTokenDomain "nfxidentity/modules/auth/domain/refresh_tokens"
 )
 
 type Service struct {

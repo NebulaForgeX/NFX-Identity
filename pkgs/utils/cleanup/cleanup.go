@@ -2,7 +2,7 @@ package cleanup
 
 import (
 	"errors"
-	"nfxid/pkgs/utils/ptr"
+	"nfxidentity/pkgs/utils/ptr"
 )
 
 /**

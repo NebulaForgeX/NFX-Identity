@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	imagepb "nfxid/protos/gen/image/image"
+	imagepb "nfxidentity/protos/gen/image/image"
 )
 
 // ImageClient Image 客户端

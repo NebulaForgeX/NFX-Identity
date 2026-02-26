@@ -1,7 +1,7 @@
 package update
 
 import (
-	"nfxid/modules/audit/domain/hash_chain_checkpoints"
+	"nfxidentity/modules/audit/domain/hash_chain_checkpoints"
 
 	"gorm.io/gorm"
 )

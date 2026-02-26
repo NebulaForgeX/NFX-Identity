@@ -3,9 +3,9 @@ package update
 import (
 	"context"
 	"errors"
-	"nfxid/enums"
-	authErr "nfxid/errors/src/auth"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	authErr "nfxidentity/errors/src/auth"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 	"time"
 
 	"gorm.io/gorm"

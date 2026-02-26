@@ -2,9 +2,9 @@ package get
 
 import (
 	"context"
-	"nfxid/modules/directory/domain/user_images"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/modules/directory/infrastructure/repository/user_images/mapper"
+	"nfxidentity/modules/directory/domain/user_images"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/modules/directory/infrastructure/repository/user_images/mapper"
 
 	"github.com/google/uuid"
 )

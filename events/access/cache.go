@@ -1,7 +1,7 @@
 package access
 
 import (
-	"nfxid/events"
+	"nfxidentity/events"
 )
 
 // GrantsInvalidateCacheEvent Grants 缓存清除事件

@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // ByClientID 根据 ClientID 检查 ClientCredential 是否存在，实现 client_credentials.Check 接口

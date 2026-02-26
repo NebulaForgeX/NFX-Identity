@@ -2,8 +2,8 @@ package members
 
 import (
 	"context"
-	memberResult "nfxid/modules/tenants/application/members/results"
-	memberDomain "nfxid/modules/tenants/domain/members"
+	memberResult "nfxidentity/modules/tenants/application/members/results"
+	memberDomain "nfxidentity/modules/tenants/domain/members"
 
 	"github.com/google/uuid"
 )

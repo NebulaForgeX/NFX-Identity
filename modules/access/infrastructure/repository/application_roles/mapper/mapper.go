@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/access/domain/application_roles"
-	"nfxid/modules/access/infrastructure/rdb/models"
+	"nfxidentity/modules/access/domain/application_roles"
+	"nfxidentity/modules/access/infrastructure/rdb/models"
 )
 
 func ApplicationRoleDomainToModel(r *application_roles.ApplicationRole) *models.ApplicationRole {

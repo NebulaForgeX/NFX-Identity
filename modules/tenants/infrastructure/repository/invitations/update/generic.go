@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/invitations"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/mapper"
+	"nfxidentity/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/mapper"
 )
 
 // Generic 通用更新 Invitation，实现 invitations.Update 接口

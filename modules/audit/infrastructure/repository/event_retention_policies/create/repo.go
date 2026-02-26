@@ -1,7 +1,7 @@
 package create
 
 import (
-	"nfxid/modules/audit/domain/event_retention_policies"
+	"nfxidentity/modules/audit/domain/event_retention_policies"
 
 	"gorm.io/gorm"
 )

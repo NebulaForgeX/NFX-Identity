@@ -1,7 +1,7 @@
 package login_attempts
 
 import (
-	loginAttemptDomain "nfxid/modules/auth/domain/login_attempts"
+	loginAttemptDomain "nfxidentity/modules/auth/domain/login_attempts"
 )
 
 type Service struct {

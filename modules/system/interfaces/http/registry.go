@@ -1,9 +1,9 @@
 package http
 
 import (
-	bootstrapApp "nfxid/modules/system/application/bootstrap"
-	systemStateApp "nfxid/modules/system/application/system_state"
-	"nfxid/modules/system/interfaces/http/handler"
+	bootstrapApp "nfxidentity/modules/system/application/bootstrap"
+	systemStateApp "nfxidentity/modules/system/application/system_state"
+	"nfxidentity/modules/system/interfaces/http/handler"
 )
 
 type Registry struct {

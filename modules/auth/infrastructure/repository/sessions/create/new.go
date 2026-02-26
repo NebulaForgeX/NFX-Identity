@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/sessions"
-	"nfxid/modules/auth/infrastructure/repository/sessions/mapper"
+	"nfxidentity/modules/auth/domain/sessions"
+	"nfxidentity/modules/auth/infrastructure/repository/sessions/mapper"
 )
 
 // New 创建新的 Session，实现 sessions.Create 接口

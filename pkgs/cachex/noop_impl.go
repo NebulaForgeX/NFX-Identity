@@ -2,8 +2,8 @@ package cachex
 
 import (
 	"context"
-	"nfxid/pkgs/cachex/config"
-	"nfxid/pkgs/utils/id"
+	"nfxidentity/pkgs/cachex/config"
+	"nfxidentity/pkgs/utils/id"
 )
 
 type NoopEntityCache[T any, ID id.IDtype] struct {

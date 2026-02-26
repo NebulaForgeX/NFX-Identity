@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/client_credentials"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/mapper"
+	"nfxidentity/modules/clients/domain/client_credentials"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/mapper"
 )
 
 // New 创建新的 ClientCredential，实现 client_credentials.Create 接口

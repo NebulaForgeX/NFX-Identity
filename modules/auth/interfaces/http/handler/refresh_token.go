@@ -1,13 +1,13 @@
 package handler
 
 import (
-	refreshTokenApp "nfxid/modules/auth/application/refresh_tokens"
-	refreshTokenAppCommands "nfxid/modules/auth/application/refresh_tokens/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	refreshTokenApp "nfxidentity/modules/auth/application/refresh_tokens"
+	refreshTokenAppCommands "nfxidentity/modules/auth/application/refresh_tokens/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"

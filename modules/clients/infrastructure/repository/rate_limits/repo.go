@@ -1,12 +1,12 @@
 package rate_limits
 
 import (
-	"nfxid/modules/clients/domain/rate_limits"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/check"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/create"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/delete"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/get"
-	"nfxid/modules/clients/infrastructure/repository/rate_limits/update"
+	"nfxidentity/modules/clients/domain/rate_limits"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/check"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/create"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/delete"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/get"
+	"nfxidentity/modules/clients/infrastructure/repository/rate_limits/update"
 
 	"gorm.io/gorm"
 )

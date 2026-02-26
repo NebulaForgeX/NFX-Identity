@@ -2,7 +2,7 @@ package tenant_apps
 
 import (
 	"context"
-	tenantAppCommands "nfxid/modules/tenants/application/tenant_apps/commands"
+	tenantAppCommands "nfxidentity/modules/tenants/application/tenant_apps/commands"
 )
 
 // UpdateTenantAppStatus 更新租户应用状态

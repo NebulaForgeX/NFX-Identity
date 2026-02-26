@@ -1,12 +1,12 @@
 package image_tags
 
 import (
-	"nfxid/modules/image/domain/image_tags"
-	"nfxid/modules/image/infrastructure/repository/image_tags/check"
-	"nfxid/modules/image/infrastructure/repository/image_tags/create"
-	"nfxid/modules/image/infrastructure/repository/image_tags/delete"
-	"nfxid/modules/image/infrastructure/repository/image_tags/get"
-	"nfxid/modules/image/infrastructure/repository/image_tags/update"
+	"nfxidentity/modules/image/domain/image_tags"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/check"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/create"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/delete"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/get"
+	"nfxidentity/modules/image/infrastructure/repository/image_tags/update"
 
 	"gorm.io/gorm"
 )

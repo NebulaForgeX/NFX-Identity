@@ -2,7 +2,7 @@ package account_lockouts
 
 import (
 	"context"
-	accountLockoutCommands "nfxid/modules/auth/application/account_lockouts/commands"
+	accountLockoutCommands "nfxidentity/modules/auth/application/account_lockouts/commands"
 )
 
 // UnlockAccount 解锁账户

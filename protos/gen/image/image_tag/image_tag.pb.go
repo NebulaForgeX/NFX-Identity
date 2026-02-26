@@ -397,7 +397,7 @@ const file_image_image_tag_proto_rawDesc = "" +
 	"\x0fImageTagService\x12X\n" +
 	"\x0fGetImageTagByID\x12!.image_tag.GetImageTagByIDRequest\x1a\".image_tag.GetImageTagByIDResponse\x12j\n" +
 	"\x15GetImageTagsByImageID\x12'.image_tag.GetImageTagsByImageIDRequest\x1a(.image_tag.GetImageTagsByImageIDResponse\x12j\n" +
-	"\x15GetImageTagsByTagName\x12'.image_tag.GetImageTagsByTagNameRequest\x1a(.image_tag.GetImageTagsByTagNameResponseB-Z+nfxid/protos/gen/image/image_tag;imagetagpbb\x06proto3"
+	"\x15GetImageTagsByTagName\x12'.image_tag.GetImageTagsByTagNameRequest\x1a(.image_tag.GetImageTagsByTagNameResponseB-Z+nfxidentity/protos/gen/image/image_tag;imagetagpbb\x06proto3"
 
 var (
 	file_image_image_tag_proto_rawDescOnce sync.Once

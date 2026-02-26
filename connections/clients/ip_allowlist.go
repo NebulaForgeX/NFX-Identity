@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	ipallowlistpb "nfxid/protos/gen/clients/ip_allowlist"
+	ipallowlistpb "nfxidentity/protos/gen/clients/ip_allowlist"
 )
 
 // IpAllowlistClient IpAllowlist 客户端

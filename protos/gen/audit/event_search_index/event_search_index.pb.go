@@ -815,7 +815,7 @@ const file_audit_event_search_index_proto_rawDesc = "" +
 	"\x17EventSearchIndexService\x12\x82\x01\n" +
 	"\x17GetEventSearchIndexByID\x122.event_search_index.GetEventSearchIndexByIDRequest\x1a3.event_search_index.GetEventSearchIndexByIDResponse\x12\x91\x01\n" +
 	"\x1cGetEventSearchIndexByEventID\x127.event_search_index.GetEventSearchIndexByEventIDRequest\x1a8.event_search_index.GetEventSearchIndexByEventIDResponse\x12a\n" +
-	"\fSearchEvents\x12'.event_search_index.SearchEventsRequest\x1a(.event_search_index.SearchEventsResponseB>Z<nfxid/protos/gen/audit/event_search_index;eventsearchindexpbb\x06proto3"
+	"\fSearchEvents\x12'.event_search_index.SearchEventsRequest\x1a(.event_search_index.SearchEventsResponseB>Z<nfxidentity/protos/gen/audit/event_search_index;eventsearchindexpbb\x06proto3"
 
 var (
 	file_audit_event_search_index_proto_rawDescOnce sync.Once

@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/system/domain/system_state"
+	"nfxidentity/modules/system/domain/system_state"
 
 	"gorm.io/gorm"
 )

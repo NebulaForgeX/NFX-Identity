@@ -1,7 +1,7 @@
 package image_types
 
 import (
-	imageTypeDomain "nfxid/modules/image/domain/image_types"
+	imageTypeDomain "nfxidentity/modules/image/domain/image_types"
 )
 
 type Service struct {

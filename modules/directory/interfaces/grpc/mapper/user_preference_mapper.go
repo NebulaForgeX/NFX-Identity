@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	userPreferenceAppResult "nfxid/modules/directory/application/user_preferences/results"
-	userpreferencepb "nfxid/protos/gen/directory/user_preference"
+	userPreferenceAppResult "nfxidentity/modules/directory/application/user_preferences/results"
+	userpreferencepb "nfxidentity/protos/gen/directory/user_preference"
 
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"

@@ -1,7 +1,7 @@
 package tenant_settings
 
 import (
-	tenantSettingDomain "nfxid/modules/tenants/domain/tenant_settings"
+	tenantSettingDomain "nfxidentity/modules/tenants/domain/tenant_settings"
 )
 
 type Service struct {

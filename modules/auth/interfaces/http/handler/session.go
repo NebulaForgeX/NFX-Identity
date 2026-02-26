@@ -1,13 +1,13 @@
 package handler
 
 import (
-	sessionApp "nfxid/modules/auth/application/sessions"
-	sessionAppCommands "nfxid/modules/auth/application/sessions/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	sessionApp "nfxidentity/modules/auth/application/sessions"
+	sessionAppCommands "nfxidentity/modules/auth/application/sessions/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

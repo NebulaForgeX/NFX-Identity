@@ -1,7 +1,7 @@
 package client_scopes
 
 import (
-	clientsErr "nfxid/errors/src/clients"
+	clientsErr "nfxidentity/errors/src/clients"
 	"time"
 
 	"github.com/google/uuid"

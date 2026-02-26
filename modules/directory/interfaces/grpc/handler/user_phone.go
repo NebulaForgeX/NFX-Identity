@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	userPhoneApp "nfxid/modules/directory/application/user_phones"
-	userPhoneAppCommands "nfxid/modules/directory/application/user_phones/commands"
-	"nfxid/modules/directory/interfaces/grpc/mapper"
-	"nfxid/pkgs/errx"
-	userphonepb "nfxid/protos/gen/directory/user_phone"
+	userPhoneApp "nfxidentity/modules/directory/application/user_phones"
+	userPhoneAppCommands "nfxidentity/modules/directory/application/user_phones/commands"
+	"nfxidentity/modules/directory/interfaces/grpc/mapper"
+	"nfxidentity/pkgs/errx"
+	userphonepb "nfxidentity/protos/gen/directory/user_phone"
 
 	"github.com/google/uuid"
 )

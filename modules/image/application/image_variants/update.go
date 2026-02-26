@@ -2,7 +2,7 @@ package image_variants
 
 import (
 	"context"
-	imageVariantCommands "nfxid/modules/image/application/image_variants/commands"
+	imageVariantCommands "nfxidentity/modules/image/application/image_variants/commands"
 )
 
 // UpdateImageVariant 更新图片变体

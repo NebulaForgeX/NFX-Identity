@@ -135,7 +135,7 @@ const file_common_schema_proto_rawDesc = "" +
 	"\x0etables_cleared\x18\x03 \x01(\x05R\rtablesClearedB\x10\n" +
 	"\x0e_error_message2e\n" +
 	"\rSchemaService\x12T\n" +
-	"\vClearSchema\x12!.common.schema.ClearSchemaRequest\x1a\".common.schema.ClearSchemaResponseB)Z'nfxid/protos/gen/common/schema;schemapbb\x06proto3"
+	"\vClearSchema\x12!.common.schema.ClearSchemaRequest\x1a\".common.schema.ClearSchemaResponseB)Z'nfxidentity/protos/gen/common/schema;schemapbb\x06proto3"
 
 var (
 	file_common_schema_proto_rawDescOnce sync.Once

@@ -1,8 +1,8 @@
 package reqdto
 
 import (
-	ipAllowlistAppCommands "nfxid/modules/clients/application/ip_allowlist/commands"
-	ipAllowlistDomain "nfxid/modules/clients/domain/ip_allowlist"
+	ipAllowlistAppCommands "nfxidentity/modules/clients/application/ip_allowlist/commands"
+	ipAllowlistDomain "nfxidentity/modules/clients/domain/ip_allowlist"
 
 	"github.com/google/uuid"
 )

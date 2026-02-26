@@ -4,13 +4,13 @@ import (
 	"errors"
 	"strings"
 
-	authApp "nfxid/modules/auth/application/auth"
-	authCommands "nfxid/modules/auth/application/auth/commands"
-	"nfxid/modules/auth/interfaces/http/dto/reqdto"
-	"nfxid/modules/auth/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	authApp "nfxidentity/modules/auth/application/auth"
+	authCommands "nfxidentity/modules/auth/application/auth/commands"
+	"nfxidentity/modules/auth/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/auth/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

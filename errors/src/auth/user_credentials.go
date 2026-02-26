@@ -1,6 +1,6 @@
 package auth
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeUserCredentialNotFound      = "USER_CREDENTIAL_NOT_FOUND"

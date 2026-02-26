@@ -1,13 +1,13 @@
 package handler
 
 import (
-	userPhoneApp "nfxid/modules/directory/application/user_phones"
-	userPhoneAppCommands "nfxid/modules/directory/application/user_phones/commands"
-	"nfxid/modules/directory/interfaces/http/dto/reqdto"
-	"nfxid/modules/directory/interfaces/http/dto/respdto"
-	"nfxid/pkgs/errx"
-	"nfxid/pkgs/fiberx"
-	"nfxid/pkgs/httpx"
+	userPhoneApp "nfxidentity/modules/directory/application/user_phones"
+	userPhoneAppCommands "nfxidentity/modules/directory/application/user_phones/commands"
+	"nfxidentity/modules/directory/interfaces/http/dto/reqdto"
+	"nfxidentity/modules/directory/interfaces/http/dto/respdto"
+	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/fiberx"
+	"nfxidentity/pkgs/httpx"
 
 	"github.com/gofiber/fiber/v3"
 )

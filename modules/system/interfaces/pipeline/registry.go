@@ -1,7 +1,7 @@
 package pipeline
 
 import (
-	"nfxid/modules/system/interfaces/pipeline/handler"
+	"nfxidentity/modules/system/interfaces/pipeline/handler"
 )
 
 type Registry struct {

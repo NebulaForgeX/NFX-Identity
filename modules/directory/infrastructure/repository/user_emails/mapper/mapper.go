@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/modules/directory/domain/user_emails"
-	"nfxid/modules/directory/infrastructure/rdb/models"
-	"nfxid/pkgs/utils/timex"
+	"nfxidentity/modules/directory/domain/user_emails"
+	"nfxidentity/modules/directory/infrastructure/rdb/models"
+	"nfxidentity/pkgs/utils/timex"
 )
 
 // UserEmailDomainToModel 将 Domain UserEmail 转换为 Model UserEmail

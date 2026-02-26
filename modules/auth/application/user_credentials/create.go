@@ -2,8 +2,8 @@ package user_credentials
 
 import (
 	"context"
-	userCredentialCommands "nfxid/modules/auth/application/user_credentials/commands"
-	userCredentialDomain "nfxid/modules/auth/domain/user_credentials"
+	userCredentialCommands "nfxidentity/modules/auth/application/user_credentials/commands"
+	userCredentialDomain "nfxidentity/modules/auth/domain/user_credentials"
 
 	"github.com/google/uuid"
 )

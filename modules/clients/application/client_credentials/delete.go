@@ -2,7 +2,7 @@ package client_credentials
 
 import (
 	"context"
-	clientCredentialCommands "nfxid/modules/clients/application/client_credentials/commands"
+	clientCredentialCommands "nfxidentity/modules/clients/application/client_credentials/commands"
 )
 
 // DeleteClientCredential 删除客户端凭证

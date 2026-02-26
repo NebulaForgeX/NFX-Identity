@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	hashChainCheckpointAppResult "nfxid/modules/audit/application/hash_chain_checkpoints/results"
+	hashChainCheckpointAppResult "nfxidentity/modules/audit/application/hash_chain_checkpoints/results"
 
 	"github.com/google/uuid"
 )

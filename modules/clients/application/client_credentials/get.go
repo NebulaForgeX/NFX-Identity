@@ -2,7 +2,7 @@ package client_credentials
 
 import (
 	"context"
-	clientCredentialResult "nfxid/modules/clients/application/client_credentials/results"
+	clientCredentialResult "nfxidentity/modules/clients/application/client_credentials/results"
 
 	"github.com/google/uuid"
 )

@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/trusted_devices"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/trusted_devices/mapper"
+	"nfxidentity/modules/auth/domain/trusted_devices"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/trusted_devices/mapper"
 )
 
 // Generic 通用更新 TrustedDevice，实现 trusted_devices.Update 接口

@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	userBadgeAppResult "nfxid/modules/directory/application/user_badges/results"
+	userBadgeAppResult "nfxidentity/modules/directory/application/user_badges/results"
 
 	"github.com/google/uuid"
 )

@@ -1,12 +1,12 @@
 package client_credentials
 
 import (
-	"nfxid/modules/clients/domain/client_credentials"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/check"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/create"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/delete"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/get"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/update"
+	"nfxidentity/modules/clients/domain/client_credentials"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/check"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/create"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/delete"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/get"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/update"
 
 	"gorm.io/gorm"
 )

@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
 
 // BySessionID 根据 SessionID 检查 Session 是否存在，实现 sessions.Check 接口

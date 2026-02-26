@@ -2,8 +2,8 @@ package user_occupations
 
 import (
 	"context"
-	userOccupationCommands "nfxid/modules/directory/application/user_occupations/commands"
-	userOccupationDomain "nfxid/modules/directory/domain/user_occupations"
+	userOccupationCommands "nfxidentity/modules/directory/application/user_occupations/commands"
+	userOccupationDomain "nfxidentity/modules/directory/domain/user_occupations"
 	"time"
 
 	"github.com/google/uuid"

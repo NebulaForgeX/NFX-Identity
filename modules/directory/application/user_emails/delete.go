@@ -2,7 +2,7 @@ package user_emails
 
 import (
 	"context"
-	userEmailCommands "nfxid/modules/directory/application/user_emails/commands"
+	userEmailCommands "nfxidentity/modules/directory/application/user_emails/commands"
 )
 
 // DeleteUserEmail 删除用户邮箱（软删除）

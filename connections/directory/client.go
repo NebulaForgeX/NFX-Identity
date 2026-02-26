@@ -1,17 +1,17 @@
 package directory
 
 import (
-	badgepb "nfxid/protos/gen/directory/badge"
-	userpb "nfxid/protos/gen/directory/user"
-	useravatarpb "nfxid/protos/gen/directory/user_avatar"
-	userbadgepb "nfxid/protos/gen/directory/user_badge"
-	usereducationpb "nfxid/protos/gen/directory/user_education"
-	useremailpb "nfxid/protos/gen/directory/user_email"
-	userimagepb "nfxid/protos/gen/directory/user_image"
-	useroccupationpb "nfxid/protos/gen/directory/user_occupation"
-	userphonepb "nfxid/protos/gen/directory/user_phone"
-	userpreferencepb "nfxid/protos/gen/directory/user_preference"
-	userprofilepb "nfxid/protos/gen/directory/user_profile"
+	badgepb "nfxidentity/protos/gen/directory/badge"
+	userpb "nfxidentity/protos/gen/directory/user"
+	useravatarpb "nfxidentity/protos/gen/directory/user_avatar"
+	userbadgepb "nfxidentity/protos/gen/directory/user_badge"
+	usereducationpb "nfxidentity/protos/gen/directory/user_education"
+	useremailpb "nfxidentity/protos/gen/directory/user_email"
+	userimagepb "nfxidentity/protos/gen/directory/user_image"
+	useroccupationpb "nfxidentity/protos/gen/directory/user_occupation"
+	userphonepb "nfxidentity/protos/gen/directory/user_phone"
+	userpreferencepb "nfxidentity/protos/gen/directory/user_preference"
+	userprofilepb "nfxidentity/protos/gen/directory/user_profile"
 )
 
 // Client Directory 服务客户端

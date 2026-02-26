@@ -3,8 +3,8 @@ package mysqlx
 import (
 	"context"
 	"fmt"
-	"nfxid/pkgs/health"
-	"nfxid/pkgs/logx"
+	"nfxidentity/pkgs/health"
+	"nfxidentity/pkgs/logx"
 	"time"
 
 	"gorm.io/gorm"

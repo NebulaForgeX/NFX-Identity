@@ -2,7 +2,7 @@ package users
 
 import (
 	"context"
-	userCommands "nfxid/modules/directory/application/users/commands"
+	userCommands "nfxidentity/modules/directory/application/users/commands"
 )
 
 // DeleteUser 删除用户（软删除）

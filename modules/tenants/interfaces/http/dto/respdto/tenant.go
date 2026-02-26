@@ -3,7 +3,7 @@ package respdto
 import (
 	"time"
 
-	tenantAppResult "nfxid/modules/tenants/application/tenants/results"
+	tenantAppResult "nfxidentity/modules/tenants/application/tenants/results"
 
 	"github.com/google/uuid"
 )

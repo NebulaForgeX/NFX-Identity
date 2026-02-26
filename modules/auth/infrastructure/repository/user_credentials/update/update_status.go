@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/auth/domain/user_credentials"
-	"nfxid/modules/auth/infrastructure/rdb/models"
-	"nfxid/modules/auth/infrastructure/repository/user_credentials/mapper"
+	"nfxidentity/modules/auth/domain/user_credentials"
+	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	"nfxidentity/modules/auth/infrastructure/repository/user_credentials/mapper"
 	"time"
 
 	"github.com/google/uuid"

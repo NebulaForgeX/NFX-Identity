@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"nfxid/modules/image/domain/image_tags"
-	"nfxid/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/domain/image_tags"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
 )
 
 // ImageTagDomainToModel 将 Domain ImageTag 转换为 Model ImageTag

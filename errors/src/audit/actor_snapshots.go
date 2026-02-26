@@ -1,6 +1,6 @@
 package audit
 
-import "nfxid/pkgs/errx"
+import "nfxidentity/pkgs/errx"
 
 const (
 	CodeActorSnapshotNotFound      = "ACTOR_SNAPSHOT_NOT_FOUND"

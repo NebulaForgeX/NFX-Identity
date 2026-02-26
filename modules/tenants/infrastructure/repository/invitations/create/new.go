@@ -2,8 +2,8 @@ package create
 
 import (
 	"context"
-	"nfxid/modules/tenants/domain/invitations"
-	"nfxid/modules/tenants/infrastructure/repository/invitations/mapper"
+	"nfxidentity/modules/tenants/domain/invitations"
+	"nfxidentity/modules/tenants/infrastructure/repository/invitations/mapper"
 )
 
 // New 创建新的 Invitation，实现 invitations.Create 接口

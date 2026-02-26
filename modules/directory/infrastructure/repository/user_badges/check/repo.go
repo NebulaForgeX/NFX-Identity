@@ -1,7 +1,7 @@
 package check
 
 import (
-	"nfxid/modules/directory/domain/user_badges"
+	"nfxidentity/modules/directory/domain/user_badges"
 
 	"gorm.io/gorm"
 )

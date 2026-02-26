@@ -2,7 +2,7 @@ package check
 
 import (
 	"context"
-	"nfxid/modules/tenants/infrastructure/rdb/models"
+	"nfxidentity/modules/tenants/infrastructure/rdb/models"
 )
 
 // ByGroupID 根据 GroupID 检查 Group 是否存在，实现 groups.Check 接口

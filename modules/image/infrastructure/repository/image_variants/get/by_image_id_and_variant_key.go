@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	imageErr "nfxid/errors/src/image"
-	"nfxid/modules/image/domain/image_variants"
-	"nfxid/modules/image/infrastructure/rdb/models"
-	"nfxid/modules/image/infrastructure/repository/image_variants/mapper"
+	imageErr "nfxidentity/errors/src/image"
+	"nfxidentity/modules/image/domain/image_variants"
+	"nfxidentity/modules/image/infrastructure/rdb/models"
+	"nfxidentity/modules/image/infrastructure/repository/image_variants/mapper"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

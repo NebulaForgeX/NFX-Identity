@@ -1,18 +1,18 @@
 package grpc
 
 import (
-	resourceApp "nfxid/modules/access/application/resource"
-	superadminsApp "nfxid/modules/access/application/super_admins"
-	tenantrolesApp "nfxid/modules/access/application/tenant_roles"
-	grpcHandler "nfxid/modules/access/interfaces/grpc/handler"
-	"nfxid/pkgs/grpcx/interceptor"
-	"nfxid/pkgs/postgresqlx"
-	"nfxid/pkgs/security/token"
-	"nfxid/pkgs/security/token/servertoken"
-	superadminpb "nfxid/protos/gen/access/super_admin"
-	tenantrolepb "nfxid/protos/gen/access/tenant_role"
-	healthpb "nfxid/protos/gen/common/health"
-	schemapb "nfxid/protos/gen/common/schema"
+	resourceApp "nfxidentity/modules/access/application/resource"
+	superadminsApp "nfxidentity/modules/access/application/super_admins"
+	tenantrolesApp "nfxidentity/modules/access/application/tenant_roles"
+	grpcHandler "nfxidentity/modules/access/interfaces/grpc/handler"
+	"nfxidentity/pkgs/grpcx/interceptor"
+	"nfxidentity/pkgs/postgresqlx"
+	"nfxidentity/pkgs/security/token"
+	"nfxidentity/pkgs/security/token/servertoken"
+	superadminpb "nfxidentity/protos/gen/access/super_admin"
+	tenantrolepb "nfxidentity/protos/gen/access/tenant_role"
+	healthpb "nfxidentity/protos/gen/common/health"
+	schemapb "nfxidentity/protos/gen/common/schema"
 
 	"google.golang.org/grpc"
 )

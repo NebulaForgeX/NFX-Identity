@@ -2,7 +2,7 @@ package servertoken
 
 import (
 	"context"
-	"nfxid/pkgs/security/token"
+	"nfxidentity/pkgs/security/token"
 	"strings"
 
 	"google.golang.org/grpc"

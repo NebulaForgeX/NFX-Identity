@@ -2,9 +2,9 @@ package update
 
 import (
 	"context"
-	"nfxid/modules/clients/domain/client_credentials"
-	"nfxid/modules/clients/infrastructure/rdb/models"
-	"nfxid/modules/clients/infrastructure/repository/client_credentials/mapper"
+	"nfxidentity/modules/clients/domain/client_credentials"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/modules/clients/infrastructure/repository/client_credentials/mapper"
 )
 
 // Generic 通用更新 ClientCredential，实现 client_credentials.Update 接口

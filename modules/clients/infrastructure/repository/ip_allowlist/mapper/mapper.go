@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"nfxid/enums"
-	"nfxid/modules/clients/domain/ip_allowlist"
-	"nfxid/modules/clients/infrastructure/rdb/models"
+	"nfxidentity/enums"
+	"nfxidentity/modules/clients/domain/ip_allowlist"
+	"nfxidentity/modules/clients/infrastructure/rdb/models"
 )
 
 // IPAllowlistDomainToModel 将 Domain IPAllowlist 转换为 Model IpAllowlist

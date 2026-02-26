@@ -1,8 +1,8 @@
 package user_images
 
 import (
-	userImageDomain "nfxid/modules/directory/domain/user_images"
-	directoryGrpc "nfxid/modules/directory/infrastructure/grpc"
+	userImageDomain "nfxidentity/modules/directory/domain/user_images"
+	directoryGrpc "nfxidentity/modules/directory/infrastructure/grpc"
 )
 
 type Service struct {

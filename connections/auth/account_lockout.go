@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	accountlockoutpb "nfxid/protos/gen/auth/account_lockout"
+	accountlockoutpb "nfxidentity/protos/gen/auth/account_lockout"
 )
 
 // AccountLockoutClient AccountLockout 客户端

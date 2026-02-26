@@ -1,6 +1,6 @@
 package kafkax
 
-import "nfxid/pkgs/kafkax/eventbus"
+import "nfxidentity/pkgs/kafkax/eventbus"
 
 type Config struct {
 	Brokers        []string                     `koanf:"brokers"`
