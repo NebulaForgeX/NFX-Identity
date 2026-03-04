@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { IconButton } from "@/components";
 import { ArrowLeft } from "@/assets/icons/lucide";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import CreateRoleForm from "./components/CreateRoleForm";
 import styles from "./styles.module.css";

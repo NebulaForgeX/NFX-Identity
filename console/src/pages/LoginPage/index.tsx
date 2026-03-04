@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { TruckLoading } from "@/animations";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
+import { LanguageSwitcher, ThemeSwitcher } from "@/components";
 
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";

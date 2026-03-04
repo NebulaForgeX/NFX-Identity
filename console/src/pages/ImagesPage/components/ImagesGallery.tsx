@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Star, Trash2 } from "@/assets/icons/lucide";
-import Button from "@/components/Button";
+import { Button } from "@/components";
 import {
   useDeleteUserImage,
   useSetPrimaryUserImage,

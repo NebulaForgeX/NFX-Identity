@@ -100,11 +100,16 @@ import type {
   UserPreference,
   UserProfile,
 } from "@/types";
-import type { ApiErrorBody } from "@/types/apiError";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import type { ApiErrorBody } from "nfx-ui/types";
+import {
+  makeUnifiedQuery,
+  type NormalUnifiedQueryOptions,
+  type SuspenseUnifiedQueryOptions,
+  type UnifiedQueryParams,
+} from "nfx-ui/hooks";
 import { directoryEventEmitter, directoryEvents } from "@/events/directory";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 import {
   DIRECTORY_USER,
   DIRECTORY_BADGE,
@@ -123,7 +128,6 @@ import {
   DIRECTORY_USER_IMAGE,
   DIRECTORY_USER_IMAGE_LIST,
 } from "@/constants";
-import type { UnifiedQueryParams, suspenseUnifiedQueryOptions, SuspenseUnifiedQueryOptions } from "./core/type";
 
 // ========== User 相关 ==========
 
@@ -763,7 +767,7 @@ export const useUserPreference = (params: UnifiedQueryParams<UserPreference> & {
 // 根据 ID 获取用户偏好（普通模式，支持 enabled 选项）
 export const useUserPreferenceNormal = (params: {
   id: string;
-  options?: suspenseUnifiedQueryOptions<UserPreference>;
+  options?: NormalUnifiedQueryOptions<UserPreference>;
   postProcess?: (data: UserPreference) => void;
 }) => {
   const { id, options, postProcess } = params;

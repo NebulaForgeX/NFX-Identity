@@ -1,9 +1,9 @@
 // Access API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
   Action,
   ActionRequirement,
-  BaseResponse,
   CreateActionRequest,
   CreateActionRequirementRequest,
   CreateGrantRequest,
@@ -12,7 +12,6 @@ import type {
   CreateRoleRequest,
   CreateScopePermissionRequest,
   CreateScopeRequest,
-  DataResponse,
   Grant,
   Permission,
   Role,

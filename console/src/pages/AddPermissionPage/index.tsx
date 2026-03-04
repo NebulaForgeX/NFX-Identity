@@ -13,8 +13,8 @@ import {
 } from "@/hooks/useAccess";
 import { GetActionByKey, GetPermissionByKey, GetRoleByKey } from "@/apis";
 import { showError } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
-import { ROUTES } from "@/types/navigation";
+import { getApiErrorMessage } from "nfx-ui/utils";
+import { ROUTES } from "@/navigations";
 
 import RolePermissionsLookupContent from "./components/RolePermissionsLookupContent";
 import ActionRequirementsConfigContent from "./components/ActionRequirementsConfigContent";

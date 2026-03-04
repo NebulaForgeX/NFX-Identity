@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { type ProfileFormValues } from "../schemas/profileSchema";
 import type { UserProfile } from "@/types";
-import type { KeyValuePair } from "@/components/KeyValueEditor";
+import type { KeyValuePair } from "@/components";
 
 // Helper to convert map to key-value pairs
 const mapToKeyValuePairs = (map?: Record<string, unknown>): KeyValuePair[] => {

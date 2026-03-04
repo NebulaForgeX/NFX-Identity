@@ -6,8 +6,8 @@ import applyCaseMiddleware from "axios-case-converter";
 
 import { API_ENDPOINTS } from "@/apis/ip";
 import AuthStore from "@/stores/authStore";
-import type { ApiErrorBody } from "@/types/apiError";
-import { onceAsync } from "@/utils/promise";
+import type { ApiErrorBody } from "nfx-ui/types";
+import { onceAsync } from "nfx-ui/utils";
 
 // 让 config._retry 有类型
 declare module "axios" {

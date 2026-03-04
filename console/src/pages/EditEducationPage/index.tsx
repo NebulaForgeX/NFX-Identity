@@ -20,7 +20,7 @@ import {
   IsCurrentEducationController,
 } from "@/elements/education";
 import { useUserEducation } from "@/hooks/useDirectory";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

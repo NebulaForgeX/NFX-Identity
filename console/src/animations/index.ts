@@ -1,7 +1,12 @@
-export { default as ECGLoading } from "./ECGLoading";
-export { default as TruckLoading } from "./TruckLoading";
-export { default as BounceLoading } from "./BounceLoading";
-export { default as WaveBackground } from "./Waves";
-export { default as SquareBackground } from "./Squares";
-export { default as LetterGlitchBackground } from "./LetterGlitch";
-export { default as PixelBlastBackground } from "./PixelBlast";
+/**
+ * 与 NFX-Vault 一致：从 nfx-ui/animations 再导出。
+ */
+export {
+  BounceLoading,
+  ECGLoading,
+  LetterGlitchBackground,
+  PixelBlastBackground,
+  SquareBackground,
+  TruckLoading,
+  WaveBackground,
+} from "nfx-ui/animations";

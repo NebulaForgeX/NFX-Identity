@@ -1,8 +1,8 @@
 // Directory API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
   Badge,
-  BaseResponse,
   BatchUpdateUserImagesDisplayOrderRequest,
   CreateBadgeRequest,
   CreateOrUpdateUserAvatarRequest,
@@ -15,7 +15,6 @@ import type {
   CreateUserPreferenceRequest,
   CreateUserProfileRequest,
   CreateUserRequest,
-  DataResponse,
   UpdateBadgeRequest,
   UpdateUserAvatarImageIDRequest,
   UpdateUserEducationRequest,

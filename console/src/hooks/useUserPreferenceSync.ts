@@ -1,18 +1,32 @@
-import type { Language } from "@/assets/languages/i18nResources";
+/**
+ * User preference sync - 与 Sjgz-Admin 一致：
+ * 使用 nfx-ui parsePreferenceJson / Preference / ThemeEnum / LayoutModeEnum，无 as。
+ */
 
 import { useCallback, useEffect, useRef } from "react";
 
-import { ChangeLanguage } from "@/assets/languages/i18n";
-import { LANGUAGE } from "@/assets/languages/i18nResources";
+import { changeLanguage, LanguageEnum } from "nfx-ui/languages";
+import { BaseEnum, ThemeEnum, useTheme } from "nfx-ui/themes";
+import { useLayout, LayoutModeEnum } from "nfx-ui/layouts";
+import { parsePreferenceJson } from "nfx-ui/preference";
+
+import type { UserPreference } from "@/types";
 import { useUpdateUserPreference, useUserPreferenceNormal } from "@/hooks/useDirectory";
-import { useLayout } from "@/providers/LayoutProvider/useLayout";
-import { useTheme } from "@/providers/ThemeProvider/useTheme";
 import { useAuthStore } from "@/stores/authStore";
 
-/**
- * Hook to sync theme preference with backend
- * Applies theme on initial load/login and syncs local changes to backend
- */
+/** 将 API 返回的 UserPreference 转为 nfx-ui Preference（用于类型安全的 theme/layoutMode） */
+function userPreferenceToPreference(raw: UserPreference | undefined): ReturnType<typeof parsePreferenceJson> {
+  if (!raw) return null;
+  const backendShape = {
+    theme: raw.theme,
+    base: raw.base,
+    language: raw.language,
+    layoutMode: raw.display?.layoutMode ?? "show",
+    other: raw.other,
+  };
+  return parsePreferenceJson(JSON.stringify(backendShape));
+}
+
 export const useThemeSync = () => {
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
@@ -21,42 +35,36 @@ export const useThemeSync = () => {
 
   const shouldFetch = !!currentUserId && isAuthValid;
 
-  const { data: preference } = useUserPreferenceNormal({
+  const { data: rawPreference } = useUserPreferenceNormal({
     id: currentUserId,
-    options: {
-      enabled: shouldFetch && !!currentUserId,
-    },
+    options: { enabled: shouldFetch && !!currentUserId },
   });
+  const preference = userPreferenceToPreference(rawPreference);
 
   const lastPreferenceId = useRef<string | null>(null);
   const isInitialized = useRef(false);
 
-  // Apply theme and base preference ONLY on initial load/login
   useEffect(() => {
-    if (!shouldFetch || !preference || !isAuthValid || !currentUserId) {
+    if (!shouldFetch || !preference || !currentUserId || !rawPreference) {
       isInitialized.current = false;
       lastPreferenceId.current = null;
       return;
     }
-
-    // Only apply on initial load (when preference ID changes or first time)
-    if (lastPreferenceId.current === preference.id && isInitialized.current) {
-      return;
-    }
+    if (lastPreferenceId.current === rawPreference.id && isInitialized.current) return;
 
     if (preference.theme && preference.theme !== themeName) {
-      setTheme(preference.theme as Parameters<typeof setTheme>[0]);
+      setTheme(preference.theme);
     }
     if (preference.base && preference.base !== baseName) {
-      setBase(preference.base as Parameters<typeof setBase>[0]);
+      setBase(preference.base);
     }
 
     isInitialized.current = true;
-    lastPreferenceId.current = preference.id;
-  }, [preference, isAuthValid, currentUserId, themeName, baseName, setTheme, setBase, shouldFetch]);
+    lastPreferenceId.current = rawPreference.id;
+  }, [preference, rawPreference, currentUserId, themeName, baseName, setTheme, setBase, shouldFetch]);
 
   const syncTheme = useCallback(
-    async (theme: string) => {
+    async (theme: ThemeEnum) => {
       if (!currentUserId || !isAuthValid) return;
       try {
         await updatePreference.mutateAsync({
@@ -71,7 +79,7 @@ export const useThemeSync = () => {
   );
 
   const syncBase = useCallback(
-    async (base: string) => {
+    async (base: BaseEnum) => {
       if (!currentUserId || !isAuthValid) return;
       try {
         await updatePreference.mutateAsync({
@@ -88,10 +96,6 @@ export const useThemeSync = () => {
   return { syncTheme, syncBase };
 };
 
-/**
- * Hook to sync language preference with backend
- * Applies language on initial load/login and syncs local changes to backend
- */
 export const useLanguageSync = () => {
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
@@ -99,54 +103,37 @@ export const useLanguageSync = () => {
 
   const shouldFetch = !!currentUserId && isAuthValid;
 
-  const { data: preference } = useUserPreferenceNormal({
+  const { data: rawPreference } = useUserPreferenceNormal({
     id: currentUserId,
-    options: {
-      enabled: shouldFetch && !!currentUserId,
-    },
+    options: { enabled: shouldFetch && !!currentUserId },
   });
+  const preference = userPreferenceToPreference(rawPreference);
 
   const lastPreferenceId = useRef<string | null>(null);
   const isInitialized = useRef(false);
 
-  // Apply language preference ONLY on initial load/login
   useEffect(() => {
-    if (!shouldFetch || !preference || !isAuthValid || !currentUserId) {
+    if (!shouldFetch || !preference || !currentUserId || !rawPreference) {
       isInitialized.current = false;
       lastPreferenceId.current = null;
       return;
     }
+    if (lastPreferenceId.current === rawPreference.id && isInitialized.current) return;
 
-    // Only apply on initial load (when preference ID changes or first time)
-    if (lastPreferenceId.current === preference.id && isInitialized.current) {
-      return;
-    }
-
-    // Apply language (only if different)
     if (preference.language) {
-      const langMap: Record<string, Language> = {
-        en: LANGUAGE.EN,
-        zh: LANGUAGE.ZH,
-        fr: LANGUAGE.FR,
-      };
-      const targetLang = langMap[preference.language.toLowerCase()];
-      if (targetLang) {
-        const currentLang = localStorage.getItem("i18nextLng") || LANGUAGE.EN;
-        if (currentLang !== targetLang) {
-          ChangeLanguage(targetLang);
-        }
+      const currentLang = localStorage.getItem("i18nextLng") || LanguageEnum.ZH;
+      if (currentLang !== preference.language) {
+        changeLanguage(preference.language);
       }
     }
 
     isInitialized.current = true;
-    lastPreferenceId.current = preference.id;
-  }, [preference, isAuthValid, currentUserId, shouldFetch]);
+    lastPreferenceId.current = rawPreference.id;
+  }, [preference, rawPreference, currentUserId, shouldFetch]);
 
-  // Sync language changes to backend
   const syncLanguage = useCallback(
-    async (language: string) => {
+    async (language: LanguageEnum) => {
       if (!currentUserId || !isAuthValid) return;
-
       try {
         await updatePreference.mutateAsync({
           id: currentUserId,
@@ -162,10 +149,6 @@ export const useLanguageSync = () => {
   return { syncLanguage };
 };
 
-/**
- * Hook to sync layout preference with backend
- * Applies layout on initial load/login and syncs local changes to backend
- */
 export const useLayoutSync = () => {
   const currentUserId = useAuthStore((state) => state.currentUserId);
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
@@ -174,75 +157,50 @@ export const useLayoutSync = () => {
 
   const shouldFetch = !!currentUserId && isAuthValid;
 
-  const { data: preference } = useUserPreferenceNormal({
+  const { data: rawPreference } = useUserPreferenceNormal({
     id: currentUserId,
-    options: {
-      enabled: shouldFetch && !!currentUserId,
-    },
+    options: { enabled: shouldFetch && !!currentUserId },
   });
+  const preference = userPreferenceToPreference(rawPreference);
 
   const lastPreferenceId = useRef<string | null>(null);
   const isInitialized = useRef(false);
 
-  // Apply layout preference ONLY on initial load/login
   useEffect(() => {
-    if (!shouldFetch || !preference || !isAuthValid || !currentUserId) {
+    if (!shouldFetch || !preference || !currentUserId || !rawPreference) {
       isInitialized.current = false;
       lastPreferenceId.current = null;
       return;
     }
+    if (lastPreferenceId.current === rawPreference.id && isInitialized.current) return;
 
-    // Only apply on initial load (when preference ID changes or first time)
-    // Once initialized, NEVER override local state from backend
-    // This ensures user's click actions immediately update UI without backend interference
-    if (lastPreferenceId.current === preference.id && isInitialized.current) {
-      return;
-    }
-
-    // Apply layout mode ONLY on initial load (first time we get preference data)
-    // After initialization, NEVER override local state from backend
-    // User's local changes take precedence - backend sync is just for persistence
-    if (preference.display && typeof preference.display === "object") {
-      const display = preference.display as Record<string, unknown>;
-      if (display.layoutMode && (display.layoutMode === "show" || display.layoutMode === "hide")) {
-        // ONLY apply on initial load (when isInitialized is false)
-        // After initialization, we NEVER touch layoutMode from backend
-        if (!isInitialized.current && display.layoutMode !== layoutMode) {
-          setLayoutMode(display.layoutMode);
-        }
+    if (
+      preference.layoutMode === LayoutModeEnum.SHOW ||
+      preference.layoutMode === LayoutModeEnum.HIDE
+    ) {
+      if (!isInitialized.current && preference.layoutMode !== layoutMode) {
+        setLayoutMode(preference.layoutMode);
       }
     }
 
     isInitialized.current = true;
-    lastPreferenceId.current = preference.id;
-  }, [preference, isAuthValid, currentUserId, setLayoutMode, shouldFetch]);
+    lastPreferenceId.current = rawPreference.id;
+  }, [preference, rawPreference, currentUserId, layoutMode, setLayoutMode, shouldFetch]);
 
-  // Sync layout changes to backend (silent, fire-and-forget, failure doesn't matter)
-  // This is called AFTER local state is already updated, just for persistence
   const syncLayout = useCallback(
-    async (layoutMode: "show" | "hide") => {
+    async (mode: LayoutModeEnum) => {
       if (!currentUserId || !isAuthValid) return;
-
-      // Fire and forget - don't wait for response, failure is OK
-      // Local state is already updated, this is just for backend persistence
-      const currentDisplay = preference?.display as Record<string, unknown> | undefined;
+      const currentDisplay = (rawPreference?.display as Record<string, unknown> | undefined) ?? {};
       updatePreference
         .mutateAsync({
           id: currentUserId,
-          data: {
-            display: {
-              ...currentDisplay,
-              layoutMode,
-            },
-          },
+          data: { display: { ...currentDisplay, layoutMode: mode } },
         })
         .catch((error) => {
-          // Silent error - only log to console, don't show error toast
-          // Failure doesn't matter, local state is already updated
           console.error("Failed to sync layout preference (non-critical):", error);
         });
     },
-    [currentUserId, isAuthValid, updatePreference, preference],
+    [currentUserId, isAuthValid, updatePreference, rawPreference?.display],
   );
 
   return { syncLayout };

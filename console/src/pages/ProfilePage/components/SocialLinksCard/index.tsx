@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Edit, ExternalLink } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
 import { useUserProfile } from "@/hooks/useDirectory";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

@@ -1,9 +1,9 @@
 // Clients API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
   APIKey,
   App,
-  BaseResponse,
   ClientCredential,
   ClientScope,
   CreateAPIKeyRequest,
@@ -12,7 +12,6 @@ import type {
   CreateClientScopeRequest,
   CreateIPAllowlistRequest,
   CreateRateLimitRequest,
-  DataResponse,
   IPAllowlist,
   RateLimit,
   UpdateAppRequest,

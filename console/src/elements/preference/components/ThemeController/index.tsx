@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { Dropdown } from "@/components";
-import { useTheme } from "@/providers/ThemeProvider/useTheme";
+import { useTheme } from "@/providers";
 
 export interface ThemeControllerProps {
   /** 选择即改：选择新主题后立即回调，用于保存并应用 */

@@ -1,8 +1,8 @@
 // Auth API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
   AccountLockout,
-  BaseResponse,
   CreateAccountLockoutRequest,
   CreateLoginAttemptRequest,
   CreateMFAFactorRequest,
@@ -12,7 +12,6 @@ import type {
   CreateSessionRequest,
   CreateTrustedDeviceRequest,
   CreateUserCredentialRequest,
-  DataResponse,
   LoginAttempt,
   MFAFactor,
   PasswordHistory,

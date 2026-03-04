@@ -1,24 +1,52 @@
+/**
+ * 公共组件：从 nfx-ui 再导出，与 NFX-Vault 一致；仅保留 IconButton、ThemeSwitcher、LanguageSwitcher、LayoutSwitcher 本地。
+ */
+export type {
+  ButtonProps,
+  DropdownOption,
+  DropdownProps,
+  IconName,
+  IconProps,
+  InputProps,
+  KeyValueEditorProps,
+  KeyValuePair,
+  SearchInputProps,
+  ShowFilterProps,
+  ShowFilterValue,
+  SliderProps,
+  SuspenseProps,
+  TextareaProps,
+  VirtualListProps,
+  VirtualWindowListProps,
+} from "nfx-ui/components";
+
+export {
+  Button,
+  Dropdown,
+  Icon,
+  Input,
+  KeyValueEditor,
+  SearchInput,
+  ShowFilter,
+  Slider,
+  Suspense,
+  Textarea,
+  VirtualList,
+  VirtualWindowList,
+} from "nfx-ui/components";
+
+export {
+  BounceLoading,
+  ECGLoading,
+  LetterGlitchBackground,
+  PixelBlastBackground,
+  SquareBackground,
+  TruckLoading,
+  WaveBackground,
+} from "nfx-ui/animations";
 
 export { default as ThemeSwitcher } from "./ThemeSwitcher";
 export { default as LanguageSwitcher } from "./LanguageSwitcher";
 export { default as LayoutSwitcher } from "./LayoutSwitcher";
-export { default as Dropdown } from "./Dropdown";
-export { default as VirtualList } from "./VirtualList";
-export { default as VirtualWindowList } from "./VirtualWindowList";
-export { default as Icon } from "./Icon";
-export { default as Suspense } from "./Suspense";
-export { default as SearchInput } from "./SearchInput";
-export { default as ShowFilter } from "./ShowFilter";
-export type { ShowFilterValue } from "./ShowFilter";
-export { default as Input } from "./Input";
-export type { InputProps } from "./Input";
-export { default as Textarea } from "./Textarea";
-export type { TextareaProps } from "./Textarea";
-export { default as Button } from "./Button";
 export { default as IconButton } from "./IconButton";
 export type { IconButtonProps } from "./IconButton";
-export type { ButtonProps } from "./Button";
-export { default as KeyValueEditor } from "./KeyValueEditor";
-export type { KeyValuePair } from "./KeyValueEditor";
-export { default as Slider } from "./Slider";
-export type { SliderProps } from "./Slider";

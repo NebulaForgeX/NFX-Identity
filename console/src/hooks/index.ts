@@ -9,5 +9,4 @@ export * from "./useImage";
 export * from "./useSystem";
 export * from "./useTenants";
 export * from "./useUserPreferenceSync";
-export * from "./core";
 

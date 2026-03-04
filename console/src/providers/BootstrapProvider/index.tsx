@@ -4,8 +4,7 @@ import { memo } from "react";
 import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, LanguageSwitcher, ThemeSwitcher } from "@/components";
-import Suspense from "@/components/Suspense";
+import { Button, LanguageSwitcher, Suspense, ThemeSwitcher } from "@/components";
 import {
   AdminEmailController,
   AdminPasswordConfirmController,

@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { InitializeSystemState } from "@/apis/system.api";
 import { hideLoading, showError, showLoading, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 
 export const useSubmitBootstrap = () => {
   const { t } = useTranslation("elements.bootstrap");

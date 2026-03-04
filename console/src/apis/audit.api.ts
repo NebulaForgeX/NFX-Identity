@@ -1,14 +1,13 @@
 // Audit API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
   ActorSnapshot,
-  BaseResponse,
   CreateActorSnapshotRequest,
   CreateEventRequest,
   CreateEventRetentionPolicyRequest,
   CreateEventSearchIndexRequest,
   CreateHashChainCheckpointRequest,
-  DataResponse,
   Event,
   EventRetentionPolicy,
   EventSearchIndex,

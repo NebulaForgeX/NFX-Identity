@@ -22,7 +22,7 @@ import {
   User,
 } from "@/assets/icons/lucide";
 import { authEventEmitter, authEvents } from "@/events/auth";
-import { isActiveRoute, ROUTES } from "@/types/navigation";
+import { isActiveRoute, ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

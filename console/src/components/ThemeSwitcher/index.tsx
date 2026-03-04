@@ -1,10 +1,11 @@
-import type { ThemeName } from "@/assets/themes/types";
+import type { ThemeEnum } from "nfx-ui/themes";
 
 import { memo, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
+import { useThemeLabel } from "nfx-ui/languages";
 import { useThemeSync } from "@/hooks/useUserPreferenceSync";
-import { useTheme } from "@/providers/ThemeProvider/useTheme";
+import { useTheme } from "@/providers";
+
 import styles from "./styles.module.css";
 
 interface ThemeSwitcherProps {
@@ -12,32 +13,23 @@ interface ThemeSwitcherProps {
 }
 
 const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
-  const { t } = useTranslation("components");
   const { themeName, setTheme, availableThemes } = useTheme();
   const { syncTheme } = useThemeSync();
+  const { getThemeDisplayName } = useThemeLabel();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // 主题显示名称映射（使用国际化）
-  const getThemeDisplayName = (theme: ThemeName): string => {
-    return t(`themeSwitcher.${theme}`, { defaultValue: theme });
-  };
-
-  // 点击外部关闭下拉菜单
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleThemeChange = (theme: ThemeName) => {
+  const handleThemeChange = (theme: ThemeEnum) => {
     setTheme(theme);
     syncTheme(theme);
     setIsOpen(false);
@@ -69,7 +61,7 @@ const ThemeSwitcher = memo(({ status = "primary" }: ThemeSwitcherProps) => {
         className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
       >
         <ul className={styles.optionsList} role="listbox">
-          {availableThemes.map((theme: ThemeName) => (
+          {availableThemes.map((theme) => (
             <li
               key={theme}
               className={`${styles.option} ${theme === themeName ? styles.selected : ""}`}

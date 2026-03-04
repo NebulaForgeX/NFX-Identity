@@ -1,7 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
-import { useLayout } from "@/providers/LayoutProvider/useLayout";
+import { useLayoutLabel } from "nfx-ui/languages";
+import { LAYOUT_MODE_VALUES, LayoutModeEnum } from "nfx-ui/layouts";
+import { useLayout } from "@/providers";
 import { useLayoutSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";
@@ -11,15 +12,11 @@ interface LayoutSwitcherProps {
 }
 
 const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
-  const { t } = useTranslation("components");
   const { layoutMode, setLayoutMode } = useLayout();
   const { syncLayout } = useLayoutSync();
+  const { getLayoutDisplayName } = useLayoutLabel();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const getDisplayName = (mode: "show" | "hide"): string => {
-    return mode === "show" ? t("layoutSwitcher.showSidebar") : t("layoutSwitcher.hideSidebar");
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -31,7 +28,7 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleChange = (mode: "show" | "hide") => {
+  const handleChange = (mode: LayoutModeEnum) => {
     setLayoutMode(mode);
     syncLayout(mode);
     setIsOpen(false);
@@ -45,7 +42,7 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        <span className={styles.buttonText}>{getDisplayName(layoutMode)}</span>
+        <span className={styles.buttonText}>{getLayoutDisplayName(layoutMode)}</span>
         <svg
           className={`${styles.chevronIcon} ${isOpen ? styles.open : ""}`}
           width="16"
@@ -63,16 +60,16 @@ const LayoutSwitcher = memo(({ status = "primary" }: LayoutSwitcherProps) => {
         className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
       >
         <ul className={styles.optionsList} role="listbox">
-          {(["show", "hide"] as const).map((m) => (
+          {LAYOUT_MODE_VALUES.map((mode) => (
             <li
-              key={m}
-              className={`${styles.option} ${m === layoutMode ? styles.selected : ""}`}
-              onClick={() => handleChange(m)}
+              key={mode}
+              className={`${styles.option} ${mode === layoutMode ? styles.selected : ""}`}
+              onClick={() => handleChange(mode)}
               role="option"
-              aria-selected={m === layoutMode}
+              aria-selected={mode === layoutMode}
             >
-              <span>{getDisplayName(m)}</span>
-              {m === layoutMode && (
+              <span>{getLayoutDisplayName(mode)}</span>
+              {mode === layoutMode && (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

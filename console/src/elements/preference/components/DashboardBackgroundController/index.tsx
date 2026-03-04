@@ -1,16 +1,15 @@
 import type { PreferenceFormValues } from "../../schemas/preferenceSchema";
-import type { DashboardBackgroundType } from "@/types";
+import type { DashboardBackgroundEnum } from "nfx-ui/preference";
 
 import { memo, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { Dropdown } from "@/components";
-import { DASHBOARD_BACKGROUND_VALUES } from "@/types";
+import { DASHBOARD_BACKGROUND_VALUES } from "nfx-ui/preference";
 
 export interface DashboardBackgroundControllerProps {
-  /** 选择即改：选择新背景后立即回调，用于保存 */
-  onApply?: (payload: { dashboardBackground: DashboardBackgroundType }) => void;
+  onApply?: (payload: { dashboardBackground: DashboardBackgroundEnum }) => void;
 }
 
 const DashboardBackgroundController = memo(({ onApply }: DashboardBackgroundControllerProps) => {
@@ -49,7 +48,7 @@ const DashboardBackgroundController = memo(({ onApply }: DashboardBackgroundCont
             value={field.value || ""}
             onChange={(value) => {
               field.onChange(value);
-              onApply?.({ dashboardBackground: value as DashboardBackgroundType });
+              onApply?.({ dashboardBackground: value as DashboardBackgroundEnum });
             }}
             placeholder={t("preference.dashboardBackground.placeholder")}
             error={!!errors.dashboardBackground}

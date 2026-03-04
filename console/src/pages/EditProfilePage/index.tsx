@@ -24,7 +24,7 @@ import {
 } from "@/elements/profile";
 import { useUserProfile } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

@@ -1,5 +1,4 @@
-import { createStore, useStore } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
+import { makeStore } from "nfx-ui/stores";
 
 type ModalType = "success" | "error" | "info" | "confirm" | "search" | "yearSelect" | "loading" | "avatarUpload";
 
@@ -110,8 +109,8 @@ const defaultAvatarUploadModalProps: AvatarUploadModalProps = {
   onCancel: undefined,
 };
 
-export const ModalStore = createStore<ModalState & ModalActions>()(
-  subscribeWithSelector((set) => ({
+const { store: ModalStore, useStore: useModalStoreBound } = makeStore<ModalState, ModalActions>(
+  {
     modalType: "info",
     baseModal: defaultBaseModalProps,
     confirmModal: defaultConfirmModalProps,
@@ -119,7 +118,8 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
     yearSelectModal: defaultYearSelectModalProps,
     loadingModal: defaultLoadingModalProps,
     avatarUploadModal: defaultAvatarUploadModalProps,
-
+  },
+  (set) => ({
     showModal: (modalType, props) => {
       // 根据 modalType 设置对应的模态框状态
       if (modalType === "success" || modalType === "error" || modalType === "info") {
@@ -226,11 +226,11 @@ export const ModalStore = createStore<ModalState & ModalActions>()(
         });
       }
     },
-  })),
+  }),
 );
 
+export { ModalStore, useModalStoreBound as useModalStore };
 export default ModalStore;
-export const useModalStore = <T>(selector: (state: ModalState) => T) => useStore(ModalStore, selector);
 
 export const showInfo = (message: string, title?: string) => {
   ModalStore.getState().showModal("info", {

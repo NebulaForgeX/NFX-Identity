@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { useLayout } from "@/providers/LayoutProvider/useLayout";
+import { LayoutModeEnum, useLayout } from "nfx-ui/layouts";
 
 import SideHideLayout from "./SideHideLayout";
 import SideShowLayout from "./SideShowLayout";
@@ -15,7 +15,7 @@ export const LayoutSwitcher = memo(({ children }: LayoutSwitcherProps) => {
   return (
     <MainWrapper>
       {(headerHeight, footerHeight) => {
-        if (layoutMode === "hide") {
+        if (layoutMode === LayoutModeEnum.HIDE) {
           return (
             <SideHideLayout headerHeight={headerHeight} footerHeight={footerHeight}>
               {children}

@@ -5,10 +5,10 @@ import type { FieldErrors } from "react-hook-form";
 
 import { useCreateUserPreference, useUpdateUserPreference } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 import { showError } from "@/stores/modalStore";
 import type { UserPreference } from "@/types";
-import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
+import { DEFAULT_DASHBOARD_BACKGROUND } from "nfx-ui/preference";
 
 import { type PreferenceFormValues } from "../schemas/preferenceSchema";
 

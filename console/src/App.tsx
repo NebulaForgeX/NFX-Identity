@@ -19,7 +19,7 @@ import {
   ProfilePage,
   UserSecurityPage,
 } from "@/pages";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import "./App.module.css";
 

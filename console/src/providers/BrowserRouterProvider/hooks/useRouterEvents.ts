@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { authEventEmitter, authEvents } from "@/events/auth";
 import { routerEventEmitter, routerEvents } from "@/events/router";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 /**
  * useRouterEvents - 处理路由导航事件
@@ -126,8 +126,8 @@ export function useRouterEvents() {
 
   // 注册所有路由事件监听器
   useEffect(() => {
-    routerEventEmitter.on(routerEvents.NAVIGATE, handleNavigate);
-    routerEventEmitter.on(routerEvents.NAVIGATE_REPLACE, handleNavigateReplace);
+    routerEventEmitter.on(routerEvents.NAVIGATE, handleNavigate as (...args: unknown[]) => void);
+    routerEventEmitter.on(routerEvents.NAVIGATE_REPLACE, handleNavigateReplace as (...args: unknown[]) => void);
     routerEventEmitter.on(routerEvents.NAVIGATE_BACK, handleNavigateBack);
     routerEventEmitter.on(routerEvents.NAVIGATE_FORWARD, handleNavigateForward);
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_LOGIN, handleNavigateToLogin);
@@ -137,18 +137,18 @@ export function useRouterEvents() {
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_PROFILE, handleNavigateToEditProfile);
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_ACCOUNT_SECURITY, handleNavigateToAccountSecurity);
     routerEventEmitter.on(routerEvents.NAVIGATE_TO_USER_SECURITY, handleNavigateToUserSecurity);
-    routerEventEmitter.on(routerEvents.NAVIGATE_TO_ADD_EDUCATION, handleNavigateToAddEducation);
-    routerEventEmitter.on(routerEvents.NAVIGATE_TO_ADD_OCCUPATION, handleNavigateToAddOccupation);
-    routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_EDUCATION, handleNavigateToEditEducation);
-    routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_OCCUPATION, handleNavigateToEditOccupation);
-    routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_PREFERENCE, handleNavigateToEditPreference);
+    routerEventEmitter.on(routerEvents.NAVIGATE_TO_ADD_EDUCATION, handleNavigateToAddEducation as (...args: unknown[]) => void);
+    routerEventEmitter.on(routerEvents.NAVIGATE_TO_ADD_OCCUPATION, handleNavigateToAddOccupation as (...args: unknown[]) => void);
+    routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_EDUCATION, handleNavigateToEditEducation as (...args: unknown[]) => void);
+    routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_OCCUPATION, handleNavigateToEditOccupation as (...args: unknown[]) => void);
+    routerEventEmitter.on(routerEvents.NAVIGATE_TO_EDIT_PREFERENCE, handleNavigateToEditPreference as (...args: unknown[]) => void);
 
     // 监听登录成功事件
-    authEventEmitter.on(authEvents.LOGIN_SUCCESS, handleLoginSuccess);
+    authEventEmitter.on(authEvents.LOGIN_SUCCESS, handleLoginSuccess as (...args: unknown[]) => void);
 
     return () => {
-      routerEventEmitter.off(routerEvents.NAVIGATE, handleNavigate);
-      routerEventEmitter.off(routerEvents.NAVIGATE_REPLACE, handleNavigateReplace);
+      routerEventEmitter.off(routerEvents.NAVIGATE, handleNavigate as (...args: unknown[]) => void);
+      routerEventEmitter.off(routerEvents.NAVIGATE_REPLACE, handleNavigateReplace as (...args: unknown[]) => void);
       routerEventEmitter.off(routerEvents.NAVIGATE_BACK, handleNavigateBack);
       routerEventEmitter.off(routerEvents.NAVIGATE_FORWARD, handleNavigateForward);
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_LOGIN, handleNavigateToLogin);
@@ -158,14 +158,14 @@ export function useRouterEvents() {
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_PROFILE, handleNavigateToEditProfile);
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_ACCOUNT_SECURITY, handleNavigateToAccountSecurity);
       routerEventEmitter.off(routerEvents.NAVIGATE_TO_USER_SECURITY, handleNavigateToUserSecurity);
-      routerEventEmitter.off(routerEvents.NAVIGATE_TO_ADD_EDUCATION, handleNavigateToAddEducation);
-      routerEventEmitter.off(routerEvents.NAVIGATE_TO_ADD_OCCUPATION, handleNavigateToAddOccupation);
-      routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_EDUCATION, handleNavigateToEditEducation);
-      routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_OCCUPATION, handleNavigateToEditOccupation);
-      routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_PREFERENCE, handleNavigateToEditPreference);
+      routerEventEmitter.off(routerEvents.NAVIGATE_TO_ADD_EDUCATION, handleNavigateToAddEducation as (...args: unknown[]) => void);
+      routerEventEmitter.off(routerEvents.NAVIGATE_TO_ADD_OCCUPATION, handleNavigateToAddOccupation as (...args: unknown[]) => void);
+      routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_EDUCATION, handleNavigateToEditEducation as (...args: unknown[]) => void);
+      routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_OCCUPATION, handleNavigateToEditOccupation as (...args: unknown[]) => void);
+      routerEventEmitter.off(routerEvents.NAVIGATE_TO_EDIT_PREFERENCE, handleNavigateToEditPreference as (...args: unknown[]) => void);
 
       // 移除登录成功事件监听
-      authEventEmitter.off(authEvents.LOGIN_SUCCESS, handleLoginSuccess);
+      authEventEmitter.off(authEvents.LOGIN_SUCCESS, handleLoginSuccess as (...args: unknown[]) => void);
     };
   }, [
     handleNavigate,

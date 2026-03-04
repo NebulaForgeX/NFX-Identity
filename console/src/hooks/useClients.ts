@@ -39,10 +39,10 @@ import type {
   RateLimit,
   UpdateAppRequest,
 } from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery, type UnifiedQueryParams } from "nfx-ui/hooks";
 import { clientsEventEmitter, clientsEvents } from "@/events/clients";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 import {
   CLIENTS_APP,
   CLIENTS_API_KEY,
@@ -51,7 +51,6 @@ import {
   CLIENTS_IP_ALLOWLIST,
   CLIENTS_RATE_LIMIT,
 } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
 
 // ========== App 相关 ==========
 

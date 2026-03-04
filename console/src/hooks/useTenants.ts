@@ -80,10 +80,10 @@ import type {
   UpdateTenantSettingRequest,
   UpdateTenantStatusRequest,
 } from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery, type UnifiedQueryParams } from "nfx-ui/hooks";
 import { tenantsEventEmitter, tenantsEvents } from "@/events/tenants";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 import {
   TENANTS_TENANT,
   TENANTS_GROUP,
@@ -96,7 +96,6 @@ import {
   TENANTS_MEMBER_GROUP,
   TENANTS_MEMBER_APP_ROLE,
 } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Tenant 相关 ==========
 

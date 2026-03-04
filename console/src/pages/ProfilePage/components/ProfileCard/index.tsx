@@ -6,7 +6,7 @@ import { Camera, Edit } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
 import { useUser, useUserProfile, useUserEmailsByUserID, useUserAvatar } from "@/hooks/useDirectory";
 import { showAvatarUpload } from "@/stores/modalStore";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 import { buildImageUrl } from "@/utils/image";
 
 import styles from "./styles.module.css";

@@ -11,12 +11,11 @@ import {
   ResetSystemState,
 } from "@/apis/system.api";
 import type { InitializeSystemStateRequest, ResetSystemStateRequest, SystemState } from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery, type UnifiedQueryParams } from "nfx-ui/hooks";
 import { systemEventEmitter, systemEvents } from "@/events/system";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 import { SYSTEM_SYSTEM_STATE, SYSTEM_SYSTEM_STATE_LATEST, SYSTEM_SYSTEM_STATE_INIT } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
 
 // ========== SystemState 相关 ==========
 

@@ -1,12 +1,7 @@
 // System API - 基于 NFX-ID Backend
 
-import type {
-  BaseResponse,
-  DataResponse,
-  InitializeSystemStateRequest,
-  ResetSystemStateRequest,
-  SystemState,
-} from "@/types";
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
+import type { InitializeSystemStateRequest, ResetSystemStateRequest, SystemState } from "@/types";
 
 import { protectedClient, publicClient } from "./clients";
 import { URL_PATHS } from "./ip";

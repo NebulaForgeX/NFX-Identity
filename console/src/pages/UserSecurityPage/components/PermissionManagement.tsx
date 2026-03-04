@@ -13,7 +13,7 @@ import {
 } from "@/hooks/useAccess";
 import { GetPermissionByKey, GetRoleByKey } from "@/apis";
 import { showError } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 
 import styles from "../styles.module.css";
 

@@ -57,10 +57,10 @@ import type {
   UpdateRoleRequest,
   UpdateScopeRequest,
 } from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery, type UnifiedQueryParams } from "nfx-ui/hooks";
 import { accessEventEmitter, accessEvents } from "@/events/access";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 
 import {
   ACCESS_ACTION,
@@ -74,7 +74,6 @@ import {
   ACCESS_ROLE_PERMISSIONS_BY_ROLE,
   ACCESS_SCOPE_PERMISSION,
 } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Role 相关 ==========
 export const useRoleById = (params: UnifiedQueryParams<Role> & { id: string }) => {

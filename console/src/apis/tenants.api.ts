@@ -1,8 +1,8 @@
 // Tenants API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
   AcceptInvitationRequest,
-  BaseResponse,
   CreateDomainVerificationRequest,
   CreateGroupRequest,
   CreateInvitationRequest,
@@ -13,7 +13,6 @@ import type {
   CreateTenantAppRequest,
   CreateTenantRequest,
   CreateTenantSettingRequest,
-  DataResponse,
   DomainVerification,
   Group,
   Invitation,

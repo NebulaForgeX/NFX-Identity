@@ -1,5 +1,4 @@
 export * from "./domain.key";
-export * from "./cache.key";
 export * from "./access.query.key";
 export * from "./auth.query.key";
 export * from "./audit.query.key";

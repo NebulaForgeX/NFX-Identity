@@ -1,9 +1,8 @@
-import type { ButtonProps } from "@/components/Button";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 import { cloneElement, forwardRef, isValidElement } from "react";
 
-import Button from "@/components/Button";
+import { Button, type ButtonProps } from "nfx-ui/components";
 
 import styles from "./styles.module.css";
 
@@ -35,8 +34,8 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     const renderIcon = (icon: ReactNode) => {
       if (!icon) return null;
       if (iconSize && isValidElement(icon) && typeof icon.type !== "string") {
-        const existingProps = icon.props && typeof icon.props === "object" ? icon.props : {};
-        return cloneElement(icon, { ...existingProps, size: iconSize });
+        const existingProps = (icon.props && typeof icon.props === "object" ? icon.props : {}) as Record<string, unknown>;
+        return cloneElement(icon as ReactElement<{ size?: number }>, { ...existingProps, size: iconSize });
       }
       return icon;
     };

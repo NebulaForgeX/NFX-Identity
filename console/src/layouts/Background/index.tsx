@@ -1,12 +1,11 @@
 import type { ReactNode } from "react";
-import type { DashboardBackgroundType } from "@/types";
 
 import { memo, useMemo } from "react";
 
 import { LetterGlitchBackground, PixelBlastBackground, SquareBackground, WaveBackground } from "@/animations";
 import { useUserPreferenceNormal } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
+import { DEFAULT_DASHBOARD_BACKGROUND, DashboardBackgroundEnum } from "nfx-ui/preference";
 
 import styles from "./styles.module.css";
 
@@ -28,40 +27,40 @@ const Background = memo(({ children }: BackgroundProps) => {
   });
 
   // Determine which background to show (从 other 字段中读取)
-  const dashboardBackground = useMemo((): DashboardBackgroundType => {
+  const dashboardBackground = useMemo((): DashboardBackgroundEnum => {
     if (!preference?.other) return DEFAULT_DASHBOARD_BACKGROUND;
     const other = preference.other as Record<string, unknown>;
-    return (other.dashboardBackground as DashboardBackgroundType) || DEFAULT_DASHBOARD_BACKGROUND;
+    return (other.dashboardBackground as DashboardBackgroundEnum) || DEFAULT_DASHBOARD_BACKGROUND;
   }, [preference]);
 
   // Render background component based on preference
   const renderBackground = () => {
     switch (dashboardBackground) {
-      case "waves":
+      case DashboardBackgroundEnum.WAVES:
         return (
           <div className={styles.wavesWrapper}>
             <WaveBackground />
           </div>
         );
-      case "squares":
+      case DashboardBackgroundEnum.SQUARES:
         return (
           <div className={styles.squaresWrapper}>
             <SquareBackground />
           </div>
         );
-      case "letterGlitch":
+      case DashboardBackgroundEnum.LETTER_GLITCH:
         return (
           <div className={styles.letterGlitchWrapper}>
             <LetterGlitchBackground />
           </div>
         );
-      case "pixelBlast":
+      case DashboardBackgroundEnum.PIXEL_BLAST:
         return (
           <div className={styles.pixelBlastWrapper}>
             <PixelBlastBackground />
           </div>
         );
-      case "none":
+      case DashboardBackgroundEnum.NONE:
       default:
         return null;
     }

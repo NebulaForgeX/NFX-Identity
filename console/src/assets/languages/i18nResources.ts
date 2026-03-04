@@ -1,4 +1,4 @@
-import type { ValueOf } from "@/utils/types";
+import type { ValueOf } from "nfx-ui/types";
 
 import en_AddActionPage from "./en/AddActionPage.json";
 import en_AddEducationPage from "./en/AddEducationPage.json";

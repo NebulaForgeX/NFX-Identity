@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Edit, Home, Search, Shield, User, X, Lock } from "@/assets/icons/lucide";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

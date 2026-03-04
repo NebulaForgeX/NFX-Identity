@@ -1,5 +1,5 @@
 import type { ProfileFormValues } from "../../schemas/profileSchema";
-import type { KeyValuePair } from "@/components/KeyValueEditor";
+import type { KeyValuePair } from "@/components";
 
 import { memo } from "react";
 import { useTranslation } from "react-i18next";

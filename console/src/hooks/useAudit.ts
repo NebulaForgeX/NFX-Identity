@@ -33,10 +33,10 @@ import type {
   HashChainCheckpoint,
   UpdateEventRetentionPolicyRequest,
 } from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery, type UnifiedQueryParams } from "nfx-ui/hooks";
 import { auditEventEmitter, auditEvents } from "@/events/audit";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
+import { getApiErrorMessage } from "nfx-ui/utils";
 import {
   AUDIT_EVENT,
   AUDIT_ACTOR_SNAPSHOT,
@@ -44,7 +44,6 @@ import {
   AUDIT_EVENT_SEARCH_INDEX,
   AUDIT_HASH_CHAIN_CHECKPOINT,
 } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Event 相关 ==========
 

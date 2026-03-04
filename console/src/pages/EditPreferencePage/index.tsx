@@ -15,12 +15,22 @@ import {
 import type { PreferenceFormValues } from "@/elements/preference";
 import { useUserPreference, useCreateUserPreference, useUpdateUserPreference } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import type { DashboardBackgroundType } from "@/types";
-import { DEFAULT_DASHBOARD_BACKGROUND } from "@/types";
+import type { DashboardBackgroundEnum } from "nfx-ui/preference";
+import { DEFAULT_DASHBOARD_BACKGROUND } from "nfx-ui/preference";
+import { LanguageEnum } from "nfx-ui/languages";
+import type { BaseEnum, ThemeEnum } from "nfx-ui/themes";
+import { BASE_VALUES, THEME_VALUES } from "nfx-ui/themes";
 import { ChangeLanguage } from "@/assets/languages/i18n";
-import { useTheme } from "@/providers/ThemeProvider/useTheme";
+import { useTheme } from "@/providers";
 
 import styles from "./styles.module.css";
+
+function isThemeEnum(s: string): s is ThemeEnum {
+  return (THEME_VALUES as readonly string[]).includes(s);
+}
+function isBaseEnum(s: string): s is BaseEnum {
+  return (BASE_VALUES as readonly string[]).includes(s);
+}
 
 const EditPreferencePage = memo(() => {
   const { t } = useTranslation("EditPreferencePage");
@@ -72,7 +82,7 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
           base: preference.base,
           language: preference.language,
           timezone: preference.timezone,
-          dashboardBackground: ((preference.other as Record<string, unknown>)?.dashboardBackground as DashboardBackgroundType | undefined) || DEFAULT_DASHBOARD_BACKGROUND,
+          dashboardBackground: ((preference.other as Record<string, unknown>)?.dashboardBackground as DashboardBackgroundEnum | undefined) || DEFAULT_DASHBOARD_BACKGROUND,
           notifications: preference.notifications,
           privacy: preference.privacy,
           display: preference.display,
@@ -112,9 +122,15 @@ const EditPreferenceContent = memo(({ userId }: { userId: string }) => {
             other: otherData,
           });
         }
-        if (payload.theme) setTheme(payload.theme as Parameters<typeof setTheme>[0]);
-        if (payload.base) setBase(payload.base as Parameters<typeof setBase>[0]);
-        if (payload.language) ChangeLanguage(payload.language as Parameters<typeof ChangeLanguage>[0]);
+        if (payload.theme && isThemeEnum(payload.theme)) {
+          setTheme(payload.theme);
+        }
+        if (payload.base && isBaseEnum(payload.base)) {
+          setBase(payload.base);
+        }
+        if (payload.language && (payload.language === LanguageEnum.EN || payload.language === LanguageEnum.ZH || payload.language === LanguageEnum.FR)) {
+          ChangeLanguage(payload.language);
+        }
       } catch (e) {
         console.error("Failed to save preference:", e);
       }

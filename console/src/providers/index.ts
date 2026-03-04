@@ -1,5 +1,5 @@
-export { default as ThemeProvider } from "./ThemeProvider";
-export { default as LayoutProvider } from "./LayoutProvider";
+export { ThemeProvider, useTheme } from "nfx-ui/themes";
+export { LayoutProvider, useLayout } from "nfx-ui/layouts";
 export { default as QueryProvider } from "./QueryProvider";
 export { default as LenisProvider } from "./LenisProvider";
 export { default as BootstrapProvider } from "./BootstrapProvider";

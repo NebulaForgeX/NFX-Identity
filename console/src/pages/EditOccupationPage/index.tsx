@@ -21,7 +21,7 @@ import {
   OccupationAchievementsController,
 } from "@/elements/occupation";
 import { useUserOccupation } from "@/hooks/useDirectory";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

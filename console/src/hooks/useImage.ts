@@ -35,12 +35,11 @@ import type {
   UpdateImageTypeRequest,
   UpdateImageVariantRequest,
 } from "@/types";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery, type UnifiedQueryParams } from "nfx-ui/hooks";
+import { getApiErrorMessage } from "nfx-ui/utils";
 import { imageEventEmitter, imageEvents } from "@/events/image";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiErrorMessage } from "@/utils/apiError";
 import { IMAGE_IMAGE, IMAGE_IMAGE_TYPE, IMAGE_IMAGE_VARIANT, IMAGE_IMAGE_TAG } from "@/constants";
-import type { UnifiedQueryParams } from "./core/type";
 
 // ========== Image 相关 ==========
 

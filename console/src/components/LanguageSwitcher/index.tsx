@@ -1,10 +1,7 @@
-import type { Language } from "@/assets/languages/i18nResources";
-
 import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { ChangeLanguage } from "@/assets/languages/i18n";
-import { LANGUAGE } from "@/assets/languages/i18nResources";
+import { LanguageEnum, changeLanguage, useLanguageLabel } from "nfx-ui/languages";
 import { useLanguageSync } from "@/hooks/useUserPreferenceSync";
 
 import styles from "./styles.module.css";
@@ -13,41 +10,29 @@ interface LanguageSwitcherProps {
   status?: "primary" | "default";
 }
 
+const LANGUAGE_OPTIONS: LanguageEnum[] = [LanguageEnum.EN, LanguageEnum.ZH, LanguageEnum.FR];
+
 const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) => {
-  const { i18n, t } = useTranslation("components");
+  const { i18n } = useTranslation();
   const { syncLanguage } = useLanguageSync();
+  const { getLanguageDisplayName } = useLanguageLabel();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // 语言显示名称映射（使用国际化）
-  const getLanguageDisplayName = (lang: Language): string => {
-    const keyMap: Record<Language, string> = {
-      [LANGUAGE.EN]: "languageSwitcher.english",
-      [LANGUAGE.ZH]: "languageSwitcher.chinese",
-      [LANGUAGE.FR]: "languageSwitcher.french",
-    };
-    return t(keyMap[lang], { defaultValue: lang });
-  };
+  const currentLanguage = (i18n.language as LanguageEnum) || LanguageEnum.ZH;
 
-  const currentLanguage = (i18n.language as Language) || LANGUAGE.EN;
-  const availableLanguages: Language[] = [LANGUAGE.EN, LANGUAGE.ZH, LANGUAGE.FR];
-
-  // 点击外部关闭下拉菜单
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLanguageChange = (lng: Language) => {
-    ChangeLanguage(lng);
+  const handleLanguageChange = (lng: LanguageEnum) => {
+    changeLanguage(lng);
     syncLanguage(lng);
     setIsOpen(false);
   };
@@ -78,7 +63,7 @@ const LanguageSwitcher = memo(({ status = "primary" }: LanguageSwitcherProps) =>
         className={`${styles.optionsPanel} ${styles[status]} ${isOpen ? styles.open : styles.closed}`}
       >
         <ul className={styles.optionsList} role="listbox">
-          {availableLanguages.map((lang) => (
+          {LANGUAGE_OPTIONS.map((lang) => (
             <li
               key={lang}
               className={`${styles.option} ${lang === currentLanguage ? styles.selected : ""}`}

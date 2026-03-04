@@ -1,30 +1,17 @@
-export const systemEvents = {
-  // SystemState 相关
+import { EventEmitter, defineEvents, type EventNamesOf } from "nfx-ui/events";
+import { singleton } from "nfx-ui/utils";
+
+export const systemEvents = defineEvents({
   INVALIDATE_SYSTEM_STATE: "SYSTEM:INVALIDATE_SYSTEM_STATE",
   INVALIDATE_SYSTEM_STATES: "SYSTEM:INVALIDATE_SYSTEM_STATES",
-} as const;
+});
 
-type SystemEvent = (typeof systemEvents)[keyof typeof systemEvents];
+type SystemEvent = EventNamesOf<typeof systemEvents>;
 
-class SystemEventEmitter {
-  private listeners: Record<SystemEvent, Set<Function>> = {
-    [systemEvents.INVALIDATE_SYSTEM_STATE]: new Set<Function>(),
-    [systemEvents.INVALIDATE_SYSTEM_STATES]: new Set<Function>(),
-  };
-
-  on(event: SystemEvent, callback: Function) {
-    this.listeners[event].add(callback);
-  }
-
-  off(event: SystemEvent, callback: Function) {
-    this.listeners[event].delete(callback);
-  }
-
-  emit(event: SystemEvent, ...args: unknown[]) {
-    this.listeners[event].forEach((callback) => {
-      callback(...args);
-    });
+class SystemEventEmitter extends EventEmitter<SystemEvent> {
+  constructor() {
+    super(systemEvents);
   }
 }
 
-export const systemEventEmitter = new SystemEventEmitter();
+export const systemEventEmitter = new (singleton(SystemEventEmitter))();

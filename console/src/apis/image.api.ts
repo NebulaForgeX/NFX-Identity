@@ -1,12 +1,11 @@
 // Image API - 基于 NFX-ID Backend
 
+import type { BaseResponse, DataResponse } from "nfx-ui/types";
 import type {
-  BaseResponse,
   CreateImageRequest,
   CreateImageTagRequest,
   CreateImageTypeRequest,
   CreateImageVariantRequest,
-  DataResponse,
   Image,
   ImageTag,
   ImageType,

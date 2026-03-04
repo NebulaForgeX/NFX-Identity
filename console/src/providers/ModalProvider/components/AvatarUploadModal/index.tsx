@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Camera, Upload, X } from "@/assets/icons/lucide";
-import { DIRECTORY_QUERY_KEY_PREFIXES } from "@/constants";
+import { DIRECTORY_USER_AVATAR } from "@/constants";
 import { CreateOrUpdateUserAvatar } from "@/apis/directory.api";
 import { UploadImage } from "@/apis/image.api";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
@@ -53,7 +53,7 @@ const AvatarUploadModal = memo(() => {
     },
     onSuccess: (imageId) => {
       // 刷新用户头像数据
-      queryClient.invalidateQueries({ queryKey: [...DIRECTORY_QUERY_KEY_PREFIXES.USER_AVATAR, userId] });
+      queryClient.invalidateQueries({ queryKey: DIRECTORY_USER_AVATAR(userId) });
       onSuccess?.(imageId);
       handleClose();
     },

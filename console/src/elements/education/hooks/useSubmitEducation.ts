@@ -5,7 +5,7 @@ import type { FieldErrors } from "react-hook-form";
 
 import { useCreateUserEducation, useUpdateUserEducation } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 import { showError } from "@/stores/modalStore";
 import type { UserEducation } from "@/types";
 

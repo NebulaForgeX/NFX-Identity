@@ -1,7 +1,7 @@
 import { createStore, useStore } from "zustand";
 import { persist, subscribeWithSelector } from "zustand/middleware";
 
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 export interface QuickNavItem {
   id: string;

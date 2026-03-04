@@ -6,7 +6,7 @@ import { Suspense } from "@/components";
 import { useUserOccupationsByUserID } from "@/hooks/useDirectory";
 import { useIsCurrent } from "@/hooks/useStyles";
 import { routerEventEmitter } from "@/events/router";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 import type { UserOccupation } from "@/types";
 
 import styles from "./styles.module.css";

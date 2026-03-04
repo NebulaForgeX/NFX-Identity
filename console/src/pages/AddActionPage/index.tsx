@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Button, Input, IconButton, Suspense } from "@/components";
 import { ArrowLeft } from "@/assets/icons/lucide";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import CreateActionForm from "./components/CreateActionForm";
 import ActionByKeyContent from "./components/ActionByKeyContent";

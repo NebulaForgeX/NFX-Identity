@@ -1,5 +1,10 @@
-import type { Category } from "@/types/domain";
-import type { ValueOf } from "@/utils/types";
+import type { Array, Nullable, ValueOf } from "nfx-ui/types";
+
+/** 与 Sjgz-Admin 一致：使用 nfx-ui/types。Console 无 catalog，此处仅作占位。 */
+export interface Category {
+  id: string;
+  name: string;
+}
 
 export type UUID = string;
 export type Timestamp = string;
@@ -76,9 +81,9 @@ export interface DraftProduct {
   stock: number;
   categoryId: string;
   category: Category;
-  productImages: ProductImage[];
-  productAddress: ProductAddress | null;
-  supportedShippingMethods: ShippingMethod[];
+  productImages: Array<ProductImage>;
+  productAddress: Nullable<ProductAddress>;
+  supportedShippingMethods: Array<ShippingMethod>;
   brand: Brand;
   brandId?: string;
   views: number;

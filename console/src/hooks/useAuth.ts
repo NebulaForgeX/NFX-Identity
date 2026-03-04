@@ -25,7 +25,7 @@ import type {
   UpdateUserCredentialRequest,
   UserCredential,
 } from "@/types";
-import type { UnifiedQueryParams } from "./core/type";
+import type { UnifiedQueryParams } from "nfx-ui/hooks";
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -80,10 +80,10 @@ import {
   AUTH_USER_CREDENTIAL,
 } from "@/constants";
 import { authEventEmitter, authEvents } from "@/events/auth";
-import { makeUnifiedQuery } from "@/hooks/core/makeUnifiedQuery";
+import { makeUnifiedQuery } from "nfx-ui/hooks";
 import AuthStore from "@/stores/authStore";
 import { showError, showSuccess } from "@/stores/modalStore";
-import { getApiError, getApiErrorMessage } from "@/utils/apiError";
+import { getApiError, getApiErrorMessage } from "nfx-ui/utils";
 
 // ========== Session 相关 ==========
 

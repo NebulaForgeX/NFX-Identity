@@ -20,7 +20,7 @@ import {
   ResponsibilitiesController,
   OccupationAchievementsController,
 } from "@/elements/occupation";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 
 import styles from "./styles.module.css";
 

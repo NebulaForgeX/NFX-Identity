@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { memo, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import Sidebar from "../Sidebar";
-import { useLayout } from "@/providers/LayoutProvider/useLayout";
+import { useLayout } from "@/providers";
 
 import styles from "./styles.module.css";
 

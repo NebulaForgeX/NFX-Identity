@@ -6,7 +6,7 @@ import { ImagePlus, Plus, Settings } from "@/assets/icons/lucide";
 import { Suspense } from "@/components";
 import { useCurrentUserImageByUserID, useUserImagesByUserID } from "@/hooks/useDirectory";
 import { useAuthStore } from "@/stores/authStore";
-import { ROUTES } from "@/types/navigation";
+import { ROUTES } from "@/navigations";
 import { buildImageUrl } from "@/utils/image";
 
 import AccountInfoCard from "./components/AccountInfoCard";

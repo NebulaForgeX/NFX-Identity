@@ -1,5 +1,13 @@
-// 路由常量定义 - 只定义实际使用的路由
-export const ROUTES = {
+import type { RouteKey as RouteKeyGeneric, RoutePath as RoutePathGeneric } from "nfx-ui/navigations";
+
+import { createRouter, defineRouter } from "nfx-ui/navigations";
+
+/**
+ * 路由常量与工具（基于 nfx-ui defineRouter / createRouter）
+ * 只定义实际使用的路由
+ */
+
+const routeMap = defineRouter({
   HOME: "/",
   LOGIN: "/login",
   DASHBOARD: "/dashboard",
@@ -17,17 +25,10 @@ export const ROUTES = {
   EDIT_EDUCATION: "/profile/edit-education",
   EDIT_OCCUPATION: "/profile/edit-occupation",
   EDIT_PREFERENCE: "/profile/edit-preference",
-} as const;
+});
 
-// 路由类型
-export type RouteKey = keyof typeof ROUTES;
-export type RoutePath = (typeof ROUTES)[RouteKey];
+const { ROUTES, matchRoute, isActiveRoute, getRouteByKey } = createRouter(routeMap);
+type RouteKey = RouteKeyGeneric<typeof routeMap>;
+type RoutePath = RoutePathGeneric<typeof routeMap>;
 
-// 工具函数
-export const isActiveRoute = (currentPath: string, targetPath: RoutePath): boolean => {
-  return currentPath === targetPath;
-};
-
-export const getRouteByKey = (key: RouteKey): RoutePath => {
-  return ROUTES[key];
-};
+export { ROUTES, matchRoute, isActiveRoute, getRouteByKey, type RouteKey, type RoutePath };
