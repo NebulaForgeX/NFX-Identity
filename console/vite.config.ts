@@ -8,48 +8,14 @@ const PAGE_CHUNKS: Record<string, string> = {
   "/src/pages/DashboardPage": "page-dashboard",
   "/src/pages/NotFoundPage": "page-404",
   "/src/pages/ProfilePage": "page-profile",
-  "/src/pages/ProfileEditPage": "page-profile-edit",
-  "/src/pages/AccountSecurityPage": "page-account-security",
-  "/src/pages/ViewProfilePage": "page-profile-view",
-  "/src/pages/CategoryListPage": "page-category-list",
-  "/src/pages/CategoryAddPage": "page-category-add",
-  "/src/pages/CategoryDetailPage": "page-category-detail",
-  "/src/pages/CategoryEditPage": "page-category-edit",
-  "/src/pages/CategoryPanelPage": "page-category-panel",
-  "/src/pages/SubcategoryListPage": "page-subcategory-list",
-  "/src/pages/SubcategoryAddPage": "page-subcategory-add",
-  "/src/pages/SubcategoryDetailPage": "page-subcategory-detail",
-  "/src/pages/SubcategoryEditPage": "page-subcategory-edit",
-  "/src/pages/TeaListPage": "page-tea-list",
-  "/src/pages/TeaAddPage": "page-tea-add",
-  "/src/pages/TeaDetailPage": "page-tea-detail",
-  "/src/pages/TeaEditPage": "page-tea-edit",
-};
-
-const TEA_COMPONENT_CHUNKS: Record<string, string> = {
-  "/src/elements/tea/components/TeaListItem": "elements-tea-list",
-  "/src/elements/tea/components/TeaImageUploader": "elements-tea-media",
-  "/src/elements/tea/components/ImagesController": "elements-tea-media",
-  "/src/elements/tea/components/CategorySelector": "elements-tea-category-selector",
-  "/src/elements/tea/components/CategoryController": "elements-tea-form",
-  "/src/elements/tea/components/NameController": "elements-tea-form",
-  "/src/elements/tea/components/DescriptionController": "elements-tea-form",
-  "/src/elements/tea/components/PriceController": "elements-tea-form",
-  "/src/elements/tea/components/StockController": "elements-tea-form",
-  "/src/elements/tea/components/ShowController": "elements-tea-form",
+  "/src/pages/SelectProfilePage": "page-select-profile",
+  "/src/pages/ImagesPage": "page-images",
+  "/src/pages/OwnerDirectoryPage": "page-owner",
+  "/src/pages/User/Settings": "page-settings",
 };
 
 const ELEMENT_CHUNKS: Record<string, string> = {
   "/src/elements/profile": "elements-profile",
-  "/src/elements/category/components": "elements-category-components",
-  "/src/elements/category/controllers": "elements-category-controllers",
-  "/src/elements/category/hooks": "elements-category-hooks",
-  "/src/elements/subCategory/components": "elements-subcategory-components",
-  "/src/elements/subCategory/controllers": "elements-subcategory-controllers",
-  "/src/elements/subCategory/hooks": "elements-subcategory-hooks",
-  "/src/elements/tea/controllers": "elements-tea-controllers",
-  "/src/elements/tea/hooks": "elements-tea-hooks",
-  ...TEA_COMPONENT_CHUNKS,
 };
 
 // https://vite.dev/config/
@@ -72,7 +38,10 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
         "lucide-react/icons": path.resolve(__dirname, "./node_modules/lucide-react/dist/esm/icons"),
+        react: path.resolve(__dirname, "./node_modules/react"),
+        "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
       },
+      dedupe: ["react", "react-dom", "react/jsx-runtime", "@tanstack/react-query", "zustand"],
     },
     css: {
       modules: {

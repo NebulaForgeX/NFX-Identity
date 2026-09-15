@@ -1,6 +1,8 @@
 package grpc
 
 import (
+	"context"
+
 	"nfxidentity/modules/auth/application/platform"
 	"nfxidentity/modules/auth/application/resource"
 	grpcHandler "nfxidentity/modules/auth/interfaces/grpc/handler"
@@ -14,8 +16,8 @@ import (
 	healthpb "nfxidentity/protos/gen/common/health"
 	schemapb "nfxidentity/protos/gen/common/schema"
 
-	"google.golang.org/grpc"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"google.golang.org/grpc"
 )
 
 type Deps interface {
@@ -38,6 +40,9 @@ func NewServer(d Deps) *grpc.Server {
 	forgerprofilepb.RegisterForgerProfileServiceServer(s, grpcHandler.NewForgerHandler(d.PlatformSvc()))
 	authorityprofilepb.RegisterAuthorityProfileServiceServer(s, grpcHandler.NewAuthorityHandler(d.PlatformSvc()))
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "auth"))
-	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "auth"))
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(func(ctx context.Context) (int32, error) {
+		n, err := postgresqlx.ClearSchema(ctx, d.Postgres().DB(), "auth", nil)
+		return int32(n), err
+	}))
 	return s
 }

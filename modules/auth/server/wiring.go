@@ -8,6 +8,10 @@ import (
 	"nfxidentity/modules/auth/application/platform"
 	"nfxidentity/modules/auth/application/resource"
 	"nfxidentity/modules/auth/config"
+	emailQuery "nfxidentity/modules/auth/infrastructure/query/email"
+	phoneQuery "nfxidentity/modules/auth/infrastructure/query/phone"
+	profileQuery "nfxidentity/modules/auth/infrastructure/query/profile"
+	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
 	"nfxidentity/pkgs/cachex"
 	"nfxidentity/pkgs/health"
 	"nfxidentity/pkgs/kafkax"
@@ -16,6 +20,7 @@ import (
 	"nfxidentity/pkgs/security/token"
 	"nfxidentity/pkgs/security/token/servertoken"
 	"nfxidentity/pkgs/tokenx"
+	"nfxidentity/pkgs/transaction"
 )
 
 type Dependencies struct {
@@ -65,7 +70,17 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		ClientSecret: cfg.GitHub.ClientSecret,
 		RedirectURL:  cfg.GitHub.RedirectURL,
 	}
-	platformSvc := platform.NewService(postgres.DB(), tokenxInstance, githubCfg, cacheConn.Client())
+	db := postgres.DB()
+	platformSvc := platform.NewService(
+		transaction.NewGormTxManager(db),
+		repofactory.NewTxRepoFactory(db),
+		emailQuery.NewQuery(db),
+		phoneQuery.NewQuery(db),
+		profileQuery.NewQuery(db),
+		tokenxInstance,
+		githubCfg,
+		cacheConn.Client(),
+	)
 	resourceSvc := resource.NewService(postgres, cacheConn, &kafkaConfig)
 
 	return &Dependencies{

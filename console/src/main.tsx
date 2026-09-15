@@ -10,7 +10,6 @@ import { LanguageProvider, ThemeProvider, ModalProvider, DataProvider } from "nf
 import { LayoutProvider } from "nfx-ui/layouts";
 
 import "./index.css";
-import "@/assets/themes/global.css";
 
 import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
 import { DialogHost, QueryProvider, RouterProvider } from "@/providers";

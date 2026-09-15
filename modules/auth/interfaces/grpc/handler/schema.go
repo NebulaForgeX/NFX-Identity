@@ -3,30 +3,22 @@ package handler
 import (
 	"context"
 
-	"nfxidentity/pkgs/postgresqlx"
 	schemapb "nfxidentity/protos/gen/common/schema"
-
-	"gorm.io/gorm"
 )
 
-// SchemaHandler schema 清空处理器
+type SchemaClearFn func(ctx context.Context) (tablesCleared int32, err error)
+
 type SchemaHandler struct {
 	schemapb.UnimplementedSchemaServiceServer
-	db         *gorm.DB
-	schemaName string
+	clear SchemaClearFn
 }
 
-// NewSchemaHandler 创建 schema 处理器
-func NewSchemaHandler(db *gorm.DB, schemaName string) *SchemaHandler {
-	return &SchemaHandler{
-		db:         db,
-		schemaName: schemaName,
-	}
+func NewSchemaHandler(clear SchemaClearFn) *SchemaHandler {
+	return &SchemaHandler{clear: clear}
 }
 
-// ClearSchema 清空 schema 中所有表的数据（不删除表）
 func (h *SchemaHandler) ClearSchema(ctx context.Context, req *schemapb.ClearSchemaRequest) (*schemapb.ClearSchemaResponse, error) {
-	tablesCleared, err := postgresqlx.ClearSchema(ctx, h.db, h.schemaName, nil)
+	tablesCleared, err := h.clear(ctx)
 	if err != nil {
 		errMsg := err.Error()
 		return &schemapb.ClearSchemaResponse{
@@ -35,9 +27,8 @@ func (h *SchemaHandler) ClearSchema(ctx context.Context, req *schemapb.ClearSche
 			TablesCleared: 0,
 		}, nil
 	}
-
 	return &schemapb.ClearSchemaResponse{
 		Success:       true,
-		TablesCleared: int32(tablesCleared),
+		TablesCleared: tablesCleared,
 	}, nil
 }

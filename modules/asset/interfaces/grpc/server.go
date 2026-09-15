@@ -1,6 +1,8 @@
 package grpc
 
 import (
+	"context"
+
 	"nfxidentity/modules/asset/application/media"
 	"nfxidentity/modules/asset/application/resource"
 	grpcHandler "nfxidentity/modules/asset/interfaces/grpc/handler"
@@ -36,7 +38,10 @@ func NewServer(d Deps) *grpc.Server {
 	}
 	s := grpc.NewServer(opts...)
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "asset"))
-	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(d.Postgres().DB(), "asset"))
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(func(ctx context.Context) (int32, error) {
+		n, err := postgresqlx.ClearSchema(ctx, d.Postgres().DB(), "asset", nil)
+		return int32(n), err
+	}))
 	imagepb.RegisterImageServiceServer(s, grpcHandler.NewImageHandler(d.MediaSvc()))
 	filepb.RegisterFileServiceServer(s, grpcHandler.NewFileHandler(d.MediaSvc()))
 	videopb.RegisterVideoServiceServer(s, grpcHandler.NewVideoHandler(d.MediaSvc()))

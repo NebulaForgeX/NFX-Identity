@@ -12,14 +12,18 @@ import (
 	"strings"
 	"time"
 
-	"nfxidentity/modules/auth/infrastructure/rdb"
+	"nfxidentity/modules/auth/domain/account"
+	"nfxidentity/modules/auth/domain/email"
+	"nfxidentity/modules/auth/domain/forgerprofile"
+	"nfxidentity/modules/auth/domain/identity"
+	"nfxidentity/modules/auth/domain/settings"
 	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
-	"gorm.io/gorm"
 )
 
 func (s *Service) oauthCfg() *oauth2.Config {
@@ -123,7 +127,7 @@ func (s *Service) fetchGitHubEmail(ctx context.Context, accessToken string) stri
 	return ""
 }
 
-func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, platform string) (*LoginOutput, error) {
+func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, platformName string) (*LoginOutput, error) {
 	if s.redis != nil && state != "" {
 		ok, _ := s.redis.Get(ctx, "nfxidentity:github:state:"+state).Result()
 		if ok == "" {
@@ -136,22 +140,21 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 		return nil, err
 	}
 	subject := strconv.FormatInt(user.ID, 10)
-	var ident rdb.Identity
-	err = s.db.WithContext(ctx).Where("identity_provider = ? AND provider_subject = ? AND deleted_at IS NULL", "github", subject).First(&ident).Error
+	ident, err := s.repos.Identity(none()).Get.ByProviderSubject(ctx, "github", subject)
 	if err == nil {
-		now := time.Now()
-		_ = s.db.WithContext(ctx).Model(&ident).Update("last_login_at", now).Error
-		email, phone := s.primaryContacts(ctx, ident.AccountID)
-		if email == "" {
-			email = user.Email
+		ident.TouchLogin(time.Now())
+		_ = s.repos.Identity(none()).Update.Generic(ctx, ident)
+		emailAddr, phone := s.primaryContacts(ctx, ident.AccountID())
+		if emailAddr == "" {
+			emailAddr = user.Email
 		}
-		return s.issueAccountSession(ctx, ident.AccountID, &ident.ID, deviceID, email, phone)
+		return s.issueAccountSession(ctx, ident.AccountID(), ptrUUID(ident.ID()), deviceID, emailAddr, phone)
 	}
-	if err != gorm.ErrRecordNotFound {
+	if !isMissing(err) {
 		return nil, errx.Internal("GITHUB_LOOKUP_FAILED", err.Error())
 	}
-	if platform == "" {
-		platform = "nfxidentity"
+	if platformName == "" {
+		platformName = "nfxidentity"
 	}
 	now := time.Now()
 	accountID := uuid.New()
@@ -161,35 +164,35 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 	if display == "" {
 		display = user.Login
 	}
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(&rdb.Account{
-			ID: accountID, AccountStatus: "active", SignupPlatform: platform, CreatedAt: now, UpdatedAt: now,
-		}).Error; err != nil {
+	err = s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
+		if err := s.repos.Account(uow).Create.New(ctx, account.NewFromState(account.AccountState{
+			ID: accountID, AccountStatus: "active", SignupPlatform: platformName, CreatedAt: now, UpdatedAt: now,
+		})); err != nil {
 			return err
 		}
-		if err := tx.Create(&rdb.Identity{
+		if err := s.repos.Identity(uow).Create.New(ctx, identity.NewFromState(identity.IdentityState{
 			ID: identityID, AccountID: accountID, IdentityProvider: "github", ProviderSubject: subject,
 			CreatedAt: now, UpdatedAt: now,
-		}).Error; err != nil {
+		})); err != nil {
 			return err
 		}
 		if user.Email != "" {
 			verified := now
-			if err := tx.Create(&rdb.Email{
-				ID: uuid.New(), AccountID: accountID, Email: strings.ToLower(user.Email), IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
-			}).Error; err != nil {
+			if err := s.repos.Email(uow).Create.New(ctx, email.NewFromState(email.EmailState{
+				ID: uuid.New(), AccountID: accountID, Address: strings.ToLower(user.Email), IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
+			})); err != nil {
 				return err
 			}
 		}
-		if err := tx.Create(&rdb.ForgerProfile{
-			ID: profileID, AccountID: accountID, ForgerRoles: pq.StringArray{"forger"},
+		if err := s.repos.Forger(uow).Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
+			ID: profileID, AccountID: accountID, Roles: pq.StringArray{"forger"},
 			ProfileLanguage: "zh", DisplayName: &display, CreatedAt: now, UpdatedAt: now,
-		}).Error; err != nil {
+		})); err != nil {
 			return err
 		}
-		return tx.Create(&rdb.ForgerProfileSettings{ProfileSettings: rdb.ProfileSettings{
-			ID: profileID, LoginNotification: true, CreatedAt: now, UpdatedAt: now,
-		}}).Error
+		return s.repos.Settings(uow).Create.New(ctx, settings.NewFromState(settings.State{
+			ID: profileID, Kind: "forger", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
+		}))
 	})
 	if err != nil {
 		return nil, errx.Internal("GITHUB_SIGNUP_FAILED", err.Error())
@@ -203,28 +206,44 @@ func (s *Service) LinkGitHub(ctx context.Context, accountID uuid.UUID, code stri
 		return err
 	}
 	subject := strconv.FormatInt(user.ID, 10)
-	var existing rdb.Identity
-	if err := s.db.WithContext(ctx).Where("identity_provider = ? AND provider_subject = ? AND deleted_at IS NULL", "github", subject).First(&existing).Error; err == nil {
-		if existing.AccountID != accountID {
+	existing, err := s.repos.Identity(none()).Get.ByProviderSubject(ctx, "github", subject)
+	if err == nil {
+		if existing.AccountID() != accountID {
 			return errx.Conflict("GITHUB_TAKEN", "github account already linked")
 		}
 		return nil
 	}
+	if !isMissing(err) {
+		return err
+	}
 	now := time.Now()
-	return s.db.WithContext(ctx).Create(&rdb.Identity{
+	return s.repos.Identity(none()).Create.New(ctx, identity.NewFromState(identity.IdentityState{
 		ID: uuid.New(), AccountID: accountID, IdentityProvider: "github", ProviderSubject: subject,
 		CreatedAt: now, UpdatedAt: now,
-	}).Error
+	}))
 }
 
 func (s *Service) UnlinkGitHub(ctx context.Context, accountID uuid.UUID) error {
-	var n int64
-	s.db.WithContext(ctx).Model(&rdb.Identity{}).Where("account_id = ? AND identity_provider = ? AND deleted_at IS NULL", accountID, "password").Count(&n)
-	if n == 0 {
+	idents, err := s.repos.Identity(none()).Get.ByAccountID(ctx, accountID)
+	if err != nil {
+		return err
+	}
+	hasPassword := false
+	var githubIdent *identity.Identity
+	for _, item := range idents {
+		if item.IdentityProvider() == "password" {
+			hasPassword = true
+		}
+		if item.IdentityProvider() == "github" {
+			githubIdent = item
+		}
+	}
+	if !hasPassword {
 		return errx.FailedPrecond("LAST_IDENTITY", "cannot unlink the last identity")
 	}
-	now := time.Now()
-	return s.db.WithContext(ctx).Model(&rdb.Identity{}).
-		Where("account_id = ? AND identity_provider = ? AND deleted_at IS NULL", accountID, "github").
-		Update("deleted_at", now).Error
+	if githubIdent == nil {
+		return nil
+	}
+	githubIdent.SoftDelete(time.Now())
+	return s.repos.Identity(none()).Update.Generic(ctx, githubIdent)
 }

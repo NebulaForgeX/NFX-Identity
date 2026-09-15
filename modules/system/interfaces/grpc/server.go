@@ -1,6 +1,9 @@
 package grpc
 
 import (
+	"context"
+	"fmt"
+
 	resourceApp "nfxidentity/modules/system/application/resource"
 	systemStateApp "nfxidentity/modules/system/application/system_state"
 	grpcHandler "nfxidentity/modules/system/interfaces/grpc/handler"
@@ -39,7 +42,18 @@ func NewServer(d Deps) *grpc.Server {
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "system"))
 
 	// Register schema service (special handler for system to ensure system_state has only one record)
-	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSystemSchemaHandler(d.Postgres().DB(), "system"))
+	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSystemSchemaHandler(func(ctx context.Context) (int32, error) {
+		schemaName := "system"
+		exclude := []string{fmt.Sprintf(`"%s"."system_state"`, schemaName)}
+		tablesCleared, err := postgresqlx.ClearSchema(ctx, d.Postgres().DB(), schemaName, exclude)
+		if err != nil {
+			return 0, err
+		}
+		if err := postgresqlx.DeleteAllFromTable(ctx, d.Postgres().DB(), schemaName, "system_state"); err != nil {
+			return 0, fmt.Errorf("failed to clear system_state table: %w", err)
+		}
+		return int32(tablesCleared + 1), nil
+	}))
 
 	return s
 }

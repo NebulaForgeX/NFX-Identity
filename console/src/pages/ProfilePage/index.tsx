@@ -16,6 +16,7 @@ const ProfilePage = memo(() => {
   const accountId = useAuthStore((s) => s.currentAccountId);
   const kind = useAuthStore((s) => s.currentProfileKind) || ProfileKindEnum.FORGER;
   const [info, setInfo] = useState<Profile.Response.FullAccountInformationWithForgerProfile | Profile.Response.FullAccountInformationWithAuthorityProfile | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const [phoneInput, setPhoneInput] = useState("");
 
   const reload = useCallback(async () => {

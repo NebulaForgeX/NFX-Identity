@@ -8,6 +8,9 @@ import (
 	"nfxidentity/modules/asset/application/media"
 	"nfxidentity/modules/asset/application/resource"
 	"nfxidentity/modules/asset/config"
+	"nfxidentity/modules/asset/infrastructure/objectstore"
+	imagesQuery "nfxidentity/modules/asset/infrastructure/query/images"
+	"nfxidentity/modules/asset/infrastructure/repository/kinds"
 	"nfxidentity/pkgs/cachex"
 	"nfxidentity/pkgs/health"
 	"nfxidentity/pkgs/kafkax"
@@ -16,21 +19,22 @@ import (
 	"nfxidentity/pkgs/security/token"
 	"nfxidentity/pkgs/security/token/servertoken"
 	"nfxidentity/pkgs/tokenx"
+	"nfxidentity/pkgs/transaction"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 type Dependencies struct {
-	healthMgr         *health.Manager
-	postgres          *postgresqlx.Connection
-	cache             *cachex.Connection
-	kafkaConfig       *kafkax.Config
-	busPublisher      *eventbus.BusPublisher
-	userTokenVerifier token.Verifier
+	healthMgr           *health.Manager
+	postgres            *postgresqlx.Connection
+	cache               *cachex.Connection
+	kafkaConfig         *kafkax.Config
+	busPublisher        *eventbus.BusPublisher
+	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
-	mediaSvc          *media.Service
-	resourceSvc       *resource.Service
+	mediaSvc            *media.Service
+	resourceSvc         *resource.Service
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -60,7 +64,12 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	if err != nil {
 		return nil, fmt.Errorf("init MinIO: %w", err)
 	}
-	mediaSvc := media.NewService(postgres.DB(), mc, cfg.MinIO.Bucket)
+	mediaSvc := media.NewService(
+		transaction.NewGormTxManager(postgres.DB()),
+		objectstore.New(mc, cfg.MinIO.Bucket),
+		kinds.New(postgres.DB()),
+		imagesQuery.NewQuery(postgres.DB()),
+	)
 	if err := mediaSvc.EnsureBucket(ctx); err != nil {
 		return nil, fmt.Errorf("ensure MinIO bucket: %w", err)
 	}
@@ -90,14 +99,14 @@ func (d *Dependencies) Cleanup() {
 	d.cache.Close()
 }
 
-func (d *Dependencies) MediaSvc() *media.Service               { return d.mediaSvc }
-func (d *Dependencies) UserTokenVerifier() token.Verifier     { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier    { return d.serverTokenVerifier }
-func (d *Dependencies) HealthMgr() *health.Manager              { return d.healthMgr }
-func (d *Dependencies) KafkaConfig() *kafkax.Config           { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher   { return d.busPublisher }
-func (d *Dependencies) Postgres() *postgresqlx.Connection     { return d.postgres }
-func (d *Dependencies) ResourceSvc() *resource.Service          { return d.resourceSvc }
+func (d *Dependencies) MediaSvc() *media.Service             { return d.mediaSvc }
+func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
+func (d *Dependencies) HealthMgr() *health.Manager           { return d.healthMgr }
+func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
+func (d *Dependencies) Postgres() *postgresqlx.Connection    { return d.postgres }
+func (d *Dependencies) ResourceSvc() *resource.Service       { return d.resourceSvc }
 
 type tokenxVerifierAdapter struct {
 	tokenx *tokenx.Tokenx

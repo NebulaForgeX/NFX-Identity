@@ -25,3 +25,4 @@
 -- atlas:import views/list_forger_profile_item.sql
 -- atlas:import views/list_authority_profile_item.sql
 -- atlas:import views/list_email_item.sql
+-- atlas:import views/list_phone_item.sql

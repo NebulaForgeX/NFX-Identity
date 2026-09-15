@@ -49,7 +49,9 @@ func RegisterRoutes(app fiber.Router, svc *platform.Service, verifier token.Veri
 	me.Patch("/forger-profile-settings", h.patchForgerSettings)
 	me.Patch("/authority-profile-settings", h.patchAuthoritySettings)
 	me.Put("/forger-profile/avatars", h.confirmForgerAvatar)
+	me.Delete("/forger-profile/avatars", h.clearForgerAvatar)
 	me.Put("/authority-profile/avatars", h.confirmAuthorityAvatar)
+	me.Delete("/authority-profile/avatars", h.clearAuthorityAvatar)
 	me.Put("/forger-profile/backgrounds", h.confirmForgerBackgrounds)
 	me.Put("/authority-profile/backgrounds", h.confirmAuthorityBackgrounds)
 	me.Put("/forger-profile/preference", h.prefForger)
@@ -338,6 +340,12 @@ func (h *Handler) confirmForgerAvatar(c fiber.Ctx) error {
 func (h *Handler) confirmAuthorityAvatar(c fiber.Ctx) error {
 	return h.confirmAvatar(c, "authority")
 }
+func (h *Handler) clearForgerAvatar(c fiber.Ctx) error {
+	return h.clearAvatar(c, "forger")
+}
+func (h *Handler) clearAuthorityAvatar(c fiber.Ctx) error {
+	return h.clearAvatar(c, "authority")
+}
 
 func (h *Handler) confirmAvatar(c fiber.Ctx, kind string) error {
 	aid, err := accountID(c)
@@ -355,6 +363,21 @@ func (h *Handler) confirmAvatar(c fiber.Ctx, kind string) error {
 		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
 	}
 	if err := h.svc.ConfirmAvatar(c.Context(), aid, pid, kind, req.ImageID); err != nil {
+		return wrap(c, err)
+	}
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
+}
+
+func (h *Handler) clearAvatar(c fiber.Ctx, kind string) error {
+	aid, err := accountID(c)
+	if err != nil {
+		return wrap(c, err)
+	}
+	pid, err := profileID(c)
+	if err != nil {
+		return wrap(c, err)
+	}
+	if err := h.svc.ClearAvatar(c.Context(), aid, pid, kind); err != nil {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
