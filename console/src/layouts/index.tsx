@@ -1,38 +1,66 @@
-import React, { memo } from "react";
+import type { SidebarMenuItem } from "nfx-ui/layouts";
+import type { ReactNode } from "react";
 
-import { LayoutModeEnum, useLayout } from "nfx-ui/layouts";
+import { memo, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router";
 
-import SideHideLayout from "./SideHideLayout";
-import SideShowLayout from "./SideShowLayout";
-import MainWrapper from "./MainWrapper";
+import { LayoutFrame } from "nfx-ui/layouts";
+import { Logo } from "nfx-ui/components";
+import { AuthStore } from "nfx-ui/stores";
+import { authEventEmitter } from "nfx-ui/events";
 
-interface LayoutSwitcherProps {
-  children: React.ReactNode;
+import { Home, Image, Settings, Shield, User } from "@/assets/icons/lucide";
+import { routerEventEmitter } from "@/events/router";
+import { ROUTES } from "@/navigations";
+import RightContainer from "./Header/RightContainer";
+
+interface ConsoleLayoutProps {
+  children: ReactNode;
 }
 
-export const LayoutSwitcher = memo(({ children }: LayoutSwitcherProps) => {
-  const { layoutMode } = useLayout();
+function useSidebarItems(): SidebarMenuItem[] {
+  const { t } = useTranslation("components");
+  return useMemo(
+    () => [
+      { label: t("sidebar.dashboard", { defaultValue: "Dashboard" }), path: ROUTES.DASHBOARD, icon: <Home size={20} /> },
+      { label: t("sidebar.profile", { defaultValue: "Profile" }), path: ROUTES.PROFILE, icon: <User size={20} /> },
+      { label: t("sidebar.assets", { defaultValue: "Assets" }), path: ROUTES.IMAGES, icon: <Image size={20} /> },
+      { label: t("sidebar.owner", { defaultValue: "Owner directory" }), path: ROUTES.OWNER, icon: <Shield size={20} /> },
+      { label: t("sidebar.settings", { defaultValue: "Settings" }), path: ROUTES.SETTINGS, icon: <Settings size={20} /> },
+    ],
+    [t],
+  );
+}
+
+export const ConsoleLayout = memo(({ children }: ConsoleLayoutProps) => {
+  const { t } = useTranslation("components");
+  const location = useLocation();
+  const sidebarItems = useSidebarItems();
+
+  const onSidebarNavigate = useCallback((path: string) => {
+    routerEventEmitter.navigate({ to: path });
+  }, []);
+
+  const onSidebarLogout = useCallback(() => {
+    AuthStore.getState().clearAuth();
+    authEventEmitter.logout();
+  }, []);
+
   return (
-    <MainWrapper>
-      {(headerHeight, footerHeight) => {
-        if (layoutMode === LayoutModeEnum.HIDE) {
-          return (
-            <SideHideLayout headerHeight={headerHeight} footerHeight={footerHeight}>
-              {children}
-            </SideHideLayout>
-          );
-        } else {
-          return (
-            <SideShowLayout headerHeight={headerHeight} footerHeight={footerHeight}>
-              {children}
-            </SideShowLayout>
-          );
-        }
-      }}
-    </MainWrapper>
+    <LayoutFrame
+      headerLeft={<Logo title="NFX" subtitle="Identity" alt="NFX" onClick={() => routerEventEmitter.navigateToDashboard()} />}
+      headerRight={<RightContainer />}
+      sidebarItems={sidebarItems}
+      sidebarCurrentPathname={location.pathname}
+      onSidebarNavigate={onSidebarNavigate}
+      sidebarLogoutLabel={t("header.logout")}
+      onSidebarLogout={onSidebarLogout}
+    >
+      {children}
+    </LayoutFrame>
   );
 });
 
-LayoutSwitcher.displayName = "LayoutSwitcher";
-
-export default LayoutSwitcher;
+ConsoleLayout.displayName = "ConsoleLayout";
+export default ConsoleLayout;

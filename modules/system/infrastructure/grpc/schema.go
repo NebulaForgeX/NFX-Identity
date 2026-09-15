@@ -40,14 +40,9 @@ func initSchemaClients(grpcClients *GRPCClients, cfg *config.GRPCClientConfig, s
 
 	// 为所有服务创建 schema 清空连接
 	serviceAddrs := map[string]string{
-		constants.ServiceAccess:    cfg.AccessAddr,
-		constants.ServiceAudit:     cfg.AuditAddr,
-		constants.ServiceAuth:      cfg.AuthAddr,
-		constants.ServiceClients:   cfg.ClientsAddr,
-		constants.ServiceDirectory: cfg.DirectoryAddr,
-		constants.ServiceImage:     cfg.ImageAddr,
-		constants.ServiceSystem:    systemAddr,
-		constants.ServiceTenants:   cfg.TenantsAddr,
+		constants.ServiceAuth:   cfg.AuthAddr,
+		constants.ServiceAsset:  cfg.AssetAddr,
+		constants.ServiceSystem: systemAddr,
 	}
 
 	for serviceName, addr := range serviceAddrs {

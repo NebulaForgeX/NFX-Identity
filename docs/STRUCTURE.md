@@ -605,19 +605,9 @@ databases/
 
 ### Schema Organization
 
-- **`schemas/auth/`** - Auth module database schemas
-  - User tables
-  - Profile tables
-  - Role and permission tables
-  - Badge and achievement tables
-  - Education and occupation tables
-- **`schemas/image/`** - Image module database schemas
-  - Image metadata tables
-  - Image type tables
-- **`schemas/permission/`** - Permission module database schemas
-  - Permission tables
-  - User permission tables
-  - Authorization code tables
+- **`schemas/auth/`** — login center: Accounts, Identities, Emails, Phones, RefreshTokens, ForgerProfiles, AuthorityProfiles, avatar/background links
+- **`schemas/asset/`** — Images, Files, Videos, Audios + `*_active_view` (user files in Stack MinIO)
+- **`schemas/system/`** — system_state
 
 ---
 

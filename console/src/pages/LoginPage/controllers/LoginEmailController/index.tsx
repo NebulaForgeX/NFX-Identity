@@ -1,46 +1,34 @@
 import { memo } from "react";
-import { useTranslation } from "react-i18next";
+import { Flex, Text, TextField } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import type { EmailLoginFormValues } from "../../schemas/loginSchema";
 
-import styles from "./styles.module.css";
-
 const LoginEmailController = memo(() => {
   const { t } = useTranslation("LoginPage");
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext<EmailLoginFormValues>();
-
-  const emailError = errors.email;
+  const { control, formState: { errors } } = useFormContext<EmailLoginFormValues>();
 
   return (
-    <div className={styles.formControl}>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field }) => (
-          <div className={styles.inputWrapper}>
-            <input
-              {...field}
-              type="email"
-              className={`${styles.input} ${emailError ? styles.error : ""}`}
-              autoComplete="email"
-            />
-            <label className={styles.label}>{t("email")}</label>
-            <div className={styles.textWrapper}>
-              <div className={styles.innerTextWrapper}>
-                {emailError && <span className={styles.errorText}>{emailError.message}</span>}
-              </div>
-            </div>
-          </div>
-        )}
-      />
-    </div>
+    <Controller
+      name="email"
+      control={control}
+      render={({ field, fieldState }) => (
+        <Flex direction="column" gap="1">
+          <Text as="label" size="2" weight="medium" htmlFor="login-email">
+            {t("email")}
+          </Text>
+          <TextField.Root id="login-email" size="3" type="email" autoComplete="email" placeholder={t("email")} color={fieldState.error ? "red" : undefined} {...field} />
+          {errors.email ? (
+            <Text size="1" color="red">
+              {errors.email.message}
+            </Text>
+          ) : null}
+        </Flex>
+      )}
+    />
   );
 });
 
 LoginEmailController.displayName = "LoginEmailController";
-
 export default LoginEmailController;

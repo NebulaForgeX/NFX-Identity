@@ -1,6 +1,7 @@
 // Directory Domain Types - 基于 NFX-ID Backend
 
-import type { DashboardBackgroundEnum } from "nfx-ui/preference";
+import type { DashboardBackgroundEnum } from "nfx-ui/enums";
+import type { ResolvedThemePreference } from "nfx-ui/themes";
 
 import { UserStatus } from "./enums";
 
@@ -106,8 +107,7 @@ export interface UserPhone {
 export interface UserPreference {
   id: string;
   userId: string;
-  theme?: string;
-  base?: string;
+  theme?: ResolvedThemePreference;
   language?: string;
   timezone?: string;
   dashboardBackground?: DashboardBackgroundEnum;

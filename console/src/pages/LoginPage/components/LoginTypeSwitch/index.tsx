@@ -1,6 +1,6 @@
 import { memo } from "react";
+import { SegmentedControl } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
-import styles from "./styles.module.css";
 
 interface LoginTypeSwitchProps {
   loginType: "email" | "phone";
@@ -10,30 +10,13 @@ interface LoginTypeSwitchProps {
 const LoginTypeSwitch = memo(({ loginType, onLoginTypeChange }: LoginTypeSwitchProps) => {
   const { t } = useTranslation("LoginPage");
 
-  const handleTypeChange = (type: "email" | "phone") => {
-    onLoginTypeChange(type);
-  };
-
   return (
-    <div className={styles.loginTypeSwitch}>
-      <button
-        type="button"
-        className={`${styles.loginTypeBtn} ${loginType === "email" ? styles.active : ""}`}
-        onClick={() => handleTypeChange("email")}
-      >
-        {t("loginType.email")}
-      </button>
-      <button
-        type="button"
-        className={`${styles.loginTypeBtn} ${loginType === "phone" ? styles.active : ""}`}
-        onClick={() => handleTypeChange("phone")}
-      >
-        {t("loginType.phone")}
-      </button>
-    </div>
+    <SegmentedControl.Root size="2" value={loginType} onValueChange={(value) => onLoginTypeChange(value as "email" | "phone")}>
+      <SegmentedControl.Item value="email">{t("loginType.email")}</SegmentedControl.Item>
+      <SegmentedControl.Item value="phone">{t("loginType.phone")}</SegmentedControl.Item>
+    </SegmentedControl.Root>
   );
 });
 
 LoginTypeSwitch.displayName = "LoginTypeSwitch";
-
 export default LoginTypeSwitch;

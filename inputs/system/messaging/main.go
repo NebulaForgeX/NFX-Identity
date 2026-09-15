@@ -10,6 +10,7 @@ import (
 
 	"nfxidentity/modules/system/config"
 	"nfxidentity/modules/system/server"
+	"nfxidentity/pkgs/connections/otelx"
 	"nfxidentity/pkgs/env"
 	"nfxidentity/pkgs/logx"
 
@@ -32,6 +33,12 @@ func main() {
 		log.Fatalf("logger init failed: %v", err)
 	}
 	defer logx.Sync()
+
+	otelShutdown, err := otelx.Init(ctx, cfg.OTEL, "system", env.Env(*envStr))
+	if err != nil {
+		log.Fatalf("otel init failed: %v", err)
+	}
+	defer func() { _ = otelShutdown(context.Background()) }()
 
 	if err := server.RunMessaging(ctx, cfg); err != nil && !errors.Is(err, context.Canceled) {
 		logx.L().Fatal("messaging server stopped with error", zap.Error(err))

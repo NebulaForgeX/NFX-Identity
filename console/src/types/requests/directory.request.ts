@@ -142,10 +142,11 @@ export interface UpdateUserPhoneRequest {
 
 // ========== 用户偏好相关 ==========
 
+import type { ResolvedThemePreference } from "nfx-ui/themes";
+
 export interface CreateUserPreferenceRequest {
   userId: string;
-  theme?: string;
-  base?: string;
+  theme?: ResolvedThemePreference;
   language?: string;
   timezone?: string;
   dashboardBackground?: string;
@@ -156,8 +157,7 @@ export interface CreateUserPreferenceRequest {
 }
 
 export interface UpdateUserPreferenceRequest {
-  theme?: string;
-  base?: string;
+  theme?: ResolvedThemePreference;
   language?: string;
   timezone?: string;
   dashboardBackground?: string;

@@ -2,7 +2,7 @@ import type { ReactElement, ReactNode } from "react";
 
 import { cloneElement, forwardRef, isValidElement } from "react";
 
-import { Button, type ButtonProps } from "nfx-ui/components";
+import Button, { type ButtonProps } from "@/components/Button";
 
 import styles from "./styles.module.css";
 

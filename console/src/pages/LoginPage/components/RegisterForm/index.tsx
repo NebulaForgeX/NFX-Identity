@@ -1,108 +1,86 @@
 import { memo } from "react";
-import { useTranslation } from "react-i18next";
-import { FormProvider, useForm } from "react-hook-form";
+import { Button, Flex } from "@radix-ui/themes";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useSendVerificationCode, useSignup } from "@/hooks/useAuth";
-import { useResendTimer } from "@/hooks/useResendTimer";
+import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { AuthSignupPlatformEnum, LanguageEnum } from "nfx-ui/enums";
+import { useAuthRepository } from "nfx-ui/apis";
+import { AuthStore, ensureDeviceIdStorage } from "nfx-ui/stores";
 import { showError, showSuccess } from "@/stores/modalStore";
+import { useResendTimer } from "@/hooks/resendTimer";
 
 import { createRegisterSchema, type RegisterFormValues } from "../../schemas/registerSchema";
 import RegisterEmailController from "../../controllers/RegisterEmailController";
 import RegisterPasswordController from "../../controllers/RegisterPasswordController";
 import RegisterVerificationCodeController from "../../controllers/RegisterVerificationCodeController";
-import styles from "./styles.module.css";
 
 const RegisterForm = memo(() => {
   const { t } = useTranslation("LoginPage");
-  const { mutateAsync: signup, isPending: isSigningUp } = useSignup();
-  const { mutateAsync: sendCode, isPending: isSendingCode } = useSendVerificationCode();
+  const auth = useAuthRepository();
   const { timeLeft, canResend, startTimer } = useResendTimer();
 
-  // 创建带翻译的 schema
-  const registerSchema = createRegisterSchema((key: string) => t(key));
-
   const methods = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(createRegisterSchema((key: string) => t(key))),
     mode: "onChange",
-    defaultValues: {
-      email: "",
-      verificationCode: "",
-      password: "",
-    },
+    defaultValues: { email: "", verificationCode: "", password: "" },
   });
 
-  const { handleSubmit, watch } = methods;
-  const email = watch("email");
-
-  const handleSendCode = async () => {
-    if (!email || !canResend || isSendingCode) return;
-    try {
-      await sendCode({ email });
-      startTimer(60);
-      showSuccess(t("codeSentToEmail"));
-    } catch (error) {
-      showError(t("registerFailed"));
-    }
-  };
-
-  const onSubmit = async (data: RegisterFormValues) => {
-    try {
-      await signup({
+  const email = methods.watch("email");
+  const sendCode = useMutation({
+    mutationFn: async () => auth.SendVerificationCode({ email, lang: LanguageEnum.ZH }),
+  });
+  const signup = useMutation({
+    mutationFn: async (data: RegisterFormValues) => {
+      const deviceId = await ensureDeviceIdStorage();
+      const response = await auth.SignupWithEmail({
         email: data.email,
         password: data.password,
         verificationCode: data.verificationCode,
+        lang: LanguageEnum.ZH,
+        deviceId,
+        signupPlatform: AuthSignupPlatformEnum.NFXIDENTITY,
       });
-    } catch (error) {
-      showError(t("registerFailed"));
-    }
-  };
-
-  const canSendCode = email && canResend && !isSendingCode;
+      AuthStore.getState().setTokens({ accessToken: response.accessToken, refreshToken: response.refreshToken });
+      AuthStore.getState().setCurrentAccountId(response.accountId);
+      sessionStorage.setItem("nfx-login-profiles", JSON.stringify(response.profiles ?? []));
+      return response;
+    },
+  });
 
   return (
-    <div className={styles.formWrapper}>
-      <div className={styles.form}>
-        <span className={styles.title}>{t("register")}</span>
-
-        <FormProvider {...methods}>
-          <div className={styles.formContent}>
-            {/* Email with Send Code Button */}
-            <div className={styles.formControl}>
-              <RegisterEmailController />
-              <button
-                type="button"
-                className={styles.sendCodeBtn}
-                onClick={handleSendCode}
-                disabled={!canSendCode}
-              >
-                {canResend ? t("sendCode") : `${timeLeft}s`}
-              </button>
-            </div>
-
-            {/* Verification Code */}
-            <RegisterVerificationCodeController />
-
-            {/* Password */}
-            <RegisterPasswordController />
-
-            <button type="button" className={styles.submitBtn} onClick={handleSubmit(onSubmit)} disabled={isSigningUp}>
-              {isSigningUp ? t("registering") : t("register")}
-            </button>
-
-            <span className={styles.bottomText}>
-              {t("hasAccount")}{" "}
-              <label htmlFor="register_toggle" className={styles.switch}>
-                {t("signInNow")}
-              </label>
-            </span>
-          </div>
-        </FormProvider>
-      </div>
-    </div>
+    <FormProvider {...methods}>
+      <Flex direction="column" gap="4">
+        <Flex gap="2" align="end">
+          <RegisterEmailController />
+          <Button
+            type="button"
+            variant="soft"
+            size="3"
+            disabled={!email || !canResend || sendCode.isPending}
+            loading={sendCode.isPending}
+            onClick={async () => {
+              try {
+                await sendCode.mutateAsync();
+                startTimer(60);
+                showSuccess(t("codeSentToEmail"));
+              } catch {
+                showError(t("registerFailed"));
+              }
+            }}
+          >
+            {canResend ? t("sendCode") : `${timeLeft}s`}
+          </Button>
+        </Flex>
+        <RegisterVerificationCodeController />
+        <RegisterPasswordController />
+        <Button type="button" size="3" loading={signup.isPending} onClick={methods.handleSubmit((data) => signup.mutateAsync(data))}>
+          {t("register")}
+        </Button>
+      </Flex>
+    </FormProvider>
   );
 });
 
 RegisterForm.displayName = "RegisterForm";
-
 export default RegisterForm;

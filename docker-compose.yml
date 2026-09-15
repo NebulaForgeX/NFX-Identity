@@ -1,7 +1,6 @@
 name: nfx-identity
 
 services:
-  #! Traefik Reverse Proxy
   reverse-proxy:
     image: traefik:v3.4
     container_name: NFX-Identity-Reverse-Proxy-Prod
@@ -112,12 +111,12 @@ services:
       - auth-api
 
   #! Image API Service
-  image-api:
-    image: nfx-identity-image-api:prod
-    container_name: NFX-Identity-Image-API-Prod
+  asset-api:
+    image: nfx-identity-asset-api:prod
+    container_name: NFX-Identity-Asset-API-Prod
     build:
       context: .
-      dockerfile: inputs/image/api/Dockerfile
+      dockerfile: inputs/asset/api/Dockerfile
     restart: always
     expose:
       - "${HTTP_PORT}"
@@ -125,16 +124,16 @@ services:
       - "traefik.enable=true"
       - "traefik.project=nfx-identity"
       # 服务定义
-      - "traefik.http.services.image-api.loadbalancer.server.port=${HTTP_PORT}"
+      - "traefik.http.services.asset-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.image-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_IMAGE}`)"
-      - "traefik.http.routers.image-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.image-api-secure.service=image-api"
-      - "traefik.http.routers.image-api-secure.tls=true"
+      - "traefik.http.routers.asset-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)"
+      - "traefik.http.routers.asset-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.asset-api-secure.service=asset-api"
+      - "traefik.http.routers.asset-api-secure.tls=true"
       # 内网 HTTP 路由
-      - "traefik.http.routers.image-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_IMAGE}`)"
-      - "traefik.http.routers.image-api-insecure.entrypoints=web"
-      - "traefik.http.routers.image-api-insecure.service=image-api"
+      - "traefik.http.routers.asset-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)"
+      - "traefik.http.routers.asset-api-insecure.entrypoints=web"
+      - "traefik.http.routers.asset-api-insecure.service=asset-api"
     environment:
       - ENV=prod
     volumes:
@@ -146,38 +145,19 @@ services:
     networks:
       - nfx-identity
 
-  #! Image Pipeline Service
-  image-pipeline:
-    image: nfx-identity-image-pipeline:prod
-    container_name: NFX-Identity-Image-Pipeline-Prod
-    build:
-      context: .
-      dockerfile: inputs/image/pipeline/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - image-api
 
   #! Image Connection Service (gRPC)
-  image-connection:
-    image: nfx-identity-image-connection:prod
-    container_name: NFX-Identity-Image-Connection-Prod
+  asset-connection:
+    image: nfx-identity-asset-connection:prod
+    container_name: NFX-Identity-Asset-Connection-Prod
     build:
       context: .
-      dockerfile: inputs/image/connection/Dockerfile
+      dockerfile: inputs/asset/connection/Dockerfile
     restart: always
     expose:
-      - "${GRPC_PORT_IMAGE}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
+      - "${GRPC_PORT_ASSET}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
     ports:
-      - "${GRPC_PORT_IMAGE}:${GRPC_PORT_IMAGE}"  # 映射 gRPC 端口到主机
+      - "${GRPC_PORT_ASSET}:${GRPC_PORT_ASSET}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
     volumes:
@@ -187,441 +167,9 @@ services:
     networks:
       - nfx-identity
     depends_on:
-      - image-api
+      - asset-api
 
   #! Auth Messaging Service
-  auth-messaging:
-    image: nfx-identity-auth-messaging:prod
-    container_name: NFX-Identity-Auth-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/auth/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - auth-api
-
-  #! Image Messaging Service
-  image-messaging:
-    image: nfx-identity-image-messaging:prod
-    container_name: NFX-Identity-Image-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/image/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - image-api
-
-  #! Access API Service
-  access-api:
-    image: nfx-identity-access-api:prod
-    container_name: NFX-Identity-Access-API-Prod
-    build:
-      context: .
-      dockerfile: inputs/access/api/Dockerfile
-    restart: always
-    expose:
-      - "${HTTP_PORT}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.project=nfx-identity"
-      # 服务定义
-      - "traefik.http.services.access-api.loadbalancer.server.port=${HTTP_PORT}"
-      # 外网 HTTPS 路由
-      - "traefik.http.routers.access-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ACCESS}`)"
-      - "traefik.http.routers.access-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.access-api-secure.service=access-api"
-      - "traefik.http.routers.access-api-secure.tls=true"
-      # 内网 HTTP 路由
-      - "traefik.http.routers.access-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_ACCESS}`)"
-      - "traefik.http.routers.access-api-insecure.entrypoints=web"
-      - "traefik.http.routers.access-api-insecure.service=access-api"
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
-    networks:
-      - nfx-identity
-
-  #! Access Pipeline Service
-  access-pipeline:
-    image: nfx-identity-access-pipeline:prod
-    container_name: NFX-Identity-Access-Pipeline-Prod
-    build:
-      context: .
-      dockerfile: inputs/access/pipeline/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - access-api
-
-  #! Access Connection Service (gRPC)
-  access-connection:
-    image: nfx-identity-access-connection:prod
-    container_name: NFX-Identity-Access-Connection-Prod
-    build:
-      context: .
-      dockerfile: inputs/access/connection/Dockerfile
-    restart: always
-    expose:
-      - "${GRPC_PORT_ACCESS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    ports:
-      - "${GRPC_PORT_ACCESS}:${GRPC_PORT_ACCESS}"  # 映射 gRPC 端口到主机
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - access-api
-
-  #! Access Messaging Service
-  access-messaging:
-    image: nfx-identity-access-messaging:prod
-    container_name: NFX-Identity-Access-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/access/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - access-api
-
-  #! Audit API Service
-  audit-api:
-    image: nfx-identity-audit-api:prod
-    container_name: NFX-Identity-Audit-API-Prod
-    build:
-      context: .
-      dockerfile: inputs/audit/api/Dockerfile
-    restart: always
-    expose:
-      - "${HTTP_PORT}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.project=nfx-identity"
-      # 服务定义
-      - "traefik.http.services.audit-api.loadbalancer.server.port=${HTTP_PORT}"
-      # 外网 HTTPS 路由
-      - "traefik.http.routers.audit-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUDIT}`)"
-      - "traefik.http.routers.audit-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.audit-api-secure.service=audit-api"
-      - "traefik.http.routers.audit-api-secure.tls=true"
-      # 内网 HTTP 路由
-      - "traefik.http.routers.audit-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_AUDIT}`)"
-      - "traefik.http.routers.audit-api-insecure.entrypoints=web"
-      - "traefik.http.routers.audit-api-insecure.service=audit-api"
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
-    networks:
-      - nfx-identity
-
-  #! Audit Pipeline Service
-  audit-pipeline:
-    image: nfx-identity-audit-pipeline:prod
-    container_name: NFX-Identity-Audit-Pipeline-Prod
-    build:
-      context: .
-      dockerfile: inputs/audit/pipeline/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - audit-api
-
-  #! Audit Connection Service (gRPC)
-  audit-connection:
-    image: nfx-identity-audit-connection:prod
-    container_name: NFX-Identity-Audit-Connection-Prod
-    build:
-      context: .
-      dockerfile: inputs/audit/connection/Dockerfile
-    restart: always
-    expose:
-      - "${GRPC_PORT_AUDIT}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    ports:
-      - "${GRPC_PORT_AUDIT}:${GRPC_PORT_AUDIT}"  # 映射 gRPC 端口到主机
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - audit-api
-
-  #! Audit Messaging Service
-  audit-messaging:
-    image: nfx-identity-audit-messaging:prod
-    container_name: NFX-Identity-Audit-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/audit/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - audit-api
-
-  #! Clients API Service
-  clients-api:
-    image: nfx-identity-clients-api:prod
-    container_name: NFX-Identity-Clients-API-Prod
-    build:
-      context: .
-      dockerfile: inputs/clients/api/Dockerfile
-    restart: always
-    expose:
-      - "${HTTP_PORT}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.project=nfx-identity"
-      # 服务定义
-      - "traefik.http.services.clients-api.loadbalancer.server.port=${HTTP_PORT}"
-      # 外网 HTTPS 路由
-      - "traefik.http.routers.clients-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)"
-      - "traefik.http.routers.clients-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.clients-api-secure.service=clients-api"
-      - "traefik.http.routers.clients-api-secure.tls=true"
-      # 内网 HTTP 路由
-      - "traefik.http.routers.clients-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)"
-      - "traefik.http.routers.clients-api-insecure.entrypoints=web"
-      - "traefik.http.routers.clients-api-insecure.service=clients-api"
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
-    networks:
-      - nfx-identity
-
-  #! Clients Pipeline Service
-  clients-pipeline:
-    image: nfx-identity-clients-pipeline:prod
-    container_name: NFX-Identity-Clients-Pipeline-Prod
-    build:
-      context: .
-      dockerfile: inputs/clients/pipeline/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - clients-api
-
-  #! Clients Connection Service (gRPC)
-  clients-connection:
-    image: nfx-identity-clients-connection:prod
-    container_name: NFX-Identity-Clients-Connection-Prod
-    build:
-      context: .
-      dockerfile: inputs/clients/connection/Dockerfile
-    restart: always
-    expose:
-      - "${GRPC_PORT_CLIENTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    ports:
-      - "${GRPC_PORT_CLIENTS}:${GRPC_PORT_CLIENTS}"  # 映射 gRPC 端口到主机
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - clients-api
-
-  #! Clients Messaging Service
-  clients-messaging:
-    image: nfx-identity-clients-messaging:prod
-    container_name: NFX-Identity-Clients-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/clients/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - clients-api
-
-  #! Directory API Service
-  directory-api:
-    image: nfx-identity-directory-api:prod
-    container_name: NFX-Identity-Directory-API-Prod
-    build:
-      context: .
-      dockerfile: inputs/directory/api/Dockerfile
-    restart: always
-    expose:
-      - "${HTTP_PORT}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.project=nfx-identity"
-      # 服务定义
-      - "traefik.http.services.directory-api.loadbalancer.server.port=${HTTP_PORT}"
-      # 外网 HTTPS 路由
-      - "traefik.http.routers.directory-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)"
-      - "traefik.http.routers.directory-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.directory-api-secure.service=directory-api"
-      - "traefik.http.routers.directory-api-secure.tls=true"
-      # 内网 HTTP 路由
-      - "traefik.http.routers.directory-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)"
-      - "traefik.http.routers.directory-api-insecure.entrypoints=web"
-      - "traefik.http.routers.directory-api-insecure.service=directory-api"
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
-    networks:
-      - nfx-identity
-
-  #! Directory Pipeline Service
-  directory-pipeline:
-    image: nfx-identity-directory-pipeline:prod
-    container_name: NFX-Identity-Directory-Pipeline-Prod
-    build:
-      context: .
-      dockerfile: inputs/directory/pipeline/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - directory-api
-
-  #! Directory Connection Service (gRPC)
-  directory-connection:
-    image: nfx-identity-directory-connection:prod
-    container_name: NFX-Identity-Directory-Connection-Prod
-    build:
-      context: .
-      dockerfile: inputs/directory/connection/Dockerfile
-    restart: always
-    expose:
-      - "${GRPC_PORT_DIRECTORY}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    ports:
-      - "${GRPC_PORT_DIRECTORY}:${GRPC_PORT_DIRECTORY}"  # 映射 gRPC 端口到主机
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - directory-api
-
-  #! Directory Messaging Service
-  directory-messaging:
-    image: nfx-identity-directory-messaging:prod
-    container_name: NFX-Identity-Directory-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/directory/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - directory-api
-
-  #! System API Service
   system-api:
     image: nfx-identity-system-api:prod
     container_name: NFX-Identity-System-API-Prod
@@ -721,104 +269,6 @@ services:
       - system-api
 
   #! Tenants API Service
-  tenants-api:
-    image: nfx-identity-tenants-api:prod
-    container_name: NFX-Identity-Tenants-API-Prod
-    build:
-      context: .
-      dockerfile: inputs/tenants/api/Dockerfile
-    restart: always
-    expose:
-      - "${HTTP_PORT}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.project=nfx-identity"
-      # 服务定义
-      - "traefik.http.services.tenants-api.loadbalancer.server.port=${HTTP_PORT}"
-      # 外网 HTTPS 路由
-      - "traefik.http.routers.tenants-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_TENANTS}`)"
-      - "traefik.http.routers.tenants-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.tenants-api-secure.service=tenants-api"
-      - "traefik.http.routers.tenants-api-secure.tls=true"
-      # 内网 HTTP 路由
-      - "traefik.http.routers.tenants-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_TENANTS}`)"
-      - "traefik.http.routers.tenants-api-insecure.entrypoints=web"
-      - "traefik.http.routers.tenants-api-insecure.service=tenants-api"
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
-    networks:
-      - nfx-identity
-
-  #! Tenants Pipeline Service
-  tenants-pipeline:
-    image: nfx-identity-tenants-pipeline:prod
-    container_name: NFX-Identity-Tenants-Pipeline-Prod
-    build:
-      context: .
-      dockerfile: inputs/tenants/pipeline/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - tenants-api
-
-  #! Tenants Connection Service (gRPC)
-  tenants-connection:
-    image: nfx-identity-tenants-connection:prod
-    container_name: NFX-Identity-Tenants-Connection-Prod
-    build:
-      context: .
-      dockerfile: inputs/tenants/connection/Dockerfile
-    restart: always
-    expose:
-      - "${GRPC_PORT_TENANTS}"  # gRPC 端口（与 prod.toml 中的 grpc_port 一致）
-    ports:
-      - "${GRPC_PORT_TENANTS}:${GRPC_PORT_TENANTS}"  # 映射 gRPC 端口到主机
-    environment:
-      - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - tenants-api
-
-  #! Tenants Messaging Service
-  tenants-messaging:
-    image: nfx-identity-tenants-messaging:prod
-    container_name: NFX-Identity-Tenants-Messaging-Prod
-    build:
-      context: .
-      dockerfile: inputs/tenants/messaging/Dockerfile
-    restart: always
-    environment:
-      - ENV=prod
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
-    networks:
-      - nfx-identity
-    depends_on:
-      - tenants-api
-
-  #! Console Service (Control Panel Frontend) - Prod mode uses api (HTTP only)
   console:
     image: nfx-identity-console-api:prod
     container_name: NFX-Identity-Console-Prod

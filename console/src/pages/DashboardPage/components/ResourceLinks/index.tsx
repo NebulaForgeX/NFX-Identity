@@ -1,89 +1,46 @@
 import { memo } from "react";
-
-import { ExternalLink, FileText, History, Home, Info, Shield } from "@/assets/icons/lucide";
-
-import styles from "./styles.module.css";
-
-interface ResourceLink {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  url: string;
-  color: string;
-}
+import { Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { ExternalLink, FileText, History, Home, Info, Shield } from "lucide-react";
 
 const ResourceLinks = memo(() => {
-  // TODO: 更新为实际的项目资源链接
-  const resourceLinks: ResourceLink[] = [
-    {
-      title: "项目主页",
-      description: "访问项目主页",
-      icon: <Home size={20} />,
-      url: "#",
-      color: "var(--color-fg-highlight)",
-    },
-    {
-      title: "更新日志",
-      description: "最新更新和功能",
-      icon: <History size={20} />,
-      url: "#",
-      color: "var(--color-info)",
-    },
-    {
-      title: "关于我们",
-      description: "关于项目的信息",
-      icon: <Info size={20} />,
-      url: "#",
-      color: "var(--color-success)",
-    },
-    {
-      title: "服务条款",
-      description: "用户条款和条件",
-      icon: <FileText size={20} />,
-      url: "#",
-      color: "var(--color-fg-muted)",
-    },
-    {
-      title: "隐私政策",
-      description: "我们如何保护您的数据",
-      icon: <Shield size={20} />,
-      url: "#",
-      color: "var(--color-danger)",
-    },
+  const resourceLinks = [
+    { title: "项目主页", description: "访问项目主页", icon: Home, url: "#" },
+    { title: "更新日志", description: "最新更新和功能", icon: History, url: "#" },
+    { title: "关于我们", description: "关于项目的信息", icon: Info, url: "#" },
+    { title: "服务条款", description: "用户条款和条件", icon: FileText, url: "#" },
+    { title: "隐私政策", description: "我们如何保护您的数据", icon: Shield, url: "#" },
   ];
 
-  const handleLinkClick = (url: string) => {
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>资源与政策</h2>
-        <p className={styles.subtitle}>了解更多关于平台和政策</p>
-      </div>
-
-      <div className={styles.grid}>
-        {resourceLinks.map((link, index) => (
-          <button
-            key={index}
-            className={styles.linkCard}
-            onClick={() => handleLinkClick(link.url)}
-            style={{ "--card-color": link.color } as React.CSSProperties}
+    <Flex direction="column" gap="3">
+      <Heading size="4">资源与政策</Heading>
+      <Text size="2" color="gray">
+        了解更多关于平台和政策
+      </Text>
+      <Flex gap="3" wrap="wrap">
+        {resourceLinks.map((link) => (
+          <Card
+            key={link.title}
+            size="2"
+            asChild
+            style={{ flex: "1 1 200px", cursor: "pointer" }}
           >
-            <div className={styles.iconWrapper}>{link.icon}</div>
-            <div className={styles.content}>
-              <h3 className={styles.cardTitle}>{link.title}</h3>
-              <p className={styles.cardDescription}>{link.description}</p>
-            </div>
-            <ExternalLink size={16} className={styles.externalIcon} />
-          </button>
+            <button type="button" onClick={() => window.open(link.url, "_blank", "noopener,noreferrer")}>
+              <Flex direction="column" gap="2" align="start">
+                <link.icon size={18} />
+                <Heading size="3">{link.title}</Heading>
+                <Text size="1" color="gray">
+                  {link.description}
+                </Text>
+                <ExternalLink size={14} />
+              </Flex>
+            </button>
+          </Card>
         ))}
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   );
 });
 
 ResourceLinks.displayName = "ResourceLinks";
-
 export default ResourceLinks;

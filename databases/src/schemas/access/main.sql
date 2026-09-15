@@ -1,6 +1,0 @@
--- atlas:import schema.sql
--- atlas:import tables/super_admins.sql
--- atlas:import tables/tenant_roles.sql
--- atlas:import tables/application_roles.sql
--- atlas:import tables/tenant_role_assignments.sql
--- atlas:import tables/application_role_assignments.sql

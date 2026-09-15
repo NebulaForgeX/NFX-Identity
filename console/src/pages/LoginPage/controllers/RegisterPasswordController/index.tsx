@@ -1,46 +1,34 @@
 import { memo } from "react";
-import { useTranslation } from "react-i18next";
+import { Flex, Text, TextField } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import type { RegisterFormValues } from "../../schemas/registerSchema";
 
-import styles from "./styles.module.css";
-
 const RegisterPasswordController = memo(() => {
   const { t } = useTranslation("LoginPage");
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext<RegisterFormValues>();
-
-  const passwordError = errors.password;
+  const { control, formState: { errors } } = useFormContext<RegisterFormValues>();
 
   return (
-    <div className={styles.formControl}>
-      <Controller
-        name="password"
-        control={control}
-        render={({ field }) => (
-          <div className={styles.inputWrapper}>
-            <input
-              {...field}
-              type="password"
-              className={`${styles.input} ${passwordError ? styles.error : ""}`}
-              autoComplete="new-password"
-            />
-            <label className={styles.label}>{t("password")}</label>
-            <div className={styles.textWrapper}>
-              <div className={styles.innerTextWrapper}>
-                {passwordError && <span className={styles.errorText}>{passwordError.message}</span>}
-              </div>
-            </div>
-          </div>
-        )}
-      />
-    </div>
+    <Controller
+      name="password"
+      control={control}
+      render={({ field, fieldState }) => (
+        <Flex direction="column" gap="1">
+          <Text as="label" size="2" weight="medium" htmlFor="register-password">
+            {t("password")}
+          </Text>
+          <TextField.Root id="register-password" size="3" type="password" autoComplete="new-password" placeholder={t("password")} color={fieldState.error ? "red" : undefined} {...field} />
+          {errors.password ? (
+            <Text size="1" color="red">
+              {errors.password.message}
+            </Text>
+          ) : null}
+        </Flex>
+      )}
+    />
   );
 });
 
 RegisterPasswordController.displayName = "RegisterPasswordController";
-
 export default RegisterPasswordController;

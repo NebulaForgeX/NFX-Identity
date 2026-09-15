@@ -1,51 +1,55 @@
 package auth
 
 import (
-	accountlockoutpb "nfxidentity/protos/gen/auth/account_lockout"
-	loginattemptpb "nfxidentity/protos/gen/auth/login_attempt"
-	mfafactorpb "nfxidentity/protos/gen/auth/mfa_factor"
-	passwordhistorypb "nfxidentity/protos/gen/auth/password_history"
-	passwordresetpb "nfxidentity/protos/gen/auth/password_reset"
-	refreshtokenpb "nfxidentity/protos/gen/auth/refresh_token"
-	sessionpb "nfxidentity/protos/gen/auth/session"
-	trusteddevicepb "nfxidentity/protos/gen/auth/trusted_device"
-	usercredentialpb "nfxidentity/protos/gen/auth/user_credential"
+	"nfxidentity/pkgs/security/token/servertoken"
+	accountpb "nfxidentity/protos/gen/auth/account"
+	authorityprofilepb "nfxidentity/protos/gen/auth/authority_profile"
+	forgerprofilepb "nfxidentity/protos/gen/auth/forger_profile"
+
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-// Client Auth 服务客户端
-type Client struct {
-	UserCredential  *UserCredentialClient
-	Session         *SessionClient
-	TrustedDevice   *TrustedDeviceClient
-	MfaFactor       *MfaFactorClient
-	RefreshToken    *RefreshTokenClient
-	PasswordReset   *PasswordResetClient
-	PasswordHistory *PasswordHistoryClient
-	LoginAttempt    *LoginAttemptClient
-	AccountLockout  *AccountLockoutClient
+type GRPCConfig struct {
+	Addr           string
+	TokenSecretKey string
+	TokenIssuer    string
+	CallerService  string
 }
 
-// NewClient 创建 Auth 客户端
-func NewClient(
-	userCredentialClient usercredentialpb.UserCredentialServiceClient,
-	sessionClient sessionpb.SessionServiceClient,
-	trustedDeviceClient trusteddevicepb.TrustedDeviceServiceClient,
-	mfaFactorClient mfafactorpb.MfaFactorServiceClient,
-	refreshTokenClient refreshtokenpb.RefreshTokenServiceClient,
-	passwordResetClient passwordresetpb.PasswordResetServiceClient,
-	passwordHistoryClient passwordhistorypb.PasswordHistoryServiceClient,
-	loginAttemptClient loginattemptpb.LoginAttemptServiceClient,
-	accountLockoutClient accountlockoutpb.AccountLockoutServiceClient,
-) *Client {
-	return &Client{
-		UserCredential:  NewUserCredentialClient(userCredentialClient),
-		Session:         NewSessionClient(sessionClient),
-		TrustedDevice:   NewTrustedDeviceClient(trustedDeviceClient),
-		MfaFactor:       NewMfaFactorClient(mfaFactorClient),
-		RefreshToken:    NewRefreshTokenClient(refreshTokenClient),
-		PasswordReset:   NewPasswordResetClient(passwordResetClient),
-		PasswordHistory: NewPasswordHistoryClient(passwordHistoryClient),
-		LoginAttempt:    NewLoginAttemptClient(loginAttemptClient),
-		AccountLockout:  NewAccountLockoutClient(accountLockoutClient),
+type Client struct {
+	Account          *AccountClient
+	ForgerProfile    *ForgerProfileClient
+	AuthorityProfile *AuthorityProfileClient
+	conn             *grpc.ClientConn
+}
+
+func Dial(cfg GRPCConfig) (*Client, error) {
+	tokenProvider := servertoken.NewProvider(
+		&servertoken.HMACSigner{Key: []byte(cfg.TokenSecretKey)},
+		cfg.TokenIssuer,
+		cfg.CallerService,
+	)
+	conn, err := grpc.NewClient(cfg.Addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithPerRPCCredentials(servertoken.NewPerRPCCreds(tokenProvider, true)),
+		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
+	)
+	if err != nil {
+		return nil, err
 	}
+	return &Client{
+		Account:          newAccountClient(accountpb.NewAccountServiceClient(conn)),
+		ForgerProfile:    newForgerProfileClient(forgerprofilepb.NewForgerProfileServiceClient(conn)),
+		AuthorityProfile: newAuthorityProfileClient(authorityprofilepb.NewAuthorityProfileServiceClient(conn)),
+		conn:             conn,
+	}, nil
+}
+
+func (c *Client) Close() error {
+	if c == nil || c.conn == nil {
+		return nil
+	}
+	return c.conn.Close()
 }

@@ -1,10 +1,5 @@
 -- atlas:import extensions/pgcrypto.sql
 -- atlas:import extensions/btree_gist.sql
 -- atlas:import schemas/auth/main.sql
--- atlas:import schemas/image/main.sql
--- atlas:import schemas/access/main.sql
--- atlas:import schemas/audit/main.sql
--- atlas:import schemas/clients/main.sql
--- atlas:import schemas/directory/main.sql
+-- atlas:import schemas/asset/main.sql
 -- atlas:import schemas/system/main.sql
--- atlas:import schemas/tenants/main.sql

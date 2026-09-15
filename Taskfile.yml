@@ -42,7 +42,6 @@ tasks:
 
   proto:gen:
     desc: "Generate gRPC & Protobuf code using buf"
-    deps: [proto:update]
     dir: "{{.PROTO_SRC_DIR}}"
     cmds:
       - buf dep update

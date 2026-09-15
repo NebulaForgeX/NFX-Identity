@@ -1,52 +1,45 @@
 import { memo } from "react";
-import { useTranslation } from "react-i18next";
+import { Flex, Text, TextField } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import type { RegisterFormValues } from "../../schemas/registerSchema";
 
-import styles from "./styles.module.css";
-
 const RegisterVerificationCodeController = memo(() => {
   const { t } = useTranslation("LoginPage");
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext<RegisterFormValues>();
-
-  const verificationCodeError = errors.verificationCode;
+  const { control, formState: { errors } } = useFormContext<RegisterFormValues>();
 
   return (
-    <div className={styles.formControl}>
-      <Controller
-        name="verificationCode"
-        control={control}
-        render={({ field }) => (
-          <div className={styles.inputWrapper}>
-            <input
-              {...field}
-              type="text"
-              className={`${styles.input} ${verificationCodeError ? styles.error : ""}`}
-              autoComplete="one-time-code"
-              inputMode="numeric"
-              maxLength={6}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-                field.onChange(value);
-              }}
-            />
-            <label className={styles.label}>{t("verificationCode")}</label>
-            <div className={styles.textWrapper}>
-              <div className={styles.innerTextWrapper}>
-                {verificationCodeError && <span className={styles.errorText}>{verificationCodeError.message}</span>}
-              </div>
-            </div>
-          </div>
-        )}
-      />
-    </div>
+    <Controller
+      name="verificationCode"
+      control={control}
+      render={({ field, fieldState }) => (
+        <Flex direction="column" gap="1">
+          <Text as="label" size="2" weight="medium" htmlFor="register-code">
+            {t("verificationCode")}
+          </Text>
+          <TextField.Root
+            id="register-code"
+            size="3"
+            type="text"
+            autoComplete="one-time-code"
+            inputMode="numeric"
+            maxLength={6}
+            placeholder={t("verificationCode")}
+            color={fieldState.error ? "red" : undefined}
+            value={field.value}
+            onChange={(e) => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))}
+          />
+          {errors.verificationCode ? (
+            <Text size="1" color="red">
+              {errors.verificationCode.message}
+            </Text>
+          ) : null}
+        </Flex>
+      )}
+    />
   );
 });
 
 RegisterVerificationCodeController.displayName = "RegisterVerificationCodeController";
-
 export default RegisterVerificationCodeController;

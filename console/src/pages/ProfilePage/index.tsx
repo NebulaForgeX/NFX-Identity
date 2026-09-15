@@ -1,206 +1,179 @@
-import { memo } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import { Avatar, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { User } from "lucide-react";
+import { PageFrame } from "nfx-ui/layouts";
+import { EmptyState, PageHeader } from "nfx-ui/components";
+import { useAssetRepository, useAuthRepository } from "nfx-ui/apis";
+import { useAuthStore } from "nfx-ui/stores";
+import { AuthIdentityProviderEnum, ProfileKindEnum } from "nfx-ui/enums";
+import type { Profile } from "nfx-ui/types";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-
-import { ImagePlus, Plus, Settings } from "@/assets/icons/lucide";
-import { Suspense } from "@/components";
-import { useCurrentUserImageByUserID, useUserImagesByUserID } from "@/hooks/useDirectory";
-import { useAuthStore } from "@/stores/authStore";
-import { ROUTES } from "@/navigations";
-import { buildImageUrl } from "@/utils/image";
-
-import AccountInfoCard from "./components/AccountInfoCard";
-import BasicInfoCard from "./components/BasicInfoCard";
-import ProfileCard from "./components/ProfileCard";
-import SkillsCard from "./components/SkillsCard";
-import SocialLinksCard from "./components/SocialLinksCard";
-import UserEducationsCard from "./components/UserEducationsCard";
-import UserEmailsCard from "./components/UserEmailsCard";
-import UserOccupationsCard from "./components/UserOccupationsCard";
-import UserPhonesCard from "./components/UserPhonesCard";
-import styles from "./styles.module.css";
 
 const ProfilePage = memo(() => {
   const { t } = useTranslation("ProfilePage");
-  const navigate = useNavigate();
-  const currentUserId = useAuthStore((state) => state.currentUserId);
+  const auth = useAuthRepository();
+  const asset = useAssetRepository();
+  const accountId = useAuthStore((s) => s.currentAccountId);
+  const kind = useAuthStore((s) => s.currentProfileKind) || ProfileKindEnum.FORGER;
+  const [info, setInfo] = useState<Profile.Response.FullAccountInformationWithForgerProfile | Profile.Response.FullAccountInformationWithAuthorityProfile | null>(null);
+  const [phoneInput, setPhoneInput] = useState("");
 
-  if (!currentUserId) {
+  const reload = useCallback(async () => {
+    setInfo(await auth.GetCurrentFullAccountInformationWithProfile(kind));
+    setLoaded(true);
+  }, [auth, kind]);
+
+  useEffect(() => {
+    void reload();
+  }, [reload]);
+
+  const profile = info && "forgerProfile" in info ? info.forgerProfile : info && "authorityProfile" in info ? info.authorityProfile : null;
+  const activeAvatar = profile?.avatars?.find((row: Profile.Response.ProfileAvatar) => row.isActive) ?? profile?.avatars?.[0];
+  const background = profile?.backgrounds?.[0];
+  const githubLinked = (info?.identities ?? []).some((row: Profile.Response.IdentityLink) => row.identityProvider === AuthIdentityProviderEnum.GITHUB);
+
+  const uploadImage = async (file: File) => {
+    const prepared = await asset.PrepareUpload("images", { fileName: file.name, mimeType: file.type || "image/png" });
+    await fetch(prepared.uploadUrl, { method: "PUT", body: file, headers: { "Content-Type": file.type || "image/png" } });
+    await asset.ConfirmUpload("images", { id: prepared.id });
+    return prepared.id;
+  };
+
+  if (!accountId || !loaded || !info) {
     return (
-      <div className={styles.container}>
-        <div className={styles.errorContainer}>
-          <p>{t("userNotFound")}</p>
-        </div>
-      </div>
+      <PageFrame>
+        <EmptyState icon={User} title={t("userNotFound")} />
+      </PageFrame>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <PageFrame>
+      <PageHeader icon={User} title={t("title")} description={t("subtitle")} />
+      <Flex direction="column" gap="5">
+        <Flex align="center" gap="4">
+          <Avatar size="5" src={activeAvatar ? asset.FileURL("images", activeAvatar.imageId) : undefined} fallback={profile?.displayName?.slice(0, 1) || "U"} />
+          <Flex direction="column" gap="1">
+            <Heading size="5">{profile?.displayName || t("user")}</Heading>
+            <Text size="2" color="gray">
+              {accountId}
+            </Text>
+          </Flex>
+        </Flex>
 
-      <div className={styles.header}>
-        <h1 className={styles.title}>{t("title")}</h1>
-        <p className={styles.subtitle}>{t("subtitle")}</p>
-      </div>
+        <Flex direction="column" gap="2">
+          <Heading size="3">{t("emails")}</Heading>
+          {(info.emails ?? []).map((email) => (
+            <Text key={email.id} size="2">
+              {email.email}
+              {email.isPrimary ? ` · ${t("primary")}` : ""}
+              {email.verifiedAt ? ` · ${t("verified")}` : ""}
+            </Text>
+          ))}
+        </Flex>
 
-      <div className={styles.content}>
-        {/* Profile Card */}
-        <ProfileCard userId={currentUserId} />
+        <Flex direction="column" gap="2">
+          <Heading size="3">{t("phones")}</Heading>
+          {(info.phones ?? []).length === 0 ? (
+            <Text size="2" color="gray">
+              —
+            </Text>
+          ) : (
+            (info.phones ?? []).map((phone) => (
+              <Text key={phone.id} size="2">
+                {phone.phone}
+                {phone.isPrimary ? ` · ${t("primary")}` : ""}
+              </Text>
+            ))
+          )}
+          <Flex gap="2">
+            <input
+              value={phoneInput}
+              onChange={(e) => setPhoneInput(e.target.value)}
+              placeholder="+86138..."
+              style={{ flex: 1, minHeight: 32, borderRadius: 8, padding: "0 10px" }}
+            />
+            <Button
+              variant="soft"
+              onClick={() => {
+                const phone = phoneInput.trim();
+                if (!phone) return;
+                void auth.CreatePhone({ phone }).then(() => {
+                  setPhoneInput("");
+                  return reload();
+                });
+              }}
+            >
+              {t("addPhone", { defaultValue: "Add phone" })}
+            </Button>
+          </Flex>
+        </Flex>
 
-        {/* Background Banner */}
-        <Suspense loadingType="ecg" loadingSize="small">
-          <BackgroundBanner userId={currentUserId} />
-        </Suspense>
-
-
-        {/* Action Buttons */}
-        <div className={styles.actionButtons}>
-          <button
-            className={styles.actionButton}
-            onClick={() => navigate(ROUTES.ADD_EDUCATION)}
-          >
-            <Plus size={18} />
-            <span>{t("addEducation")}</span>
-          </button>
-          <button
-            className={styles.actionButton}
-            onClick={() => navigate(ROUTES.ADD_OCCUPATION)}
-          >
-            <Plus size={18} />
-            <span>{t("addOccupation")}</span>
-          </button>
-          <button
-            className={styles.actionButton}
-            onClick={() => navigate(ROUTES.EDIT_PREFERENCE)}
-          >
-            <Settings size={18} />
-            <span>{t("editPreference")}</span>
-          </button>
-          <button
-            className={styles.actionButton}
-            onClick={() => navigate(ROUTES.IMAGES)}
-          >
-            <ImagePlus size={18} />
-            <span>{t("manageImages", "Manage Images")}</span>
-          </button>
-        </div>
-
-        {/* Details Section */}
-        <div className={styles.detailsSection}>
-          <BasicInfoCard userId={currentUserId} />
-          <AccountInfoCard userId={currentUserId} />
-        </div>
-
-        {/* User Data Cards */}
-        <div className={styles.userDataSection}>
-          {/* Social Links and Skills Section */}
-          <div className={styles.socialSkillsSection}>
-            <SocialLinksCard userId={currentUserId} />
-            <SkillsCard userId={currentUserId} />
-          </div>
-
-          {/* Contact Section - Email and Phone side by side */}
-          <div className={styles.contactSection}>
-            <UserEmailsCard userId={currentUserId} />
-            <UserPhonesCard userId={currentUserId} />
-          </div>
-
-          {/* Education and Occupation */}
-          <UserEducationsCard userId={currentUserId} />
-          <UserOccupationsCard userId={currentUserId} />
-        </div>
-
-        {/* Other Images Gallery */}
-        <Suspense loadingType="ecg" loadingSize="small">
-          <ImagesGallery userId={currentUserId} />
-        </Suspense>
-      </div>
-    </div>
+        <Flex gap="3" wrap="wrap">
+          <Button asChild>
+            <label>
+              {t("avatar", { defaultValue: "Avatar" })}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  void uploadImage(file).then((id) => auth.ConfirmProfileAvatar(kind, { imageId: id })).then(reload);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          </Button>
+          <Button asChild variant="soft">
+            <label>
+              {t("background", { defaultValue: "Background" })}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  void uploadImage(file)
+                    .then((id) => auth.ConfirmProfileBackgrounds(kind, { images: [{ imageId: id, sortOrder: 0 }] }))
+                    .then(reload);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          </Button>
+          {githubLinked ? (
+            <Button
+              color="red"
+              variant="soft"
+              onClick={() => {
+                void auth.UnlinkGitHub().then(reload);
+              }}
+            >
+              GitHub
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={() => {
+                void auth.GetGitHubAuthorizeUrl().then((data) => {
+                  if (data.authorizeUrl) window.location.href = data.authorizeUrl;
+                });
+              }}
+            >
+              GitHub
+            </Button>
+          )}
+        </Flex>
+        {background ? (
+          <img src={asset.FileURL("images", background.imageId)} alt="" style={{ maxWidth: 480, borderRadius: 12 }} />
+        ) : null}
+      </Flex>
+    </PageFrame>
   );
 });
 
 ProfilePage.displayName = "ProfilePage";
-
-// 背景横幅组件
-interface BackgroundBannerProps {
-  userId: string;
-}
-
-const BackgroundBanner = memo(({ userId }: BackgroundBannerProps) => {
-  const { t } = useTranslation("ProfilePage");
-  const navigate = useNavigate();
-  const { data: currentImage } = useCurrentUserImageByUserID({ userId });
-
-  if (!currentImage?.imageId) {
-    return (
-      <div className={styles.bannerPlaceholder} onClick={() => navigate(ROUTES.IMAGES)}>
-        <ImagePlus size={32} />
-        <span>{t("addBackground", "Add a background image")}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.banner} onClick={() => navigate(ROUTES.IMAGES)}>
-      <img
-        src={buildImageUrl(currentImage.imageId)}
-        alt="Profile Background"
-        className={styles.bannerImage}
-      />
-      <div className={styles.bannerOverlay}>
-        <span>{t("changeBackground", "Click to manage images")}</span>
-      </div>
-    </div>
-  );
-});
-
-BackgroundBanner.displayName = "BackgroundBanner";
-
-// 图片画廊组件
-interface ImagesGalleryProps {
-  userId: string;
-}
-
-const ImagesGallery = memo(({ userId }: ImagesGalleryProps) => {
-  const { t } = useTranslation("ProfilePage");
-  const navigate = useNavigate();
-  const { data: userImages = [] } = useUserImagesByUserID({ userId });
-
-  // 跳过第一张（primary/background）
-  const otherImages = userImages.slice(1);
-
-  if (otherImages.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className={styles.gallerySection}>
-      <div className={styles.galleryHeader}>
-        <h3 className={styles.galleryTitle}>{t("otherImages", "Other Images")}</h3>
-        <button className={styles.viewAllButton} onClick={() => navigate(ROUTES.IMAGES)}>
-          {t("viewAll", "View All")}
-        </button>
-      </div>
-      <div className={styles.galleryGrid}>
-        {otherImages.slice(0, 6).map((userImage, index) => (
-          <div key={userImage.id} className={styles.galleryItem}>
-            <img
-              src={buildImageUrl(userImage.imageId)}
-              alt={`Image ${index + 2}`}
-              className={styles.galleryImage}
-            />
-          </div>
-        ))}
-      </div>
-      {otherImages.length > 6 && (
-        <p className={styles.moreImages}>
-          {t("moreImages", "+ {{count}} more images", { count: otherImages.length - 6 })}
-        </p>
-      )}
-    </div>
-  );
-});
-
-ImagesGallery.displayName = "ImagesGallery";
-
 export default ProfilePage;

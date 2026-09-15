@@ -125,30 +125,22 @@ func RunPipeline(ctx context.Context, cfg *config.Config) error {
 	return g.Wait()
 }
 
-// RunMessaging starts the RabbitMQ messaging server (used by messaging/main.go)
+// RunMessaging starts the idle Kafka messaging process (used by messaging/main.go)
 func RunMessaging(ctx context.Context, cfg *config.Config) error {
-	// === Dependencies ===
 	deps, err := NewDeps(ctx, cfg)
 	if err != nil {
 		return err
 	}
 	defer deps.Cleanup()
 
-	logx.S().Info("✅ RabbitMQ Messaging: All dependencies initialized successfully (PostgreSQL, Redis, RabbitMQ Subscriber)")
-
 	messagingSrv, err := messagingInterfaces.NewServer(deps)
 	if err != nil {
 		return err
 	}
-
-	logx.S().Info("✅ RabbitMQ Messaging initialized successfully")
-
 	messagingSrv.RegisterRoutes()
-
 	g, gctx := errgroup.WithContext(ctx)
-
 	g.Go(func() error {
-		logx.S().Infof("✅ Messaging (RabbitMQ) server listening on %s", cfg.RabbitMQConfig.URI)
+		logx.S().Infof("✅ Messaging idle; Kafka brokers %v", cfg.KafkaConfig.Brokers)
 		return messagingSrv.Run(ctx)
 	})
 
@@ -171,7 +163,7 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 	}
 	defer deps.Cleanup()
 
-	logx.S().Info("✅ All-in-One Server: All dependencies initialized successfully (PostgreSQL, Redis, Kafka Publisher, RabbitMQ)")
+	logx.S().Info("✅ All-in-One Server: PostgreSQL, Redis, Kafka")
 
 	// === Initialize Servers ===
 	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg.Server.AccessLog)
@@ -222,7 +214,7 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 
 	// Messaging (RabbitMQ) Server
 	g.Go(func() error {
-		logx.S().Infof("✅ Messaging (RabbitMQ) server listening on %s", cfg.RabbitMQConfig.URI)
+		logx.S().Infof("✅ Messaging idle; Kafka brokers %v", cfg.KafkaConfig.Brokers)
 		return messagingSrv.Run(ctx)
 	})
 

@@ -1,0 +1,9 @@
+-- atlas:import schema.sql
+-- atlas:import tables/images.sql
+-- atlas:import tables/files.sql
+-- atlas:import tables/videos.sql
+-- atlas:import tables/audios.sql
+-- atlas:import views/images_active_view.sql
+-- atlas:import views/files_active_view.sql
+-- atlas:import views/videos_active_view.sql
+-- atlas:import views/audios_active_view.sql

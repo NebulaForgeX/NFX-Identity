@@ -1,0 +1,67 @@
+syntax = "proto3";
+package asset;
+
+option go_package = "nfxidentity/protos/gen/asset/file;filepb";
+
+message File {
+  string id = 1;
+  string file_path = 2;
+  string file_name = 3;
+  int64 file_size = 4;
+  string mime_type = 5;
+  string uploader_id = 6;
+}
+
+message GetFileByIDRequest { string id = 1; }
+message GetFileByIDResponse { File file = 1; }
+message BatchGetFilesRequest { repeated string ids = 1; }
+message BatchGetFilesResponse { repeated File files = 1; }
+message PrepareFileUploadRequest {
+  string account_id = 1;
+  string file_name = 2;
+  string mime_type = 3;
+}
+message PrepareFileUploadResponse {
+  string file_id = 1;
+  string upload_url = 2;
+  string file_path = 3;
+}
+message ConfirmFileUploadRequest {
+  string account_id = 1;
+  string file_id = 2;
+}
+message ConfirmFileUploadResponse { File file = 1; }
+message PrepareFileUploadItem {
+  string file_name = 1;
+  string mime_type = 2;
+}
+message PrepareFilesUploadRequest {
+  string account_id = 1;
+  repeated PrepareFileUploadItem items = 2;
+}
+message PrepareFileUploadResult {
+  string file_id = 1;
+  string upload_url = 2;
+  string file_path = 3;
+}
+message PrepareFilesUploadResponse { repeated PrepareFileUploadResult results = 1; }
+message ConfirmFilesUploadRequest {
+  string account_id = 1;
+  repeated string file_ids = 2;
+}
+message ConfirmFilesUploadResponse { repeated File files = 1; }
+message DeleteFileRequest {
+  string id = 1;
+  string account_id = 2;
+}
+message DeleteFileResponse {}
+
+service FileService {
+  rpc GetFileByID (GetFileByIDRequest) returns (GetFileByIDResponse);
+  rpc BatchGetFiles (BatchGetFilesRequest) returns (BatchGetFilesResponse);
+  rpc PrepareFileUpload (PrepareFileUploadRequest) returns (PrepareFileUploadResponse);
+  rpc PrepareFilesUpload (PrepareFilesUploadRequest) returns (PrepareFilesUploadResponse);
+  rpc ConfirmFileUpload (ConfirmFileUploadRequest) returns (ConfirmFileUploadResponse);
+  rpc ConfirmFilesUpload (ConfirmFilesUploadRequest) returns (ConfirmFilesUploadResponse);
+  rpc DeleteFile (DeleteFileRequest) returns (DeleteFileResponse);
+}

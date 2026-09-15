@@ -100,7 +100,7 @@ export default defineConfig(({ mode }) => {
               if (id.includes("react") || id.includes("react-dom") || id.includes("scheduler")) {
                 return "react-vendor";
               }
-              if (id.includes("react-router-dom") || id.includes("react-router")) {
+              if (id.includes("react-router")) {
                 return "router-vendor";
               }
               if (id.includes("i18next") || id.includes("react-i18next")) {

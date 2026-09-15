@@ -5,8 +5,8 @@ export {
   BounceLoading,
   ECGLoading,
   LetterGlitchBackground,
-  PixelBlastBackground,
   SquareBackground,
   TruckLoading,
   WaveBackground,
 } from "nfx-ui/animations";
+export { default as PixelBlastBackground } from "nfx-ui/pixel-blast";

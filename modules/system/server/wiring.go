@@ -16,7 +16,6 @@ import (
 	"nfxidentity/pkgs/kafkax"
 	"nfxidentity/pkgs/kafkax/eventbus"
 	"nfxidentity/pkgs/postgresqlx"
-	"nfxidentity/pkgs/rabbitmqx"
 	"nfxidentity/pkgs/security/token"
 	"nfxidentity/pkgs/security/token/servertoken"
 	"nfxidentity/pkgs/tokenx"
@@ -28,7 +27,6 @@ type Dependencies struct {
 	postgres            *postgresqlx.Connection
 	kafkaConfig         *kafkax.Config
 	busPublisher        *eventbus.BusPublisher
-	rabbitMQConfig      *rabbitmqx.Config
 	systemStateAppSvc   *systemStateApp.Service
 	bootstrapSvc        *bootstrapApp.Service
 	resourceSvc         *resourceApp.Service
@@ -66,9 +64,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		return nil, fmt.Errorf("failed to create kafka publisher: %w", err)
 	}
 
-	//! === RabbitMQ Config ===
-	rabbitMQConfig := cfg.RabbitMQConfig
-
 	//! === Tokenx ===
 	// 使用配置文件中的 token 配置（确保与其他服务一致）
 	tokenCfg := cfg.Token
@@ -97,7 +92,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	//! === Application Services ===
 	systemStateAppSvc := systemStateApp.NewService(systemStateRepoInstance)
 	bootstrapSvc := bootstrapApp.NewService(systemStateRepoInstance, grpcClientsInstance)
-	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig, &rabbitMQConfig)
+	resourceSvc := resourceApp.NewService(postgres, cacheConn, &kafkaConfig)
 
 	errorsLangsPath := cfg.I18n.ErrorsLangsPath
 	if errorsLangsPath == "" {
@@ -110,7 +105,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		cache:               cacheConn,
 		kafkaConfig:         &kafkaConfig,
 		busPublisher:        busPublisher,
-		rabbitMQConfig:      &rabbitMQConfig,
 		systemStateAppSvc:   systemStateAppSvc,
 		bootstrapSvc:        bootstrapSvc,
 		resourceSvc:         resourceSvc,
@@ -138,10 +132,9 @@ func (d *Dependencies) ResourceSvc() *resourceApp.Service          { return d.re
 func (d *Dependencies) HealthMgr() *health.Manager                 { return d.healthMgr }
 func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
-func (d *Dependencies) RabbitMQConfig() *rabbitmqx.Config          { return d.rabbitMQConfig }
-func (d *Dependencies) Postgres() *postgresqlx.Connection          { return d.postgres }
+func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
+func (d *Dependencies) Postgres() *postgresqlx.Connection    { return d.postgres }
 func (d *Dependencies) ErrorsLangsPath() string                     { return d.errorsLangsPath }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
@@ -159,12 +152,13 @@ func (a *tokenxVerifierAdapter) Verify(ctx context.Context, tokenStr string) (*t
 	return &token.Claims{
 		Registered: claims.RegisteredClaims,
 		Raw: map[string]any{
-			"user_id":  claims.UserID,
-			"username": claims.Username,
-			"email":    claims.Email,
-			"phone":    claims.Phone,
-			"role_id":  claims.RoleID,
-			"type":     claims.Type,
+			"account_id":    claims.AccountID,
+			"profile_id":    claims.ProfileID,
+			"username":      claims.Username,
+			"email":         claims.Email,
+			"phone":         claims.Phone,
+			"profile_scope": claims.ProfileScope,
+			"type":          claims.Type,
 		},
 	}, nil
 }

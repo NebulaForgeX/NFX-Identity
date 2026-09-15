@@ -1,5 +1,0 @@
--- atlas:import schema.sql
--- atlas:import tables/applications.sql
--- atlas:import tables/client_credentials.sql
--- atlas:import tables/ip_allowlist.sql
--- atlas:import tables/rate_limits.sql

@@ -2,36 +2,38 @@ package config
 
 import (
 	"nfxidentity/pkgs/cachex"
+	"nfxidentity/pkgs/connections/otelx"
 	"nfxidentity/pkgs/env"
 	"nfxidentity/pkgs/httpx"
 	"nfxidentity/pkgs/kafkax"
 	"nfxidentity/pkgs/logx"
 	"nfxidentity/pkgs/postgresqlx"
-	"nfxidentity/pkgs/rabbitmqx"
 	"nfxidentity/pkgs/tokenx"
 )
 
 type Config struct {
-	Env            env.Env
-	Server         ServerConfig       `koanf:"server"`
-	PostgreSQL     postgresqlx.Config `koanf:"postgresql"`
-	Cache          cachex.ConnConfig  `koanf:"cache"`
-	Logger         logx.LoggerConfig  `koanf:"logger"`
-	Token          tokenx.Config      `koanf:"token"`
-	KafkaConfig    kafkax.Config      `koanf:"kafka"`
-	RabbitMQConfig rabbitmqx.Config   `koanf:"rabbitmq"`
-	Email          EmailConfig        `koanf:"email"`
-	GRPCClient     GRPCClientConfig   `koanf:"grpc_client"`
+	Env         env.Env
+	Server      ServerConfig       `koanf:"server"`
+	PostgreSQL  postgresqlx.Config `koanf:"postgresql"`
+	Cache       cachex.ConnConfig  `koanf:"cache"`
+	Logger      logx.LoggerConfig  `koanf:"logger"`
+	Token       tokenx.Config      `koanf:"token"`
+	KafkaConfig kafkax.Config      `koanf:"kafka"`
+	Email       EmailConfig        `koanf:"email"`
+	GitHub      GitHubConfig       `koanf:"github"`
+	OTEL        otelx.Config       `koanf:"otel"`
+	GRPCClient  GRPCClientConfig   `koanf:"grpc_client"`
+}
+
+type GitHubConfig struct {
+	ClientID     string `koanf:"client_id"`
+	ClientSecret string `koanf:"client_secret"`
+	RedirectURL  string `koanf:"redirect_url"`
 }
 
 type GRPCClientConfig struct {
-	AccessAddr    string `koanf:"access_addr"`    // access service address, e.g., "localhost:10000" or "access:50051"
-	AuditAddr     string `koanf:"audit_addr"`     // audit service address, e.g., "localhost:10002" or "audit:50051"
-	ClientsAddr   string `koanf:"clients_addr"`   // clients service address, e.g., "localhost:10003" or "clients:50051"
-	DirectoryAddr string `koanf:"directory_addr"` // directory service address, e.g., "localhost:10004" or "directory:50051"
-	ImageAddr     string `koanf:"image_addr"`     // image service address, e.g., "localhost:10005" or "image:50051"
-	SystemAddr    string `koanf:"system_addr"`    // system service address, e.g., "localhost:10006" or "system:50051"
-	TenantsAddr   string `koanf:"tenants_addr"`   // tenants service address, e.g., "localhost:10007" or "tenants:50051"
+	AssetAddr  string `koanf:"asset_addr"`
+	SystemAddr string `koanf:"system_addr"`
 }
 
 type ServerConfig struct {

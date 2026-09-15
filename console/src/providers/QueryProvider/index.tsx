@@ -4,7 +4,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { useCacheInvalidationEvents } from "./hooks/useCacheInvalidationEvents";
+import { useQueryInv } from "./hooks/useQueryInv";
 
 interface QueryProviderProps {
   children: ReactNode;
@@ -19,10 +19,8 @@ export function QueryProvider({ children }: QueryProviderProps) {
           queries: {
             // 数据在 10 分钟内被认为是新鲜的
             staleTime: 1000 * 60 * 10,
-            // 缓存时间 10 分钟
             gcTime: 1000 * 60 * 10,
-            // 失败时重试 1 次
-            retry: 1,
+            retry: 3,
             // 窗口重新获得焦点时不重新获取
             refetchOnWindowFocus: false,
             // 网络重新连接时不重新获取
@@ -37,7 +35,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
   );
 
   // 监听所有缓存失效事件
-  useCacheInvalidationEvents(queryClient);
+  useQueryInv(queryClient);
 
   return (
     <QueryClientProvider client={queryClient}>

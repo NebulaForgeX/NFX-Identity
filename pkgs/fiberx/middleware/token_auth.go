@@ -30,7 +30,21 @@ func TokenAuth(verifier token.Verifier) fiber.Handler {
 		if err != nil {
 			return fiberx.ErrorFromErrx(c, ErrInvalidToken.WithCause(err))
 		}
-		c.SetContext(fiberx.WithUserID(c.Context(), userID))
+		ctx := fiberx.WithAccountID(c.Context(), userID)
+		if raw, ok := claims.Raw["account_id"].(string); ok {
+			if aid, err := uuid.Parse(raw); err == nil {
+				ctx = fiberx.WithAccountID(ctx, aid)
+			}
+		}
+		if raw, ok := claims.Raw["profile_id"].(string); ok {
+			if pid, err := uuid.Parse(raw); err == nil {
+				ctx = fiberx.WithProfileID(ctx, pid)
+			}
+		}
+		if raw, ok := claims.Raw["profile_scope"].(string); ok {
+			ctx = fiberx.WithProfileScope(ctx, raw)
+		}
+		c.SetContext(ctx)
 		return c.Next()
 	}
 }

@@ -1,24 +1,22 @@
-# Auth ignore rules
+# NFX-Identity — Go API + Vite console
+# Canonical ignore list vs Example PulsoLink-API, plus product secrets/console/Atlas.
 
 ## Go build artifacts
-bin/
-dist/
-tmp/
-.buildcache/
-.cache/
-cache/
-coverage/
 *.exe
+*.exe~
 *.dll
 *.so
 *.dylib
+bin/
+dist/
+tmp/
 *.test
 *.out
 *.prof
 *.pprof
 *.cover
 cover.out
-
+coverage/
 
 ## Go module overrides
 vendor/
@@ -27,14 +25,10 @@ go.work.sum
 
 ## Tooling & temporary files
 .air.toml.local
-.env
-.env.*
-.env.local
-.env.*.local
-*.env
-*.log
-logs/
-log/
+.buildcache/
+.cache/
+cache/
+.task/
 *.pid
 *.sock
 *.tmp
@@ -42,13 +36,24 @@ log/
 *.cache
 *.orig
 *.rej
-*.bak
-*.backup
 
-## Atlas generated content
-databases/build/
-databases/gen/
-databases/debug.txt
+## Secrets — ignore real env, keep examples
+.env
+.env.*
+.env.local
+.env.*.local
+*.env
+!.example.env
+!.env.example
+
+# Redis SSH tunnel (task run / scripts/redis_ssh_tunnel.sh)
+.env.redis-tunnel
+.redis-ssh-tunnel.pid
+
+## Logs
+logs/
+*.log
+log/
 
 ## Uploaded assets
 assets/**/*
@@ -56,11 +61,15 @@ assets/**/*
 static/images/pictures/*
 !static/images/pictures/.gitkeep
 
-## Runtime data
-data/*
-data/postgresql/*
-data/redis/*
-data/kafka/*
+## Runtime data (never push)
+stores/
+stores/mysql/
+stores/redis/
+stores/kafka/
+data/
+data/postgresql/
+data/redis/
+data/kafka/
 dump.rdb
 *.rdb
 *.sqlite
@@ -79,7 +88,7 @@ dump.rdb
 *.keystore
 static/keys/*
 !static/keys/.gitkeep
-# certs/
+certs/
 certificates/
 ssl/
 
@@ -104,32 +113,45 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-## Database dumps
+## Database dumps (keep Atlas migrations)
+*.sql
 *.dump
-data/**/*.sql
-
-.task/*
-
-
-## Protect pkgs directory (never exclude any pkgs)
-!pkgs/
-!pkgs/**
-!pkgs/cache/
-!pkgs/cache/**
+*.bak
+*.backup
 !databases/
 !databases/**
+databases/build/
+databases/gen/
+databases/debug.txt
+databases/bin/
+
+## Protect source trees (never exclude pkgs)
+!scripts/
+!scripts/**
+!pkg/
+!pkg/**
+!pkg/cachex/
+!pkg/cachex/**
+!pkgs/
+!pkgs/**
+!pkgs/cachex/
+!pkgs/cachex/**
+!atlas/
+!atlas/**
 !enums/
 !enums/**
 !inputs/
 !inputs/**
-# Configuration files now use environment variables, safe to commit
-# inputs/**/configuration/*.toml files are tracked
 !modules/
 !modules/**
 !protos/
 !protos/**
 !events/
 !events/**
+!connections/
+!connections/**
+!errors/
+!errors/**
 !certs/
 !certs/**
 !ssl/
@@ -144,12 +166,11 @@ data/**/*.sql
 !LICENSE
 !CONTRIBUTING.md
 
-## Console
+## Console (Vite)
 /console/dist/
 /console/node_modules/
+/console/.turbo/
 !/console/.env.dev
 !/console/.env.prod
-
-!.example.env
-
-!pkgs/
+!/console/.env.example
+!/console/.example.env

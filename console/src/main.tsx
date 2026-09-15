@@ -1,49 +1,37 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { LanguageEnum, LanguageProvider } from "nfx-ui/languages";
-import { ThemeEnum, ThemeProvider } from "nfx-ui/themes";
+import "@radix-ui/themes/styles.css";
+import "nfx-ui/themes/fonts";
+import "nfx-ui/themes/styles.css";
+
+import { LanguageEnum } from "nfx-ui/enums";
+import { LanguageProvider, ThemeProvider, ModalProvider, DataProvider } from "nfx-ui/providers";
 import { LayoutProvider } from "nfx-ui/layouts";
 
 import "./index.css";
 import "@/assets/themes/global.css";
 
-import { NAME_SPACES, NAME_SPACES_MAP, RESOURCES } from "@/assets/languages/i18nResources";
-import { getErrorTranslations } from "@/apis/system.api";
-import { BootstrapProvider, BrowserRouterProvider, ModalProvider, QueryProvider, LenisProvider } from "@/providers";
+import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
+import { DialogHost, QueryProvider, RouterProvider } from "@/providers";
 
 import App from "./App.tsx";
-
-async function loadErrorTranslationsBundle(
-  lng: string,
-): Promise<{ namespace: string; bundle: Record<string, unknown> } | null> {
-  try {
-    const bundle = await getErrorTranslations(lng);
-    return { namespace: "errors", bundle: bundle as Record<string, unknown> };
-  } catch {
-    return null;
-  }
-}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryProvider>
-      <LanguageProvider
-        bundles={{ RESOURCES, NAME_SPACES_MAP, NAME_SPACES }}
-        fallbackLng={LanguageEnum.ZH}
-        onLoadExtraBundles={async (lng) => loadErrorTranslationsBundle(lng)}
-      >
-        <ThemeProvider defaultTheme={ThemeEnum.DEFAULT}>
+      <LanguageProvider getBuiltinBundles={getBuiltinI18nBundles} fallbackLng={LanguageEnum.ZH}>
+        <ThemeProvider>
           <LayoutProvider>
-            <BrowserRouterProvider>
-              <LenisProvider>
+            <DataProvider>
+              <RouterProvider>
                 <ModalProvider>
-                  <BootstrapProvider>
+                  <DialogHost>
                     <App />
-                  </BootstrapProvider>
+                  </DialogHost>
                 </ModalProvider>
-              </LenisProvider>
-            </BrowserRouterProvider>
+              </RouterProvider>
+            </DataProvider>
           </LayoutProvider>
         </ThemeProvider>
       </LanguageProvider>

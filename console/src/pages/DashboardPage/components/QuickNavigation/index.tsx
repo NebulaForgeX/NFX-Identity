@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { Package, Plus, X } from "@/assets/icons/lucide";
 import * as LucideIcons from "@/assets/icons/lucide";

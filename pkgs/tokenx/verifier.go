@@ -93,12 +93,12 @@ func (v *Verifier) RefreshTokenPair(refreshToken string, generator *Generator) (
 
 	// 生成新的 Token 对
 	accessToken, newRefreshToken, err = generator.GenerateTokenPair(
-		claims.UserID,
+		claims.AccountID,
+		claims.ProfileID,
 		claims.Username,
 		claims.Email,
 		claims.Phone,
-		claims.CountryCode,
-		claims.RoleID,
+		claims.ProfileScope,
 	)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to generate new token pair: %w", err)

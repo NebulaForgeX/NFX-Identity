@@ -1,9 +1,9 @@
 import type { LucideIcon } from "@/assets/icons/lucide";
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
-import { Edit, Home, Search, Shield, User, X, Lock } from "@/assets/icons/lucide";
+import { Home, Image, Search, Settings, User, X } from "@/assets/icons/lucide";
 import ModalStore, { useModalStore } from "@/stores/modalStore";
 import { ROUTES } from "@/navigations";
 
@@ -44,25 +44,18 @@ const SearchModal = memo(() => {
         keywords: ["profile", "my profile", "account", "个人资料", "资料", "账户"],
       },
       {
-        title: "编辑资料",
-        description: "更新您的个人资料信息",
-        icon: Edit,
-        route: ROUTES.EDIT_PROFILE,
-        keywords: ["edit", "profile", "update", "编辑", "资料", "更新"],
+        title: "资源",
+        description: "Images / Files / Videos / Audios",
+        icon: Image,
+        route: ROUTES.IMAGES,
+        keywords: ["assets", "images", "files", "videos", "audios", "资源", "图片"],
       },
       {
-        title: "账户安全",
-        description: "管理密码和安全设置",
-        icon: Shield,
-        route: ROUTES.ACCOUNT_SECURITY,
-        keywords: ["security", "password", "account", "安全", "密码", "账户"],
-      },
-      {
-        title: "用户安全",
-        description: "查看角色和权限信息",
-        icon: Lock,
-        route: ROUTES.USER_SECURITY,
-        keywords: ["user security", "role", "permission", "grant", "用户安全", "角色", "权限", "授权"],
+        title: "设置",
+        description: "主题与偏好",
+        icon: Settings,
+        route: ROUTES.SETTINGS,
+        keywords: ["settings", "theme", "preference", "设置", "主题"],
       },
     ],
     [],

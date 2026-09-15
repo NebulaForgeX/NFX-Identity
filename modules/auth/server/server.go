@@ -10,7 +10,6 @@ import (
 	"nfxidentity/modules/auth/config"
 	grpcInterfaces "nfxidentity/modules/auth/interfaces/grpc"
 	httpInterfaces "nfxidentity/modules/auth/interfaces/http"
-	messagingInterfaces "nfxidentity/modules/auth/interfaces/messaging"
 	eventbusInterfaces "nfxidentity/modules/auth/interfaces/pipeline"
 	"nfxidentity/pkgs/logx"
 
@@ -125,62 +124,18 @@ func RunPipeline(ctx context.Context, cfg *config.Config) error {
 	return g.Wait()
 }
 
-// RunMessaging starts the RabbitMQ messaging server (used by messaging/main.go)
-func RunMessaging(ctx context.Context, cfg *config.Config) error {
-	// === Dependencies ===
-	deps, err := NewDeps(ctx, cfg)
-	if err != nil {
-		return err
-	}
-	defer deps.Cleanup()
-
-	logx.S().Info("✅ RabbitMQ Messaging: All dependencies initialized successfully (PostgreSQL, Redis, RabbitMQ Subscriber)")
-
-	messagingSrv, err := messagingInterfaces.NewServer(deps)
-	if err != nil {
-		return err
-	}
-
-	logx.S().Info("✅ RabbitMQ Messaging initialized successfully")
-
-	messagingSrv.RegisterRoutes()
-
-	g, gctx := errgroup.WithContext(ctx)
-
-	g.Go(func() error {
-		logx.S().Infof("✅ Messaging (RabbitMQ) server listening on %s", cfg.RabbitMQConfig.URI)
-		return messagingSrv.Run(ctx)
-	})
-
-	g.Go(func() error {
-		<-gctx.Done()
-		_ = messagingSrv.Close()
-		return gctx.Err()
-	})
-
-	return g.Wait()
-}
-
-// RunServer starts all four services (HTTP, gRPC, Pipeline, Messaging) concurrently
-// This is useful for development or when you want to run all services in a single process
 func RunServer(ctx context.Context, cfg *config.Config) error {
-	// === Dependencies ===
 	deps, err := NewDeps(ctx, cfg)
 	if err != nil {
 		return err
 	}
 	defer deps.Cleanup()
 
-	logx.S().Info("✅ All-in-One Server: All dependencies initialized successfully (PostgreSQL, Redis, Kafka Publisher, RabbitMQ)")
+	logx.S().Info("✅ All-in-One Server: PostgreSQL, Redis, Kafka Publisher")
 
-	// === Initialize Servers ===
 	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg.Server.AccessLog)
 	grpcSrv := grpcInterfaces.NewServer(deps)
 	eventbusSrv, err := eventbusInterfaces.NewServer(deps)
-	if err != nil {
-		return err
-	}
-	messagingSrv, err := messagingInterfaces.NewServer(deps)
 	if err != nil {
 		return err
 	}
@@ -196,7 +151,6 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 
 	g, gctx := errgroup.WithContext(ctx)
 
-	// HTTP Server
 	g.Go(func() error {
 		logx.S().Infof("✅ HTTP server listening on %s", httpAddr)
 		if err := httpSrv.Listen(httpAddr); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -205,7 +159,6 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 		return nil
 	})
 
-	// gRPC Server
 	g.Go(func() error {
 		logx.S().Infof("✅ gRPC server listening on %s", grpcAddr)
 		if err := grpcSrv.Serve(grpcLis); err != nil && !errors.Is(err, grpc.ErrServerStopped) {
@@ -214,26 +167,17 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 		return nil
 	})
 
-	// Pipeline (Kafka Eventbus) Server
 	g.Go(func() error {
 		logx.S().Infof("✅ Eventbus (Kafka) server listening on %v", cfg.KafkaConfig.Brokers)
 		return eventbusSrv.Run(ctx)
 	})
 
-	// Messaging (RabbitMQ) Server
-	g.Go(func() error {
-		logx.S().Infof("✅ Messaging (RabbitMQ) server listening on %s", cfg.RabbitMQConfig.URI)
-		return messagingSrv.Run(ctx)
-	})
-
-	// Graceful shutdown handler
 	g.Go(func() error {
 		<-gctx.Done()
 		logx.S().Info("🛑 Shutting down all services...")
 		_ = httpSrv.Shutdown()
 		grpcSrv.GracefulStop()
 		_ = eventbusSrv.Close()
-		_ = messagingSrv.Close()
 		return gctx.Err()
 	})
 

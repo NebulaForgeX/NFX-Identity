@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS "system"."system_state" (
   "initialized_at" TIMESTAMP, -- When system was initialized
   "initialization_version" VARCHAR(50), -- Version of initialization schema/data
   "last_reset_at" TIMESTAMP, -- Last time system was reset
-  "last_reset_by" UUID, -- User ID who reset the system (references directory.users.id, application-level consistency). Even if database is cleared after reset, can be traced via log files for accountability
+  "last_reset_by" UUID, -- Account ID who reset the system (auth.Accounts.id, application-level).
   "reset_count" INTEGER NOT NULL DEFAULT 0, -- Number of times system has been reset
   "metadata" JSONB DEFAULT '{}'::jsonb, -- Extended fields: {"bootstrap_token": "...", "services_initialized": [...], ...}
   "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

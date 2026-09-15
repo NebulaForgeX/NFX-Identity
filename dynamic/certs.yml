@@ -1,6 +1,6 @@
 # TLS 证书配置
 # 使用动态配置文件定义证书，避免 Docker labels 语法问题
-# 证书文件从 vault 目录读取：/volume1/NebulaForgeX/NFX-Edge/nebulaforgex
+# 证书文件从 Vault Websites 读取：/volume1/Projects/NebulaForgeX/NFX-Vault/Websites/nebulaforgex
 
 tls:
   certificates:

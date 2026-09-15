@@ -1,0 +1,67 @@
+syntax = "proto3";
+package asset;
+
+option go_package = "nfxidentity/protos/gen/asset/video;videopb";
+
+message Video {
+  string id = 1;
+  string file_path = 2;
+  string file_name = 3;
+  int64 file_size = 4;
+  string mime_type = 5;
+  string uploader_id = 6;
+}
+
+message GetVideoByIDRequest { string id = 1; }
+message GetVideoByIDResponse { Video video = 1; }
+message BatchGetVideosRequest { repeated string ids = 1; }
+message BatchGetVideosResponse { repeated Video videos = 1; }
+message PrepareVideoUploadRequest {
+  string account_id = 1;
+  string file_name = 2;
+  string mime_type = 3;
+}
+message PrepareVideoUploadResponse {
+  string video_id = 1;
+  string upload_url = 2;
+  string file_path = 3;
+}
+message ConfirmVideoUploadRequest {
+  string account_id = 1;
+  string video_id = 2;
+}
+message ConfirmVideoUploadResponse { Video video = 1; }
+message PrepareVideoUploadItem {
+  string file_name = 1;
+  string mime_type = 2;
+}
+message PrepareVideosUploadRequest {
+  string account_id = 1;
+  repeated PrepareVideoUploadItem items = 2;
+}
+message PrepareVideoUploadResult {
+  string video_id = 1;
+  string upload_url = 2;
+  string file_path = 3;
+}
+message PrepareVideosUploadResponse { repeated PrepareVideoUploadResult results = 1; }
+message ConfirmVideosUploadRequest {
+  string account_id = 1;
+  repeated string video_ids = 2;
+}
+message ConfirmVideosUploadResponse { repeated Video videos = 1; }
+message DeleteVideoRequest {
+  string id = 1;
+  string account_id = 2;
+}
+message DeleteVideoResponse {}
+
+service VideoService {
+  rpc GetVideoByID (GetVideoByIDRequest) returns (GetVideoByIDResponse);
+  rpc BatchGetVideos (BatchGetVideosRequest) returns (BatchGetVideosResponse);
+  rpc PrepareVideoUpload (PrepareVideoUploadRequest) returns (PrepareVideoUploadResponse);
+  rpc PrepareVideosUpload (PrepareVideosUploadRequest) returns (PrepareVideosUploadResponse);
+  rpc ConfirmVideoUpload (ConfirmVideoUploadRequest) returns (ConfirmVideoUploadResponse);
+  rpc ConfirmVideosUpload (ConfirmVideosUploadRequest) returns (ConfirmVideosUploadResponse);
+  rpc DeleteVideo (DeleteVideoRequest) returns (DeleteVideoResponse);
+}

@@ -76,23 +76,6 @@ func (h *HealthHandler) GetHealth(ctx context.Context, req *healthpb.GetHealthRe
 		}
 	}
 
-	// 检查 RabbitMQ 健康状态
-	rabbitMQErr := h.resourceSvc.CheckRabbitMQ(ctx)
-	if rabbitMQErr != nil {
-		errMsg := rabbitMQErr.Error()
-		infra.Others["rabbitmq"] = &healthpb.ResourceHealth{
-			Healthy:      false,
-			ErrorMessage: &errMsg,
-			CheckedAt:    now,
-		}
-		allHealthy = false
-	} else {
-		infra.Others["rabbitmq"] = &healthpb.ResourceHealth{
-			Healthy:   true,
-			CheckedAt: now,
-		}
-	}
-
 	return &healthpb.GetHealthResponse{
 		Healthy:        allHealthy,
 		Infrastructure: infra,

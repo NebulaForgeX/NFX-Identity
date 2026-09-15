@@ -299,245 +299,27 @@
 # ============================================================================
 # RabbitMQ Message Broker Configuration
 # ============================================================================
-[rabbitmq]
-    # Connection configuration
-    # All values from .env: RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USER, RABBITMQ_PASSWORD, RABBITMQ_VHOST
-    host = "${RABBITMQ_HOST}"
-    port = "${RABBITMQ_PORT}"
-    user = "${RABBITMQ_USER}"
-    password = "${RABBITMQ_PASSWORD}"
-    vhost = "${RABBITMQ_VHOST}"
-    
-    # Client ID for RabbitMQ connections
-    client_id = "nfxidentity-<module>-service"
-
-    # Producer configuration
-    [rabbitmq.producer]
-        # If true, return error when message cannot be routed
-        mandatory = false
-        
-        # If true, return error when message cannot be delivered immediately
-        immediate = false
-        
-        # Message content type
-        content_type = "application/json"
-        
-        # Delivery mode: 1 = non-persistent, 2 = persistent
-        delivery_mode = 2
-        
-        # Wait for server confirmation (Publisher Confirms)
-        confirm_delivery = true
-        
-        # Channel pool size (0 = no pooling)
-        channel_pool_size = 10
-        
-        # Enable transactional mode
-        transactional = false
-        
-        # Default message priority (0-255, 0 = no priority)
-        default_priority = 0
-
-    # Consumer configuration
-    [rabbitmq.consumer]
-        # Queue name (if empty, auto-generated from topic)
-        queue_name = ""
-        
-        # Consumer tag identifier
-        consumer_tag = "nfxidentity-<module>-consumer"
-        
-        # Automatically acknowledge messages (not recommended)
-        auto_ack = false
-        
-        # Exclusive queue (only this consumer can access)
-        exclusive = false
-        
-        # Don't receive messages published on the same connection
-        no_local = false
-        
-        # Don't wait for server response
-        no_wait = false
-        
-        # Don't requeue message on nack
-        no_requeue_on_nack = false
-        
-        # Prefetch count (0 = unlimited)
-        prefetch_count = 10
-        
-        # Prefetch size in bytes (0 = unlimited)
-        prefetch_size = 0
-        
-        # Apply QOS globally to all channels
-        qos_global = false
-
-    # Connection settings
-    [rabbitmq.connection]
-        # TLS configuration
-        [rabbitmq.connection.tls]
-            # Enable TLS connection
-            enabled = false
-            
-            # Skip TLS certificate verification (use false in production)
-            insecure_skip_verify = false
-            
-            # Client certificate file path
-            cert_file = ""
-            
-            # Client private key file path
-            key_file = ""
-            
-            # CA certificate file path
-            ca_file = ""
-            
-            # Server name for TLS verification
-            server_name = ""
-
-        # Reconnection settings
-        [rabbitmq.connection.reconnect]
-            # Enable automatic reconnection
-            enabled = true
-            
-            # Initial reconnection interval (e.g., "1s")
-            initial_interval = "1s"
-            
-            # Randomization factor for backoff (0.0 - 1.0)
-            randomization_factor = 0.5
-            
-            # Backoff multiplier
-            multiplier = 1.5
-            
-            # Maximum reconnection interval (e.g., "30s")
-            max_interval = "30s"
-
-        # AMQP protocol settings
-        [rabbitmq.connection.amqp]
-            # Virtual host (from .env: RABBITMQ_VHOST)
-            vhost = "${RABBITMQ_VHOST}"
-            
-            # Heartbeat interval in seconds (0 = disabled)
-            heartbeat = 10
-            
-            # Locale setting
-            locale = "en_US"
-            
-            # Maximum number of channels (0 = unlimited)
-            channel_max = 0
-            
-            # Maximum frame size (0 = use default)
-            frame_size = 0
-
-    # Exchange configuration
-    [rabbitmq.exchange]
-        # Exchange name (if empty, auto-generated from topic)
-        name = ""
-        
-        # Exchange type: "direct" | "topic" | "fanout" | "headers"
-        # Plugin types: "x-delayed-message" | "x-consistent-hash" | etc.
-        type = "topic"
-        
-        # Exchange survives broker restart
-        durable = true
-        
-        # Auto-delete when no queues are bound
-        auto_delete = false
-        
-        # Internal exchange (cannot be published to directly)
-        internal = false
-        
-        # Don't wait for server response
-        no_wait = false
-
-    # Queue configuration
-    [rabbitmq.queue]
-        # Queue survives broker restart
-        durable = true
-        
-        # Auto-delete when no consumers
-        auto_delete = false
-        
-        # Exclusive queue (only this connection can access)
-        exclusive = false
-        
-        # Don't wait for server response
-        no_wait = false
-        
-        # Maximum priority (0-255, 0 = priority queue disabled)
-        max_priority = 0
-        
-        # Message TTL in milliseconds (0 = no TTL)
-        message_ttl = 0
-        
-        # Maximum queue length in messages (0 = unlimited)
-        max_length = 0
-        
-        # Maximum queue length in bytes (0 = unlimited)
-        max_length_bytes = 0
-        
-        # Dead letter exchange name
-        dead_letter_exchange = ""
-        
-        # Dead letter routing key
-        dead_letter_routing_key = ""
-
-    # Queue binding configuration
-    [rabbitmq.queue_bind]
-        # Routing key (if empty, uses topic name)
-        routing_key = ""
-        
-        # Don't wait for server response
-        no_wait = false
-
-    # Producer exchanges: map message keys to exchange and routing key
-    # Format: message_key = {exchange = "exchange_name", routing_key = "routing.key"}
-    # - If exchange is empty, uses exchange.name config or auto-generated
-    # - If routing_key is empty, uses message key as routing_key
-    [rabbitmq.producer_exchanges]
-        # Example:
-        # event = {exchange = "", routing_key = "<module>.event"}
-        # event_poison = {exchange = "", routing_key = "<module>.event.poison"}
-
-    # Consumer queues: map message keys to queue and binding key
-    # Format: message_key = {queue = "queue_name", binding_key = "binding.key"}
-    # - If queue is empty, uses consumer.queue_name config or auto-generated
-    # - If binding_key is empty, uses message key as binding_key
-    [rabbitmq.consumer_queues]
-        # Example:
-        # event = {queue = "", binding_key = "<module>.event"}
-        # event_poison = {queue = "", binding_key = "<module>.event.poison"}
-
-# ============================================================================
-# gRPC Client Configuration
-# ============================================================================
-# Inter-service communication addresses
-# All addresses use environment variables from .env:
-#   GRPC_HOST_<MODULE>: Service host (IP address or Docker service name)
-#   GRPC_PORT_<MODULE>: Service port
 [grpc_client]
     # Service addresses - format: "${GRPC_HOST_<MODULE>}:${GRPC_PORT_<MODULE>}"
     # Each service can be deployed on a different host (supports multi-host deployment)
     
     # Access service gRPC address
-    access_addr = "${GRPC_HOST_ACCESS}:${GRPC_PORT_ACCESS}"
     
     # Auth service gRPC address
     auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
     
     # Audit service gRPC address
-    audit_addr = "${GRPC_HOST_AUDIT}:${GRPC_PORT_AUDIT}"
     
     # Clients service gRPC address
-    clients_addr = "${GRPC_HOST_CLIENTS}:${GRPC_PORT_CLIENTS}"
     
     # Directory service gRPC address
-    directory_addr = "${GRPC_HOST_DIRECTORY}:${GRPC_PORT_DIRECTORY}"
     
     # Image service gRPC address
-    image_addr = "${GRPC_HOST_IMAGE}:${GRPC_PORT_IMAGE}"
     
     # System service gRPC address
     system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
     
     # Tenants service gRPC address
-    tenants_addr = "${GRPC_HOST_TENANTS}:${GRPC_PORT_TENANTS}"
 
 # ============================================================================
 # Service-Specific Configuration Notes

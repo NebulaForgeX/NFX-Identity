@@ -1,50 +1,34 @@
 import { useState } from "react";
+import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
-import { TruckLoading } from "@/animations";
-import { LanguageSwitcher, ThemeSwitcher } from "@/components";
-
+import AuthShell from "./AuthShell";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
-import styles from "./styles.module.css";
 
 export default function LoginPage() {
   const { t } = useTranslation("LoginPage");
   const [isRegister, setIsRegister] = useState(false);
-  const isLoading = false;
-
-  if (isLoading) {
-    return (
-      <div className={styles.loginPage}>
-        <div className={styles.loadingContainer}>
-          <TruckLoading size="medium" />
-          <p className={styles.loadingText}>{t("loggingIn")}</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className={styles.loginPage}>
-      {/* 顶部控制栏：语言和主题切换 */}
-      <div className={styles.topControls}>
-        <LanguageSwitcher status="default" />
-        <ThemeSwitcher status="default" />
-      </div>
-
-      <div className={styles.container}>
-        <input
-          type="checkbox"
-          id="register_toggle"
-          checked={isRegister}
-          onChange={(e) => setIsRegister(e.target.checked)}
-          className={styles.registerToggle}
-        />
-        <div className={styles.slider}>
-          <LoginForm />
-          <RegisterForm />
-        </div>
-      </div>
-    </div>
+    <AuthShell brandEyebrow="NFX Identity" brandTitle={t("title")} heroFooter={t("subtitle")}>
+      <Flex direction="column" gap="5" className="js-auth-stagger">
+        <Flex direction="column" gap="1">
+          <Heading as="h2" size="6">
+            {isRegister ? t("register") : t("login")}
+          </Heading>
+          <Text as="p" size="2" color="gray">
+            {t("subtitle")}
+          </Text>
+        </Flex>
+        {isRegister ? <RegisterForm /> : <LoginForm />}
+        <Text as="p" size="2" align="center" color="gray">
+          {isRegister ? t("hasAccount") : t("noAccount")}{" "}
+          <Button type="button" variant="ghost" size="1" onClick={() => setIsRegister((v) => !v)}>
+            {isRegister ? t("signInNow") : t("registerNow")}
+          </Button>
+        </Text>
+      </Flex>
+    </AuthShell>
   );
 }

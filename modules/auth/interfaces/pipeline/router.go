@@ -21,16 +21,7 @@ func NewRouter(sub *eventbus.BusSubscriber, registry *Registry, config eventbus.
 }
 
 func (r *Router) RegisterRoutes() {
-	// 注册事件处理器
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAccountLockoutsInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnLoginAttemptsInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnMFAFactorsInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnPasswordHistoryInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnPasswordResetsInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnRefreshTokensInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnSessionsInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnTrustedDevicesInvalidateCache)
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnUserCredentialsInvalidateCache)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthEvent)
 }
 
 func (r *Router) Run(ctx context.Context) error {

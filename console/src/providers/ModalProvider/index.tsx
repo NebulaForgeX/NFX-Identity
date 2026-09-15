@@ -2,17 +2,16 @@ import type { ReactNode } from "react";
 
 import { memo } from "react";
 
-import { AvatarUploadModal, BaseModal, ConfirmModal, LoadingModal, SearchModal, YearSelectModal } from "./components";
+import { BaseModal, ConfirmModal, LoadingModal, SearchModal, YearSelectModal } from "./components";
 
-interface ModalProviderProps {
+interface DialogHostProps {
   children: ReactNode;
 }
 
-const ModalProvider = memo(({ children }: ModalProviderProps) => {
+const DialogHost = memo(({ children }: DialogHostProps) => {
   return (
     <>
       {children}
-      <AvatarUploadModal />
       <BaseModal />
       <ConfirmModal />
       <LoadingModal />
@@ -22,5 +21,5 @@ const ModalProvider = memo(({ children }: ModalProviderProps) => {
   );
 });
 
-ModalProvider.displayName = "ModalProvider";
-export default ModalProvider;
+DialogHost.displayName = "DialogHost";
+export default DialogHost;
