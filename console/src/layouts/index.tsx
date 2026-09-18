@@ -7,12 +7,11 @@ import { useLocation } from "react-router";
 
 import { LayoutFrame } from "nfx-ui/layouts";
 import { Logo } from "nfx-ui/components";
-import { AuthStore } from "nfx-ui/stores";
-import { authEventEmitter } from "nfx-ui/events";
 
 import { Home, Image, Settings, Shield, User } from "@/assets/icons/lucide";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
+import { clearLocalData } from "@/utils/clearLocalData";
 import RightContainer from "./Header/RightContainer";
 
 interface ConsoleLayoutProps {
@@ -43,8 +42,7 @@ export const ConsoleLayout = memo(({ children }: ConsoleLayoutProps) => {
   }, []);
 
   const onSidebarLogout = useCallback(() => {
-    AuthStore.getState().clearAuth();
-    authEventEmitter.logout();
+    void clearLocalData();
   }, []);
 
   return (

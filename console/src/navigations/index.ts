@@ -5,6 +5,7 @@ import { createRouter, defineRouter } from "nfx-ui/navigations";
 const routeMap = defineRouter({
   HOME: "/",
   LOGIN: "/login",
+  LOGIN_GITHUB_CALLBACK: "/login/github/callback",
   SELECT_PROFILE: "/select-profile",
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",

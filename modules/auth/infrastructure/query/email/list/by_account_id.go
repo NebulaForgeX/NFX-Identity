@@ -3,8 +3,8 @@ package list
 import (
 	"context"
 
-	emailQuery "nfxidentity/modules/auth/query/email"
 	"nfxidentity/modules/auth/infrastructure/rdb/views"
+	emailQuery "nfxidentity/modules/auth/query/email"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

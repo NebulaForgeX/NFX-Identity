@@ -1,8 +1,8 @@
 package email
 
 import (
-	emailQuery "nfxidentity/modules/auth/query/email"
 	"nfxidentity/modules/auth/infrastructure/query/email/list"
+	emailQuery "nfxidentity/modules/auth/query/email"
 
 	"gorm.io/gorm"
 )

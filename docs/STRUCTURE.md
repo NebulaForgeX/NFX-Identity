@@ -673,16 +673,16 @@ Event-driven architecture definitions.
 
 ### Services
 
-1. **reverse-proxy** - Traefik reverse proxy
-2. **auth-api** - Auth HTTP API service
-3. **auth-connection** - Auth gRPC service
-4. **auth-pipeline** - Auth Kafka consumer
-5. **image-api** - Image HTTP API service
-6. **image-connection** - Image gRPC service
-7. **image-pipeline** - Image Kafka consumer
-8. **permission-api** - Permission HTTP API service
-9. **permission-connection** - Permission gRPC service
-10. **permission-pipeline** - Permission Kafka consumer
+HTTP 入口是 **NFX-Edge**，本仓 **没有** reverse-proxy。
+
+1. **auth-api** - Auth HTTP API（`nfx-identity` + `nfx-edge`）
+2. **auth-connection** - Auth gRPC
+3. **auth-pipeline** - Auth Kafka consumer
+4. **asset-api** - Asset HTTP API
+5. **asset-connection** - Asset gRPC
+6. **system-api** - System HTTP API
+7. **system-connection** / **system-pipeline** / **system-messaging**
+8. **console** - Identity console（Host `TRAEFIK_CONSOLE_HOST`）
 
 ---
 

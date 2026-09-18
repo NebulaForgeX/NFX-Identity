@@ -78,5 +78,21 @@
   "statusLocked": "Locked",
   "isVerified": "Verified",
   "unverified": "Unverified",
-  "lastLoginAt": "Last Login"
+  "addPhone": "Add phone",
+  "addEmail": "Add email",
+  "sendCode": "Send code",
+  "verificationCode": "Code",
+  "loginNotification": "Login notification",
+  "phoneSmsUnimplemented": "SMS verification is not available yet. Numbers can still be stored as primary contact.",
+  "clearAvatar": "Clear avatar",
+  "linkGitHub": "Link GitHub",
+  "unlinkGitHub": "Unlink GitHub",
+  "avatar": "Avatar",
+  "background": "Background",
+  "city": "City",
+  "country": "Country",
+  "timezone": "Timezone",
+  "profileLanguage": "Profile language",
+  "updateEmail": "Update email",
+  "delete": "Delete"
 }

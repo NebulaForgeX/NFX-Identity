@@ -3,12 +3,14 @@ package platform
 import (
 	"context"
 	"encoding/json"
+	"nfxidentity/errors/src/auth"
+	"nfxidentity/errors/src/sys"
 	"time"
 
 	"nfxidentity/modules/auth/domain/authorityprofile"
 	"nfxidentity/modules/auth/domain/forgerprofile"
 	"nfxidentity/modules/auth/domain/settings"
-	"nfxidentity/pkgs/errx"
+	profileQuery "nfxidentity/modules/auth/query/profile"
 	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
@@ -18,31 +20,60 @@ import (
 func (s *Service) forgerVO(p *forgerprofile.Profile) map[string]any {
 	return map[string]any{
 		"profile_id": p.ID().String(), "account_id": p.AccountID().String(), "display_name": p.DisplayName(),
-		"profile_language": p.ProfileLanguage(), "city": p.City(), "country": p.Country(), "website": p.Website(),
-		"timezone": p.Timezone(), "forger_roles": p.Roles(), "created_at": p.CreatedAt(),
+		"profile_language": p.ProfileLanguage(), "preference": p.Preference(),
+		"first_name": p.FirstName(), "last_name": p.LastName(), "city": p.City(), "country": p.Country(),
+		"gender": p.Gender(), "birthday": p.Birthday(), "website": p.Website(), "timezone": p.Timezone(),
+		"bio": p.Bio(), "forger_roles": p.Roles(), "created_at": p.CreatedAt(), "updated_at": p.UpdatedAt(),
 	}
 }
 
 func (s *Service) authorityVO(p *authorityprofile.Profile) map[string]any {
 	return map[string]any{
 		"profile_id": p.ID().String(), "account_id": p.AccountID().String(), "display_name": p.DisplayName(),
-		"profile_language": p.ProfileLanguage(), "city": p.City(), "country": p.Country(),
-		"authority_roles": p.Roles(), "created_at": p.CreatedAt(),
+		"profile_language": p.ProfileLanguage(), "preference": p.Preference(),
+		"first_name": p.FirstName(), "last_name": p.LastName(), "city": p.City(), "country": p.Country(),
+		"gender": p.Gender(), "birthday": p.Birthday(), "website": p.Website(), "timezone": p.Timezone(),
+		"bio": p.Bio(), "authority_roles": p.Roles(), "created_at": p.CreatedAt(), "updated_at": p.UpdatedAt(),
+	}
+}
+
+func avatarID(id *uuid.UUID) any {
+	if id == nil {
+		return nil
+	}
+	return id.String()
+}
+
+func forgerItemMap(r profileQuery.ForgerItemVO) map[string]any {
+	return map[string]any{
+		"profile_id": r.ProfileID.String(), "account_id": r.AccountID.String(), "display_name": r.DisplayName,
+		"profile_language": r.ProfileLanguage, "city": r.City, "country": r.Country, "website": r.Website,
+		"timezone": r.Timezone, "forger_roles": []string(r.ForgerRoles), "avatar_image_id": avatarID(r.AvatarImageID),
+		"created_at": r.CreatedAt,
+	}
+}
+
+func authorityItemMap(r profileQuery.AuthorityItemVO) map[string]any {
+	return map[string]any{
+		"profile_id": r.ProfileID.String(), "account_id": r.AccountID.String(), "display_name": r.DisplayName,
+		"profile_language": r.ProfileLanguage, "city": r.City, "country": r.Country,
+		"authority_roles": []string(r.AuthorityRoles), "avatar_image_id": avatarID(r.AvatarImageID),
+		"created_at": r.CreatedAt,
 	}
 }
 
 func (s *Service) ForgerRoles(ctx context.Context, profileID uuid.UUID) ([]string, error) {
-	p, err := s.repos.Forger(none()).Get.ByID(ctx, profileID)
+	p, err := s.repoFactory.Forger(none()).Get.ByID(ctx, profileID)
 	if err != nil {
-		return nil, ErrNotFound
+		return nil, sys.ErrNotFound
 	}
 	return p.Roles(), nil
 }
 
 func (s *Service) AuthorityRoles(ctx context.Context, profileID uuid.UUID) ([]string, error) {
-	p, err := s.repos.Authority(none()).Get.ByID(ctx, profileID)
+	p, err := s.repoFactory.Authority(none()).Get.ByID(ctx, profileID)
 	if err != nil {
-		return nil, ErrNotFound
+		return nil, sys.ErrNotFound
 	}
 	return p.Roles(), nil
 }
@@ -52,7 +83,7 @@ func (s *Service) HasAuthorityRole(ctx context.Context, profileID, role string) 
 	if err != nil {
 		return false, err
 	}
-	p, err := s.repos.Authority(none()).Get.ByID(ctx, pid)
+	p, err := s.repoFactory.Authority(none()).Get.ByID(ctx, pid)
 	if err != nil {
 		return false, nil
 	}
@@ -64,7 +95,7 @@ func (s *Service) HasForgerRole(ctx context.Context, profileID, role string) (bo
 	if err != nil {
 		return false, err
 	}
-	p, err := s.repos.Forger(none()).Get.ByID(ctx, pid)
+	p, err := s.repoFactory.Forger(none()).Get.ByID(ctx, pid)
 	if err != nil {
 		return false, nil
 	}
@@ -74,21 +105,21 @@ func (s *Service) HasForgerRole(ctx context.Context, profileID, role string) (bo
 func (s *Service) PatchProfile(ctx context.Context, accountID, profileID uuid.UUID, kind string, patch map[string]any) error {
 	switch kind {
 	case "forger":
-		p, err := s.repos.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 		p.ApplyPatch(patch)
-		return s.repos.Forger(none()).Update.Generic(ctx, p)
+		return s.repoFactory.Forger(none()).Update.Generic(ctx, p)
 	case "authority":
-		p, err := s.repos.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 		p.ApplyPatch(patch)
-		return s.repos.Authority(none()).Update.Generic(ctx, p)
+		return s.repoFactory.Authority(none()).Update.Generic(ctx, p)
 	default:
-		return errx.InvalidArg("INVALID_PROFILE_KIND", "kind must be forger or authority")
+		return auth.ErrInvalidProfileKind
 	}
 }
 
@@ -96,12 +127,12 @@ func (s *Service) PatchProfileSettings(ctx context.Context, profileID uuid.UUID,
 	if loginNotification == nil {
 		return nil
 	}
-	row, err := s.repos.Settings(none()).Get.ByID(ctx, kind, profileID)
+	row, err := s.repoFactory.Settings(none()).Get.ByID(ctx, kind, profileID)
 	if err != nil {
 		return err
 	}
 	row.SetLoginNotification(*loginNotification)
-	return s.repos.Settings(none()).Update.Generic(ctx, row)
+	return s.repoFactory.Settings(none()).Update.Generic(ctx, row)
 }
 
 func (s *Service) UpdatePreference(ctx context.Context, accountID, profileID uuid.UUID, kind, preference string) error {
@@ -111,21 +142,21 @@ func (s *Service) UpdatePreference(ctx context.Context, accountID, profileID uui
 	}
 	switch kind {
 	case "forger":
-		p, err := s.repos.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 		p.SetPreference(raw)
-		return s.repos.Forger(none()).Update.Generic(ctx, p)
+		return s.repoFactory.Forger(none()).Update.Generic(ctx, p)
 	case "authority":
-		p, err := s.repos.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 		p.SetPreference(raw)
-		return s.repos.Authority(none()).Update.Generic(ctx, p)
+		return s.repoFactory.Authority(none()).Update.Generic(ctx, p)
 	default:
-		return errx.InvalidArg("INVALID_PROFILE_KIND", "kind must be forger or authority")
+		return auth.ErrInvalidProfileKind
 	}
 }
 
@@ -133,14 +164,41 @@ func (s *Service) CreateForgerProfile(ctx context.Context, accountID uuid.UUID, 
 	now := time.Now()
 	id := uuid.New()
 	err := s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		if err := s.repos.Forger(uow).Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
+		forgerRepo := s.repoFactory.Forger(uow)
+		settingsRepo := s.repoFactory.Settings(uow)
+		if err := forgerRepo.Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
 			ID: id, AccountID: accountID, Roles: pq.StringArray{"forger"},
 			ProfileLanguage: langOrDefault(lang), DisplayName: &displayName, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		return s.repos.Settings(uow).Create.New(ctx, settings.NewFromState(settings.State{
+		return settingsRepo.Create.New(ctx, settings.NewFromState(settings.State{
 			ID: id, Kind: "forger", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
+		}))
+	})
+	if err != nil {
+		return "", err
+	}
+	return id.String(), nil
+}
+
+func (s *Service) CreateAuthorityProfile(ctx context.Context, accountID uuid.UUID, displayName, lang string) (string, error) {
+	if err := s.requireOwner(ctx, accountID); err != nil {
+		return "", err
+	}
+	now := time.Now()
+	id := uuid.New()
+	err := s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
+		authorityRepo := s.repoFactory.Authority(uow)
+		settingsRepo := s.repoFactory.Settings(uow)
+		if err := authorityRepo.Create.New(ctx, authorityprofile.NewFromState(authorityprofile.State{
+			ID: id, AccountID: accountID, Roles: pq.StringArray{"administrator"},
+			ProfileLanguage: langOrDefault(lang), DisplayName: &displayName, CreatedAt: now, UpdatedAt: now,
+		})); err != nil {
+			return err
+		}
+		return settingsRepo.Create.New(ctx, settings.NewFromState(settings.State{
+			ID: id, Kind: "authority", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
 		}))
 	})
 	if err != nil {
@@ -153,21 +211,21 @@ func (s *Service) DeleteProfile(ctx context.Context, accountID, profileID uuid.U
 	now := time.Now()
 	switch kind {
 	case "forger":
-		p, err := s.repos.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 		p.SoftDelete(now)
-		return s.repos.Forger(none()).Update.Generic(ctx, p)
+		return s.repoFactory.Forger(none()).Update.Generic(ctx, p)
 	case "authority":
-		p, err := s.repos.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 		p.SoftDelete(now)
-		return s.repos.Authority(none()).Update.Generic(ctx, p)
+		return s.repoFactory.Authority(none()).Update.Generic(ctx, p)
 	default:
-		return errx.InvalidArg("INVALID_PROFILE_KIND", "kind must be forger or authority")
+		return auth.ErrInvalidProfileKind
 	}
 }
 
@@ -180,20 +238,20 @@ func (s *Service) ConfirmBackgrounds(ctx context.Context, accountID, profileID u
 	}
 	now := time.Now()
 	return s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		bg := s.repos.Background(uow)
-		imgRepo := s.repos.Image(uow)
-		if err := bg.Delete.AllByProfileID(ctx, kind, profileID); err != nil {
+		backgroundRepo := s.repoFactory.Background(uow)
+		imageRepo := s.repoFactory.Image(uow)
+		if err := backgroundRepo.Delete.AllByProfileID(ctx, kind, profileID); err != nil {
 			return err
 		}
 		for _, img := range images {
 			iid, err := uuid.Parse(img.ImageID)
 			if err != nil {
-				return errx.InvalidArg("INVALID_IMAGE_ID", "invalid image id")
+				return auth.ErrInvalidImageID
 			}
-			if _, err := imgRepo.Get.ByID(ctx, iid); err != nil {
+			if _, err := imageRepo.Get.ByID(ctx, iid); err != nil {
 				return err
 			}
-			if err := bg.Create.New(ctx, newBackground(profileID, iid, kind, img.SortOrder, now)); err != nil {
+			if err := backgroundRepo.Create.New(ctx, newBackground(profileID, iid, kind, img.SortOrder, now)); err != nil {
 				return err
 			}
 		}
@@ -207,18 +265,19 @@ func (s *Service) ConfirmAvatar(ctx context.Context, accountID, profileID uuid.U
 	}
 	iid, err := uuid.Parse(imageID)
 	if err != nil {
-		return errx.InvalidArg("INVALID_IMAGE_ID", "invalid image id")
+		return auth.ErrInvalidImageID
 	}
 	now := time.Now()
 	return s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		if _, err := s.repos.Image(uow).Get.ByID(ctx, iid); err != nil {
+		imageRepo := s.repoFactory.Image(uow)
+		if _, err := imageRepo.Get.ByID(ctx, iid); err != nil {
 			return err
 		}
-		av := s.repos.Avatar(uow)
-		if err := av.Update.DeactivateActive(ctx, kind, profileID); err != nil {
+		avatarRepo := s.repoFactory.Avatar(uow)
+		if err := avatarRepo.Update.DeactivateActive(ctx, kind, profileID); err != nil {
 			return err
 		}
-		return av.Create.New(ctx, newAvatar(profileID, iid, kind, now))
+		return avatarRepo.Create.New(ctx, newAvatar(profileID, iid, kind, now))
 	})
 }
 
@@ -227,7 +286,7 @@ func (s *Service) ClearAvatar(ctx context.Context, accountID, profileID uuid.UUI
 		return err
 	}
 	return s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		return s.repos.Avatar(uow).Update.DeactivateActive(ctx, kind, profileID)
+		return s.repoFactory.Avatar(uow).Update.DeactivateActive(ctx, kind, profileID)
 	})
 }
 
@@ -239,11 +298,7 @@ func (s *Service) ListAccountProfiles(ctx context.Context, accountID uuid.UUID, 
 		}
 		out := make([]map[string]any, 0, len(rows))
 		for _, r := range rows {
-			out = append(out, map[string]any{
-				"profile_id": r.ProfileID.String(), "account_id": r.AccountID.String(), "display_name": r.DisplayName,
-				"profile_language": r.ProfileLanguage, "city": r.City, "country": r.Country,
-				"authority_roles": []string(r.AuthorityRoles), "created_at": r.CreatedAt,
-			})
+			out = append(out, authorityItemMap(r))
 		}
 		return out, nil
 	}
@@ -253,11 +308,7 @@ func (s *Service) ListAccountProfiles(ctx context.Context, accountID uuid.UUID, 
 	}
 	out := make([]map[string]any, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, map[string]any{
-			"profile_id": r.ProfileID.String(), "account_id": r.AccountID.String(), "display_name": r.DisplayName,
-			"profile_language": r.ProfileLanguage, "city": r.City, "country": r.Country, "website": r.Website,
-			"timezone": r.Timezone, "forger_roles": []string(r.ForgerRoles), "created_at": r.CreatedAt,
-		})
+		out = append(out, forgerItemMap(r))
 	}
 	return out, nil
 }
@@ -271,11 +322,7 @@ func (s *Service) SearchProfiles(ctx context.Context, kind, query string, limit,
 		}
 		items := make([]map[string]any, 0, len(rows))
 		for _, r := range rows {
-			items = append(items, map[string]any{
-				"profile_id": r.ProfileID.String(), "account_id": r.AccountID.String(), "display_name": r.DisplayName,
-				"profile_language": r.ProfileLanguage, "city": r.City, "country": r.Country,
-				"authority_roles": []string(r.AuthorityRoles), "created_at": r.CreatedAt,
-			})
+			items = append(items, authorityItemMap(r))
 		}
 		return items, total, nil
 	}
@@ -285,11 +332,7 @@ func (s *Service) SearchProfiles(ctx context.Context, kind, query string, limit,
 	}
 	items := make([]map[string]any, 0, len(rows))
 	for _, r := range rows {
-		items = append(items, map[string]any{
-			"profile_id": r.ProfileID.String(), "account_id": r.AccountID.String(), "display_name": r.DisplayName,
-			"profile_language": r.ProfileLanguage, "city": r.City, "country": r.Country, "website": r.Website,
-			"timezone": r.Timezone, "forger_roles": []string(r.ForgerRoles), "created_at": r.CreatedAt,
-		})
+		items = append(items, forgerItemMap(r))
 	}
 	return items, total, nil
 }
@@ -309,12 +352,12 @@ func (s *Service) ListOwnerAuthorityProfiles(ctx context.Context, accountID uuid
 }
 
 func (s *Service) PublicProfileCard(ctx context.Context, profileID uuid.UUID) (map[string]any, error) {
-	if p, err := s.repos.Forger(none()).Get.ByID(ctx, profileID); err == nil {
+	if p, err := s.repoFactory.Forger(none()).Get.ByID(ctx, profileID); err == nil {
 		return s.forgerVO(p), nil
 	}
-	p, err := s.repos.Authority(none()).Get.ByID(ctx, profileID)
+	p, err := s.repoFactory.Authority(none()).Get.ByID(ctx, profileID)
 	if err != nil {
-		return nil, ErrNotFound
+		return nil, sys.ErrNotFound
 	}
 	return s.authorityVO(p), nil
 }
@@ -325,15 +368,15 @@ func (s *Service) UpdateAuthorityRoles(ctx context.Context, actorAccountID, prof
 	}
 	for _, r := range roles {
 		if r == "owner" {
-			return errx.Forbidden("OWNER_ROLE_IMMUTABLE", "owner role cannot be assigned via API")
+			return auth.ErrOwnerRoleImmutable
 		}
 	}
-	p, err := s.repos.Authority(none()).Get.ByID(ctx, profileID)
+	p, err := s.repoFactory.Authority(none()).Get.ByID(ctx, profileID)
 	if err != nil {
 		return err
 	}
 	p.SetRoles(roles)
-	return s.repos.Authority(none()).Update.Generic(ctx, p)
+	return s.repoFactory.Authority(none()).Update.Generic(ctx, p)
 }
 
 func (s *Service) BatchPublicCards(ctx context.Context, ids []string) []map[string]any {

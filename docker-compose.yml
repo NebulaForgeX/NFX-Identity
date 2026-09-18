@@ -1,38 +1,10 @@
 name: nfx-identity
 
-services:
-  reverse-proxy:
-    image: traefik:v3.4
-    container_name: NFX-Identity-Reverse-Proxy-Prod
-    restart: always
-    command:
-      - --api.dashboard=true
-      - --api.insecure=true
-      - --providers.docker
-      - --providers.docker.exposedByDefault=false
-      - --providers.docker.constraints=Label(`traefik.project`, `nfx-identity`)
-      # 文件配置（动态规则目录）
-      - --providers.file.directory=/etc/traefik/dynamic
-      - --providers.file.watch=true
-      # HTTP 和 HTTPS 入口
-      - --entrypoints.web.address=:${TRAEFIK_HTTP_INTERNAL_PORT}
-      - --entrypoints.websecure.address=:${TRAEFIK_HTTPS_INTERNAL_PORT}
-      # HTTP → HTTPS 重定向（外网）
-      - --entrypoints.web.http.redirections.entrypoint.to=websecure
-      - --entrypoints.web.http.redirections.entrypoint.scheme=https
-    ports:
-      - "${TRAEFIK_HTTP_PORT}:${TRAEFIK_HTTP_INTERNAL_PORT}"   # 内网 HTTP 入口
-      - "${TRAEFIK_HTTPS_PORT}:${TRAEFIK_HTTPS_INTERNAL_PORT}"  # 外网 HTTPS 入口
-      - "${TRAEFIK_DASHBOARD_PORT}:${TRAEFIK_DASHBOARD_INTERNAL_PORT}" # Traefik Dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${CERTS_DIR}:/certs/websites:ro
-      - ${TRAEFIK_CONFIG_FILE}:/etc/traefik/traefik.yml:ro
-      - ${TRAEFIK_DYNAMIC_DIR}:/etc/traefik/dynamic:ro
-    networks:
-      - nfx-identity
+# HTTP 入口只有 NFX-Edge（先启动 Edge：共享网络 nfx-edge + Traefik）。
+# 本栈不跑 reverse-proxy。traefik.project 由 Edge LabelRegex 发现。
+# Must start NFX-Edge first (creates nfx-edge). This stack has no reverse-proxy.
 
-  #! Auth API Service
+services:
   auth-api:
     image: nfx-identity-auth-api:prod
     container_name: NFX-Identity-Auth-API-Prod
@@ -46,26 +18,25 @@ services:
       - "traefik.enable=true"
       - "traefik.project=nfx-identity"
       # 服务定义
-      - "traefik.http.services.auth-api.loadbalancer.server.port=${HTTP_PORT}"
+      - "traefik.http.services.identity-auth-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.auth-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)"
-      - "traefik.http.routers.auth-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.auth-api-secure.service=auth-api"
-      - "traefik.http.routers.auth-api-secure.tls=true"
+      - "traefik.http.routers.identity-auth-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)"
+      - "traefik.http.routers.identity-auth-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.identity-auth-api-secure.service=identity-auth-api"
+      - "traefik.http.routers.identity-auth-api-secure.tls=true"
       # 内网 HTTP 路由（通过端口访问，允许任何 Host）
-      - "traefik.http.routers.auth-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)"
-      - "traefik.http.routers.auth-api-insecure.entrypoints=web"
-      - "traefik.http.routers.auth-api-insecure.service=auth-api"
+      - "traefik.http.routers.identity-auth-api.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)"
+      - "traefik.http.routers.identity-auth-api.entrypoints=web"
+      - "traefik.http.routers.identity-auth-api.service=identity-auth-api"
     environment:
       - ENV=prod
     volumes:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
     networks:
       - nfx-identity
+      - nfx-edge
 
   #! Auth Pipeline Service（kafka）
   auth-pipeline:
@@ -124,26 +95,25 @@ services:
       - "traefik.enable=true"
       - "traefik.project=nfx-identity"
       # 服务定义
-      - "traefik.http.services.asset-api.loadbalancer.server.port=${HTTP_PORT}"
+      - "traefik.http.services.identity-asset-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.asset-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)"
-      - "traefik.http.routers.asset-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.asset-api-secure.service=asset-api"
-      - "traefik.http.routers.asset-api-secure.tls=true"
+      - "traefik.http.routers.identity-asset-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)"
+      - "traefik.http.routers.identity-asset-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.identity-asset-api-secure.service=identity-asset-api"
+      - "traefik.http.routers.identity-asset-api-secure.tls=true"
       # 内网 HTTP 路由
-      - "traefik.http.routers.asset-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)"
-      - "traefik.http.routers.asset-api-insecure.entrypoints=web"
-      - "traefik.http.routers.asset-api-insecure.service=asset-api"
+      - "traefik.http.routers.identity-asset-api.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)"
+      - "traefik.http.routers.identity-asset-api.entrypoints=web"
+      - "traefik.http.routers.identity-asset-api.service=identity-asset-api"
     environment:
       - ENV=prod
     volumes:
       - ./static:/app/static
       - ./data:/app/data
       - ./assets:/app/assets
-    depends_on:
-      - reverse-proxy
     networks:
       - nfx-identity
+      - nfx-edge
 
 
   #! Image Connection Service (gRPC)
@@ -183,16 +153,16 @@ services:
       - "traefik.enable=true"
       - "traefik.project=nfx-identity"
       # 服务定义
-      - "traefik.http.services.system-api.loadbalancer.server.port=${HTTP_PORT}"
+      - "traefik.http.services.identity-system-api.loadbalancer.server.port=${HTTP_PORT}"
       # 外网 HTTPS 路由
-      - "traefik.http.routers.system-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)"
-      - "traefik.http.routers.system-api-secure.entrypoints=websecure"
-      - "traefik.http.routers.system-api-secure.service=system-api"
-      - "traefik.http.routers.system-api-secure.tls=true"
+      - "traefik.http.routers.identity-system-api-secure.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)"
+      - "traefik.http.routers.identity-system-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.identity-system-api-secure.service=identity-system-api"
+      - "traefik.http.routers.identity-system-api-secure.tls=true"
       # 内网 HTTP 路由
-      - "traefik.http.routers.system-api-insecure.rule=HostRegexp(`.*`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)"
-      - "traefik.http.routers.system-api-insecure.entrypoints=web"
-      - "traefik.http.routers.system-api-insecure.service=system-api"
+      - "traefik.http.routers.identity-system-api.rule=Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)"
+      - "traefik.http.routers.identity-system-api.entrypoints=web"
+      - "traefik.http.routers.identity-system-api.service=identity-system-api"
     environment:
       - ENV=prod
     volumes:
@@ -200,10 +170,9 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
-    depends_on:
-      - reverse-proxy
     networks:
       - nfx-identity
+      - nfx-edge
 
   #! System Pipeline Service
   system-pipeline:
@@ -284,29 +253,29 @@ services:
       - "traefik.enable=true"
       - "traefik.project=nfx-identity"
       # 服务定义
-      - "traefik.http.services.console.loadbalancer.server.port=${CONSOLE_PORT}"
+      - "traefik.http.services.identity-console.loadbalancer.server.port=${CONSOLE_PORT}"
       # 外网 HTTPS 路由 - 控制面板根路径
-      - "traefik.http.routers.console-secure.rule=Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/`)"
-      - "traefik.http.routers.console-secure.entrypoints=websecure"
-      - "traefik.http.routers.console-secure.service=console"
-      - "traefik.http.routers.console-secure.tls=true"
-      - "traefik.http.routers.console-secure.priority=1"  # 高优先级，确保根路径匹配
+      - "traefik.http.routers.identity-console-secure.rule=Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.identity-console-secure.entrypoints=websecure"
+      - "traefik.http.routers.identity-console-secure.service=identity-console"
+      - "traefik.http.routers.identity-console-secure.tls=true"
+      - "traefik.http.routers.identity-console-secure.priority=1"  # 高优先级，确保根路径匹配
       # 内网 HTTP 路由
-      - "traefik.http.routers.console-insecure.rule=HostRegexp(`.*`) && PathPrefix(`/`)"
-      - "traefik.http.routers.console-insecure.entrypoints=web"
-      - "traefik.http.routers.console-insecure.service=console"
-      - "traefik.http.routers.console-insecure.priority=1"  # 高优先级
+      - "traefik.http.routers.identity-console.rule=Host(`${TRAEFIK_CONSOLE_HOST}`)"
+      - "traefik.http.routers.identity-console.entrypoints=web"
+      - "traefik.http.routers.identity-console.service=identity-console"
+      - "traefik.http.routers.identity-console.priority=1"  # 高优先级
     environment:
       - ENV=prod
-    depends_on:
-      - reverse-proxy
     networks:
       - nfx-identity
-
+      - nfx-edge
 
 networks:
   nfx-identity:
     name: nfx-identity
     driver: bridge
 
-
+  nfx-edge:
+    external: true
+    name: nfx-edge

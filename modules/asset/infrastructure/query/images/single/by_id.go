@@ -3,10 +3,10 @@ package single
 import (
 	"context"
 	"errors"
+	"nfxidentity/errors/src/asset"
 
 	"nfxidentity/modules/asset/infrastructure/rdb/views"
 	imagesQuery "nfxidentity/modules/asset/query/images"
-	"nfxidentity/pkgs/errx"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -28,7 +28,7 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*imagesQuery.ImageVO,
 	if err := h.db.WithContext(ctx).Table(views.ImagesActiveView{}.TableName()).
 		Where("id = ?", id).First(&row).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NotFound("ASSET_NOT_FOUND", "asset not found")
+			return nil, asset.ErrAssetNotFound
 		}
 		return nil, err
 	}

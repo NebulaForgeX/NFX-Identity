@@ -2,10 +2,10 @@ package handler
 
 import (
 	"context"
+	"nfxidentity/errors/src/sys"
 
 	systemStateApp "nfxidentity/modules/system/application/system_state"
 	"nfxidentity/modules/system/interfaces/grpc/mapper"
-	"nfxidentity/pkgs/errx"
 	systemstatepb "nfxidentity/protos/gen/system/system_state"
 
 	"github.com/google/uuid"
@@ -29,7 +29,7 @@ func (h *SystemStateHandler) GetSystemStateByID(
 ) (*systemstatepb.GetSystemStateByIDResponse, error) {
 	systemStateID, err := uuid.Parse(req.Id)
 	if err != nil {
-		return nil, errx.ErrInvalidParams.WithCause(err)
+		return nil, sys.ErrInvalidParams.WithCause(err)
 	}
 
 	systemStateView, err := h.appSvc.GetSystemState(ctx, systemStateID)
@@ -62,5 +62,5 @@ func (h *SystemStateHandler) GetAllSystemStates(
 	req *systemstatepb.GetAllSystemStatesRequest,
 ) (*systemstatepb.GetAllSystemStatesResponse, error) {
 	// TODO: 如果 service 有 GetAll 方法，使用它；否则返回错误
-	return nil, errx.FailedPrecond("UNIMPLEMENTED", "GetAllSystemStates not implemented yet")
+	return nil, sys.ErrUnimplemented
 }

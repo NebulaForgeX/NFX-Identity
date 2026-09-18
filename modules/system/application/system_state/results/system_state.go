@@ -9,16 +9,16 @@ import (
 )
 
 type SystemStateRO struct {
-	ID                    uuid.UUID
-	Initialized           bool
-	InitializedAt         *time.Time
-	InitializationVersion *string
-	LastResetAt           *time.Time
-	LastResetBy           *uuid.UUID
-	ResetCount            int
-	Metadata              map[string]interface{}
-	CreatedAt             time.Time
-	UpdatedAt             time.Time
+	ID                    uuid.UUID              `json:"id"`
+	Initialized           bool                   `json:"initialized"`
+	InitializedAt         *time.Time             `json:"initialized_at,omitempty"`
+	InitializationVersion *string                `json:"initialization_version,omitempty"`
+	LastResetAt           *time.Time             `json:"last_reset_at,omitempty"`
+	LastResetBy           *uuid.UUID             `json:"last_reset_by,omitempty"`
+	ResetCount            int                    `json:"reset_count"`
+	Metadata              map[string]interface{} `json:"metadata,omitempty"`
+	CreatedAt             time.Time              `json:"created_at"`
+	UpdatedAt             time.Time              `json:"updated_at"`
 }
 
 // SystemStateMapper 将 Domain SystemState 转换为 Application SystemStateRO

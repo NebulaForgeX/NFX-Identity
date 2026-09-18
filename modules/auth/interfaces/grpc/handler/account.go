@@ -115,6 +115,23 @@ func (h *AccountHandler) EnsureOwnedProfile(ctx context.Context, req *accountpb.
 	return &accountpb.EnsureOwnedProfileResponse{Allowed: true}, nil
 }
 
+func (h *AccountHandler) BootstrapOwner(ctx context.Context, req *accountpb.BootstrapOwnerRequest) (*accountpb.BootstrapOwnerResponse, error) {
+	out, err := h.svc.BootstrapOwner(ctx, platform.BootstrapOwnerInput{
+		Username: req.GetUsername(),
+		Password: req.GetPassword(),
+		Email:    req.GetEmail(),
+		Phone:    req.GetPhone(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &accountpb.BootstrapOwnerResponse{
+		AccountId:          out.AccountID,
+		ForgerProfileId:    out.ForgerProfileID,
+		AuthorityProfileId: out.AuthorityProfileID,
+	}, nil
+}
+
 func (h *AccountHandler) ListProfilesInTable(ctx context.Context, req *accountpb.ListProfilesInTableRequest) (*accountpb.ListProfilesInTableResponse, error) {
 	items, total, err := h.svc.SearchProfiles(ctx, req.GetTable(), req.GetQuery(), int(req.GetLimit()), int(req.GetOffset()))
 	if err != nil {

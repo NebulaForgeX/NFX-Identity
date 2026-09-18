@@ -2,6 +2,7 @@ package fiberx
 
 import (
 	"errors"
+	"nfxidentity/errors/src/sys"
 	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/logx"
 
@@ -39,14 +40,14 @@ func normalizeErr(err error) *errx.Error {
 	if errors.As(err, &fe) {
 		switch fe.Code {
 		case fiber.StatusNotFound:
-			return errx.NotFound("NOT_FOUND", fe.Message).WithCause(err)
+			return sys.ErrNotFound.WithMsg(fe.Message).WithCause(err)
 		case fiber.StatusMethodNotAllowed:
-			return errx.InvalidArg("METHOD_NOT_ALLOWED", fe.Message).WithCause(err)
+			return sys.ErrMethodNotAllowed.WithMsg(fe.Message).WithCause(err)
 		default:
 			if fe.Code >= 500 {
-				return errx.Internal("INTERNAL", fe.Message).WithCause(err)
+				return sys.ErrInternal.WithMsg(fe.Message).WithCause(err)
 			}
-			return errx.InvalidArg("BAD_REQUEST", fe.Message).WithCause(err)
+			return sys.ErrBadRequest.WithMsg(fe.Message).WithCause(err)
 		}
 	}
 	var verrs validator.ValidationErrors
@@ -59,7 +60,7 @@ func normalizeErr(err error) *errx.Error {
 	if e := errx.AsError(err); e != nil {
 		return e
 	}
-	return errx.ErrInternal.WithCause(err)
+	return sys.ErrInternal.WithCause(err)
 }
 
 func logError(c fiber.Ctx, e *errx.Error) {

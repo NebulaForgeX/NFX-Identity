@@ -21,6 +21,11 @@ type Config struct {
 	KafkaConfig kafkax.Config      `koanf:"kafka"`
 	MinIO       MinIOConfig        `koanf:"minio"`
 	OTEL        otelx.Config       `koanf:"otel"`
+	GRPCClient  GRPCClientConfig   `koanf:"grpc_client"`
+}
+
+type GRPCClientConfig struct {
+	AuthAddr string `koanf:"auth_addr"`
 }
 
 type ServerConfig struct {

@@ -48,5 +48,9 @@
     "verificationCodeRequired": "验证码不能为空",
     "verificationCodeLength": "验证码必须是6位数字",
     "inviteCodeRequired": "邀请代码不能为空"
-  }
+  },
+  "githubCallback": "GitHub 登录",
+  "githubCallbackHint": "正在完成 GitHub 授权…",
+  "githubCallbackFailed": "GitHub 登录失败",
+  "githubMissingCode": "GitHub 未返回授权码"
 }

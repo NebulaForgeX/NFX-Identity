@@ -1,10 +1,10 @@
 package http
 
 import (
-	"os"
+	"nfxidentity/errors/src/auth"
+	"nfxidentity/errors/src/sys"
 	"path/filepath"
 	"strconv"
-	"strings"
 
 	"nfxidentity/modules/auth/application/platform"
 	"nfxidentity/pkgs/errx"
@@ -35,10 +35,12 @@ func RegisterRoutes(app fiber.Router, svc *platform.Service, verifier token.Veri
 	auth.Post("/signup/send-code", h.SendCode)
 	auth.Post("/signup/with-email", h.Signup)
 	auth.Post("/refresh", h.Refresh)
+	auth.Post("/logout", h.Logout)
 	auth.Get("/health", func(c fiber.Ctx) error {
 		return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]string{"service": "auth"}})
 	})
 	auth.Get("/locales/:lang", h.Locales)
+	auth.Get("/messages/:lang", h.Messages)
 
 	me := auth.Group("/me", middleware.TokenAuth(verifier))
 	me.Post("/select-profile", h.SelectProfile)
@@ -78,6 +80,7 @@ func RegisterRoutes(app fiber.Router, svc *platform.Service, verifier token.Veri
 	me.Delete("/profiles/:profileId", h.DeleteForger)
 	me.Get("/profiles/:profileId/public-card", h.PublicCard)
 	me.Get("/authority-profiles", h.ListAuthorityProfiles)
+	me.Post("/authority-profiles", h.CreateAuthorityProfile)
 	me.Post("/authority-profiles/search", h.SearchAuthority)
 	me.Delete("/authority-profiles/:profileId", h.DeleteAuthority)
 	me.Post("/password/send-verification-code", h.SendPasswordCode)
@@ -93,16 +96,16 @@ func wrap(c fiber.Ctx, err error) error {
 	if err == nil {
 		return nil
 	}
-	if e, ok := err.(*errx.Error); ok {
+	if e := errx.AsError(err); e != nil {
 		return fiberx.ErrorFromErrx(c, e)
 	}
-	return fiberx.ErrorFromErrx(c, errx.Internal("INTERNAL", err.Error()))
+	return fiberx.ErrorFromErrx(c, sys.ErrInternal.WithCause(err))
 }
 
 func accountID(c fiber.Ctx) (uuid.UUID, error) {
 	id, ok := fiberx.AccountIDFromContext(c.Context())
 	if !ok {
-		return uuid.UUID{}, errx.Unauthorized("INVALID_TOKEN", "missing account")
+		return uuid.UUID{}, sys.ErrInvalidToken
 	}
 	return id, nil
 }
@@ -110,7 +113,7 @@ func accountID(c fiber.Ctx) (uuid.UUID, error) {
 func profileID(c fiber.Ctx) (uuid.UUID, error) {
 	id, ok := fiberx.ProfileIDFromContext(c.Context())
 	if !ok {
-		return uuid.UUID{}, errx.Unauthorized("INVALID_TOKEN", "missing profile")
+		return uuid.UUID{}, sys.ErrInvalidToken
 	}
 	return id, nil
 }
@@ -122,7 +125,7 @@ func (h *Handler) LoginWithEmail(c fiber.Ctx) error {
 		DeviceID string `json:"device_id"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	out, err := h.svc.LoginWithEmail(c.Context(), req.Email, req.Password, req.DeviceID)
 	if err != nil {
@@ -138,7 +141,7 @@ func (h *Handler) LoginWithPhone(c fiber.Ctx) error {
 		DeviceID string `json:"device_id"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	out, err := h.svc.LoginWithPhone(c.Context(), req.Phone, req.Password, req.DeviceID)
 	if err != nil {
@@ -157,7 +160,7 @@ func (h *Handler) Signup(c fiber.Ctx) error {
 		SignupPlatform   string `json:"signup_platform"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	out, err := h.svc.SignupWithEmail(c.Context(), req.Email, req.Password, req.VerificationCode, req.Lang, req.DeviceID, req.SignupPlatform)
 	if err != nil {
@@ -172,9 +175,9 @@ func (h *Handler) SendCode(c fiber.Ctx) error {
 		Lang  string `json:"lang"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
-	if err := h.svc.SendSignupCode(c.Context(), req.Email); err != nil {
+	if err := h.svc.SendSignupCode(c.Context(), req.Email, req.Lang); err != nil {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]any{"sent": true}})
@@ -196,7 +199,7 @@ func (h *Handler) LoginGitHub(c fiber.Ctx) error {
 		SignupPlatform string `json:"signup_platform"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	out, err := h.svc.LoginWithGitHub(c.Context(), req.Code, req.State, req.DeviceID, req.SignupPlatform)
 	if err != nil {
@@ -215,9 +218,9 @@ func (h *Handler) LinkGitHub(c fiber.Ctx) error {
 		State string `json:"state"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
-	if err := h.svc.LinkGitHub(c.Context(), aid, req.Code); err != nil {
+	if err := h.svc.LinkGitHub(c.Context(), aid, req.Code, req.State); err != nil {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
@@ -240,13 +243,26 @@ func (h *Handler) Refresh(c fiber.Ctx) error {
 		DeviceID     string `json:"device_id"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	out, err := h.svc.Refresh(c.Context(), req.RefreshToken, req.DeviceID)
 	if err != nil {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
+}
+
+func (h *Handler) Logout(c fiber.Ctx) error {
+	var req struct {
+		RefreshToken string `json:"refresh_token"`
+	}
+	if err := c.Bind().Body(&req); err != nil {
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
+	}
+	if err := h.svc.Logout(c.Context(), req.RefreshToken); err != nil {
+		return wrap(c, err)
+	}
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
 }
 
 func (h *Handler) SelectProfile(c fiber.Ctx) error {
@@ -260,11 +276,11 @@ func (h *Handler) SelectProfile(c fiber.Ctx) error {
 		DeviceID  string `json:"device_id"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	pid, err := uuid.Parse(req.ProfileID)
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PROFILE_ID", "invalid profile id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidProfileID)
 	}
 	out, err := h.svc.SelectProfile(c.Context(), aid, pid, req.Kind, req.DeviceID)
 	if err != nil {
@@ -306,7 +322,7 @@ func (h *Handler) patch(c fiber.Ctx, kind string) error {
 	}
 	var req map[string]any
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.PatchProfile(c.Context(), aid, pid, kind, req); err != nil {
 		return wrap(c, err)
@@ -326,7 +342,7 @@ func (h *Handler) patchSettings(c fiber.Ctx, kind string) error {
 		LoginNotification *bool `json:"login_notification"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.PatchProfileSettings(c.Context(), pid, kind, req.LoginNotification); err != nil {
 		return wrap(c, err)
@@ -360,7 +376,7 @@ func (h *Handler) confirmAvatar(c fiber.Ctx, kind string) error {
 		ImageID string `json:"image_id"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.ConfirmAvatar(c.Context(), aid, pid, kind, req.ImageID); err != nil {
 		return wrap(c, err)
@@ -406,7 +422,7 @@ func (h *Handler) confirmBackgrounds(c fiber.Ctx, kind string) error {
 		} `json:"images"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	items := make([]struct {
 		ImageID   string
@@ -440,7 +456,7 @@ func (h *Handler) pref(c fiber.Ctx, kind string) error {
 		Preference string `json:"preference"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.UpdatePreference(c.Context(), aid, pid, kind, req.Preference); err != nil {
 		return wrap(c, err)
@@ -469,7 +485,7 @@ func (h *Handler) CreateEmail(c fiber.Ctx) error {
 		Email string `json:"email"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	id, err := h.svc.CreateEmail(c.Context(), aid, req.Email)
 	if err != nil {
@@ -485,9 +501,13 @@ func (h *Handler) SendEmailCode(c fiber.Ctx) error {
 	}
 	eid, err := uuid.Parse(c.Params("emailId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidEmailID)
 	}
-	if err := h.svc.SendEmailVerificationCode(c.Context(), aid, eid); err != nil {
+	var req struct {
+		Lang string `json:"lang"`
+	}
+	_ = c.Bind().Body(&req)
+	if err := h.svc.SendEmailVerificationCode(c.Context(), aid, eid, req.Lang); err != nil {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
@@ -500,13 +520,13 @@ func (h *Handler) VerifyEmail(c fiber.Ctx) error {
 	}
 	eid, err := uuid.Parse(c.Params("emailId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidEmailID)
 	}
 	var req struct {
 		VerificationCode string `json:"verification_code"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.VerifyEmail(c.Context(), aid, eid, req.VerificationCode); err != nil {
 		return wrap(c, err)
@@ -521,13 +541,13 @@ func (h *Handler) UpdateEmail(c fiber.Ctx) error {
 	}
 	eid, err := uuid.Parse(c.Params("emailId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidEmailID)
 	}
 	var req struct {
 		Email string `json:"email"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.UpdateEmail(c.Context(), aid, eid, req.Email); err != nil {
 		return wrap(c, err)
@@ -542,7 +562,7 @@ func (h *Handler) SetPrimaryEmail(c fiber.Ctx) error {
 	}
 	eid, err := uuid.Parse(c.Params("emailId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidEmailID)
 	}
 	if err := h.svc.SetPrimaryEmail(c.Context(), aid, eid); err != nil {
 		return wrap(c, err)
@@ -551,22 +571,11 @@ func (h *Handler) SetPrimaryEmail(c fiber.Ctx) error {
 }
 
 func (h *Handler) Locales(c fiber.Ctx) error {
-	lang := strings.TrimSpace(c.Params("lang"))
-	if lang == "" {
-		lang = "en"
-	}
-	path := filepath.Join("errors", "langs", lang+".json")
-	data, err := os.ReadFile(path)
-	if err != nil {
-		if lang != "en" {
-			data, err = os.ReadFile(filepath.Join("errors", "langs", "en.json"))
-		}
-		if err != nil {
-			return c.Status(fiber.StatusNotFound).JSON(map[string]string{"message": "lang not found"})
-		}
-	}
-	c.Set(fiber.HeaderContentType, "application/json; charset=utf-8")
-	return c.Send(data)
+	return fiberx.SendLangJSON(c, filepath.Join("errors", "langs"), c.Params("lang"))
+}
+
+func (h *Handler) Messages(c fiber.Ctx) error {
+	return fiberx.SendLangJSON(c, filepath.Join("messages", "langs"), c.Params("lang"))
 }
 
 func (h *Handler) ListPhones(c fiber.Ctx) error {
@@ -590,7 +599,7 @@ func (h *Handler) CreatePhone(c fiber.Ctx) error {
 		Phone string `json:"phone"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	id, err := h.svc.CreatePhone(c.Context(), aid, req.Phone)
 	if err != nil {
@@ -606,7 +615,7 @@ func (h *Handler) SendPhoneCode(c fiber.Ctx) error {
 	}
 	pid, err := uuid.Parse(c.Params("phoneId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidPhoneID)
 	}
 	if err := h.svc.SendPhoneVerificationCode(c.Context(), aid, pid); err != nil {
 		return wrap(c, err)
@@ -621,13 +630,13 @@ func (h *Handler) VerifyPhone(c fiber.Ctx) error {
 	}
 	pid, err := uuid.Parse(c.Params("phoneId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidPhoneID)
 	}
 	var req struct {
 		VerificationCode string `json:"verification_code"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.VerifyPhone(c.Context(), aid, pid, req.VerificationCode); err != nil {
 		return wrap(c, err)
@@ -642,13 +651,13 @@ func (h *Handler) UpdatePhone(c fiber.Ctx) error {
 	}
 	pid, err := uuid.Parse(c.Params("phoneId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidPhoneID)
 	}
 	var req struct {
 		Phone string `json:"phone"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.UpdatePhone(c.Context(), aid, pid, req.Phone); err != nil {
 		return wrap(c, err)
@@ -663,7 +672,7 @@ func (h *Handler) SetPrimaryPhone(c fiber.Ctx) error {
 	}
 	pid, err := uuid.Parse(c.Params("phoneId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidPhoneID)
 	}
 	if err := h.svc.SetPrimaryPhone(c.Context(), aid, pid); err != nil {
 		return wrap(c, err)
@@ -678,7 +687,7 @@ func (h *Handler) DeletePhone(c fiber.Ctx) error {
 	}
 	pid, err := uuid.Parse(c.Params("phoneId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidPhoneID)
 	}
 	if err := h.svc.DeletePhone(c.Context(), aid, pid); err != nil {
 		return wrap(c, err)
@@ -693,7 +702,7 @@ func (h *Handler) DeleteEmail(c fiber.Ctx) error {
 	}
 	eid, err := uuid.Parse(c.Params("emailId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidEmailID)
 	}
 	if err := h.svc.DeleteEmail(c.Context(), aid, eid); err != nil {
 		return wrap(c, err)
@@ -730,9 +739,28 @@ func (h *Handler) CreateForgerProfile(c fiber.Ctx) error {
 		ProfileLanguage string `json:"profile_language"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	id, err := h.svc.CreateForgerProfile(c.Context(), aid, req.DisplayName, req.ProfileLanguage)
+	if err != nil {
+		return wrap(c, err)
+	}
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]any{"profile_id": id}})
+}
+
+func (h *Handler) CreateAuthorityProfile(c fiber.Ctx) error {
+	aid, err := accountID(c)
+	if err != nil {
+		return wrap(c, err)
+	}
+	var req struct {
+		DisplayName     string `json:"display_name"`
+		ProfileLanguage string `json:"profile_language"`
+	}
+	if err := c.Bind().Body(&req); err != nil {
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
+	}
+	id, err := h.svc.CreateAuthorityProfile(c.Context(), aid, req.DisplayName, req.ProfileLanguage)
 	if err != nil {
 		return wrap(c, err)
 	}
@@ -770,7 +798,7 @@ func (h *Handler) deleteProfile(c fiber.Ctx, kind string) error {
 	}
 	pid, err := uuid.Parse(c.Params("profileId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PROFILE_ID", "invalid profile id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidProfileID)
 	}
 	if err := h.svc.DeleteProfile(c.Context(), aid, pid, kind); err != nil {
 		return wrap(c, err)
@@ -781,7 +809,7 @@ func (h *Handler) deleteProfile(c fiber.Ctx, kind string) error {
 func (h *Handler) PublicCard(c fiber.Ctx) error {
 	pid, err := uuid.Parse(c.Params("profileId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PROFILE_ID", "invalid profile id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidProfileID)
 	}
 	card, err := h.svc.PublicProfileCard(c.Context(), pid)
 	if err != nil {
@@ -795,7 +823,11 @@ func (h *Handler) SendPasswordCode(c fiber.Ctx) error {
 	if err != nil {
 		return wrap(c, err)
 	}
-	if err := h.svc.SendPasswordCode(c.Context(), aid); err != nil {
+	var req struct {
+		Lang string `json:"lang"`
+	}
+	_ = c.Bind().Body(&req)
+	if err := h.svc.SendPasswordCode(c.Context(), aid, req.Lang); err != nil {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
@@ -812,7 +844,7 @@ func (h *Handler) ChangePassword(c fiber.Ctx) error {
 		VerificationCode string `json:"verification_code"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.ChangePassword(c.Context(), aid, req.CurrentPassword, req.NewPassword, req.VerificationCode); err != nil {
 		return wrap(c, err)
@@ -855,13 +887,13 @@ func (h *Handler) UpdateAuthorityRoles(c fiber.Ctx) error {
 	}
 	pid, err := uuid.Parse(c.Params("profileId"))
 	if err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_PROFILE_ID", "invalid profile id"))
+		return fiberx.ErrorFromErrx(c, auth.ErrInvalidProfileID)
 	}
 	var req struct {
 		AuthorityRoles []string `json:"authority_roles"`
 	}
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 	}
 	if err := h.svc.UpdateAuthorityRoles(c.Context(), aid, pid, req.AuthorityRoles); err != nil {
 		return wrap(c, err)

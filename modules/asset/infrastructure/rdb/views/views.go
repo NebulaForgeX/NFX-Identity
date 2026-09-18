@@ -7,17 +7,17 @@ import (
 )
 
 type ImagesActiveView struct {
-	ID         uuid.UUID  `gorm:"column:id"`
-	FilePath   string     `gorm:"column:file_path"`
-	FileName   string     `gorm:"column:file_name"`
-	FileSize   int64      `gorm:"column:file_size"`
-	MimeType   string     `gorm:"column:mime_type"`
-	Width      *int       `gorm:"column:width"`
-	Height     *int       `gorm:"column:height"`
-	AltText    *string    `gorm:"column:alt_text"`
-	UploaderID uuid.UUID  `gorm:"column:uploader_id"`
-	CreatedAt  time.Time  `gorm:"column:created_at"`
-	UpdatedAt  time.Time  `gorm:"column:updated_at"`
+	ID         uuid.UUID `gorm:"column:id"`
+	FilePath   string    `gorm:"column:file_path"`
+	FileName   string    `gorm:"column:file_name"`
+	FileSize   int64     `gorm:"column:file_size"`
+	MimeType   string    `gorm:"column:mime_type"`
+	Width      *int      `gorm:"column:width"`
+	Height     *int      `gorm:"column:height"`
+	AltText    *string   `gorm:"column:alt_text"`
+	UploaderID uuid.UUID `gorm:"column:uploader_id"`
+	CreatedAt  time.Time `gorm:"column:created_at"`
+	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
 func (ImagesActiveView) TableName() string { return "asset.ImagesActiveView" }

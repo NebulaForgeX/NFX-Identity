@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
+	"nfxidentity/errors/src/auth"
 	"nfxidentity/modules/auth/domain/settings"
 	"nfxidentity/modules/auth/infrastructure/rdb/models"
-	"nfxidentity/pkgs/errx"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -39,7 +39,10 @@ func (h *repo) ByID(ctx context.Context, kind string, id uuid.UUID) (*settings.S
 	}
 	if err := q.Where("id = ?", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errx.NotFound("NOT_FOUND", "settings not found")
+			if kind == "authority" {
+				return nil, auth.ErrAuthorityProfileSettingsNotFound
+			}
+			return nil, auth.ErrForgerProfileSettingsNotFound
 		}
 		return nil, err
 	}

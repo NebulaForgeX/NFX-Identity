@@ -1,11 +1,11 @@
 package handler
 
 import (
+	"nfxidentity/errors/src/sys"
 	bootstrapApp "nfxidentity/modules/system/application/bootstrap"
 	systemStateApp "nfxidentity/modules/system/application/system_state"
 	systemStateCommands "nfxidentity/modules/system/application/system_state/commands"
 	"nfxidentity/modules/system/interfaces/http/dto/reqdto"
-	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/httpx"
 
@@ -37,7 +37,7 @@ func (h *SystemStateHandler) GetLatest(c fiber.Ctx) error {
 func (h *SystemStateHandler) GetByID(c fiber.Ctx) error {
 	var req reqdto.SystemStateByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
-		return errx.ErrInvalidParams.WithCause(err)
+		return sys.ErrInvalidParams.WithCause(err)
 	}
 
 	result, err := h.appSvc.GetSystemState(c.Context(), req.ID)
@@ -53,7 +53,7 @@ func (h *SystemStateHandler) GetByID(c fiber.Ctx) error {
 func (h *SystemStateHandler) Initialize(c fiber.Ctx) error {
 	var req reqdto.SystemStateInitializeRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
-		return errx.ErrInvalidBody.WithCause(err)
+		return sys.ErrInvalidBody.WithCause(err)
 	}
 
 	// 使用 DTO 的转换方法
@@ -70,7 +70,7 @@ func (h *SystemStateHandler) Initialize(c fiber.Ctx) error {
 func (h *SystemStateHandler) Reset(c fiber.Ctx) error {
 	var req reqdto.SystemStateResetRequestDTO
 	if err := c.Bind().Body(&req); err != nil {
-		return errx.ErrInvalidBody.WithCause(err)
+		return sys.ErrInvalidBody.WithCause(err)
 	}
 
 	cmd := req.ToResetSystemCmd()
@@ -85,7 +85,7 @@ func (h *SystemStateHandler) Reset(c fiber.Ctx) error {
 func (h *SystemStateHandler) Delete(c fiber.Ctx) error {
 	var req reqdto.SystemStateByIDRequestDTO
 	if err := c.Bind().URI(&req); err != nil {
-		return errx.ErrInvalidParams.WithCause(err)
+		return sys.ErrInvalidParams.WithCause(err)
 	}
 
 	cmd := systemStateCommands.DeleteSystemStateCmd{SystemStateID: req.ID}

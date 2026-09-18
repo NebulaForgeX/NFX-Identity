@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"nfxidentity/errors/src/asset"
 	"path"
 	"strings"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"nfxidentity/modules/asset/infrastructure/objectstore"
 	"nfxidentity/modules/asset/infrastructure/repository/kinds"
 	imagesQuery "nfxidentity/modules/asset/query/images"
-	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
@@ -55,7 +55,7 @@ func (s *Service) Prepare(ctx context.Context, uploaderID uuid.UUID, kind, fileN
 	key := fmt.Sprintf("%s/%s/%s%s", uploaderID.String(), kind, id.String(), ext)
 	u, err := s.store.PresignPut(ctx, key, 15*time.Minute)
 	if err != nil {
-		return nil, errx.Internal("PRESIGN_FAILED", err.Error())
+		return nil, asset.ErrPresignFailed.WithCause(err)
 	}
 	now := time.Now()
 	if err := s.rows.Insert(ctx, kind, id.String(), key, fileName, mimeType, uploaderID.String(), now); err != nil {
@@ -72,7 +72,7 @@ func (s *Service) Confirm(ctx context.Context, uploaderID uuid.UUID, kind, id st
 	}
 	info, err := s.store.Stat(ctx, row.FilePath)
 	if err != nil {
-		return errx.FailedPrecond("OBJECT_MISSING", "upload not found in object storage")
+		return asset.ErrObjectMissing
 	}
 	return s.rows.UpdateSize(ctx, kind, id, info.Size, info.ContentType)
 }

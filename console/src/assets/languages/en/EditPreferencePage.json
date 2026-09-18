@@ -7,5 +7,12 @@
   "cancel": "Cancel",
   "submit": "Submit",
   "submitting": "Submitting...",
-  "loading": "Loading preference..."
+  "loading": "Loading preference...",
+  "changePassword": "Change password",
+  "changePasswordHint": "Identity holds the password. Request a verification code, then set a new one.",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "verificationCode": "Verification code",
+  "sendCode": "Send code",
+  "passwordUpdated": "Password updated."
 }

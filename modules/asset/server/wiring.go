@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	authconn "nfxidentity/connections/auth"
 	"nfxidentity/modules/asset/application/media"
 	"nfxidentity/modules/asset/application/resource"
 	"nfxidentity/modules/asset/config"
@@ -35,6 +36,7 @@ type Dependencies struct {
 	serverTokenVerifier token.Verifier
 	mediaSvc            *media.Service
 	resourceSvc         *resource.Service
+	authClient          *authconn.Client
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -74,6 +76,19 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		return nil, fmt.Errorf("ensure MinIO bucket: %w", err)
 	}
 
+	var authClient *authconn.Client
+	if cfg.GRPCClient.AuthAddr != "" {
+		authClient, err = authconn.Dial(authconn.GRPCConfig{
+			Addr:           cfg.GRPCClient.AuthAddr,
+			TokenSecretKey: cfg.Token.SecretKey,
+			TokenIssuer:    cfg.Token.Issuer,
+			CallerService:  "asset-service",
+		})
+		if err != nil {
+			return nil, fmt.Errorf("dial auth: %w", err)
+		}
+	}
+
 	tokenxInstance := tokenx.New(cfg.Token)
 	resourceSvc := resource.NewService(postgres, cacheConn, &kafkaConfig)
 	return &Dependencies{
@@ -90,6 +105,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		),
 		mediaSvc:    mediaSvc,
 		resourceSvc: resourceSvc,
+		authClient:  authClient,
 	}, nil
 }
 
@@ -97,9 +113,13 @@ func (d *Dependencies) Cleanup() {
 	d.healthMgr.Stop()
 	d.postgres.Close()
 	d.cache.Close()
+	if d.authClient != nil {
+		_ = d.authClient.Close()
+	}
 }
 
 func (d *Dependencies) MediaSvc() *media.Service             { return d.mediaSvc }
+func (d *Dependencies) AuthClient() *authconn.Client         { return d.authClient }
 func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }
 func (d *Dependencies) HealthMgr() *health.Manager           { return d.healthMgr }

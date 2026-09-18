@@ -32,6 +32,9 @@
   "sidebar": {
     "dashboard": "Dashboard",
     "profile": "Profile",
+    "assets": "Assets",
+    "owner": "Owner directory",
+    "settings": "Settings",
     "profileView": "View Profile",
     "editProfile": "Edit Profile",
     "addEducation": "Add Education",

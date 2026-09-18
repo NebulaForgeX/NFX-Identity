@@ -48,5 +48,9 @@
     "verificationCodeRequired": "Verification code is required",
     "verificationCodeLength": "Verification code must be 6 digits",
     "inviteCodeRequired": "Invite code is required"
-  }
+  },
+  "githubCallback": "GitHub sign-in",
+  "githubCallbackHint": "Completing GitHub authorization…",
+  "githubCallbackFailed": "GitHub sign-in failed",
+  "githubMissingCode": "GitHub did not return an authorization code"
 }

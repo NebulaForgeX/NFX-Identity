@@ -1,9 +1,11 @@
-import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthRepository } from "nfx-ui/apis";
 import { AuthStore, ensureDeviceIdStorage } from "nfx-ui/stores";
-import { ProfileKind, ProfileKindEnum } from "nfx-ui/enums";
+import { AuthAuthorityRoleEnum, LanguageEnum, ProfileKind, ProfileKindEnum } from "nfx-ui/enums";
 import type { Login, Profile } from "nfx-ui/types";
+
+import AuthShell from "@/pages/LoginPage/AuthShell";
 
 export default function SelectProfilePage() {
   const auth = useAuthRepository();
@@ -49,22 +51,83 @@ export default function SelectProfilePage() {
     },
   });
 
+  const create = useMutation({
+    mutationFn: async () => {
+      const created = await auth.CreateForgerProfile({ displayName: "Forger", profileLanguage: LanguageEnum.ZH });
+      const deviceId = await ensureDeviceIdStorage();
+      const out = await auth.SelectProfile({ profileId: created.profileId, kind: ProfileKind(ProfileKindEnum.FORGER), deviceId });
+      AuthStore.getState().setTokens({ accessToken: out.accessToken, refreshToken: out.refreshToken });
+      AuthStore.getState().setCurrentAccountId(out.accountId);
+      AuthStore.getState().setCurrentProfileId(out.profileId);
+      AuthStore.getState().setCurrentProfileKind(ProfileKind(ProfileKindEnum.FORGER));
+      AuthStore.getState().setIsAuthValid(true);
+    },
+  });
+
+  const createAuthority = useMutation({
+    mutationFn: async () => {
+      const created = await auth.CreateAuthorityProfile({ displayName: "Administrator", profileLanguage: LanguageEnum.ZH });
+      const deviceId = await ensureDeviceIdStorage();
+      const out = await auth.SelectProfile({ profileId: created.profileId, kind: ProfileKind(ProfileKindEnum.AUTHORITY), deviceId });
+      AuthStore.getState().setTokens({ accessToken: out.accessToken, refreshToken: out.refreshToken });
+      AuthStore.getState().setCurrentAccountId(out.accountId);
+      AuthStore.getState().setCurrentProfileId(out.profileId);
+      AuthStore.getState().setCurrentProfileKind(ProfileKind(ProfileKindEnum.AUTHORITY));
+      AuthStore.getState().setIsAuthValid(true);
+    },
+  });
+
+  const canCreateAuthority = (authorities.data?.items ?? []).some((item: Profile.Response.AuthorityProfileItem) =>
+    (item.authorityRoles ?? []).includes(AuthAuthorityRoleEnum.OWNER),
+  );
+  const error = (select.error || create.error || createAuthority.error) as Error | null;
+
   return (
-    <Flex align="center" justify="center" style={{ minHeight: "100vh" }}>
-      <Card size="3" style={{ width: 420 }}>
-        <Flex direction="column" gap="4">
-          <Heading size="5">Select profile</Heading>
-          <Text size="2" color="gray">
-            Choose a Forger or Authority profile to continue.
-          </Text>
-          {profiles.map((profile) => (
-            <Button key={profile.profileId} variant="soft" onClick={() => select.mutate(profile)} loading={select.isPending}>
+    <AuthShell brandEyebrow="NFX Identity" brandTitle="Select a profile" heroFooter="Identity issues one token per profile. Empty accounts create a Forger here.">
+      <Flex direction="column" gap="4">
+        <Heading as="h2" size="5">
+          Profiles
+        </Heading>
+        <Text as="p" size="2">
+          Choose a Forger or Authority profile, or create the first Forger on this account.
+        </Text>
+        {profiles.map((profile) => (
+          <Flex key={profile.profileId} gap="2">
+            <Button style={{ flex: 1 }} variant="soft" onClick={() => select.mutate(profile)} loading={select.isPending}>
               {profile.displayName || profile.profileId} ({profile.kind})
             </Button>
-          ))}
-          {profiles.length === 0 ? <Text color="gray">No profiles on this account.</Text> : null}
-        </Flex>
-      </Card>
-    </Flex>
+            {profiles.length > 1 && !(profile.roles ?? []).includes(AuthAuthorityRoleEnum.OWNER) ? (
+              <Button
+                color="red"
+                variant="soft"
+                onClick={() => {
+                  void auth.DeleteProfile(ProfileKind(profile.kind), profile.profileId).then(() => {
+                    void forgers.refetch();
+                    void authorities.refetch();
+                  });
+                }}
+              >
+                ×
+              </Button>
+            ) : null}
+          </Flex>
+        ))}
+        {profiles.length === 0 ? (
+          <Button onClick={() => create.mutate()} loading={create.isPending}>
+            Create Forger profile
+          </Button>
+        ) : null}
+        {canCreateAuthority ? (
+          <Button variant="outline" onClick={() => createAuthority.mutate()} loading={createAuthority.isPending}>
+            Create Authority profile
+          </Button>
+        ) : null}
+        {error ? (
+          <Text size="2" color="red">
+            {error.message}
+          </Text>
+        ) : null}
+      </Flex>
+    </AuthShell>
   );
 }

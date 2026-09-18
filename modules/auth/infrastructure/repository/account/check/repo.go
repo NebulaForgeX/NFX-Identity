@@ -2,6 +2,7 @@ package check
 
 import (
 	"nfxidentity/modules/auth/domain/account"
+
 	"gorm.io/gorm"
 )
 

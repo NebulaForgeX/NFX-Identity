@@ -107,7 +107,10 @@
     secret_key = "${MINIO_SECRET_KEY}"
     bucket = "nfxidentity-images"
     use_ssl = false
-    region = "us-east-1"
+	region = "us-east-1"
+
+[grpc_client]
+    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
 
 [otel]
     enabled = true

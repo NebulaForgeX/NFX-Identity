@@ -32,6 +32,9 @@
   "sidebar": {
     "dashboard": "仪表盘",
     "profile": "个人资料",
+    "assets": "资源",
+    "owner": "Owner 目录",
+    "settings": "设置",
     "profileView": "查看资料",
     "editProfile": "编辑资料",
     "addEducation": "添加教育",

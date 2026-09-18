@@ -233,6 +233,19 @@ message ListProfilesInTableResponse {
   int64 total = 2;
 }
 
+message BootstrapOwnerRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+  string phone = 4;
+}
+
+message BootstrapOwnerResponse {
+  string account_id = 1;
+  string forger_profile_id = 2;
+  string authority_profile_id = 3;
+}
+
 service AccountService {
   rpc GetFullAccountInformation (GetFullAccountInformationRequest) returns (GetFullAccountInformationResponse);
   rpc GetAccountByID (GetAccountByIDRequest) returns (GetAccountByIDResponse);
@@ -243,4 +256,5 @@ service AccountService {
   rpc InvalidateFullInformationWithAuthorityProfile (InvalidateFullInformationWithAuthorityProfileRequest) returns (InvalidateFullInformationWithAuthorityProfileResponse);
   rpc EnsureOwnedProfile (EnsureOwnedProfileRequest) returns (EnsureOwnedProfileResponse);
   rpc ListProfilesInTable (ListProfilesInTableRequest) returns (ListProfilesInTableResponse);
+  rpc BootstrapOwner (BootstrapOwnerRequest) returns (BootstrapOwnerResponse);
 }

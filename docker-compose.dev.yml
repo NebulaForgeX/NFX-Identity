@@ -1,29 +1,10 @@
 name: nfx-identity-dev
 
-services:
-  reverse-proxy:
-    image: traefik:latest
-    container_name: NFX-Identity-Reverse-Proxy-Dev
-    command:
-      - --api.insecure=true
-      - --providers.docker
-      - --providers.docker.exposedByDefault=false
-      - --providers.docker.constraints=Label(`traefik.project`, `nfx-identity`)
-      - --entrypoints.web.address=:${TRAEFIK_HTTP_INTERNAL_PORT}
-      - --entrypoints.traefik.address=:${TRAEFIK_DASHBOARD_INTERNAL_PORT}
-    ports:
-      - "${TRAEFIK_HTTP_PORT}:${TRAEFIK_HTTP_INTERNAL_PORT}"   # 内网 HTTP 入口
-      - "${TRAEFIK_HTTPS_PORT}:${TRAEFIK_HTTPS_INTERNAL_PORT}"  # 外网 HTTPS 入口
-      - "${TRAEFIK_DASHBOARD_PORT}:${TRAEFIK_DASHBOARD_INTERNAL_PORT}" # Traefik Dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-identity
-    restart: unless-stopped
+# HTTP 入口只有 NFX-Edge（先启动 Edge：共享网络 nfx-edge + Traefik）。
+# 本栈不跑 reverse-proxy。traefik.project 由 Edge LabelRegex 发现。
+# Must start NFX-Edge first (creates nfx-edge). This stack has no reverse-proxy.
 
-  #! Auth Base Service (all services in goroutines)
+services:
   auth-base:
     image: nfx-identity-auth-base:dev
     container_name: NFX-Identity-Auth-Base-Dev
@@ -42,9 +23,14 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
-      traefik.http.routers.auth-base.entrypoints: web
-      traefik.http.routers.auth-base.rule: PathPrefix(`${API_PREFIX_PATH_AUTH}`)
-      traefik.http.services.auth-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.services.identity-auth-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.identity-auth-base.entrypoints: web
+      traefik.http.routers.identity-auth-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)
+      traefik.http.routers.identity-auth-base.service: identity-auth-base
+      traefik.http.routers.identity-auth-base-secure.entrypoints: websecure
+      traefik.http.routers.identity-auth-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)
+      traefik.http.routers.identity-auth-base-secure.service: identity-auth-base
+      traefik.http.routers.identity-auth-base-secure.tls: "true"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -87,13 +73,11 @@ services:
           target: /app/.env
         - action: rebuild
           path: inputs/auth/base/Dockerfile
-    depends_on:
-      reverse-proxy:
-        condition: service_started
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-identity
+      - nfx-edge
 
   #! Image Base Service (all services in goroutines)
   asset-base:
@@ -114,9 +98,14 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
-      traefik.http.routers.asset-base.entrypoints: web
-      traefik.http.routers.asset-base.rule: PathPrefix(`${API_PREFIX_PATH_ASSET}`)
-      traefik.http.services.asset-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.services.identity-asset-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.identity-asset-base.entrypoints: web
+      traefik.http.routers.identity-asset-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)
+      traefik.http.routers.identity-asset-base.service: identity-asset-base
+      traefik.http.routers.identity-asset-base-secure.entrypoints: websecure
+      traefik.http.routers.identity-asset-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)
+      traefik.http.routers.identity-asset-base-secure.service: identity-asset-base
+      traefik.http.routers.identity-asset-base-secure.tls: "true"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -159,13 +148,11 @@ services:
           target: /app/.env
         - action: rebuild
           path: inputs/asset/base/Dockerfile
-    depends_on:
-      reverse-proxy:
-        condition: service_started
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-identity
+      - nfx-edge
 
   #! Access Base Service (all services in goroutines)
   system-base:
@@ -186,9 +173,14 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
-      traefik.http.routers.system-base.entrypoints: web
-      traefik.http.routers.system-base.rule: PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
-      traefik.http.services.system-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.services.identity-system-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.identity-system-base.entrypoints: web
+      traefik.http.routers.identity-system-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.identity-system-base.service: identity-system-base
+      traefik.http.routers.identity-system-base-secure.entrypoints: websecure
+      traefik.http.routers.identity-system-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.identity-system-base-secure.service: identity-system-base
+      traefik.http.routers.identity-system-base-secure.tls: "true"
     volumes:
       - ./static:/app/static
       - ./data:/app/data
@@ -231,16 +223,16 @@ services:
           target: /app/.env
         - action: rebuild
           path: inputs/system/base/Dockerfile
-    depends_on:
-      reverse-proxy:
-        condition: service_started
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - nfx-identity
+      - nfx-edge
 
-  #! Tenants Base Service (all services in goroutines)
 networks:
   nfx-identity:
     name: nfx-identity
     driver: bridge
+  nfx-edge:
+    external: true
+    name: nfx-edge

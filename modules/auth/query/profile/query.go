@@ -9,17 +9,17 @@ import (
 )
 
 type ForgerItemVO struct {
-	ProfileID         uuid.UUID      `json:"profile_id"`
-	AccountID         uuid.UUID      `json:"account_id"`
-	ForgerRoles       pq.StringArray `json:"forger_roles"`
-	DisplayName       *string        `json:"display_name"`
-	ProfileLanguage   string         `json:"profile_language"`
-	City              *string        `json:"city"`
-	Country           *string        `json:"country"`
-	Website           *string        `json:"website"`
-	Timezone          *string        `json:"timezone"`
-	AvatarImageID     *uuid.UUID     `json:"avatar_image_id"`
-	CreatedAt         time.Time      `json:"created_at"`
+	ProfileID       uuid.UUID      `json:"profile_id"`
+	AccountID       uuid.UUID      `json:"account_id"`
+	ForgerRoles     pq.StringArray `json:"forger_roles"`
+	DisplayName     *string        `json:"display_name"`
+	ProfileLanguage string         `json:"profile_language"`
+	City            *string        `json:"city"`
+	Country         *string        `json:"country"`
+	Website         *string        `json:"website"`
+	Timezone        *string        `json:"timezone"`
+	AvatarImageID   *uuid.UUID     `json:"avatar_image_id"`
+	CreatedAt       time.Time      `json:"created_at"`
 }
 
 type AuthorityItemVO struct {

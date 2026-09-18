@@ -187,4 +187,3 @@ type AuthorityProfileSettings struct {
 }
 
 func (AuthorityProfileSettings) TableName() string { return "auth.AuthorityProfileSettings" }
-

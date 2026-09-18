@@ -17,7 +17,8 @@ const LoginPhoneForm = memo(() => {
   const login = useMutation({
     mutationFn: async (data: PhoneLoginFormValues) => {
       const deviceId = await ensureDeviceIdStorage();
-      const response = await auth.LoginWithPhone({ phone: data.phone, password: data.password, deviceId });
+      const phone = data.code ? `+${data.code}${data.phone}` : data.phone;
+      const response = await auth.LoginWithPhone({ phone, password: data.password, deviceId });
       AuthStore.getState().setTokens({ accessToken: response.accessToken, refreshToken: response.refreshToken });
       AuthStore.getState().setCurrentAccountId(response.accountId);
       sessionStorage.setItem("nfx-login-profiles", JSON.stringify(response.profiles ?? []));

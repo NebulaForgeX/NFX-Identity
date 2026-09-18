@@ -2,10 +2,10 @@ package kinds
 
 import (
 	"context"
+	"nfxidentity/errors/src/asset"
 	"time"
 
 	"nfxidentity/modules/asset/infrastructure/rdb/models"
-	"nfxidentity/pkgs/errx"
 
 	"gorm.io/gorm"
 )
@@ -39,7 +39,7 @@ func (h *Handler) Insert(ctx context.Context, kind, id, filePath, fileName, mime
 			ID: id, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploaderID, CreatedAt: now, UpdatedAt: now,
 		}).Error
 	default:
-		return errx.InvalidArg("INVALID_ASSET_KIND", "kind must be images, files, videos, or audios")
+		return asset.ErrInvalidAssetKind
 	}
 }
 
@@ -76,7 +76,7 @@ func (h *Handler) GetOwned(ctx context.Context, kind, id, uploaderID string) (*R
 		Where("id = ? AND uploader_id = ? AND deleted_at IS NULL", id, uploaderID).
 		Take(&row).Error
 	if err != nil {
-		return nil, errx.NotFound("ASSET_NOT_FOUND", "asset not found")
+		return nil, asset.ErrAssetNotFound
 	}
 	return &row, nil
 }
@@ -88,7 +88,7 @@ func (h *Handler) GetAny(ctx context.Context, kind, id string) (*Row, error) {
 		Where("id = ? AND deleted_at IS NULL", id).
 		Take(&row).Error
 	if err != nil {
-		return nil, errx.NotFound("ASSET_NOT_FOUND", "asset not found")
+		return nil, asset.ErrAssetNotFound
 	}
 	return &row, nil
 }
@@ -120,7 +120,7 @@ func (h *Handler) GetFromView(ctx context.Context, kind, id string) (*ListItem, 
 	var row ListItem
 	err := h.db.WithContext(ctx).Table(viewFor(kind)).Where("id = ?", id).Take(&row).Error
 	if err != nil {
-		return nil, errx.NotFound("ASSET_NOT_FOUND", "asset not found")
+		return nil, asset.ErrAssetNotFound
 	}
 	return &row, nil
 }

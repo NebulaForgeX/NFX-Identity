@@ -2,10 +2,8 @@ package platform
 
 import (
 	"context"
-	"encoding/json"
-	"time"
-
-	"nfxidentity/pkgs/errx"
+	"nfxidentity/errors/src/auth"
+	"nfxidentity/errors/src/sys"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -13,37 +11,39 @@ import (
 
 func (s *Service) ChangePassword(ctx context.Context, accountID uuid.UUID, current, next, code string) error {
 	emailAddr, _ := s.primaryContacts(ctx, accountID)
-	if emailAddr == "" || !s.checkVerificationCode(ctx, emailAddr, code) {
-		return errx.InvalidArg("INVALID_VERIFICATION_CODE", "invalid verification code")
+	if emailAddr == "" {
+		return auth.ErrVerificationCodeWrong
 	}
-	idents, err := s.repos.Identity(none()).Get.ByAccountID(ctx, accountID)
+	if err := s.consumeVerificationCode(ctx, emailAddr, code); err != nil {
+		return err
+	}
+	idents, err := s.repoFactory.Identity(none()).Get.ByAccountID(ctx, accountID)
 	if err != nil {
-		return ErrNotFound
+		return sys.ErrNotFound
 	}
 	for _, item := range idents {
 		if item.IdentityProvider() != "password" {
 			continue
 		}
 		if item.PasswordHash() == nil || bcrypt.CompareHashAndPassword([]byte(*item.PasswordHash()), []byte(current)) != nil {
-			return ErrInvalidCredentials
+			return auth.ErrInvalidCredentials
 		}
 		hash, err := bcrypt.GenerateFromPassword([]byte(next), bcrypt.DefaultCost)
 		if err != nil {
-			return errx.Internal("HASH_FAILED", "failed to hash password")
+			return auth.ErrHashFailed
 		}
 		item.SetPasswordHash(string(hash))
-		return s.repos.Identity(none()).Update.Generic(ctx, item)
+		return s.repoFactory.Identity(none()).Update.Generic(ctx, item)
 	}
-	return ErrNotFound
+	return sys.ErrNotFound
 }
 
-func (s *Service) SendPasswordCode(ctx context.Context, accountID uuid.UUID) error {
+func (s *Service) SendPasswordCode(ctx context.Context, accountID uuid.UUID, lang string) error {
 	emailAddr, _ := s.primaryContacts(ctx, accountID)
 	if emailAddr == "" {
-		return ErrNotFound
+		return sys.ErrNotFound
 	}
-	s.StoreVerificationCode(ctx, emailAddr, RandomCode())
-	return nil
+	return s.issueAndStoreVerification(ctx, emailAddr, lang)
 }
 
 func (s *Service) GetAccountByID(ctx context.Context, accountID uuid.UUID) (map[string]any, error) {
@@ -51,21 +51,13 @@ func (s *Service) GetAccountByID(ctx context.Context, accountID uuid.UUID) (map[
 }
 
 func (s *Service) FullAccountWithProfile(ctx context.Context, accountID uuid.UUID, profileID uuid.UUID, kind string) (map[string]any, error) {
-	if s.redis != nil {
-		if raw, err := s.redis.Get(ctx, fullCacheKey(accountID, profileID)).Bytes(); err == nil {
-			var cached map[string]any
-			if json.Unmarshal(raw, &cached) == nil {
-				return cached, nil
-			}
-		}
-	}
-	acc, err := s.repos.Account(none()).Get.ByID(ctx, accountID)
+	acc, err := s.repoFactory.Account(none()).Get.ByID(ctx, accountID)
 	if err != nil {
-		return nil, ErrNotFound
+		return nil, sys.ErrNotFound
 	}
 	emails, _ := s.emails.List.ByAccountID(ctx, accountID)
 	phones, _ := s.phones.List.ByAccountID(ctx, accountID)
-	idents, _ := s.repos.Identity(none()).Get.ByAccountID(ctx, accountID)
+	idents, _ := s.repoFactory.Identity(none()).Get.ByAccountID(ctx, accountID)
 	identJSON := make([]map[string]any, 0, len(idents))
 	for _, e := range idents {
 		identJSON = append(identJSON, map[string]any{
@@ -82,51 +74,41 @@ func (s *Service) FullAccountWithProfile(ctx context.Context, accountID uuid.UUI
 		"identities": identJSON,
 	}
 	if kind == "authority" {
-		if p, err := s.repos.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID); err == nil {
+		if p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID); err == nil {
 			m := s.authorityVO(p)
-			m["first_name"] = p.FirstName()
-			m["last_name"] = p.LastName()
-			m["bio"] = p.Bio()
-			m["preference"] = p.Preference()
+			s.attachProfileMedia(ctx, m, "authority", p.ID())
 			out["authority_profile"] = m
 		} else {
 			out["authority_profile"] = nil
 		}
 	} else {
-		if p, err := s.repos.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID); err == nil {
+		if p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID); err == nil {
 			m := s.forgerVO(p)
-			m["first_name"] = p.FirstName()
-			m["last_name"] = p.LastName()
-			m["bio"] = p.Bio()
-			m["gender"] = p.Gender()
-			m["birthday"] = p.Birthday()
-			m["preference"] = p.Preference()
-			if avatars, err := s.repos.Avatar(none()).Get.ByProfileID(ctx, "forger", p.ID()); err == nil {
-				list := make([]map[string]any, 0, len(avatars))
-				for _, a := range avatars {
-					list = append(list, map[string]any{"id": a.ID().String(), "image_id": a.ImageID().String(), "is_active": a.IsActive()})
-				}
-				m["avatars"] = list
-			}
-			if bgs, err := s.repos.Background(none()).Get.ByProfileID(ctx, "forger", p.ID()); err == nil {
-				list := make([]map[string]any, 0, len(bgs))
-				for _, b := range bgs {
-					list = append(list, map[string]any{"id": b.ID().String(), "image_id": b.ImageID().String(), "sort_order": b.SortOrder()})
-				}
-				m["backgrounds"] = list
-			}
-			if st, err := s.repos.Settings(none()).Get.ByID(ctx, "forger", p.ID()); err == nil {
-				m["settings"] = map[string]any{"id": st.ID().String(), "login_notification": st.LoginNotification()}
-			}
+			s.attachProfileMedia(ctx, m, "forger", p.ID())
 			out["forger_profile"] = m
 		} else {
 			out["forger_profile"] = nil
 		}
 	}
-	if s.redis != nil {
-		if raw, err := json.Marshal(out); err == nil {
-			_ = s.redis.Set(ctx, fullCacheKey(accountID, profileID), raw, 5*time.Minute).Err()
-		}
-	}
 	return out, nil
+}
+
+func (s *Service) attachProfileMedia(ctx context.Context, m map[string]any, kind string, profileID uuid.UUID) {
+	if avatars, err := s.repoFactory.Avatar(none()).Get.ByProfileID(ctx, kind, profileID); err == nil {
+		list := make([]map[string]any, 0, len(avatars))
+		for _, a := range avatars {
+			list = append(list, map[string]any{"id": a.ID().String(), "image_id": a.ImageID().String(), "is_active": a.IsActive()})
+		}
+		m["avatars"] = list
+	}
+	if bgs, err := s.repoFactory.Background(none()).Get.ByProfileID(ctx, kind, profileID); err == nil {
+		list := make([]map[string]any, 0, len(bgs))
+		for _, b := range bgs {
+			list = append(list, map[string]any{"id": b.ID().String(), "image_id": b.ImageID().String(), "sort_order": b.SortOrder()})
+		}
+		m["backgrounds"] = list
+	}
+	if st, err := s.repoFactory.Settings(none()).Get.ByID(ctx, kind, profileID); err == nil {
+		m["settings"] = map[string]any{"id": st.ID().String(), "login_notification": st.LoginNotification()}
+	}
 }

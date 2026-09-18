@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	systemErr "nfxidentity/errors/src/system"
 	bootstrapCommands "nfxidentity/modules/system/application/bootstrap/commands"
 	systemStateDomain "nfxidentity/modules/system/domain/system_state"
 	"nfxidentity/pkgs/logx"
+	accountpb "nfxidentity/protos/gen/auth/account"
 )
 
 func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) error {
@@ -24,7 +26,11 @@ func (s *Service) BootstrapInit(ctx context.Context, cmd bootstrapCommands.Boots
 	if err != nil {
 		return err
 	}
-	systemState, err := s.createInitialSystemState(ctx, cmd)
+	owner, err := s.createOwnerAdmin(ctx, cmd)
+	if err != nil {
+		return err
+	}
+	systemState, err := s.createInitialSystemState(ctx, cmd, owner)
 	if err != nil {
 		return err
 	}
@@ -49,11 +55,30 @@ func (s *Service) checkSystemInitialized(ctx context.Context) error {
 	return nil
 }
 
-func (s *Service) createInitialSystemState(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) (*systemStateDomain.SystemState, error) {
+func (s *Service) createOwnerAdmin(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd) (*accountpb.BootstrapOwnerResponse, error) {
+	emailAddr := strings.TrimSpace(cmd.AdminEmail)
+	if emailAddr == "" {
+		return nil, systemErr.ErrAdminEmailRequired
+	}
+	out, err := s.grpcClients.BootstrapOwner(ctx, cmd.AdminUsername, cmd.AdminPassword, emailAddr, strings.TrimSpace(cmd.AdminPhone))
+	if err != nil {
+		return nil, systemErr.ErrBootstrapOwnerFailed.WithCause(err)
+	}
+	return out, nil
+}
+
+func (s *Service) createInitialSystemState(ctx context.Context, cmd bootstrapCommands.BootstrapInitCmd, owner *accountpb.BootstrapOwnerResponse) (*systemStateDomain.SystemState, error) {
+	if owner == nil {
+		return nil, systemErr.ErrBootstrapOwnerFailed
+	}
 	now := time.Now().UTC()
 	initialMetadata := map[string]interface{}{
 		"bootstrap_started_at": now.Format(time.RFC3339),
 		"admin_username":       cmd.AdminUsername,
+		"admin_email":          cmd.AdminEmail,
+		"owner_account_id":     owner.GetAccountId(),
+		"forger_profile_id":    owner.GetForgerProfileId(),
+		"authority_profile_id": owner.GetAuthorityProfileId(),
 		"services_initialized": []string{"auth", "asset", "system"},
 	}
 	systemState, err := systemStateDomain.NewSystemState(systemStateDomain.NewSystemStateParams{
@@ -139,6 +164,10 @@ func (s *Service) finalizeSystemState(
 	updatedMetadata := map[string]interface{}{
 		"bootstrap_started_at":   systemState.Metadata()["bootstrap_started_at"],
 		"admin_username":         systemState.Metadata()["admin_username"],
+		"admin_email":            systemState.Metadata()["admin_email"],
+		"owner_account_id":       systemState.Metadata()["owner_account_id"],
+		"forger_profile_id":      systemState.Metadata()["forger_profile_id"],
+		"authority_profile_id":   systemState.Metadata()["authority_profile_id"],
 		"services_initialized":   []string{"auth", "asset", "system"},
 		"bootstrap_completed_at": time.Now().UTC().Format(time.RFC3339),
 		"schema_clear_results":   schemaClearResults,

@@ -7,5 +7,12 @@
   "cancel": "Annuler",
   "submit": "Soumettre",
   "submitting": "Soumission...",
-  "loading": "Chargement de la préférence..."
+  "loading": "Chargement de la préférence...",
+  "changePassword": "Changer le mot de passe",
+  "changePasswordHint": "Identity conserve le mot de passe. Demandez un code, puis définissez-en un nouveau.",
+  "currentPassword": "Mot de passe actuel",
+  "newPassword": "Nouveau mot de passe",
+  "verificationCode": "Code de vérification",
+  "sendCode": "Envoyer le code",
+  "passwordUpdated": "Mot de passe mis à jour."
 }

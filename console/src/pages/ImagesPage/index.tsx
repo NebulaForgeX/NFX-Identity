@@ -14,9 +14,16 @@ const AssetsPage = memo(function AssetsPage() {
   const asset = useAssetRepository();
   const [kind, setKind] = useState<Asset.Kind>("images");
   const [rows, setRows] = useState<Asset.Response.Detail[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
-    setRows(await asset.List(kind));
+    setError(null);
+    try {
+      setRows(await asset.List(kind));
+    } catch (err) {
+      setError((err as Error).message);
+      setRows([]);
+    }
   }, [asset, kind]);
 
   useEffect(() => {
@@ -32,12 +39,12 @@ const AssetsPage = memo(function AssetsPage() {
 
   return (
     <PageFrame>
-      <PageHeader icon={Images} title={t("title", "Assets")} description={t("subtitle", "Images, files, videos, and audios in Stack MinIO")} />
+      <PageHeader icon={Images} title={t("title")} description={t("subtitle")} />
       <Tabs.Root value={kind} onValueChange={(v) => setKind(v as Asset.Kind)}>
         <Tabs.List>
           {KINDS.map((k) => (
             <Tabs.Trigger key={k} value={k}>
-              {k}
+              {t(`kinds.${k}`)}
             </Tabs.Trigger>
           ))}
         </Tabs.List>
@@ -45,7 +52,7 @@ const AssetsPage = memo(function AssetsPage() {
       <Flex mt="4" mb="4">
         <Button asChild>
           <label>
-            Upload
+            {t("upload")}
             <input
               type="file"
               hidden
@@ -58,11 +65,23 @@ const AssetsPage = memo(function AssetsPage() {
           </label>
         </Button>
       </Flex>
+      {error ? (
+        <Text size="2" color="red">
+          {error}
+        </Text>
+      ) : null}
       <Flex direction="column" gap="2">
-        {rows.length === 0 ? <Heading size="3">No items</Heading> : null}
+        {rows.length === 0 ? <Heading size="3">{t("noItems")}</Heading> : null}
         {rows.map((row) => (
-          <Flex key={row.id} justify="between" align="center">
-            <Text size="2">{row.fileName}</Text>
+          <Flex key={row.id} justify="between" align="center" gap="3">
+            <Flex align="center" gap="3">
+              {kind === "images" ? <img src={asset.FileURL("images", row.id)} alt="" style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 8 }} /> : null}
+              <Text size="2">
+                <a href={asset.FileURL(kind, row.id)} target="_blank" rel="noreferrer">
+                  {row.fileName}
+                </a>
+              </Text>
+            </Flex>
             <Button
               variant="soft"
               color="red"
@@ -70,7 +89,7 @@ const AssetsPage = memo(function AssetsPage() {
                 void asset.Delete(kind, row.id).then(reload);
               }}
             >
-              Delete
+              {t("delete")}
             </Button>
           </Flex>
         ))}

@@ -1,10 +1,11 @@
 import { memo, useState } from "react";
-import { Button, Card, Flex, Table, TextField } from "@radix-ui/themes";
+import { Button, Card, Flex, Select, Table, Text, TextField } from "@radix-ui/themes";
 import { Shield } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthRepository } from "nfx-ui/apis";
 import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
 import { PageFrame } from "nfx-ui/layouts";
+import { AuthAuthorityRoleEnum, UI_ASSIGNABLE_AUTH_AUTHORITY_ROLES } from "nfx-ui/enums";
 import type { Profile } from "nfx-ui/types";
 
 const OwnerDirectoryPage = memo(() => {
@@ -18,19 +19,27 @@ const OwnerDirectoryPage = memo(() => {
     queryKey: ["owner-authority", query],
     queryFn: () => auth.ListOwnerAuthorityProfiles({ limit: 50, offset: 0, query }),
   });
+  const updateRoles = useMutation({
+    mutationFn: async (input: { profileId: string; authorityRoles: AuthAuthorityRoleEnum[] }) => {
+      await auth.UpdateAuthorityProfileRoles(input.profileId, { authorityRoles: input.authorityRoles });
+    },
+    onSuccess: () => {
+      void authorities.refetch();
+    },
+  });
   const forgerItems = forgers.data?.items ?? [];
   const authorityItems = authorities.data?.items ?? [];
-  const ownerError = forgers.error || authorities.error;
+  const ownerError = forgers.error || authorities.error || updateRoles.error;
 
   return (
     <PageFrame>
       <PageHeader
         icon={Shield}
         title="Owner directory"
-        description="List Forger and Authority profiles on this login center."
+        description="List Forger and Authority profiles. Owner can assign auditor/administrator, not owner."
         actions={<TextField.Root placeholder="Search profiles" value={query} onChange={(e) => setQuery(e.target.value)} />}
       />
-      {ownerError ? <EmptyState icon={Shield} title="Owner role required to list all profiles." /> : null}
+      {ownerError ? <EmptyState icon={Shield} title={(ownerError as Error).message || "Owner role required to list all profiles."} /> : null}
       <Flex direction="column" gap="4">
         <Card>
           <CardHeader icon={<Shield size={18} />} title="Forger" />
@@ -67,20 +76,56 @@ const OwnerDirectoryPage = memo(() => {
                 <Table.Row>
                   <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell>Roles</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Assign</Table.ColumnHeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {authorityItems.map((item: Profile.Response.AuthorityProfileItem) => (
-                  <Table.Row key={item.profileId}>
-                    <Table.Cell>{item.displayName}</Table.Cell>
-                    <Table.Cell>{(item.authorityRoles ?? []).join(", ")}</Table.Cell>
-                  </Table.Row>
-                ))}
+                {authorityItems.map((item: Profile.Response.AuthorityProfileItem) => {
+                  const roles = item.authorityRoles ?? [];
+                  const isOwner = roles.includes(AuthAuthorityRoleEnum.OWNER);
+                  const current = roles.find((role) => role !== AuthAuthorityRoleEnum.OWNER) ?? AuthAuthorityRoleEnum.ADMINISTRATOR;
+                  return (
+                    <Table.Row key={item.profileId}>
+                      <Table.Cell>{item.displayName}</Table.Cell>
+                      <Table.Cell>{roles.join(", ")}</Table.Cell>
+                      <Table.Cell>
+                        {isOwner ? (
+                          <Text size="2">owner</Text>
+                        ) : (
+                          <Select.Root
+                            value={current}
+                            onValueChange={(value) => {
+                              updateRoles.mutate({
+                                profileId: item.profileId,
+                                authorityRoles: [value as AuthAuthorityRoleEnum],
+                              });
+                            }}
+                          >
+                            <Select.Trigger />
+                            <Select.Content>
+                              {UI_ASSIGNABLE_AUTH_AUTHORITY_ROLES.map((role) => (
+                                <Select.Item key={role} value={role}>
+                                  {role}
+                                </Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table.Root>
           )}
         </Card>
-        <Button variant="soft" onClick={() => { void forgers.refetch(); void authorities.refetch(); }}>
+        <Button
+          variant="soft"
+          onClick={() => {
+            void forgers.refetch();
+            void authorities.refetch();
+          }}
+        >
           Refresh
         </Button>
       </Flex>

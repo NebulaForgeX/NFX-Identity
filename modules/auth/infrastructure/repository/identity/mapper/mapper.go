@@ -1,8 +1,10 @@
 package mapper
+
 import (
 	"nfxidentity/modules/auth/domain/identity"
 	"nfxidentity/modules/auth/infrastructure/rdb/models"
 )
+
 func ToModel(i *identity.Identity) *models.Identity {
 	st := i.State()
 	return &models.Identity{ID: st.ID, AccountID: st.AccountID, IdentityProvider: st.IdentityProvider, ProviderSubject: st.ProviderSubject, PasswordHash: st.PasswordHash, LastLoginAt: st.LastLoginAt, CreatedAt: st.CreatedAt, UpdatedAt: st.UpdatedAt, DeletedAt: st.DeletedAt}

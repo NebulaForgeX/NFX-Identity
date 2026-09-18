@@ -1,4 +1,13 @@
 {
   "title": "Ressources",
-  "subtitle": "Images, fichiers, vidéos et audios dans Stack MinIO"
+  "subtitle": "Images, fichiers, vidéos et audios dans Stack MinIO",
+  "upload": "Téléverser",
+  "delete": "Supprimer",
+  "noItems": "Aucun élément",
+  "kinds": {
+    "images": "Images",
+    "files": "Fichiers",
+    "videos": "Vidéos",
+    "audios": "Audios"
+  }
 }

@@ -1,10 +1,9 @@
 package handler
 
 import (
+	"nfxidentity/errors/src/sys"
 	"os"
 	"path/filepath"
-
-	"nfxidentity/pkgs/errx"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -27,16 +26,16 @@ func NewI18nHandler(errorsLangsPath string) *I18nHandler {
 func (h *I18nHandler) GetErrorTranslations(c fiber.Ctx) error {
 	lang := c.Params("lang")
 	if lang == "" || !supportedLangs[lang] {
-		return errx.ErrInvalidParams.WithMsg("lang must be one of: en, zh, fr")
+		return sys.ErrInvalidParams.WithMsg("lang must be one of: en, zh, fr")
 	}
 	name := lang + ".json"
 	fpath := filepath.Join(h.errorsLangsPath, name)
 	data, err := os.ReadFile(fpath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return errx.NotFound("NOT_FOUND", "translation file not found: "+name)
+			return sys.ErrNotFound.WithMsg("translation file not found: " + name)
 		}
-		return errx.ErrInternal.WithCause(err)
+		return sys.ErrInternal.WithCause(err)
 	}
 	c.Set("Content-Type", "application/json; charset=utf-8")
 	return c.Send(data)

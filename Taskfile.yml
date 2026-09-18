@@ -1,43 +1,41 @@
 # https://taskfile.dev
+# 推荐用法：`task start` → 先选择 dev / secure → 再从菜单选指令。
+#   task start
+#   task run（默认 dev） | task atlas:pipeline:run ENV=secure -- --no-skip
+# Identity 不跑 Traefik/Kafka 栈；infra 在 NFX-Stack / NFX-Edge。
 
 version: "3"
-
-dotenv:
-  - ".env"
 
 vars:
   PROTO_SRC_DIR: protos
   PROTO_OUT_DIR: protos/gen
-  GO_VERSION: "1.24.3"
-  POSTGRES_HOST: "172.18.0.6"
-  POSTGRES_PORT: "5432"
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "Lucas127."
-  POSTGRES_DB_DEV: "nfxidentity_dev"
-  POSTGRES_DB_PROD: "nfxidentity"
-  POSTGRES_DB_SHADOW: "nfxidentity_diff"
-  POSTGRES_CONTAINER_NAME: "NFX-Stack-PostgreSQL"
-  ATLAS_ENV: "{{default \"dev\" .ATLAS_ENV}}"
-  ATLAS_CONFIG_PATH: "file://databases/atlas.hcl"
-  ATLAS_MIGRATIONS_DIR_DEV: "file://databases/migrations/development"
-  ATLAS_MIGRATIONS_DIR_PROD: "file://databases/migrations/production"
-  ATLAS_MIGRATIONS_DIR: "{{if eq .ATLAS_ENV \"prod\"}}{{.ATLAS_MIGRATIONS_DIR_PROD}}{{else}}{{.ATLAS_MIGRATIONS_DIR_DEV}}{{end}}"
-  # Resources docker-compose.yml path (relative to Identity-Backend directory)
-  RESOURCES_DOCKER_COMPOSE: "../Resources/docker-compose.yml"
-  # 错误：源码 errors/src，生成 errors/langs；与 docker-compose watch/volume 一致
+  GO_VERSION: "1.26.0"
+  MODULE: "nfxidentity"
   ERRORS_DIR: errors
+  MESSAGES_DIR: messages
+  ENV: '{{.ENV | default "dev"}}'
+  ENV_FILE: '{{if eq .ENV "secure"}}.secure.env{{else}}.env{{end}}'
+  APP_COMPOSE: '{{if eq .ENV "secure"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
+  EDGE_NETWORK: nfx-edge
 
 tasks:
+  start:
+    desc: "Interactive task menu — browse Taskfile tasks with ↑/↓ or w/s, Enter to run"
+    cmds:
+      - ./task.sh
+    interactive: true
+
   install:
     desc: "Install required Go dev tools"
     cmds:
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-      - go install github.com/air-verse/air@latest
-      - go install golang.org/x/tools/cmd/goimports@latest
-      - go install github.com/segmentio/golines@latest
-      - go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-      - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-      - go install golang.org/x/tools/cmd/goimports@latest
+      - |
+        if [ -f /volume1/Environments/use-menv.sh ]; then . /volume1/Environments/use-menv.sh >/dev/null 2>&1 || true; fi
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        go install github.com/air-verse/air@latest
+        go install golang.org/x/tools/cmd/goimports@latest
+        go install github.com/segmentio/golines@latest
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
     silent: false
 
   proto:gen:
@@ -47,7 +45,7 @@ tasks:
       - buf dep update
       - buf generate
     sources:
-      - "{{.PROTO_SRC_DIR}}/**/*.proto"
+      - "{{.PROTO_SRC_DIR}}/src/**/*.proto"
     generates:
       - "{{.PROTO_OUT_DIR}}/**/*.pb.go"
 
@@ -69,53 +67,166 @@ tasks:
       - task: fmt
       - task: lint
 
+  errors:add-templates:
+    desc: "Add i18n comment blocks to .go files in errors/src that lack them"
+    cmds:
+      - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
+
+  errors:gen-langs:
+    desc: "Generate errors/langs/*.json from translation blocks in errors/src"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{.CLI_ARGS}}
+
+  errors:gen-langs:prod:
+    desc: "Generate errors/langs/*.json for production (*p* overrides)"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} --prod
+
+  errors:
+    desc: "Errors: add missing i18n blocks then generate langs"
+    cmds:
+      - task: errors:add-templates
+      - task: errors:gen-langs
+
+  messages:gen-langs:
+    desc: "Generate messages/langs/*.json from translation blocks in messages/src"
+    cmds:
+      - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}} {{.CLI_ARGS}}
+
+  messages:
+    desc: "Generate system-message i18n JSON"
+    cmds:
+      - task: messages:gen-langs
+
+  clean:
+    desc: "Clean build artifacts"
+    cmds:
+      - rm -rf bin/
+
+  redis:tunnel:
+    desc: "Kill any stale Redis SSH tunnel, then prompt to open a fresh local-forward"
+    interactive: true
+    cmds:
+      - bash scripts/redis_ssh_tunnel.sh --env-file {{.ENV_FILE}}
+
+  redis:tunnel:down:
+    desc: "Stop Redis SSH tunnel and remove .env.redis-tunnel"
+    cmds:
+      - bash scripts/redis_ssh_tunnel.sh --down
+
+  run:
+    desc: "Generate langs then start auth/asset/system (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
+      - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
+      - |
+        echo "==> ensure docker network {{.EDGE_NETWORK}}"
+        if sudo docker network inspect {{.EDGE_NETWORK}}; then
+          echo "  network {{.EDGE_NETWORK}} already exists"
+        else
+          echo "ERROR: Docker network {{.EDGE_NETWORK}} missing. Start NFX-Edge first."
+          exit 1
+        fi
+      - |
+        ENV_ARGS=(--env-file "{{.ENV_FILE}}")
+        if [[ -f .env.redis-tunnel ]]; then
+          ENV_ARGS+=(--env-file .env.redis-tunnel)
+          echo "==> compose env: {{.ENV_FILE}} + .env.redis-tunnel"
+        else
+          echo "==> compose env: {{.ENV_FILE}} only (no Redis tunnel sidecar)"
+        fi
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          svcs=(auth-api asset-api system-api)
+        else
+          svcs=(auth-base asset-base system-base)
+        fi
+        for svc in "${svcs[@]}"; do
+          echo "==> docker compose build $svc"
+          sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build "$svc"
+        done
+        echo "==> docker compose up"
+        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
+
+  run:rebuild:
+    desc: "Force-rebuild (--no-cache) auth/asset/system (ENV=dev|secure)"
+    cmds:
+      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
+      - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
+      - |
+        echo "==> ensure docker network {{.EDGE_NETWORK}}"
+        if sudo docker network inspect {{.EDGE_NETWORK}}; then
+          echo "  network {{.EDGE_NETWORK}} already exists"
+        else
+          echo "ERROR: Docker network {{.EDGE_NETWORK}} missing. Start NFX-Edge first."
+          exit 1
+        fi
+      - |
+        ENV_ARGS=(--env-file "{{.ENV_FILE}}")
+        if [[ -f .env.redis-tunnel ]]; then
+          ENV_ARGS+=(--env-file .env.redis-tunnel)
+        fi
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          svcs=(auth-api asset-api system-api)
+        else
+          svcs=(auth-base asset-base system-base)
+        fi
+        for svc in "${svcs[@]}"; do
+          echo "==> docker compose build --no-cache $svc"
+          sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build --no-cache "$svc"
+        done
+        echo "==> docker compose up"
+        sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
+
+  run:down:
+    desc: "Stop the app stack (ENV=dev|secure)"
+    cmds:
+      - sudo docker compose --env-file {{.ENV_FILE}} -f {{.APP_COMPOSE}} down
+
   atlas:gen-models:
-    desc: "Generate Go models from the database schema"
+    desc: "Generate Go models from the PostgreSQL schema (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        POSTGRES_USER="{{.POSTGRES_USER}}" \
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
-        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
-        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
-        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
-        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
-        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
-        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_models.sh
     silent: false
 
   atlas:gen-views:
-    desc: "Generate Go views from the database schema"
+    desc: "Generate Go views from the PostgreSQL schema (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        POSTGRES_USER="{{.POSTGRES_USER}}" \
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
-        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
-        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
-        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
-        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
-        RESOURCES_DOCKER_COMPOSE="{{.RESOURCES_DOCKER_COMPOSE}}" \
-        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_views.sh
     silent: false
 
   atlas:gen-enums:
-    desc: "Generate Go enums from the database schema"
+    desc: "Generate Go enums from the PostgreSQL schema (ENV=dev|secure)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        POSTGRES_USER="{{.POSTGRES_USER}}" \
-        POSTGRES_PASSWORD="{{.POSTGRES_PASSWORD}}" \
-        POSTGRES_HOST="{{.POSTGRES_HOST}}" \
-        POSTGRES_PORT="{{.POSTGRES_PORT}}" \
-        POSTGRES_DB_DEV="{{.POSTGRES_DB_DEV}}" \
-        POSTGRES_DB_PROD="{{.POSTGRES_DB_PROD}}" \
-        POSTGRES_DB_SHADOW="{{.POSTGRES_DB_SHADOW}}" \
-        POSTGRES_CONTAINER_NAME="{{.POSTGRES_CONTAINER_NAME}}" \
-        ATLAS_ENV="{{.ATLAS_ENV}}" \
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_enums.sh
     silent: false
 
@@ -127,70 +238,102 @@ tasks:
       - task: atlas:gen-views
     silent: false
 
-  atlas:pipeline:run:ps:
-    desc: "Run Atlas pipeline using PowerShell (interactive environment selection)"
-    dir: .
-    env:
-      POSTGRES_USER: "{{.POSTGRES_USER}}"
-      POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
-      POSTGRES_HOST: "{{.POSTGRES_HOST}}"
-      POSTGRES_PORT: "{{.POSTGRES_PORT}}"
-      POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
-      POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
-      POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
-      POSTGRES_CONTAINER_NAME: "{{.POSTGRES_CONTAINER_NAME}}"
-      RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
-      ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
-    cmds:
-      - powershell -ExecutionPolicy Bypass -File run_atlas_pipeline.ps1
-
-  atlas:pipeline:run:sh:
-    desc: "Run Atlas pipeline using bash (interactive environment selection)"
-    env:
-      POSTGRES_USER: "{{.POSTGRES_USER}}"
-      POSTGRES_PASSWORD: "{{.POSTGRES_PASSWORD}}"
-      POSTGRES_HOST: "{{.POSTGRES_HOST}}"
-      POSTGRES_PORT: "{{.POSTGRES_PORT}}"
-      POSTGRES_DB_DEV: "{{.POSTGRES_DB_DEV}}"
-      POSTGRES_DB_PROD: "{{.POSTGRES_DB_PROD}}"
-      POSTGRES_DB_SHADOW: "{{.POSTGRES_DB_SHADOW}}"
-      POSTGRES_CONTAINER_NAME: "{{.POSTGRES_CONTAINER_NAME}}"
-      RESOURCES_DOCKER_COMPOSE: "{{.RESOURCES_DOCKER_COMPOSE}}"
-      ATLAS_CONFIG_PATH: "{{.ATLAS_CONFIG_PATH}}"
-    cmds:
-      - bash run_atlas_pipeline.sh
-
-  atlas:push:
-    desc: "Push migrations to Atlas Cloud"
-    dir: atlas
+  atlas:pipeline:run:
+    desc: "Run Atlas pipeline (ENV=dev|secure; extra flags after --)"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
       - |
-        source /volume1/use-menv.sh && \
-        atlas migrate push \
-          --env {{.ATLAS_ENV}} \
-          --dev-url "postgres://{{.POSTGRES_USER}}:{{.POSTGRES_PASSWORD}}@{{.POSTGRES_HOST}}:{{.POSTGRES_PORT}}/{{.POSTGRES_DB_SHADOW}}?sslmode=disable" \
-          nfx-identity
-    silent: false
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export ATLAS_CONFIG_PATH="file://databases/atlas.hcl"
+        bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
 
-  clean:
-    desc: "Clean build artifacts"
+  databases:gen:
+    desc: "Generate Go enums+models+views from the schema, no Atlas. KIND=enums|models|views|all"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
-      - rm -rf bin/
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        bash databases/scripts/db_gen.sh "{{.KIND | default "all"}}"
 
-  errors:add-templates:
-    desc: "Add /* */ translation template block to .go files in errors/src that don't have it"
+  databases:migrate-diff:
+    desc: "Show schema delta. Extra flags after --."
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
-      - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        bash databases/scripts/db_migrate_diff.sh {{.CLI_ARGS}}
 
-  errors:gen-langs:
-    desc: "Clear errors/langs then generate frontend i18n JSON from /* */ blocks in errors/src"
+  databases:migrate-apply:
+    desc: "Apply versioned goose migrations. Extra goose args after --."
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
-      - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}}
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        bash databases/scripts/db_migrate_apply.sh {{.CLI_ARGS}}
 
-  errors:add-templates:
-    desc: "Add /* */ translation template block to .go files in errors/src that don't have it"
+  databases:baseline:
+    desc: "Bootstrap goose versioning from the current schema"
+    dotenv:
+      - "{{.ENV_FILE}}"
     cmds:
-      - go run ./errors/cmd/add_templates/ {{.ERRORS_DIR}}
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        bash databases/scripts/db_goose_baseline.sh
+
+  databases:pipeline:run:
+    desc: "Run the license-free DB pipeline (diff -> apply -> generate)"
+    dotenv:
+      - "{{.ENV_FILE}}"
+    cmds:
+      - |
+        export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
+        export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
+        export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
+        export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
+        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        bash run_db_pipeline.sh {{.CLI_ARGS}}
+
+  scripts:test-db:
+    desc: "Probe PostgreSQL (+ Redis) using auth TOML + .env"
+    dotenv:
+      - "{{.ENV_FILE}}"
+    cmds:
+      - ENV={{.ENV}} go run ./scripts/testdb/ {{.CLI_ARGS}}
+
+  scripts:clear-data:
+    desc: "Truncate all table data in auth/asset/system (dev only). Pass -- --yes to skip prompt."
+    cmds:
+      - go run ./scripts/cleardata/ {{.CLI_ARGS}}
 
   console:
     desc: "Run console dev server"
@@ -203,13 +346,3 @@ tasks:
     dir: console
     cmds:
       - npm install
-  
-  go:ub:
-    desc: "Up go dev server and build"
-    cmds:
-      - sudo docker compose -f docker-compose.dev.yml up --build
-
-  go:up:
-    desc: "Up go dev server"
-    cmds:
-      - sudo docker compose -f docker-compose.dev.yml up

@@ -48,5 +48,9 @@
     "verificationCodeRequired": "Le code de vérification est requis",
     "verificationCodeLength": "Le code de vérification doit contenir 6 chiffres",
     "inviteCodeRequired": "Le code d'invitation est requis"
-  }
+  },
+  "githubCallback": "Connexion GitHub",
+  "githubCallbackHint": "Finalisation de l'autorisation GitHub…",
+  "githubCallbackFailed": "Échec de la connexion GitHub",
+  "githubMissingCode": "GitHub n'a pas renvoyé de code d'autorisation"
 }

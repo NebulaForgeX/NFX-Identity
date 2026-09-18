@@ -9,10 +9,12 @@ import (
 	"strings"
 	"time"
 
+	"nfxidentity/errors/src/auth"
 	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
 	emailQuery "nfxidentity/modules/auth/query/email"
 	phoneQuery "nfxidentity/modules/auth/query/phone"
 	profileQuery "nfxidentity/modules/auth/query/profile"
+	"nfxidentity/pkgs/email"
 	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/tokenx"
 	"nfxidentity/pkgs/transaction"
@@ -21,27 +23,19 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var (
-	ErrInvalidCredentials = errx.Unauthorized("INVALID_CREDENTIALS", "invalid credentials")
-	ErrInvalidToken       = errx.Unauthorized("INVALID_TOKEN", "invalid or expired token")
-	ErrInvalidRefresh     = errx.Unauthorized("INVALID_REFRESH_TOKEN", "invalid refresh token")
-	ErrProfileNotOwned    = errx.Forbidden("PROFILE_NOT_OWNED", "profile is not owned by account")
-	ErrOwnerRequired      = errx.Forbidden("AUTHORITY_PROFILE_INSUFFICIENT_ROLE", "owner role required")
-	ErrNotFound           = errx.NotFound("NOT_FOUND", "resource not found")
-)
-
 const emptyProfileID = "00000000-0000-0000-0000-000000000000"
 
 type Service struct {
-	tx       transaction.TxManager
-	repos    *repofactory.TxRepoFactory
-	emails   *emailQuery.Query
-	phones   *phoneQuery.Query
-	profiles *profileQuery.Query
-	tokens   *tokenx.Tokenx
-	github   *GitHubConfig
-	redis    *redis.Client
-	checkFn  checkFunc
+	tx          transaction.TxManager
+	repoFactory *repofactory.TxRepoFactory
+	emails      *emailQuery.Query
+	phones      *phoneQuery.Query
+	profiles    *profileQuery.Query
+	tokens      *tokenx.Tokenx
+	github      *GitHubConfig
+	redis       *redis.Client
+	mail        *email.EmailService
+	checkFn     checkFunc
 }
 
 type GitHubConfig struct {
@@ -52,17 +46,18 @@ type GitHubConfig struct {
 
 func NewService(
 	tx transaction.TxManager,
-	repos *repofactory.TxRepoFactory,
+	repoFactory *repofactory.TxRepoFactory,
 	emails *emailQuery.Query,
 	phones *phoneQuery.Query,
 	profiles *profileQuery.Query,
 	tokens *tokenx.Tokenx,
 	github *GitHubConfig,
 	redisClient *redis.Client,
+	mail *email.EmailService,
 ) *Service {
 	s := &Service{
-		tx: tx, repos: repos, emails: emails, phones: phones, profiles: profiles,
-		tokens: tokens, github: github, redis: redisClient,
+		tx: tx, repoFactory: repoFactory, emails: emails, phones: phones, profiles: profiles,
+		tokens: tokens, github: github, redis: redisClient, mail: mail,
 	}
 	if redisClient != nil {
 		s.SetVerificationChecker(s.redisCheckCode)
@@ -108,16 +103,19 @@ func isMissing(err error) bool {
 
 func none() transaction.UoW { return transaction.UoW{} }
 
-func (s *Service) StoreVerificationCode(ctx context.Context, email, code string) {
+func (s *Service) StoreVerificationCode(ctx context.Context, email, code string) error {
 	if s.redis == nil {
-		return
+		return auth.ErrVerificationCodeSaveFailed
 	}
-	_ = s.redis.Set(ctx, verifyKey(email), code, 10*time.Minute).Err()
+	if err := s.redis.Set(ctx, verifyKey(email), code, 10*time.Minute).Err(); err != nil {
+		return auth.ErrVerificationCodeSaveFailed.WithCause(err)
+	}
+	return nil
 }
 
 func (s *Service) redisCheckCode(ctx context.Context, email, code string) bool {
 	if s.redis == nil {
-		return len(code) >= 4
+		return false
 	}
 	got, err := s.redis.Get(ctx, verifyKey(email)).Result()
 	if err != nil {
@@ -138,21 +136,24 @@ func (s *Service) SetVerificationChecker(fn func(ctx context.Context, email, cod
 	s.checkFn = fn
 }
 
-var defaultCheck = func(ctx context.Context, email, code string) bool {
-	return len(code) >= 4
-}
-
-func (s *Service) checkVerificationCode(ctx context.Context, email, code string) bool {
-	if s.checkFn != nil {
-		return s.checkFn(ctx, email, code)
+func (s *Service) consumeVerificationCode(ctx context.Context, email, code string) error {
+	code = strings.TrimSpace(code)
+	if code == "" {
+		return auth.ErrVerificationCodeWrong
 	}
-	return defaultCheck(ctx, email, code)
+	if s.checkFn != nil {
+		if s.checkFn(ctx, email, code) {
+			return nil
+		}
+		return auth.ErrVerificationCodeWrong
+	}
+	return auth.ErrVerificationCodeExpired
 }
 
 func (s *Service) issueAccountSession(ctx context.Context, accountID uuid.UUID, identityID *uuid.UUID, deviceID, email, phone string) (*LoginOutput, error) {
 	access, refresh, err := s.tokens.GenerateTokenPair(accountID.String(), emptyProfileID, "", email, phone, "")
 	if err != nil {
-		return nil, errx.Internal("TOKEN_FAILED", err.Error())
+		return nil, auth.ErrTokenFailed.WithCause(err)
 	}
 	if err := s.persistRefresh(ctx, accountID, identityID, nil, nil, deviceID, refresh); err != nil {
 		return nil, err
@@ -166,9 +167,9 @@ func (s *Service) issueAccountSession(ctx context.Context, accountID uuid.UUID, 
 func (s *Service) persistRefresh(ctx context.Context, accountID uuid.UUID, identityID, profileID *uuid.UUID, scope *string, deviceID, refresh string) error {
 	now := time.Now()
 	return s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		rt := s.repos.RefreshToken(uow)
+		refreshTokenRepo := s.repoFactory.RefreshToken(uow)
 		if deviceID != "" {
-			if err := rt.Update.RevokeDevice(ctx, accountID, deviceID, now); err != nil {
+			if err := refreshTokenRepo.Update.RevokeDevice(ctx, accountID, deviceID, now); err != nil {
 				return err
 			}
 		}
@@ -177,7 +178,7 @@ func (s *Service) persistRefresh(ctx context.Context, accountID uuid.UUID, ident
 			dev = &deviceID
 		}
 		row := refreshtokenNew(accountID, identityID, profileID, scope, dev, hashToken(refresh), now)
-		return rt.Create.New(ctx, row)
+		return refreshTokenRepo.Create.New(ctx, row)
 	})
 }
 
@@ -231,12 +232,12 @@ func (s *Service) primaryContacts(ctx context.Context, accountID uuid.UUID) (ema
 }
 
 func (s *Service) requireOwner(ctx context.Context, accountID uuid.UUID) error {
-	ok, err := s.repos.Authority(none()).Get.HasOwnerRole(ctx, accountID)
+	ok, err := s.repoFactory.Authority(none()).Get.HasOwnerRole(ctx, accountID)
 	if err != nil {
 		return err
 	}
 	if !ok {
-		return ErrOwnerRequired
+		return auth.ErrAuthorityProfileInsufficientRole
 	}
 	return nil
 }
@@ -244,25 +245,25 @@ func (s *Service) requireOwner(ctx context.Context, accountID uuid.UUID) error {
 func (s *Service) EnsureOwnedProfile(ctx context.Context, accountID, profileID, scope string) error {
 	aid, err := uuid.Parse(accountID)
 	if err != nil {
-		return ErrProfileNotOwned
+		return auth.ErrProfileNotOwned
 	}
 	pid, err := uuid.Parse(profileID)
 	if err != nil {
-		return ErrProfileNotOwned
+		return auth.ErrProfileNotOwned
 	}
 	switch scope {
 	case "forger":
-		ok, err := s.repos.Forger(none()).Get.Owned(ctx, aid, pid)
+		ok, err := s.repoFactory.Forger(none()).Get.Owned(ctx, aid, pid)
 		if err != nil || !ok {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 	case "authority":
-		ok, err := s.repos.Authority(none()).Get.Owned(ctx, aid, pid)
+		ok, err := s.repoFactory.Authority(none()).Get.Owned(ctx, aid, pid)
 		if err != nil || !ok {
-			return ErrProfileNotOwned
+			return auth.ErrProfileNotOwned
 		}
 	default:
-		return ErrProfileNotOwned
+		return auth.ErrProfileNotOwned
 	}
 	return nil
 }
@@ -298,7 +299,8 @@ func nullableStr(s string) *string {
 func RandomCode() string {
 	b := make([]byte, 3)
 	_, _ = rand.Read(b)
-	return fmt.Sprintf("%06d", int(b[0])<<16|int(b[1])<<8|int(b[2])%1000000%1000000)
+	n := (int(b[0])<<16 | int(b[1])<<8 | int(b[2])) % 1000000
+	return fmt.Sprintf("%06d", n)
 }
 
 func fullCacheKey(accountID, profileID uuid.UUID) string {

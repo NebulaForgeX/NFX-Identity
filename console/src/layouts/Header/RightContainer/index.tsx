@@ -2,10 +2,10 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PreferencesPopover } from "nfx-ui/components";
 import { useAuthRepository } from "nfx-ui/apis";
-import { AuthStore, useAuthStore } from "nfx-ui/stores";
-import { authEventEmitter } from "nfx-ui/events";
+import { useAuthStore } from "nfx-ui/stores";
 import { Mail } from "@/assets/icons/lucide";
 import { routerEventEmitter } from "@/events/router";
+import { clearLocalData } from "@/utils/clearLocalData";
 import styles from "./styles.module.css";
 
 const RightContainer = memo(() => {
@@ -53,9 +53,7 @@ const UserMenu = memo(() => {
   const accountId = useAuthStore((s) => s.currentAccountId);
 
   const handleLogout = useCallback(() => {
-    AuthStore.getState().clearAuth();
-    authEventEmitter.logout();
-    routerEventEmitter.navigateToLogin();
+    void clearLocalData();
   }, []);
 
   const items = useMemo(

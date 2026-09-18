@@ -132,10 +132,10 @@ func (d *Dependencies) ResourceSvc() *resourceApp.Service          { return d.re
 func (d *Dependencies) HealthMgr() *health.Manager                 { return d.healthMgr }
 func (d *Dependencies) UserTokenVerifier() token.Verifier          { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier        { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config          { return d.kafkaConfig }
-func (d *Dependencies) BusPublisher() *eventbus.BusPublisher { return d.busPublisher }
-func (d *Dependencies) Postgres() *postgresqlx.Connection    { return d.postgres }
-func (d *Dependencies) ErrorsLangsPath() string                     { return d.errorsLangsPath }
+func (d *Dependencies) KafkaConfig() *kafkax.Config                { return d.kafkaConfig }
+func (d *Dependencies) BusPublisher() *eventbus.BusPublisher       { return d.busPublisher }
+func (d *Dependencies) Postgres() *postgresqlx.Connection          { return d.postgres }
+func (d *Dependencies) ErrorsLangsPath() string                    { return d.errorsLangsPath }
 
 // tokenxVerifierAdapter 将 tokenx.Tokenx 适配为 token.Verifier 接口
 type tokenxVerifierAdapter struct {

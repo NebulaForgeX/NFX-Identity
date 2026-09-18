@@ -28,6 +28,7 @@ const (
 	AccountService_InvalidateFullInformationWithAuthorityProfile_FullMethodName = "/account.AccountService/InvalidateFullInformationWithAuthorityProfile"
 	AccountService_EnsureOwnedProfile_FullMethodName                            = "/account.AccountService/EnsureOwnedProfile"
 	AccountService_ListProfilesInTable_FullMethodName                           = "/account.AccountService/ListProfilesInTable"
+	AccountService_BootstrapOwner_FullMethodName                                = "/account.AccountService/BootstrapOwner"
 )
 
 // AccountServiceClient is the client API for AccountService service.
@@ -43,6 +44,7 @@ type AccountServiceClient interface {
 	InvalidateFullInformationWithAuthorityProfile(ctx context.Context, in *InvalidateFullInformationWithAuthorityProfileRequest, opts ...grpc.CallOption) (*InvalidateFullInformationWithAuthorityProfileResponse, error)
 	EnsureOwnedProfile(ctx context.Context, in *EnsureOwnedProfileRequest, opts ...grpc.CallOption) (*EnsureOwnedProfileResponse, error)
 	ListProfilesInTable(ctx context.Context, in *ListProfilesInTableRequest, opts ...grpc.CallOption) (*ListProfilesInTableResponse, error)
+	BootstrapOwner(ctx context.Context, in *BootstrapOwnerRequest, opts ...grpc.CallOption) (*BootstrapOwnerResponse, error)
 }
 
 type accountServiceClient struct {
@@ -143,6 +145,16 @@ func (c *accountServiceClient) ListProfilesInTable(ctx context.Context, in *List
 	return out, nil
 }
 
+func (c *accountServiceClient) BootstrapOwner(ctx context.Context, in *BootstrapOwnerRequest, opts ...grpc.CallOption) (*BootstrapOwnerResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BootstrapOwnerResponse)
+	err := c.cc.Invoke(ctx, AccountService_BootstrapOwner_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility.
@@ -156,6 +168,7 @@ type AccountServiceServer interface {
 	InvalidateFullInformationWithAuthorityProfile(context.Context, *InvalidateFullInformationWithAuthorityProfileRequest) (*InvalidateFullInformationWithAuthorityProfileResponse, error)
 	EnsureOwnedProfile(context.Context, *EnsureOwnedProfileRequest) (*EnsureOwnedProfileResponse, error)
 	ListProfilesInTable(context.Context, *ListProfilesInTableRequest) (*ListProfilesInTableResponse, error)
+	BootstrapOwner(context.Context, *BootstrapOwnerRequest) (*BootstrapOwnerResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -192,6 +205,9 @@ func (UnimplementedAccountServiceServer) EnsureOwnedProfile(context.Context, *En
 }
 func (UnimplementedAccountServiceServer) ListProfilesInTable(context.Context, *ListProfilesInTableRequest) (*ListProfilesInTableResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListProfilesInTable not implemented")
+}
+func (UnimplementedAccountServiceServer) BootstrapOwner(context.Context, *BootstrapOwnerRequest) (*BootstrapOwnerResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BootstrapOwner not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 func (UnimplementedAccountServiceServer) testEmbeddedByValue()                        {}
@@ -376,6 +392,24 @@ func _AccountService_ListProfilesInTable_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_BootstrapOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BootstrapOwnerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).BootstrapOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_BootstrapOwner_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).BootstrapOwner(ctx, req.(*BootstrapOwnerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -418,6 +452,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListProfilesInTable",
 			Handler:    _AccountService_ListProfilesInTable_Handler,
+		},
+		{
+			MethodName: "BootstrapOwner",
+			Handler:    _AccountService_BootstrapOwner_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

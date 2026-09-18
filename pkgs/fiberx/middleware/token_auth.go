@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"nfxidentity/pkgs/errx"
+	"nfxidentity/errors/src/sys"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/security/token"
 	"strings"
@@ -10,25 +10,20 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	ErrInvalidAuthHeader = errx.Unauthorized("INVALID_AUTH_HEADER", "missing or invalid Authorization header")
-	ErrInvalidToken      = errx.Unauthorized("INVALID_TOKEN", "invalid or expired token")
-)
-
 func TokenAuth(verifier token.Verifier) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 		if !strings.HasPrefix(authHeader, "Bearer ") {
-			return fiberx.ErrorFromErrx(c, ErrInvalidAuthHeader)
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidAuthHeader)
 		}
 		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
 		claims, err := verifier.Verify(c.Context(), tokenStr)
 		if err != nil {
-			return fiberx.ErrorFromErrx(c, ErrInvalidToken.WithCause(err))
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidToken.WithCause(err))
 		}
 		userID, err := uuid.Parse(claims.Registered.Subject)
 		if err != nil {
-			return fiberx.ErrorFromErrx(c, ErrInvalidToken.WithCause(err))
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidToken.WithCause(err))
 		}
 		ctx := fiberx.WithAccountID(c.Context(), userID)
 		if raw, ok := claims.Raw["account_id"].(string); ok {

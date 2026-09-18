@@ -12,16 +12,16 @@ import (
 )
 
 type Config struct {
-	Env            env.Env
-	Server         ServerConfig       `koanf:"server"`
-	PostgreSQL     postgresqlx.Config `koanf:"postgresql"`
-	Cache          cachex.ConnConfig  `koanf:"cache"`
-	Logger         logx.LoggerConfig  `koanf:"logger"`
+	Env         env.Env
+	Server      ServerConfig       `koanf:"server"`
+	PostgreSQL  postgresqlx.Config `koanf:"postgresql"`
+	Cache       cachex.ConnConfig  `koanf:"cache"`
+	Logger      logx.LoggerConfig  `koanf:"logger"`
 	KafkaConfig kafkax.Config      `koanf:"kafka"`
-	GRPCClient  GRPCClientConfig  `koanf:"grpc_client"`
-	Token       tokenx.Config     `koanf:"token"`
-	I18n        I18nConfig        `koanf:"i18n"`
-	OTEL        otelx.Config      `koanf:"otel"`
+	GRPCClient  GRPCClientConfig   `koanf:"grpc_client"`
+	Token       tokenx.Config      `koanf:"token"`
+	I18n        I18nConfig         `koanf:"i18n"`
+	OTEL        otelx.Config       `koanf:"otel"`
 }
 
 // I18nConfig 错误码翻译 JSON 目录（挂载路径，外部更新即生效）

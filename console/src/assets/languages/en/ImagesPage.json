@@ -1,4 +1,13 @@
 {
   "title": "Assets",
-  "subtitle": "Images, files, videos, and audios in Stack MinIO"
+  "subtitle": "Images, files, videos, and audios in Stack MinIO",
+  "upload": "Upload",
+  "delete": "Delete",
+  "noItems": "No items",
+  "kinds": {
+    "images": "Images",
+    "files": "Files",
+    "videos": "Videos",
+    "audios": "Audios"
+  }
 }

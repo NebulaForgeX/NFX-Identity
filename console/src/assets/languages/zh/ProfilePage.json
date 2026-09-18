@@ -78,5 +78,21 @@
   "statusLocked": "已锁定",
   "isVerified": "已验证",
   "unverified": "未验证",
-  "lastLoginAt": "最后登录时间"
+  "addPhone": "添加手机",
+  "addEmail": "添加邮箱",
+  "sendCode": "发送验证码",
+  "verificationCode": "验证码",
+  "loginNotification": "登录通知",
+  "phoneSmsUnimplemented": "短信验证尚未接入，号码仍可保存为主联系方式。",
+  "clearAvatar": "清除头像",
+  "linkGitHub": "绑定 GitHub",
+  "unlinkGitHub": "解绑 GitHub",
+  "avatar": "头像",
+  "background": "背景",
+  "city": "城市",
+  "country": "国家",
+  "timezone": "时区",
+  "profileLanguage": "资料语言",
+  "updateEmail": "更新邮箱",
+  "delete": "删除"
 }

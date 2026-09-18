@@ -19,7 +19,7 @@ type State struct {
 	DeletedAt *time.Time
 }
 
-func NewFromState(st State) *Background { return &Background{state: st} }
+func NewFromState(st State) *Background    { return &Background{state: st} }
 func (b *Background) ID() uuid.UUID        { return b.state.ID }
 func (b *Background) ProfileID() uuid.UUID { return b.state.ProfileID }
 func (b *Background) ImageID() uuid.UUID   { return b.state.ImageID }

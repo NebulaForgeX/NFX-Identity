@@ -33,19 +33,19 @@ type ListPhoneItem struct {
 func (ListPhoneItem) TableName() string { return "auth.ListPhoneItems" }
 
 type ListForgerProfileItem struct {
-	ProfileID        uuid.UUID      `gorm:"column:profile_id"`
-	AccountID        uuid.UUID      `gorm:"column:account_id"`
-	ForgerRoles      pq.StringArray `gorm:"column:forger_roles;type:auth.forger_role[]"`
-	DisplayName      *string        `gorm:"column:display_name"`
-	ProfileLanguage  string         `gorm:"column:profile_language"`
-	City             *string        `gorm:"column:city"`
-	Country          *string        `gorm:"column:country"`
-	Website          *string        `gorm:"column:website"`
-	Timezone         *string        `gorm:"column:timezone"`
-	Birthday         *time.Time     `gorm:"column:birthday"`
-	CreatedAt        time.Time      `gorm:"column:created_at"`
-	AvatarImageID    *uuid.UUID     `gorm:"column:avatar_image_id"`
-	BackgroundImageID *uuid.UUID    `gorm:"column:background_image_id"`
+	ProfileID         uuid.UUID      `gorm:"column:profile_id"`
+	AccountID         uuid.UUID      `gorm:"column:account_id"`
+	ForgerRoles       pq.StringArray `gorm:"column:forger_roles;type:auth.forger_role[]"`
+	DisplayName       *string        `gorm:"column:display_name"`
+	ProfileLanguage   string         `gorm:"column:profile_language"`
+	City              *string        `gorm:"column:city"`
+	Country           *string        `gorm:"column:country"`
+	Website           *string        `gorm:"column:website"`
+	Timezone          *string        `gorm:"column:timezone"`
+	Birthday          *time.Time     `gorm:"column:birthday"`
+	CreatedAt         time.Time      `gorm:"column:created_at"`
+	AvatarImageID     *uuid.UUID     `gorm:"column:avatar_image_id"`
+	BackgroundImageID *uuid.UUID     `gorm:"column:background_image_id"`
 }
 
 func (ListForgerProfileItem) TableName() string { return "auth.ListForgerProfileItems" }

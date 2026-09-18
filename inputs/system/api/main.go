@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"nfxidentity/modules/system/config"	
+	"nfxidentity/modules/system/config"
 	"nfxidentity/modules/system/server"
 	"nfxidentity/pkgs/connections/otelx"
 	"nfxidentity/pkgs/env"

@@ -58,5 +58,22 @@
   "statusLocked": "Verrouillé",
   "isVerified": "Vérifié",
   "unverified": "Non vérifié",
-  "lastLoginAt": "Dernière connexion"
+  "lastLoginAt": "Dernière connexion",
+  "addPhone": "Ajouter un téléphone",
+  "addEmail": "Ajouter un e-mail",
+  "sendCode": "Envoyer le code",
+  "verificationCode": "Code",
+  "loginNotification": "Notification de connexion",
+  "phoneSmsUnimplemented": "La vérification SMS n'est pas encore disponible. Le numéro peut quand même être enregistré.",
+  "clearAvatar": "Effacer l'avatar",
+  "linkGitHub": "Lier GitHub",
+  "unlinkGitHub": "Délier GitHub",
+  "avatar": "Avatar",
+  "background": "Arrière-plan",
+  "city": "Ville",
+  "country": "Pays",
+  "timezone": "Fuseau horaire",
+  "profileLanguage": "Langue du profil",
+  "updateEmail": "Mettre à jour l'e-mail",
+  "delete": "Supprimer"
 }

@@ -7,5 +7,12 @@
   "cancel": "取消",
   "submit": "提交",
   "submitting": "提交中...",
-  "loading": "加载偏好中..."
+  "loading": "加载偏好中...",
+  "changePassword": "修改密码",
+  "changePasswordHint": "密码由 Identity 持有。先发送验证码，再设置新密码。",
+  "currentPassword": "当前密码",
+  "newPassword": "新密码",
+  "verificationCode": "验证码",
+  "sendCode": "发送验证码",
+  "passwordUpdated": "密码已更新。"
 }

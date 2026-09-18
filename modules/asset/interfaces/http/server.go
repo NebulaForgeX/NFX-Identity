@@ -3,10 +3,11 @@ package http
 import (
 	"encoding/json"
 	"io"
-	"os"
+	"nfxidentity/errors/src/sys"
 	"path/filepath"
 	"time"
 
+	authconn "nfxidentity/connections/auth"
 	"nfxidentity/modules/asset/application/media"
 	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/fiberx"
@@ -21,6 +22,7 @@ import (
 
 type httpDeps interface {
 	MediaSvc() *media.Service
+	AuthClient() *authconn.Client
 	UserTokenVerifier() token.Verifier
 }
 
@@ -40,10 +42,10 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		MaxAge:       3600,
 	}))
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
-	h := &Handler{svc: d.MediaSvc()}
+	h := &Handler{svc: d.MediaSvc(), auth: d.AuthClient()}
 	asset := app.Group("/asset")
 	asset.Get("/locales/:lang", h.Locales)
-	asset.Get("/messages/:lang", h.Locales)
+	asset.Get("/messages/:lang", h.Messages)
 	app.Get("/health", func(c fiber.Ctx) error {
 		return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]string{"service": "asset"}})
 	})
@@ -62,37 +64,36 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 }
 
 type Handler struct {
-	svc *media.Service
+	svc  *media.Service
+	auth *authconn.Client
 }
 
 func wrap(c fiber.Ctx, err error) error {
 	if err == nil {
 		return nil
 	}
-	if e, ok := err.(*errx.Error); ok {
+	if e := errx.AsError(err); e != nil {
 		return fiberx.ErrorFromErrx(c, e)
 	}
-	return fiberx.ErrorFromErrx(c, errx.Internal("INTERNAL", err.Error()))
+	return fiberx.ErrorFromErrx(c, sys.ErrInternal.WithCause(err))
 }
 
 func (h *Handler) Locales(c fiber.Ctx) error {
-	lang := c.Params("lang")
-	path := filepath.Join("errors", "langs", lang+".json")
-	data, err := os.ReadFile(path)
-	if err != nil {
-		data, err = os.ReadFile(filepath.Join("errors", "langs", "en.json"))
-		if err != nil {
-			return c.Status(fiber.StatusNotFound).JSON(map[string]string{"message": "lang not found"})
-		}
-	}
-	c.Set(fiber.HeaderContentType, "application/json; charset=utf-8")
-	return c.Send(data)
+	return fiberx.SendLangJSON(c, filepath.Join("errors", "langs"), c.Params("lang"))
+}
+
+func (h *Handler) Messages(c fiber.Ctx) error {
+	return fiberx.SendLangJSON(c, filepath.Join("messages", "langs"), c.Params("lang"))
+}
+
+func (h *Handler) ensureOwned(c fiber.Ctx, aid uuid.UUID) error {
+	return media.EnsureOwnedProfile(c.Context(), h.auth, aid)
 }
 
 func accountID(c fiber.Ctx) (uuid.UUID, error) {
 	aid, ok := fiberx.AccountIDFromContext(c.Context())
 	if !ok {
-		return uuid.Nil, errx.Unauthorized("INVALID_TOKEN", "missing account")
+		return uuid.Nil, sys.ErrInvalidToken
 	}
 	return aid, nil
 }
@@ -101,6 +102,9 @@ func (h *Handler) list(kind string) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		aid, err := accountID(c)
 		if err != nil {
+			return wrap(c, err)
+		}
+		if err := h.ensureOwned(c, aid); err != nil {
 			return wrap(c, err)
 		}
 		rows, err := h.svc.List(c.Context(), aid, kind)
@@ -117,12 +121,15 @@ func (h *Handler) prepare(kind string) fiber.Handler {
 		if err != nil {
 			return wrap(c, err)
 		}
+		if err := h.ensureOwned(c, aid); err != nil {
+			return wrap(c, err)
+		}
 		var req struct {
 			FileName string `json:"file_name"`
 			MimeType string `json:"mime_type"`
 		}
 		if err := c.Bind().Body(&req); err != nil {
-			return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 		}
 		out, err := h.svc.Prepare(c.Context(), aid, kind, req.FileName, req.MimeType)
 		if err != nil {
@@ -138,6 +145,9 @@ func (h *Handler) prepareMany(kind string) fiber.Handler {
 		if err != nil {
 			return wrap(c, err)
 		}
+		if err := h.ensureOwned(c, aid); err != nil {
+			return wrap(c, err)
+		}
 		var req struct {
 			Items []struct {
 				FileName string `json:"file_name"`
@@ -145,7 +155,7 @@ func (h *Handler) prepareMany(kind string) fiber.Handler {
 			} `json:"items"`
 		}
 		if err := c.Bind().Body(&req); err != nil || len(req.Items) == 0 {
-			return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 		}
 		out := make([]*media.PrepareResult, 0, len(req.Items))
 		for _, item := range req.Items {
@@ -165,11 +175,14 @@ func (h *Handler) confirm(kind string) fiber.Handler {
 		if err != nil {
 			return wrap(c, err)
 		}
+		if err := h.ensureOwned(c, aid); err != nil {
+			return wrap(c, err)
+		}
 		var req struct {
 			ID string `json:"id"`
 		}
 		if err := c.Bind().Body(&req); err != nil {
-			return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 		}
 		if err := h.svc.Confirm(c.Context(), aid, kind, req.ID); err != nil {
 			return wrap(c, err)
@@ -184,11 +197,14 @@ func (h *Handler) confirmMany(kind string) fiber.Handler {
 		if err != nil {
 			return wrap(c, err)
 		}
+		if err := h.ensureOwned(c, aid); err != nil {
+			return wrap(c, err)
+		}
 		var req struct {
 			IDs []string `json:"ids"`
 		}
 		if err := c.Bind().Body(&req); err != nil || len(req.IDs) == 0 {
-			return fiberx.ErrorFromErrx(c, errx.InvalidArg("INVALID_BODY", "invalid body"))
+			return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
 		}
 		for _, id := range req.IDs {
 			if err := h.svc.Confirm(c.Context(), aid, kind, id); err != nil {
@@ -203,6 +219,9 @@ func (h *Handler) remove(kind string) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		aid, err := accountID(c)
 		if err != nil {
+			return wrap(c, err)
+		}
+		if err := h.ensureOwned(c, aid); err != nil {
 			return wrap(c, err)
 		}
 		if err := h.svc.Delete(c.Context(), aid, kind, c.Params("id")); err != nil {

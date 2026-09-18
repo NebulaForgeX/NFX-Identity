@@ -48,6 +48,15 @@ func (c *AccountClient) EnsureOwnedProfile(ctx context.Context, accountID, profi
 	return resp.GetAllowed(), nil
 }
 
+func (c *AccountClient) BootstrapOwner(ctx context.Context, username, password, emailAddr, phone string) (*accountpb.BootstrapOwnerResponse, error) {
+	return c.client.BootstrapOwner(ctx, &accountpb.BootstrapOwnerRequest{
+		Username: username,
+		Password: password,
+		Email:    emailAddr,
+		Phone:    phone,
+	})
+}
+
 func (c *AccountClient) ListProfilesInTable(ctx context.Context, table, query string, limit, offset int) (*accountpb.ListProfilesInTableResponse, error) {
 	return c.client.ListProfilesInTable(ctx, &accountpb.ListProfilesInTableRequest{
 		Table:  table,

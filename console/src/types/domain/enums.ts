@@ -1,22 +1,7 @@
-// Domain Enums - 基于后端数据库定义
-// 所有枚举类型都从后端数据库 schema 中提取
-
-// ========== Directory Schema ==========
+// Domain Enums used by auth.domain.ts (Identity login center).
 
 /**
- * 用户状态
- * directory.user_status
- */
-export enum UserStatus {
-  PENDING = "pending",
-  ACTIVE = "active",
-  DEACTIVE = "deactive",
-}
-
-// ========== Auth Schema ==========
-
-/**
- * 凭证类型
+ * Credential type
  * auth.credential_type
  */
 export enum CredentialType {
@@ -28,7 +13,7 @@ export enum CredentialType {
 }
 
 /**
- * 凭证状态
+ * Credential status
  * auth.credential_status
  */
 export enum CredentialStatus {
@@ -38,7 +23,7 @@ export enum CredentialStatus {
 }
 
 /**
- * MFA 类型
+ * MFA type
  * auth.mfa_type
  */
 export enum MFAType {
@@ -50,7 +35,7 @@ export enum MFAType {
 }
 
 /**
- * 撤销原因
+ * Revoke reason
  * auth.revoke_reason
  */
 export enum RevokeReason {
@@ -65,7 +50,7 @@ export enum RevokeReason {
 }
 
 /**
- * 会话撤销原因
+ * Session revoke reason
  * auth.session_revoke_reason
  */
 export enum SessionRevokeReason {
@@ -80,7 +65,7 @@ export enum SessionRevokeReason {
 }
 
 /**
- * 登录失败代码
+ * Login failure code
  * auth.failure_code
  */
 export enum FailureCode {
@@ -98,7 +83,7 @@ export enum FailureCode {
 }
 
 /**
- * 锁定原因
+ * Lock reason
  * auth.lock_reason
  */
 export enum LockReason {
@@ -111,7 +96,7 @@ export enum LockReason {
 }
 
 /**
- * 密码重置交付方式
+ * Password reset delivery
  * auth.reset_delivery
  */
 export enum ResetDelivery {
@@ -120,7 +105,7 @@ export enum ResetDelivery {
 }
 
 /**
- * 密码重置状态
+ * Password reset status
  * auth.reset_status
  */
 export enum ResetStatus {
@@ -128,268 +113,4 @@ export enum ResetStatus {
   USED = "used",
   EXPIRED = "expired",
   REVOKED = "revoked",
-}
-
-// ========== Tenants Schema ==========
-
-/**
- * 租户状态
- * tenants.tenant_status
- */
-export enum TenantStatus {
-  ACTIVE = "ACTIVE",
-  SUSPENDED = "SUSPENDED",
-  CLOSED = "CLOSED",
-  PENDING = "PENDING",
-}
-
-/**
- * 成员状态
- * tenants.member_status
- */
-export enum MemberStatus {
-  INVITED = "INVITED",
-  ACTIVE = "ACTIVE",
-  SUSPENDED = "SUSPENDED",
-  REMOVED = "REMOVED",
-}
-
-/**
- * 成员来源
- * tenants.member_source
- */
-export enum MemberSource {
-  MANUAL = "MANUAL",
-  INVITE = "INVITE",
-  SCIM = "SCIM",
-  SSO = "SSO",
-  HR_SYNC = "HR_SYNC",
-  IMPORT = "IMPORT",
-}
-
-/**
- * 租户应用状态
- * tenants.tenant_app_status
- */
-export enum TenantAppStatus {
-  ACTIVE = "ACTIVE",
-  DISABLED = "DISABLED",
-  SUSPENDED = "SUSPENDED",
-}
-
-/**
- * 验证状态
- * tenants.verification_status
- */
-export enum VerificationStatus {
-  PENDING = "PENDING",
-  VERIFIED = "VERIFIED",
-  FAILED = "FAILED",
-  EXPIRED = "EXPIRED",
-}
-
-/**
- * 验证方法
- * tenants.verification_method
- */
-export enum VerificationMethod {
-  DNS = "DNS",
-  TXT = "TXT",
-  HTML = "HTML",
-  FILE = "FILE",
-}
-
-/**
- * 邀请状态
- * tenants.invitation_status
- */
-export enum InvitationStatus {
-  PENDING = "PENDING",
-  ACCEPTED = "ACCEPTED",
-  EXPIRED = "EXPIRED",
-  REVOKED = "REVOKED",
-}
-
-/**
- * 组类型
- * tenants.group_type
- */
-export enum GroupType {
-  DEPARTMENT = "department",
-  TEAM = "team",
-  GROUP = "group",
-  OTHER = "other",
-}
-
-// ========== Clients Schema ==========
-
-/**
- * 应用类型
- * clients.app_type
- */
-export enum AppType {
-  SERVER = "server",
-  SERVICE = "service",
-  INTERNAL = "internal",
-  PARTNER = "partner",
-  THIRD_PARTY = "third_party",
-}
-
-/**
- * 应用状态
- * clients.app_status
- */
-export enum AppStatus {
-  ACTIVE = "active",
-  DISABLED = "disabled",
-  SUSPENDED = "suspended",
-  PENDING = "pending",
-}
-
-/**
- * 环境
- * clients.environment
- */
-export enum Environment {
-  PRODUCTION = "production",
-  STAGING = "staging",
-  DEVELOPMENT = "development",
-  TEST = "test",
-}
-
-/**
- * API 密钥状态
- * clients.api_key_status
- */
-export enum ApiKeyStatus {
-  ACTIVE = "active",
-  REVOKED = "revoked",
-  EXPIRED = "expired",
-}
-
-/**
- * 客户端凭证状态
- * clients.credential_status
- */
-export enum ClientCredentialStatus {
-  ACTIVE = "active",
-  EXPIRED = "expired",
-  REVOKED = "revoked",
-  ROTATING = "rotating",
-}
-
-/**
- * 白名单状态
- * clients.allowlist_status
- */
-export enum AllowlistStatus {
-  ACTIVE = "active",
-  DISABLED = "disabled",
-  REVOKED = "revoked",
-}
-
-/**
- * 速率限制类型
- * clients.rate_limit_type
- */
-export enum RateLimitType {
-  REQUESTS_PER_SECOND = "requests_per_second",
-  REQUESTS_PER_MINUTE = "requests_per_minute",
-  REQUESTS_PER_HOUR = "requests_per_hour",
-  REQUESTS_PER_DAY = "requests_per_day",
-}
-
-// ========== Access Schema ==========
-
-/**
- * 作用域类型
- * access.scope_type
- */
-export enum ScopeType {
-  TENANT = "TENANT",
-  APP = "APP",
-  GLOBAL = "GLOBAL",
-}
-
-/**
- * 主体类型
- * access.subject_type
- */
-export enum SubjectType {
-  USER = "USER",
-  CLIENT = "CLIENT",
-}
-
-/**
- * 授权类型
- * access.grant_type
- */
-export enum GrantType {
-  ROLE = "ROLE",
-  PERMISSION = "PERMISSION",
-}
-
-/**
- * 授权效果
- * access.grant_effect
- */
-export enum GrantEffect {
-  ALLOW = "ALLOW",
-  DENY = "DENY",
-}
-
-// ========== Audit Schema ==========
-
-/**
- * 操作者类型
- * audit.actor_type
- */
-export enum ActorType {
-  USER = "user",
-  SERVICE = "service",
-  SYSTEM = "system",
-  ADMIN = "admin",
-}
-
-/**
- * 结果类型
- * audit.result_type
- */
-export enum ResultType {
-  SUCCESS = "success",
-  FAILURE = "failure",
-  DENY = "deny",
-  ERROR = "error",
-}
-
-/**
- * 风险级别
- * audit.risk_level
- */
-export enum RiskLevel {
-  LOW = "low",
-  MEDIUM = "medium",
-  HIGH = "high",
-  CRITICAL = "critical",
-}
-
-/**
- * 数据分类
- * audit.data_classification
- */
-export enum DataClassification {
-  PUBLIC = "public",
-  INTERNAL = "internal",
-  CONFIDENTIAL = "confidential",
-  RESTRICTED = "restricted",
-}
-
-/**
- * 保留操作
- * audit.retention_action
- */
-export enum RetentionAction {
-  ARCHIVE = "archive",
-  DELETE = "delete",
-  EXPORT = "export",
 }

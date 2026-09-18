@@ -21,6 +21,7 @@ type Get interface {
 	ByAccountID(ctx context.Context, accountID uuid.UUID) ([]*Profile, error)
 	Owned(ctx context.Context, accountID, id uuid.UUID) (bool, error)
 	HasOwnerRole(ctx context.Context, accountID uuid.UUID) (bool, error)
+	AnyOwnerExists(ctx context.Context) (bool, error)
 }
 type Update interface {
 	Generic(ctx context.Context, p *Profile) error

@@ -13,6 +13,7 @@ import (
 	profileQuery "nfxidentity/modules/auth/infrastructure/query/profile"
 	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
 	"nfxidentity/pkgs/cachex"
+	"nfxidentity/pkgs/email"
 	"nfxidentity/pkgs/health"
 	"nfxidentity/pkgs/kafkax"
 	"nfxidentity/pkgs/kafkax/eventbus"
@@ -70,6 +71,13 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		ClientSecret: cfg.GitHub.ClientSecret,
 		RedirectURL:  cfg.GitHub.RedirectURL,
 	}
+	mail := email.NewEmailService(email.SMTPConfig{
+		Host:     cfg.Email.SMTPHost,
+		Port:     cfg.Email.SMTPPort,
+		Username: cfg.Email.SMTPUser,
+		Password: cfg.Email.SMTPPassword,
+		From:     cfg.Email.SMTPFrom,
+	})
 	db := postgres.DB()
 	platformSvc := platform.NewService(
 		transaction.NewGormTxManager(db),
@@ -80,6 +88,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		tokenxInstance,
 		githubCfg,
 		cacheConn.Client(),
+		mail,
 	)
 	resourceSvc := resource.NewService(postgres, cacheConn, &kafkaConfig)
 

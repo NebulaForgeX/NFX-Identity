@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"nfxidentity/errors/src/auth"
 	"strconv"
 	"strings"
 	"time"
@@ -17,7 +18,6 @@ import (
 	"nfxidentity/modules/auth/domain/forgerprofile"
 	"nfxidentity/modules/auth/domain/identity"
 	"nfxidentity/modules/auth/domain/settings"
-	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
@@ -42,7 +42,7 @@ func (s *Service) oauthCfg() *oauth2.Config {
 func (s *Service) GitHubAuthorizeURL(ctx context.Context) (string, string, error) {
 	cfg := s.oauthCfg()
 	if cfg == nil || cfg.ClientID == "" {
-		return "", "", errx.FailedPrecond("GITHUB_NOT_CONFIGURED", "configure GITHUB_CLIENT_ID to enable GitHub login")
+		return "", "", auth.ErrGitHubNotConfigured
 	}
 	b := make([]byte, 16)
 	_, _ = rand.Read(b)
@@ -63,11 +63,11 @@ type githubUser struct {
 func (s *Service) exchangeGitHub(ctx context.Context, code string) (*githubUser, error) {
 	cfg := s.oauthCfg()
 	if cfg == nil || cfg.ClientID == "" {
-		return nil, errx.FailedPrecond("GITHUB_NOT_CONFIGURED", "configure GITHUB_CLIENT_ID to enable GitHub login")
+		return nil, auth.ErrGitHubNotConfigured
 	}
 	tok, err := cfg.Exchange(ctx, code)
 	if err != nil {
-		return nil, errx.Unauthorized("GITHUB_EXCHANGE_FAILED", err.Error())
+		return nil, auth.ErrGitHubExchangeFailed.WithCause(err)
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.github.com/user", nil)
 	if err != nil {
@@ -77,12 +77,12 @@ func (s *Service) exchangeGitHub(ctx context.Context, code string) (*githubUser,
 	req.Header.Set("Accept", "application/vnd.github+json")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, errx.Internal("GITHUB_USER_FAILED", err.Error())
+		return nil, auth.ErrGitHubUserFailed.WithCause(err)
 	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode >= 300 {
-		return nil, errx.Unauthorized("GITHUB_USER_FAILED", fmt.Sprintf("status %d", resp.StatusCode))
+		return nil, auth.ErrGitHubUserFailed.WithMsg(fmt.Sprintf("status %d", resp.StatusCode))
 	}
 	var user githubUser
 	if err := json.Unmarshal(body, &user); err != nil {
@@ -127,23 +127,35 @@ func (s *Service) fetchGitHubEmail(ctx context.Context, accessToken string) stri
 	return ""
 }
 
+func (s *Service) consumeGitHubState(ctx context.Context, state string) error {
+	state = strings.TrimSpace(state)
+	if state == "" {
+		return auth.ErrInvalidOAuthState
+	}
+	if s.redis == nil {
+		return auth.ErrInvalidOAuthState
+	}
+	ok, err := s.redis.Get(ctx, "nfxidentity:github:state:"+state).Result()
+	if err != nil || ok == "" {
+		return auth.ErrInvalidOAuthState
+	}
+	_ = s.redis.Del(ctx, "nfxidentity:github:state:"+state).Err()
+	return nil
+}
+
 func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, platformName string) (*LoginOutput, error) {
-	if s.redis != nil && state != "" {
-		ok, _ := s.redis.Get(ctx, "nfxidentity:github:state:"+state).Result()
-		if ok == "" {
-			return nil, errx.Unauthorized("INVALID_OAUTH_STATE", "invalid oauth state")
-		}
-		_ = s.redis.Del(ctx, "nfxidentity:github:state:"+state).Err()
+	if err := s.consumeGitHubState(ctx, state); err != nil {
+		return nil, err
 	}
 	user, err := s.exchangeGitHub(ctx, code)
 	if err != nil {
 		return nil, err
 	}
 	subject := strconv.FormatInt(user.ID, 10)
-	ident, err := s.repos.Identity(none()).Get.ByProviderSubject(ctx, "github", subject)
+	ident, err := s.repoFactory.Identity(none()).Get.ByProviderSubject(ctx, "github", subject)
 	if err == nil {
 		ident.TouchLogin(time.Now())
-		_ = s.repos.Identity(none()).Update.Generic(ctx, ident)
+		_ = s.repoFactory.Identity(none()).Update.Generic(ctx, ident)
 		emailAddr, phone := s.primaryContacts(ctx, ident.AccountID())
 		if emailAddr == "" {
 			emailAddr = user.Email
@@ -151,7 +163,7 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 		return s.issueAccountSession(ctx, ident.AccountID(), ptrUUID(ident.ID()), deviceID, emailAddr, phone)
 	}
 	if !isMissing(err) {
-		return nil, errx.Internal("GITHUB_LOOKUP_FAILED", err.Error())
+		return nil, auth.ErrGitHubLookupFailed.WithCause(err)
 	}
 	if platformName == "" {
 		platformName = "nfxidentity"
@@ -165,12 +177,17 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 		display = user.Login
 	}
 	err = s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		if err := s.repos.Account(uow).Create.New(ctx, account.NewFromState(account.AccountState{
+		accountRepo := s.repoFactory.Account(uow)
+		identityRepo := s.repoFactory.Identity(uow)
+		emailRepo := s.repoFactory.Email(uow)
+		forgerRepo := s.repoFactory.Forger(uow)
+		settingsRepo := s.repoFactory.Settings(uow)
+		if err := accountRepo.Create.New(ctx, account.NewFromState(account.AccountState{
 			ID: accountID, AccountStatus: "active", SignupPlatform: platformName, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := s.repos.Identity(uow).Create.New(ctx, identity.NewFromState(identity.IdentityState{
+		if err := identityRepo.Create.New(ctx, identity.NewFromState(identity.IdentityState{
 			ID: identityID, AccountID: accountID, IdentityProvider: "github", ProviderSubject: subject,
 			CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
@@ -178,38 +195,41 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 		}
 		if user.Email != "" {
 			verified := now
-			if err := s.repos.Email(uow).Create.New(ctx, email.NewFromState(email.EmailState{
+			if err := emailRepo.Create.New(ctx, email.NewFromState(email.EmailState{
 				ID: uuid.New(), AccountID: accountID, Address: strings.ToLower(user.Email), IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
 			})); err != nil {
 				return err
 			}
 		}
-		if err := s.repos.Forger(uow).Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
+		if err := forgerRepo.Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
 			ID: profileID, AccountID: accountID, Roles: pq.StringArray{"forger"},
 			ProfileLanguage: "zh", DisplayName: &display, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		return s.repos.Settings(uow).Create.New(ctx, settings.NewFromState(settings.State{
+		return settingsRepo.Create.New(ctx, settings.NewFromState(settings.State{
 			ID: profileID, Kind: "forger", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
 		}))
 	})
 	if err != nil {
-		return nil, errx.Internal("GITHUB_SIGNUP_FAILED", err.Error())
+		return nil, auth.ErrGitHubSignupFailed.WithCause(err)
 	}
 	return s.issueAccountSession(ctx, accountID, &identityID, deviceID, user.Email, "")
 }
 
-func (s *Service) LinkGitHub(ctx context.Context, accountID uuid.UUID, code string) error {
+func (s *Service) LinkGitHub(ctx context.Context, accountID uuid.UUID, code, state string) error {
+	if err := s.consumeGitHubState(ctx, state); err != nil {
+		return err
+	}
 	user, err := s.exchangeGitHub(ctx, code)
 	if err != nil {
 		return err
 	}
 	subject := strconv.FormatInt(user.ID, 10)
-	existing, err := s.repos.Identity(none()).Get.ByProviderSubject(ctx, "github", subject)
+	existing, err := s.repoFactory.Identity(none()).Get.ByProviderSubject(ctx, "github", subject)
 	if err == nil {
 		if existing.AccountID() != accountID {
-			return errx.Conflict("GITHUB_TAKEN", "github account already linked")
+			return auth.ErrGitHubTaken
 		}
 		return nil
 	}
@@ -217,14 +237,14 @@ func (s *Service) LinkGitHub(ctx context.Context, accountID uuid.UUID, code stri
 		return err
 	}
 	now := time.Now()
-	return s.repos.Identity(none()).Create.New(ctx, identity.NewFromState(identity.IdentityState{
+	return s.repoFactory.Identity(none()).Create.New(ctx, identity.NewFromState(identity.IdentityState{
 		ID: uuid.New(), AccountID: accountID, IdentityProvider: "github", ProviderSubject: subject,
 		CreatedAt: now, UpdatedAt: now,
 	}))
 }
 
 func (s *Service) UnlinkGitHub(ctx context.Context, accountID uuid.UUID) error {
-	idents, err := s.repos.Identity(none()).Get.ByAccountID(ctx, accountID)
+	idents, err := s.repoFactory.Identity(none()).Get.ByAccountID(ctx, accountID)
 	if err != nil {
 		return err
 	}
@@ -239,11 +259,11 @@ func (s *Service) UnlinkGitHub(ctx context.Context, accountID uuid.UUID) error {
 		}
 	}
 	if !hasPassword {
-		return errx.FailedPrecond("LAST_IDENTITY", "cannot unlink the last identity")
+		return auth.ErrLastIdentity
 	}
 	if githubIdent == nil {
 		return nil
 	}
 	githubIdent.SoftDelete(time.Now())
-	return s.repos.Identity(none()).Update.Generic(ctx, githubIdent)
+	return s.repoFactory.Identity(none()).Update.Generic(ctx, githubIdent)
 }

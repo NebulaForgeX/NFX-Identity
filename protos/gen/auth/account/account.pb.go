@@ -2192,6 +2192,134 @@ func (x *ListProfilesInTableResponse) GetTotal() int64 {
 	return 0
 }
 
+type BootstrapOwnerRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BootstrapOwnerRequest) Reset() {
+	*x = BootstrapOwnerRequest{}
+	mi := &file_auth_account_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BootstrapOwnerRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BootstrapOwnerRequest) ProtoMessage() {}
+
+func (x *BootstrapOwnerRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_account_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BootstrapOwnerRequest.ProtoReflect.Descriptor instead.
+func (*BootstrapOwnerRequest) Descriptor() ([]byte, []int) {
+	return file_auth_account_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *BootstrapOwnerRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *BootstrapOwnerRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *BootstrapOwnerRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *BootstrapOwnerRequest) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+type BootstrapOwnerResponse struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	AccountId          string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	ForgerProfileId    string                 `protobuf:"bytes,2,opt,name=forger_profile_id,json=forgerProfileId,proto3" json:"forger_profile_id,omitempty"`
+	AuthorityProfileId string                 `protobuf:"bytes,3,opt,name=authority_profile_id,json=authorityProfileId,proto3" json:"authority_profile_id,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *BootstrapOwnerResponse) Reset() {
+	*x = BootstrapOwnerResponse{}
+	mi := &file_auth_account_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BootstrapOwnerResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BootstrapOwnerResponse) ProtoMessage() {}
+
+func (x *BootstrapOwnerResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_account_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BootstrapOwnerResponse.ProtoReflect.Descriptor instead.
+func (*BootstrapOwnerResponse) Descriptor() ([]byte, []int) {
+	return file_auth_account_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *BootstrapOwnerResponse) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+func (x *BootstrapOwnerResponse) GetForgerProfileId() string {
+	if x != nil {
+		return x.ForgerProfileId
+	}
+	return ""
+}
+
+func (x *BootstrapOwnerResponse) GetAuthorityProfileId() string {
+	if x != nil {
+		return x.AuthorityProfileId
+	}
+	return ""
+}
+
 var File_auth_account_proto protoreflect.FileDescriptor
 
 const file_auth_account_proto_rawDesc = "" +
@@ -2440,7 +2568,17 @@ const file_auth_account_proto_rawDesc = "" +
 	"\x05query\x18\x04 \x01(\tR\x05query\"j\n" +
 	"\x1bListProfilesInTableResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.account.FullAccountInformationR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total*A\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"{\n" +
+	"\x15BootstrapOwnerRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
+	"\x05phone\x18\x04 \x01(\tR\x05phone\"\x95\x01\n" +
+	"\x16BootstrapOwnerResponse\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12*\n" +
+	"\x11forger_profile_id\x18\x02 \x01(\tR\x0fforgerProfileId\x120\n" +
+	"\x14authority_profile_id\x18\x03 \x01(\tR\x12authorityProfileId*A\n" +
 	"\n" +
 	"ForgerRole\x12\x1b\n" +
 	"\x17FORGER_ROLE_UNSPECIFIED\x10\x00\x12\x16\n" +
@@ -2459,7 +2597,7 @@ const file_auth_account_proto_rawDesc = "" +
 	"\x1cPROFILE_LANGUAGE_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13PROFILE_LANGUAGE_EN\x10\x01\x12\x17\n" +
 	"\x13PROFILE_LANGUAGE_ZH\x10\x02\x12\x17\n" +
-	"\x13PROFILE_LANGUAGE_FR\x10\x032\xa0\b\n" +
+	"\x13PROFILE_LANGUAGE_FR\x10\x032\xf3\b\n" +
 	"\x0eAccountService\x12r\n" +
 	"\x19GetFullAccountInformation\x12).account.GetFullAccountInformationRequest\x1a*.account.GetFullAccountInformationResponse\x12Q\n" +
 	"\x0eGetAccountByID\x12\x1e.account.GetAccountByIDRequest\x1a\x1f.account.GetAccountByIDResponse\x12Z\n" +
@@ -2469,7 +2607,8 @@ const file_auth_account_proto_rawDesc = "" +
 	"*InvalidateFullInformationWithForgerProfile\x12:.account.InvalidateFullInformationWithForgerProfileRequest\x1a;.account.InvalidateFullInformationWithForgerProfileResponse\x12\xae\x01\n" +
 	"-InvalidateFullInformationWithAuthorityProfile\x12=.account.InvalidateFullInformationWithAuthorityProfileRequest\x1a>.account.InvalidateFullInformationWithAuthorityProfileResponse\x12]\n" +
 	"\x12EnsureOwnedProfile\x12\".account.EnsureOwnedProfileRequest\x1a#.account.EnsureOwnedProfileResponse\x12`\n" +
-	"\x13ListProfilesInTable\x12#.account.ListProfilesInTableRequest\x1a$.account.ListProfilesInTableResponseB/Z-nfxidentity/protos/gen/auth/account;accountpbb\x06proto3"
+	"\x13ListProfilesInTable\x12#.account.ListProfilesInTableRequest\x1a$.account.ListProfilesInTableResponse\x12Q\n" +
+	"\x0eBootstrapOwner\x12\x1e.account.BootstrapOwnerRequest\x1a\x1f.account.BootstrapOwnerResponseB/Z-nfxidentity/protos/gen/auth/account;accountpbb\x06proto3"
 
 var (
 	file_auth_account_proto_rawDescOnce sync.Once
@@ -2484,7 +2623,7 @@ func file_auth_account_proto_rawDescGZIP() []byte {
 }
 
 var file_auth_account_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_auth_account_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+var file_auth_account_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_auth_account_proto_goTypes = []any{
 	(ForgerRole)(0),                                               // 0: account.ForgerRole
 	(AuthorityRole)(0),                                            // 1: account.AuthorityRole
@@ -2518,44 +2657,46 @@ var file_auth_account_proto_goTypes = []any{
 	(*EnsureOwnedProfileResponse)(nil),                            // 29: account.EnsureOwnedProfileResponse
 	(*ListProfilesInTableRequest)(nil),                            // 30: account.ListProfilesInTableRequest
 	(*ListProfilesInTableResponse)(nil),                           // 31: account.ListProfilesInTableResponse
-	(*timestamppb.Timestamp)(nil),                                 // 32: google.protobuf.Timestamp
+	(*BootstrapOwnerRequest)(nil),                                 // 32: account.BootstrapOwnerRequest
+	(*BootstrapOwnerResponse)(nil),                                // 33: account.BootstrapOwnerResponse
+	(*timestamppb.Timestamp)(nil),                                 // 34: google.protobuf.Timestamp
 }
 var file_auth_account_proto_depIdxs = []int32{
 	2,  // 0: account.Account.account_status:type_name -> account.AccountStatus
-	32, // 1: account.Account.created_at:type_name -> google.protobuf.Timestamp
-	32, // 2: account.Account.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 3: account.Account.deleted_at:type_name -> google.protobuf.Timestamp
-	32, // 4: account.Email.verified_at:type_name -> google.protobuf.Timestamp
-	32, // 5: account.Email.created_at:type_name -> google.protobuf.Timestamp
-	32, // 6: account.Email.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 7: account.Email.deleted_at:type_name -> google.protobuf.Timestamp
-	32, // 8: account.Phone.verified_at:type_name -> google.protobuf.Timestamp
-	32, // 9: account.Phone.created_at:type_name -> google.protobuf.Timestamp
-	32, // 10: account.Phone.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 11: account.Phone.deleted_at:type_name -> google.protobuf.Timestamp
-	32, // 12: account.ForgerProfileAvatar.created_at:type_name -> google.protobuf.Timestamp
-	32, // 13: account.ForgerProfileAvatar.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 14: account.ForgerProfileAvatar.deleted_at:type_name -> google.protobuf.Timestamp
-	32, // 15: account.ForgerProfileBackground.created_at:type_name -> google.protobuf.Timestamp
-	32, // 16: account.ForgerProfileBackground.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 17: account.ForgerProfileBackground.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 1: account.Account.created_at:type_name -> google.protobuf.Timestamp
+	34, // 2: account.Account.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 3: account.Account.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 4: account.Email.verified_at:type_name -> google.protobuf.Timestamp
+	34, // 5: account.Email.created_at:type_name -> google.protobuf.Timestamp
+	34, // 6: account.Email.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 7: account.Email.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 8: account.Phone.verified_at:type_name -> google.protobuf.Timestamp
+	34, // 9: account.Phone.created_at:type_name -> google.protobuf.Timestamp
+	34, // 10: account.Phone.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 11: account.Phone.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 12: account.ForgerProfileAvatar.created_at:type_name -> google.protobuf.Timestamp
+	34, // 13: account.ForgerProfileAvatar.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 14: account.ForgerProfileAvatar.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 15: account.ForgerProfileBackground.created_at:type_name -> google.protobuf.Timestamp
+	34, // 16: account.ForgerProfileBackground.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 17: account.ForgerProfileBackground.deleted_at:type_name -> google.protobuf.Timestamp
 	3,  // 18: account.ForgerProfile.profile_language:type_name -> account.ProfileLanguage
-	32, // 19: account.ForgerProfile.created_at:type_name -> google.protobuf.Timestamp
-	32, // 20: account.ForgerProfile.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 21: account.ForgerProfile.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 19: account.ForgerProfile.created_at:type_name -> google.protobuf.Timestamp
+	34, // 20: account.ForgerProfile.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 21: account.ForgerProfile.deleted_at:type_name -> google.protobuf.Timestamp
 	7,  // 22: account.ForgerProfile.avatars:type_name -> account.ForgerProfileAvatar
 	8,  // 23: account.ForgerProfile.backgrounds:type_name -> account.ForgerProfileBackground
 	0,  // 24: account.ForgerProfile.forger_roles:type_name -> account.ForgerRole
-	32, // 25: account.AuthorityProfileAvatar.created_at:type_name -> google.protobuf.Timestamp
-	32, // 26: account.AuthorityProfileAvatar.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 27: account.AuthorityProfileAvatar.deleted_at:type_name -> google.protobuf.Timestamp
-	32, // 28: account.AuthorityProfileBackground.created_at:type_name -> google.protobuf.Timestamp
-	32, // 29: account.AuthorityProfileBackground.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 30: account.AuthorityProfileBackground.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 25: account.AuthorityProfileAvatar.created_at:type_name -> google.protobuf.Timestamp
+	34, // 26: account.AuthorityProfileAvatar.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 27: account.AuthorityProfileAvatar.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 28: account.AuthorityProfileBackground.created_at:type_name -> google.protobuf.Timestamp
+	34, // 29: account.AuthorityProfileBackground.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 30: account.AuthorityProfileBackground.deleted_at:type_name -> google.protobuf.Timestamp
 	3,  // 31: account.AuthorityProfile.profile_language:type_name -> account.ProfileLanguage
-	32, // 32: account.AuthorityProfile.created_at:type_name -> google.protobuf.Timestamp
-	32, // 33: account.AuthorityProfile.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 34: account.AuthorityProfile.deleted_at:type_name -> google.protobuf.Timestamp
+	34, // 32: account.AuthorityProfile.created_at:type_name -> google.protobuf.Timestamp
+	34, // 33: account.AuthorityProfile.updated_at:type_name -> google.protobuf.Timestamp
+	34, // 34: account.AuthorityProfile.deleted_at:type_name -> google.protobuf.Timestamp
 	10, // 35: account.AuthorityProfile.avatars:type_name -> account.AuthorityProfileAvatar
 	11, // 36: account.AuthorityProfile.backgrounds:type_name -> account.AuthorityProfileBackground
 	1,  // 37: account.AuthorityProfile.authority_roles:type_name -> account.AuthorityRole
@@ -2578,17 +2719,19 @@ var file_auth_account_proto_depIdxs = []int32{
 	26, // 54: account.AccountService.InvalidateFullInformationWithAuthorityProfile:input_type -> account.InvalidateFullInformationWithAuthorityProfileRequest
 	28, // 55: account.AccountService.EnsureOwnedProfile:input_type -> account.EnsureOwnedProfileRequest
 	30, // 56: account.AccountService.ListProfilesInTable:input_type -> account.ListProfilesInTableRequest
-	15, // 57: account.AccountService.GetFullAccountInformation:output_type -> account.GetFullAccountInformationResponse
-	17, // 58: account.AccountService.GetAccountByID:output_type -> account.GetAccountByIDResponse
-	19, // 59: account.AccountService.GetAccountByEmail:output_type -> account.GetAccountByEmailResponse
-	21, // 60: account.AccountService.GetAccountByPhone:output_type -> account.GetAccountByPhoneResponse
-	23, // 61: account.AccountService.GetPrimaryEmailByProfileID:output_type -> account.GetPrimaryEmailByProfileIDResponse
-	25, // 62: account.AccountService.InvalidateFullInformationWithForgerProfile:output_type -> account.InvalidateFullInformationWithForgerProfileResponse
-	27, // 63: account.AccountService.InvalidateFullInformationWithAuthorityProfile:output_type -> account.InvalidateFullInformationWithAuthorityProfileResponse
-	29, // 64: account.AccountService.EnsureOwnedProfile:output_type -> account.EnsureOwnedProfileResponse
-	31, // 65: account.AccountService.ListProfilesInTable:output_type -> account.ListProfilesInTableResponse
-	57, // [57:66] is the sub-list for method output_type
-	48, // [48:57] is the sub-list for method input_type
+	32, // 57: account.AccountService.BootstrapOwner:input_type -> account.BootstrapOwnerRequest
+	15, // 58: account.AccountService.GetFullAccountInformation:output_type -> account.GetFullAccountInformationResponse
+	17, // 59: account.AccountService.GetAccountByID:output_type -> account.GetAccountByIDResponse
+	19, // 60: account.AccountService.GetAccountByEmail:output_type -> account.GetAccountByEmailResponse
+	21, // 61: account.AccountService.GetAccountByPhone:output_type -> account.GetAccountByPhoneResponse
+	23, // 62: account.AccountService.GetPrimaryEmailByProfileID:output_type -> account.GetPrimaryEmailByProfileIDResponse
+	25, // 63: account.AccountService.InvalidateFullInformationWithForgerProfile:output_type -> account.InvalidateFullInformationWithForgerProfileResponse
+	27, // 64: account.AccountService.InvalidateFullInformationWithAuthorityProfile:output_type -> account.InvalidateFullInformationWithAuthorityProfileResponse
+	29, // 65: account.AccountService.EnsureOwnedProfile:output_type -> account.EnsureOwnedProfileResponse
+	31, // 66: account.AccountService.ListProfilesInTable:output_type -> account.ListProfilesInTableResponse
+	33, // 67: account.AccountService.BootstrapOwner:output_type -> account.BootstrapOwnerResponse
+	58, // [58:68] is the sub-list for method output_type
+	48, // [48:58] is the sub-list for method input_type
 	48, // [48:48] is the sub-list for extension type_name
 	48, // [48:48] is the sub-list for extension extendee
 	0,  // [0:48] is the sub-list for field type_name
@@ -2614,7 +2757,7 @@ func file_auth_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_account_proto_rawDesc), len(file_auth_account_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   28,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

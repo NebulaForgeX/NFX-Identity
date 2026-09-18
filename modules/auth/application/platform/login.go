@@ -2,6 +2,8 @@ package platform
 
 import (
 	"context"
+	"nfxidentity/errors/src/auth"
+	"nfxidentity/errors/src/sys"
 	"strings"
 	"time"
 
@@ -10,7 +12,6 @@ import (
 	"nfxidentity/modules/auth/domain/forgerprofile"
 	"nfxidentity/modules/auth/domain/identity"
 	"nfxidentity/modules/auth/domain/settings"
-	"nfxidentity/pkgs/errx"
 	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
@@ -18,29 +19,38 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s *Service) SendSignupCode(ctx context.Context, emailAddr string) error {
+func (s *Service) SendSignupCode(ctx context.Context, emailAddr, lang string) error {
 	emailAddr = strings.ToLower(strings.TrimSpace(emailAddr))
 	if emailAddr == "" {
-		return errx.InvalidArg("INVALID_EMAIL", "email required")
+		return auth.ErrInvalidEmail
 	}
-	s.StoreVerificationCode(ctx, emailAddr, RandomCode())
-	return nil
+	if _, err := s.repoFactory.Email(none()).Get.ByAddress(ctx, emailAddr); err == nil {
+		return auth.ErrEmailAlreadyExists
+	} else if !isMissing(err) {
+		return auth.ErrEmailRegistrationCheckFailed.WithCause(err)
+	}
+	return s.issueAndStoreVerification(ctx, emailAddr, lang)
 }
 
 func (s *Service) SignupWithEmail(ctx context.Context, emailAddr, password, code, lang, deviceID, platformName string) (*LoginOutput, error) {
 	emailAddr = strings.ToLower(strings.TrimSpace(emailAddr))
 	if emailAddr == "" || password == "" {
-		return nil, errx.InvalidArg("INVALID_PARAMS", "email and password required")
+		return nil, sys.ErrInvalidParams
 	}
-	if !s.checkVerificationCode(ctx, emailAddr, code) {
-		return nil, errx.InvalidArg("INVALID_VERIFICATION_CODE", "invalid verification code")
+	if err := s.consumeVerificationCode(ctx, emailAddr, code); err != nil {
+		return nil, err
+	}
+	if _, err := s.repoFactory.Email(none()).Get.ByAddress(ctx, emailAddr); err == nil {
+		return nil, auth.ErrEmailAlreadyExists
+	} else if !isMissing(err) {
+		return nil, err
 	}
 	if platformName == "" {
 		platformName = "nfxidentity"
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, errx.Internal("HASH_FAILED", "failed to hash password")
+		return nil, auth.ErrHashFailed
 	}
 	now := time.Now()
 	accountID := uuid.New()
@@ -52,61 +62,66 @@ func (s *Service) SignupWithEmail(ctx context.Context, emailAddr, password, code
 	display := emailAddr
 
 	err = s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
-		if err := s.repos.Account(uow).Create.New(ctx, account.NewFromState(account.AccountState{
+		accountRepo := s.repoFactory.Account(uow)
+		identityRepo := s.repoFactory.Identity(uow)
+		emailRepo := s.repoFactory.Email(uow)
+		forgerRepo := s.repoFactory.Forger(uow)
+		settingsRepo := s.repoFactory.Settings(uow)
+		if err := accountRepo.Create.New(ctx, account.NewFromState(account.AccountState{
 			ID: accountID, AccountStatus: "active", SignupPlatform: platformName, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := s.repos.Identity(uow).Create.New(ctx, identity.NewFromState(identity.IdentityState{
+		if err := identityRepo.Create.New(ctx, identity.NewFromState(identity.IdentityState{
 			ID: identityID, AccountID: accountID, IdentityProvider: "password", ProviderSubject: emailAddr,
 			PasswordHash: &hashStr, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := s.repos.Email(uow).Create.New(ctx, email.NewFromState(email.EmailState{
+		if err := emailRepo.Create.New(ctx, email.NewFromState(email.EmailState{
 			ID: emailID, AccountID: accountID, Address: emailAddr, IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := s.repos.Forger(uow).Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
+		if err := forgerRepo.Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
 			ID: profileID, AccountID: accountID, Roles: pq.StringArray{"forger"},
 			ProfileLanguage: langOrDefault(lang), DisplayName: &display, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		return s.repos.Settings(uow).Create.New(ctx, settings.NewFromState(settings.State{
+		return settingsRepo.Create.New(ctx, settings.NewFromState(settings.State{
 			ID: profileID, Kind: "forger", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
 		}))
 	})
 	if err != nil {
-		return nil, errx.Internal("SIGNUP_FAILED", err.Error())
+		return nil, auth.ErrSignupFailed.WithCause(err)
 	}
 	return s.issueAccountSession(ctx, accountID, &identityID, deviceID, emailAddr, "")
 }
 
 func (s *Service) LoginWithEmail(ctx context.Context, emailAddr, password, deviceID string) (*LoginOutput, error) {
 	emailAddr = strings.ToLower(strings.TrimSpace(emailAddr))
-	ident, err := s.repos.Identity(none()).Get.ByProviderSubject(ctx, "password", emailAddr)
+	ident, err := s.repoFactory.Identity(none()).Get.ByProviderSubject(ctx, "password", emailAddr)
 	if err != nil || ident.PasswordHash() == nil {
-		return nil, ErrInvalidCredentials
+		return nil, auth.ErrInvalidCredentials
 	}
 	if bcrypt.CompareHashAndPassword([]byte(*ident.PasswordHash()), []byte(password)) != nil {
-		return nil, ErrInvalidCredentials
+		return nil, auth.ErrInvalidCredentials
 	}
 	ident.TouchLogin(time.Now())
-	_ = s.repos.Identity(none()).Update.Generic(ctx, ident)
+	_ = s.repoFactory.Identity(none()).Update.Generic(ctx, ident)
 	return s.issueAccountSession(ctx, ident.AccountID(), ptrUUID(ident.ID()), deviceID, emailAddr, "")
 }
 
 func (s *Service) LoginWithPhone(ctx context.Context, phoneNum, password, deviceID string) (*LoginOutput, error) {
 	phoneNum = strings.TrimSpace(phoneNum)
-	p, err := s.repos.Phone(none()).Get.ByNumber(ctx, phoneNum)
+	p, err := s.repoFactory.Phone(none()).Get.ByNumber(ctx, phoneNum)
 	if err != nil {
-		return nil, ErrInvalidCredentials
+		return nil, auth.ErrInvalidCredentials
 	}
-	idents, err := s.repos.Identity(none()).Get.ByAccountID(ctx, p.AccountID())
+	idents, err := s.repoFactory.Identity(none()).Get.ByAccountID(ctx, p.AccountID())
 	if err != nil {
-		return nil, ErrInvalidCredentials
+		return nil, auth.ErrInvalidCredentials
 	}
 	var ident *identity.Identity
 	for _, item := range idents {
@@ -116,7 +131,7 @@ func (s *Service) LoginWithPhone(ctx context.Context, phoneNum, password, device
 		}
 	}
 	if ident == nil || ident.PasswordHash() == nil || bcrypt.CompareHashAndPassword([]byte(*ident.PasswordHash()), []byte(password)) != nil {
-		return nil, ErrInvalidCredentials
+		return nil, auth.ErrInvalidCredentials
 	}
 	return s.issueAccountSession(ctx, p.AccountID(), ptrUUID(ident.ID()), deviceID, "", phoneNum)
 }
@@ -126,27 +141,27 @@ func (s *Service) SelectProfile(ctx context.Context, accountID uuid.UUID, profil
 	display := ""
 	switch kind {
 	case "forger":
-		p, err := s.repos.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return nil, ErrProfileNotOwned
+			return nil, auth.ErrProfileNotOwned
 		}
 		if p.DisplayName() != nil {
 			display = *p.DisplayName()
 		}
 	case "authority":
-		p, err := s.repos.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
-			return nil, ErrProfileNotOwned
+			return nil, auth.ErrProfileNotOwned
 		}
 		if p.DisplayName() != nil {
 			display = *p.DisplayName()
 		}
 	default:
-		return nil, errx.InvalidArg("INVALID_PROFILE_KIND", "kind must be forger or authority")
+		return nil, auth.ErrInvalidProfileKind
 	}
 	access, refresh, err := s.tokens.GenerateTokenPair(accountID.String(), profileID.String(), display, emailAddr, phoneNum, kind)
 	if err != nil {
-		return nil, errx.Internal("TOKEN_FAILED", err.Error())
+		return nil, auth.ErrTokenFailed.WithCause(err)
 	}
 	if err := s.persistRefresh(ctx, accountID, nil, &profileID, &kind, deviceID, refresh); err != nil {
 		return nil, err
@@ -159,18 +174,18 @@ func (s *Service) SelectProfile(ctx context.Context, accountID uuid.UUID, profil
 func (s *Service) Refresh(ctx context.Context, refreshToken, deviceID string) (*TokenOutput, error) {
 	claims, err := s.tokens.VerifyRefreshToken(refreshToken)
 	if err != nil {
-		return nil, ErrInvalidRefresh
+		return nil, auth.ErrInvalidRefreshToken
 	}
-	row, err := s.repos.RefreshToken(none()).Get.ByTokenHash(ctx, hashToken(refreshToken))
+	row, err := s.repoFactory.RefreshToken(none()).Get.ByTokenHash(ctx, hashToken(refreshToken))
 	if err != nil {
-		return nil, ErrInvalidRefresh
+		return nil, auth.ErrInvalidRefreshToken
 	}
 	now := time.Now()
 	row.Revoke(now)
-	_ = s.repos.RefreshToken(none()).Update.Generic(ctx, row)
+	_ = s.repoFactory.RefreshToken(none()).Update.Generic(ctx, row)
 	access, refresh, err := s.tokens.GenerateTokenPair(claims.AccountID, claims.ProfileID, claims.Username, claims.Email, claims.Phone, claims.ProfileScope)
 	if err != nil {
-		return nil, errx.Internal("TOKEN_FAILED", err.Error())
+		return nil, auth.ErrTokenFailed.WithCause(err)
 	}
 	accountID, _ := uuid.Parse(claims.AccountID)
 	var profileID *uuid.UUID
