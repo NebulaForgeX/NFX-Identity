@@ -103,17 +103,6 @@ tasks:
     cmds:
       - rm -rf bin/
 
-  redis:tunnel:
-    desc: "Kill any stale Redis SSH tunnel, then prompt to open a fresh local-forward"
-    interactive: true
-    cmds:
-      - bash scripts/redis_ssh_tunnel.sh --env-file {{.ENV_FILE}}
-
-  redis:tunnel:down:
-    desc: "Stop Redis SSH tunnel and remove .env.redis-tunnel"
-    cmds:
-      - bash scripts/redis_ssh_tunnel.sh --down
-
   run:
     desc: "Generate langs then start auth/asset/system + console (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
     cmds:
@@ -129,12 +118,7 @@ tasks:
         fi
       - |
         ENV_ARGS=(--env-file "{{.ENV_FILE}}")
-        if [[ -f .env.redis-tunnel ]]; then
-          ENV_ARGS+=(--env-file .env.redis-tunnel)
-          echo "==> compose env: {{.ENV_FILE}} + .env.redis-tunnel"
-        else
-          echo "==> compose env: {{.ENV_FILE}} only (no Redis tunnel sidecar)"
-        fi
+        echo "==> compose env: {{.ENV_FILE}}"
         svcs=(auth-base asset-base system-base console)
         for svc in "${svcs[@]}"; do
           echo "==> docker compose build $svc"
@@ -158,9 +142,6 @@ tasks:
         fi
       - |
         ENV_ARGS=(--env-file "{{.ENV_FILE}}")
-        if [[ -f .env.redis-tunnel ]]; then
-          ENV_ARGS+=(--env-file .env.redis-tunnel)
-        fi
         svcs=(auth-base asset-base system-base console)
         for svc in "${svcs[@]}"; do
           echo "==> docker compose build --no-cache $svc"
