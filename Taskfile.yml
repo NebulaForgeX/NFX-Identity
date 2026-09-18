@@ -135,11 +135,7 @@ tasks:
         else
           echo "==> compose env: {{.ENV_FILE}} only (no Redis tunnel sidecar)"
         fi
-        if [[ "{{.ENV}}" == "secure" ]]; then
-          svcs=(auth-base asset-base system-base console)
-        else
-          svcs=(auth-base asset-base system-base console)
-        fi
+        svcs=(auth-base asset-base system-base console)
         for svc in "${svcs[@]}"; do
           echo "==> docker compose build $svc"
           sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build "$svc"
@@ -165,11 +161,7 @@ tasks:
         if [[ -f .env.redis-tunnel ]]; then
           ENV_ARGS+=(--env-file .env.redis-tunnel)
         fi
-        if [[ "{{.ENV}}" == "secure" ]]; then
-          svcs=(auth-base asset-base system-base console)
-        else
-          svcs=(auth-base asset-base system-base console)
-        fi
+        svcs=(auth-base asset-base system-base console)
         for svc in "${svcs[@]}"; do
           echo "==> docker compose build --no-cache $svc"
           sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} build --no-cache "$svc"
