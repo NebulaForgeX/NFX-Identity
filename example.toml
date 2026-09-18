@@ -211,7 +211,7 @@
 # ============================================================================
 [kafka]
     # Kafka broker addresses (from .env: KAFKA_BROKERS)
-    # Format: "host:port" (e.g., "192.168.1.64:10183")
+    # Format: "host:port" (e.g., "192.168.1.64:10108")
     brokers = ["${KAFKA_BROKERS}"]
     
     # Client ID for Kafka connections
