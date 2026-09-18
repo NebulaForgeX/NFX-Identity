@@ -8,8 +8,8 @@ import (
 	"strconv"
 
 	"nfxidentity/modules/asset/config"
-	grpcInterfaces "nfxidentity/modules/asset/interfaces/grpc"
-	httpInterfaces "nfxidentity/modules/asset/interfaces/http"
+	grpcInterfaces "nfxidentity/modules/asset/interface/grpc"
+	httpInterfaces "nfxidentity/modules/asset/interface/http"
 	"nfxidentity/pkgs/logx"
 
 	"golang.org/x/sync/errgroup"

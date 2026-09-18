@@ -8,9 +8,9 @@ import (
 	"strconv"
 
 	"nfxidentity/modules/auth/config"
-	grpcInterfaces "nfxidentity/modules/auth/interfaces/grpc"
-	httpInterfaces "nfxidentity/modules/auth/interfaces/http"
-	eventbusInterfaces "nfxidentity/modules/auth/interfaces/pipeline"
+	grpcInterfaces "nfxidentity/modules/auth/interface/grpc"
+	httpInterfaces "nfxidentity/modules/auth/interface/http"
+	eventbusInterfaces "nfxidentity/modules/auth/interface/pipeline"
 	"nfxidentity/pkgs/logx"
 
 	"golang.org/x/sync/errgroup"

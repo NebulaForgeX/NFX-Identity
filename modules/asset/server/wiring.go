@@ -10,8 +10,14 @@ import (
 	"nfxidentity/modules/asset/application/resource"
 	"nfxidentity/modules/asset/config"
 	"nfxidentity/modules/asset/infrastructure/objectstore"
+	audiosQuery "nfxidentity/modules/asset/infrastructure/query/audios"
+	filesQuery "nfxidentity/modules/asset/infrastructure/query/files"
 	imagesQuery "nfxidentity/modules/asset/infrastructure/query/images"
-	"nfxidentity/modules/asset/infrastructure/repository/kinds"
+	videosQuery "nfxidentity/modules/asset/infrastructure/query/videos"
+	audiosRepo "nfxidentity/modules/asset/infrastructure/repository/audios"
+	filesRepo "nfxidentity/modules/asset/infrastructure/repository/files"
+	imagesRepo "nfxidentity/modules/asset/infrastructure/repository/images"
+	videosRepo "nfxidentity/modules/asset/infrastructure/repository/videos"
 	"nfxidentity/pkgs/cachex"
 	"nfxidentity/pkgs/health"
 	"nfxidentity/pkgs/kafkax"
@@ -66,11 +72,18 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	if err != nil {
 		return nil, fmt.Errorf("init MinIO: %w", err)
 	}
+	db := postgres.DB()
 	mediaSvc := media.NewService(
-		transaction.NewGormTxManager(postgres.DB()),
+		transaction.NewGormTxManager(db),
 		objectstore.New(mc, cfg.MinIO.Bucket),
-		kinds.New(postgres.DB()),
-		imagesQuery.NewQuery(postgres.DB()),
+		imagesRepo.NewRepo(db),
+		filesRepo.NewRepo(db),
+		videosRepo.NewRepo(db),
+		audiosRepo.NewRepo(db),
+		imagesQuery.NewQuery(db),
+		filesQuery.NewQuery(db),
+		videosQuery.NewQuery(db),
+		audiosQuery.NewQuery(db),
 	)
 	if err := mediaSvc.EnsureBucket(ctx); err != nil {
 		return nil, fmt.Errorf("ensure MinIO bucket: %w", err)

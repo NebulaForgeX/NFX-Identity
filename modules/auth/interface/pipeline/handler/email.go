@@ -1,0 +1,116 @@
+package handler
+
+import (
+	"context"
+	"strings"
+	"time"
+
+	"nfxidentity/events"
+	authmail "nfxidentity/modules/auth/infrastructure/email"
+	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
+	pkgemail "nfxidentity/pkgs/email"
+	"nfxidentity/pkgs/transaction"
+
+	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/google/uuid"
+)
+
+type EmailHandler struct {
+	mail        *pkgemail.EmailService
+	repoFactory *repofactory.TxRepoFactory
+}
+
+func NewEmailHandler(mail *pkgemail.EmailService, factory *repofactory.TxRepoFactory) *EmailHandler {
+	return &EmailHandler{mail: mail, repoFactory: factory}
+}
+
+func none() transaction.UoW { return transaction.UoW{} }
+
+func (h *EmailHandler) SignupSuccess(ctx context.Context, evt events.SignupSuccessEvent, _ *message.Message) error {
+	if h.mail == nil {
+		return nil
+	}
+	return authmail.SendSignupWelcomeEmail(ctx, h.mail, evt.Email, evt.Lang, evt.AccountID.String())
+}
+
+func (h *EmailHandler) LoginSuccess(ctx context.Context, evt events.LoginSuccessEvent, _ *message.Message) error {
+	if h.mail == nil || h.repoFactory == nil {
+		return nil
+	}
+	kind := strings.TrimSpace(evt.ProfileKind)
+	if kind == "" {
+		kind = "forger"
+	}
+	notify := false
+	switch kind {
+	case "authority":
+		st, err := h.repoFactory.Profile(none()).Get.AuthoritySettingsByProfileID(ctx, evt.ProfileID)
+		if err != nil {
+			return nil
+		}
+		notify = st.LoginNotification()
+	default:
+		st, err := h.repoFactory.Profile(none()).Get.ForgerSettingsByProfileID(ctx, evt.ProfileID)
+		if err != nil {
+			return nil
+		}
+		notify = st.LoginNotification()
+	}
+	if !notify {
+		return nil
+	}
+	to := strings.TrimSpace(evt.LoginEmail)
+	if to == "" {
+		to = h.primaryEmail(ctx, evt.AccountID)
+	}
+	if to == "" {
+		return nil
+	}
+	lang := h.profileLang(ctx, kind, evt.ProfileID)
+	loginAt := evt.LoginAt.UTC()
+	if loginAt.IsZero() {
+		loginAt = time.Now().UTC()
+	}
+	return authmail.SendLoginNoticeEmail(
+		ctx,
+		h.mail,
+		to,
+		lang,
+		evt.AccountID.String(),
+		loginAt.Format(time.RFC3339),
+		to,
+		evt.IdentityProvider,
+		evt.ProviderSubject,
+	)
+}
+
+func (h *EmailHandler) primaryEmail(ctx context.Context, accountID uuid.UUID) string {
+	rows, err := h.repoFactory.Email(none()).Get.ByAccountID(ctx, accountID)
+	if err != nil {
+		return ""
+	}
+	for _, row := range rows {
+		if row.IsPrimary() {
+			return row.Email()
+		}
+	}
+	if len(rows) > 0 {
+		return rows[0].Email()
+	}
+	return ""
+}
+
+func (h *EmailHandler) profileLang(ctx context.Context, kind string, profileID uuid.UUID) string {
+	if kind == "authority" {
+		p, err := h.repoFactory.Profile(none()).Get.AuthorityByProfileID(ctx, profileID)
+		if err == nil {
+			return string(p.ProfileLanguage())
+		}
+		return "en"
+	}
+	p, err := h.repoFactory.Profile(none()).Get.ForgerByProfileID(ctx, profileID)
+	if err == nil {
+		return string(p.ProfileLanguage())
+	}
+	return "en"
+}

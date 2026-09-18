@@ -23,7 +23,9 @@
     "cancelEdit": "Annuler",
     "saveEmail": "Enregistrer",
     "deleteProfile": "Supprimer",
-    "switch": "Changer"
+    "switch": "Changer",
+    "linkGitHub": "Lier GitHub",
+    "unlinkGitHub": "Délier GitHub"
   },
   "labels": {
     "primary": "Principal",
@@ -37,7 +39,6 @@
     "currentPassword": "Mot de passe actuel",
     "newPassword": "Nouveau mot de passe",
     "displayName": "Nom d'affichage",
-    "newCommunityProfile": "Nouveau profil communautaire",
     "loading": "Chargement des identités",
     "langEn": "English",
     "langZh": "中文",
@@ -46,12 +47,15 @@
     "newEmail": "Nouvelle adresse e-mail",
     "current": "En cours",
     "emptyName": "Identité sans nom",
-    "scopeCommunity": "Communauté",
     "scopeAuthority": "Autorité",
     "cannotDeleteCurrent": "Vous ne pouvez pas supprimer l'identité en cours d'utilisation.",
     "cannotDeleteLast": "Au moins une identité doit rester.",
     "deleteConfirmBody": "Supprimer définitivement « {{name}} » et ses données ? Irréversible.",
-    "profileLanguage": "Langue"
+    "profileLanguage": "Langue",
+    "scopeForger": "Forger",
+    "newForgerProfile": "Nouveau profil Forger",
+    "githubLinked": "GitHub est lié à ce Account.",
+    "unlinkGitHubConfirm": "Délier GitHub de ce Account ?"
   },
   "sections": {
     "emails": {
@@ -64,11 +68,15 @@
     },
     "profiles": {
       "title": "Profils",
-      "description": "Passez d'une identité communautaire à une identité d'autorité sous ce compte."
+      "description": "Passez d'une identité Forger à une identité d'autorité sous ce compte."
     },
-    "communityProfiles": {
-      "title": "Profils communautaires",
-      "description": "Créez un autre Profile. Les profils d'autorité sont accordés après examen."
+    "github": {
+      "title": "GitHub",
+      "description": "Connectez et prouvez ce Account avec une identité GitHub."
+    },
+    "forgerProfiles": {
+      "title": "Nouveau profil Forger",
+      "description": "Créez un autre Profile Forger. Les profils d'autorité sont accordés après examen."
     }
   }
 }

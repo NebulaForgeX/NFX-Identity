@@ -16,9 +16,9 @@ type Handler struct{ db *gorm.DB }
 func NewHandler(db *gorm.DB) phoneQuery.List { return &Handler{db: db} }
 
 func (h *Handler) ByAccountID(ctx context.Context, accountID uuid.UUID) ([]phoneQuery.PhoneItemVO, error) {
-	var rows []views.Listphoneitem
+	var rows []views.ListPhoneItem
 	if err := h.db.WithContext(ctx).
-		Table(views.Listphoneitem{}.TableName()).
+		Table(views.ListPhoneItem{}.TableName()).
 		Where("account_id = ?", accountID).
 		Order("is_primary DESC, created_at ASC").
 		Find(&rows).Error; err != nil {

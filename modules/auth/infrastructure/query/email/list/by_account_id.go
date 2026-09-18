@@ -16,9 +16,9 @@ type Handler struct{ db *gorm.DB }
 func NewHandler(db *gorm.DB) emailQuery.List { return &Handler{db: db} }
 
 func (h *Handler) ByAccountID(ctx context.Context, accountID uuid.UUID) ([]emailQuery.EmailItemVO, error) {
-	var rows []views.Listemailitem
+	var rows []views.ListEmailItem
 	if err := h.db.WithContext(ctx).
-		Table(views.Listemailitem{}.TableName()).
+		Table(views.ListEmailItem{}.TableName()).
 		Where("account_id = ?", accountID).
 		Order("is_primary DESC, created_at ASC").
 		Find(&rows).Error; err != nil {

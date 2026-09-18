@@ -4,6 +4,7 @@ import (
 	"context"
 	"nfxidentity/errors/src/auth"
 	"nfxidentity/errors/src/sys"
+	"nfxidentity/modules/auth/domain/profile"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -74,17 +75,19 @@ func (s *Service) FullAccountWithProfile(ctx context.Context, accountID uuid.UUI
 		"identities": identJSON,
 	}
 	if kind == "authority" {
-		if p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID); err == nil {
+		p, err := s.loadAuthorityProfile(ctx, accountID, profileID)
+		if err == nil {
 			m := s.authorityVO(p)
-			s.attachProfileMedia(ctx, m, "authority", p.ID())
+			s.attachAuthorityMedia(ctx, m, p.ID())
 			out["authority_profile"] = m
 		} else {
 			out["authority_profile"] = nil
 		}
 	} else {
-		if p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID); err == nil {
+		p, err := s.loadForgerProfile(ctx, accountID, profileID)
+		if err == nil {
 			m := s.forgerVO(p)
-			s.attachProfileMedia(ctx, m, "forger", p.ID())
+			s.attachForgerMedia(ctx, m, p.ID())
 			out["forger_profile"] = m
 		} else {
 			out["forger_profile"] = nil
@@ -93,22 +96,58 @@ func (s *Service) FullAccountWithProfile(ctx context.Context, accountID uuid.UUI
 	return out, nil
 }
 
-func (s *Service) attachProfileMedia(ctx context.Context, m map[string]any, kind string, profileID uuid.UUID) {
-	if avatars, err := s.repoFactory.Avatar(none()).Get.ByProfileID(ctx, kind, profileID); err == nil {
+func (s *Service) loadForgerProfile(ctx context.Context, accountID, profileID uuid.UUID) (*profile.ForgerProfile, error) {
+	if profileID == uuid.Nil {
+		return s.repoFactory.Profile(none()).Get.ForgerByAccountID(ctx, accountID)
+	}
+	return s.repoFactory.Profile(none()).Get.ForgerByAccountAndID(ctx, accountID, profileID)
+}
+
+func (s *Service) loadAuthorityProfile(ctx context.Context, accountID, profileID uuid.UUID) (*profile.AuthorityProfile, error) {
+	if profileID == uuid.Nil {
+		return s.repoFactory.Profile(none()).Get.AuthorityByAccountID(ctx, accountID)
+	}
+	return s.repoFactory.Profile(none()).Get.AuthorityByAccountAndID(ctx, accountID, profileID)
+}
+
+func (s *Service) attachForgerMedia(ctx context.Context, m map[string]any, profileID uuid.UUID) {
+	repo := s.repoFactory.Profile(none())
+	if avatars, err := repo.Get.ListForgerAvatarsByProfileID(ctx, profileID); err == nil {
 		list := make([]map[string]any, 0, len(avatars))
 		for _, a := range avatars {
 			list = append(list, map[string]any{"id": a.ID().String(), "image_id": a.ImageID().String(), "is_active": a.IsActive()})
 		}
 		m["avatars"] = list
 	}
-	if bgs, err := s.repoFactory.Background(none()).Get.ByProfileID(ctx, kind, profileID); err == nil {
+	if bgs, err := repo.Get.ForgerBackgroundsByProfileID(ctx, profileID); err == nil {
 		list := make([]map[string]any, 0, len(bgs))
 		for _, b := range bgs {
 			list = append(list, map[string]any{"id": b.ID().String(), "image_id": b.ImageID().String(), "sort_order": b.SortOrder()})
 		}
 		m["backgrounds"] = list
 	}
-	if st, err := s.repoFactory.Settings(none()).Get.ByID(ctx, kind, profileID); err == nil {
+	if st, err := repo.Get.ForgerSettingsByProfileID(ctx, profileID); err == nil {
+		m["settings"] = map[string]any{"id": st.ID().String(), "login_notification": st.LoginNotification()}
+	}
+}
+
+func (s *Service) attachAuthorityMedia(ctx context.Context, m map[string]any, profileID uuid.UUID) {
+	repo := s.repoFactory.Profile(none())
+	if avatars, err := repo.Get.ListAuthorityAvatarsByProfileID(ctx, profileID); err == nil {
+		list := make([]map[string]any, 0, len(avatars))
+		for _, a := range avatars {
+			list = append(list, map[string]any{"id": a.ID().String(), "image_id": a.ImageID().String(), "is_active": a.IsActive()})
+		}
+		m["avatars"] = list
+	}
+	if bgs, err := repo.Get.AuthorityBackgroundsByProfileID(ctx, profileID); err == nil {
+		list := make([]map[string]any, 0, len(bgs))
+		for _, b := range bgs {
+			list = append(list, map[string]any{"id": b.ID().String(), "image_id": b.ImageID().String(), "sort_order": b.SortOrder()})
+		}
+		m["backgrounds"] = list
+	}
+	if st, err := repo.Get.AuthoritySettingsByProfileID(ctx, profileID); err == nil {
 		m["settings"] = map[string]any{"id": st.ID().String(), "login_notification": st.LoginNotification()}
 	}
 }

@@ -23,7 +23,9 @@
     "cancelEdit": "Cancel",
     "saveEmail": "Save email",
     "deleteProfile": "Delete",
-    "switch": "Switch"
+    "switch": "Switch",
+    "linkGitHub": "Link GitHub",
+    "unlinkGitHub": "Unlink GitHub"
   },
   "labels": {
     "primary": "Primary",
@@ -37,7 +39,6 @@
     "currentPassword": "Current password",
     "newPassword": "New password",
     "displayName": "Display name",
-    "newCommunityProfile": "New community profile",
     "loading": "Loading identities",
     "langEn": "English",
     "langZh": "中文",
@@ -46,12 +47,15 @@
     "newEmail": "New email address",
     "current": "In use",
     "emptyName": "Untitled identity",
-    "scopeCommunity": "Community",
     "scopeAuthority": "Authority",
     "cannotDeleteCurrent": "You cannot delete the identity currently in use.",
     "cannotDeleteLast": "At least one identity must remain.",
     "deleteConfirmBody": "Permanently delete \"{{name}}\" and its data? This cannot be undone.",
-    "profileLanguage": "Language"
+    "profileLanguage": "Language",
+    "scopeForger": "Forger",
+    "newForgerProfile": "New forger profile",
+    "githubLinked": "GitHub is linked to this Account.",
+    "unlinkGitHubConfirm": "Unlink GitHub from this Account?"
   },
   "sections": {
     "emails": {
@@ -64,11 +68,15 @@
     },
     "profiles": {
       "title": "Profiles",
-      "description": "Switch between community and authority identities under this Account."
+      "description": "Switch between forger and authority identities under this Account."
     },
-    "communityProfiles": {
-      "title": "Community Profiles",
-      "description": "Create another Profile. Authority profiles are granted by review."
+    "github": {
+      "title": "GitHub",
+      "description": "Sign in and prove this Account with a GitHub identity."
+    },
+    "forgerProfiles": {
+      "title": "New forger profile",
+      "description": "Create another Forger profile. Authority profiles are granted by review."
     }
   }
 }

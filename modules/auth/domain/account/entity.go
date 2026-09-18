@@ -3,28 +3,35 @@ package account
 import (
 	"time"
 
+	"nfxidentity/enums"
+
 	"github.com/google/uuid"
 )
 
-type Account struct{ state AccountState }
+type Account struct {
+	state AccountState
+}
 
 type AccountState struct {
 	ID             uuid.UUID
-	AccountStatus  string
-	SignupPlatform string
+	AccountStatus  enums.AuthAccountStatus
+	SignupPlatform enums.AuthSignupPlatform
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	DeletedAt      *time.Time
 }
 
-func NewFromState(st AccountState) *Account { return &Account{state: st} }
-func (a *Account) ID() uuid.UUID            { return a.state.ID }
-func (a *Account) AccountStatus() string    { return a.state.AccountStatus }
-func (a *Account) SignupPlatform() string   { return a.state.SignupPlatform }
-func (a *Account) CreatedAt() time.Time     { return a.state.CreatedAt }
-func (a *Account) UpdatedAt() time.Time     { return a.state.UpdatedAt }
-func (a *Account) DeletedAt() *time.Time    { return a.state.DeletedAt }
-func (a *Account) IsActive() bool {
-	return a.state.AccountStatus == "active" && a.state.DeletedAt == nil
+func (u *Account) ID() uuid.UUID                            { return u.state.ID }
+func (u *Account) AccountStatus() enums.AuthAccountStatus   { return u.state.AccountStatus }
+func (u *Account) SignupPlatform() enums.AuthSignupPlatform { return u.state.SignupPlatform }
+func (u *Account) CreatedAt() time.Time                     { return u.state.CreatedAt }
+func (u *Account) UpdatedAt() time.Time                     { return u.state.UpdatedAt }
+func (u *Account) DeletedAt() *time.Time                    { return u.state.DeletedAt }
+
+func (u *Account) IsActive() bool {
+	return u.AccountStatus() == enums.AuthAccountStatusActive && u.DeletedAt() == nil
 }
-func (a *Account) State() AccountState { return a.state }
+
+func NewAccountFromState(st AccountState) *Account {
+	return &Account{state: st}
+}

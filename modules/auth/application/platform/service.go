@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"nfxidentity/enums"
 	"nfxidentity/errors/src/auth"
 	"nfxidentity/events"
 	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
@@ -169,7 +170,7 @@ func (s *Service) issueAccountSession(ctx context.Context, accountID uuid.UUID, 
 	}, nil
 }
 
-func (s *Service) persistRefresh(ctx context.Context, accountID uuid.UUID, identityID, profileID *uuid.UUID, scope *string, deviceID, refresh string) error {
+func (s *Service) persistRefresh(ctx context.Context, accountID uuid.UUID, identityID, profileID *uuid.UUID, scope *enums.AuthProfileScope, deviceID, refresh string) error {
 	now := time.Now()
 	return s.tx.WithUoW(ctx, func(ctx context.Context, uow transaction.UoW) error {
 		refreshTokenRepo := s.repoFactory.RefreshToken(uow)
@@ -193,18 +194,18 @@ func (s *Service) ListProfileItemsExport(ctx context.Context, accountID uuid.UUI
 
 func (s *Service) listProfileItems(ctx context.Context, accountID uuid.UUID) []ProfileItem {
 	var out []ProfileItem
-	forgers, _ := s.profiles.Forger.ByAccountID(ctx, accountID)
+	forgers, _ := s.profiles.ForgerList.ByAccountID(ctx, accountID)
 	for _, p := range forgers {
-		item := ProfileItem{ProfileID: p.ProfileID.String(), Kind: "forger", Roles: []string(p.ForgerRoles), DisplayName: p.DisplayName, City: p.City, Country: p.Country}
+		item := ProfileItem{ProfileID: p.ProfileID.String(), Kind: "forger", Roles: roleStrings(p.ForgerRoles), DisplayName: p.DisplayName, City: p.City, Country: p.Country}
 		if p.AvatarImageID != nil {
 			id := p.AvatarImageID.String()
 			item.AvatarImageID = &id
 		}
 		out = append(out, item)
 	}
-	auths, _ := s.profiles.Authority.ByAccountID(ctx, accountID)
+	auths, _ := s.profiles.AuthorityList.ByAccountID(ctx, accountID)
 	for _, p := range auths {
-		item := ProfileItem{ProfileID: p.ProfileID.String(), Kind: "authority", Roles: []string(p.AuthorityRoles), DisplayName: p.DisplayName, City: p.City, Country: p.Country}
+		item := ProfileItem{ProfileID: p.ProfileID.String(), Kind: "authority", Roles: roleStrings(p.AuthorityRoles), DisplayName: p.DisplayName, City: p.City, Country: p.Country}
 		if p.AvatarImageID != nil {
 			id := p.AvatarImageID.String()
 			item.AvatarImageID = &id
@@ -237,7 +238,7 @@ func (s *Service) primaryContacts(ctx context.Context, accountID uuid.UUID) (ema
 }
 
 func (s *Service) requireOwner(ctx context.Context, accountID uuid.UUID) error {
-	ok, err := s.repoFactory.Authority(none()).Get.HasOwnerRole(ctx, accountID)
+	ok, err := s.repoFactory.Profile(none()).Get.HasOwnerRole(ctx, accountID)
 	if err != nil {
 		return err
 	}
@@ -258,13 +259,11 @@ func (s *Service) EnsureOwnedProfile(ctx context.Context, accountID, profileID, 
 	}
 	switch scope {
 	case "forger":
-		ok, err := s.repoFactory.Forger(none()).Get.Owned(ctx, aid, pid)
-		if err != nil || !ok {
+		if _, err := s.repoFactory.Profile(none()).Get.ForgerByAccountAndID(ctx, aid, pid); err != nil {
 			return auth.ErrProfileNotOwned
 		}
 	case "authority":
-		ok, err := s.repoFactory.Authority(none()).Get.Owned(ctx, aid, pid)
-		if err != nil || !ok {
+		if _, err := s.repoFactory.Profile(none()).Get.AuthorityByAccountAndID(ctx, aid, pid); err != nil {
 			return auth.ErrProfileNotOwned
 		}
 	default:
@@ -362,7 +361,7 @@ func (s *Service) latestIdentity(ctx context.Context, accountID uuid.UUID) (prov
 			best = item
 		}
 	}
-	return best.IdentityProvider(), best.ProviderSubject()
+	return string(best.IdentityProvider()), best.ProviderSubject()
 }
 
 func emailMaps(rows []emailQuery.EmailItemVO) []map[string]any {

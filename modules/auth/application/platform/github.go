@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"nfxidentity/enums"
 	"nfxidentity/errors/src/auth"
 	"strconv"
 	"strings"
@@ -15,13 +16,11 @@ import (
 
 	"nfxidentity/modules/auth/domain/account"
 	"nfxidentity/modules/auth/domain/email"
-	"nfxidentity/modules/auth/domain/forgerprofile"
 	"nfxidentity/modules/auth/domain/identity"
-	"nfxidentity/modules/auth/domain/settings"
+	"nfxidentity/modules/auth/domain/profile"
 	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 )
@@ -180,35 +179,35 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 		accountRepo := s.repoFactory.Account(uow)
 		identityRepo := s.repoFactory.Identity(uow)
 		emailRepo := s.repoFactory.Email(uow)
-		forgerRepo := s.repoFactory.Forger(uow)
-		settingsRepo := s.repoFactory.Settings(uow)
-		if err := accountRepo.Create.New(ctx, account.NewFromState(account.AccountState{
-			ID: accountID, AccountStatus: "active", SignupPlatform: platformName, CreatedAt: now, UpdatedAt: now,
+		profileRepo := s.repoFactory.Profile(uow)
+
+		if err := accountRepo.Create.New(ctx, account.NewAccountFromState(account.AccountState{
+			ID: accountID, AccountStatus: enums.AuthAccountStatusActive, SignupPlatform: enums.AuthSignupPlatform(platformName), CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := identityRepo.Create.New(ctx, identity.NewFromState(identity.IdentityState{
-			ID: identityID, AccountID: accountID, IdentityProvider: "github", ProviderSubject: subject,
+		if err := identityRepo.Create.New(ctx, identity.NewIdentityFromState(identity.IdentityState{
+			ID: identityID, AccountID: accountID, IdentityProvider: enums.AuthIdentityProviderGithub, ProviderSubject: subject,
 			CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
 		if user.Email != "" {
 			verified := now
-			if err := emailRepo.Create.New(ctx, email.NewFromState(email.EmailState{
-				ID: uuid.New(), AccountID: accountID, Address: strings.ToLower(user.Email), IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
+			if err := emailRepo.Create.New(ctx, email.NewEmailFromState(email.EmailState{
+				ID: uuid.New(), AccountID: accountID, Email: strings.ToLower(user.Email), IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
 			})); err != nil {
 				return err
 			}
 		}
-		if err := forgerRepo.Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
-			ID: profileID, AccountID: accountID, Roles: pq.StringArray{"forger"},
-			ProfileLanguage: "zh", DisplayName: &display, CreatedAt: now, UpdatedAt: now,
+		if err := profileRepo.Create.NewForger(ctx, profile.NewForgerProfileFromState(profile.ForgerProfileState{
+			ID: profileID, AccountID: accountID, ForgerRoles: []enums.AuthForgerRole{enums.AuthForgerRoleForger},
+			ProfileLanguage: enums.AuthProfileLanguageZh, Preference: profile.Default(enums.AuthProfileLanguageZh), DisplayName: &display, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		return settingsRepo.Create.New(ctx, settings.NewFromState(settings.State{
-			ID: profileID, Kind: "forger", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
+		return profileRepo.Create.NewForgerSettings(ctx, profile.NewForgerProfileSettingsFromState(profile.ForgerProfileSettingsState{
+			ID: profileID, LoginNotification: true, CreatedAt: now, UpdatedAt: now,
 		}))
 	})
 	if err != nil {
@@ -238,8 +237,8 @@ func (s *Service) LinkGitHub(ctx context.Context, accountID uuid.UUID, code, sta
 		return err
 	}
 	now := time.Now()
-	return s.repoFactory.Identity(none()).Create.New(ctx, identity.NewFromState(identity.IdentityState{
-		ID: uuid.New(), AccountID: accountID, IdentityProvider: "github", ProviderSubject: subject,
+	return s.repoFactory.Identity(none()).Create.New(ctx, identity.NewIdentityFromState(identity.IdentityState{
+		ID: uuid.New(), AccountID: accountID, IdentityProvider: enums.AuthIdentityProviderGithub, ProviderSubject: subject,
 		CreatedAt: now, UpdatedAt: now,
 	}))
 }
@@ -252,10 +251,10 @@ func (s *Service) UnlinkGitHub(ctx context.Context, accountID uuid.UUID) error {
 	hasPassword := false
 	var githubIdent *identity.Identity
 	for _, item := range idents {
-		if item.IdentityProvider() == "password" {
+		if item.IdentityProvider() == enums.AuthIdentityProviderPassword {
 			hasPassword = true
 		}
-		if item.IdentityProvider() == "github" {
+		if item.IdentityProvider() == enums.AuthIdentityProviderGithub {
 			githubIdent = item
 		}
 	}

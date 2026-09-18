@@ -1,16 +1,63 @@
 package constants
 
-// 认证相关常量
+import (
+	"nfxidentity/enums"
+	"nfxidentity/pkgs/constantx"
+)
+
 const (
-	// MaxLoginAttempts 最大登录失败次数，超过此次数将锁定账户
-	MaxLoginAttempts = 5
+	MaxLoginAttempts               = 5
+	LockoutDurationMinutes         = 30
+	DefaultAccessTokenTTLSeconds   = 900
+	DefaultRefreshTokenTTLSeconds  = 7 * 24 * 3600
+	AuthProfileMaxBackgrounds      = 6
+	AuthAccountMaxProfiles         = 5
+	AuthAccountMinProfiles         = 1
+	AuthAccountMinVerifiedEmails   = 1
+)
 
-	// LockoutDurationMinutes 账户锁定持续时间（分钟）
-	LockoutDurationMinutes = 30
+var AuthProfileScope = constantx.NewStringEnumSet(
+	enums.AuthProfileScopeForger,
+	enums.AuthProfileScopeAuthority,
+)
 
-	// DefaultAccessTokenTTLSeconds 默认 Access Token 有效期（秒），15 分钟
-	DefaultAccessTokenTTLSeconds = 900
+var AuthForgerRole = constantx.NewStringEnumSet(
+	enums.AuthForgerRoleForger,
+)
 
-	// DefaultRefreshTokenTTLSeconds 默认 Refresh Token 有效期（秒），7 天
-	DefaultRefreshTokenTTLSeconds = 7 * 24 * 3600
+var AuthAuthorityRole = constantx.NewStringEnumSet(
+	enums.AuthAuthorityRoleAuditor,
+	enums.AuthAuthorityRoleAdministrator,
+	enums.AuthAuthorityRoleOwner,
+)
+
+var AuthAccountStatus = constantx.NewStringEnumSet(
+	enums.AuthAccountStatusActive,
+	enums.AuthAccountStatusSuspended,
+	enums.AuthAccountStatusDeleted,
+)
+
+var AuthSignupPlatform = constantx.NewStringEnumSet(
+	enums.AuthSignupPlatformNfxidentity,
+	enums.AuthSignupPlatformNfxnews,
+	enums.AuthSignupPlatformNfxstorages,
+	enums.AuthSignupPlatformNfxvault,
+)
+
+var AuthIdentityProvider = constantx.NewStringEnumSet(
+	enums.AuthIdentityProviderPassword,
+	enums.AuthIdentityProviderGithub,
+)
+
+type ProfileKind string
+
+const (
+	ProfileKindForger    ProfileKind = "forger"
+	ProfileKindAuthority ProfileKind = "authority"
+)
+
+var AuthLanguage = constantx.NewStringEnumSet(
+	enums.AuthProfileLanguageEn,
+	enums.AuthProfileLanguageZh,
+	enums.AuthProfileLanguageFr,
 )

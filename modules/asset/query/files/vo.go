@@ -1,0 +1,18 @@
+package files
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type FileVO struct {
+	ID         uuid.UUID `json:"id"`
+	FilePath   string    `json:"file_path"`
+	FileName   string    `json:"file_name"`
+	FileSize   int64     `json:"file_size"`
+	MimeType   string    `json:"mime_type"`
+	UploaderID uuid.UUID `json:"uploader_id"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
+}

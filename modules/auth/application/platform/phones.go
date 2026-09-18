@@ -28,8 +28,8 @@ func (s *Service) CreatePhone(ctx context.Context, accountID uuid.UUID, number s
 	}
 	now := time.Now()
 	id := uuid.New()
-	if err := s.repoFactory.Phone(none()).Create.New(ctx, phone.NewFromState(phone.PhoneState{
-		ID: id, AccountID: accountID, Number: number, CreatedAt: now, UpdatedAt: now,
+	if err := s.repoFactory.Phone(none()).Create.New(ctx, phone.NewPhoneFromState(phone.PhoneState{
+		ID: id, AccountID: accountID, Phone: number, CreatedAt: now, UpdatedAt: now,
 	})); err != nil {
 		return "", auth.ErrPhoneAlreadyExists
 	}
@@ -49,7 +49,7 @@ func (s *Service) VerifyPhone(ctx context.Context, accountID, phoneID uuid.UUID,
 	if err != nil || row.AccountID() != accountID {
 		return sys.ErrNotFound
 	}
-	if err := s.consumeVerificationCode(ctx, "phone:"+row.Number(), code); err != nil {
+	if err := s.consumeVerificationCode(ctx, "phone:"+row.Phone(), code); err != nil {
 		return err
 	}
 	row.MarkVerified(time.Now())
@@ -105,7 +105,7 @@ func (s *Service) DeletePhone(ctx context.Context, accountID, phoneID uuid.UUID)
 }
 
 func (s *Service) AccountIDByPhone(ctx context.Context, number string) (uuid.UUID, error) {
-	row, err := s.repoFactory.Phone(none()).Get.ByNumber(ctx, strings.TrimSpace(number))
+	row, err := s.repoFactory.Phone(none()).Get.ByPhone(ctx, strings.TrimSpace(number))
 	if err != nil {
 		return uuid.Nil, sys.ErrNotFound
 	}

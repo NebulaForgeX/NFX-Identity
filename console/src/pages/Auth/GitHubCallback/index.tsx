@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Flex, Spinner, Text } from "@radix-ui/themes";
 import { AuthSignupPlatformEnum } from "nfx-ui/enums";
-import { systemEventEmitter } from "nfx-ui/events";
-import { useLoginWithGitHub, useSelectProfile } from "nfx-ui/hooks";
+import { authEventEmitter, authEvents, systemEventEmitter } from "nfx-ui/events";
+import { useLinkGitHub, useLoginWithGitHub, useSelectProfile } from "nfx-ui/hooks";
+import { AuthStore, hasSelectedProfile, useAuthStore } from "nfx-ui/stores";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
 
@@ -14,7 +15,10 @@ export default function GitHubCallbackPage() {
   const { t } = useTranslation("pages.Account.Login");
   const [params] = useSearchParams();
   const login = useLoginWithGitHub();
+  const link = useLinkGitHub();
   const selectProfile = useSelectProfile();
+  const isAuthValid = useAuthStore((s) => s.isAuthValid);
+  const currentProfileId = useAuthStore((s) => s.currentProfileId);
   const started = useRef(false);
 
   useEffect(() => {
@@ -23,12 +27,18 @@ export default function GitHubCallbackPage() {
     const code = params.get("code") ?? "";
     const state = params.get("state") ?? "";
     if (!code || !state) {
-      systemEventEmitter.showError(t("github.missingParams", { defaultValue: "GitHub callback is missing code or state." }));
+      systemEventEmitter.showError(t("github.missingParams"));
       routerEventEmitter.navigate({ to: ROUTES.LOGIN, replace: true });
       return;
     }
     void (async () => {
       try {
+        if (isAuthValid && hasSelectedProfile(currentProfileId)) {
+          await link.mutateAsync({ code, state });
+          authEventEmitter.emit(authEvents.UPDATE_ACCOUNT_SUCCESS, AuthStore.getState().currentAccountId);
+          routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_IDENTITIES, replace: true });
+          return;
+        }
         const result = await login.mutateAsync({
           code,
           state,
@@ -45,17 +55,17 @@ export default function GitHubCallbackPage() {
         }
         routerEventEmitter.navigate({ to: ROUTES.LOGIN, replace: true });
       } catch {
-        routerEventEmitter.navigate({ to: ROUTES.LOGIN, replace: true });
+        routerEventEmitter.navigate({ to: isAuthValid && hasSelectedProfile(currentProfileId) ? ROUTES.USER_PROFILE_IDENTITIES : ROUTES.LOGIN, replace: true });
       }
     })();
-  }, [login, params, selectProfile, t]);
+  }, [currentProfileId, isAuthValid, link, login, params, selectProfile, t]);
 
   return (
     <Flex align="center" justify="center" minHeight="100dvh">
       <Flex direction="column" align="center" gap="3">
         <Spinner size="3" />
         <Text size="2" color="gray">
-          {t("github.completing", { defaultValue: "Completing GitHub sign-in…" })}
+          {t("github.completing")}
         </Text>
       </Flex>
     </Flex>

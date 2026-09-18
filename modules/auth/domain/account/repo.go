@@ -11,10 +11,11 @@ type Repo struct {
 	Get    Get
 	Check  Check
 	Update Update
+	Delete Delete
 }
 
 type Create interface {
-	New(ctx context.Context, a *Account) error
+	New(ctx context.Context, u *Account) error
 }
 
 type Get interface {
@@ -26,5 +27,9 @@ type Check interface {
 }
 
 type Update interface {
-	Generic(ctx context.Context, a *Account) error
+	Generic(ctx context.Context, u *Account) error
+}
+
+type Delete interface {
+	ByID(ctx context.Context, id uuid.UUID) error
 }

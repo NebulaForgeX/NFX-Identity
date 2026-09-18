@@ -3,21 +3,24 @@ package get
 import (
 	"context"
 
-	"nfxidentity/modules/auth/domain/identity"
-	"nfxidentity/modules/auth/infrastructure/rdb/models"
+	identityDomain "nfxidentity/modules/auth/domain/identity"
+	rdbmodels "nfxidentity/modules/auth/infrastructure/rdb/models"
 	"nfxidentity/modules/auth/infrastructure/repository/identity/mapper"
 
 	"github.com/google/uuid"
 )
 
-func (h *Handler) ByAccountID(ctx context.Context, accountID uuid.UUID) ([]*identity.Identity, error) {
-	var rows []models.Identity
-	if err := h.db.WithContext(ctx).Where("account_id = ? AND deleted_at IS NULL", accountID).Find(&rows).Error; err != nil {
+func (h *Handler) ByAccountID(ctx context.Context, accountID uuid.UUID) ([]*identityDomain.Identity, error) {
+	var ms []rdbmodels.Identity
+	if err := h.db.WithContext(ctx).
+		Where(rdbmodels.IdentityCols.AccountID+" = ?", accountID.String()).
+		Find(&ms).Error; err != nil {
 		return nil, err
 	}
-	out := make([]*identity.Identity, 0, len(rows))
-	for i := range rows {
-		out = append(out, mapper.ToDomain(&rows[i]))
+
+	out := make([]*identityDomain.Identity, 0, len(ms))
+	for i := range ms {
+		out = append(out, mapper.IdentityModelToDomain(&ms[i]))
 	}
 	return out, nil
 }

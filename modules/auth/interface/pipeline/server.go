@@ -1,0 +1,55 @@
+package pipeline
+
+import (
+	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
+	"nfxidentity/modules/auth/interface/pipeline/handler"
+	pkgemail "nfxidentity/pkgs/email"
+	"nfxidentity/pkgs/kafkax"
+	"nfxidentity/pkgs/kafkax/eventbus"
+	"nfxidentity/pkgs/logx"
+	"time"
+
+	wmMiddleware "github.com/ThreeDotsLabs/watermill/message/router/middleware"
+)
+
+type Deps interface {
+	KafkaConfig() *kafkax.Config
+	BusPublisher() *eventbus.BusPublisher
+	Mail() *pkgemail.EmailService
+	RepoFactory() *repofactory.TxRepoFactory
+}
+
+func NewServer(d Deps) (*Router, error) {
+	sub, err := kafkax.NewSubscriber(d.KafkaConfig())
+	if err != nil {
+		return nil, err
+	}
+
+	registry := &Registry{
+		Email: handler.NewEmailHandler(d.Mail(), d.RepoFactory()),
+	}
+
+	router, err := NewRouter(sub, registry, eventbus.EventRouterConfig{
+		CloseTimeout: 10 * time.Second,
+		Logger:       logx.NewZapWatermillLogger(logx.L()),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	router.AddMiddleware(
+		wmMiddleware.CorrelationID,
+		wmMiddleware.Recoverer,
+		wmMiddleware.Retry{
+			MaxRetries:      3,
+			InitialInterval: 200 * time.Millisecond,
+			MaxInterval:     2 * time.Second,
+			Multiplier:      2.0,
+		}.Middleware,
+		wmMiddleware.Timeout(10*time.Second),
+	)
+
+	router.RegisterRoutes()
+
+	return router, nil
+}

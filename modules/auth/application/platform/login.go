@@ -2,6 +2,7 @@ package platform
 
 import (
 	"context"
+	"nfxidentity/enums"
 	"nfxidentity/errors/src/auth"
 	"nfxidentity/errors/src/sys"
 	"strings"
@@ -9,13 +10,11 @@ import (
 
 	"nfxidentity/modules/auth/domain/account"
 	"nfxidentity/modules/auth/domain/email"
-	"nfxidentity/modules/auth/domain/forgerprofile"
 	"nfxidentity/modules/auth/domain/identity"
-	"nfxidentity/modules/auth/domain/settings"
+	"nfxidentity/modules/auth/domain/profile"
 	"nfxidentity/pkgs/transaction"
 
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,7 +23,7 @@ func (s *Service) SendSignupCode(ctx context.Context, emailAddr, lang string) er
 	if emailAddr == "" {
 		return auth.ErrInvalidEmail
 	}
-	if _, err := s.repoFactory.Email(none()).Get.ByAddress(ctx, emailAddr); err == nil {
+	if _, err := s.repoFactory.Email(none()).Get.ByEmail(ctx, emailAddr); err == nil {
 		return auth.ErrEmailAlreadyExists
 	} else if !isMissing(err) {
 		return auth.ErrEmailRegistrationCheckFailed.WithCause(err)
@@ -40,7 +39,7 @@ func (s *Service) SignupWithEmail(ctx context.Context, emailAddr, password, code
 	if err := s.consumeVerificationCode(ctx, emailAddr, code); err != nil {
 		return nil, err
 	}
-	if _, err := s.repoFactory.Email(none()).Get.ByAddress(ctx, emailAddr); err == nil {
+	if _, err := s.repoFactory.Email(none()).Get.ByEmail(ctx, emailAddr); err == nil {
 		return nil, auth.ErrEmailAlreadyExists
 	} else if !isMissing(err) {
 		return nil, err
@@ -65,32 +64,33 @@ func (s *Service) SignupWithEmail(ctx context.Context, emailAddr, password, code
 		accountRepo := s.repoFactory.Account(uow)
 		identityRepo := s.repoFactory.Identity(uow)
 		emailRepo := s.repoFactory.Email(uow)
-		forgerRepo := s.repoFactory.Forger(uow)
-		settingsRepo := s.repoFactory.Settings(uow)
-		if err := accountRepo.Create.New(ctx, account.NewFromState(account.AccountState{
-			ID: accountID, AccountStatus: "active", SignupPlatform: platformName, CreatedAt: now, UpdatedAt: now,
+		profileRepo := s.repoFactory.Profile(uow)
+
+		if err := accountRepo.Create.New(ctx, account.NewAccountFromState(account.AccountState{
+			ID: accountID, AccountStatus: enums.AuthAccountStatusActive, SignupPlatform: enums.AuthSignupPlatform(platformName), CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := identityRepo.Create.New(ctx, identity.NewFromState(identity.IdentityState{
-			ID: identityID, AccountID: accountID, IdentityProvider: "password", ProviderSubject: emailAddr,
+		if err := identityRepo.Create.New(ctx, identity.NewIdentityFromState(identity.IdentityState{
+			ID: identityID, AccountID: accountID, IdentityProvider: enums.AuthIdentityProviderPassword, ProviderSubject: emailAddr,
 			PasswordHash: &hashStr, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := emailRepo.Create.New(ctx, email.NewFromState(email.EmailState{
-			ID: emailID, AccountID: accountID, Address: emailAddr, IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
+		if err := emailRepo.Create.New(ctx, email.NewEmailFromState(email.EmailState{
+			ID: emailID, AccountID: accountID, Email: emailAddr, IsPrimary: true, VerifiedAt: &verified, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		if err := forgerRepo.Create.New(ctx, forgerprofile.NewFromState(forgerprofile.State{
-			ID: profileID, AccountID: accountID, Roles: pq.StringArray{"forger"},
-			ProfileLanguage: langOrDefault(lang), DisplayName: &display, CreatedAt: now, UpdatedAt: now,
+		lang := enums.AuthProfileLanguage(langOrDefault(lang))
+		if err := profileRepo.Create.NewForger(ctx, profile.NewForgerProfileFromState(profile.ForgerProfileState{
+			ID: profileID, AccountID: accountID, ForgerRoles: []enums.AuthForgerRole{enums.AuthForgerRoleForger},
+			ProfileLanguage: lang, Preference: profile.Default(lang), DisplayName: &display, CreatedAt: now, UpdatedAt: now,
 		})); err != nil {
 			return err
 		}
-		return settingsRepo.Create.New(ctx, settings.NewFromState(settings.State{
-			ID: profileID, Kind: "forger", LoginNotification: true, CreatedAt: now, UpdatedAt: now,
+		return profileRepo.Create.NewForgerSettings(ctx, profile.NewForgerProfileSettingsFromState(profile.ForgerProfileSettingsState{
+			ID: profileID, LoginNotification: true, CreatedAt: now, UpdatedAt: now,
 		}))
 	})
 	if err != nil {
@@ -116,7 +116,7 @@ func (s *Service) LoginWithEmail(ctx context.Context, emailAddr, password, devic
 
 func (s *Service) LoginWithPhone(ctx context.Context, phoneNum, password, deviceID string) (*LoginOutput, error) {
 	phoneNum = strings.TrimSpace(phoneNum)
-	p, err := s.repoFactory.Phone(none()).Get.ByNumber(ctx, phoneNum)
+	p, err := s.repoFactory.Phone(none()).Get.ByPhone(ctx, phoneNum)
 	if err != nil {
 		return nil, auth.ErrInvalidCredentials
 	}
@@ -126,7 +126,7 @@ func (s *Service) LoginWithPhone(ctx context.Context, phoneNum, password, device
 	}
 	var ident *identity.Identity
 	for _, item := range idents {
-		if item.IdentityProvider() == "password" {
+		if item.IdentityProvider() == enums.AuthIdentityProviderPassword {
 			ident = item
 			break
 		}
@@ -142,7 +142,7 @@ func (s *Service) SelectProfile(ctx context.Context, accountID uuid.UUID, profil
 	display := ""
 	switch kind {
 	case "forger":
-		p, err := s.repoFactory.Forger(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Profile(none()).Get.ForgerByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
 			return nil, auth.ErrProfileNotOwned
 		}
@@ -150,7 +150,7 @@ func (s *Service) SelectProfile(ctx context.Context, accountID uuid.UUID, profil
 			display = *p.DisplayName()
 		}
 	case "authority":
-		p, err := s.repoFactory.Authority(none()).Get.ByAccountAndID(ctx, accountID, profileID)
+		p, err := s.repoFactory.Profile(none()).Get.AuthorityByAccountAndID(ctx, accountID, profileID)
 		if err != nil {
 			return nil, auth.ErrProfileNotOwned
 		}
@@ -164,7 +164,7 @@ func (s *Service) SelectProfile(ctx context.Context, accountID uuid.UUID, profil
 	if err != nil {
 		return nil, auth.ErrTokenFailed.WithCause(err)
 	}
-	if err := s.persistRefresh(ctx, accountID, nil, &profileID, &kind, deviceID, refresh); err != nil {
+	if err := s.persistRefresh(ctx, accountID, nil, &profileID, scopePtr(kind), deviceID, refresh); err != nil {
 		return nil, err
 	}
 	provider, subject := s.latestIdentity(ctx, accountID)
@@ -199,7 +199,7 @@ func (s *Service) Refresh(ctx context.Context, refreshToken, deviceID string) (*
 		}
 	}
 	scope := claims.ProfileScope
-	if err := s.persistRefresh(ctx, accountID, row.IdentityID(), profileID, nullableStr(scope), deviceID, refresh); err != nil {
+	if err := s.persistRefresh(ctx, accountID, row.IdentityID(), profileID, scopePtr(scope), deviceID, refresh); err != nil {
 		return nil, err
 	}
 	return &TokenOutput{AccessToken: access, RefreshToken: refresh}, nil

@@ -28,8 +28,8 @@ func (s *Service) CreateEmail(ctx context.Context, accountID uuid.UUID, address 
 	}
 	now := time.Now()
 	id := uuid.New()
-	if err := s.repoFactory.Email(none()).Create.New(ctx, email.NewFromState(email.EmailState{
-		ID: id, AccountID: accountID, Address: address, CreatedAt: now, UpdatedAt: now,
+	if err := s.repoFactory.Email(none()).Create.New(ctx, email.NewEmailFromState(email.EmailState{
+		ID: id, AccountID: accountID, Email: address, CreatedAt: now, UpdatedAt: now,
 	})); err != nil {
 		return "", auth.ErrEmailAlreadyExists
 	}
@@ -41,7 +41,7 @@ func (s *Service) SendEmailVerificationCode(ctx context.Context, accountID, emai
 	if err != nil || row.AccountID() != accountID {
 		return sys.ErrNotFound
 	}
-	if err := s.issueAndStoreVerification(ctx, row.Address(), lang); err != nil {
+	if err := s.issueAndStoreVerification(ctx, row.Email(), lang); err != nil {
 		return err
 	}
 	return nil
@@ -52,7 +52,7 @@ func (s *Service) VerifyEmail(ctx context.Context, accountID, emailID uuid.UUID,
 	if err != nil || row.AccountID() != accountID {
 		return sys.ErrNotFound
 	}
-	if err := s.consumeVerificationCode(ctx, row.Address(), code); err != nil {
+	if err := s.consumeVerificationCode(ctx, row.Email(), code); err != nil {
 		return err
 	}
 	row.MarkVerified(time.Now())
@@ -108,7 +108,7 @@ func (s *Service) DeleteEmail(ctx context.Context, accountID, emailID uuid.UUID)
 }
 
 func (s *Service) AccountIDByEmail(ctx context.Context, address string) (uuid.UUID, error) {
-	row, err := s.repoFactory.Email(none()).Get.ByAddress(ctx, strings.ToLower(strings.TrimSpace(address)))
+	row, err := s.repoFactory.Email(none()).Get.ByEmail(ctx, strings.ToLower(strings.TrimSpace(address)))
 	if err != nil {
 		return uuid.Nil, sys.ErrNotFound
 	}
