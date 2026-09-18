@@ -3,55 +3,42 @@ import { createRoot } from "react-dom/client";
 
 import "@radix-ui/themes/styles.css";
 import "nfx-ui/themes/fonts";
-import "nfx-ui/themes/styles.css";
+import "nfx-ui/themes/index.css";
 
 import { LanguageEnum } from "nfx-ui/enums";
-import { LanguageProvider, ThemeProvider, ModalProvider, DataProvider } from "nfx-ui/providers";
-import { LayoutProvider } from "nfx-ui/layouts";
+import { i18n } from "nfx-ui/languages";
+import { LanguageProvider, ThemeProvider } from "nfx-ui/providers";
+import { ensureDeviceIdStorage } from "nfx-ui/stores";
+
+import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
+import { syncDocumentLogo } from "@/constants";
+import { DataProvider, ModalProvider, QueryProvider, RouterProvider } from "@/providers";
+
+import App from "./App";
 
 import "./index.css";
 
-import { ApiAssetRepository, ApiAuthRepository } from "nfx-ui/apis";
-import { getBuiltinI18nBundles } from "@/assets/languages/i18nResources";
-import { BootstrapProvider, QueryProvider, RouterProvider } from "@/providers";
-import PreferenceSync from "@/providers/PreferenceSync";
+void ensureDeviceIdStorage();
 
-import App from "./App.tsx";
-
-const authErrors = new ApiAuthRepository();
-const assetErrors = new ApiAssetRepository();
-
-async function onLoadExtraBundles(lng: LanguageEnum) {
-  try {
-    const [authBundle, assetBundle] = await Promise.all([
-      authErrors.GetErrorTranslations(lng).catch(() => ({})),
-      assetErrors.GetErrorTranslations(lng).catch(() => ({})),
-    ]);
-    return { namespace: "errors", bundle: { ...assetBundle, ...authBundle } };
-  } catch {
-    return null;
-  }
-}
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryProvider>
-      <LanguageProvider getBuiltinBundles={getBuiltinI18nBundles} fallbackLng={LanguageEnum.ZH} onLoadExtraBundles={onLoadExtraBundles}>
-        <ThemeProvider>
-          <LayoutProvider>
+function bootstrap() {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <QueryProvider>
+        <LanguageProvider fallbackLng={LanguageEnum.ZH} getBuiltinBundles={getBuiltinI18nBundles}>
+          <ThemeProvider onAppearanceChange={syncDocumentLogo}>
             <DataProvider>
-              <PreferenceSync />
               <RouterProvider>
                 <ModalProvider>
-                  <BootstrapProvider>
-                    <App />
-                  </BootstrapProvider>
+                  <App />
                 </ModalProvider>
               </RouterProvider>
             </DataProvider>
-          </LayoutProvider>
-        </ThemeProvider>
-      </LanguageProvider>
-    </QueryProvider>
-  </StrictMode>,
-);
+          </ThemeProvider>
+        </LanguageProvider>
+      </QueryProvider>
+    </StrictMode>,
+  );
+}
+
+void i18n;
+void bootstrap();

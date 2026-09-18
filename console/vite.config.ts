@@ -4,11 +4,10 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, loadEnv } from "vite";
 
 const PAGE_CHUNKS: Record<string, string> = {
-  "/src/pages/LoginPage": "page-login",
+  "/src/pages/Auth/Login": "page-login",
   "/src/pages/DashboardPage": "page-dashboard",
   "/src/pages/NotFoundPage": "page-404",
-  "/src/pages/ProfilePage": "page-profile",
-  "/src/pages/SelectProfilePage": "page-select-profile",
+  "/src/pages/User/Profile": "page-profile",
   "/src/pages/ImagesPage": "page-images",
   "/src/pages/OwnerDirectoryPage": "page-owner",
   "/src/pages/User/Settings": "page-settings",

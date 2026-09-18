@@ -1,8 +1,8 @@
 import { memo } from "react";
 import { Button, Flex } from "@radix-ui/themes";
 import { Edit, LayoutDashboard } from "lucide-react";
-import { PageFrame } from "nfx-ui/layouts";
-import { PageHeader, Suspense } from "nfx-ui/components";
+import { PageHeader, Suspense } from "@/components";
+import { PageFrame } from "@/layouts";
 import QuickStore, { useQuickStore } from "@/stores/quickStore";
 
 import QuickNavigation from "./components/QuickNavigation";

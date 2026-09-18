@@ -9,9 +9,8 @@ ENV VITE_API_URL=${VITE_API_URL}
 ENV VITE_WS_URL=${VITE_WS_URL}
 ENV VITE_BUILD_ENV=${VITE_BUILD_ENV}
 ENV VITE_APP_ID=${VITE_APP_ID}
-COPY package.json package-lock.json* ./
-COPY --from=nfx-ui . /NFX-UI
-RUN npm ci || npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 RUN npm run build
 

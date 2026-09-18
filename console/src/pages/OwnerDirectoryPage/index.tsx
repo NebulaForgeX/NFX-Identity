@@ -3,8 +3,8 @@ import { Button, Card, Flex, Select, Table, Text, TextField } from "@radix-ui/th
 import { Shield } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthRepository } from "nfx-ui/apis";
-import { CardHeader, EmptyState, PageHeader } from "nfx-ui/components";
-import { PageFrame } from "nfx-ui/layouts";
+import { CardHeader, EmptyState, PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 import { AuthAuthorityRoleEnum, UI_ASSIGNABLE_AUTH_AUTHORITY_ROLES } from "nfx-ui/enums";
 import type { Profile } from "nfx-ui/types";
 

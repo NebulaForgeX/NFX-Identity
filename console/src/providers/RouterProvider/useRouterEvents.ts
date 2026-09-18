@@ -38,7 +38,7 @@ export function useRouterEvents() {
   }, [navigate]);
 
   const handleNavigateToDashboard = useCallback(() => {
-    navigate(ROUTES.DASHBOARD, { replace: true });
+    navigate(ROUTES.USER_OVERVIEW, { replace: true });
   }, [navigate]);
 
   const handleNavigateToHome = useCallback(() => {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+import { useAuthInv } from "./hooks/useAuthInv";
 import { useQueryInv } from "./hooks/useQueryInv";
 
 interface QueryProviderProps {
@@ -34,7 +35,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
       }),
   );
 
-  // 监听所有缓存失效事件
+  useAuthInv(queryClient);
   useQueryInv(queryClient);
 
   return (

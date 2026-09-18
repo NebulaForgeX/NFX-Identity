@@ -1,8 +1,8 @@
 import { memo, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { Package, Plus, X } from "@/assets/icons/lucide";
-import * as LucideIcons from "@/assets/icons/lucide";
+import { Package, Plus, X } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { showConfirm, showInfo } from "@/stores/modalStore";
 import QuickStore, { ALL_AVAILABLE_ITEMS, useQuickStore } from "@/stores/quickStore";
 

@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import { Button, Flex, Heading, Tabs, Text } from "@radix-ui/themes";
 import { Images } from "lucide-react";
-import { PageFrame } from "nfx-ui/layouts";
-import { PageHeader } from "nfx-ui/components";
+import { PageHeader } from "@/components";
+import { PageFrame } from "@/layouts";
 import { useAssetRepository } from "nfx-ui/apis";
 import type { Asset } from "nfx-ui/types";
 import { useTranslation } from "react-i18next";
