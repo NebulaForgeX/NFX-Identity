@@ -1,31 +1,22 @@
-# 多阶段构建：构建阶段
-FROM node:20-alpine AS builder
-
+# syntax=docker/dockerfile:1
+FROM node:22-alpine AS builder
 WORKDIR /app
-
-# 复制 package 文件
-COPY package*.json ./
-
-# 安装依赖
-RUN npm ci --only=production=false
-
-# 复制源代码
+ARG VITE_API_URL=http://192.168.1.64:10166
+ARG VITE_WS_URL=ws://192.168.1.64:10166
+ARG VITE_BUILD_ENV=prod
+ARG VITE_APP_ID=nfx-console
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_WS_URL=${VITE_WS_URL}
+ENV VITE_BUILD_ENV=${VITE_BUILD_ENV}
+ENV VITE_APP_ID=${VITE_APP_ID}
+COPY package.json package-lock.json* ./
+COPY --from=nfx-ui . /NFX-UI
+RUN npm ci || npm install
 COPY . .
-
-# 构建应用（生产环境）
 RUN npm run build
 
-# 生产阶段：使用 Nginx 服务静态文件
-FROM nginx:alpine
-
-# 复制构建产物到 nginx
+FROM nginx:alpine AS prod
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# 复制 nginx 配置
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# 暴露端口
 EXPOSE 80
-
-# 启动 nginx
 CMD ["nginx", "-g", "daemon off;"]

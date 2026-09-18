@@ -115,7 +115,7 @@ tasks:
       - bash scripts/redis_ssh_tunnel.sh --down
 
   run:
-    desc: "Generate langs then start auth/asset/system (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
+    desc: "Generate langs then start auth/asset/system + console (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
       - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
@@ -136,9 +136,9 @@ tasks:
           echo "==> compose env: {{.ENV_FILE}} only (no Redis tunnel sidecar)"
         fi
         if [[ "{{.ENV}}" == "secure" ]]; then
-          svcs=(auth-api asset-api system-api)
+          svcs=(auth-api asset-api system-api console)
         else
-          svcs=(auth-base asset-base system-base)
+          svcs=(auth-base asset-base system-base console)
         fi
         for svc in "${svcs[@]}"; do
           echo "==> docker compose build $svc"
@@ -148,7 +148,7 @@ tasks:
         sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{end}}
 
   run:rebuild:
-    desc: "Force-rebuild (--no-cache) auth/asset/system (ENV=dev|secure)"
+    desc: "Force-rebuild (--no-cache) auth/asset/system + console (ENV=dev|secure)"
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
       - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
@@ -166,9 +166,9 @@ tasks:
           ENV_ARGS+=(--env-file .env.redis-tunnel)
         fi
         if [[ "{{.ENV}}" == "secure" ]]; then
-          svcs=(auth-api asset-api system-api)
+          svcs=(auth-api asset-api system-api console)
         else
-          svcs=(auth-base asset-base system-base)
+          svcs=(auth-base asset-base system-base console)
         fi
         for svc in "${svcs[@]}"; do
           echo "==> docker compose build --no-cache $svc"

@@ -239,34 +239,35 @@ services:
 
   #! Tenants API Service
   console:
-    image: nfx-identity-console-api:prod
+    image: nfx-identity-console:prod
     container_name: NFX-Identity-Console-Prod
     build:
-      context: .
-      dockerfile: console/Dockerfile
+      context: ./console
+      dockerfile: Dockerfile
+      additional_contexts:
+        nfx-ui: ../NFX-UI
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_WS_URL: ${VITE_WS_URL}
+        VITE_BUILD_ENV: ${VITE_BUILD_ENV:-prod}
+        VITE_APP_ID: ${VITE_APP_ID:-nfx-console-prod}
     restart: always
     ports:
-      - "${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"  # 直接访问前端端口
-    expose:
-      - "${CONSOLE_PORT}"
+      - "${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
     labels:
-      - "traefik.enable=true"
-      - "traefik.project=nfx-identity"
-      # 服务定义
-      - "traefik.http.services.identity-console.loadbalancer.server.port=${CONSOLE_PORT}"
-      # 外网 HTTPS 路由 - 控制面板根路径
-      - "traefik.http.routers.identity-console-secure.rule=Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/`)"
-      - "traefik.http.routers.identity-console-secure.entrypoints=websecure"
-      - "traefik.http.routers.identity-console-secure.service=identity-console"
-      - "traefik.http.routers.identity-console-secure.tls=true"
-      - "traefik.http.routers.identity-console-secure.priority=1"  # 高优先级，确保根路径匹配
-      # 内网 HTTP 路由
-      - "traefik.http.routers.identity-console.rule=Host(`${TRAEFIK_CONSOLE_HOST}`)"
-      - "traefik.http.routers.identity-console.entrypoints=web"
-      - "traefik.http.routers.identity-console.service=identity-console"
-      - "traefik.http.routers.identity-console.priority=1"  # 高优先级
-    environment:
-      - ENV=prod
+      traefik.enable: "true"
+      traefik.project: "nfx-identity"
+      traefik.http.services.identity-console.loadbalancer.server.port: "${CONSOLE_PORT}"
+      traefik.http.routers.identity-console.entrypoints: web
+      traefik.http.routers.identity-console.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
+      traefik.http.routers.identity-console.service: identity-console
+      traefik.http.routers.identity-console.priority: "1"
+      traefik.http.routers.identity-console-secure.entrypoints: websecure
+      traefik.http.routers.identity-console-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
+      traefik.http.routers.identity-console-secure.service: identity-console
+      traefik.http.routers.identity-console-secure.tls: "true"
+      traefik.http.routers.identity-console-secure.priority: "1"
     networks:
       - nfx-identity
       - nfx-edge
