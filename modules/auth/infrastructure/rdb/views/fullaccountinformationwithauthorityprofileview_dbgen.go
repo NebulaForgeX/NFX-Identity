@@ -3,37 +3,38 @@ package views
 
 import (
 	"nfxidentity/enums"
+	"nfxidentity/pkgs/enumx"
 	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/datatypes"
 )
 
-type Fullaccountinformationwithauthorityprofileview struct {
-	ID              *uuid.UUID                 `gorm:"column:id;->"`
-	AccountID       *uuid.UUID                 `gorm:"column:account_id;->"`
-	AuthorityRoles  *string                    `gorm:"column:authority_roles;->"`
-	ProfileLanguage *enums.AuthProfileLanguage `gorm:"column:profile_language;->"`
-	Preference      *datatypes.JSON            `gorm:"column:preference;->"`
-	DisplayName     *string                    `gorm:"column:display_name;->"`
-	FirstName       *string                    `gorm:"column:first_name;->"`
-	LastName        *string                    `gorm:"column:last_name;->"`
-	Country         *string                    `gorm:"column:country;->"`
-	City            *string                    `gorm:"column:city;->"`
-	Gender          *string                    `gorm:"column:gender;->"`
-	Birthday        *time.Time                 `gorm:"column:birthday;->"`
-	Website         *string                    `gorm:"column:website;->"`
-	Timezone        *string                    `gorm:"column:timezone;->"`
-	Bio             *string                    `gorm:"column:bio;->"`
-	CreatedAt       *time.Time                 `gorm:"column:created_at;->"`
-	UpdatedAt       *time.Time                 `gorm:"column:updated_at;->"`
+type FullAccountInformationWithAuthorityProfileView struct {
+	ID              *uuid.UUID                           `gorm:"column:id;->"`
+	AccountID       *uuid.UUID                           `gorm:"column:account_id;->"`
+	AuthorityRoles  enumx.Array[enums.AuthAuthorityRole] `gorm:"column:authority_roles;->"`
+	ProfileLanguage *enums.AuthProfileLanguage           `gorm:"column:profile_language;->"`
+	Preference      *datatypes.JSON                      `gorm:"column:preference;->"`
+	DisplayName     *string                              `gorm:"column:display_name;->"`
+	FirstName       *string                              `gorm:"column:first_name;->"`
+	LastName        *string                              `gorm:"column:last_name;->"`
+	Country         *string                              `gorm:"column:country;->"`
+	City            *string                              `gorm:"column:city;->"`
+	Gender          *string                              `gorm:"column:gender;->"`
+	Birthday        *time.Time                           `gorm:"column:birthday;->"`
+	Website         *string                              `gorm:"column:website;->"`
+	Timezone        *string                              `gorm:"column:timezone;->"`
+	Bio             *string                              `gorm:"column:bio;->"`
+	CreatedAt       *time.Time                           `gorm:"column:created_at;->"`
+	UpdatedAt       *time.Time                           `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithauthorityprofileview) TableName() string {
+func (FullAccountInformationWithAuthorityProfileView) TableName() string {
 	return "auth.FullAccountInformationWithAuthorityProfileView"
 }
 
-var FullaccountinformationwithauthorityprofileviewCols = struct {
+var FullAccountInformationWithAuthorityProfileViewCols = struct {
 	ID, AccountID, AuthorityRoles, ProfileLanguage, Preference, DisplayName, FirstName,
 	LastName, Country, City, Gender, Birthday, Website, Timezone,
 	Bio, CreatedAt, UpdatedAt string

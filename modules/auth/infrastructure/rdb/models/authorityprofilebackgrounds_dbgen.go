@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Authorityprofilebackground struct {
+type AuthorityProfileBackground struct {
 	ID        uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	ProfileID uuid.UUID      `gorm:"type:uuid;index:idx_authority_profile_backgrounds_profile_id;index:idx_authority_profile_backgrounds_profile_sort,priority:1"`
 	ImageID   uuid.UUID      `gorm:"type:uuid;index:idx_authority_profile_backgrounds_image_id"`
@@ -18,16 +18,16 @@ type Authorityprofilebackground struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (Authorityprofilebackground) TableName() string { return "auth.AuthorityProfileBackgrounds" }
+func (AuthorityProfileBackground) TableName() string { return "auth.AuthorityProfileBackgrounds" }
 
-func (m *Authorityprofilebackground) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *AuthorityProfileBackground) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var AuthorityprofilebackgroundCols = struct {
+var AuthorityProfileBackgroundCols = struct {
 	ID, ProfileID, ImageID, SortOrder, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:        "id",
@@ -40,6 +40,6 @@ var AuthorityprofilebackgroundCols = struct {
 }
 
 const (
-	AuthorityprofilebackgroundPk                                     = "AuthorityProfileBackgrounds_pkey"
-	AuthorityprofilebackgroundFkAuthorityProfileBackgroundsProfileId = "fk_authority_profile_backgrounds_profile_id"
+	AuthorityProfileBackgroundPk                                     = "AuthorityProfileBackgrounds_pkey"
+	AuthorityProfileBackgroundFkAuthorityProfileBackgroundsProfileId = "fk_authority_profile_backgrounds_profile_id"
 )

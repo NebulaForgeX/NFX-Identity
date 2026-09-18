@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Listemailitem struct {
+type ListEmailItem struct {
 	ID         *uuid.UUID `gorm:"column:id;->"`
 	AccountID  *uuid.UUID `gorm:"column:account_id;->"`
 	Email      *string    `gorm:"column:email;->"`
@@ -17,9 +17,9 @@ type Listemailitem struct {
 	UpdatedAt  *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Listemailitem) TableName() string { return "auth.ListEmailItems" }
+func (ListEmailItem) TableName() string { return "auth.ListEmailItems" }
 
-var ListemailitemCols = struct {
+var ListEmailItemCols = struct {
 	ID, AccountID, Email, IsPrimary, VerifiedAt, CreatedAt, UpdatedAt string
 }{
 	ID:         "id",

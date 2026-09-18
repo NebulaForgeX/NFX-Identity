@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) ActiveByAccountDevice(ctx context.Context, accountID uuid.UUID, deviceID string) ([]*refreshtoken.RefreshToken, error) {
-	var rows []models.RefreshToken
+	var rows []models.Refreshtoken
 	if err := h.db.WithContext(ctx).Where("account_id = ? AND device_id = ? AND revoked_at IS NULL AND deleted_at IS NULL", accountID, deviceID).Find(&rows).Error; err != nil {
 		return nil, err
 	}

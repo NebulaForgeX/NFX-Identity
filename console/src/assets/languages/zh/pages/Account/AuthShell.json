@@ -1,9 +1,10 @@
 {
-  "pillarIdentityTitle": "Identity",
-  "pillarIdentityBody": "一个 Account 承载你在整个 Pulso 家族中的身份。",
-  "pillarCommunityTitle": "Community",
-  "pillarCommunityBody": "Profile 把你与城市里的人与地方连在一起。",
-  "pillarLinkTitle": "Link",
-  "pillarLinkBody": "打开 Near、Loop 与所有产品的共享钥匙。",
+  "brandHome": "身份中心",
+  "pillarIdentityTitle": "账号",
+  "pillarIdentityBody": "一份 NFX Account，打开 News、Vault、Storages 与文档站。",
+  "pillarCommunityTitle": "档案",
+  "pillarCommunityBody": "同一账号可以持有多个 Profile，按产品切换身份。",
+  "pillarLinkTitle": "通行",
+  "pillarLinkBody": "签发一次，NebulaForgeX 各控制台共用这把钥匙。",
   "backHome": "返回首页"
 }

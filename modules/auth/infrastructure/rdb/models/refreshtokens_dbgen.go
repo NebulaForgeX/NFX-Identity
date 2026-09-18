@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Refreshtoken struct {
+type RefreshToken struct {
 	ID           uuid.UUID               `gorm:"type:uuid;primaryKey"`
 	AccountID    uuid.UUID               `gorm:"type:uuid;index:idx_refresh_tokens_account_device_active,priority:1;index:idx_refresh_tokens_account_id"`
 	IdentityID   *uuid.UUID              `gorm:"type:uuid;index:idx_refresh_tokens_identity_id"`
@@ -23,16 +23,16 @@ type Refreshtoken struct {
 	DeletedAt    gorm.DeletedAt          `gorm:"index"`
 }
 
-func (Refreshtoken) TableName() string { return "auth.RefreshTokens" }
+func (RefreshToken) TableName() string { return "auth.RefreshTokens" }
 
-func (m *Refreshtoken) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *RefreshToken) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var RefreshtokenCols = struct {
+var RefreshTokenCols = struct {
 	ID, AccountID, IdentityID, ProfileID, ProfileScope, DeviceID, TokenHash,
 	ExpiresAt, RevokedAt, CreatedAt, DeletedAt string
 }{
@@ -50,7 +50,7 @@ var RefreshtokenCols = struct {
 }
 
 const (
-	RefreshtokenPk                        = "RefreshTokens_pkey"
-	RefreshtokenFkRefreshTokensAccountId  = "fk_refresh_tokens_account_id"
-	RefreshtokenFkRefreshTokensIdentityId = "fk_refresh_tokens_identity_id"
+	RefreshTokenPk                        = "RefreshTokens_pkey"
+	RefreshTokenFkRefreshTokensAccountId  = "fk_refresh_tokens_account_id"
+	RefreshTokenFkRefreshTokensIdentityId = "fk_refresh_tokens_identity_id"
 )

@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationemailview struct {
+type FullAccountInformationEmailView struct {
 	ID         *uuid.UUID `gorm:"column:id;->"`
 	AccountID  *uuid.UUID `gorm:"column:account_id;->"`
 	Email      *string    `gorm:"column:email;->"`
@@ -17,11 +17,11 @@ type Fullaccountinformationemailview struct {
 	UpdatedAt  *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationemailview) TableName() string {
+func (FullAccountInformationEmailView) TableName() string {
 	return "auth.FullAccountInformationEmailView"
 }
 
-var FullaccountinformationemailviewCols = struct {
+var FullAccountInformationEmailViewCols = struct {
 	ID, AccountID, Email, IsPrimary, VerifiedAt, CreatedAt, UpdatedAt string
 }{
 	ID:         "id",

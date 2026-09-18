@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationavatarview struct {
+type FullAccountInformationAvatarView struct {
 	ID        *uuid.UUID `gorm:"column:id;->"`
 	ProfileID *uuid.UUID `gorm:"column:profile_id;->"`
 	ImageID   *uuid.UUID `gorm:"column:image_id;->"`
@@ -16,11 +16,11 @@ type Fullaccountinformationavatarview struct {
 	UpdatedAt *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationavatarview) TableName() string {
+func (FullAccountInformationAvatarView) TableName() string {
 	return "auth.FullAccountInformationAvatarView"
 }
 
-var FullaccountinformationavatarviewCols = struct {
+var FullAccountInformationAvatarViewCols = struct {
 	ID, ProfileID, ImageID, IsActive, CreatedAt, UpdatedAt string
 }{
 	ID:        "id",

@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Forgerprofileavatar struct {
+type ForgerProfileAvatar struct {
 	ID        uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	ProfileID uuid.UUID      `gorm:"type:uuid;index:idx_forger_profile_avatars_profile_id;uniqueIndex:uq_forger_profile_avatars_one_active_per_profile"`
 	ImageID   uuid.UUID      `gorm:"type:uuid;index:idx_forger_profile_avatars_image_id"`
@@ -18,16 +18,16 @@ type Forgerprofileavatar struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (Forgerprofileavatar) TableName() string { return "auth.ForgerProfileAvatars" }
+func (ForgerProfileAvatar) TableName() string { return "auth.ForgerProfileAvatars" }
 
-func (m *Forgerprofileavatar) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *ForgerProfileAvatar) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var ForgerprofileavatarCols = struct {
+var ForgerProfileAvatarCols = struct {
 	ID, ProfileID, ImageID, IsActive, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:        "id",
@@ -40,7 +40,7 @@ var ForgerprofileavatarCols = struct {
 }
 
 const (
-	ForgerprofileavatarPk                                        = "ForgerProfileAvatars_pkey"
-	ForgerprofileavatarUkForgerProfileAvatarsOneActivePerProfile = "uq_forger_profile_avatars_one_active_per_profile"
-	ForgerprofileavatarFkForgerProfileAvatarsProfileId           = "fk_forger_profile_avatars_profile_id"
+	ForgerProfileAvatarPk                                        = "ForgerProfileAvatars_pkey"
+	ForgerProfileAvatarUkForgerProfileAvatarsOneActivePerProfile = "uq_forger_profile_avatars_one_active_per_profile"
+	ForgerProfileAvatarFkForgerProfileAvatarsProfileId           = "fk_forger_profile_avatars_profile_id"
 )

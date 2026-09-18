@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationwithforgerprofileemailview struct {
+type FullAccountInformationWithForgerProfileEmailView struct {
 	ID         *uuid.UUID `gorm:"column:id;->"`
 	AccountID  *uuid.UUID `gorm:"column:account_id;->"`
 	Email      *string    `gorm:"column:email;->"`
@@ -17,11 +17,11 @@ type Fullaccountinformationwithforgerprofileemailview struct {
 	UpdatedAt  *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithforgerprofileemailview) TableName() string {
+func (FullAccountInformationWithForgerProfileEmailView) TableName() string {
 	return "auth.FullAccountInformationWithForgerProfileEmailView"
 }
 
-var FullaccountinformationwithforgerprofileemailviewCols = struct {
+var FullAccountInformationWithForgerProfileEmailViewCols = struct {
 	ID, AccountID, Email, IsPrimary, VerifiedAt, CreatedAt, UpdatedAt string
 }{
 	ID:         "id",

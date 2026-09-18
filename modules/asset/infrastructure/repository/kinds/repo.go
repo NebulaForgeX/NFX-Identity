@@ -7,6 +7,7 @@ import (
 
 	"nfxidentity/modules/asset/infrastructure/rdb/models"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -21,22 +22,30 @@ type Row struct {
 }
 
 func (h *Handler) Insert(ctx context.Context, kind, id, filePath, fileName, mimeType, uploaderID string, now time.Time) error {
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return err
+	}
+	uploader, err := uuid.Parse(uploaderID)
+	if err != nil {
+		return err
+	}
 	switch kind {
 	case "images":
 		return h.db.WithContext(ctx).Create(&models.Image{
-			ID: id, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploaderID, CreatedAt: now, UpdatedAt: now,
+			ID: uid, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploader, CreatedAt: now, UpdatedAt: now,
 		}).Error
 	case "files":
 		return h.db.WithContext(ctx).Create(&models.File{
-			ID: id, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploaderID, CreatedAt: now, UpdatedAt: now,
+			ID: uid, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploader, CreatedAt: now, UpdatedAt: now,
 		}).Error
 	case "videos":
 		return h.db.WithContext(ctx).Create(&models.Video{
-			ID: id, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploaderID, CreatedAt: now, UpdatedAt: now,
+			ID: uid, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploader, CreatedAt: now, UpdatedAt: now,
 		}).Error
 	case "audios":
 		return h.db.WithContext(ctx).Create(&models.Audio{
-			ID: id, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploaderID, CreatedAt: now, UpdatedAt: now,
+			ID: uid, FilePath: filePath, FileName: fileName, MimeType: mimeType, UploaderID: uploader, CreatedAt: now, UpdatedAt: now,
 		}).Error
 	default:
 		return asset.ErrInvalidAssetKind

@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationwithauthorityprofilephoneview struct {
+type FullAccountInformationWithAuthorityProfilePhoneView struct {
 	ID         *uuid.UUID `gorm:"column:id;->"`
 	AccountID  *uuid.UUID `gorm:"column:account_id;->"`
 	Phone      *string    `gorm:"column:phone;->"`
@@ -17,11 +17,11 @@ type Fullaccountinformationwithauthorityprofilephoneview struct {
 	UpdatedAt  *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithauthorityprofilephoneview) TableName() string {
+func (FullAccountInformationWithAuthorityProfilePhoneView) TableName() string {
 	return "auth.FullAccountInformationWithAuthorityProfilePhoneView"
 }
 
-var FullaccountinformationwithauthorityprofilephoneviewCols = struct {
+var FullAccountInformationWithAuthorityProfilePhoneViewCols = struct {
 	ID, AccountID, Phone, IsPrimary, VerifiedAt, CreatedAt, UpdatedAt string
 }{
 	ID:         "id",

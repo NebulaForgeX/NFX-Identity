@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) ByAccountID(ctx context.Context, accountID uuid.UUID) ([]*forgerprofile.Profile, error) {
-	var rows []models.ForgerProfile
+	var rows []models.Forgerprofile
 	if err := h.db.WithContext(ctx).Where("account_id = ? AND deleted_at IS NULL", accountID).Find(&rows).Error; err != nil {
 		return nil, err
 	}

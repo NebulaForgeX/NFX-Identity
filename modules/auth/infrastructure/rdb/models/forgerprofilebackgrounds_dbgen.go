@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Forgerprofilebackground struct {
+type ForgerProfileBackground struct {
 	ID        uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	ProfileID uuid.UUID      `gorm:"type:uuid;index:idx_forger_profile_backgrounds_profile_id;index:idx_forger_profile_backgrounds_profile_sort,priority:1"`
 	ImageID   uuid.UUID      `gorm:"type:uuid;index:idx_forger_profile_backgrounds_image_id"`
@@ -18,16 +18,16 @@ type Forgerprofilebackground struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (Forgerprofilebackground) TableName() string { return "auth.ForgerProfileBackgrounds" }
+func (ForgerProfileBackground) TableName() string { return "auth.ForgerProfileBackgrounds" }
 
-func (m *Forgerprofilebackground) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *ForgerProfileBackground) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var ForgerprofilebackgroundCols = struct {
+var ForgerProfileBackgroundCols = struct {
 	ID, ProfileID, ImageID, SortOrder, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:        "id",
@@ -40,6 +40,6 @@ var ForgerprofilebackgroundCols = struct {
 }
 
 const (
-	ForgerprofilebackgroundPk                                  = "ForgerProfileBackgrounds_pkey"
-	ForgerprofilebackgroundFkForgerProfileBackgroundsProfileId = "fk_forger_profile_backgrounds_profile_id"
+	ForgerProfileBackgroundPk                                  = "ForgerProfileBackgrounds_pkey"
+	ForgerProfileBackgroundFkForgerProfileBackgroundsProfileId = "fk_forger_profile_backgrounds_profile_id"
 )

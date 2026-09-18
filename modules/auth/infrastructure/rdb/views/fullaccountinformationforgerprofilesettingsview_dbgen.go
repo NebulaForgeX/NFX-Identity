@@ -7,18 +7,18 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationforgerprofilesettingsview struct {
+type FullAccountInformationForgerProfileSettingsView struct {
 	ID                *uuid.UUID `gorm:"column:id;->"`
 	LoginNotification *bool      `gorm:"column:login_notification;->"`
 	CreatedAt         *time.Time `gorm:"column:created_at;->"`
 	UpdatedAt         *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationforgerprofilesettingsview) TableName() string {
+func (FullAccountInformationForgerProfileSettingsView) TableName() string {
 	return "auth.FullAccountInformationForgerProfileSettingsView"
 }
 
-var FullaccountinformationforgerprofilesettingsviewCols = struct {
+var FullAccountInformationForgerProfileSettingsViewCols = struct {
 	ID, LoginNotification, CreatedAt, UpdatedAt string
 }{
 	ID:                "id",

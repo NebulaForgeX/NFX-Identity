@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationwithforgerprofileaccountview struct {
+type FullAccountInformationWithForgerProfileAccountView struct {
 	AccountID      *uuid.UUID                `gorm:"column:account_id;->"`
 	AccountStatus  *enums.AuthAccountStatus  `gorm:"column:account_status;->"`
 	SignupPlatform *enums.AuthSignupPlatform `gorm:"column:signup_platform;->"`
@@ -16,11 +16,11 @@ type Fullaccountinformationwithforgerprofileaccountview struct {
 	UpdatedAt      *time.Time                `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithforgerprofileaccountview) TableName() string {
+func (FullAccountInformationWithForgerProfileAccountView) TableName() string {
 	return "auth.FullAccountInformationWithForgerProfileAccountView"
 }
 
-var FullaccountinformationwithforgerprofileaccountviewCols = struct {
+var FullAccountInformationWithForgerProfileAccountViewCols = struct {
 	AccountID, AccountStatus, SignupPlatform, CreatedAt, UpdatedAt string
 }{
 	AccountID:      "account_id",

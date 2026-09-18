@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Authorityprofileavatar struct {
+type AuthorityProfileAvatar struct {
 	ID        uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	ProfileID uuid.UUID      `gorm:"type:uuid;index:idx_authority_profile_avatars_profile_id;uniqueIndex:uq_authority_profile_avatars_one_active_per_profile"`
 	ImageID   uuid.UUID      `gorm:"type:uuid;index:idx_authority_profile_avatars_image_id"`
@@ -18,16 +18,16 @@ type Authorityprofileavatar struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (Authorityprofileavatar) TableName() string { return "auth.AuthorityProfileAvatars" }
+func (AuthorityProfileAvatar) TableName() string { return "auth.AuthorityProfileAvatars" }
 
-func (m *Authorityprofileavatar) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *AuthorityProfileAvatar) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var AuthorityprofileavatarCols = struct {
+var AuthorityProfileAvatarCols = struct {
 	ID, ProfileID, ImageID, IsActive, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:        "id",
@@ -40,7 +40,7 @@ var AuthorityprofileavatarCols = struct {
 }
 
 const (
-	AuthorityprofileavatarPk                                           = "AuthorityProfileAvatars_pkey"
-	AuthorityprofileavatarUkAuthorityProfileAvatarsOneActivePerProfile = "uq_authority_profile_avatars_one_active_per_profile"
-	AuthorityprofileavatarFkAuthorityProfileAvatarsProfileId           = "fk_authority_profile_avatars_profile_id"
+	AuthorityProfileAvatarPk                                           = "AuthorityProfileAvatars_pkey"
+	AuthorityProfileAvatarUkAuthorityProfileAvatarsOneActivePerProfile = "uq_authority_profile_avatars_one_active_per_profile"
+	AuthorityProfileAvatarFkAuthorityProfileAvatarsProfileId           = "fk_authority_profile_avatars_profile_id"
 )

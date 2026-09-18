@@ -5,7 +5,6 @@
 {{- $root := $ctx.root  -}}
 {{- $schema  := $ctx.schema -}}
 {{- $hasUUIDPK := false -}}
-{{- /* ===== user_profiles → UserProfile ===== */ -}}
 {{- $tableName := exec "Title" $t.Name | exec "Singular" -}}
 {{- $schemaName := lower $schema.Name -}}
 {{- $fileName := printf "%s__%s.go" $schemaName (lower $t.Name) -}}
@@ -15,10 +14,13 @@
 package models
 
 import (
+  "nfxidentity/enums"
+  "nfxidentity/pkgs/enumx"
+  "time"
+
   "github.com/google/uuid"
   "gorm.io/datatypes"
   "gorm.io/gorm"
-  "time"
 )
 
 type {{ $tableName }} struct {
@@ -27,7 +29,6 @@ type {{ $tableName }} struct {
     {{- $field := exec "FieldName" $col -}}
     {{- $goType := exec "ResolveType" (dict "root" $root "col" $c "schema" $schema) -}}
 
-    {{- /* UUID primary key detect */ -}}
     {{- if and (eq $col "id") (eq $goType "uuid.UUID") -}}
       {{- $isPK := false -}}
       {{- if $t.PrimaryKey -}}
@@ -40,7 +41,6 @@ type {{ $tableName }} struct {
       {{- if $isPK }}{{ $hasUUIDPK = true }}{{ end }}
     {{- end }}
 
-    {{- /* Special columns */ -}}
     {{- if eq $col "deleted_at" -}}
       {{- printf "\n    %s %s `gorm:\"index\"`" "DeletedAt" "gorm.DeletedAt" -}}
       {{- continue -}}
@@ -56,7 +56,6 @@ type {{ $tableName }} struct {
       {{- continue -}}
     {{- end -}}
 
-    {{- /* Assemble gorm tags */ -}}
     {{- $tags := list -}}
     {{- $ctypeRaw := columnType $c -}}
     {{- if $ctypeRaw -}}
@@ -64,7 +63,6 @@ type {{ $tableName }} struct {
       {{- $tags = append $tags (printf "type:%s" $ctype) -}}
     {{- end -}}
 
-    {{- /* primaryKey tag */ -}}
     {{- $isPK := false -}}
     {{- if $t.PrimaryKey -}}
       {{- range $p := $t.PrimaryKey.Parts -}}
@@ -76,22 +74,18 @@ type {{ $tableName }} struct {
     {{- if $isPK -}}
       {{- $tags = append $tags "primaryKey" -}}
     {{- end -}}
-    
-    {{- /* index / uniqueIndex —— only output priority when it's a composite index (column order starts from 1) */ -}}
+
     {{- range $idx := $t.Indexes -}}
       {{- $belongs := false -}}
       {{- $prio := 0 -}}
       {{- $partsCount := len $idx.Parts -}}
       {{- $isComposite := gt $partsCount 1 -}}
-
-      {{- /* find the position of the current column in the index (1-based) */ -}}
       {{- range $i, $part := $idx.Parts -}}
         {{- if and $part.C (eq $part.C.Name $col) -}}
           {{- $belongs = true -}}
           {{- $prio = add $i 1 -}}
         {{- end -}}
       {{- end -}}
-
       {{- if $belongs -}}
         {{- if $idx.Unique -}}
           {{- if $idx.Name -}}
@@ -125,8 +119,6 @@ type {{ $tableName }} struct {
       {{- end -}}
     {{- end -}}
 
-
-    {{- /* Write semicolon manually to avoid join compatibility issues */ -}}
     {{- $tagstr := "" -}}
     {{- range $i, $t := $tags -}}
       {{- if gt $i 0 -}}{{- $tagstr = printf "%s;%s" $tagstr $t -}}{{- else -}}{{- $tagstr = $t -}}{{- end -}}
@@ -154,20 +146,16 @@ func (m *{{ $tableName }}) BeforeCreate(tx *gorm.DB) (err error) {
 
 {{ template "ColsStruct" (dict "Table" $t "TableName" $tableName) }}
 
-{{/* ================= PK / UniqueIndex / FK consts ================= */}}
 {{- $hasConst := false -}}
-
 {{- $hasPk := and $t.PrimaryKey $t.PrimaryKey.Name -}}
 {{- if $hasPk }}
   {{- $hasConst = true -}}
 {{- end }}
-
 {{- range $idx := $t.Indexes }}
   {{- if and $idx.Unique $idx.Name }}
     {{- $hasConst = true -}}
   {{- end }}
 {{- end }}
-
 {{- range $fk := $t.ForeignKeys }}
   {{- if $fk.Symbol }}
     {{- $hasConst = true -}}
@@ -179,14 +167,12 @@ const (
   {{- if $hasPk }}
     {{- printf "\n    %sPk = \"%s\"" $tableName $t.PrimaryKey.Name -}}
   {{- end }}
-
   {{- range $idx := $t.Indexes }}
     {{- if and $idx.Unique $idx.Name }}
       {{- $suffix := include "IndexSuffix" (dict "name" $idx.Name "table" $t.Name) -}}
       {{- printf "\n    %sUk%s = \"%s\"" $tableName $suffix $idx.Name -}}
     {{- end }}
   {{- end }}
-
    {{- range $fk := $t.ForeignKeys }}
     {{- if $fk.Symbol }}
       {{- $suffix := include "IndexSuffix" (dict "name" $fk.Symbol "table" $t.Name) -}}
@@ -197,8 +183,6 @@ const (
 {{- end }}
 {{- end }}
 
-
-{{- /* ================== Main: iterate ALL schemas & tables ================== */ -}}
 {{- $acc := "" -}}
 {{- $root := . -}}
 {{- range $schema := $root.Realm.Schemas }}
@@ -207,4 +191,3 @@ const (
   {{- end }}
 {{- end }}
 {{- $acc | txtar | write "gen/models" -}}
-

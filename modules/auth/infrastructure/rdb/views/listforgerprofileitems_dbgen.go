@@ -3,30 +3,31 @@ package views
 
 import (
 	"nfxidentity/enums"
+	"nfxidentity/pkgs/enumx"
 	"time"
 
 	"github.com/google/uuid"
 )
 
-type Listforgerprofileitem struct {
-	ProfileID         *uuid.UUID                 `gorm:"column:profile_id;->"`
-	AccountID         *uuid.UUID                 `gorm:"column:account_id;->"`
-	ForgerRoles       *string                    `gorm:"column:forger_roles;->"`
-	DisplayName       *string                    `gorm:"column:display_name;->"`
-	ProfileLanguage   *enums.AuthProfileLanguage `gorm:"column:profile_language;->"`
-	City              *string                    `gorm:"column:city;->"`
-	Country           *string                    `gorm:"column:country;->"`
-	Website           *string                    `gorm:"column:website;->"`
-	Timezone          *string                    `gorm:"column:timezone;->"`
-	Birthday          *time.Time                 `gorm:"column:birthday;->"`
-	CreatedAt         *time.Time                 `gorm:"column:created_at;->"`
-	AvatarImageID     *uuid.UUID                 `gorm:"column:avatar_image_id;->"`
-	BackgroundImageID *uuid.UUID                 `gorm:"column:background_image_id;->"`
+type ListForgerProfileItem struct {
+	ProfileID         *uuid.UUID                        `gorm:"column:profile_id;->"`
+	AccountID         *uuid.UUID                        `gorm:"column:account_id;->"`
+	ForgerRoles       enumx.Array[enums.AuthForgerRole] `gorm:"column:forger_roles;->"`
+	DisplayName       *string                           `gorm:"column:display_name;->"`
+	ProfileLanguage   *enums.AuthProfileLanguage        `gorm:"column:profile_language;->"`
+	City              *string                           `gorm:"column:city;->"`
+	Country           *string                           `gorm:"column:country;->"`
+	Website           *string                           `gorm:"column:website;->"`
+	Timezone          *string                           `gorm:"column:timezone;->"`
+	Birthday          *time.Time                        `gorm:"column:birthday;->"`
+	CreatedAt         *time.Time                        `gorm:"column:created_at;->"`
+	AvatarImageID     *uuid.UUID                        `gorm:"column:avatar_image_id;->"`
+	BackgroundImageID *uuid.UUID                        `gorm:"column:background_image_id;->"`
 }
 
-func (Listforgerprofileitem) TableName() string { return "auth.ListForgerProfileItems" }
+func (ListForgerProfileItem) TableName() string { return "auth.ListForgerProfileItems" }
 
-var ListforgerprofileitemCols = struct {
+var ListForgerProfileItemCols = struct {
 	ProfileID, AccountID, ForgerRoles, DisplayName, ProfileLanguage, City, Country,
 	Website, Timezone, Birthday, CreatedAt, AvatarImageID, BackgroundImageID string
 }{

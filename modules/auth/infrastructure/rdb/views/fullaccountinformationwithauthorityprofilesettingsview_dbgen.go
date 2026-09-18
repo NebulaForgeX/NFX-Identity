@@ -7,18 +7,18 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationwithauthorityprofilesettingsview struct {
+type FullAccountInformationWithAuthorityProfileSettingsView struct {
 	ID                *uuid.UUID `gorm:"column:id;->"`
 	LoginNotification *bool      `gorm:"column:login_notification;->"`
 	CreatedAt         *time.Time `gorm:"column:created_at;->"`
 	UpdatedAt         *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithauthorityprofilesettingsview) TableName() string {
+func (FullAccountInformationWithAuthorityProfileSettingsView) TableName() string {
 	return "auth.FullAccountInformationWithAuthorityProfileSettingsView"
 }
 
-var FullaccountinformationwithauthorityprofilesettingsviewCols = struct {
+var FullAccountInformationWithAuthorityProfileSettingsViewCols = struct {
 	ID, LoginNotification, CreatedAt, UpdatedAt string
 }{
 	ID:                "id",

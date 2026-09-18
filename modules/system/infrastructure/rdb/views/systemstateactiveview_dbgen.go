@@ -3,12 +3,12 @@ package views
 
 import (
 	"time"
-	"uuid"
 
+	"github.com/google/uuid"
 	"gorm.io/datatypes"
 )
 
-type Systemstateactiveview struct {
+type SystemStateActiveView struct {
 	ID                    *uuid.UUID      `gorm:"column:id;->"`
 	Initialized           *bool           `gorm:"column:initialized;->"`
 	InitializedAt         *time.Time      `gorm:"column:initialized_at;->"`
@@ -21,9 +21,9 @@ type Systemstateactiveview struct {
 	UpdatedAt             *time.Time      `gorm:"column:updated_at;->"`
 }
 
-func (Systemstateactiveview) TableName() string { return "system.SystemStateActiveView" }
+func (SystemStateActiveView) TableName() string { return "system.SystemStateActiveView" }
 
-var SystemstateactiveviewCols = struct {
+var SystemStateActiveViewCols = struct {
 	ID, Initialized, InitializedAt, InitializationVersion, LastResetAt, LastResetBy, ResetCount,
 	Metadata, CreatedAt, UpdatedAt string
 }{

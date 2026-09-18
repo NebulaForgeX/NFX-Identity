@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Audiosactiveview struct {
+type AudiosActiveView struct {
 	ID              *uuid.UUID `gorm:"column:id;->"`
 	FilePath        *string    `gorm:"column:file_path;->"`
 	FileName        *string    `gorm:"column:file_name;->"`
@@ -19,9 +19,9 @@ type Audiosactiveview struct {
 	UpdatedAt       *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Audiosactiveview) TableName() string { return "asset.AudiosActiveView" }
+func (AudiosActiveView) TableName() string { return "asset.AudiosActiveView" }
 
-var AudiosactiveviewCols = struct {
+var AudiosActiveViewCols = struct {
 	ID, FilePath, FileName, FileSize, MimeType, DurationSeconds, UploaderID,
 	CreatedAt, UpdatedAt string
 }{

@@ -3,30 +3,31 @@ package views
 
 import (
 	"nfxidentity/enums"
+	"nfxidentity/pkgs/enumx"
 	"time"
 
 	"github.com/google/uuid"
 )
 
-type Listauthorityprofileitem struct {
-	ProfileID         *uuid.UUID                 `gorm:"column:profile_id;->"`
-	AccountID         *uuid.UUID                 `gorm:"column:account_id;->"`
-	AuthorityRoles    *string                    `gorm:"column:authority_roles;->"`
-	DisplayName       *string                    `gorm:"column:display_name;->"`
-	ProfileLanguage   *enums.AuthProfileLanguage `gorm:"column:profile_language;->"`
-	City              *string                    `gorm:"column:city;->"`
-	Country           *string                    `gorm:"column:country;->"`
-	Website           *string                    `gorm:"column:website;->"`
-	Timezone          *string                    `gorm:"column:timezone;->"`
-	Birthday          *time.Time                 `gorm:"column:birthday;->"`
-	CreatedAt         *time.Time                 `gorm:"column:created_at;->"`
-	AvatarImageID     *uuid.UUID                 `gorm:"column:avatar_image_id;->"`
-	BackgroundImageID *uuid.UUID                 `gorm:"column:background_image_id;->"`
+type ListAuthorityProfileItem struct {
+	ProfileID         *uuid.UUID                           `gorm:"column:profile_id;->"`
+	AccountID         *uuid.UUID                           `gorm:"column:account_id;->"`
+	AuthorityRoles    enumx.Array[enums.AuthAuthorityRole] `gorm:"column:authority_roles;->"`
+	DisplayName       *string                              `gorm:"column:display_name;->"`
+	ProfileLanguage   *enums.AuthProfileLanguage           `gorm:"column:profile_language;->"`
+	City              *string                              `gorm:"column:city;->"`
+	Country           *string                              `gorm:"column:country;->"`
+	Website           *string                              `gorm:"column:website;->"`
+	Timezone          *string                              `gorm:"column:timezone;->"`
+	Birthday          *time.Time                           `gorm:"column:birthday;->"`
+	CreatedAt         *time.Time                           `gorm:"column:created_at;->"`
+	AvatarImageID     *uuid.UUID                           `gorm:"column:avatar_image_id;->"`
+	BackgroundImageID *uuid.UUID                           `gorm:"column:background_image_id;->"`
 }
 
-func (Listauthorityprofileitem) TableName() string { return "auth.ListAuthorityProfileItems" }
+func (ListAuthorityProfileItem) TableName() string { return "auth.ListAuthorityProfileItems" }
 
-var ListauthorityprofileitemCols = struct {
+var ListAuthorityProfileItemCols = struct {
 	ProfileID, AccountID, AuthorityRoles, DisplayName, ProfileLanguage, City, Country,
 	Website, Timezone, Birthday, CreatedAt, AvatarImageID, BackgroundImageID string
 }{

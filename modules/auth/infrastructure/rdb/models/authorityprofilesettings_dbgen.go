@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Authorityprofilesetting struct {
+type AuthorityProfileSetting struct {
 	ID                uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	LoginNotification bool           `gorm:"type:boolean"`
 	CreatedAt         time.Time      `gorm:"autoCreateTime"`
@@ -16,16 +16,16 @@ type Authorityprofilesetting struct {
 	DeletedAt         gorm.DeletedAt `gorm:"index"`
 }
 
-func (Authorityprofilesetting) TableName() string { return "auth.AuthorityProfileSettings" }
+func (AuthorityProfileSetting) TableName() string { return "auth.AuthorityProfileSettings" }
 
-func (m *Authorityprofilesetting) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *AuthorityProfileSetting) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var AuthorityprofilesettingCols = struct {
+var AuthorityProfileSettingCols = struct {
 	ID, LoginNotification, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:                "id",
@@ -36,6 +36,6 @@ var AuthorityprofilesettingCols = struct {
 }
 
 const (
-	AuthorityprofilesettingPk                           = "AuthorityProfileSettings_pkey"
-	AuthorityprofilesettingFkAuthorityProfileSettingsId = "fk_authority_profile_settings_id"
+	AuthorityProfileSettingPk                           = "AuthorityProfileSettings_pkey"
+	AuthorityProfileSettingFkAuthorityProfileSettingsId = "fk_authority_profile_settings_id"
 )

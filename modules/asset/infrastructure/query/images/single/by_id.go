@@ -7,6 +7,7 @@ import (
 
 	"nfxidentity/modules/asset/infrastructure/rdb/views"
 	imagesQuery "nfxidentity/modules/asset/query/images"
+	"nfxidentity/pkgs/utils/ptr"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -16,16 +17,17 @@ type Handler struct{ db *gorm.DB }
 
 func NewHandler(db *gorm.DB) imagesQuery.Single { return &Handler{db: db} }
 
-func toVO(r views.ImagesActiveView) imagesQuery.ImageVO {
+func toVO(r views.Imagesactiveview) imagesQuery.ImageVO {
 	return imagesQuery.ImageVO{
-		ID: r.ID, FilePath: r.FilePath, FileName: r.FileName, FileSize: r.FileSize,
-		MimeType: r.MimeType, UploaderID: r.UploaderID, CreatedAt: r.CreatedAt, UpdatedAt: r.UpdatedAt,
+		ID: ptr.Deref(r.ID), FilePath: ptr.Deref(r.FilePath), FileName: ptr.Deref(r.FileName),
+		FileSize: ptr.Deref(r.FileSize), MimeType: ptr.Deref(r.MimeType), UploaderID: ptr.Deref(r.UploaderID),
+		CreatedAt: ptr.Deref(r.CreatedAt), UpdatedAt: ptr.Deref(r.UpdatedAt),
 	}
 }
 
 func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*imagesQuery.ImageVO, error) {
-	var row views.ImagesActiveView
-	if err := h.db.WithContext(ctx).Table(views.ImagesActiveView{}.TableName()).
+	var row views.Imagesactiveview
+	if err := h.db.WithContext(ctx).Table(views.Imagesactiveview{}.TableName()).
 		Where("id = ?", id).First(&row).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, asset.ErrAssetNotFound
@@ -37,8 +39,8 @@ func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*imagesQuery.ImageVO,
 }
 
 func (h *Handler) ListByUploader(ctx context.Context, uploaderID uuid.UUID) ([]imagesQuery.ImageVO, error) {
-	var rows []views.ImagesActiveView
-	if err := h.db.WithContext(ctx).Table(views.ImagesActiveView{}.TableName()).
+	var rows []views.Imagesactiveview
+	if err := h.db.WithContext(ctx).Table(views.Imagesactiveview{}.TableName()).
 		Where("uploader_id = ?", uploaderID).Order("created_at DESC").Find(&rows).Error; err != nil {
 		return nil, err
 	}

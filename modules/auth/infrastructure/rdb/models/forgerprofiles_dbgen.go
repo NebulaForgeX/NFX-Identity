@@ -3,6 +3,7 @@ package models
 
 import (
 	"nfxidentity/enums"
+	"nfxidentity/pkgs/enumx"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,37 +11,37 @@ import (
 	"gorm.io/gorm"
 )
 
-type Forgerprofile struct {
-	ID              uuid.UUID                 `gorm:"type:uuid;primaryKey"`
-	AccountID       uuid.UUID                 `gorm:"type:uuid;index:idx_forger_profiles_account_id"`
-	ForgerRoles     string                    `gorm:"type:auth.forger_role[];index:idx_forger_profiles_forger_roles"`
-	ProfileLanguage enums.AuthProfileLanguage `gorm:"type:profile_language;index:idx_forger_profiles_profile_language"`
-	Preference      *datatypes.JSON           `gorm:"type:jsonb"`
-	DisplayName     *string                   `gorm:"type:varchar(150)"`
-	FirstName       *string                   `gorm:"type:varchar(100)"`
-	LastName        *string                   `gorm:"type:varchar(100)"`
-	Country         *string                   `gorm:"type:varchar(100)"`
-	City            *string                   `gorm:"type:varchar(100)"`
-	Gender          *string                   `gorm:"type:varchar(100)"`
-	Birthday        *time.Time                `gorm:"type:date"`
-	Website         *string                   `gorm:"type:varchar(100)"`
-	Timezone        *string                   `gorm:"type:varchar(100)"`
-	Bio             *string                   `gorm:"type:text"`
-	CreatedAt       time.Time                 `gorm:"autoCreateTime"`
-	UpdatedAt       time.Time                 `gorm:"autoUpdateTime"`
-	DeletedAt       gorm.DeletedAt            `gorm:"index"`
+type ForgerProfile struct {
+	ID              uuid.UUID                         `gorm:"type:uuid;primaryKey"`
+	AccountID       uuid.UUID                         `gorm:"type:uuid;index:idx_forger_profiles_account_id"`
+	ForgerRoles     enumx.Array[enums.AuthForgerRole] `gorm:"type:auth.forger_role[];index:idx_forger_profiles_forger_roles"`
+	ProfileLanguage enums.AuthProfileLanguage         `gorm:"type:profile_language;index:idx_forger_profiles_profile_language"`
+	Preference      *datatypes.JSON                   `gorm:"type:jsonb"`
+	DisplayName     *string                           `gorm:"type:varchar(150)"`
+	FirstName       *string                           `gorm:"type:varchar(100)"`
+	LastName        *string                           `gorm:"type:varchar(100)"`
+	Country         *string                           `gorm:"type:varchar(100)"`
+	City            *string                           `gorm:"type:varchar(100)"`
+	Gender          *string                           `gorm:"type:varchar(100)"`
+	Birthday        *time.Time                        `gorm:"type:date"`
+	Website         *string                           `gorm:"type:varchar(100)"`
+	Timezone        *string                           `gorm:"type:varchar(100)"`
+	Bio             *string                           `gorm:"type:text"`
+	CreatedAt       time.Time                         `gorm:"autoCreateTime"`
+	UpdatedAt       time.Time                         `gorm:"autoUpdateTime"`
+	DeletedAt       gorm.DeletedAt                    `gorm:"index"`
 }
 
-func (Forgerprofile) TableName() string { return "auth.ForgerProfiles" }
+func (ForgerProfile) TableName() string { return "auth.ForgerProfiles" }
 
-func (m *Forgerprofile) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *ForgerProfile) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var ForgerprofileCols = struct {
+var ForgerProfileCols = struct {
 	ID, AccountID, ForgerRoles, ProfileLanguage, Preference, DisplayName, FirstName,
 	LastName, Country, City, Gender, Birthday, Website, Timezone,
 	Bio, CreatedAt, UpdatedAt, DeletedAt string
@@ -66,6 +67,6 @@ var ForgerprofileCols = struct {
 }
 
 const (
-	ForgerprofilePk                        = "ForgerProfiles_pkey"
-	ForgerprofileFkForgerProfilesAccountId = "fk_forger_profiles_account_id"
+	ForgerProfilePk                        = "ForgerProfiles_pkey"
+	ForgerProfileFkForgerProfilesAccountId = "fk_forger_profiles_account_id"
 )

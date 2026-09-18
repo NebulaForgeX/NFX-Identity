@@ -1,9 +1,10 @@
 {
-  "pillarIdentityTitle": "Identity",
-  "pillarIdentityBody": "Un Account porte qui vous êtes dans toute la famille Pulso.",
-  "pillarCommunityTitle": "Community",
-  "pillarCommunityBody": "Les profils vous relient aux personnes et aux lieux de la ville.",
-  "pillarLinkTitle": "Link",
-  "pillarLinkBody": "La clé partagée qui ouvre Near, Loop et chaque produit.",
+  "brandHome": "Identité",
+  "pillarIdentityTitle": "Compte",
+  "pillarIdentityBody": "Un Account NFX ouvre News, Vault, Storages et la doc.",
+  "pillarCommunityTitle": "Profils",
+  "pillarCommunityBody": "Plusieurs Profile sur le même Account, un par produit.",
+  "pillarLinkTitle": "Accès",
+  "pillarLinkBody": "Une connexion. La clé partagée des consoles NebulaForgeX.",
   "backHome": "Accueil"
 }

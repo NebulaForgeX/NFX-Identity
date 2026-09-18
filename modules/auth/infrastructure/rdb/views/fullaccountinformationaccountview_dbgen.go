@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationaccountview struct {
+type FullAccountInformationAccountView struct {
 	AccountID      *uuid.UUID                `gorm:"column:account_id;->"`
 	AccountStatus  *enums.AuthAccountStatus  `gorm:"column:account_status;->"`
 	SignupPlatform *enums.AuthSignupPlatform `gorm:"column:signup_platform;->"`
@@ -16,11 +16,11 @@ type Fullaccountinformationaccountview struct {
 	UpdatedAt      *time.Time                `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationaccountview) TableName() string {
+func (FullAccountInformationAccountView) TableName() string {
 	return "auth.FullAccountInformationAccountView"
 }
 
-var FullaccountinformationaccountviewCols = struct {
+var FullAccountInformationAccountViewCols = struct {
 	AccountID, AccountStatus, SignupPlatform, CreatedAt, UpdatedAt string
 }{
 	AccountID:      "account_id",

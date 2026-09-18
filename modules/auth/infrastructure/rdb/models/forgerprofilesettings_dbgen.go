@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Forgerprofilesetting struct {
+type ForgerProfileSetting struct {
 	ID                uuid.UUID      `gorm:"type:uuid;primaryKey"`
 	LoginNotification bool           `gorm:"type:boolean"`
 	CreatedAt         time.Time      `gorm:"autoCreateTime"`
@@ -16,16 +16,16 @@ type Forgerprofilesetting struct {
 	DeletedAt         gorm.DeletedAt `gorm:"index"`
 }
 
-func (Forgerprofilesetting) TableName() string { return "auth.ForgerProfileSettings" }
+func (ForgerProfileSetting) TableName() string { return "auth.ForgerProfileSettings" }
 
-func (m *Forgerprofilesetting) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *ForgerProfileSetting) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var ForgerprofilesettingCols = struct {
+var ForgerProfileSettingCols = struct {
 	ID, LoginNotification, CreatedAt, UpdatedAt, DeletedAt string
 }{
 	ID:                "id",
@@ -36,6 +36,6 @@ var ForgerprofilesettingCols = struct {
 }
 
 const (
-	ForgerprofilesettingPk                        = "ForgerProfileSettings_pkey"
-	ForgerprofilesettingFkForgerProfileSettingsId = "fk_forger_profile_settings_id"
+	ForgerProfileSettingPk                        = "ForgerProfileSettings_pkey"
+	ForgerProfileSettingFkForgerProfileSettingsId = "fk_forger_profile_settings_id"
 )

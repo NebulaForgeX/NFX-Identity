@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Imagesactiveview struct {
+type ImagesActiveView struct {
 	ID         *uuid.UUID `gorm:"column:id;->"`
 	FilePath   *string    `gorm:"column:file_path;->"`
 	FileName   *string    `gorm:"column:file_name;->"`
@@ -21,9 +21,9 @@ type Imagesactiveview struct {
 	UpdatedAt  *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Imagesactiveview) TableName() string { return "asset.ImagesActiveView" }
+func (ImagesActiveView) TableName() string { return "asset.ImagesActiveView" }
 
-var ImagesactiveviewCols = struct {
+var ImagesActiveViewCols = struct {
 	ID, FilePath, FileName, FileSize, MimeType, Width, Height,
 	AltText, UploaderID, CreatedAt, UpdatedAt string
 }{

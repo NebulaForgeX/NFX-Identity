@@ -1,14 +1,25 @@
 {{- /* snake_case -> PascalCase */ -}}
 {{- define "Title" -}}
-  {{- $v := "" -}}
-  {{- range $w := splitBy $ "_" -}}
-    {{- if le (len $w) 1 -}}
-      {{- $v = print $v (upper $w) -}}
+  {{- $s := . -}}
+  {{- $parts := splitBy $s "_" -}}
+  {{- /* If already non-snake (e.g. FullAccountInformation), preserve inner casing. */ -}}
+  {{- if le (len $parts) 1 -}}
+    {{- if le (len $s) 1 -}}
+      {{- upper $s -}}
     {{- else -}}
-      {{- $v = print $v (upper (slice $w 0 1)) (lower (slice $w 1)) -}}
+      {{- print (upper (slice $s 0 1)) (slice $s 1) -}}
     {{- end -}}
+  {{- else -}}
+    {{- $v := "" -}}
+    {{- range $w := splitBy $s "_" -}}
+      {{- if le (len $w) 1 -}}
+        {{- $v = print $v (upper $w) -}}
+      {{- else -}}
+        {{- $v = print $v (upper (slice $w 0 1)) (lower (slice $w 1)) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- print $v -}}
   {{- end -}}
-  {{- print $v -}}
 {{- end -}}
 
 {{- /* Convert plural to singular */ -}}
@@ -145,6 +156,12 @@
   {{- $paren := splitBy $tRaw "(" -}}
   {{- $t     := trim (index $paren 0) -}}
   {{- $tBase := lower $t -}}
+  {{- /* Enum / scalar arrays arrive as "social.direct_message_policy[]" — strip [] before enum lookup. */ -}}
+  {{- $isArray := false -}}
+  {{- if hasSuffix $tBase "[]" -}}
+    {{- $isArray = true -}}
+    {{- $tBase = trimSuffix $tBase "[]" -}}
+  {{- end -}}
   {{- $parts := splitBy $tBase "." -}}
   {{- if gt (len $parts) 1 -}}
     {{- $tBase = index $parts 1 -}}
@@ -152,7 +169,10 @@
 
   {{- if hasKey $ENUMS $tBase -}}
     {{- $enumGo := printf "enums.%s" (get $ENUMS $tBase) -}}
-    {{- if $col.Type.Null -}}
+    {{- if $isArray -}}
+      {{- /* enumx.Array[T] scans "{a,b}" and treats nil/empty as SQL NULL — never pointerize. */ -}}
+      {{- printf "enumx.Array[%s]" $enumGo -}}
+    {{- else if $col.Type.Null -}}
       {{- if $USE_POINTER_NULLS -}}*{{ $enumGo }}{{- else -}}{{ $enumGo }}{{- end -}}
     {{- else -}}
       {{- $enumGo -}}
@@ -271,4 +291,3 @@ var {{ .TableName }}Cols = struct {
   {{- end }}
 }
 {{- end }}
-

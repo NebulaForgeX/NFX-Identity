@@ -3,6 +3,7 @@ package models
 
 import (
 	"nfxidentity/enums"
+	"nfxidentity/pkgs/enumx"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,37 +11,37 @@ import (
 	"gorm.io/gorm"
 )
 
-type Authorityprofile struct {
-	ID              uuid.UUID                 `gorm:"type:uuid;primaryKey"`
-	AccountID       uuid.UUID                 `gorm:"type:uuid;index:idx_authority_profiles_account_id"`
-	AuthorityRoles  string                    `gorm:"type:auth.authority_role[];index:idx_authority_profiles_authority_roles"`
-	ProfileLanguage enums.AuthProfileLanguage `gorm:"type:profile_language;index:idx_authority_profiles_profile_language"`
-	Preference      *datatypes.JSON           `gorm:"type:jsonb"`
-	DisplayName     *string                   `gorm:"type:varchar(150)"`
-	FirstName       *string                   `gorm:"type:varchar(100)"`
-	LastName        *string                   `gorm:"type:varchar(100)"`
-	Country         *string                   `gorm:"type:varchar(100)"`
-	City            *string                   `gorm:"type:varchar(100)"`
-	Gender          *string                   `gorm:"type:varchar(100)"`
-	Birthday        *time.Time                `gorm:"type:date"`
-	Website         *string                   `gorm:"type:varchar(100)"`
-	Timezone        *string                   `gorm:"type:varchar(100)"`
-	Bio             *string                   `gorm:"type:text"`
-	CreatedAt       time.Time                 `gorm:"autoCreateTime"`
-	UpdatedAt       time.Time                 `gorm:"autoUpdateTime"`
-	DeletedAt       gorm.DeletedAt            `gorm:"index"`
+type AuthorityProfile struct {
+	ID              uuid.UUID                            `gorm:"type:uuid;primaryKey"`
+	AccountID       uuid.UUID                            `gorm:"type:uuid;index:idx_authority_profiles_account_id"`
+	AuthorityRoles  enumx.Array[enums.AuthAuthorityRole] `gorm:"type:auth.authority_role[];index:idx_authority_profiles_authority_roles"`
+	ProfileLanguage enums.AuthProfileLanguage            `gorm:"type:profile_language;index:idx_authority_profiles_profile_language"`
+	Preference      *datatypes.JSON                      `gorm:"type:jsonb"`
+	DisplayName     *string                              `gorm:"type:varchar(150)"`
+	FirstName       *string                              `gorm:"type:varchar(100)"`
+	LastName        *string                              `gorm:"type:varchar(100)"`
+	Country         *string                              `gorm:"type:varchar(100)"`
+	City            *string                              `gorm:"type:varchar(100)"`
+	Gender          *string                              `gorm:"type:varchar(100)"`
+	Birthday        *time.Time                           `gorm:"type:date"`
+	Website         *string                              `gorm:"type:varchar(100)"`
+	Timezone        *string                              `gorm:"type:varchar(100)"`
+	Bio             *string                              `gorm:"type:text"`
+	CreatedAt       time.Time                            `gorm:"autoCreateTime"`
+	UpdatedAt       time.Time                            `gorm:"autoUpdateTime"`
+	DeletedAt       gorm.DeletedAt                       `gorm:"index"`
 }
 
-func (Authorityprofile) TableName() string { return "auth.AuthorityProfiles" }
+func (AuthorityProfile) TableName() string { return "auth.AuthorityProfiles" }
 
-func (m *Authorityprofile) BeforeCreate(tx *gorm.DB) (err error) {
+func (m *AuthorityProfile) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.ID == uuid.Nil {
 		m.ID, err = uuid.NewV7()
 	}
 	return
 }
 
-var AuthorityprofileCols = struct {
+var AuthorityProfileCols = struct {
 	ID, AccountID, AuthorityRoles, ProfileLanguage, Preference, DisplayName, FirstName,
 	LastName, Country, City, Gender, Birthday, Website, Timezone,
 	Bio, CreatedAt, UpdatedAt, DeletedAt string
@@ -66,6 +67,6 @@ var AuthorityprofileCols = struct {
 }
 
 const (
-	AuthorityprofilePk                           = "AuthorityProfiles_pkey"
-	AuthorityprofileFkAuthorityProfilesAccountId = "fk_authority_profiles_account_id"
+	AuthorityProfilePk                           = "AuthorityProfiles_pkey"
+	AuthorityProfileFkAuthorityProfilesAccountId = "fk_authority_profiles_account_id"
 )

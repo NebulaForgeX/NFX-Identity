@@ -14,7 +14,7 @@ import (
 )
 
 func (h *Handler) ByID(ctx context.Context, id uuid.UUID) (*authorityprofile.Profile, error) {
-	var m models.AuthorityProfile
+	var m models.Authorityprofile
 	if err := h.db.WithContext(ctx).Where("id = ? AND deleted_at IS NULL", id).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, auth.ErrAuthorityProfileNotFound

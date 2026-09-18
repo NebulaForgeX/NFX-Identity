@@ -13,7 +13,7 @@ import (
 )
 
 func (h *Handler) ByTokenHash(ctx context.Context, hash string) (*refreshtoken.RefreshToken, error) {
-	var m models.RefreshToken
+	var m models.Refreshtoken
 	if err := h.db.WithContext(ctx).Where("token_hash = ? AND revoked_at IS NULL AND deleted_at IS NULL", hash).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, auth.ErrRefreshTokenNotFound

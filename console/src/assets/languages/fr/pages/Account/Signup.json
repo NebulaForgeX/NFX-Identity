@@ -4,10 +4,10 @@
     "access": "Accès {{name}}",
     "title": "Créez l'identité qui relie tout."
   },
-  "heroFooter": "Un Account devient l'accès produit pour Near, Loop et le reste de Pulso — jamais un second signup.",
+  "heroFooter": "Un Account devient l'accès à News, Vault et Storages — jamais un second signup.",
   "pageEyebrow": "Créer un compte",
   "pageTitle": "Rejoindre {{name}}",
-  "pageSubtitle": "Vérifiez l'e-mail, choisissez un mot de passe, ouvrez la maison urbaine.",
+  "pageSubtitle": "Vérifiez l'e-mail, choisissez un mot de passe, ouvrez le centre d'identité NFX.",
   "emailLabel": "E-mail",
   "emailPlaceholder": "vous@exemple.com",
   "emailHint": "Nous envoyons un code à 6 caractères à cette adresse.",

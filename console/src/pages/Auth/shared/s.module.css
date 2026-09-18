@@ -10,12 +10,12 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: var(--color-background);
+  background: var(--color-bg);
 }
 
 @media (min-width: 961px) {
   .backdrop {
-    background: linear-gradient(90deg, var(--accent-10) 0%, var(--accent-10) 48%, var(--color-background) 48%);
+    background: linear-gradient(90deg, var(--color-bg-2) 0%, var(--color-bg-2) 50%, var(--color-bg) 50%);
   }
 }
 
@@ -26,8 +26,8 @@
   opacity: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 14% 18%, color-mix(in oklab, var(--accent-9) 22%, transparent), transparent 38%),
-    radial-gradient(circle at 88% 72%, color-mix(in oklab, var(--accent-10) 14%, transparent), transparent 40%);
+    radial-gradient(ellipse 70% 50% at 12% 18%, var(--color-primary-bg), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 78% 82%, var(--color-primary-light), transparent 50%);
 }
 
 .heroPanel,
@@ -37,15 +37,12 @@
 }
 
 .heroPanel {
-  /* Accent plane always uses light ink — gray-1 flips black in dark appearance. */
-  --gray-1: #ffffff;
-  --gray-11: color-mix(in oklab, white 86%, transparent);
-  --gray-12: #ffffff;
   min-height: 100dvh;
-  color: #ffffff;
+  color: var(--gray-12);
   background:
-    radial-gradient(circle at 16% 12%, color-mix(in oklab, white 18%, transparent), transparent 48%),
-    radial-gradient(circle at 84% 78%, color-mix(in oklab, black 14%, transparent), transparent 46%), linear-gradient(155deg, var(--accent-9) 0%, var(--accent-10) 100%);
+    radial-gradient(circle at 18% 8%, var(--color-primary-bg), transparent 42%),
+    radial-gradient(circle at 88% 92%, var(--color-primary-light), transparent 40%),
+    var(--color-bg-2);
   overflow: hidden;
 }
 
@@ -54,12 +51,14 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0.42;
+  opacity: 0.45;
   background-image:
-    linear-gradient(to right, color-mix(in oklab, white 14%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, white 12%, transparent) 1px, transparent 1px);
-  background-size: 56px 72px;
-  mask-image: radial-gradient(ellipse 78% 68% at 40% 55%, #000 48%, transparent 100%);
+    radial-gradient(1.2px 1.2px at 12% 22%, var(--color-primary), transparent),
+    radial-gradient(1px 1px at 28% 68%, var(--color-primary-hover), transparent),
+    radial-gradient(1.4px 1.4px at 61% 18%, var(--color-primary), transparent),
+    radial-gradient(1px 1px at 81% 44%, var(--color-primary-light), transparent),
+    radial-gradient(1.2px 1.2px at 44% 86%, var(--color-primary), transparent),
+    radial-gradient(1px 1px at 93% 12%, var(--color-primary-hover), transparent);
 }
 
 .heroPanel > * {
@@ -67,68 +66,56 @@
   z-index: 1;
 }
 
+.brandHome {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
 .brandEyebrow {
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  opacity: 0.82;
+  letter-spacing: 0.16em;
+  color: var(--color-primary-hover);
 }
 
 .brandTitle {
   font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.045em;
-  max-width: 14ch;
-  line-height: 0.98;
-}
-
-.districtRail {
-  width: min(420px, 92%);
-  margin: 0 auto;
-}
-
-/* White glass chrome on accent hero — Card panel tokens cannot express this */
-.districtBlock {
-  border-radius: var(--radius-4);
-  border: 1px solid color-mix(in oklab, white 28%, transparent);
-  background: linear-gradient(160deg, color-mix(in oklab, white 14%, transparent), color-mix(in oklab, white 4%, transparent)), color-mix(in oklab, white 6%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, white 18%, transparent);
-}
-
-.districtLabel {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.92;
+  letter-spacing: -0.04em;
+  max-width: 13ch;
+  line-height: 1.02;
+  color: var(--gray-12);
 }
 
 .pillar {
-  border-radius: var(--radius-4);
-  border: 1px solid color-mix(in oklab, white 22%, transparent);
-  background: color-mix(in oklab, white 8%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, white 16%, transparent);
+  border-radius: var(--radius-3);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
 }
 
 .pillarIcon {
   border-radius: var(--radius-3);
-  background: color-mix(in oklab, white 14%, transparent);
-  color: var(--gray-1);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
 }
 
 .pillarTitle {
   font-family: var(--heading-font-family), sans-serif;
   letter-spacing: -0.02em;
+  color: var(--gray-12);
 }
 
 .pillarBody {
-  opacity: 0.86;
+  color: var(--gray-11);
 }
 
 .heroFooter {
-  max-width: 42ch;
-  opacity: 0.88;
+  max-width: 46ch;
+  color: var(--gray-11);
 }
 
 .formPanel {
   min-height: 100dvh;
-  background: var(--color-background);
+  background: var(--color-bg);
 }
 
 .formToolbar {
@@ -140,16 +127,8 @@
 }
 
 @media (max-width: 960px) {
-  .heroPanel {
-    min-height: auto;
-    padding-bottom: var(--space-6);
-  }
-
+  .heroPanel,
   .formPanel {
     min-height: auto;
-  }
-
-  .districtRail {
-    display: none;
   }
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Fullaccountinformationwithforgerprofilebackgroundview struct {
+type FullAccountInformationWithForgerProfileBackgroundView struct {
 	ID        *uuid.UUID `gorm:"column:id;->"`
 	ProfileID *uuid.UUID `gorm:"column:profile_id;->"`
 	ImageID   *uuid.UUID `gorm:"column:image_id;->"`
@@ -16,11 +16,11 @@ type Fullaccountinformationwithforgerprofilebackgroundview struct {
 	UpdatedAt *time.Time `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithforgerprofilebackgroundview) TableName() string {
+func (FullAccountInformationWithForgerProfileBackgroundView) TableName() string {
 	return "auth.FullAccountInformationWithForgerProfileBackgroundView"
 }
 
-var FullaccountinformationwithforgerprofilebackgroundviewCols = struct {
+var FullAccountInformationWithForgerProfileBackgroundViewCols = struct {
 	ID, ProfileID, ImageID, SortOrder, CreatedAt, UpdatedAt string
 }{
 	ID:        "id",

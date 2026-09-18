@@ -3,37 +3,38 @@ package views
 
 import (
 	"nfxidentity/enums"
+	"nfxidentity/pkgs/enumx"
 	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/datatypes"
 )
 
-type Fullaccountinformationwithforgerprofileview struct {
-	ID              *uuid.UUID                 `gorm:"column:id;->"`
-	AccountID       *uuid.UUID                 `gorm:"column:account_id;->"`
-	ForgerRoles     *string                    `gorm:"column:forger_roles;->"`
-	ProfileLanguage *enums.AuthProfileLanguage `gorm:"column:profile_language;->"`
-	Preference      *datatypes.JSON            `gorm:"column:preference;->"`
-	DisplayName     *string                    `gorm:"column:display_name;->"`
-	FirstName       *string                    `gorm:"column:first_name;->"`
-	LastName        *string                    `gorm:"column:last_name;->"`
-	Country         *string                    `gorm:"column:country;->"`
-	City            *string                    `gorm:"column:city;->"`
-	Gender          *string                    `gorm:"column:gender;->"`
-	Birthday        *time.Time                 `gorm:"column:birthday;->"`
-	Website         *string                    `gorm:"column:website;->"`
-	Timezone        *string                    `gorm:"column:timezone;->"`
-	Bio             *string                    `gorm:"column:bio;->"`
-	CreatedAt       *time.Time                 `gorm:"column:created_at;->"`
-	UpdatedAt       *time.Time                 `gorm:"column:updated_at;->"`
+type FullAccountInformationWithForgerProfileView struct {
+	ID              *uuid.UUID                        `gorm:"column:id;->"`
+	AccountID       *uuid.UUID                        `gorm:"column:account_id;->"`
+	ForgerRoles     enumx.Array[enums.AuthForgerRole] `gorm:"column:forger_roles;->"`
+	ProfileLanguage *enums.AuthProfileLanguage        `gorm:"column:profile_language;->"`
+	Preference      *datatypes.JSON                   `gorm:"column:preference;->"`
+	DisplayName     *string                           `gorm:"column:display_name;->"`
+	FirstName       *string                           `gorm:"column:first_name;->"`
+	LastName        *string                           `gorm:"column:last_name;->"`
+	Country         *string                           `gorm:"column:country;->"`
+	City            *string                           `gorm:"column:city;->"`
+	Gender          *string                           `gorm:"column:gender;->"`
+	Birthday        *time.Time                        `gorm:"column:birthday;->"`
+	Website         *string                           `gorm:"column:website;->"`
+	Timezone        *string                           `gorm:"column:timezone;->"`
+	Bio             *string                           `gorm:"column:bio;->"`
+	CreatedAt       *time.Time                        `gorm:"column:created_at;->"`
+	UpdatedAt       *time.Time                        `gorm:"column:updated_at;->"`
 }
 
-func (Fullaccountinformationwithforgerprofileview) TableName() string {
+func (FullAccountInformationWithForgerProfileView) TableName() string {
 	return "auth.FullAccountInformationWithForgerProfileView"
 }
 
-var FullaccountinformationwithforgerprofileviewCols = struct {
+var FullAccountInformationWithForgerProfileViewCols = struct {
 	ID, AccountID, ForgerRoles, ProfileLanguage, Preference, DisplayName, FirstName,
 	LastName, Country, City, Gender, Birthday, Website, Timezone,
 	Bio, CreatedAt, UpdatedAt string
