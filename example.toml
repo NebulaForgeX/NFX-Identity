@@ -344,15 +344,12 @@
 #    - If a variable is missing, the application will exit with an error
 #    - See .example.env for all available environment variables
 #
-# 4. Service port ranges (gRPC):
-#    - access:   10155 (GRPC_PORT_ACCESS)
-#    - auth:     10156 (GRPC_PORT_AUTH)
-#    - audit:    10157 (GRPC_PORT_AUDIT)
-#    - clients:  10158 (GRPC_PORT_CLIENTS)
-#    - directory: 10159 (GRPC_PORT_DIRECTORY)
-#    - image:    10160 (GRPC_PORT_IMAGE)
-#    - system:   10161 (GRPC_PORT_SYSTEM)
-#    - tenants:  10162 (GRPC_PORT_TENANTS)
+# 4. Service ports (align PulsoLink-API):
+#    Container GRPC_PORT_* = 50071+ ; host GRPC_EXT_* from 10200
+#    - auth:   GRPC_PORT_AUTH=50071  GRPC_EXT_PORT_AUTH=10200
+#    - asset:  GRPC_PORT_ASSET=50072 GRPC_EXT_PORT_ASSET=10201
+#    - system: GRPC_PORT_SYSTEM=50073 GRPC_EXT_PORT_SYSTEM=10202
+#    Console host: CONSOLE_EXTERNAL_PORT=10203
 #
 # 5. Multi-host deployment support:
 #    - Each service can be configured with a different host IP using GRPC_HOST_<MODULE>

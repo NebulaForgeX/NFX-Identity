@@ -19,7 +19,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_AUTH}"  # gRPC 端口
     ports:
-      - "${GRPC_PORT_AUTH}:${GRPC_PORT_AUTH}"  # 映射 gRPC 端口到主机
+      - "${GRPC_EXT_PORT_AUTH}:${GRPC_PORT_AUTH}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -94,7 +94,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_ASSET}"  # gRPC 端口
     ports:
-      - "${GRPC_PORT_ASSET}:${GRPC_PORT_ASSET}"  # 映射 gRPC 端口到主机
+      - "${GRPC_EXT_PORT_ASSET}:${GRPC_PORT_ASSET}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
@@ -169,7 +169,7 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_SYSTEM}"  # gRPC 端口
     ports:
-      - "${GRPC_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"  # 映射 gRPC 端口到主机
+      - "${GRPC_EXT_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"  # 映射 gRPC 端口到主机
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
