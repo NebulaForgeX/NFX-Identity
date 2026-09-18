@@ -192,8 +192,14 @@ tasks:
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
         export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
-        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
+        else
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
+        fi
         export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_models.sh
     silent: false
@@ -208,8 +214,14 @@ tasks:
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
         export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
-        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
+        else
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
+        fi
         export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_views.sh
     silent: false
@@ -224,8 +236,14 @@ tasks:
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
         export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
-        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
+        else
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
+        fi
         export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_ENV="${ATLAS_ENV:-{{.ENV}}}"
         bash databases/scripts/gen_enums.sh
     silent: false
@@ -239,7 +257,7 @@ tasks:
     silent: false
 
   atlas:pipeline:run:
-    desc: "Run Atlas pipeline (ENV=dev|secure; extra flags after --)"
+    desc: "Run Atlas pipeline (ENV=dev|secure; extra flags after --, e.g. task atlas:pipeline:run ENV=secure -- --no-skip)"
     dotenv:
       - "{{.ENV_FILE}}"
     cmds:
@@ -248,8 +266,14 @@ tasks:
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRESQL_HOST}"
         export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRESQL_PORT}"
-        export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME_DEV:-$POSTGRESQL_NAME}}"
+        if [[ "{{.ENV}}" == "secure" ]]; then
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
+        else
+          export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_DEV}}"
+        fi
         export POSTGRES_DB_SHADOW="${POSTGRES_DB_SHADOW:-${POSTGRESQL_NAME_SHADOW:-nfxidentity_diff}}"
+        export POSTGRES_SSLMODE="${POSTGRES_SSLMODE:-disable}"
+        export POSTGRES_CONTAINER_NAME="${POSTGRES_CONTAINER_NAME:-NFX-Stack-PostgreSQL}"
         export ATLAS_CONFIG_PATH="file://databases/atlas.hcl"
         bash run_atlas_pipeline.sh --{{.ENV}} {{.CLI_ARGS}}
 
