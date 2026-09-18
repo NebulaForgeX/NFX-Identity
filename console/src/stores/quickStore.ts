@@ -34,7 +34,7 @@ export const ALL_AVAILABLE_ITEMS: QuickNavItem[] = [
     title: "Settings",
     description: "Theme and console preferences",
     icon: "Settings",
-    route: ROUTES.SETTINGS,
+    route: ROUTES.USER_SETTINGS,
     color: "var(--color-info)",
   },
 ];
