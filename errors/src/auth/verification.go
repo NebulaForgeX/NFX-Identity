@@ -15,6 +15,8 @@ var (
 	ErrVerificationCodeWrong = errx.InvalidArg("VERIFICATION_CODE_WRONG", "incorrect verification code")
 	// Stored OTP missing or past TTL.
 	ErrVerificationCodeExpired = errx.Expired("VERIFICATION_CODE_EXPIRED", "verification code has expired")
+	ErrLoginNoticeSendFailed   = errx.Internal("LOGIN_NOTICE_SEND_FAILED", "failed to send login notice email")
+	ErrSignupWelcomeSendFailed = errx.Internal("SIGNUP_WELCOME_SEND_FAILED", "failed to send signup welcome email")
 )
 
 /*
@@ -62,4 +64,20 @@ var (
 *p*en<Oops, this verification code has expired. Please request a new one.>
 *p*zh<糟糕，验证码已过期，请重新获取。>
 *p*fr<Oups, ce code de vérification a expiré. Veuillez en demander un nouveau.>
+
+!LOGIN_NOTICE_SEND_FAILED
+*en<Failed to send login notice email>
+*zh<登录通知邮件发送失败>
+*fr<Échec de l'envoi de l'avis de connexion>
+*p*en<Sorry, we couldn't send the sign-in notice. This is on us—please try again later.>
+*p*zh<抱歉，登录通知邮件暂时发送失败，这是我们的问题，请稍后再试。>
+*p*fr<Désolé, l'avis de connexion n'a pas pu être envoyé. Veuillez réessayer plus tard.>
+
+!SIGNUP_WELCOME_SEND_FAILED
+*en<Failed to send signup welcome email>
+*zh<注册欢迎邮件发送失败>
+*fr<Échec de l'envoi de l'e-mail de bienvenue>
+*p*en<Sorry, we couldn't send the welcome email. This is on us—please try again later.>
+*p*zh<抱歉，欢迎邮件暂时发送失败，这是我们的问题，请稍后再试。>
+*p*fr<Désolé, l'e-mail de bienvenue n'a pas pu être envoyé. Veuillez réessayer plus tard.>
 */

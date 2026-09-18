@@ -1,4 +1,12 @@
 {
+  "LOGIN_NOTICE": {
+    "title": "New sign-in to your Identity account",
+    "body": "A new sign-in was recorded. If this was you, you can ignore this email."
+  },
+  "SIGNUP_WELCOME": {
+    "title": "Welcome to NebulaForgeX Identity",
+    "body": "Your login-center account is ready. Select or create a profile to open the console."
+  },
   "SYSTEM_INITIALIZED": {
     "title": "System initialized",
     "body": "NFX Identity is ready"

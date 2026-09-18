@@ -10,6 +10,12 @@ import (
 //go:embed templates/verification.html
 var verificationTemplateContent string
 
+//go:embed templates/login_notice.html
+var loginNoticeTemplateContent string
+
+//go:embed templates/signup_welcome.html
+var signupWelcomeTemplateContent string
+
 //go:embed templates/contact_admin.html
 var contactAdminTemplateContent string
 

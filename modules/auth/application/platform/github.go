@@ -214,6 +214,7 @@ func (s *Service) LoginWithGitHub(ctx context.Context, code, state, deviceID, pl
 	if err != nil {
 		return nil, auth.ErrGitHubSignupFailed.WithCause(err)
 	}
+	s.publishSignup(ctx, accountID, user.Email, "zh")
 	return s.issueAccountSession(ctx, accountID, &identityID, deviceID, user.Email, "")
 }
 

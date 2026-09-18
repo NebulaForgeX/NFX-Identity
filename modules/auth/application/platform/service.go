@@ -10,12 +10,15 @@ import (
 	"time"
 
 	"nfxidentity/errors/src/auth"
+	"nfxidentity/events"
 	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
 	emailQuery "nfxidentity/modules/auth/query/email"
 	phoneQuery "nfxidentity/modules/auth/query/phone"
 	profileQuery "nfxidentity/modules/auth/query/profile"
 	"nfxidentity/pkgs/email"
 	"nfxidentity/pkgs/errx"
+	"nfxidentity/pkgs/kafkax/eventbus"
+	"nfxidentity/pkgs/logx"
 	"nfxidentity/pkgs/tokenx"
 	"nfxidentity/pkgs/transaction"
 
@@ -35,6 +38,7 @@ type Service struct {
 	github      *GitHubConfig
 	redis       *redis.Client
 	mail        *email.EmailService
+	bus         *eventbus.BusPublisher
 	checkFn     checkFunc
 }
 
@@ -54,10 +58,11 @@ func NewService(
 	github *GitHubConfig,
 	redisClient *redis.Client,
 	mail *email.EmailService,
+	bus *eventbus.BusPublisher,
 ) *Service {
 	s := &Service{
 		tx: tx, repoFactory: repoFactory, emails: emails, phones: phones, profiles: profiles,
-		tokens: tokens, github: github, redis: redisClient, mail: mail,
+		tokens: tokens, github: github, redis: redisClient, mail: mail, bus: bus,
 	}
 	if redisClient != nil {
 		s.SetVerificationChecker(s.redisCheckCode)
@@ -312,6 +317,52 @@ func (s *Service) InvalidateFull(ctx context.Context, accountID, profileID uuid.
 		return nil
 	}
 	return s.redis.Del(ctx, fullCacheKey(accountID, profileID)).Err()
+}
+
+func (s *Service) publishSignup(ctx context.Context, accountID uuid.UUID, emailAddr, lang string) {
+	emailAddr = strings.TrimSpace(emailAddr)
+	if s.bus == nil || emailAddr == "" {
+		return
+	}
+	if err := eventbus.PublishEvent(ctx, s.bus, events.SignupSuccessEvent{
+		AccountID: accountID,
+		Email:     emailAddr,
+		Lang:      lang,
+	}); err != nil {
+		logx.S().Warnf("publish signup success failed: %v", err)
+	}
+}
+
+func (s *Service) publishLogin(ctx context.Context, accountID, profileID uuid.UUID, kind, provider, subject, loginEmail string) {
+	if s.bus == nil {
+		return
+	}
+	if err := eventbus.PublishEvent(ctx, s.bus, events.LoginSuccessEvent{
+		AccountID:        accountID,
+		ProfileID:        profileID,
+		ProfileKind:      kind,
+		IdentityProvider: provider,
+		ProviderSubject:  subject,
+		LoginEmail:       loginEmail,
+		LoginAt:          time.Now().UTC(),
+	}); err != nil {
+		logx.S().Warnf("publish login success failed: %v", err)
+	}
+}
+
+func (s *Service) latestIdentity(ctx context.Context, accountID uuid.UUID) (provider, subject string) {
+	idents, err := s.repoFactory.Identity(none()).Get.ByAccountID(ctx, accountID)
+	if err != nil || len(idents) == 0 {
+		return "", ""
+	}
+	best := idents[0]
+	for _, item := range idents[1:] {
+		bt, at := best.LastLoginAt(), item.LastLoginAt()
+		if at != nil && (bt == nil || at.After(*bt)) {
+			best = item
+		}
+	}
+	return best.IdentityProvider(), best.ProviderSubject()
 }
 
 func emailMaps(rows []emailQuery.EmailItemVO) []map[string]any {

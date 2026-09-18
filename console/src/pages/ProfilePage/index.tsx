@@ -148,7 +148,12 @@ const ProfilePage = memo(() => {
               void auth.PatchProfileSettings(kind, { loginNotification: checked }).then(reload);
             }}
           />
-          <Text size="2">{t("loginNotification", { defaultValue: "Login notification" })}</Text>
+          <Flex direction="column" gap="1">
+            <Text size="2">{t("loginNotification")}</Text>
+            <Text size="1" color="gray">
+              {t("loginNotificationHint")}
+            </Text>
+          </Flex>
         </Flex>
 
         <Flex direction="column" gap="2">

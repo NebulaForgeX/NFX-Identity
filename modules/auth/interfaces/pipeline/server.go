@@ -1,7 +1,9 @@
 package pipeline
 
 import (
+	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
 	"nfxidentity/modules/auth/interfaces/pipeline/handler"
+	pkgemail "nfxidentity/pkgs/email"
 	"nfxidentity/pkgs/kafkax"
 	"nfxidentity/pkgs/kafkax/eventbus"
 	"nfxidentity/pkgs/logx"
@@ -13,17 +15,18 @@ import (
 type Deps interface {
 	KafkaConfig() *kafkax.Config
 	BusPublisher() *eventbus.BusPublisher
+	Mail() *pkgemail.EmailService
+	RepoFactory() *repofactory.TxRepoFactory
 }
 
 func NewServer(d Deps) (*Router, error) {
-	// 创建订阅者
 	sub, err := kafkax.NewSubscriber(d.KafkaConfig())
 	if err != nil {
 		return nil, err
 	}
 
 	registry := &Registry{
-		Auth: handler.NewAuthHandler(),
+		Email: handler.NewEmailHandler(d.Mail(), d.RepoFactory()),
 	}
 
 	router, err := NewRouter(sub, registry, eventbus.EventRouterConfig{
@@ -34,7 +37,6 @@ func NewServer(d Deps) (*Router, error) {
 		return nil, err
 	}
 
-	// 添加中间件
 	router.AddMiddleware(
 		wmMiddleware.CorrelationID,
 		wmMiddleware.Recoverer,

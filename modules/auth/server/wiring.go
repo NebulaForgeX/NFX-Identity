@@ -35,6 +35,8 @@ type Dependencies struct {
 	tokenxInstance      *tokenx.Tokenx
 	platformSvc         *platform.Service
 	resourceSvc         *resource.Service
+	mail                *email.EmailService
+	repoFactory         *repofactory.TxRepoFactory
 }
 
 func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
@@ -79,9 +81,10 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		From:     cfg.Email.SMTPFrom,
 	})
 	db := postgres.DB()
+	factory := repofactory.NewTxRepoFactory(db)
 	platformSvc := platform.NewService(
 		transaction.NewGormTxManager(db),
-		repofactory.NewTxRepoFactory(db),
+		factory,
 		emailQuery.NewQuery(db),
 		phoneQuery.NewQuery(db),
 		profileQuery.NewQuery(db),
@@ -89,6 +92,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		githubCfg,
 		cacheConn.Client(),
 		mail,
+		busPublisher,
 	)
 	resourceSvc := resource.NewService(postgres, cacheConn, &kafkaConfig)
 
@@ -103,6 +107,8 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		tokenxInstance:      tokenxInstance,
 		platformSvc:         platformSvc,
 		resourceSvc:         resourceSvc,
+		mail:                mail,
+		repoFactory:         factory,
 	}, nil
 }
 
@@ -123,6 +129,10 @@ func (d *Dependencies) BusPublisher() *eventbus.BusPublisher {
 func (d *Dependencies) PlatformSvc() *platform.Service { return d.platformSvc }
 func (d *Dependencies) ResourceSvc() *resource.Service { return d.resourceSvc }
 func (d *Dependencies) Cache() *cachex.Connection      { return d.cache }
+func (d *Dependencies) Mail() *email.EmailService      { return d.mail }
+func (d *Dependencies) RepoFactory() *repofactory.TxRepoFactory {
+	return d.repoFactory
+}
 
 type tokenxVerifierAdapter struct {
 	tokenx *tokenx.Tokenx

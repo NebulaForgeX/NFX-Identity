@@ -5,5 +5,5 @@ import (
 )
 
 type Registry struct {
-	Auth *handler.AuthHandler
+	Email *handler.EmailHandler
 }

@@ -28,7 +28,7 @@ func SendVerificationEmail(ctx context.Context, mail *pkgemail.EmailService, to,
 	}
 	html := pkgemail.BuildVerificationEmailHTML(code)
 	if err := mail.Send(pkgemail.EmailMessage{
-		To:     []string{to},
+		To:      []string{to},
 		Subject: subject,
 		Body:    html,
 		IsHTML:  true,

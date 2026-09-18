@@ -21,7 +21,8 @@ func NewRouter(sub *eventbus.BusSubscriber, registry *Registry, config eventbus.
 }
 
 func (r *Router) RegisterRoutes() {
-	eventbus.RegisterHandler(r.EventRouter, r.registry.Auth.OnAuthEvent)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.Email.SignupSuccess)
+	eventbus.RegisterHandler(r.EventRouter, r.registry.Email.LoginSuccess)
 }
 
 func (r *Router) Run(ctx context.Context) error {

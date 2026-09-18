@@ -96,6 +96,7 @@ func (s *Service) SignupWithEmail(ctx context.Context, emailAddr, password, code
 	if err != nil {
 		return nil, auth.ErrSignupFailed.WithCause(err)
 	}
+	s.publishSignup(ctx, accountID, emailAddr, langOrDefault(lang))
 	return s.issueAccountSession(ctx, accountID, &identityID, deviceID, emailAddr, "")
 }
 
@@ -166,6 +167,8 @@ func (s *Service) SelectProfile(ctx context.Context, accountID uuid.UUID, profil
 	if err := s.persistRefresh(ctx, accountID, nil, &profileID, &kind, deviceID, refresh); err != nil {
 		return nil, err
 	}
+	provider, subject := s.latestIdentity(ctx, accountID)
+	s.publishLogin(ctx, accountID, profileID, kind, provider, subject, emailAddr)
 	return &SelectProfileOutput{
 		AccountID: accountID.String(), ProfileID: profileID.String(), AccessToken: access, RefreshToken: refresh,
 	}, nil
