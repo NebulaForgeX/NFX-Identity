@@ -36,17 +36,10 @@ type Service struct {
 	phones      *phoneQuery.Query
 	profiles    *profileQuery.Query
 	tokens      *tokenx.Tokenx
-	github      *GitHubConfig
 	redis       *redis.Client
 	mail        *email.EmailService
 	bus         *eventbus.BusPublisher
 	checkFn     checkFunc
-}
-
-type GitHubConfig struct {
-	ClientID     string
-	ClientSecret string
-	RedirectURL  string
 }
 
 func NewService(
@@ -56,14 +49,13 @@ func NewService(
 	phones *phoneQuery.Query,
 	profiles *profileQuery.Query,
 	tokens *tokenx.Tokenx,
-	github *GitHubConfig,
 	redisClient *redis.Client,
 	mail *email.EmailService,
 	bus *eventbus.BusPublisher,
 ) *Service {
 	s := &Service{
 		tx: tx, repoFactory: repoFactory, emails: emails, phones: phones, profiles: profiles,
-		tokens: tokens, github: github, redis: redisClient, mail: mail, bus: bus,
+		tokens: tokens, redis: redisClient, mail: mail, bus: bus,
 	}
 	if redisClient != nil {
 		s.SetVerificationChecker(s.redisCheckCode)

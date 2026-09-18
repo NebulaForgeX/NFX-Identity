@@ -30,8 +30,6 @@ func RegisterRoutes(app fiber.Router, svc *platform.Service, verifier token.Veri
 	auth := app.Group("/auth")
 	auth.Post("/login/with-email", h.LoginWithEmail)
 	auth.Post("/login/with-phone", h.LoginWithPhone)
-	auth.Post("/login/github", h.LoginGitHub)
-	auth.Get("/login/github/url", h.GitHubURL)
 	auth.Post("/signup/send-code", h.SendCode)
 	auth.Post("/signup/with-email", h.Signup)
 	auth.Post("/refresh", h.Refresh)
@@ -58,8 +56,6 @@ func RegisterRoutes(app fiber.Router, svc *platform.Service, verifier token.Veri
 	me.Put("/authority-profile/backgrounds", h.confirmAuthorityBackgrounds)
 	me.Put("/forger-profile/preference", h.prefForger)
 	me.Put("/authority-profile/preference", h.prefAuthority)
-	me.Post("/github", h.LinkGitHub)
-	me.Delete("/github", h.UnlinkGitHub)
 	me.Get("/emails", h.ListEmails)
 	me.Post("/emails", h.CreateEmail)
 	me.Post("/emails/:emailId/send-verification-code", h.SendEmailCode)
@@ -181,60 +177,6 @@ func (h *Handler) SendCode(c fiber.Ctx) error {
 		return wrap(c, err)
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]any{"sent": true}})
-}
-
-func (h *Handler) GitHubURL(c fiber.Ctx) error {
-	url, state, err := h.svc.GitHubAuthorizeURL(c.Context())
-	if err != nil {
-		return wrap(c, err)
-	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]any{"authorize_url": url, "state": state}})
-}
-
-func (h *Handler) LoginGitHub(c fiber.Ctx) error {
-	var req struct {
-		Code           string `json:"code"`
-		State          string `json:"state"`
-		DeviceID       string `json:"device_id"`
-		SignupPlatform string `json:"signup_platform"`
-	}
-	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
-	}
-	out, err := h.svc.LoginWithGitHub(c.Context(), req.Code, req.State, req.DeviceID, req.SignupPlatform)
-	if err != nil {
-		return wrap(c, err)
-	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
-}
-
-func (h *Handler) LinkGitHub(c fiber.Ctx) error {
-	aid, err := accountID(c)
-	if err != nil {
-		return wrap(c, err)
-	}
-	var req struct {
-		Code  string `json:"code"`
-		State string `json:"state"`
-	}
-	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
-	}
-	if err := h.svc.LinkGitHub(c.Context(), aid, req.Code, req.State); err != nil {
-		return wrap(c, err)
-	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
-}
-
-func (h *Handler) UnlinkGitHub(c fiber.Ctx) error {
-	aid, err := accountID(c)
-	if err != nil {
-		return wrap(c, err)
-	}
-	if err := h.svc.UnlinkGitHub(c.Context(), aid); err != nil {
-		return wrap(c, err)
-	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
 }
 
 func (h *Handler) Refresh(c fiber.Ctx) error {

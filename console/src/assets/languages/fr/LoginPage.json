@@ -19,7 +19,6 @@
   "loginFailed": "Échec de la connexion, veuillez réessayer",
   "invalidCredentials": "Email ou mot de passe invalide",
   "accountLocked": "Le compte est verrouillé en raison de trop nombreuses tentatives de connexion échouées",
-  "register": "S'inscrire",
   "registerType": {
     "email": "Email",
     "phone": "Téléphone"
@@ -33,8 +32,6 @@
   "codeSentToPhone": "Code de vérification envoyé au téléphone",
   "registering": "Inscription en cours...",
   "registerFailed": "Échec de l'inscription, veuillez réessayer",
-  "hasAccount": "Vous avez déjà un compte ?",
-  "signInNow": "Se connecter maintenant",
   "validation": {
     "emailRequired": "L'email est requis",
     "emailInvalid": "Veuillez entrer une adresse email valide",
@@ -48,9 +45,5 @@
     "verificationCodeRequired": "Le code de vérification est requis",
     "verificationCodeLength": "Le code de vérification doit contenir 6 chiffres",
     "inviteCodeRequired": "Le code d'invitation est requis"
-  },
-  "githubCallback": "Connexion GitHub",
-  "githubCallbackHint": "Finalisation de l'autorisation GitHub…",
-  "githubCallbackFailed": "Échec de la connexion GitHub",
-  "githubMissingCode": "GitHub n'a pas renvoyé de code d'autorisation"
+  }
 }

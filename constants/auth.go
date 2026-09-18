@@ -46,7 +46,6 @@ var AuthSignupPlatform = constantx.NewStringEnumSet(
 
 var AuthIdentityProvider = constantx.NewStringEnumSet(
 	enums.AuthIdentityProviderPassword,
-	enums.AuthIdentityProviderGithub,
 )
 
 type ProfileKind string

@@ -14,15 +14,7 @@ var (
 	ErrHashFailed           = errx.Internal("HASH_FAILED", "failed to hash password")
 	ErrTokenFailed          = errx.Internal("TOKEN_FAILED", "token operation failed")
 	ErrPhoneNotDeletable    = errx.FailedPrecond("PHONE_NOT_DELETABLE", "cannot delete primary or missing phone")
-	ErrOwnerRoleImmutable   = errx.Forbidden("OWNER_ROLE_IMMUTABLE", "owner role cannot be assigned via API")
-	ErrLastIdentity         = errx.FailedPrecond("LAST_IDENTITY", "cannot unlink the last identity")
-	ErrGitHubNotConfigured  = errx.FailedPrecond("GITHUB_NOT_CONFIGURED", "configure GITHUB_CLIENT_ID to enable GitHub login")
-	ErrGitHubExchangeFailed = errx.Unauthorized("GITHUB_EXCHANGE_FAILED", "github oauth exchange failed")
-	ErrGitHubUserFailed     = errx.Internal("GITHUB_USER_FAILED", "failed to load github user")
-	ErrGitHubLookupFailed   = errx.Internal("GITHUB_LOOKUP_FAILED", "failed to look up github identity")
-	ErrGitHubSignupFailed   = errx.Internal("GITHUB_SIGNUP_FAILED", "github signup failed")
-	ErrGitHubTaken          = errx.Conflict("GITHUB_TAKEN", "github account already linked")
-	ErrInvalidOAuthState    = errx.Unauthorized("INVALID_OAUTH_STATE", "invalid oauth state")
+	ErrOwnerRoleImmutable = errx.Forbidden("OWNER_ROLE_IMMUTABLE", "owner role cannot be assigned via API")
 )
 
 /*
@@ -85,44 +77,4 @@ var (
 *en<Owner role cannot be assigned via API>
 *zh<不能通过 API 分配所有者角色>
 *fr<Le rôle propriétaire ne peut pas être attribué via l'API>
-
-!LAST_IDENTITY
-*en<Cannot unlink the last identity>
-*zh<不能解绑最后一个登录身份>
-*fr<Impossible de détacher la dernière identité>
-
-!GITHUB_NOT_CONFIGURED
-*en<Configure GITHUB_CLIENT_ID to enable GitHub login>
-*zh<请配置 GITHUB_CLIENT_ID 以启用 GitHub 登录>
-*fr<Configurez GITHUB_CLIENT_ID pour activer la connexion GitHub>
-
-!GITHUB_EXCHANGE_FAILED
-*en<GitHub OAuth exchange failed>
-*zh<GitHub OAuth 交换失败>
-*fr<Échec de l'échange OAuth GitHub>
-
-!GITHUB_USER_FAILED
-*en<Failed to load GitHub user>
-*zh<获取 GitHub 用户失败>
-*fr<Échec du chargement de l'utilisateur GitHub>
-
-!GITHUB_LOOKUP_FAILED
-*en<Failed to look up GitHub identity>
-*zh<查找 GitHub 身份失败>
-*fr<Échec de la recherche de l'identité GitHub>
-
-!GITHUB_SIGNUP_FAILED
-*en<GitHub signup failed>
-*zh<GitHub 注册失败>
-*fr<Inscription GitHub échouée>
-
-!GITHUB_TAKEN
-*en<GitHub account already linked>
-*zh<该 GitHub 账号已被绑定>
-*fr<Compte GitHub déjà lié>
-
-!INVALID_OAUTH_STATE
-*en<Invalid OAuth state>
-*zh<OAuth state 无效>
-*fr<État OAuth invalide>
 */

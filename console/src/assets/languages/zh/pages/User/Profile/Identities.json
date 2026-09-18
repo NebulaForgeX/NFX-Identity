@@ -23,9 +23,7 @@
     "cancelEdit": "取消",
     "saveEmail": "保存邮箱",
     "deleteProfile": "删除",
-    "switch": "切换",
-    "linkGitHub": "绑定 GitHub",
-    "unlinkGitHub": "解除 GitHub"
+    "switch": "切换"
   },
   "labels": {
     "primary": "主要",
@@ -53,9 +51,7 @@
     "deleteConfirmBody": "确定永久删除「{{name}}」及其数据？此操作不可撤销。",
     "profileLanguage": "语言",
     "scopeForger": "Forger",
-    "newForgerProfile": "新建 Forger 身份",
-    "githubLinked": "已将 GitHub 绑定到此 Account。",
-    "unlinkGitHubConfirm": "解除此 Account 的 GitHub 绑定？"
+    "newForgerProfile": "新建 Forger 身份"
   },
   "sections": {
     "emails": {
@@ -69,10 +65,6 @@
     "profiles": {
       "title": "身份",
       "description": "在此账户下的 Forger 身份与权威身份之间切换。"
-    },
-    "github": {
-      "title": "GitHub",
-      "description": "用 GitHub 身份登录并证明此 Account。"
     },
     "forgerProfiles": {
       "title": "新建 Forger 身份",

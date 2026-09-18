@@ -19,7 +19,6 @@
   "loginFailed": "Login failed, please try again",
   "invalidCredentials": "Invalid email or password",
   "accountLocked": "Account is locked due to too many failed login attempts",
-  "register": "Sign Up",
   "registerType": {
     "email": "Email",
     "phone": "Phone"
@@ -33,8 +32,6 @@
   "codeSentToPhone": "Verification code sent to phone",
   "registering": "Registering...",
   "registerFailed": "Registration failed, please try again",
-  "hasAccount": "Already have an account?",
-  "signInNow": "Sign In Now",
   "validation": {
     "emailRequired": "Email is required",
     "emailInvalid": "Please enter a valid email address",
@@ -48,9 +45,5 @@
     "verificationCodeRequired": "Verification code is required",
     "verificationCodeLength": "Verification code must be 6 digits",
     "inviteCodeRequired": "Invite code is required"
-  },
-  "githubCallback": "GitHub sign-in",
-  "githubCallbackHint": "Completing GitHub authorization…",
-  "githubCallbackFailed": "GitHub sign-in failed",
-  "githubMissingCode": "GitHub did not return an authorization code"
+  }
 }

@@ -68,11 +68,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		servertoken.WithAllowedSkew(5*time.Second),
 	)
 
-	githubCfg := &platform.GitHubConfig{
-		ClientID:     cfg.GitHub.ClientID,
-		ClientSecret: cfg.GitHub.ClientSecret,
-		RedirectURL:  cfg.GitHub.RedirectURL,
-	}
 	mail := email.NewEmailService(email.SMTPConfig{
 		Host:     cfg.Email.SMTPHost,
 		Port:     cfg.Email.SMTPPort,
@@ -89,7 +84,6 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		phoneQuery.NewQuery(db),
 		profileQuery.NewQuery(db),
 		tokenxInstance,
-		githubCfg,
 		cacheConn.Client(),
 		mail,
 		busPublisher,

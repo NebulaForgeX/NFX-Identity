@@ -23,9 +23,7 @@
     "cancelEdit": "Annuler",
     "saveEmail": "Enregistrer",
     "deleteProfile": "Supprimer",
-    "switch": "Changer",
-    "linkGitHub": "Lier GitHub",
-    "unlinkGitHub": "Délier GitHub"
+    "switch": "Changer"
   },
   "labels": {
     "primary": "Principal",
@@ -53,9 +51,7 @@
     "deleteConfirmBody": "Supprimer définitivement « {{name}} » et ses données ? Irréversible.",
     "profileLanguage": "Langue",
     "scopeForger": "Forger",
-    "newForgerProfile": "Nouveau profil Forger",
-    "githubLinked": "GitHub est lié à ce Account.",
-    "unlinkGitHubConfirm": "Délier GitHub de ce Account ?"
+    "newForgerProfile": "Nouveau profil Forger"
   },
   "sections": {
     "emails": {
@@ -69,10 +65,6 @@
     "profiles": {
       "title": "Profils",
       "description": "Passez d'une identité Forger à une identité d'autorité sous ce compte."
-    },
-    "github": {
-      "title": "GitHub",
-      "description": "Connectez et prouvez ce Account avec une identité GitHub."
     },
     "forgerProfiles": {
       "title": "Nouveau profil Forger",

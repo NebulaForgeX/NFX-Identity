@@ -49,8 +49,6 @@
   "loginNotificationHint": "Si activé, une sélection de profil après connexion envoie un avis à l'e-mail principal.",
   "phoneSmsUnimplemented": "La vérification SMS n'est pas encore disponible. Le numéro peut quand même être enregistré.",
   "clearAvatar": "Effacer l'avatar",
-  "linkGitHub": "Lier GitHub",
-  "unlinkGitHub": "Délier GitHub",
   "avatar": "Avatar",
   "background": "Arrière-plan",
   "city": "Localité",

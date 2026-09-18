@@ -23,9 +23,7 @@
     "cancelEdit": "Cancel",
     "saveEmail": "Save email",
     "deleteProfile": "Delete",
-    "switch": "Switch",
-    "linkGitHub": "Link GitHub",
-    "unlinkGitHub": "Unlink GitHub"
+    "switch": "Switch"
   },
   "labels": {
     "primary": "Primary",
@@ -53,9 +51,7 @@
     "deleteConfirmBody": "Permanently delete \"{{name}}\" and its data? This cannot be undone.",
     "profileLanguage": "Language",
     "scopeForger": "Forger",
-    "newForgerProfile": "New forger profile",
-    "githubLinked": "GitHub is linked to this Account.",
-    "unlinkGitHubConfirm": "Unlink GitHub from this Account?"
+    "newForgerProfile": "New forger profile"
   },
   "sections": {
     "emails": {
@@ -69,10 +65,6 @@
     "profiles": {
       "title": "Profiles",
       "description": "Switch between forger and authority identities under this Account."
-    },
-    "github": {
-      "title": "GitHub",
-      "description": "Sign in and prove this Account with a GitHub identity."
     },
     "forgerProfiles": {
       "title": "New forger profile",

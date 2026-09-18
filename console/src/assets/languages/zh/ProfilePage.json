@@ -53,8 +53,6 @@
   "loginNotificationHint": "开启后，登录并选择资料时会向主邮箱发送通知。",
   "phoneSmsUnimplemented": "短信验证尚未接入，号码仍可保存为主联系方式。",
   "clearAvatar": "清除头像",
-  "linkGitHub": "绑定 GitHub",
-  "unlinkGitHub": "解绑 GitHub",
   "avatar": "头像",
   "background": "背景",
   "city": "所在地",

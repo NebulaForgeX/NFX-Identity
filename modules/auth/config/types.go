@@ -20,15 +20,8 @@ type Config struct {
 	Token       tokenx.Config      `koanf:"token"`
 	KafkaConfig kafkax.Config      `koanf:"kafka"`
 	Email       EmailConfig        `koanf:"email"`
-	GitHub      GitHubConfig       `koanf:"github"`
 	OTEL        otelx.Config       `koanf:"otel"`
 	GRPCClient  GRPCClientConfig   `koanf:"grpc_client"`
-}
-
-type GitHubConfig struct {
-	ClientID     string `koanf:"client_id"`
-	ClientSecret string `koanf:"client_secret"`
-	RedirectURL  string `koanf:"redirect_url"`
 }
 
 type GRPCClientConfig struct {

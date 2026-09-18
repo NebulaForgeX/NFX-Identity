@@ -5,7 +5,6 @@ export { default as SettingsPage } from "./User/Settings";
 export { default as OwnerDirectoryPage } from "./OwnerDirectoryPage";
 export { default as LoginPage } from "./Auth/Login";
 export { default as SignupPage } from "./Auth/Signup";
-export { default as GitHubCallbackPage } from "./Auth/GitHubCallback";
 export { default as ProfileOverviewPage } from "./User/Profile/Overview";
 export { default as ProfileEditPage } from "./User/Profile/Edit";
 export { default as ProfileIdentitiesPage } from "./User/Profile/Identities";

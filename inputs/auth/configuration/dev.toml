@@ -113,11 +113,6 @@
     asset_addr = "${GRPC_HOST_ASSET}:${GRPC_PORT_ASSET}"
     system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
 
-[github]
-    client_id = "${GITHUB_CLIENT_ID}"
-    client_secret = "${GITHUB_CLIENT_SECRET}"
-    redirect_url = "${GITHUB_REDIRECT_URL}"
-
 [otel]
     enabled = true
     endpoint = "${OTEL_EXPORTER_OTLP_ENDPOINT}"

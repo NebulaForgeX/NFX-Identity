@@ -3,24 +3,19 @@ import type { Profile } from "nfx-ui/types";
 import { useState } from "react";
 import { Avatar, Badge, Box, Button, Card, Flex, Grid, Select, Text, TextField } from "@radix-ui/themes";
 import { Users } from "lucide-react";
-import { GithubIcon } from "nfx-ui/icons";
-import { AuthIdentityProviderEnum, LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
-import { authEventEmitter, authEvents } from "nfx-ui/events";
+import { LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
 import {
   useChangePassword,
   useCreateForgerProfile,
   useCreateEmail,
-  useCurrentProfile,
   useDeleteEmail,
   useDeleteProfile,
-  useGetGitHubAuthorizeUrl,
   useListEmails,
   useListProfiles,
   useSelectProfile,
   useSendChangePasswordVerificationCode,
   useSendEmailVerificationCode,
   useSetPrimaryEmail,
-  useUnlinkGitHub,
   useUpdateEmail,
   useVerifyEmail,
 } from "nfx-ui/hooks";
@@ -32,7 +27,7 @@ import { PageHeader, Suspense } from "@/components";
 import { PageFrame } from "@/layouts";
 import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
 
-type SectionId = "emails" | "password" | "profiles" | "github";
+type SectionId = "emails" | "password" | "profiles";
 
 type IdentityRow = {
   profileId: string;
@@ -484,84 +479,12 @@ function ProfilesSection() {
   );
 }
 
-function GitHubSection() {
-  const { t } = useTranslation("pages.User.Profile.Identities");
-  const { data } = useCurrentProfile();
-  const getUrl = useGetGitHubAuthorizeUrl();
-  const unlink = useUnlinkGitHub();
-  const github = safeArray(data?.identities).find((item) => item.identityProvider === AuthIdentityProviderEnum.GITHUB);
-  const busy = getUrl.isPending || unlink.isPending;
-
-  return (
-    <Card size="2">
-      <Flex direction="column" gap="3">
-        <Box>
-          <Text size="2" weight="bold">
-            {t("sections.github.title")}
-          </Text>
-          <Text size="1" color="gray" mt="1">
-            {t("sections.github.description")}
-          </Text>
-        </Box>
-        {github ? (
-          <Flex align="center" justify="between" gap="3" py="2">
-            <Flex align="center" gap="3" minWidth="0" flexGrow="1">
-              <GithubIcon size={18} />
-              <Flex direction="column" gap="1" minWidth="0">
-                <Text size="2" weight="medium">
-                  {github.providerSubject}
-                </Text>
-                <Text size="1" color="gray">
-                  {t("labels.githubLinked")}
-                </Text>
-              </Flex>
-            </Flex>
-            <Button
-              size="2"
-              variant="soft"
-              color="red"
-              disabled={busy}
-              loading={unlink.isPending}
-              onClick={() => {
-                if (!window.confirm(t("labels.unlinkGitHubConfirm"))) return;
-                unlink.mutate(undefined, {
-                  onSuccess: () => {
-                    authEventEmitter.emit(authEvents.UPDATE_ACCOUNT_SUCCESS, data?.account.id);
-                  },
-                });
-              }}
-            >
-              {t("actions.unlinkGitHub")}
-            </Button>
-          </Flex>
-        ) : (
-          <Flex align="center" justify="end" gap="3" py="2">
-            <Button
-              size="2"
-              disabled={busy}
-              loading={getUrl.isPending}
-              onClick={() => {
-                void getUrl.mutateAsync().then((res) => {
-                  if (res?.authorizeUrl) window.location.assign(res.authorizeUrl);
-                });
-              }}
-            >
-              {t("actions.linkGitHub")}
-            </Button>
-          </Flex>
-        )}
-      </Flex>
-    </Card>
-  );
-}
-
 function IdentitiesBody() {
   const { t } = useTranslation("pages.User.Profile.Identities");
   const [section, setSection] = useState<SectionId>("profiles");
   const sections: { id: SectionId; label: string }[] = [
     { id: "profiles", label: t("sections.profiles.title") },
     { id: "emails", label: t("sections.emails.title") },
-    { id: "github", label: t("sections.github.title") },
     { id: "password", label: t("sections.password.title") },
   ];
 
@@ -580,7 +503,6 @@ function IdentitiesBody() {
       <Flex direction="column" gap="3" minWidth="0">
         {section === "profiles" ? <ProfilesSection /> : null}
         {section === "emails" ? <EmailsSection /> : null}
-        {section === "github" ? <GitHubSection /> : null}
         {section === "password" ? <PasswordSection /> : null}
       </Flex>
     </Grid>
