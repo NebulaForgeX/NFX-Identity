@@ -10,7 +10,7 @@ services:
     container_name: NFX-Identity-Auth-Base-Dev
     build:
       context: .
-      dockerfile: inputs/auth/base/Dockerfile
+      dockerfile: inputs/auth/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -72,7 +72,7 @@ services:
           path: .env
           target: /app/.env
         - action: rebuild
-          path: inputs/auth/base/Dockerfile
+          path: inputs/auth/configuration/Dockerfile.Base
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -85,7 +85,7 @@ services:
     container_name: NFX-Identity-Asset-Base-Dev
     build:
       context: .
-      dockerfile: inputs/asset/base/Dockerfile
+      dockerfile: inputs/asset/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -147,7 +147,7 @@ services:
           path: .env
           target: /app/.env
         - action: rebuild
-          path: inputs/asset/base/Dockerfile
+          path: inputs/asset/configuration/Dockerfile.Base
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -160,7 +160,7 @@ services:
     container_name: NFX-Identity-System-Base-Dev
     build:
       context: .
-      dockerfile: inputs/system/base/Dockerfile
+      dockerfile: inputs/system/configuration/Dockerfile.Base
       target: dev
     environment:
       - ENV=dev
@@ -222,7 +222,7 @@ services:
           path: .env
           target: /app/.env
         - action: rebuild
-          path: inputs/system/base/Dockerfile
+          path: inputs/system/configuration/Dockerfile.Base
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:

@@ -136,7 +136,7 @@ tasks:
           echo "==> compose env: {{.ENV_FILE}} only (no Redis tunnel sidecar)"
         fi
         if [[ "{{.ENV}}" == "secure" ]]; then
-          svcs=(auth-api asset-api system-api console)
+          svcs=(auth-base asset-base system-base console)
         else
           svcs=(auth-base asset-base system-base console)
         fi
@@ -166,7 +166,7 @@ tasks:
           ENV_ARGS+=(--env-file .env.redis-tunnel)
         fi
         if [[ "{{.ENV}}" == "secure" ]]; then
-          svcs=(auth-api asset-api system-api console)
+          svcs=(auth-base asset-base system-base console)
         else
           svcs=(auth-base asset-base system-base console)
         fi
