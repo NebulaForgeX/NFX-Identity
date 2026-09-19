@@ -6,7 +6,6 @@ type AuthIdentityProvider string
 
 const (
 	AuthIdentityProviderPassword AuthIdentityProvider = "password"
-	AuthIdentityProviderGithub   AuthIdentityProvider = "github"
 )
 
 type AuthForgerRole string

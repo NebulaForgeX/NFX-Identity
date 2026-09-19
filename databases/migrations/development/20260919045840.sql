@@ -196,7 +196,7 @@ COMMENT ON COLUMN "asset"."Videos"."updated_at" IS 'Last metadata update.';
 -- Set comment to column: "deleted_at" on table: "Videos"
 COMMENT ON COLUMN "asset"."Videos"."deleted_at" IS 'Soft-delete; NULL if object still active.';
 -- Create enum type "identity_provider"
-CREATE TYPE "auth"."identity_provider" AS ENUM ('password', 'github');
+CREATE TYPE "auth"."identity_provider" AS ENUM ('password');
 -- Create enum type "forger_role"
 CREATE TYPE "auth"."forger_role" AS ENUM ('forger');
 -- Create enum type "authority_role"

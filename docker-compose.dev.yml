@@ -78,6 +78,7 @@ services:
     networks:
       - nfx-identity
       - nfx-edge
+      - nfx-stack
 
   #! Image Base Service (all services in goroutines)
   asset-base:
@@ -153,6 +154,7 @@ services:
     networks:
       - nfx-identity
       - nfx-edge
+      - nfx-stack
 
   #! Access Base Service (all services in goroutines)
   system-base:
@@ -228,6 +230,7 @@ services:
     networks:
       - nfx-identity
       - nfx-edge
+      - nfx-stack
 
   console:
     image: nfx-identity-console:dev
@@ -267,3 +270,6 @@ networks:
   nfx-edge:
     external: true
     name: nfx-edge
+  nfx-stack:
+    external: true
+    name: nfx-stack

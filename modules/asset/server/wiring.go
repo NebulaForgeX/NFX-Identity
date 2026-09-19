@@ -65,9 +65,10 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	}
 
 	mc, err := minio.New(cfg.MinIO.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(cfg.MinIO.AccessKey, cfg.MinIO.SecretKey, ""),
-		Secure: cfg.MinIO.UseSSL,
-		Region: cfg.MinIO.Region,
+		Creds:        credentials.NewStaticV4(cfg.MinIO.AccessKey, cfg.MinIO.SecretKey, ""),
+		Secure:       cfg.MinIO.UseSSL,
+		Region:       cfg.MinIO.Region,
+		BucketLookup: minio.BucketLookupPath,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("init MinIO: %w", err)
