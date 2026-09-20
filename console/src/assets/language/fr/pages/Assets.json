@@ -2,6 +2,8 @@
   "title": "Ressources",
   "subtitle": "Images, fichiers, vidéos et audios dans Stack MinIO",
   "upload": "Téléverser",
+  "uploadFailed": "Échec du téléversement.",
+  "uploadFailedNetwork": "MinIO injoignable. MINIO_PUBLIC_URL doit pointer vers l'API Stack (hôte:10112).",
   "delete": "Supprimer",
   "noItems": "Aucun élément",
   "kinds": {

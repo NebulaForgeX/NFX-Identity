@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon, PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
-import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, isEmptyPatch, resolveAccountInitial, safeNullable } from "@/utils";
+import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
 import { FieldList, FieldRow, LedgerSection } from "./Ledger";
@@ -54,15 +54,10 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
         fileName: compressed.name,
         mimeType: compressed.type || "image/png",
       });
-      const putRes = await fetch(prep.uploadUrl, {
-        method: "PUT",
-        body: compressed,
-        headers: { "Content-Type": compressed.type || "image/png" },
-      });
-      if (!putRes.ok) throw new Error(`upload ${putRes.status}`);
+      await putToPresignedUrl(prep.uploadUrl, compressed, compressed.type || "image/png");
       setPendingImageId(prep.id);
     } catch (err) {
-      systemEventEmitter.showError(getApiErrorMessage(err, t("avatar.uploadFailed")));
+      systemEventEmitter.showError(minioUploadMessage(err, t("avatar.uploadFailedNetwork"), getApiErrorMessage(err, t("avatar.uploadFailed"))));
       setPendingImageId(null);
     }
   };

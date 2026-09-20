@@ -2,6 +2,8 @@
   "title": "Assets",
   "subtitle": "Images, files, videos, and audios in Stack MinIO",
   "upload": "Upload",
+  "uploadFailed": "Upload failed.",
+  "uploadFailedNetwork": "Could not reach MinIO. Set MINIO_PUBLIC_URL to the Stack API URL (host:10112).",
   "delete": "Delete",
   "noItems": "No items",
   "kinds": {

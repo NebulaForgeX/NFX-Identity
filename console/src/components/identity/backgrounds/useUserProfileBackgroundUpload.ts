@@ -8,7 +8,7 @@ import { useConfirmProfileBackgrounds, useDeleteImage, usePrepareImageUpload } f
 import { createUserProfileBackgroundsFieldSchema } from "nfx-ui/schemas";
 import { useTranslation } from "react-i18next";
 
-import { buildImageUrl, getApiErrorMessage, safeArray } from "@/utils";
+import { buildImageUrl, getApiErrorMessage, minioUploadMessage, putToPresignedUrl, safeArray } from "@/utils";
 
 import {
   applyUserProfileBackgroundSortOrders,
@@ -144,14 +144,7 @@ export function useUserProfileBackgroundUpload(profile: Profile.Response.Profile
         ),
       );
 
-      const response = await fetch(slot.uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type || "image/png" },
-      });
-      if (!response.ok) {
-        throw new Error(`S3 upload failed: ${response.status}`);
-      }
+      await putToPresignedUrl(slot.uploadUrl, file, file.type || "image/png");
 
       patchDraft(localId, serverId, {
         pending: false,
@@ -162,7 +155,7 @@ export function useUserProfileBackgroundUpload(profile: Profile.Response.Profile
       });
       setDirty(true);
     } catch (error) {
-      const message = getApiErrorMessage(error, t("backgroundUpload.uploadFailed"));
+      const message = minioUploadMessage(error, t("backgroundUpload.uploadFailedNetwork"), getApiErrorMessage(error, t("backgroundUpload.uploadFailed")));
       patchDraft(localId, serverId, {
         pending: false,
         uploading: false,

@@ -2,6 +2,8 @@
   "title": "资源",
   "subtitle": "Stack MinIO 中的图片、文件、视频、音频",
   "upload": "上传",
+  "uploadFailed": "上传失败。",
+  "uploadFailedNetwork": "无法写入 MinIO。请确认 MINIO_PUBLIC_URL 与 NFX-Stack 的 10112 一致。",
   "delete": "删除",
   "noItems": "暂无内容",
   "kinds": {

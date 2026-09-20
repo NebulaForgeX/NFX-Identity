@@ -1,13 +1,14 @@
 import { CameraIcon } from "nfx-ui/icons";
 import { useState } from "react";
 import { Button, Flex, Tabs, Text } from "@radix-ui/themes";
+import { systemEventEmitter } from "nfx-ui/events";
 import { useAssetFileURL, useConfirmUpload, useDeleteAsset, useListAssets, usePrepareUpload } from "nfx-ui/hooks";
 import type { Asset } from "nfx-ui/types";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
-import { safeArray } from "@/utils";
+import { minioUploadMessage, putToPresignedUrl, safeArray } from "@/utils";
 
 import styles from "./assets.module.css";
 import { LedgerSection } from "./Ledger";
@@ -26,17 +27,17 @@ export default function AssetsView() {
   const busy = prepare.isPending || confirm.isPending;
 
   const onFile = async (file: File) => {
-    const prepared = await prepare.mutateAsync({
-      kind,
-      params: { fileName: file.name, mimeType: file.type || "application/octet-stream" },
-    });
-    await fetch(prepared.uploadUrl, {
-      method: "PUT",
-      body: file,
-      headers: { "Content-Type": file.type || "application/octet-stream" },
-    });
-    await confirm.mutateAsync({ kind, params: { id: prepared.id } });
-    await list.refetch();
+    try {
+      const prepared = await prepare.mutateAsync({
+        kind,
+        params: { fileName: file.name, mimeType: file.type || "application/octet-stream" },
+      });
+      await putToPresignedUrl(prepared.uploadUrl, file, file.type || "application/octet-stream");
+      await confirm.mutateAsync({ kind, params: { id: prepared.id } });
+      await list.refetch();
+    } catch (err) {
+      systemEventEmitter.showError(minioUploadMessage(err, t("uploadFailedNetwork"), t("uploadFailed")));
+    }
   };
 
   return (
