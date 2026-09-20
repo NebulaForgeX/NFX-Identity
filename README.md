@@ -1,5 +1,8 @@
 # NFX-Identity — Unified Authentication & Identity Service
 
+> 部署、网络、配置与安全的详细说明见 [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation)。
+> Deploy, network, config, and security: [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation).
+
 **NFX-Identity = NebulaForgeX Identity Platform**
 
 **NFX-Identity** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
