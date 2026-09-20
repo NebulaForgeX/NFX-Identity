@@ -31,7 +31,7 @@ export default function LoginPage() {
       password: data.password,
       rememberMe: safeOr(data.rememberMe, false),
     });
-    const list = safeArray(result?.profiles);
+    const list = safeArray<Login.ProfileItem>(result?.profiles);
     if (list.length > 0) {
       setProfiles(list);
       return;
@@ -40,8 +40,8 @@ export default function LoginPage() {
   };
 
   const profileGroups = useMemo(() => {
-    const forger = profiles.filter((p) => p.kind === ProfileKindEnum.FORGER);
-    const authority = profiles.filter((p) => p.kind === ProfileKindEnum.AUTHORITY);
+    const forger = profiles.filter((p: Login.ProfileItem) => p.kind === ProfileKindEnum.FORGER);
+    const authority = profiles.filter((p: Login.ProfileItem) => p.kind === ProfileKindEnum.AUTHORITY);
     return [
       { kind: ProfileKindEnum.FORGER as const, items: forger },
       { kind: ProfileKindEnum.AUTHORITY as const, items: authority },
@@ -126,7 +126,7 @@ export default function LoginPage() {
                                 </Text>
                                 {roles.length > 0 ? (
                                   <Flex wrap="wrap" gap="1">
-                                    {roles.map((role) => (
+                                    {roles.map((role: string) => (
                                       <Badge key={role} variant="soft" size="1">
                                         {t(`selectProfile.roles.${role}`, { defaultValue: role })}
                                       </Badge>
