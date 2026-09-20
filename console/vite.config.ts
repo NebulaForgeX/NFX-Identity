@@ -12,6 +12,8 @@ import {
   nfxUiOptimizeDepsExclude,
   nfxUiViteAliases,
   nfxViteDefine,
+  nfxConsoleBase,
+  nfxViteDevServer,
   resolveNfxUiRoot,
 } from "./vite.nfx-ui.ts";
 
@@ -40,7 +42,7 @@ export default defineConfig(({ mode, command }) => {
   const proxyTarget = env.VITE_DEV_API_PROXY_TARGET || env.VITE_API_URL || "http://192.168.1.64/nfx-identity";
 
   return {
-    base: "/",
+    base: nfxConsoleBase(env),
     define: nfxViteDefine(env),
     plugins: [
       nfxKillListenPortPlugin(port),
@@ -48,7 +50,7 @@ export default defineConfig(({ mode, command }) => {
       react(),
       visualizer({
         filename: "./dist/stats.html",
-        open: process.env.DOCKER_BUILD !== "1",
+        open: process.env.DOCKER !== "1" && process.env.DOCKER_BUILD !== "1",
         gzipSize: true,
         brotliSize: true,
       }),
@@ -65,12 +67,10 @@ export default defineConfig(({ mode, command }) => {
     },
     optimizeDeps: {
       exclude: nfxUiOptimizeDepsExclude,
+      holdUntilCrawlEnd: false,
     },
     server: {
-      port,
-      strictPort: true,
-      host: "0.0.0.0",
-      open: process.env.DOCKER !== "1",
+      ...nfxViteDevServer(env, port),
       fs: { allow: [root, nfxUiRoot] },
       watch: {
         ignored: ["**/templates/**"],

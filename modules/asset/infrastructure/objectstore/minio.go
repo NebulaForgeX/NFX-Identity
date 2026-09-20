@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/cors"
 )
 
 type Store struct {
@@ -32,18 +31,18 @@ func (s *Store) EnsureBucket(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if !ok {
-		if err := s.client.MakeBucket(ctx, s.bucket, minio.MakeBucketOptions{}); err != nil {
-			return err
-		}
+	if ok {
+		return nil
 	}
-	return s.client.SetBucketCors(ctx, s.bucket, cors.NewConfig([]cors.Rule{{
-		AllowedOrigin: []string{"*"},
-		AllowedMethod: []string{"GET", "PUT", "HEAD", "POST", "DELETE"},
-		AllowedHeader: []string{"*"},
-		ExposeHeader:  []string{"ETag", "Accept-Ranges", "Content-Range", "Content-Length", "Content-Type"},
-		MaxAgeSeconds: 3600,
-	}}))
+	err = s.client.MakeBucket(ctx, s.bucket, minio.MakeBucketOptions{})
+	if err == nil {
+		return nil
+	}
+	resp := minio.ToErrorResponse(err)
+	if resp.Code == "BucketAlreadyOwnedByYou" || resp.Code == "BucketAlreadyExists" {
+		return nil
+	}
+	return err
 }
 
 func (s *Store) PresignPut(ctx context.Context, key string, expiry time.Duration) (*url.URL, error) {
