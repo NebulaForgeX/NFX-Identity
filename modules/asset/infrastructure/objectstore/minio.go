@@ -49,6 +49,10 @@ func (s *Store) PresignPut(ctx context.Context, key string, expiry time.Duration
 	return s.presigner.PresignedPutObject(ctx, s.bucket, key, expiry)
 }
 
+func (s *Store) PresignGet(ctx context.Context, key string, expiry time.Duration) (*url.URL, error) {
+	return s.presigner.PresignedGetObject(ctx, s.bucket, key, expiry, nil)
+}
+
 func (s *Store) Stat(ctx context.Context, key string) (minio.ObjectInfo, error) {
 	return s.client.StatObject(ctx, s.bucket, key, minio.StatObjectOptions{})
 }

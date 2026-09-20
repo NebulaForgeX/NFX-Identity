@@ -3,8 +3,11 @@ package grpc
 import (
 	"context"
 
-	"nfxidentity/modules/asset/application/media"
+	audiosApp "nfxidentity/modules/asset/application/audios"
+	filesApp "nfxidentity/modules/asset/application/files"
+	imagesApp "nfxidentity/modules/asset/application/images"
 	"nfxidentity/modules/asset/application/resource"
+	videosApp "nfxidentity/modules/asset/application/videos"
 	grpcHandler "nfxidentity/modules/asset/interface/grpc/handler"
 	"nfxidentity/pkgs/grpcx/interceptor"
 	"nfxidentity/pkgs/postgresqlx"
@@ -25,7 +28,10 @@ type Deps interface {
 	ResourceSvc() *resource.Service
 	ServerTokenVerifier() token.Verifier
 	Postgres() *postgresqlx.Connection
-	MediaSvc() *media.Service
+	ImagesApp() *imagesApp.Service
+	FilesApp() *filesApp.Service
+	VideosApp() *videosApp.Service
+	AudiosApp() *audiosApp.Service
 }
 
 func NewServer(d Deps) *grpc.Server {
@@ -42,9 +48,9 @@ func NewServer(d Deps) *grpc.Server {
 		n, err := postgresqlx.ClearSchema(ctx, d.Postgres().DB(), "asset", nil)
 		return int32(n), err
 	}))
-	imagepb.RegisterImageServiceServer(s, grpcHandler.NewImageHandler(d.MediaSvc()))
-	filepb.RegisterFileServiceServer(s, grpcHandler.NewFileHandler(d.MediaSvc()))
-	videopb.RegisterVideoServiceServer(s, grpcHandler.NewVideoHandler(d.MediaSvc()))
-	audiopb.RegisterAudioServiceServer(s, grpcHandler.NewAudioHandler(d.MediaSvc()))
+	imagepb.RegisterImageServiceServer(s, grpcHandler.NewImageHandler(d.ImagesApp()))
+	filepb.RegisterFileServiceServer(s, grpcHandler.NewFileHandler(d.FilesApp()))
+	videopb.RegisterVideoServiceServer(s, grpcHandler.NewVideoHandler(d.VideosApp()))
+	audiopb.RegisterAudioServiceServer(s, grpcHandler.NewAudioHandler(d.AudiosApp()))
 	return s
 }
