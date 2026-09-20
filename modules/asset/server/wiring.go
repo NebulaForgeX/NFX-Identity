@@ -3,6 +3,8 @@ package server
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"strings"
 	"time"
 
 	authconn "nfxidentity/connections/auth"
@@ -73,10 +75,26 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	if err != nil {
 		return nil, fmt.Errorf("init MinIO: %w", err)
 	}
+	presigner := mc
+	if pub := publicMinIOURL(cfg.MinIO.PublicURL); pub != "" {
+		u, err := url.Parse(pub)
+		if err != nil || u.Host == "" {
+			return nil, fmt.Errorf("invalid minio public_url %q", pub)
+		}
+		presigner, err = minio.New(u.Host, &minio.Options{
+			Creds:        credentials.NewStaticV4(cfg.MinIO.AccessKey, cfg.MinIO.SecretKey, ""),
+			Secure:       u.Scheme == "https" || cfg.MinIO.UseSSL,
+			Region:       cfg.MinIO.Region,
+			BucketLookup: minio.BucketLookupPath,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("init MinIO public client: %w", err)
+		}
+	}
 	db := postgres.DB()
 	mediaSvc := media.NewService(
 		transaction.NewGormTxManager(db),
-		objectstore.New(mc, cfg.MinIO.Bucket),
+		objectstore.NewWithPresigner(mc, presigner, cfg.MinIO.Bucket),
 		imagesRepo.NewRepo(db),
 		filesRepo.NewRepo(db),
 		videosRepo.NewRepo(db),
@@ -144,6 +162,14 @@ func (d *Dependencies) ResourceSvc() *resource.Service       { return d.resource
 
 type tokenxVerifierAdapter struct {
 	tokenx *tokenx.Tokenx
+}
+
+func publicMinIOURL(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" || strings.Contains(raw, "${") {
+		return ""
+	}
+	return raw
 }
 
 func (a *tokenxVerifierAdapter) Verify(ctx context.Context, tokenStr string) (*token.Claims, error) {

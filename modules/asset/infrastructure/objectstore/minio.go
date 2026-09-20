@@ -7,15 +7,24 @@ import (
 	"time"
 
 	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/cors"
 )
 
 type Store struct {
-	client *minio.Client
-	bucket string
+	client    *minio.Client
+	presigner *minio.Client
+	bucket    string
 }
 
 func New(client *minio.Client, bucket string) *Store {
-	return &Store{client: client, bucket: bucket}
+	return NewWithPresigner(client, nil, bucket)
+}
+
+func NewWithPresigner(client, presigner *minio.Client, bucket string) *Store {
+	if presigner == nil {
+		presigner = client
+	}
+	return &Store{client: client, presigner: presigner, bucket: bucket}
 }
 
 func (s *Store) EnsureBucket(ctx context.Context) error {
@@ -23,14 +32,22 @@ func (s *Store) EnsureBucket(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	if ok {
-		return nil
+	if !ok {
+		if err := s.client.MakeBucket(ctx, s.bucket, minio.MakeBucketOptions{}); err != nil {
+			return err
+		}
 	}
-	return s.client.MakeBucket(ctx, s.bucket, minio.MakeBucketOptions{})
+	return s.client.SetBucketCors(ctx, s.bucket, cors.NewConfig([]cors.Rule{{
+		AllowedOrigin: []string{"*"},
+		AllowedMethod: []string{"GET", "PUT", "HEAD", "POST", "DELETE"},
+		AllowedHeader: []string{"*"},
+		ExposeHeader:  []string{"ETag", "Accept-Ranges", "Content-Range", "Content-Length", "Content-Type"},
+		MaxAgeSeconds: 3600,
+	}}))
 }
 
 func (s *Store) PresignPut(ctx context.Context, key string, expiry time.Duration) (*url.URL, error) {
-	return s.client.PresignedPutObject(ctx, s.bucket, key, expiry)
+	return s.presigner.PresignedPutObject(ctx, s.bucket, key, expiry)
 }
 
 func (s *Store) Stat(ctx context.Context, key string) (minio.ObjectInfo, error) {
