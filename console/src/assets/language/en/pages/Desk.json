@@ -1,0 +1,23 @@
+{
+  "title": "Desk",
+  "description": "Current Identity session — account, profile, and contact counts.",
+  "openRegistry": "Open registry",
+  "empty": "—",
+  "on": "On",
+  "off": "Off",
+  "session": {
+    "title": "Session",
+    "description": "Live values from full-account information.",
+    "accountId": "Account ID",
+    "status": "Status",
+    "platform": "Signup platform",
+    "kind": "Kind",
+    "profileId": "Profile ID",
+    "roles": "Roles",
+    "emails": "Emails",
+    "phones": "Phones",
+    "links": "Identity links",
+    "loginNotification": "Login notification",
+    "created": "Created"
+  }
+}

@@ -33,7 +33,7 @@ export default function SignupPage() {
       rememberMe: data.rememberMe ?? false,
       signupPlatform: AuthSignupPlatformEnum.NFXIDENTITY,
     });
-    routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW, replace: true });
+    routerEventEmitter.navigate({ to: ROUTES.SELECT_PROFILE, replace: true });
   };
 
   const email = form.watch("email");

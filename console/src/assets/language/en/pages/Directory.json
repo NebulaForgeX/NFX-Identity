@@ -1,0 +1,29 @@
+{
+  "title": "Owner directory",
+  "description": "List every Forger and Authority profile. Owner can assign auditor or administrator.",
+  "search": "Search profiles",
+  "ownerRequired": "Owner role required to list all profiles.",
+  "columns": {
+    "name": "Name",
+    "city": "City",
+    "country": "Country",
+    "roles": "Roles",
+    "created": "Created",
+    "assign": "Assign"
+  },
+  "forger": {
+    "title": "Forger",
+    "description": "All Forger profiles on this Identity.",
+    "empty": "No Forger profiles."
+  },
+  "authority": {
+    "title": "Authority",
+    "description": "Assign auditor or administrator. Owner is not assignable here.",
+    "empty": "No Authority profiles."
+  },
+  "card": {
+    "title": "Public card",
+    "description": "Lookup from /auth/me/profiles/:id/public-card.",
+    "loading": "Loading card…"
+  }
+}

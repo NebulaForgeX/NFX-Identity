@@ -14,11 +14,13 @@
   pointer-events: auto;
 }
 
-/* Floating bar: width/centering + float shadow only — surface comes from Card */
 .bar {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--gray-a5);
+  background: var(--color-background);
   box-shadow: 0 8px 28px color-mix(in oklab, var(--gray-12) 6%, transparent);
 }
 

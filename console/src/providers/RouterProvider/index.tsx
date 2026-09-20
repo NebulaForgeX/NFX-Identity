@@ -2,9 +2,10 @@ import type { ReactNode } from "react";
 
 import { useCallback, useEffect } from "react";
 import { BrowserRouter, useNavigate } from "react-router";
+import { AuthStore } from "nfx-ui/stores";
 
 import { routerEventEmitter, routerEvents } from "@/events/router";
-import { ROUTES } from "@/navigations";
+import { profileHome, ROUTES } from "@/navigations";
 
 export interface RouterProviderProps {
   children: ReactNode;
@@ -29,7 +30,7 @@ function RouterEventsHandler({ children }: { children: ReactNode }) {
   }, [navigate]);
 
   const handleNavigateToDashboard = useCallback(() => {
-    navigate(ROUTES.USER_OVERVIEW, { replace: true });
+    navigate(profileHome(AuthStore.getState().currentProfileKind), { replace: true });
   }, [navigate]);
 
   useEffect(() => {

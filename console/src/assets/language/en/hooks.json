@@ -11,7 +11,15 @@
     "updateEmailSuccess": "Email updated.",
     "setPrimaryEmailSuccess": "Primary email updated.",
     "deleteEmailSuccess": "Email removed.",
-    "changePasswordSuccess": "Password updated."
+    "createPhoneSuccess": "Phone added.",
+    "verifyPhoneSuccess": "Phone verified.",
+    "updatePhoneSuccess": "Phone updated.",
+    "setPrimaryPhoneSuccess": "Primary phone updated.",
+    "deletePhoneSuccess": "Phone removed.",
+    "changePasswordSuccess": "Password updated.",
+    "updateSettingsSuccess": "Settings updated.",
+    "clearAvatarSuccess": "Avatar removed.",
+    "updateRolesSuccess": "Roles updated."
   },
   "payments": {
     "stripeLoadFailed": "Could not load Stripe.",

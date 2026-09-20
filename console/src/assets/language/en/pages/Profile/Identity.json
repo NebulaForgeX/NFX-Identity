@@ -1,0 +1,53 @@
+{
+  "title": "Identities",
+  "description": "Emails, phones, and every Profile on this Account.",
+  "empty": {
+    "emails": "No emails yet.",
+    "phones": "No phones yet.",
+    "profiles": "No profiles yet."
+  },
+  "actions": {
+    "sendCode": "Send code",
+    "setPrimary": "Set primary",
+    "remove": "Remove",
+    "verify": "Verify",
+    "addEmail": "Add email",
+    "addPhone": "Add phone",
+    "save": "Save",
+    "createForger": "Create Forger",
+    "createAuthority": "Create Authority",
+    "deleteProfile": "Delete",
+    "switch": "Switch"
+  },
+  "labels": {
+    "email": "Email",
+    "phone": "Phone",
+    "status": "Status",
+    "actions": "Actions",
+    "primary": "Primary",
+    "unverified": "Unverified",
+    "code": "Code",
+    "emailPlaceholder": "name@example.com",
+    "phonePlaceholder": "+15551234567",
+    "searchProfiles": "Search profiles",
+    "profile": "Profile",
+    "kind": "Kind",
+    "loading": "Loading identities",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "current": "In use",
+    "emptyName": "Untitled identity",
+    "scopeAuthority": "Authority",
+    "scopeForger": "Forger",
+    "deleteConfirmBody": "Permanently delete \"{{name}}\"?",
+    "displayName": "Display name",
+    "newForgerProfile": "New Forger profile",
+    "newAuthorityProfile": "New Authority profile"
+  },
+  "sections": {
+    "emails": { "title": "Emails", "description": "Verify and choose a primary address." },
+    "phones": { "title": "Phones", "description": "Verify and choose a primary number." },
+    "profiles": { "title": "Profiles", "description": "Switch or create Forger and Authority identities." }
+  }
+}

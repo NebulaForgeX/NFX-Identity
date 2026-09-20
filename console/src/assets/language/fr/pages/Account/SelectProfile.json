@@ -1,0 +1,25 @@
+{
+  "brand": {
+    "access": "Accès {{name}}",
+    "title": "Choisissez le Profile qui continue."
+  },
+  "heroFooter": "Un Account. Forger ou Authority — choisissez la session.",
+  "eyebrow": "Choisir l'identité",
+  "title": "Quel Profile continuer ?",
+  "subtitle": "Votre Account peut porter plusieurs Profile.",
+  "kind": {
+    "authority": "Authority",
+    "forger": "Forger"
+  },
+  "roles": {
+    "auditor": "Auditeur",
+    "administrator": "Administrateur",
+    "owner": "Propriétaire",
+    "forger": "Forger"
+  },
+  "create": {
+    "title": "Créer un autre Profile",
+    "displayName": "Nom affiché",
+    "submit": "Créer et entrer"
+  }
+}

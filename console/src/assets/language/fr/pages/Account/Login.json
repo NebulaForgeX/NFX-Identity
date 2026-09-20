@@ -13,10 +13,21 @@
     "emailPlaceholder": "vous@exemple.com",
     "passwordLabel": "Mot de passe",
     "passwordPlaceholder": "Entrez votre mot de passe",
+    "phoneLabel": "Téléphone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "E-mail",
+    "channelPhone": "Téléphone",
     "showPassword": "Afficher",
     "hidePassword": "Masquer",
     "rememberMe": "Se souvenir de moi",
-    "submit": "Se connecter"
+    "submit": "Se connecter",
+    "validation": {
+      "emailRequired": "E-mail requis",
+      "emailInvalid": "E-mail invalide",
+      "phoneRequired": "Téléphone requis",
+      "phoneInvalid": "Numéro invalide",
+      "passwordRequired": "Mot de passe requis"
+    }
   },
   "promo": {
     "newTo": "Nouveau sur {{name}} ?",

@@ -1,0 +1,29 @@
+{
+  "title": "Annuaire Owner",
+  "description": "Lister tous les profils Forger et Authority. Owner peut attribuer auditor ou administrator.",
+  "search": "Rechercher des profils",
+  "ownerRequired": "Le rôle Owner est requis pour lister tous les profils.",
+  "columns": {
+    "name": "Nom",
+    "city": "Ville",
+    "country": "Pays",
+    "roles": "Rôles",
+    "created": "Créé",
+    "assign": "Attribuer"
+  },
+  "forger": {
+    "title": "Forger",
+    "description": "Tous les profils Forger de cette Identity.",
+    "empty": "Aucun profil Forger."
+  },
+  "authority": {
+    "title": "Authority",
+    "description": "Attribuer auditor ou administrator. Owner n'est pas attribuable ici.",
+    "empty": "Aucun profil Authority."
+  },
+  "card": {
+    "title": "Carte publique",
+    "description": "Depuis /auth/me/profiles/:id/public-card.",
+    "loading": "Chargement…"
+  }
+}

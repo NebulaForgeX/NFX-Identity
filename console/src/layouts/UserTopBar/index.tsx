@@ -1,16 +1,19 @@
 import { GearIcon, UserIcon } from "nfx-ui/icons";
 import { Avatar, Button, Flex, Text } from "@radix-ui/themes";
 import { useCurrentProfile } from "nfx-ui/hooks";
+import { useTranslation } from "react-i18next";
 
 import { LucideIcon } from "@/components";
 import { routerEventEmitter } from "@/events/router";
-import { ROUTES } from "@/navigations";
+import { scopePaths } from "@/navigations";
 import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
 
 import styles from "./s.module.css";
 
 export default function UserTopBar() {
+  const { t } = useTranslation("language");
   const { data, profile, kind } = useCurrentProfile();
+  const paths = scopePaths(kind);
   const accountId = safeNullable(data?.account.id);
   const displayName = resolveAccountDisplayName(profile?.displayName, accountId);
   const initial = resolveAccountInitial(profile?.displayName, accountId);
@@ -19,7 +22,7 @@ export default function UserTopBar() {
   return (
     <Flex align="center" justify="between" gap="3" wrap="wrap" py="3" px="4" position="sticky" top="0" className={styles.bar}>
       <Flex align="center" gap="3" minWidth="0">
-        <Avatar size="2" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+        <Avatar size="2" radius="none" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
         <Flex direction="column" minWidth="0">
           <Text size="2" weight="bold" truncate>
             {displayName}
@@ -31,13 +34,13 @@ export default function UserTopBar() {
       </Flex>
 
       <Flex align="center" gap="2" wrap="wrap">
-        <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+        <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: paths.overview })}>
           <LucideIcon icon={UserIcon} size={14} />
-          Profile
+          {t("header.profile")}
         </Button>
-        <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_SETTINGS })}>
+        <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: paths.settings })}>
           <LucideIcon icon={GearIcon} size={14} />
-          Settings
+          {t("sidebar.settingsItem")}
         </Button>
       </Flex>
     </Flex>

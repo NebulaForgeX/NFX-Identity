@@ -1,0 +1,25 @@
+{
+  "brand": {
+    "access": "{{name}} 通行",
+    "title": "选择继续使用的 Profile。"
+  },
+  "heroFooter": "一个 Account。Forger 或 Authority — 选择本次会话。",
+  "eyebrow": "选择身份",
+  "title": "用哪个 Profile 继续？",
+  "subtitle": "一个 Account 可以持有多个 Profile。",
+  "kind": {
+    "authority": "Authority",
+    "forger": "Forger"
+  },
+  "roles": {
+    "auditor": "审计员",
+    "administrator": "管理员",
+    "owner": "所有者",
+    "forger": "Forger"
+  },
+  "create": {
+    "title": "再创建一个 Profile",
+    "displayName": "显示名",
+    "submit": "创建并进入"
+  }
+}

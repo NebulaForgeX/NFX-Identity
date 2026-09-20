@@ -1,0 +1,23 @@
+{
+  "title": "工作台",
+  "description": "当前 Identity 会话：账号、资料与联系方式计数。",
+  "openRegistry": "打开登记册",
+  "empty": "—",
+  "on": "开",
+  "off": "关",
+  "session": {
+    "title": "会话",
+    "description": "来自完整账号信息的实时数据。",
+    "accountId": "账号 ID",
+    "status": "状态",
+    "platform": "注册平台",
+    "kind": "类型",
+    "profileId": "资料 ID",
+    "roles": "角色",
+    "emails": "邮箱",
+    "phones": "手机",
+    "links": "身份链接",
+    "loginNotification": "登录通知",
+    "created": "创建时间"
+  }
+}

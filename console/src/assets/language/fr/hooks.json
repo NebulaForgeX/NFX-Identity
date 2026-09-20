@@ -11,7 +11,15 @@
     "updateEmailSuccess": "E-mail mis à jour.",
     "setPrimaryEmailSuccess": "E-mail principal mis à jour.",
     "deleteEmailSuccess": "E-mail supprimé.",
-    "changePasswordSuccess": "Mot de passe mis à jour."
+    "createPhoneSuccess": "Téléphone ajouté.",
+    "verifyPhoneSuccess": "Téléphone vérifié.",
+    "updatePhoneSuccess": "Téléphone mis à jour.",
+    "setPrimaryPhoneSuccess": "Téléphone principal mis à jour.",
+    "deletePhoneSuccess": "Téléphone supprimé.",
+    "changePasswordSuccess": "Mot de passe mis à jour.",
+    "updateSettingsSuccess": "Paramètres mis à jour.",
+    "clearAvatarSuccess": "Avatar retiré.",
+    "updateRolesSuccess": "Rôles mis à jour."
   },
   "payments": {
     "stripeLoadFailed": "Impossible de charger Stripe.",

@@ -1,0 +1,22 @@
+{
+  "title": "Security",
+  "description": "Change the Account password with a verification code.",
+  "actions": {
+    "sendCode": "Send code",
+    "updatePassword": "Update password"
+  },
+  "labels": {
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "verificationCode": "Verification code",
+    "verificationCodePlaceholder": "6-digit code",
+    "passwordSendCodeHint": "We will send a code to your primary email {{email}}.",
+    "passwordSendCodeHintNoEmail": "Set and verify a primary email before sending a code."
+  },
+  "sections": {
+    "password": {
+      "title": "Password",
+      "description": "Requires the current password and a code sent to the primary email."
+    }
+  }
+}

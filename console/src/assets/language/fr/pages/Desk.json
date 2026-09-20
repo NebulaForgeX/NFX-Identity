@@ -1,0 +1,23 @@
+{
+  "title": "Bureau",
+  "description": "Session Identity actuelle — compte, profil et compteurs de contact.",
+  "openRegistry": "Ouvrir le registre",
+  "empty": "—",
+  "on": "Oui",
+  "off": "Non",
+  "session": {
+    "title": "Session",
+    "description": "Valeurs live du compte complet.",
+    "accountId": "ID compte",
+    "status": "Statut",
+    "platform": "Plateforme d'inscription",
+    "kind": "Type",
+    "profileId": "ID profil",
+    "roles": "Rôles",
+    "emails": "E-mails",
+    "phones": "Téléphones",
+    "links": "Liens d'identité",
+    "loginNotification": "Notification de connexion",
+    "created": "Créé"
+  }
+}

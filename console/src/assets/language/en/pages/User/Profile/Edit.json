@@ -10,18 +10,25 @@
   },
   "labels": {
     "displayName": "Display name",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "gender": "Gender",
+    "birthday": "Birthday",
     "bio": "Bio",
-    "city": "Location",
-    "website": "Website"
+    "city": "City",
+    "country": "Country",
+    "website": "Website",
+    "timezone": "Timezone",
+    "profileLanguage": "Language",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français"
   },
   "sections": {
     "basics": {
       "title": "Basics",
       "description": "Display name and public details."
     }
-  },
-  "edit": {
-    "saveSuccess": "Profile updated"
   },
   "avatar": {
     "title": "Avatar",
@@ -35,7 +42,16 @@
     "uploadFailed": "Upload failed.",
     "confirmFailed": "Confirm failed.",
     "noImage": "Choose an image first.",
-    "success": "Avatar updated."
+    "success": "Avatar updated.",
+    "clear": "Remove avatar"
+  },
+  "edit": {
+    "saveSuccess": "Profile updated",
+    "validation": {
+      "maxLength": "Must be at most {{max}} characters",
+      "birthdayInvalid": "Use YYYY-MM-DD",
+      "websiteInvalid": "Website must start with http:// or https://"
+    }
   },
   "backgroundUpload": {
     "label": "Background gallery",

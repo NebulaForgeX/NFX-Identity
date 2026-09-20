@@ -4,42 +4,58 @@ import enHooks from "./en/hooks.json";
 import enLanguage from "./en/language.json";
 import enAuthShell from "./en/pages/Account/AuthShell.json";
 import enLogin from "./en/pages/Account/Login.json";
+import enSelectProfile from "./en/pages/Account/SelectProfile.json";
 import enSignup from "./en/pages/Account/Signup.json";
-import enImages from "./en/pages/Images.json";
+import enAssets from "./en/pages/Assets.json";
+import enDesk from "./en/pages/Desk.json";
+import enDirectory from "./en/pages/Directory.json";
+import enProfileIdentity from "./en/pages/Profile/Identity.json";
+import enProfileOverview from "./en/pages/Profile/Overview.json";
+import enProfileSecurity from "./en/pages/Profile/Security.json";
 import enUserProfileEdit from "./en/pages/User/Profile/Edit.json";
-import enUserProfileIdentities from "./en/pages/User/Profile/Identities.json";
-import enUserProfileOverview from "./en/pages/User/Profile/Overview.json";
 import enUserSetting from "./en/pages/User/Setting.json";
 import frHooks from "./fr/hooks.json";
 import frLanguage from "./fr/language.json";
 import frAuthShell from "./fr/pages/Account/AuthShell.json";
 import frLogin from "./fr/pages/Account/Login.json";
+import frSelectProfile from "./fr/pages/Account/SelectProfile.json";
 import frSignup from "./fr/pages/Account/Signup.json";
-import frImages from "./fr/pages/Images.json";
+import frAssets from "./fr/pages/Assets.json";
+import frDesk from "./fr/pages/Desk.json";
+import frDirectory from "./fr/pages/Directory.json";
+import frProfileIdentity from "./fr/pages/Profile/Identity.json";
+import frProfileOverview from "./fr/pages/Profile/Overview.json";
+import frProfileSecurity from "./fr/pages/Profile/Security.json";
 import frUserProfileEdit from "./fr/pages/User/Profile/Edit.json";
-import frUserProfileIdentities from "./fr/pages/User/Profile/Identities.json";
-import frUserProfileOverview from "./fr/pages/User/Profile/Overview.json";
 import frUserSetting from "./fr/pages/User/Setting.json";
 import zhHooks from "./zh/hooks.json";
 import zhLanguage from "./zh/language.json";
 import zhAuthShell from "./zh/pages/Account/AuthShell.json";
 import zhLogin from "./zh/pages/Account/Login.json";
+import zhSelectProfile from "./zh/pages/Account/SelectProfile.json";
 import zhSignup from "./zh/pages/Account/Signup.json";
-import zhImages from "./zh/pages/Images.json";
+import zhAssets from "./zh/pages/Assets.json";
+import zhDesk from "./zh/pages/Desk.json";
+import zhDirectory from "./zh/pages/Directory.json";
+import zhProfileIdentity from "./zh/pages/Profile/Identity.json";
+import zhProfileOverview from "./zh/pages/Profile/Overview.json";
+import zhProfileSecurity from "./zh/pages/Profile/Security.json";
 import zhUserProfileEdit from "./zh/pages/User/Profile/Edit.json";
-import zhUserProfileIdentities from "./zh/pages/User/Profile/Identities.json";
-import zhUserProfileOverview from "./zh/pages/User/Profile/Overview.json";
 import zhUserSetting from "./zh/pages/User/Setting.json";
 
 const PAGE = {
   AuthShell: "pages.Account.AuthShell",
   Login: "pages.Account.Login",
   Signup: "pages.Account.Signup",
+  SelectProfile: "pages.Account.SelectProfile",
   UserSetting: "pages.User.Setting",
-  UserProfileOverview: "pages.User.Profile.Overview",
   UserProfileEdit: "pages.User.Profile.Edit",
-  UserProfileIdentities: "pages.User.Profile.Identities",
-  Images: "pages.Images",
+  Desk: "pages.Desk",
+  ProfileOverview: "pages.Profile.Overview",
+  ProfileIdentity: "pages.Profile.Identity",
+  ProfileSecurity: "pages.Profile.Security",
+  Assets: "pages.Assets",
+  Directory: "pages.Directory",
 } as const;
 
 const BUILTIN_I18N_NAMESPACES_MAP: NameSpacesMap = {
@@ -57,11 +73,15 @@ const BUILTIN_I18N_RESOURCES: Resources = {
     [PAGE.AuthShell]: enAuthShell,
     [PAGE.Login]: enLogin,
     [PAGE.Signup]: enSignup,
+    [PAGE.SelectProfile]: enSelectProfile,
     [PAGE.UserSetting]: enUserSetting,
-    [PAGE.UserProfileOverview]: enUserProfileOverview,
     [PAGE.UserProfileEdit]: enUserProfileEdit,
-    [PAGE.UserProfileIdentities]: enUserProfileIdentities,
-    [PAGE.Images]: enImages,
+    [PAGE.Desk]: enDesk,
+    [PAGE.ProfileOverview]: enProfileOverview,
+    [PAGE.ProfileIdentity]: enProfileIdentity,
+    [PAGE.ProfileSecurity]: enProfileSecurity,
+    [PAGE.Assets]: enAssets,
+    [PAGE.Directory]: enDirectory,
   },
   zh: {
     language: zhLanguage,
@@ -69,11 +89,15 @@ const BUILTIN_I18N_RESOURCES: Resources = {
     [PAGE.AuthShell]: zhAuthShell,
     [PAGE.Login]: zhLogin,
     [PAGE.Signup]: zhSignup,
+    [PAGE.SelectProfile]: zhSelectProfile,
     [PAGE.UserSetting]: zhUserSetting,
-    [PAGE.UserProfileOverview]: zhUserProfileOverview,
     [PAGE.UserProfileEdit]: zhUserProfileEdit,
-    [PAGE.UserProfileIdentities]: zhUserProfileIdentities,
-    [PAGE.Images]: zhImages,
+    [PAGE.Desk]: zhDesk,
+    [PAGE.ProfileOverview]: zhProfileOverview,
+    [PAGE.ProfileIdentity]: zhProfileIdentity,
+    [PAGE.ProfileSecurity]: zhProfileSecurity,
+    [PAGE.Assets]: zhAssets,
+    [PAGE.Directory]: zhDirectory,
   },
   fr: {
     language: frLanguage,
@@ -81,11 +105,15 @@ const BUILTIN_I18N_RESOURCES: Resources = {
     [PAGE.AuthShell]: frAuthShell,
     [PAGE.Login]: frLogin,
     [PAGE.Signup]: frSignup,
+    [PAGE.SelectProfile]: frSelectProfile,
     [PAGE.UserSetting]: frUserSetting,
-    [PAGE.UserProfileOverview]: frUserProfileOverview,
     [PAGE.UserProfileEdit]: frUserProfileEdit,
-    [PAGE.UserProfileIdentities]: frUserProfileIdentities,
-    [PAGE.Images]: frImages,
+    [PAGE.Desk]: frDesk,
+    [PAGE.ProfileOverview]: frProfileOverview,
+    [PAGE.ProfileIdentity]: frProfileIdentity,
+    [PAGE.ProfileSecurity]: frProfileSecurity,
+    [PAGE.Assets]: frAssets,
+    [PAGE.Directory]: frDirectory,
   },
 };
 

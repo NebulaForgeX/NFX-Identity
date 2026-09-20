@@ -1,0 +1,22 @@
+{
+  "title": "Sécurité",
+  "description": "Changez le mot de passe du Account avec un code.",
+  "actions": {
+    "sendCode": "Envoyer le code",
+    "updatePassword": "Mettre à jour le mot de passe"
+  },
+  "labels": {
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "verificationCode": "Code de vérification",
+    "verificationCodePlaceholder": "Code à 6 chiffres",
+    "passwordSendCodeHint": "Nous enverrons un code à l'e-mail principal {{email}}.",
+    "passwordSendCodeHintNoEmail": "Définissez et vérifiez un e-mail principal avant d'envoyer un code."
+  },
+  "sections": {
+    "password": {
+      "title": "Mot de passe",
+      "description": "Le mot de passe actuel et un code envoyé à l'e-mail principal sont requis."
+    }
+  }
+}

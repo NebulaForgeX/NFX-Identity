@@ -11,7 +11,7 @@ import { Menu, Sidebar as ProSidebar } from "react-pro-sidebar";
 import { Link, Outlet, useLocation } from "react-router";
 
 import UserTopBar from "@/layouts/UserTopBar";
-import { ROUTES } from "@/navigations";
+import { scopePaths } from "@/navigations";
 import { buildImageUrl, resolveAccountDisplayName, safeNullable } from "@/utils";
 
 import { MenuItem, SidebarMenuState, SubMenu } from "./menu";
@@ -92,46 +92,32 @@ interface SectionProps {
   onMobileClose: () => void;
 }
 
-function OverviewSection({ collapsed, broken, onMobileClose }: SectionProps) {
+function OverviewSection({ collapsed, broken, onMobileClose, paths }: SectionProps & { paths: ReturnType<typeof scopePaths> }) {
   const { t } = useTranslation("language");
   const location = useLocation();
-  const active = location.pathname === ROUTES.USER_OVERVIEW || location.pathname.startsWith(`${ROUTES.USER_OVERVIEW}/`);
+  const active = location.pathname === paths.desk || location.pathname.startsWith(`${paths.desk}/`);
 
   return (
     <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
-      <MenuItem component={<Link to={ROUTES.USER_OVERVIEW} />} icon={<AnimatedIcon icon={LayoutDashboardIcon} size={18} />} active={active} onClick={() => broken && onMobileClose()}>
-        <MenuLabel active={active}>{t("sidebar.overview")}</MenuLabel>
+      <MenuItem component={<Link to={paths.desk} />} icon={<AnimatedIcon icon={LayoutDashboardIcon} size={18} />} active={active} onClick={() => broken && onMobileClose()}>
+        <MenuLabel active={active}>{t("sidebar.desk")}</MenuLabel>
       </MenuItem>
     </Menu>
   );
 }
 
-function MainMenuSection({ collapsed, broken, onMobileClose }: SectionProps) {
+function MainMenuSection({ collapsed, broken, onMobileClose, paths }: SectionProps & { paths: ReturnType<typeof scopePaths> }) {
   const { t } = useTranslation("language");
   const location = useLocation();
-  const [profileOpen, setProfileOpen] = useState(() => location.pathname.startsWith(ROUTES.PROFILE));
+  const [profileOpen, setProfileOpen] = useState(() => location.pathname.startsWith(paths.profile));
 
   const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   const profileSubItems = [
-    {
-      key: "profileOverview",
-      to: ROUTES.USER_PROFILE_OVERVIEW,
-      icon: <AnimatedIcon icon={UserIcon} size={16} />,
-      label: t("sidebar.profileOverview"),
-    },
-    {
-      key: "profileEdit",
-      to: ROUTES.USER_PROFILE_EDIT,
-      icon: <AnimatedIcon icon={PenIcon} size={16} />,
-      label: t("sidebar.profileEdit"),
-    },
-    {
-      key: "profileIdentities",
-      to: ROUTES.USER_PROFILE_IDENTITIES,
-      icon: <AnimatedIcon icon={PassportIcon} size={16} />,
-      label: t("sidebar.profileIdentities"),
-    },
+    { key: "profileOverview", to: paths.overview, icon: <AnimatedIcon icon={UserIcon} size={16} />, label: t("sidebar.profileOverview") },
+    { key: "profileEdit", to: paths.edit, icon: <AnimatedIcon icon={PenIcon} size={16} />, label: t("sidebar.profileEdit") },
+    { key: "profileIdentities", to: paths.identity, icon: <AnimatedIcon icon={PassportIcon} size={16} />, label: t("sidebar.profileIdentities") },
+    { key: "profileSecurity", to: paths.security, icon: <AnimatedIcon icon={ShieldCheck} size={16} />, label: t("sidebar.profileSecurity") },
   ];
 
   const isProfileChildActive = profileSubItems.some((item) => isActive(item.to));
@@ -146,17 +132,19 @@ function MainMenuSection({ collapsed, broken, onMobileClose }: SectionProps) {
           </MenuItem>
         ))}
       </SubMenu>
-      <MenuItem component={<Link to={ROUTES.IMAGES} />} icon={<AnimatedIcon icon={CameraIcon} size={18} />} active={isActive(ROUTES.IMAGES)} onClick={() => broken && onMobileClose()}>
-        <MenuLabel active={isActive(ROUTES.IMAGES)}>{t("sidebar.images")}</MenuLabel>
+      <MenuItem component={<Link to={paths.assets} />} icon={<AnimatedIcon icon={CameraIcon} size={18} />} active={isActive(paths.assets)} onClick={() => broken && onMobileClose()}>
+        <MenuLabel active={isActive(paths.assets)}>{t("sidebar.assets")}</MenuLabel>
       </MenuItem>
-      <MenuItem component={<Link to={ROUTES.OWNER} />} icon={<AnimatedIcon icon={ShieldCheck} size={18} />} active={isActive(ROUTES.OWNER)} onClick={() => broken && onMobileClose()}>
-        <MenuLabel active={isActive(ROUTES.OWNER)}>{t("sidebar.owner")}</MenuLabel>
-      </MenuItem>
+      {paths.directory ? (
+        <MenuItem component={<Link to={paths.directory} />} icon={<AnimatedIcon icon={ShieldCheck} size={18} />} active={isActive(paths.directory)} onClick={() => broken && onMobileClose()}>
+          <MenuLabel active={isActive(paths.directory)}>{t("sidebar.directory")}</MenuLabel>
+        </MenuItem>
+      ) : null}
     </Menu>
   );
 }
 
-function SettingsSection({ collapsed, broken, onMobileClose }: SectionProps) {
+function SettingsSection({ collapsed, broken, onMobileClose, paths }: SectionProps & { paths: ReturnType<typeof scopePaths> }) {
   const { t } = useTranslation("language");
   const location = useLocation();
   const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(`${to}/`);
@@ -165,12 +153,12 @@ function SettingsSection({ collapsed, broken, onMobileClose }: SectionProps) {
     <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
       <SectionTitle label={t("sidebar.settings")} icon={GearIcon} />
       <MenuItem
-        component={<Link to={ROUTES.USER_SETTINGS} />}
+        component={<Link to={paths.settings} />}
         icon={<AnimatedIcon icon={GearIcon} size={18} />}
-        active={isActive(ROUTES.USER_SETTINGS)}
+        active={isActive(paths.settings)}
         onClick={() => broken && onMobileClose()}
       >
-        <MenuLabel active={isActive(ROUTES.USER_SETTINGS)}>{t("sidebar.settingsItem")}</MenuLabel>
+        <MenuLabel active={isActive(paths.settings)}>{t("sidebar.settingsItem")}</MenuLabel>
       </MenuItem>
     </Menu>
   );
@@ -220,6 +208,7 @@ function Sidebar() {
   }, [broken, toggled]);
 
   const { kind, data, profile } = useCurrentProfile();
+  const paths = scopePaths(kind);
 
   const accountId = safeNullable(data?.account.id);
   const displayName = resolveAccountDisplayName(profile?.displayName, accountId);
@@ -296,9 +285,9 @@ function Sidebar() {
             </div>
 
             <Box flexGrow="1" minHeight="0" py="2" className={`${styles.menuArea} ${collapsed ? styles.menuAreaCollapsed : ""}`}>
-              <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
-              <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
-              <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
+              <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+              <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+              <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
             </Box>
 
             <div className={`${styles.footer} ${collapsed ? styles.footerCollapsed : ""}`}>

@@ -10,9 +10,19 @@
   },
   "labels": {
     "displayName": "Nom d'affichage",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "gender": "Genre",
+    "birthday": "Naissance",
     "bio": "Bio",
-    "city": "Localité",
-    "website": "Site web"
+    "city": "Ville",
+    "country": "Pays",
+    "website": "Site web",
+    "timezone": "Fuseau",
+    "profileLanguage": "Langue",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français"
   },
   "sections": {
     "basics": {
@@ -21,7 +31,12 @@
     }
   },
   "edit": {
-    "saveSuccess": "Profil mis à jour"
+    "saveSuccess": "Profil mis à jour",
+    "validation": {
+      "maxLength": "{{max}} caractères maximum",
+      "birthdayInvalid": "Utilisez AAAA-MM-JJ",
+      "websiteInvalid": "Le site doit commencer par http:// ou https://"
+    }
   },
   "avatar": {
     "title": "Avatar",
@@ -35,7 +50,8 @@
     "uploadFailed": "Échec du téléversement.",
     "confirmFailed": "Échec de confirmation.",
     "noImage": "Choisissez d'abord une image.",
-    "success": "Avatar mis à jour."
+    "success": "Avatar mis à jour.",
+    "clear": "Retirer l'avatar"
   },
   "backgroundUpload": {
     "label": "Galerie d'arrière-plan",

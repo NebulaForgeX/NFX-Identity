@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Button, Card, DropdownMenu, Flex, Text } from "@radix-ui/themes";
+import { Avatar, Button, DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import { Logo, PreferencesPopover } from "@/components";
 import { routerEventEmitter } from "@/events/router";
-import { ROUTES } from "@/navigations";
+import { profileHome, ROUTES, scopePaths } from "@/navigations";
 import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
 
 import styles from "./s.module.css";
@@ -17,8 +17,9 @@ function Header() {
   const headerRef = useRef<Nullable<HTMLElement>>(null);
   const { t } = useTranslation("language");
   const isAuthValid = useAuthStore((state) => state.isAuthValid);
-  const { data: accountInfo, profile } = useCurrentProfile();
+  const { data: accountInfo, profile, kind } = useCurrentProfile();
   const [elevated, setElevated] = useState(false);
+  const paths = scopePaths(kind);
 
   const accountId = safeNullable(accountInfo?.account.id);
   const displayName = resolveAccountDisplayName(profile?.displayName, accountId);
@@ -54,8 +55,10 @@ function Header() {
   return (
     <Flex asChild className={styles.header}>
       <header ref={headerRef}>
-        <Card
-          size="1"
+        <Flex
+          align="center"
+          justify="between"
+          gap="3"
           className={styles.bar}
           style={
             elevated
@@ -65,62 +68,60 @@ function Header() {
               : undefined
           }
         >
-          <Flex align="center" justify="between" gap="3">
-            <Logo variant="glassSquare" size="small" title={<Text className={styles.brandWord}>{APP_NAME}</Text>} subtitle="Identity" />
+          <Logo variant="glassSquare" size="small" title={<Text className={styles.brandWord}>{APP_NAME}</Text>} subtitle="Identity" />
 
-            <Flex align="center" gap="2" flexShrink="0">
-              <PreferencesPopover />
+          <Flex align="center" gap="2" flexShrink="0">
+            <PreferencesPopover />
 
-              {isAuthValid ? (
-                <DropdownMenu.Root modal={false}>
-                  <DropdownMenu.Trigger>
-                    <Button variant="soft" color="gray" highContrast>
-                      <Avatar size="1" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-                      <Text size="2" truncate style={{ maxWidth: 120 }}>
-                        {displayName}
-                      </Text>
-                    </Button>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content align="end" sideOffset={8} size="2" className={styles.accountMenu}>
-                    <DropdownMenu.Label>
-                      <Text size="1" color="gray" truncate style={{ maxWidth: 200 }}>
-                        {displayName}
-                      </Text>
-                    </DropdownMenu.Label>
-                    <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW })}>
-                      {t("header.panel")}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
-                      {t("header.profile")}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_SETTINGS })}>
-                      {t("sidebar.settingsItem")}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Separator />
-                    <DropdownMenu.Item
-                      color="red"
-                      onSelect={() => {
-                        const aID = AuthStore.getState().currentAccountId;
-                        if (aID) authEventEmitter.emit(authEvents.LOGOUT, aID);
-                        clearAuth();
-                        routerEventEmitter.navigate({ to: ROUTES.LOGIN });
-                      }}
-                    >
-                      {t("header.logout")}
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
-              ) : (
-                <>
-                  <Button variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.LOGIN })}>
-                    {t("header.login")}
+            {isAuthValid ? (
+              <DropdownMenu.Root modal={false}>
+                <DropdownMenu.Trigger>
+                  <Button variant="soft" color="gray" highContrast>
+                    <Avatar size="1" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+                    <Text size="2" truncate style={{ maxWidth: 120 }}>
+                      {displayName}
+                    </Text>
                   </Button>
-                  <Button onClick={() => routerEventEmitter.navigate({ to: ROUTES.SIGNUP })}>{t("header.signup")}</Button>
-                </>
-              )}
-            </Flex>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content align="end" sideOffset={8} size="2" className={styles.accountMenu}>
+                  <DropdownMenu.Label>
+                    <Text size="1" color="gray" truncate style={{ maxWidth: 200 }}>
+                      {displayName}
+                    </Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: profileHome(kind) })}>
+                    {t("header.panel")}
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: paths.overview })}>
+                    {t("header.profile")}
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: paths.settings })}>
+                    {t("sidebar.settingsItem")}
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Separator />
+                  <DropdownMenu.Item
+                    color="red"
+                    onSelect={() => {
+                      const aID = AuthStore.getState().currentAccountId;
+                      if (aID) authEventEmitter.emit(authEvents.LOGOUT, aID);
+                      clearAuth();
+                      routerEventEmitter.navigate({ to: ROUTES.LOGIN });
+                    }}
+                  >
+                    {t("header.logout")}
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            ) : (
+              <>
+                <Button variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.LOGIN })}>
+                  {t("header.login")}
+                </Button>
+                <Button onClick={() => routerEventEmitter.navigate({ to: ROUTES.SIGNUP })}>{t("header.signup")}</Button>
+              </>
+            )}
           </Flex>
-        </Card>
+        </Flex>
       </header>
     </Flex>
   );

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { QueryClient } from "@tanstack/react-query";
-import { ACCOUNT_SCOPE, AUTH_ACCOUNT_SCOPE, AUTH_EMAILS, AUTH_ME, AUTH_PROFILE_SCOPE, AUTH_PROFILES } from "nfx-ui/constants";
+import { ACCOUNT_SCOPE, AUTH_ACCOUNT_SCOPE, AUTH_EMAILS, AUTH_ME, AUTH_OWNER_AUTHORITIES, AUTH_OWNER_FORGERS, AUTH_PHONES, AUTH_PROFILE_SCOPE, AUTH_PROFILES } from "nfx-ui/constants";
 import { authEventEmitter, authEvents, InvalidateProfilesPayload } from "nfx-ui/events";
 import { AuthStore } from "nfx-ui/stores";
 
@@ -33,16 +33,10 @@ export const useAuthInv = (queryClient: QueryClient) => {
       }
     };
 
-    const onInvalidateEmails = (aID?: string) => {
-      const id = resolveAccountId(aID);
-      if (!id) return;
+    const invalidateAccountProfile = (id: string) => {
       queryClient.invalidateQueries({
         queryKey: ACCOUNT_SCOPE(id),
         refetchType: "active",
-      });
-      queryClient.invalidateQueries({
-        queryKey: AUTH_EMAILS(id),
-        refetchType: "all",
       });
       const pID = AuthStore.getState().currentProfileId;
       if (pID) {
@@ -57,6 +51,26 @@ export const useAuthInv = (queryClient: QueryClient) => {
       }
     };
 
+    const onInvalidateEmails = (aID?: string) => {
+      const id = resolveAccountId(aID);
+      if (!id) return;
+      invalidateAccountProfile(id);
+      queryClient.invalidateQueries({
+        queryKey: AUTH_EMAILS(id),
+        refetchType: "all",
+      });
+    };
+
+    const onInvalidatePhones = (aID?: string) => {
+      const id = resolveAccountId(aID);
+      if (!id) return;
+      invalidateAccountProfile(id);
+      queryClient.invalidateQueries({
+        queryKey: AUTH_PHONES(id),
+        refetchType: "all",
+      });
+    };
+
     const onInvalidateProfiles = (payload: InvalidateProfilesPayload) => {
       if (!payload?.aID || !payload?.kind) return;
       queryClient.invalidateQueries({
@@ -65,16 +79,33 @@ export const useAuthInv = (queryClient: QueryClient) => {
       });
     };
 
+    const onInvalidateOwner = (aID?: string) => {
+      const id = resolveAccountId(aID);
+      if (!id) return;
+      queryClient.invalidateQueries({
+        queryKey: AUTH_OWNER_FORGERS(id),
+        refetchType: "all",
+      });
+      queryClient.invalidateQueries({
+        queryKey: AUTH_OWNER_AUTHORITIES(id),
+        refetchType: "all",
+      });
+    };
+
     authEventEmitter.on(authEvents.LOGOUT, onLogout);
     authEventEmitter.on(authEvents.UPDATE_ACCOUNT_SUCCESS, onUpdateAccount);
     authEventEmitter.on(authEvents.INVALIDATE_EMAILS, onInvalidateEmails);
+    authEventEmitter.on(authEvents.INVALIDATE_PHONES, onInvalidatePhones);
     authEventEmitter.on(authEvents.INVALIDATE_PROFILES, onInvalidateProfiles);
+    authEventEmitter.on(authEvents.INVALIDATE_OWNER, onInvalidateOwner);
 
     return () => {
       authEventEmitter.off(authEvents.LOGOUT, onLogout);
       authEventEmitter.off(authEvents.UPDATE_ACCOUNT_SUCCESS, onUpdateAccount);
       authEventEmitter.off(authEvents.INVALIDATE_EMAILS, onInvalidateEmails);
+      authEventEmitter.off(authEvents.INVALIDATE_PHONES, onInvalidatePhones);
       authEventEmitter.off(authEvents.INVALIDATE_PROFILES, onInvalidateProfiles);
+      authEventEmitter.off(authEvents.INVALIDATE_OWNER, onInvalidateOwner);
     };
   }, [queryClient]);
 };

@@ -1,0 +1,29 @@
+{
+  "title": "Owner 目录",
+  "description": "列出全部 Forger 与 Authority 资料。Owner 可分配 auditor / administrator。",
+  "search": "搜索资料",
+  "ownerRequired": "需要 Owner 角色才能列出全部资料。",
+  "columns": {
+    "name": "名称",
+    "city": "城市",
+    "country": "国家",
+    "roles": "角色",
+    "created": "创建",
+    "assign": "分配"
+  },
+  "forger": {
+    "title": "Forger",
+    "description": "此 Identity 下全部 Forger 资料。",
+    "empty": "没有 Forger 资料。"
+  },
+  "authority": {
+    "title": "Authority",
+    "description": "可分配 auditor 或 administrator。Owner 不可在此分配。",
+    "empty": "没有 Authority 资料。"
+  },
+  "card": {
+    "title": "公开卡片",
+    "description": "来自 /auth/me/profiles/:id/public-card。",
+    "loading": "正在加载…"
+  }
+}

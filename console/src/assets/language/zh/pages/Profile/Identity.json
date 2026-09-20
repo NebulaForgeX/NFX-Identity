@@ -1,0 +1,53 @@
+{
+  "title": "身份",
+  "description": "此账号下的邮箱、手机与全部 Profile。",
+  "empty": {
+    "emails": "尚无邮箱。",
+    "phones": "尚无手机。",
+    "profiles": "尚无资料。"
+  },
+  "actions": {
+    "sendCode": "发送验证码",
+    "setPrimary": "设为主",
+    "remove": "删除",
+    "verify": "验证",
+    "addEmail": "添加邮箱",
+    "addPhone": "添加手机",
+    "save": "保存",
+    "createForger": "创建 Forger",
+    "createAuthority": "创建 Authority",
+    "deleteProfile": "删除",
+    "switch": "切换"
+  },
+  "labels": {
+    "email": "邮箱",
+    "phone": "手机",
+    "status": "状态",
+    "actions": "操作",
+    "primary": "主",
+    "unverified": "未验证",
+    "code": "验证码",
+    "emailPlaceholder": "name@example.com",
+    "phonePlaceholder": "+15551234567",
+    "searchProfiles": "搜索资料",
+    "profile": "资料",
+    "kind": "类型",
+    "loading": "正在加载身份",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "current": "使用中",
+    "emptyName": "未命名身份",
+    "scopeAuthority": "Authority",
+    "scopeForger": "Forger",
+    "deleteConfirmBody": "永久删除「{{name}}」？",
+    "displayName": "显示名",
+    "newForgerProfile": "新 Forger 资料",
+    "newAuthorityProfile": "新 Authority 资料"
+  },
+  "sections": {
+    "emails": { "title": "邮箱", "description": "验证并选择主邮箱。" },
+    "phones": { "title": "手机", "description": "验证并选择主号码。" },
+    "profiles": { "title": "资料", "description": "切换或创建 Forger / Authority 身份。" }
+  }
+}

@@ -11,7 +11,15 @@
     "updateEmailSuccess": "邮箱已更新。",
     "setPrimaryEmailSuccess": "主邮箱已更新。",
     "deleteEmailSuccess": "邮箱已删除。",
-    "changePasswordSuccess": "密码已更新。"
+    "createPhoneSuccess": "手机已添加。",
+    "verifyPhoneSuccess": "手机已验证。",
+    "updatePhoneSuccess": "手机已更新。",
+    "setPrimaryPhoneSuccess": "主手机已更新。",
+    "deletePhoneSuccess": "手机已删除。",
+    "changePasswordSuccess": "密码已更新。",
+    "updateSettingsSuccess": "设置已更新。",
+    "clearAvatarSuccess": "头像已移除。",
+    "updateRolesSuccess": "角色已更新。"
   },
   "payments": {
     "stripeLoadFailed": "无法加载 Stripe。",

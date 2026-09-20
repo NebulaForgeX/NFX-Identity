@@ -4,7 +4,8 @@ import { Button, Flex } from "@radix-ui/themes";
 import { EmptyState } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
-import { ROUTES } from "@/navigations";
+import { profileHome } from "@/navigations";
+import { AuthStore } from "nfx-ui/stores";
 
 const NotFoundPage = memo(() => {
   return (
@@ -18,7 +19,7 @@ const NotFoundPage = memo(() => {
             <Button variant="soft" onClick={() => routerEventEmitter.navigateBack()}>
               Go Back
             </Button>
-            <Button onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW })}>Go to Homepage</Button>
+            <Button onClick={() => routerEventEmitter.navigate({ to: profileHome(AuthStore.getState().currentProfileKind) })}>Go to Homepage</Button>
           </Flex>
         }
       />

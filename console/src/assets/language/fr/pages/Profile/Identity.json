@@ -1,0 +1,53 @@
+{
+  "title": "Identités",
+  "description": "E-mails, téléphones et tous les Profile de ce Account.",
+  "empty": {
+    "emails": "Aucun e-mail.",
+    "phones": "Aucun téléphone.",
+    "profiles": "Aucun profil."
+  },
+  "actions": {
+    "sendCode": "Envoyer le code",
+    "setPrimary": "Définir principal",
+    "remove": "Supprimer",
+    "verify": "Vérifier",
+    "addEmail": "Ajouter un e-mail",
+    "addPhone": "Ajouter un téléphone",
+    "save": "Enregistrer",
+    "createForger": "Créer Forger",
+    "createAuthority": "Créer Authority",
+    "deleteProfile": "Supprimer",
+    "switch": "Changer"
+  },
+  "labels": {
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "status": "Statut",
+    "actions": "Actions",
+    "primary": "Principal",
+    "unverified": "Non vérifié",
+    "code": "Code",
+    "emailPlaceholder": "nom@exemple.com",
+    "phonePlaceholder": "+15551234567",
+    "searchProfiles": "Rechercher des profils",
+    "profile": "Profil",
+    "kind": "Type",
+    "loading": "Chargement des identités",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français",
+    "current": "En cours",
+    "emptyName": "Identité sans nom",
+    "scopeAuthority": "Authority",
+    "scopeForger": "Forger",
+    "deleteConfirmBody": "Supprimer définitivement « {{name}} » ?",
+    "displayName": "Nom affiché",
+    "newForgerProfile": "Nouveau profil Forger",
+    "newAuthorityProfile": "Nouveau profil Authority"
+  },
+  "sections": {
+    "emails": { "title": "E-mails", "description": "Vérifiez et choisissez une adresse principale." },
+    "phones": { "title": "Téléphones", "description": "Vérifiez et choisissez un numéro principal." },
+    "profiles": { "title": "Profils", "description": "Changer ou créer des identités Forger et Authority." }
+  }
+}
