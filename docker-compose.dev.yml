@@ -23,6 +23,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
+      traefik.docker.network: nfx-edge
       traefik.http.services.identity-auth-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.identity-auth-base.entrypoints: web
       traefik.http.middlewares.nfx-identity-auth-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -105,6 +106,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
+      traefik.docker.network: nfx-edge
       traefik.http.services.identity-asset-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.identity-asset-base.entrypoints: web
       traefik.http.middlewares.nfx-identity-asset-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -187,6 +189,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
+      traefik.docker.network: nfx-edge
       traefik.http.services.identity-system-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.identity-system-base.entrypoints: web
       traefik.http.middlewares.nfx-identity-system-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
@@ -251,53 +254,37 @@ services:
       - nfx-stack
 
   console:
-    image: nfx-identity-console:dev
+    image: node:22-bookworm-slim
     container_name: NFX-Identity-Console-Dev
-    build:
-      context: ./console
-      dockerfile: Dockerfile
-      target: dev
-      args:
-        VITE_API_URL: ${VITE_API_URL}
-        VITE_WS_URL: ${VITE_WS_URL}
-        VITE_BUILD_ENV: ${VITE_BUILD_ENV:-dev}
-        VITE_APP_ID: ${VITE_APP_ID:-nfx-console-dev}
+    working_dir: /app
+    volumes:
+      - ./console:/app
+    command: ["node", "node_modules/vite/bin/vite.js", "--mode", "dev", "--host", "0.0.0.0"]
     environment:
       VITE_API_URL: ${VITE_API_URL}
       VITE_WS_URL: ${VITE_WS_URL}
       VITE_BUILD_ENV: ${VITE_BUILD_ENV:-dev}
       VITE_APP_ID: ${VITE_APP_ID:-nfx-console-dev}
       VITE_PORT: ${VITE_PORT}
+      VITE_BASE: ${VITE_BASE}
       DOCKER: "1"
-    ports:
-      - "${CONSOLE_EXTERNAL_PORT}:${VITE_PORT}"
+    expose:
+      - "${VITE_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
+      traefik.docker.network: nfx-edge
       traefik.http.services.identity-console.loadbalancer.server.port: "${VITE_PORT}"
       traefik.http.routers.identity-console.entrypoints: web
-      traefik.http.routers.identity-console.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
+      traefik.http.routers.identity-console.rule: PathPrefix(`/console/nfx-identity`)
       traefik.http.routers.identity-console.service: identity-console
-      traefik.http.routers.identity-console.priority: "1"
+      traefik.http.routers.identity-console.priority: "25"
       traefik.http.routers.identity-console-secure.entrypoints: websecure
-      traefik.http.routers.identity-console-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
+      traefik.http.routers.identity-console-secure.rule: PathPrefix(`/console/nfx-identity`)
       traefik.http.routers.identity-console-secure.service: identity-console
       traefik.http.routers.identity-console-secure.tls: "true"
-      traefik.http.routers.identity-console-secure.priority: "1"
-    develop:
-      watch:
-        - action: sync
-          path: ./console
-          target: /app
-          ignore:
-            - node_modules/
-            - dist/
-        - action: rebuild
-          path: ./console/package.json
-        - action: rebuild
-          path: ./console/package-lock.json
-        - action: rebuild
-          path: ./console/Dockerfile
+      traefik.http.routers.identity-console-secure.priority: "25"
+    init: true
     networks:
       - nfx-identity
       - nfx-edge
