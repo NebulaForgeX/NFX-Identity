@@ -2,10 +2,6 @@
 
 **NFX-Identity = NebulaForgeX Identity Platform**
 
-<div align="center">
-  <img src="./docs/image.png" alt="NFX-Identity Logo" width="200">
-</div>
-
 **NFX-Identity** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
 
 It provides authentication, authorization, user management, permission management, and enriched profile capabilities for all internal applications and microservices.
