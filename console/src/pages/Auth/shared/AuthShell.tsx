@@ -1,14 +1,14 @@
+import { AnimatedIcon, ArrowNarrowLeftIcon, ShieldCheck, LayersIcon, LockIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { Box, Button, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import gsap from "gsap";
-import { ArrowLeft, KeyRound, Layers, ShieldCheck } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { useTranslation } from "react-i18next";
 
-import { Logo, LucideIcon, PreferencesPopover } from "@/components";
+import { Logo, PreferencesPopover } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
 
@@ -48,8 +48,8 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
 
   const pillars = [
     { icon: ShieldCheck, title: t("pillarIdentityTitle"), body: t("pillarIdentityBody") },
-    { icon: Layers, title: t("pillarCommunityTitle"), body: t("pillarCommunityBody") },
-    { icon: KeyRound, title: t("pillarLinkTitle"), body: t("pillarLinkBody") },
+    { icon: LayersIcon, title: t("pillarCommunityTitle"), body: t("pillarCommunityBody") },
+    { icon: LockIcon, title: t("pillarLinkTitle"), body: t("pillarLinkBody") },
   ] as const;
 
   return (
@@ -87,7 +87,7 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
               {pillars.map((pillar) => (
                 <Flex key={pillar.title} align="start" gap="3" p="3" className={styles.pillar}>
                   <Flex align="center" justify="center" width="36px" height="36px" flexShrink="0" className={styles.pillarIcon}>
-                    <LucideIcon icon={pillar.icon} size={16} />
+                    <AnimatedIcon icon={pillar.icon} size={16} />
                   </Flex>
                   <Flex direction="column" gap="1" minWidth="0">
                     <Text size="2" weight="bold" className={styles.pillarTitle}>
@@ -110,7 +110,7 @@ export default function AuthShell({ brandTitle, brandEyebrow, heroFooter, childr
             <Flex align="center" gap="2" position="absolute" top="4" right="4" className={styles.formToolbar}>
               <PreferencesPopover />
               <Button type="button" variant="soft" color="gray" size="2" onClick={() => routerEventEmitter.navigate({ to: ROUTES.HOME })}>
-                <LucideIcon icon={ArrowLeft} size={15} />
+                <AnimatedIcon icon={ArrowNarrowLeftIcon} size={15} />
                 {t("backHome")}
               </Button>
             </Flex>

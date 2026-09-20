@@ -256,18 +256,25 @@ services:
     build:
       context: ./console
       dockerfile: Dockerfile
-      target: prod
+      target: dev
       args:
         VITE_API_URL: ${VITE_API_URL}
         VITE_WS_URL: ${VITE_WS_URL}
         VITE_BUILD_ENV: ${VITE_BUILD_ENV:-dev}
         VITE_APP_ID: ${VITE_APP_ID:-nfx-console-dev}
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_WS_URL: ${VITE_WS_URL}
+      VITE_BUILD_ENV: ${VITE_BUILD_ENV:-dev}
+      VITE_APP_ID: ${VITE_APP_ID:-nfx-console-dev}
+      VITE_PORT: ${VITE_PORT}
+      DOCKER: "1"
     ports:
-      - "${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
+      - "${CONSOLE_EXTERNAL_PORT}:${VITE_PORT}"
     labels:
       traefik.enable: "true"
       traefik.project: "nfx-identity"
-      traefik.http.services.identity-console.loadbalancer.server.port: "${CONSOLE_PORT}"
+      traefik.http.services.identity-console.loadbalancer.server.port: "${VITE_PORT}"
       traefik.http.routers.identity-console.entrypoints: web
       traefik.http.routers.identity-console.rule: Host(`${TRAEFIK_CONSOLE_HOST}`)
       traefik.http.routers.identity-console.service: identity-console
@@ -277,6 +284,20 @@ services:
       traefik.http.routers.identity-console-secure.service: identity-console
       traefik.http.routers.identity-console-secure.tls: "true"
       traefik.http.routers.identity-console-secure.priority: "1"
+    develop:
+      watch:
+        - action: sync
+          path: ./console
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+        - action: rebuild
+          path: ./console/package.json
+        - action: rebuild
+          path: ./console/package-lock.json
+        - action: rebuild
+          path: ./console/Dockerfile
     networks:
       - nfx-identity
       - nfx-edge

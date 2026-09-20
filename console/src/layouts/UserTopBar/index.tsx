@@ -1,5 +1,5 @@
+import { GearIcon, UserIcon } from "nfx-ui/icons";
 import { Avatar, Button, Flex, Text } from "@radix-ui/themes";
-import { Settings, UserRound } from "lucide-react";
 import { useCurrentProfile } from "nfx-ui/hooks";
 
 import { LucideIcon } from "@/components";
@@ -32,11 +32,11 @@ export default function UserTopBar() {
 
       <Flex align="center" gap="2" wrap="wrap">
         <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
-          <LucideIcon icon={UserRound} size={14} />
+          <LucideIcon icon={UserIcon} size={14} />
           Profile
         </Button>
         <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_SETTINGS })}>
-          <LucideIcon icon={Settings} size={14} />
+          <LucideIcon icon={GearIcon} size={14} />
           Settings
         </Button>
       </Flex>

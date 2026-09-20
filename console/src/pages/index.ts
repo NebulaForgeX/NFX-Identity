@@ -1,8 +1,8 @@
-export { default as DashboardPage } from "./DashboardPage";
-export { default as ImagesPage } from "./ImagesPage";
-export { default as NotFoundPage } from "./NotFoundPage";
+export { default as DashboardPage } from "./Dashboard";
+export { default as ImagesPage } from "./Images";
+export { default as NotFoundPage } from "./NotFound";
 export { default as SettingsPage } from "./User/Settings";
-export { default as OwnerDirectoryPage } from "./OwnerDirectoryPage";
+export { default as OwnerDirectoryPage } from "./OwnerDirectory";
 export { default as LoginPage } from "./Auth/Login";
 export { default as SignupPage } from "./Auth/Signup";
 export { default as ProfileOverviewPage } from "./User/Profile/Overview";

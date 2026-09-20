@@ -20,11 +20,11 @@ const nfxUiRoot = resolveNfxUiRoot(root);
 
 const PAGE_CHUNKS: Record<string, string> = {
   "/src/pages/Auth/Login": "page-login",
-  "/src/pages/DashboardPage": "page-dashboard",
-  "/src/pages/NotFoundPage": "page-404",
+  "/src/pages/Dashboard": "page-dashboard",
+  "/src/pages/NotFound": "page-404",
   "/src/pages/User/Profile": "page-profile",
-  "/src/pages/ImagesPage": "page-images",
-  "/src/pages/OwnerDirectoryPage": "page-owner",
+  "/src/pages/Images": "page-images",
+  "/src/pages/OwnerDirectory": "page-owner",
   "/src/pages/User/Settings": "page-settings",
 };
 
@@ -34,7 +34,7 @@ const ELEMENT_CHUNKS: Record<string, string> = {
 
 export default defineConfig(({ mode, command }) => {
   const env = loadNfxConsoleEnv(root, mode);
-  const port = Number(env.VITE_PORT) || 10203;
+  const port = Number(env.VITE_PORT) || 5173;
   const hasApiUrl = Boolean(env.VITE_API_URL);
   const proxyTarget = env.VITE_DEV_API_PROXY_TARGET || env.VITE_API_URL || "http://192.168.1.64/nfx-identity";
 
@@ -67,7 +67,7 @@ export default defineConfig(({ mode, command }) => {
     server: {
       port,
       host: "0.0.0.0",
-      open: true,
+      open: process.env.DOCKER !== "1",
       fs: { allow: [root, nfxUiRoot] },
       watch: {
         ignored: ["**/templates/**"],

@@ -1,6 +1,6 @@
+import { AnimatedIcon, ArrowNarrowRightIcon, EyeIcon, EyeOffIcon } from "nfx-ui/icons";
 import { useState } from "react";
 import { Button, Checkbox, Flex, Heading, Link, Separator, Text, TextField } from "@radix-ui/themes";
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { AuthSignupPlatformEnum, LanguageEnum } from "nfx-ui/enums";
 import { useSendVerificationCode, useSignupWithEmail } from "nfx-ui/hooks";
@@ -9,7 +9,6 @@ import { usePreferenceStore } from "nfx-ui/stores";
 import { Controller, FormProvider, SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
 import AuthShell from "@/pages/Auth/shared/AuthShell";
@@ -132,7 +131,7 @@ export default function SignupPage() {
                           onClick={() => setShowPassword((v) => !v)}
                           aria-label={showPassword ? t("hidePassword") : t("showPassword")}
                         >
-                          <LucideIcon icon={showPassword ? EyeOff : Eye} size={14} />
+                          <AnimatedIcon icon={showPassword ? EyeOffIcon : EyeIcon} size={14} />
                         </Button>
                       </TextField.Slot>
                     </TextField.Root>
@@ -170,7 +169,7 @@ export default function SignupPage() {
                           onClick={() => setShowConfirm((v) => !v)}
                           aria-label={showConfirm ? t("hidePassword") : t("showPassword")}
                         >
-                          <LucideIcon icon={showConfirm ? EyeOff : Eye} size={14} />
+                          <AnimatedIcon icon={showConfirm ? EyeOffIcon : EyeIcon} size={14} />
                         </Button>
                       </TextField.Slot>
                     </TextField.Root>
@@ -198,7 +197,7 @@ export default function SignupPage() {
 
               <Button type="submit" size="3" loading={signup.isPending} style={{ width: "100%" }}>
                 {t("submit")}
-                <LucideIcon icon={ArrowRight} size={16} />
+                <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
               </Button>
             </form>
           </Flex>

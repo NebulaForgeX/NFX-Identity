@@ -1,8 +1,8 @@
+import { CheckedIcon, RefreshIcon, SaveIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
 import { useEffect, useState } from "react";
 import { Badge, Box, Button, Card, Flex, Grid, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
-import { Check, RotateCcw, Save } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { AccentColorEnum, AppearanceEnum, GrayColorEnum, LanguageEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
 import { useBaseLabel, useSyncPreference } from "nfx-ui/hooks";
@@ -129,7 +129,7 @@ export default function ThemeSettings() {
                     className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
+                    {active ? <LucideIcon icon={CheckedIcon} size={12} color="white" /> : null}
                   </button>
                 );
               })}
@@ -152,7 +152,7 @@ export default function ThemeSettings() {
                     className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
+                    {active ? <LucideIcon icon={CheckedIcon} size={12} color="white" /> : null}
                   </button>
                 );
               })}
@@ -278,7 +278,7 @@ export default function ThemeSettings() {
             </Text>
           ) : null}
           <Button type="button" variant="soft" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
-            <LucideIcon icon={RotateCcw} size={14} />
+            <LucideIcon icon={RefreshIcon} size={14} />
             {t("actions.reset")}
           </Button>
           <Button
@@ -294,7 +294,7 @@ export default function ThemeSettings() {
               }
             }}
           >
-            <LucideIcon icon={Save} size={14} />
+            <LucideIcon icon={SaveIcon} size={14} />
             {t("actions.saveTheme")}
           </Button>
         </Flex>

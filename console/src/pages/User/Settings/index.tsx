@@ -1,7 +1,7 @@
+import { GearIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
-import { Settings2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader, Suspense } from "@/components";
@@ -30,7 +30,7 @@ export default function SettingsPage() {
 
   return (
     <PageFrame>
-      <PageHeader icon={Settings2} title={t("title")} description={t("description")} />
+      <PageHeader icon={GearIcon} title={t("title")} description={t("description")} />
 
       <Flex direction="column" gap="6" width="100%">
         <SettingsSection id="settings-theme" title={t("sections.theme.title")} description={t("sections.theme.description")}>

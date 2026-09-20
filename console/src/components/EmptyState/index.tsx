@@ -1,12 +1,10 @@
-import type { LucideIcon as LucideIconType } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Flex, Heading, Text } from "@radix-ui/themes";
-
-import LucideIcon from "@/components/LucideIcon";
+import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 export type EmptyStateProps = {
-  icon: LucideIconType;
+  icon: AnimatedIconComponent;
   title: string;
   description?: string;
   action?: ReactNode;
@@ -26,7 +24,7 @@ export default function EmptyState({ icon, title, description, action }: EmptySt
           color: "var(--gray-10)",
         }}
       >
-        <LucideIcon icon={icon} size={24} />
+        <AnimatedIcon icon={icon} size={24} />
       </Flex>
       <Heading as="h3" size="4" align="center">
         {title}

@@ -1,8 +1,8 @@
+import { AnimatedIcon, ArrowNarrowRightIcon, RightChevron, EyeIcon, EyeOffIcon, ShieldCheck, UsersIcon } from "nfx-ui/icons";
 import type { Login } from "nfx-ui/types";
 
 import { useMemo, useState } from "react";
 import { Avatar, Badge, Box, Button, Card, Checkbox, Flex, Heading, Link, Separator, Spinner, Text, TextField } from "@radix-ui/themes";
-import { ArrowRight, ChevronRight, Eye, EyeOff, Shield, Users } from "lucide-react";
 import { APP_NAME } from "nfx-ui/config";
 import { ProfileKindEnum } from "nfx-ui/enums";
 import { useLoginWithEmail, useSelectProfile } from "nfx-ui/hooks";
@@ -10,7 +10,6 @@ import { LoginFormData, useInitLoginForm } from "nfx-ui/schemas";
 import { Controller, FormProvider, SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
 import AuthShell from "@/pages/Auth/shared/AuthShell";
@@ -74,7 +73,7 @@ export default function LoginPage() {
               return (
                 <Flex key={group.kind} direction="column" gap="2">
                   <Flex align="center" gap="2">
-                    <LucideIcon icon={isAuthority ? Shield : Users} size={15} />
+                    <AnimatedIcon icon={isAuthority ? ShieldCheck : UsersIcon} size={15} />
                     <Text size="2" weight="bold">
                       {kindLabel}
                     </Text>
@@ -136,7 +135,7 @@ export default function LoginPage() {
                                 ) : null}
                               </Flex>
                               <Box flexShrink="0" pt="1">
-                                {selectProfile.isPending ? <Spinner size="2" /> : <LucideIcon icon={ChevronRight} size={18} />}
+                                {selectProfile.isPending ? <Spinner size="2" /> : <AnimatedIcon icon={RightChevron} size={18} />}
                               </Box>
                             </Flex>
                           </button>
@@ -216,7 +215,7 @@ export default function LoginPage() {
                             onClick={() => setShowPassword((v) => !v)}
                             aria-label={showPassword ? t("form.hidePassword") : t("form.showPassword")}
                           >
-                            <LucideIcon icon={showPassword ? EyeOff : Eye} size={14} />
+                            <AnimatedIcon icon={showPassword ? EyeOffIcon : EyeIcon} size={14} />
                           </Button>
                         </TextField.Slot>
                       </TextField.Root>
@@ -246,7 +245,7 @@ export default function LoginPage() {
 
                 <Button type="submit" size="3" loading={login.isPending} style={{ width: "100%" }}>
                   {t("form.submit")}
-                  <LucideIcon icon={ArrowRight} size={16} />
+                  <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
                 </Button>
               </form>
             </Flex>
