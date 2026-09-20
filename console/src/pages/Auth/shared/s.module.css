@@ -1,69 +1,20 @@
 .page {
-  position: relative;
-  z-index: 1;
-  width: 100%;
   min-height: 100dvh;
-}
-
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
   background: var(--color-bg);
-}
-
-@media (min-width: 961px) {
-  .backdrop {
-    background: linear-gradient(90deg, var(--color-bg-2) 0%, var(--color-bg-2) 50%, var(--color-bg) 50%);
-  }
-}
-
-.glow {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  opacity: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 50% at 12% 18%, var(--color-primary-bg), transparent 55%),
-    radial-gradient(ellipse 55% 45% at 78% 82%, var(--color-primary-light), transparent 50%);
-}
-
-.heroPanel,
-.formPanel {
-  position: relative;
-  z-index: 2;
-}
-
-.heroPanel {
-  min-height: 100dvh;
   color: var(--gray-12);
-  background:
-    radial-gradient(circle at 18% 8%, var(--color-primary-bg), transparent 42%),
-    radial-gradient(circle at 88% 92%, var(--color-primary-light), transparent 40%),
-    var(--color-bg-2);
-  overflow: hidden;
 }
 
-.heroPanel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.45;
-  background-image:
-    radial-gradient(1.2px 1.2px at 12% 22%, var(--color-primary), transparent),
-    radial-gradient(1px 1px at 28% 68%, var(--color-primary-hover), transparent),
-    radial-gradient(1.4px 1.4px at 61% 18%, var(--color-primary), transparent),
-    radial-gradient(1px 1px at 81% 44%, var(--color-primary-light), transparent),
-    radial-gradient(1.2px 1.2px at 44% 86%, var(--color-primary), transparent),
-    radial-gradient(1px 1px at 93% 12%, var(--color-primary-hover), transparent);
-}
-
-.heroPanel > * {
-  position: relative;
-  z-index: 1;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 4;
 }
 
 .brandHome {
@@ -72,63 +23,7 @@
   color: var(--color-primary);
 }
 
-.brandEyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--color-primary-hover);
-}
-
-.brandTitle {
-  font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.04em;
-  max-width: 13ch;
-  line-height: 1.02;
-  color: var(--gray-12);
-}
-
-.pillar {
-  border-radius: var(--radius-3);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
-}
-
-.pillarIcon {
-  border-radius: var(--radius-3);
-  background: var(--color-primary-bg);
-  color: var(--color-primary);
-}
-
-.pillarTitle {
-  font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.02em;
-  color: var(--gray-12);
-}
-
-.pillarBody {
-  color: var(--gray-11);
-}
-
-.heroFooter {
-  max-width: 46ch;
-  color: var(--gray-11);
-}
-
-.formPanel {
-  min-height: 100dvh;
-  background: var(--color-bg);
-}
-
-.formToolbar {
-  z-index: 3;
-}
-
-.card {
-  width: min(100%, 440px);
-}
-
-@media (max-width: 960px) {
-  .heroPanel,
-  .formPanel {
-    min-height: auto;
-  }
+.body {
+  position: relative;
+  min-height: calc(100dvh - 4rem);
 }

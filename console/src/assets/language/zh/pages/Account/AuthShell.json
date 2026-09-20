@@ -1,10 +1,3 @@
 {
-  "brandHome": "身份中心",
-  "pillarIdentityTitle": "账号",
-  "pillarIdentityBody": "一份 NFX Account，打开 News、Vault、Storages 与文档站。",
-  "pillarCommunityTitle": "档案",
-  "pillarCommunityBody": "同一账号可以持有多个 Profile，按产品切换身份。",
-  "pillarLinkTitle": "通行",
-  "pillarLinkBody": "签发一次，NebulaForgeX 各控制台共用这把钥匙。",
-  "backHome": "返回首页"
+  "brandHome": "身份中心"
 }

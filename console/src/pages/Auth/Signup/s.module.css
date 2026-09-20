@@ -1,5 +1,107 @@
-.kicker {
+.issuance {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 4rem);
+}
+
+.ticket {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.15rem 1.35rem;
+  border-right: 1px solid var(--color-border);
+}
+
+.step:last-child {
+  border-right: none;
+}
+
+.stepIndex {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
   color: var(--color-primary);
+  font-size: 0.7rem;
+}
+
+.stepLabel {
+  font-family: var(--heading-font-family), sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.9fr) minmax(20rem, 1.1fr);
+  flex: 1;
+}
+
+.copy {
+  padding: 3.5rem 2.5rem 4rem;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-2);
+}
+
+.kicker {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.title {
+  font-family: var(--heading-font-family), sans-serif;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  max-width: 12ch;
+}
+
+.lede {
+  color: var(--gray-11);
+  max-width: 36ch;
+}
+
+.form {
+  padding: 3.5rem 2.5rem 4rem;
+}
+
+.passRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 960px) {
+  .ticket,
+  .split,
+  .passRow {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .copy {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 2rem 1.25rem;
+  }
+
+  .form {
+    padding: 2rem 1.25rem 3.5rem;
+  }
 }

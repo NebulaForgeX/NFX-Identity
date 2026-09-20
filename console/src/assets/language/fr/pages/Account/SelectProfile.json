@@ -11,6 +11,14 @@
     "authority": "Authority",
     "forger": "Forger"
   },
+  "kindHint": {
+    "authority": "Modération et rôles",
+    "forger": "Usage quotidien"
+  },
+  "empty": {
+    "authority": "Pas encore de Profile Authority. Créez-en un dans le dock.",
+    "forger": "Pas encore de Profile Forger. Créez-en un dans le dock."
+  },
   "roles": {
     "auditor": "Auditeur",
     "administrator": "Administrateur",

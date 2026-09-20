@@ -9,6 +9,7 @@ import { PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
 import { safeArray } from "@/utils";
 
+import styles from "./assets.module.css";
 import { LedgerSection } from "./Ledger";
 
 const KINDS: Asset.Kind[] = ["images", "files", "videos", "audios"];
@@ -42,7 +43,7 @@ export default function AssetsView() {
     <PageFrame>
       <PageHeader icon={CameraIcon} title={t("title")} description={t("subtitle")} />
       <Tabs.Root value={kind} onValueChange={(v) => setKind(v as Asset.Kind)}>
-        <Tabs.List>
+        <Tabs.List className={styles.tabList}>
           {KINDS.map((k) => (
             <Tabs.Trigger key={k} value={k}>
               {t(`kinds.${k}`)}

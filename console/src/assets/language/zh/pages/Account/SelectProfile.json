@@ -11,6 +11,14 @@
     "authority": "Authority",
     "forger": "Forger"
   },
+  "kindHint": {
+    "authority": "审核与角色",
+    "forger": "日常使用"
+  },
+  "empty": {
+    "authority": "还没有 Authority Profile。在底栏创建一个。",
+    "forger": "还没有 Forger Profile。在底栏创建一个。"
+  },
   "roles": {
     "auditor": "审计员",
     "administrator": "管理员",
