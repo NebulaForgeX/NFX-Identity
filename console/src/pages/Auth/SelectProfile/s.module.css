@@ -1,0 +1,144 @@
+.ledger {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 4rem);
+}
+
+.head {
+  padding: 2rem 1.5rem 1.25rem;
+}
+
+.kicker {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.title {
+  font-family: var(--heading-font-family), sans-serif;
+  letter-spacing: -0.04em;
+}
+
+.lede {
+  color: var(--gray-11);
+  max-width: 48ch;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  border-top: 1px solid var(--color-border);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  min-height: 22rem;
+  padding: 1.25rem 1.35rem 6.5rem;
+}
+
+.colForger {
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.colAuthority {
+  background: var(--color-bg-2);
+}
+
+.colHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.colName {
+  font-family: var(--heading-font-family), sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.colHint {
+  color: var(--gray-11);
+}
+
+.empty {
+  color: var(--gray-11);
+  padding: 1.5rem 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.75rem 0.15rem;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.row:hover:not(:disabled) {
+  background: var(--color-primary-bg);
+}
+
+.row:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.rowMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(10rem, 1fr) auto auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem 1.35rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.dockLabel {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  font-size: 0.7rem;
+}
+
+@media (max-width: 960px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .colForger {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .col {
+    min-height: 0;
+    padding-bottom: 1.5rem;
+  }
+
+  .dock {
+    grid-template-columns: 1fr 1fr;
+    position: sticky;
+  }
+}
