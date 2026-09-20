@@ -24,10 +24,15 @@ services:
       traefik.project: "nfx-identity"
       traefik.http.services.identity-auth-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.identity-auth-base.entrypoints: web
-      traefik.http.routers.identity-auth-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)
+      traefik.http.middlewares.nfx-identity-auth-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.identity-auth-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_AUTH}`)
+      traefik.http.routers.identity-auth-base.priority: "20"
+      traefik.http.routers.identity-auth-base.middlewares: nfx-identity-auth-gw
       traefik.http.routers.identity-auth-base.service: identity-auth-base
       traefik.http.routers.identity-auth-base-secure.entrypoints: websecure
-      traefik.http.routers.identity-auth-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_AUTH}`)
+      traefik.http.routers.identity-auth-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_AUTH}`)
+      traefik.http.routers.identity-auth-base-secure.priority: "20"
+      traefik.http.routers.identity-auth-base-secure.middlewares: nfx-identity-auth-gw
       traefik.http.routers.identity-auth-base-secure.service: identity-auth-base
       traefik.http.routers.identity-auth-base-secure.tls: "true"
     volumes:
@@ -35,6 +40,7 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -63,10 +69,15 @@ services:
       traefik.project: "nfx-identity"
       traefik.http.services.identity-asset-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.identity-asset-base.entrypoints: web
-      traefik.http.routers.identity-asset-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)
+      traefik.http.middlewares.nfx-identity-asset-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.identity-asset-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ASSET}`)
+      traefik.http.routers.identity-asset-base.priority: "20"
+      traefik.http.routers.identity-asset-base.middlewares: nfx-identity-asset-gw
       traefik.http.routers.identity-asset-base.service: identity-asset-base
       traefik.http.routers.identity-asset-base-secure.entrypoints: websecure
-      traefik.http.routers.identity-asset-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_ASSET}`)
+      traefik.http.routers.identity-asset-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ASSET}`)
+      traefik.http.routers.identity-asset-base-secure.priority: "20"
+      traefik.http.routers.identity-asset-base-secure.middlewares: nfx-identity-asset-gw
       traefik.http.routers.identity-asset-base-secure.service: identity-asset-base
       traefik.http.routers.identity-asset-base-secure.tls: "true"
     volumes:
@@ -74,6 +85,7 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -102,10 +114,15 @@ services:
       traefik.project: "nfx-identity"
       traefik.http.services.identity-system-base.loadbalancer.server.port: "${HTTP_PORT}"
       traefik.http.routers.identity-system-base.entrypoints: web
-      traefik.http.routers.identity-system-base.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.middlewares.nfx-identity-system-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.identity-system-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.identity-system-base.priority: "20"
+      traefik.http.routers.identity-system-base.middlewares: nfx-identity-system-gw
       traefik.http.routers.identity-system-base.service: identity-system-base
       traefik.http.routers.identity-system-base-secure.entrypoints: websecure
-      traefik.http.routers.identity-system-base-secure.rule: Host(`${TRAEFIK_API_HOST}`) && PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.identity-system-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.identity-system-base-secure.priority: "20"
+      traefik.http.routers.identity-system-base-secure.middlewares: nfx-identity-system-gw
       traefik.http.routers.identity-system-base-secure.service: identity-system-base
       traefik.http.routers.identity-system-base-secure.tls: "true"
     volumes:
@@ -113,6 +130,7 @@ services:
       - ./data:/app/data
       - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"

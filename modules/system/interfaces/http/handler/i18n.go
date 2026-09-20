@@ -4,6 +4,7 @@ import (
 	"nfxidentity/errors/src/sys"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -13,23 +14,35 @@ var supportedLangs = map[string]bool{"en": true, "zh": true, "fr": true}
 
 // I18nHandler serves error code translation JSON from a mounted directory (e.g. ./data/errors/langs).
 type I18nHandler struct {
-	errorsLangsPath string
+	errorsLangsPath   string
+	messagesLangsPath string
 }
 
 func NewI18nHandler(errorsLangsPath string) *I18nHandler {
-	return &I18nHandler{errorsLangsPath: errorsLangsPath}
+	messagesLangsPath := strings.Replace(errorsLangsPath, "errors/langs", "messages/langs", 1)
+	if messagesLangsPath == errorsLangsPath {
+		messagesLangsPath = "./messages/langs"
+	}
+	return &I18nHandler{errorsLangsPath: errorsLangsPath, messagesLangsPath: messagesLangsPath}
 }
 
-// GetErrorTranslations returns the error code translations JSON for the given lang (en, zh, fr).
-// Reads from disk each time so external updates are visible immediately.
-// GET /system/i18n/errors/:lang
+// GetErrorTranslations GET /system/locales/:lang
 func (h *I18nHandler) GetErrorTranslations(c fiber.Ctx) error {
+	return h.sendLangJSON(c, h.errorsLangsPath)
+}
+
+// GetMessageTranslations GET /system/messages/:lang
+func (h *I18nHandler) GetMessageTranslations(c fiber.Ctx) error {
+	return h.sendLangJSON(c, h.messagesLangsPath)
+}
+
+func (h *I18nHandler) sendLangJSON(c fiber.Ctx, dir string) error {
 	lang := c.Params("lang")
 	if lang == "" || !supportedLangs[lang] {
 		return sys.ErrInvalidParams.WithMsg("lang must be one of: en, zh, fr")
 	}
 	name := lang + ".json"
-	fpath := filepath.Join(h.errorsLangsPath, name)
+	fpath := filepath.Join(dir, name)
 	data, err := os.ReadFile(fpath)
 	if err != nil {
 		if os.IsNotExist(err) {

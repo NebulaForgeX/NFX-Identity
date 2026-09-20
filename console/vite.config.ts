@@ -1,7 +1,22 @@
-import path from "path";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig } from "vite";
+
+import {
+  loadNfxConsoleEnv,
+  nfxUiAtAliasPlugin,
+  nfxUiDedupe,
+  nfxUiOptimizeDepsExclude,
+  nfxUiViteAliases,
+  nfxViteDefine,
+  resolveNfxUiRoot,
+} from "./vite.nfx-ui";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname);
+const nfxUiRoot = resolveNfxUiRoot(root);
 
 const PAGE_CHUNKS: Record<string, string> = {
   "/src/pages/Auth/Login": "page-login",
@@ -17,30 +32,28 @@ const ELEMENT_CHUNKS: Record<string, string> = {
   "/src/elements/profile": "elements-profile",
 };
 
-// https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
-  const port = Number(env.VITE_PORT) || 5173;
+export default defineConfig(({ mode, command }) => {
+  const env = loadNfxConsoleEnv(root, mode);
+  const port = Number(env.VITE_PORT) || 10203;
+  const hasApiUrl = Boolean(env.VITE_API_URL);
+  const proxyTarget = env.VITE_DEV_API_PROXY_TARGET || env.VITE_API_URL || "http://192.168.1.64/nfx-identity";
 
   return {
+    base: "/",
+    define: nfxViteDefine(env),
     plugins: [
+      nfxUiAtAliasPlugin(root, nfxUiRoot),
       react(),
       visualizer({
-        filename: "./dist/stats.html", // 分析图生成的文件名
-        open: true, // 构建完成后自动打开浏览器
-        gzipSize: true, // 显示 gzip 后的大小
-        brotliSize: true, // 显示 brotli 压缩后的大小
+        filename: "./dist/stats.html",
+        open: process.env.DOCKER_BUILD !== "1",
+        gzipSize: true,
+        brotliSize: true,
       }),
     ],
-    base: "/", // 添加相对路径base，确保资源路径正确
     resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-        "lucide-react/icons": path.resolve(__dirname, "./node_modules/lucide-react/dist/esm/icons"),
-        react: path.resolve(__dirname, "./node_modules/react"),
-        "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
-      },
-      dedupe: ["react", "react-dom", "react/jsx-runtime", "@tanstack/react-query", "zustand"],
+      alias: nfxUiViteAliases(root, nfxUiRoot),
+      dedupe: nfxUiDedupe,
     },
     css: {
       modules: {
@@ -48,19 +61,31 @@ export default defineConfig(({ mode }) => {
         generateScopedName: "[name]__[local]___[hash:base64:5]",
       },
     },
+    optimizeDeps: {
+      exclude: nfxUiOptimizeDepsExclude,
+    },
     server: {
-      port: port,
-      host: "0.0.0.0", // 允许局域网访问
+      port,
+      host: "0.0.0.0",
       open: true,
+      fs: { allow: [root, nfxUiRoot] },
       watch: {
-        // 排除 templates 目录，避免监听其他项目的文件
-        ignored: ["**/templates/**", "**/node_modules/**"],
+        ignored: ["**/templates/**"],
       },
+      ...(command === "serve" && !hasApiUrl
+        ? {
+            proxy: {
+              "/auth": { target: proxyTarget, changeOrigin: true },
+              "/asset": { target: proxyTarget, changeOrigin: true },
+              "/system": { target: proxyTarget, changeOrigin: true },
+            },
+          }
+        : {}),
     },
     build: {
       outDir: "dist",
       sourcemap: true,
-      chunkSizeWarningLimit: 300, // 调整警告阈值为 300 kB (gzip 后的大小更重要)
+      chunkSizeWarningLimit: 300,
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -128,12 +153,8 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    optimizeDeps: {
-      // 排除 templates 目录的文件
-      exclude: ["templates"],
-    },
     preview: {
-      port: port,
+      port,
       host: "0.0.0.0",
     },
   };

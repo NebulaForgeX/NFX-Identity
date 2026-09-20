@@ -28,5 +28,6 @@ func (r *Router) RegisterRoutes() {
 	system.Post("/system-state/initialize", r.handlers.SystemState.Initialize)
 
 	// 错误码翻译 JSON（从挂载目录读取，外部更新即生效）
-	system.Get("/i18n/errors/:lang", r.handlers.I18n.GetErrorTranslations)
+	system.Get("/locales/:lang", r.handlers.I18n.GetErrorTranslations)
+	system.Get("/messages/:lang", r.handlers.I18n.GetMessageTranslations)
 }
