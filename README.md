@@ -1,18 +1,16 @@
-# NFX-Identity — Unified Authentication & Identity Service
+# NFX-Identity
 
-> 部署、网络、配置与安全的详细说明见 [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation)。
-> Deploy, network, config, and security: [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation).
+[English](README.en.md)
 
-**NFX-Identity = NebulaForgeX Identity Platform**
+NebulaForgeX 登录与资料中心。Go 模块：**auth / asset / system**。其它产品没有本地账号表。
 
-**NFX-Identity** is the centralized identity and user-profile platform of the NebulaForgeX ecosystem.
+部署、HTTP 全表、schema：[NFX-Documentation 第六章](https://github.com/NebulaForgeX/NFX-Documentation/blob/main/books/zh/chapter-06-nfx-identity-deployment.md)。先 Stack 与 Edge。主机 gRPC **10200–10202**，console **10203**。`nfx-ui` **0.28.0**。
 
-It provides authentication, authorization, user management, permission management, and enriched profile capabilities for all internal applications and microservices.
-
-Built with **Go**, designed with **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** principles, NFX-Identity is engineered for scalability, API-first integration, and cross-service interoperability.
-
----
-
-## 🎯 Service Overview
-
-NFX-Identity consists of three main services, each serving different purposes:
+```bash
+cp .example.env .env
+task proto:gen
+task errors:gen-langs
+task atlas:pipeline:run
+task console:i
+sudo docker compose -f docker-compose.dev.yml up --build
+```
