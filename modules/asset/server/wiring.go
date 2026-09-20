@@ -8,8 +8,11 @@ import (
 	"time"
 
 	authconn "nfxidentity/connections/auth"
-	"nfxidentity/modules/asset/application/media"
+	audiosApp "nfxidentity/modules/asset/application/audios"
+	filesApp "nfxidentity/modules/asset/application/files"
+	imagesApp "nfxidentity/modules/asset/application/images"
 	"nfxidentity/modules/asset/application/resource"
+	videosApp "nfxidentity/modules/asset/application/videos"
 	"nfxidentity/modules/asset/config"
 	"nfxidentity/modules/asset/infrastructure/objectstore"
 	audiosQuery "nfxidentity/modules/asset/infrastructure/query/audios"
@@ -28,7 +31,6 @@ import (
 	"nfxidentity/pkgs/security/token"
 	"nfxidentity/pkgs/security/token/servertoken"
 	"nfxidentity/pkgs/tokenx"
-	"nfxidentity/pkgs/transaction"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -42,7 +44,10 @@ type Dependencies struct {
 	busPublisher        *eventbus.BusPublisher
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
-	mediaSvc            *media.Service
+	imagesSvc           *imagesApp.Service
+	filesSvc            *filesApp.Service
+	videosSvc           *videosApp.Service
+	audiosSvc           *audiosApp.Service
 	resourceSvc         *resource.Service
 	authClient          *authconn.Client
 }
@@ -92,21 +97,14 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		}
 	}
 	db := postgres.DB()
-	mediaSvc := media.NewService(
-		transaction.NewGormTxManager(db),
-		objectstore.NewWithPresigner(mc, presigner, cfg.MinIO.Bucket),
-		imagesRepo.NewRepo(db),
-		filesRepo.NewRepo(db),
-		videosRepo.NewRepo(db),
-		audiosRepo.NewRepo(db),
-		imagesQuery.NewQuery(db),
-		filesQuery.NewQuery(db),
-		videosQuery.NewQuery(db),
-		audiosQuery.NewQuery(db),
-	)
-	if err := mediaSvc.EnsureBucket(ctx); err != nil {
+	store := objectstore.NewWithPresigner(mc, presigner, cfg.MinIO.Bucket)
+	if err := store.EnsureBucket(ctx); err != nil {
 		return nil, fmt.Errorf("ensure MinIO bucket: %w", err)
 	}
+	imagesSvc := imagesApp.NewService(imagesRepo.NewRepo(db), imagesQuery.NewQuery(db), store)
+	filesSvc := filesApp.NewService(filesRepo.NewRepo(db), filesQuery.NewQuery(db), store)
+	videosSvc := videosApp.NewService(videosRepo.NewRepo(db), videosQuery.NewQuery(db), store)
+	audiosSvc := audiosApp.NewService(audiosRepo.NewRepo(db), audiosQuery.NewQuery(db), store)
 
 	var authClient *authconn.Client
 	if cfg.GRPCClient.AuthAddr != "" {
@@ -135,7 +133,10 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 			cfg.Token.Issuer,
 			servertoken.WithAllowedSkew(5*time.Second),
 		),
-		mediaSvc:    mediaSvc,
+		imagesSvc:   imagesSvc,
+		filesSvc:    filesSvc,
+		videosSvc:   videosSvc,
+		audiosSvc:   audiosSvc,
 		resourceSvc: resourceSvc,
 		authClient:  authClient,
 	}, nil
@@ -150,7 +151,10 @@ func (d *Dependencies) Cleanup() {
 	}
 }
 
-func (d *Dependencies) MediaSvc() *media.Service             { return d.mediaSvc }
+func (d *Dependencies) ImagesApp() *imagesApp.Service        { return d.imagesSvc }
+func (d *Dependencies) FilesApp() *filesApp.Service          { return d.filesSvc }
+func (d *Dependencies) VideosApp() *videosApp.Service        { return d.videosSvc }
+func (d *Dependencies) AudiosApp() *audiosApp.Service        { return d.audiosSvc }
 func (d *Dependencies) AuthClient() *authconn.Client         { return d.authClient }
 func (d *Dependencies) UserTokenVerifier() token.Verifier    { return d.userTokenVerifier }
 func (d *Dependencies) ServerTokenVerifier() token.Verifier  { return d.serverTokenVerifier }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"nfxidentity/modules/auth/application/platform"
+	"nfxidentity/modules/auth/interface/http/handler"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/fiberx/middleware"
 	"nfxidentity/pkgs/httpx"
@@ -13,6 +14,16 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 )
+
+type Registry struct {
+	Login     *handler.LoginHandler
+	Signup    *handler.SignupHandler
+	Account   *handler.AccountHandler
+	Forger    *handler.ForgerHandler
+	Authority *handler.AuthorityHandler
+	Owner     *handler.OwnerHandler
+	Locales   *handler.LocalesHandler
+}
 
 type httpDeps interface {
 	PlatformSvc() *platform.Service
@@ -28,7 +39,6 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  120 * time.Second,
 	})
-
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"},
@@ -37,8 +47,18 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
 		MaxAge:           3600,
 	}))
-
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
-	RegisterRoutes(app, d.PlatformSvc(), d.UserTokenVerifier())
+
+	svc := d.PlatformSvc()
+	reg := &Registry{
+		Login:     handler.NewLoginHandler(svc),
+		Signup:    handler.NewSignupHandler(svc),
+		Account:   handler.NewAccountHandler(svc),
+		Forger:    handler.NewForgerHandler(svc),
+		Authority: handler.NewAuthorityHandler(svc),
+		Owner:     handler.NewOwnerHandler(svc),
+		Locales:   handler.NewLocalesHandler(),
+	}
+	NewRouter(app, reg, d.UserTokenVerifier()).RegisterRoutes()
 	return app
 }

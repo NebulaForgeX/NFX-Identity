@@ -22,7 +22,7 @@ func RunHTTP(ctx context.Context, cfg *config.Config) error {
 		return err
 	}
 	defer deps.Cleanup()
-	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg.Server.AccessLog)
+	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg)
 	httpAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.HTTPPort))
 	g, gctx := errgroup.WithContext(ctx)
 	g.Go(func() error {
@@ -75,7 +75,7 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 		return err
 	}
 	defer deps.Cleanup()
-	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg.Server.AccessLog)
+	httpSrv := httpInterfaces.NewHTTPServer(deps, cfg)
 	grpcSrv := grpcInterfaces.NewServer(deps)
 	httpAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.HTTPPort))
 	grpcAddr := net.JoinHostPort(cfg.Server.Host, strconv.Itoa(cfg.Server.GRPCPort))

@@ -22,12 +22,19 @@ func NewRouter(app fiber.Router, tokenVerifier token.Verifier, handlers *Registr
 
 func (r *Router) RegisterRoutes() {
 	system := r.app.Group("/system")
+	r.RegisterLocalesGroup(system)
+	r.RegisterSystemStateGroup(system)
+}
 
-	// 公开路由（system-base 等服务会调用）
-	system.Get("/system-state/latest", r.handlers.SystemState.GetLatest)
-	system.Post("/system-state/initialize", r.handlers.SystemState.Initialize)
+func (r *Router) RegisterLocalesGroup(system fiber.Router) {
+	locales := system.Group("/locales")
+	locales.Get("/:lang", r.handlers.I18n.GetErrorTranslations)
+	messages := system.Group("/messages")
+	messages.Get("/:lang", r.handlers.I18n.GetMessageTranslations)
+}
 
-	// 错误码翻译 JSON（从挂载目录读取，外部更新即生效）
-	system.Get("/locales/:lang", r.handlers.I18n.GetErrorTranslations)
-	system.Get("/messages/:lang", r.handlers.I18n.GetMessageTranslations)
+func (r *Router) RegisterSystemStateGroup(system fiber.Router) {
+	state := system.Group("/system-state")
+	state.Get("/latest", r.handlers.SystemState.GetLatest)
+	state.Post("/initialize", r.handlers.SystemState.Initialize)
 }
