@@ -1,4 +1,4 @@
-import { GearIcon, UserIcon } from "nfx-ui/icons";
+import { Settings, User } from "lucide-react";
 import { Avatar, Button, Flex, Text } from "@radix-ui/themes";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ export default function UserTopBar() {
   const avatarImageId = safeNullable(profile?.avatars?.[0]?.imageId);
 
   return (
-    <Flex align="center" justify="between" gap="3" wrap="wrap" py="3" px="4" position="sticky" top="0" className={styles.bar}>
+    <Flex align="center" justify="between" gap="4" wrap="wrap" py="4" px="6" position="sticky" top="0" className={styles.bar}>
       <Flex align="center" gap="3" minWidth="0">
         <Avatar size="2" radius="none" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
         <Flex direction="column" minWidth="0">
@@ -35,11 +35,11 @@ export default function UserTopBar() {
 
       <Flex align="center" gap="2" wrap="wrap">
         <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: paths.overview })}>
-          <LucideIcon icon={UserIcon} size={14} />
+          <LucideIcon icon={User} size={14} />
           {t("header.profile")}
         </Button>
         <Button size="2" variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: paths.settings })}>
-          <LucideIcon icon={GearIcon} size={14} />
+          <LucideIcon icon={Settings} size={14} />
           {t("sidebar.settingsItem")}
         </Button>
       </Flex>

@@ -1,4 +1,5 @@
-import { PenIcon, UploadIcon } from "nfx-ui/icons";
+import { PenIcon } from "nfx-ui/icons";
+import { Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Button, Flex, Select, Text, TextArea, TextField } from "@radix-ui/themes";
 import { LanguageEnum } from "nfx-ui/enums";
@@ -83,16 +84,16 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
 
   return (
     <LedgerSection title={t("avatar.title")} description={t("avatar.hint")}>
-      <Flex align="center" justify="between" gap="3" wrap="wrap">
-        <Flex align="center" gap="3" minWidth="0">
+      <Flex align="center" justify="between" gap="5" wrap="wrap">
+        <Flex align="center" gap="4" minWidth="0">
           <Avatar size="5" radius="none" src={src} fallback={initial} />
           <Text size="2" color="gray">
             {t("avatar.pickHint")}
           </Text>
         </Flex>
-        <Flex gap="2" wrap="wrap">
+        <Flex gap="3" wrap="wrap">
           <Button size="2" variant="soft" disabled={busy} onClick={() => fileRef.current?.click()}>
-            <LucideIcon icon={UploadIcon} size={14} />
+            <LucideIcon icon={Upload} size={14} />
             {busy ? t("avatar.uploading") : t("avatar.choose")}
           </Button>
           <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
@@ -212,7 +213,7 @@ export default function EditView() {
       {profile ? (
         <>
           <AvatarSection profile={profile} accountId={accountId} />
-          <LedgerSection title={t("backgroundUpload.label")}>
+          <LedgerSection title={t("backgroundUpload.label")} description={t("backgroundUpload.hint")}>
             <BackgroundGallery profile={profile} />
           </LedgerSection>
           <ProfileFields profile={profile} />

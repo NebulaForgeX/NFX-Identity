@@ -1,4 +1,4 @@
-import { ArrowNarrowLeftIcon, RightChevron, CameraIcon, SaveIcon, TrashIcon } from "nfx-ui/icons";
+import { ArrowLeft, Camera, ChevronRight, Save, Trash2 } from "lucide-react";
 import type { Profile } from "nfx-ui/types";
 
 import { useRef } from "react";
@@ -22,16 +22,8 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
   const atLimit = drafts.filter((d) => d.status !== "failed").length >= MAX_PROFILE_BACKGROUNDS;
 
   return (
-    <Flex direction="column" gap="3">
-      <Box>
-        <Text size="2" weight="bold">
-          {t("backgroundUpload.label")}
-        </Text>
-        <Text size="1" color="gray" mt="1">
-          {t("backgroundUpload.hint")}
-        </Text>
-      </Box>
-      <Flex align="center" justify="between" gap="3" py="2">
+    <Flex direction="column" gap="4">
+      <Flex align="center" justify="between" gap="4" wrap="wrap">
         <Flex minWidth="0" flexGrow="1">
           <Text size="1" color="gray">
             {t("backgroundUpload.queueSummary", {
@@ -42,11 +34,11 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
         </Flex>
         <Flex gap="2" wrap="wrap" align="center">
           <Button type="button" size="2" variant="soft" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
-            <LucideIcon icon={CameraIcon} size={14} />
+            <LucideIcon icon={Camera} size={14} />
             {atLimit ? t("backgroundUpload.full") : t("backgroundUpload.add")}
           </Button>
           <Button type="button" size="2" disabled={!dirty || uploading || confirming} loading={confirming} onClick={() => void confirmDrafts()}>
-            <LucideIcon icon={SaveIcon} size={14} />
+            <LucideIcon icon={Save} size={14} />
             {confirming ? t("backgroundUpload.confirming") : t("backgroundUpload.confirm")}
           </Button>
         </Flex>
@@ -102,7 +94,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     onClick={() => moveDraft(draft.imageId, -1)}
                     aria-label={t("backgroundUpload.moveLeft")}
                   >
-                    <LucideIcon icon={ArrowNarrowLeftIcon} size={12} />
+                    <LucideIcon icon={ArrowLeft} size={12} />
                   </Button>
                   <Button
                     type="button"
@@ -113,10 +105,10 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     onClick={() => moveDraft(draft.imageId, 1)}
                     aria-label={t("backgroundUpload.moveRight")}
                   >
-                    <LucideIcon icon={RightChevron} size={12} />
+                    <LucideIcon icon={ChevronRight} size={12} />
                   </Button>
                   <Button type="button" size="1" variant="soft" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
-                    <LucideIcon icon={TrashIcon} size={12} />
+                    <LucideIcon icon={Trash2} size={12} />
                   </Button>
                 </Flex>
               </Box>
