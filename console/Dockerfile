@@ -10,7 +10,7 @@ ENV VITE_WS_URL=${VITE_WS_URL}
 ENV VITE_BUILD_ENV=${VITE_BUILD_ENV}
 ENV VITE_APP_ID=${VITE_APP_ID}
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 COPY . .
 
 FROM deps AS dev
