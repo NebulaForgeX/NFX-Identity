@@ -17,7 +17,7 @@ export function LedgerSection({
 }) {
   return (
     <section className={styles.section}>
-      <Flex align="start" justify="between" gap="3" wrap="wrap" className={styles.sectionHead}>
+      <Flex align="start" justify="between" gap="4" wrap="wrap" className={styles.sectionHead}>
         <Box minWidth="0">
           <Heading as="h2" size="3" className={styles.sectionTitle}>
             {title}

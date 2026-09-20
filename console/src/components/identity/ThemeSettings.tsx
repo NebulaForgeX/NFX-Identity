@@ -1,4 +1,4 @@
-import { CheckedIcon, RefreshIcon, SaveIcon } from "nfx-ui/icons";
+import { Check, RefreshCw, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge, Box, Button, Flex, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
@@ -84,7 +84,7 @@ export default function ThemeSettings() {
         actions={
           <Flex gap="2">
             <Button type="button" variant="soft" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
-              <LucideIcon icon={RefreshIcon} size={14} />
+              <LucideIcon icon={RefreshCw} size={14} />
               {t("actions.reset")}
             </Button>
             <Button
@@ -100,7 +100,7 @@ export default function ThemeSettings() {
                 }
               }}
             >
-              <LucideIcon icon={SaveIcon} size={14} />
+              <LucideIcon icon={Save} size={14} />
               {t("actions.saveTheme")}
             </Button>
           </Flex>
@@ -132,7 +132,7 @@ export default function ThemeSettings() {
                     className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={CheckedIcon} size={12} color="white" /> : null}
+                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
                   </button>
                 );
               })}
@@ -152,7 +152,7 @@ export default function ThemeSettings() {
                     className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={CheckedIcon} size={12} color="white" /> : null}
+                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
                   </button>
                 );
               })}

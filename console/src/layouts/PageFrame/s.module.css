@@ -11,3 +11,7 @@
   flex: 1 1 auto;
   box-sizing: border-box;
 }
+
+.stack {
+  min-width: 0;
+}
