@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gofiber/fiber/v3"
 	"nfxidentity/modules/auth/config"
 	grpcInterfaces "nfxidentity/modules/auth/interface/grpc"
 	httpInterfaces "nfxidentity/modules/auth/interface/http"
@@ -34,7 +35,7 @@ func RunHTTP(ctx context.Context, cfg *config.Config) error {
 
 	g.Go(func() error {
 		logx.S().Infof("✅ HTTP server listening on %s", httpAddr)
-		if err := httpSrv.Listen(httpAddr); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := httpSrv.Listen(httpAddr, fiber.ListenConfig{DisableStartupMessage: true}); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			return err
 		}
 		return nil
@@ -153,7 +154,7 @@ func RunServer(ctx context.Context, cfg *config.Config) error {
 
 	g.Go(func() error {
 		logx.S().Infof("✅ HTTP server listening on %s", httpAddr)
-		if err := httpSrv.Listen(httpAddr); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := httpSrv.Listen(httpAddr, fiber.ListenConfig{DisableStartupMessage: true}); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			return err
 		}
 		return nil

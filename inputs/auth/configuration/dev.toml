@@ -9,6 +9,7 @@
 
     [server.access_log]
     mode = "logger"
+    format = "pretty"
 
 [postgresql]
     host = "${POSTGRESQL_HOST}"
@@ -48,7 +49,7 @@
 
 [logger]
     level = "debug"
-    format = "console"
+    format = "pretty"
     output = "stdout"
     file_path = "logs/auth.log"
     max_size_mb = 100
