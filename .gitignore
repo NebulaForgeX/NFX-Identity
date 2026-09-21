@@ -50,23 +50,13 @@ databases/build/
 databases/gen/
 databases/debug.txt
 
-## Uploaded assets
-assets/**/*
-!assets/**/.gitkeep
-static/images/pictures/*
-!static/images/pictures/.gitkeep
 
 ## Runtime data
-data/*
-data/postgresql/*
-data/redis/*
-data/kafka/*
 dump.rdb
 *.rdb
 *.sqlite
 *.db
 *.db-journal
-!data/**/.gitkeep
 
 ## Secrets & certificates
 *.key
@@ -77,8 +67,6 @@ dump.rdb
 *.pfx
 *.jks
 *.keystore
-static/keys/*
-!static/keys/.gitkeep
 # certs/
 certificates/
 ssl/
@@ -106,7 +94,6 @@ Desktop.ini
 
 ## Database dumps
 *.dump
-data/**/*.sql
 
 .task/*
 

@@ -47,9 +47,6 @@ services:
       traefik.http.routers.auth-base.rule: PathPrefix(`${API_PREFIX_PATH_AUTH}`)
       traefik.http.services.auth-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -119,9 +116,6 @@ services:
       traefik.http.routers.image-base.rule: PathPrefix(`${API_PREFIX_PATH_IMAGE}`)
       traefik.http.services.image-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -191,9 +185,6 @@ services:
       traefik.http.routers.access-base.rule: PathPrefix(`${API_PREFIX_PATH_ACCESS}`)
       traefik.http.services.access-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -263,9 +254,6 @@ services:
       traefik.http.routers.audit-base.rule: PathPrefix(`${API_PREFIX_PATH_AUDIT}`)
       traefik.http.services.audit-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -335,9 +323,6 @@ services:
       traefik.http.routers.clients-base.rule: PathPrefix(`${API_PREFIX_PATH_CLIENTS}`)
       traefik.http.services.clients-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -407,9 +392,6 @@ services:
       traefik.http.routers.directory-base.rule: PathPrefix(`${API_PREFIX_PATH_DIRECTORY}`)
       traefik.http.services.directory-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -479,9 +461,6 @@ services:
       traefik.http.routers.system-base.rule: PathPrefix(`${API_PREFIX_PATH_SYSTEM}`)
       traefik.http.services.system-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:
@@ -551,9 +530,6 @@ services:
       traefik.http.routers.tenants-base.rule: PathPrefix(`${API_PREFIX_PATH_TENANTS}`)
       traefik.http.services.tenants-base.loadbalancer.server.port: "${HTTP_PORT}"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     develop:
       watch:

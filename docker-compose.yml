@@ -59,10 +59,6 @@ services:
       - "traefik.http.routers.auth-api-insecure.service=auth-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -79,10 +75,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -102,10 +94,6 @@ services:
       - "${GRPC_PORT_AUTH}:${GRPC_PORT_AUTH}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -137,10 +125,6 @@ services:
       - "traefik.http.routers.image-api-insecure.service=image-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -157,10 +141,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -180,10 +160,6 @@ services:
       - "${GRPC_PORT_IMAGE}:${GRPC_PORT_IMAGE}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -200,10 +176,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -220,10 +192,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -255,10 +223,6 @@ services:
       - "traefik.http.routers.access-api-insecure.service=access-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -275,10 +239,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -298,10 +258,6 @@ services:
       - "${GRPC_PORT_ACCESS}:${GRPC_PORT_ACCESS}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -318,10 +274,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -353,10 +305,6 @@ services:
       - "traefik.http.routers.audit-api-insecure.service=audit-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -373,10 +321,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -396,10 +340,6 @@ services:
       - "${GRPC_PORT_AUDIT}:${GRPC_PORT_AUDIT}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -416,10 +356,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -451,10 +387,6 @@ services:
       - "traefik.http.routers.clients-api-insecure.service=clients-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -471,10 +403,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -494,10 +422,6 @@ services:
       - "${GRPC_PORT_CLIENTS}:${GRPC_PORT_CLIENTS}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -514,10 +438,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -549,10 +469,6 @@ services:
       - "traefik.http.routers.directory-api-insecure.service=directory-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -569,10 +485,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -592,10 +504,6 @@ services:
       - "${GRPC_PORT_DIRECTORY}:${GRPC_PORT_DIRECTORY}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -612,10 +520,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -648,9 +552,6 @@ services:
     environment:
       - ENV=prod
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
     depends_on:
       - reverse-proxy
@@ -668,10 +569,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -691,10 +588,6 @@ services:
       - "${GRPC_PORT_SYSTEM}:${GRPC_PORT_SYSTEM}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -711,10 +604,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -746,10 +635,6 @@ services:
       - "traefik.http.routers.tenants-api-insecure.service=tenants-api"
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     depends_on:
       - reverse-proxy
     networks:
@@ -766,10 +651,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -789,10 +670,6 @@ services:
       - "${GRPC_PORT_TENANTS}:${GRPC_PORT_TENANTS}"  # 映射 gRPC 端口到主机
     environment:
       - ENV=prod
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
@@ -809,10 +686,6 @@ services:
     environment:
       - ENV=prod
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-    volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
     networks:
       - nfx-identity
     depends_on:
