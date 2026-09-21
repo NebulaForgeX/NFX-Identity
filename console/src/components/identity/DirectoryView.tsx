@@ -11,6 +11,7 @@ import { PageFrame } from "@/layouts";
 import { formatDateTime, safeArray, safeStringable } from "@/utils";
 
 import { FieldList, FieldRow, LedgerSection } from "./Ledger";
+import styles from "./Ledger/s.module.css";
 
 export default function DirectoryView() {
   const { t } = useTranslation("pages.Directory");
@@ -30,7 +31,11 @@ export default function DirectoryView() {
         icon={ShieldCheck}
         title={t("title")}
         description={t("description")}
-        actions={<TextField.Root placeholder={t("search")} value={query} onChange={(e) => setQuery(e.target.value)} />}
+        actions={
+          <div className={styles.search}>
+            <TextField.Root variant="classic" placeholder={t("search")} value={query} onChange={(e) => setQuery(e.target.value)} />
+          </div>
+        }
       />
       {ownerError ? (
         <Text size="2" color="red" mb="3">
@@ -44,13 +49,14 @@ export default function DirectoryView() {
             {t("forger.empty")}
           </Text>
         ) : (
-          <Table.Root variant="surface">
+          <div className={styles.tableWrap}>
+          <Table.Root variant="ghost" size="2">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>{t("columns.name")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("columns.city")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("columns.roles")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("columns.created")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.name")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.city")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.roles")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.created")}</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -72,6 +78,7 @@ export default function DirectoryView() {
               ))}
             </Table.Body>
           </Table.Root>
+          </div>
         )}
       </LedgerSection>
 
@@ -81,12 +88,13 @@ export default function DirectoryView() {
             {t("authority.empty")}
           </Text>
         ) : (
-          <Table.Root variant="surface">
+          <div className={styles.tableWrap}>
+          <Table.Root variant="ghost" size="2">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>{t("columns.name")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("columns.roles")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("columns.assign")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.name")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.roles")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={styles.head}>{t("columns.assign")}</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -127,6 +135,7 @@ export default function DirectoryView() {
               })}
             </Table.Body>
           </Table.Root>
+          </div>
         )}
       </LedgerSection>
 

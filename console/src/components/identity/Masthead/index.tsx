@@ -4,7 +4,7 @@ import type { Profile } from "nfx-ui/types";
 
 import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeArray, safeNullable, safeStringable } from "@/utils";
 
-import styles from "./masthead.module.css";
+import styles from "./s.module.css";
 
 export function profileRoles(kind: ProfileKindEnum, data: Maybe<Profile.Response.FullAccountInformationWithForgerProfile | Profile.Response.FullAccountInformationWithAuthorityProfile>): string[] {
   if (!data) return [];
@@ -44,7 +44,8 @@ export default function Masthead({
       <Flex align="end" justify="between" gap="4" wrap="wrap" className={styles.body}>
         <Flex align="end" gap="4" minWidth="0">
           <Avatar size="6" radius="none" className={styles.avatar} src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-          <Flex direction="column" gap="1" minWidth="0" pb="1">
+          <Box pb="1">
+          <Flex direction="column" gap="1" minWidth="0">
             <Text size="1" color="gray" className={styles.kind}>
               {kind}
             </Text>
@@ -64,6 +65,7 @@ export default function Masthead({
               ) : null}
             </Flex>
           </Flex>
+          </Box>
         </Flex>
         {action ? <Box pb="1">{action}</Box> : null}
       </Flex>

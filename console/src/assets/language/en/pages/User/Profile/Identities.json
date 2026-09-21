@@ -50,8 +50,8 @@
     "cannotDeleteLast": "At least one identity must remain.",
     "deleteConfirmBody": "Permanently delete \"{{name}}\" and its data? This cannot be undone.",
     "profileLanguage": "Language",
-    "scopeForger": "Forger",
-    "newForgerProfile": "New forger profile"
+    "newForgerProfile": "New forger profile",
+    "scopeCommunity": "Community"
   },
   "sections": {
     "emails": {

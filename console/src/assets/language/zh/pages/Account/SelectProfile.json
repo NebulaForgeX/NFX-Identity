@@ -3,21 +3,21 @@
     "access": "{{name}} 通行",
     "title": "选择继续使用的 Profile。"
   },
-  "heroFooter": "一个 Account。Forger 或 Authority — 选择本次会话。",
+  "heroFooter": "一个 Account。Community 或 Authority — 选择本次会话。",
   "eyebrow": "选择身份",
   "title": "用哪个 Profile 继续？",
   "subtitle": "一个 Account 可以持有多个 Profile。",
   "kind": {
     "authority": "Authority",
-    "forger": "Forger"
+    "community": "Community"
   },
   "kindHint": {
     "authority": "审核与角色",
-    "forger": "日常使用"
+    "community": "日常使用"
   },
   "empty": {
     "authority": "还没有 Authority Profile。在底栏创建一个。",
-    "forger": "还没有 Forger Profile。在底栏创建一个。"
+    "community": "还没有 Community Profile。在底栏创建一个。"
   },
   "roles": {
     "auditor": "审计员",

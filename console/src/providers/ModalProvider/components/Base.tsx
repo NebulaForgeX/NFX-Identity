@@ -40,10 +40,12 @@ const Base = () => {
           <Text as="p" align="center" color="gray" size="2">
             {message || "No message"}
           </Text>
-          <Button onClick={handleClose} style={{ width: "100%" }}>
-            <CheckIcon />
-            {confirmText || "OK"}
-          </Button>
+          <Flex asChild width="100%">
+            <Button onClick={handleClose}>
+              <CheckIcon />
+              {confirmText || "OK"}
+            </Button>
+          </Flex>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

@@ -41,7 +41,7 @@ export default function App() {
 
       <Route element={<ProtectedRoute redirectTo={ROUTES.LOGIN} />}>
         <Route element={<Sidebar />}>
-          <Route element={<ScopeRoute scope={ProfileKindEnum.FORGER} />}>
+          <Route element={<ScopeRoute scope={ProfileKindEnum.COMMUNITY} />}>
             <Route path={ROUTES.FORGER} element={<Navigate to={ROUTES.FORGER_DESK} replace />} />
             <Route path={ROUTES.FORGER_DESK} element={<ForgerDeskPage />} />
             <Route path={ROUTES.FORGER_PROFILE} element={<Navigate to={ROUTES.FORGER_PROFILE_OVERVIEW} replace />} />

@@ -92,14 +92,14 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
           </Text>
         </Flex>
         <Flex gap="3" wrap="wrap">
-          <Button size="2" variant="soft" disabled={busy} onClick={() => fileRef.current?.click()}>
+          <Button size="2" variant="outline" disabled={busy} onClick={() => fileRef.current?.click()}>
             <LucideIcon icon={Upload} size={14} />
             {busy ? t("avatar.uploading") : t("avatar.choose")}
           </Button>
           <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
             {confirmUpload.isPending ? t("avatar.confirming") : t("avatar.confirm")}
           </Button>
-          <Button size="2" variant="soft" color="red" disabled={!currentAvatarId || busy} onClick={() => clearAvatar.mutate()}>
+          <Button size="2" variant="outline" color="red" disabled={!currentAvatarId || busy} onClick={() => clearAvatar.mutate()}>
             {t("avatar.clear")}
           </Button>
         </Flex>

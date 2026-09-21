@@ -40,11 +40,11 @@
     "back": "Retour à la connexion",
     "kind": {
       "authority": "Authority",
-      "forger": "Forger"
+      "community": "Community"
     },
     "kindHint": {
       "authority": "Modération et rôles",
-      "forger": "Usage quotidien"
+      "community": "Usage quotidien"
     },
     "roles": {
       "pulser": "Pulser",

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, CameraIcon, DownChevron, GearIcon, LayersIcon, LayoutDashboardIcon, LogoutIcon, PassportIcon, PenIcon, RightChevron, ShieldCheck, UnorderedListIcon, UserIcon } from "nfx-ui/icons";
+import { ProfileKindEnum } from "nfx-ui/enums";
 import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { AuthStore, clearAuth } from "nfx-ui/stores";
@@ -256,7 +257,7 @@ function Sidebar() {
         >
           <Flex direction="column" height="100%" minHeight="0" className={styles.sidebar}>
             <div className={styles.header}>
-              <button type="button" className={styles.accountCard} aria-label={displayName}>
+              <Button type="button" variant="ghost" className={styles.accountCard} aria-label={displayName}>
                 <Avatar
                   size="3"
                   className={styles.avatar}
@@ -267,13 +268,13 @@ function Sidebar() {
                 />
                 {!collapsed && (
                   <span className={styles.accountInfo}>
-                    <span className={styles.accountRole}>{t(kind === "authority" ? "sidebar.profileAuthority" : "sidebar.profileForger")}</span>
+                    <span className={styles.accountRole}>{t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}</span>
                     <span className={styles.accountName}>{displayName}</span>
                   </span>
                 )}
-              </button>
+              </Button>
               <IconButton
-                variant="soft"
+                variant="outline"
                 size="1"
                 className={styles.toggle}
                 aria-label={collapsed ? t("sidebar.expand") : t("sidebar.collapse")}

@@ -5,7 +5,12 @@
 }
 
 .head {
-  padding: 2rem 1.5rem 1.25rem;
+}
+.headPx {
+  padding-inline: 1.5rem;
+}
+.headPy {
+  padding-block: 2rem 1.25rem;
 }
 
 .kicker {
@@ -35,10 +40,15 @@
   display: flex;
   flex-direction: column;
   min-height: 22rem;
-  padding: 1.25rem 1.35rem 6.5rem;
+}
+.colPx {
+  padding-inline: 1.35rem;
+}
+.colPy {
+  padding-block: 1.25rem 6.5rem;
 }
 
-.colForger {
+.colCommunity {
   border-right: 1px solid var(--color-border);
   background: var(--color-bg);
 }
@@ -52,9 +62,13 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
+}
+.colHeadHairline {
+  border-bottom: 1px solid var(--color-border);
+}
+.colHeadPy {
   padding-bottom: 0.85rem;
   margin-bottom: 0.85rem;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .colName {
@@ -74,14 +88,16 @@
 .row {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.85rem;
+  height: auto;
   width: 100%;
   padding: 0.75rem 0.15rem;
   border: none;
   border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
   background: transparent;
   color: inherit;
-  cursor: pointer;
   text-align: left;
 }
 
@@ -110,9 +126,14 @@
   grid-template-columns: auto minmax(10rem, 1fr) auto auto auto;
   gap: 0.75rem;
   align-items: center;
-  padding: 0.85rem 1.35rem;
   border-top: 1px solid var(--color-border);
   background: var(--color-bg);
+}
+.dockPx {
+  padding-inline: 1.35rem;
+}
+.dockPy {
+  padding-block: 0.85rem;
 }
 
 .dockLabel {
@@ -127,7 +148,7 @@
     grid-template-columns: 1fr;
   }
 
-  .colForger {
+  .colCommunity {
     border-right: none;
     border-bottom: 1px solid var(--color-border);
   }

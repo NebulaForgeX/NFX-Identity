@@ -21,8 +21,8 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon } from "@/components";
 
-import { FieldList, FieldRow, LedgerSection } from "./Ledger";
-import styles from "./settings.module.css";
+import { FieldList, FieldRow, LedgerSection } from "../Ledger";
+import styles from "./s.module.css";
 
 const FONT_LABEL_KEY: Record<ThemeFontFamilyEnum, string> = {
   [ThemeFontFamilyEnum.SYSTEM]: "labels.fontSystem",
@@ -83,7 +83,7 @@ export default function ThemeSettings() {
         description={t("sections.theme.description")}
         actions={
           <Flex gap="2">
-            <Button type="button" variant="soft" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
+            <Button type="button" variant="outline" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
               <LucideIcon icon={RefreshCw} size={14} />
               {t("actions.reset")}
             </Button>
@@ -123,9 +123,11 @@ export default function ThemeSettings() {
               {RADIX_ACCENT_VALUES.map((c) => {
                 const active = draft.accent === c;
                 return (
-                  <button
+                  <Button
                     key={c}
                     type="button"
+                    variant="outline"
+                    color="gray"
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ accent: c })}
@@ -133,7 +135,7 @@ export default function ThemeSettings() {
                     style={{ background: swatchVar(c) }}
                   >
                     {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
-                  </button>
+                  </Button>
                 );
               })}
             </Flex>
@@ -143,9 +145,11 @@ export default function ThemeSettings() {
               {RADIX_GRAY_VALUES.map((c) => {
                 const active = draft.gray === c;
                 return (
-                  <button
+                  <Button
                     key={c}
                     type="button"
+                    variant="outline"
+                    color="gray"
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ gray: c })}
@@ -153,7 +157,7 @@ export default function ThemeSettings() {
                     style={{ background: swatchVar(c) }}
                   >
                     {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
-                  </button>
+                  </Button>
                 );
               })}
             </Flex>
@@ -213,14 +217,17 @@ export default function ThemeSettings() {
               hasBackground
               className={styles.previewTheme}
             >
-              <Flex direction="column" gap="3" p="3" style={{ border: "1px solid var(--gray-a5)" }}>
+              <Box style={{ border: "1px solid var(--gray-a5)" }}>
+                <Box px="3">
+                  <Box py="3">
+              <Flex direction="column" gap="3">
                 <Flex align="center" justify="between">
                   <Heading size="4">{APP_NAME}</Heading>
                   <Badge size="1">{t("labels.previewBadge")}</Badge>
                 </Flex>
                 <Flex gap="2" wrap="wrap">
                   <Button size="2">{t("labels.previewSolid")}</Button>
-                  <Button size="2" variant="soft">
+                  <Button size="2" variant="outline">
                     {t("labels.previewSoft")}
                   </Button>
                 </Flex>
@@ -230,6 +237,9 @@ export default function ThemeSettings() {
                   <Text size="2">{t("labels.notifications")}</Text>
                 </Flex>
               </Flex>
+                  </Box>
+                </Box>
+              </Box>
             </Theme>
           </FieldRow>
         </FieldList>

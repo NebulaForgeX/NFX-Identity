@@ -50,8 +50,8 @@
     "cannotDeleteLast": "至少需保留一个身份。",
     "deleteConfirmBody": "确定永久删除「{{name}}」及其数据？此操作不可撤销。",
     "profileLanguage": "语言",
-    "scopeForger": "Forger",
-    "newForgerProfile": "新建 Forger 身份"
+    "newForgerProfile": "新建 Forger 身份",
+    "scopeCommunity": "Community"
   },
   "sections": {
     "emails": {

@@ -4,5 +4,5 @@ import { OverviewView } from "@/components/identity";
 import { scopePaths } from "@/navigations";
 
 export default function ForgerProfileOverviewPage() {
-  return <OverviewView paths={scopePaths(ProfileKindEnum.FORGER)} />;
+  return <OverviewView paths={scopePaths(ProfileKindEnum.COMMUNITY)} />;
 }

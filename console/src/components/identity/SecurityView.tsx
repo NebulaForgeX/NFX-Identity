@@ -56,7 +56,7 @@ export default function SecurityView() {
                 <Button
                   type="button"
                   size="2"
-                  variant="soft"
+                  variant="outline"
                   loading={sendCode.isPending}
                   disabled={busy || !primaryEmail}
                   onClick={() => void sendCode.mutateAsync({ lang: currentLanguage ?? LanguageEnum.EN })}

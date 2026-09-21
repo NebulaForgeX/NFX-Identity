@@ -11,11 +11,18 @@
 }
 
 .step {
+  border-right: 1px solid var(--color-border);
+}
+.stepPx {
+  padding-inline: 1.35rem;
+}
+.stepPy {
+  padding-block: 1.15rem;
+}
+.stepStack {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  padding: 1.15rem 1.35rem;
-  border-right: 1px solid var(--color-border);
 }
 
 .step:last-child {
@@ -42,9 +49,14 @@
 }
 
 .copy {
-  padding: 3.5rem 2.5rem 4rem;
   border-right: 1px solid var(--color-border);
   background: var(--color-bg-2);
+}
+.copyPx {
+  padding-inline: 2.5rem;
+}
+.copyPy {
+  padding-block: 3.5rem 4rem;
 }
 
 .kicker {
@@ -66,7 +78,13 @@
 }
 
 .form {
-  padding: 3.5rem 2.5rem 4rem;
+  min-width: 0;
+}
+.formPx {
+  padding-inline: 2.5rem;
+}
+.formPy {
+  padding-block: 3.5rem 4rem;
 }
 
 .passRow {
@@ -98,10 +116,26 @@
   .copy {
     border-right: none;
     border-bottom: 1px solid var(--color-border);
-    padding: 2rem 1.25rem;
+  }
+  .copyPx {
+    padding-inline: 1.25rem;
+  }
+  .copyPy {
+    padding-block: 2rem;
   }
 
-  .form {
-    padding: 2rem 1.25rem 3.5rem;
+  .formPx {
+    padding-inline: 1.25rem;
   }
+  .formPy {
+    padding-block: 2rem 3.5rem;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.codeField {
+  flex: 1;
 }
