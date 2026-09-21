@@ -226,7 +226,7 @@
   "INVALID_PHONE": "Phone required",
   "INVALID_PHONE_ID": "Invalid phone id",
   "INVALID_PROFILE_ID": "Invalid profile id",
-  "INVALID_PROFILE_KIND": "Kind must be forger or authority",
+  "INVALID_PROFILE_KIND": "Kind must be community or authority",
   "INVALID_QUERY": "Invalid request query",
   "INVALID_REFRESH_TOKEN": "Invalid or expired refresh token",
   "INVALID_TOKEN": "Invalid or expired token",

@@ -226,7 +226,7 @@
   "INVALID_PHONE": "Téléphone requis",
   "INVALID_PHONE_ID": "Identifiant téléphone invalide",
   "INVALID_PROFILE_ID": "Identifiant de profil invalide",
-  "INVALID_PROFILE_KIND": "Le type doit être forger ou authority",
+  "INVALID_PROFILE_KIND": "Le type doit être community ou authority",
   "INVALID_QUERY": "Requête invalide",
   "INVALID_REFRESH_TOKEN": "Jeton de rafraîchissement invalide ou expiré",
   "INVALID_TOKEN": "jeton invalide ou expiré",

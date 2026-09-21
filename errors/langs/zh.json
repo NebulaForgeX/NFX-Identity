@@ -226,7 +226,7 @@
   "INVALID_PHONE": "手机号必填",
   "INVALID_PHONE_ID": "手机号 ID 无效",
   "INVALID_PROFILE_ID": "资料 ID 无效",
-  "INVALID_PROFILE_KIND": "资料类型必须是 forger 或 authority",
+  "INVALID_PROFILE_KIND": "资料类型必须是 community 或 authority",
   "INVALID_QUERY": "请求查询无效",
   "INVALID_REFRESH_TOKEN": "刷新令牌无效或已过期",
   "INVALID_TOKEN": "令牌无效或已过期",
