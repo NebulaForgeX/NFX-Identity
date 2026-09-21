@@ -3,6 +3,7 @@ package handler
 import (
 	authconn "nfxidentity/connections/auth"
 	asseterrs "nfxidentity/errors/src/asset"
+	assetmsg "nfxidentity/messages/src/asset"
 	audiosApp "nfxidentity/modules/asset/application/audios"
 	"nfxidentity/modules/asset/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
@@ -52,7 +53,7 @@ func (h *AudioHandler) PrepareAudioUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URL created", httpx.SuccessOptions{Data: reqdto.PrepareAudioUploadDataFrom(out)})
+	return fiberx.OK(c, assetmsg.UPLOAD_URL_CREATED, httpx.SuccessOptions{Data: reqdto.PrepareAudioUploadDataFrom(out)})
 }
 
 func (h *AudioHandler) PrepareAudiosUpload(c fiber.Ctx) error {
@@ -74,7 +75,7 @@ func (h *AudioHandler) PrepareAudiosUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URLs created", httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareAudioUploadsDataFrom(out)}})
+	return fiberx.OK(c, assetmsg.UPLOAD_URLS_CREATED, httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareAudioUploadsDataFrom(out)}})
 }
 
 func (h *AudioHandler) ConfirmAudioUpload(c fiber.Ctx) error {
@@ -96,7 +97,7 @@ func (h *AudioHandler) ConfirmAudioUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUpload(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Audio confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.AUDIO_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *AudioHandler) ConfirmAudiosUpload(c fiber.Ctx) error {
@@ -121,7 +122,7 @@ func (h *AudioHandler) ConfirmAudiosUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUploads(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Audios confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.AUDIOS_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *AudioHandler) DeleteAudio(c fiber.Ctx) error {
@@ -142,7 +143,7 @@ func (h *AudioHandler) DeleteAudio(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Audio deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.AUDIO_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *AudioHandler) ServeAudioFile(c fiber.Ctx) error {

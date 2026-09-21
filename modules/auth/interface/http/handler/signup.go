@@ -2,6 +2,7 @@ package handler
 
 import (
 	authErr "nfxidentity/errors/src/auth"
+	authmsg "nfxidentity/messages/src/auth"
 	signup "nfxidentity/modules/auth/application/signup"
 	"nfxidentity/modules/auth/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/errx"
@@ -39,7 +40,7 @@ func (h *SignupHandler) BySendingCode(c fiber.Ctx) error {
 	if err := h.signup.BySendingCode(c.Context(), email, string(req.Lang)); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Verification code sent successfully", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.VERIFICATION_CODE_SENT, httpx.SuccessOptions{})
 }
 
 func (h *SignupHandler) WithEmail(c fiber.Ctx) error {
@@ -81,5 +82,5 @@ func (h *SignupHandler) WithEmail(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Signup successfully", httpx.SuccessOptions{Data: result})
+	return fiberx.OK(c, authmsg.SIGNUP_SUCCESS, httpx.SuccessOptions{Data: result})
 }

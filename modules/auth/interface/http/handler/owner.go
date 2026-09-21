@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	sysErr "nfxidentity/errors/src/sys"
+	authmsg "nfxidentity/messages/src/auth"
 	"nfxidentity/modules/auth/application/account"
 	"nfxidentity/modules/auth/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
@@ -82,5 +83,5 @@ func (h *OwnerHandler) UpdateAuthorityRoles(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
+	return fiberx.OK(c, authmsg.AUTHORITY_ROLES_UPDATED, httpx.SuccessOptions{Data: nil})
 }

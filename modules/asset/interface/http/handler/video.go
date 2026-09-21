@@ -3,6 +3,7 @@ package handler
 import (
 	authconn "nfxidentity/connections/auth"
 	asseterrs "nfxidentity/errors/src/asset"
+	assetmsg "nfxidentity/messages/src/asset"
 	videosApp "nfxidentity/modules/asset/application/videos"
 	"nfxidentity/modules/asset/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
@@ -52,7 +53,7 @@ func (h *VideoHandler) PrepareVideoUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URL created", httpx.SuccessOptions{Data: reqdto.PrepareVideoUploadDataFrom(out)})
+	return fiberx.OK(c, assetmsg.UPLOAD_URL_CREATED, httpx.SuccessOptions{Data: reqdto.PrepareVideoUploadDataFrom(out)})
 }
 
 func (h *VideoHandler) PrepareVideosUpload(c fiber.Ctx) error {
@@ -74,7 +75,7 @@ func (h *VideoHandler) PrepareVideosUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URLs created", httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareVideoUploadsDataFrom(out)}})
+	return fiberx.OK(c, assetmsg.UPLOAD_URLS_CREATED, httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareVideoUploadsDataFrom(out)}})
 }
 
 func (h *VideoHandler) ConfirmVideoUpload(c fiber.Ctx) error {
@@ -96,7 +97,7 @@ func (h *VideoHandler) ConfirmVideoUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUpload(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Video confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.VIDEO_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *VideoHandler) ConfirmVideosUpload(c fiber.Ctx) error {
@@ -121,7 +122,7 @@ func (h *VideoHandler) ConfirmVideosUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUploads(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Videos confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.VIDEOS_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *VideoHandler) DeleteVideo(c fiber.Ctx) error {
@@ -142,7 +143,7 @@ func (h *VideoHandler) DeleteVideo(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Video deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.VIDEO_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *VideoHandler) ServeVideoFile(c fiber.Ctx) error {

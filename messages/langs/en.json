@@ -1,10 +1,198 @@
 {
+  "AUDIOS_CONFIRMED": {
+    "title": "Audios confirmed",
+    "body": "The audio uploads have been confirmed"
+  },
+  "AUDIO_CONFIRMED": {
+    "title": "Audio confirmed",
+    "body": "The audio upload has been confirmed"
+  },
+  "AUDIO_DELETED": {
+    "title": "Audio deleted",
+    "body": "The audio has been deleted"
+  },
+  "AUTHORITY_PROFILE_AVATAR_CLEARED": {
+    "title": "Avatar cleared",
+    "body": "The authority profile avatar has been cleared"
+  },
+  "AUTHORITY_PROFILE_AVATAR_UPDATED": {
+    "title": "Avatar updated",
+    "body": "The authority profile avatar has been updated"
+  },
+  "AUTHORITY_PROFILE_BACKGROUNDS_UPDATED": {
+    "title": "Backgrounds updated",
+    "body": "Authority profile backgrounds have been updated"
+  },
+  "AUTHORITY_PROFILE_CREATED": {
+    "title": "Profile created",
+    "body": "The authority profile has been created"
+  },
+  "AUTHORITY_PROFILE_DELETED": {
+    "title": "Profile deleted",
+    "body": "The authority profile has been deleted"
+  },
+  "AUTHORITY_PROFILE_SETTINGS_UPDATED": {
+    "title": "Settings updated",
+    "body": "Authority profile settings have been updated"
+  },
+  "AUTHORITY_PROFILE_UPDATED": {
+    "title": "Profile updated",
+    "body": "The authority profile has been updated"
+  },
+  "AUTHORITY_ROLES_UPDATED": {
+    "title": "Roles updated",
+    "body": "Authority roles have been updated"
+  },
+  "EMAIL_ADDED": {
+    "title": "Email added",
+    "body": "The email address has been added"
+  },
+  "EMAIL_DELETED": {
+    "title": "Email deleted",
+    "body": "The email address has been deleted"
+  },
+  "EMAIL_UPDATED": {
+    "title": "Email updated",
+    "body": "The email address has been updated"
+  },
+  "EMAIL_VERIFIED": {
+    "title": "Email verified",
+    "body": "The email address has been verified"
+  },
+  "FILES_CONFIRMED": {
+    "title": "Files confirmed",
+    "body": "The file uploads have been confirmed"
+  },
+  "FILE_CONFIRMED": {
+    "title": "File confirmed",
+    "body": "The file upload has been confirmed"
+  },
+  "FILE_DELETED": {
+    "title": "File deleted",
+    "body": "The file has been deleted"
+  },
+  "IMAGES_CONFIRMED": {
+    "title": "Images confirmed",
+    "body": "The image uploads have been confirmed"
+  },
+  "IMAGE_CONFIRMED": {
+    "title": "Image confirmed",
+    "body": "The image upload has been confirmed"
+  },
+  "IMAGE_DELETED": {
+    "title": "Image deleted",
+    "body": "The image has been deleted"
+  },
   "LOGIN_NOTICE": {
     "title": "New sign-in to your Identity account",
     "body": "A new sign-in was recorded. If this was you, you can ignore this email."
   },
+  "LOGIN_SUCCESS": {
+    "title": "Signed in",
+    "body": "You have signed in successfully"
+  },
+  "LOGOUT_SUCCESS": {
+    "title": "Signed out",
+    "body": "You have signed out"
+  },
+  "PASSWORD_UPDATED": {
+    "title": "Password updated",
+    "body": "The password has been updated"
+  },
+  "PHONE_ADDED": {
+    "title": "Phone added",
+    "body": "The phone number has been added"
+  },
+  "PHONE_DELETED": {
+    "title": "Phone deleted",
+    "body": "The phone number has been deleted"
+  },
+  "PHONE_UPDATED": {
+    "title": "Phone updated",
+    "body": "The phone number has been updated"
+  },
+  "PHONE_VERIFIED": {
+    "title": "Phone verified",
+    "body": "The phone number has been verified"
+  },
+  "PREFERENCE_UPDATED": {
+    "title": "Preference updated",
+    "body": "Your preference has been updated"
+  },
+  "PRIMARY_EMAIL_UPDATED": {
+    "title": "Primary email updated",
+    "body": "The primary email has been updated"
+  },
+  "PRIMARY_PHONE_UPDATED": {
+    "title": "Primary phone updated",
+    "body": "The primary phone has been updated"
+  },
+  "PROFILE_SELECTED": {
+    "title": "Profile selected",
+    "body": "The profile has been selected"
+  },
+  "SIGNUP_SUCCESS": {
+    "title": "Account created",
+    "body": "Your account has been created"
+  },
   "SIGNUP_WELCOME": {
     "title": "Welcome to NebulaForgeX Identity",
     "body": "Your login-center account is ready. Select or create a profile to open the console."
+  },
+  "TOKENS_REFRESHED": {
+    "title": "Tokens refreshed",
+    "body": "Access tokens have been refreshed"
+  },
+  "UPLOAD_URLS_CREATED": {
+    "title": "Upload URLs created",
+    "body": "Presigned upload URLs have been created"
+  },
+  "UPLOAD_URL_CREATED": {
+    "title": "Upload URL created",
+    "body": "A presigned upload URL has been created"
+  },
+  "USER_PROFILE_AVATAR_CLEARED": {
+    "title": "Avatar cleared",
+    "body": "The user profile avatar has been cleared"
+  },
+  "USER_PROFILE_AVATAR_UPDATED": {
+    "title": "Avatar updated",
+    "body": "The user profile avatar has been updated"
+  },
+  "USER_PROFILE_BACKGROUNDS_UPDATED": {
+    "title": "Backgrounds updated",
+    "body": "User profile backgrounds have been updated"
+  },
+  "USER_PROFILE_CREATED": {
+    "title": "Profile created",
+    "body": "The user profile has been created"
+  },
+  "USER_PROFILE_DELETED": {
+    "title": "Profile deleted",
+    "body": "The user profile has been deleted"
+  },
+  "USER_PROFILE_SETTINGS_UPDATED": {
+    "title": "Settings updated",
+    "body": "User profile settings have been updated"
+  },
+  "USER_PROFILE_UPDATED": {
+    "title": "Profile updated",
+    "body": "The user profile has been updated"
+  },
+  "VERIFICATION_CODE_SENT": {
+    "title": "Code sent",
+    "body": "A verification code has been sent"
+  },
+  "VIDEOS_CONFIRMED": {
+    "title": "Videos confirmed",
+    "body": "The video uploads have been confirmed"
+  },
+  "VIDEO_CONFIRMED": {
+    "title": "Video confirmed",
+    "body": "The video upload has been confirmed"
+  },
+  "VIDEO_DELETED": {
+    "title": "Video deleted",
+    "body": "The video has been deleted"
   }
 }

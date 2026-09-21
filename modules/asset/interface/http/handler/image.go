@@ -3,6 +3,7 @@ package handler
 import (
 	authconn "nfxidentity/connections/auth"
 	asseterrs "nfxidentity/errors/src/asset"
+	assetmsg "nfxidentity/messages/src/asset"
 	imagesApp "nfxidentity/modules/asset/application/images"
 	"nfxidentity/modules/asset/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
@@ -52,7 +53,7 @@ func (h *ImageHandler) PrepareImageUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URL created", httpx.SuccessOptions{Data: reqdto.PrepareImageUploadDataFrom(out)})
+	return fiberx.OK(c, assetmsg.UPLOAD_URL_CREATED, httpx.SuccessOptions{Data: reqdto.PrepareImageUploadDataFrom(out)})
 }
 
 func (h *ImageHandler) PrepareImagesUpload(c fiber.Ctx) error {
@@ -74,7 +75,7 @@ func (h *ImageHandler) PrepareImagesUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URLs created", httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareImageUploadsDataFrom(out)}})
+	return fiberx.OK(c, assetmsg.UPLOAD_URLS_CREATED, httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareImageUploadsDataFrom(out)}})
 }
 
 func (h *ImageHandler) ConfirmImageUpload(c fiber.Ctx) error {
@@ -96,7 +97,7 @@ func (h *ImageHandler) ConfirmImageUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUpload(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Image confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.IMAGE_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *ImageHandler) ConfirmImagesUpload(c fiber.Ctx) error {
@@ -121,7 +122,7 @@ func (h *ImageHandler) ConfirmImagesUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUploads(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Images confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.IMAGES_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *ImageHandler) DeleteImage(c fiber.Ctx) error {
@@ -142,7 +143,7 @@ func (h *ImageHandler) DeleteImage(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Image deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.IMAGE_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *ImageHandler) ServeImageFile(c fiber.Ctx) error {

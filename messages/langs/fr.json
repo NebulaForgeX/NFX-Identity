@@ -1,10 +1,198 @@
 {
+  "AUDIOS_CONFIRMED": {
+    "title": "Audios confirmés",
+    "body": "Les uploads audio ont été confirmés"
+  },
+  "AUDIO_CONFIRMED": {
+    "title": "Audio confirmé",
+    "body": "L'upload audio a été confirmé"
+  },
+  "AUDIO_DELETED": {
+    "title": "Audio supprimé",
+    "body": "L'audio a été supprimé"
+  },
+  "AUTHORITY_PROFILE_AVATAR_CLEARED": {
+    "title": "Avatar effacé",
+    "body": "L'avatar du profil d'autorité a été effacé"
+  },
+  "AUTHORITY_PROFILE_AVATAR_UPDATED": {
+    "title": "Avatar mis à jour",
+    "body": "L'avatar du profil d'autorité a été mis à jour"
+  },
+  "AUTHORITY_PROFILE_BACKGROUNDS_UPDATED": {
+    "title": "Arrière-plans mis à jour",
+    "body": "Les arrière-plans du profil d'autorité ont été mis à jour"
+  },
+  "AUTHORITY_PROFILE_CREATED": {
+    "title": "Profil créé",
+    "body": "Le profil d'autorité a été créé"
+  },
+  "AUTHORITY_PROFILE_DELETED": {
+    "title": "Profil supprimé",
+    "body": "Le profil d'autorité a été supprimé"
+  },
+  "AUTHORITY_PROFILE_SETTINGS_UPDATED": {
+    "title": "Paramètres mis à jour",
+    "body": "Les paramètres du profil d'autorité ont été mis à jour"
+  },
+  "AUTHORITY_PROFILE_UPDATED": {
+    "title": "Profil mis à jour",
+    "body": "Le profil d'autorité a été mis à jour"
+  },
+  "AUTHORITY_ROLES_UPDATED": {
+    "title": "Rôles mis à jour",
+    "body": "Les rôles d'autorité ont été mis à jour"
+  },
+  "EMAIL_ADDED": {
+    "title": "E-mail ajouté",
+    "body": "L'adresse e-mail a été ajoutée"
+  },
+  "EMAIL_DELETED": {
+    "title": "E-mail supprimé",
+    "body": "L'adresse e-mail a été supprimée"
+  },
+  "EMAIL_UPDATED": {
+    "title": "E-mail mis à jour",
+    "body": "L'adresse e-mail a été mise à jour"
+  },
+  "EMAIL_VERIFIED": {
+    "title": "E-mail vérifié",
+    "body": "L'adresse e-mail a été vérifiée"
+  },
+  "FILES_CONFIRMED": {
+    "title": "Fichiers confirmés",
+    "body": "Les uploads de fichiers ont été confirmés"
+  },
+  "FILE_CONFIRMED": {
+    "title": "Fichier confirmé",
+    "body": "L'upload du fichier a été confirmé"
+  },
+  "FILE_DELETED": {
+    "title": "Fichier supprimé",
+    "body": "Le fichier a été supprimé"
+  },
+  "IMAGES_CONFIRMED": {
+    "title": "Images confirmées",
+    "body": "Les uploads d'images ont été confirmés"
+  },
+  "IMAGE_CONFIRMED": {
+    "title": "Image confirmée",
+    "body": "L'upload d'image a été confirmé"
+  },
+  "IMAGE_DELETED": {
+    "title": "Image supprimée",
+    "body": "L'image a été supprimée"
+  },
   "LOGIN_NOTICE": {
     "title": "Nouvelle connexion à votre compte Identity",
     "body": "Une nouvelle connexion a été détectée. Si c'était vous, ignorez cet e-mail."
   },
+  "LOGIN_SUCCESS": {
+    "title": "Connexion réussie",
+    "body": "Vous êtes connecté"
+  },
+  "LOGOUT_SUCCESS": {
+    "title": "Déconnexion",
+    "body": "Vous êtes déconnecté"
+  },
+  "PASSWORD_UPDATED": {
+    "title": "Mot de passe mis à jour",
+    "body": "Le mot de passe a été mis à jour"
+  },
+  "PHONE_ADDED": {
+    "title": "Téléphone ajouté",
+    "body": "Le numéro de téléphone a été ajouté"
+  },
+  "PHONE_DELETED": {
+    "title": "Téléphone supprimé",
+    "body": "Le numéro de téléphone a été supprimé"
+  },
+  "PHONE_UPDATED": {
+    "title": "Téléphone mis à jour",
+    "body": "Le numéro de téléphone a été mis à jour"
+  },
+  "PHONE_VERIFIED": {
+    "title": "Téléphone vérifié",
+    "body": "Le numéro de téléphone a été vérifié"
+  },
+  "PREFERENCE_UPDATED": {
+    "title": "Préférence mise à jour",
+    "body": "Votre préférence a été mise à jour"
+  },
+  "PRIMARY_EMAIL_UPDATED": {
+    "title": "E-mail principal mis à jour",
+    "body": "L'e-mail principal a été mis à jour"
+  },
+  "PRIMARY_PHONE_UPDATED": {
+    "title": "Téléphone principal mis à jour",
+    "body": "Le téléphone principal a été mis à jour"
+  },
+  "PROFILE_SELECTED": {
+    "title": "Profil sélectionné",
+    "body": "Le profil a été sélectionné"
+  },
+  "SIGNUP_SUCCESS": {
+    "title": "Compte créé",
+    "body": "Votre compte a été créé"
+  },
   "SIGNUP_WELCOME": {
     "title": "Bienvenue sur NebulaForgeX Identity",
     "body": "Votre compte du centre de connexion a été créé. Choisissez ou créez un profil pour ouvrir la console."
+  },
+  "TOKENS_REFRESHED": {
+    "title": "Jetons actualisés",
+    "body": "Les jetons d'accès ont été actualisés"
+  },
+  "UPLOAD_URLS_CREATED": {
+    "title": "URL d'upload créées",
+    "body": "Des URL d'upload pré-signées ont été créées"
+  },
+  "UPLOAD_URL_CREATED": {
+    "title": "URL d'upload créée",
+    "body": "Une URL d'upload pré-signée a été créée"
+  },
+  "USER_PROFILE_AVATAR_CLEARED": {
+    "title": "Avatar effacé",
+    "body": "L'avatar du profil utilisateur a été effacé"
+  },
+  "USER_PROFILE_AVATAR_UPDATED": {
+    "title": "Avatar mis à jour",
+    "body": "L'avatar du profil utilisateur a été mis à jour"
+  },
+  "USER_PROFILE_BACKGROUNDS_UPDATED": {
+    "title": "Arrière-plans mis à jour",
+    "body": "Les arrière-plans du profil utilisateur ont été mis à jour"
+  },
+  "USER_PROFILE_CREATED": {
+    "title": "Profil créé",
+    "body": "Le profil utilisateur a été créé"
+  },
+  "USER_PROFILE_DELETED": {
+    "title": "Profil supprimé",
+    "body": "Le profil utilisateur a été supprimé"
+  },
+  "USER_PROFILE_SETTINGS_UPDATED": {
+    "title": "Paramètres mis à jour",
+    "body": "Les paramètres du profil utilisateur ont été mis à jour"
+  },
+  "USER_PROFILE_UPDATED": {
+    "title": "Profil mis à jour",
+    "body": "Le profil utilisateur a été mis à jour"
+  },
+  "VERIFICATION_CODE_SENT": {
+    "title": "Code envoyé",
+    "body": "Un code de vérification a été envoyé"
+  },
+  "VIDEOS_CONFIRMED": {
+    "title": "Vidéos confirmées",
+    "body": "Les uploads vidéo ont été confirmés"
+  },
+  "VIDEO_CONFIRMED": {
+    "title": "Vidéo confirmée",
+    "body": "L'upload vidéo a été confirmé"
+  },
+  "VIDEO_DELETED": {
+    "title": "Vidéo supprimée",
+    "body": "La vidéo a été supprimée"
   }
 }

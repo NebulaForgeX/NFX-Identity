@@ -7,6 +7,7 @@ import (
 	"nfxidentity/enums"
 	authErr "nfxidentity/errors/src/auth"
 	sysErr "nfxidentity/errors/src/sys"
+	authmsg "nfxidentity/messages/src/auth"
 	account "nfxidentity/modules/auth/application/account"
 	"nfxidentity/modules/auth/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
@@ -37,7 +38,7 @@ func (h *AuthorityAccountHandler) GetFullAccountInformationWithAuthorityProfile(
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Account information loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AuthorityAccountHandler) PatchAuthorityProfile(c fiber.Ctx) error {
@@ -64,7 +65,7 @@ func (h *AuthorityAccountHandler) PatchAuthorityProfile(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profile patched", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.AUTHORITY_PROFILE_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AuthorityAccountHandler) PatchAuthorityProfileSettings(c fiber.Ctx) error {
@@ -91,7 +92,7 @@ func (h *AuthorityAccountHandler) PatchAuthorityProfileSettings(c fiber.Ctx) err
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profile settings patched", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.AUTHORITY_PROFILE_SETTINGS_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AuthorityAccountHandler) ConfirmAuthorityProfileAvatar(c fiber.Ctx) error {
@@ -114,7 +115,7 @@ func (h *AuthorityAccountHandler) ConfirmAuthorityProfileAvatar(c fiber.Ctx) err
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profile avatar updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.AUTHORITY_PROFILE_AVATAR_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AuthorityAccountHandler) ClearAuthorityProfileAvatar(c fiber.Ctx) error {
@@ -128,7 +129,7 @@ func (h *AuthorityAccountHandler) ClearAuthorityProfileAvatar(c fiber.Ctx) error
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profile avatar cleared", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.AUTHORITY_PROFILE_AVATAR_CLEARED, httpx.SuccessOptions{})
 }
 
 func (h *AuthorityAccountHandler) ListAuthorityProfiles(c fiber.Ctx) error {
@@ -140,7 +141,7 @@ func (h *AuthorityAccountHandler) ListAuthorityProfiles(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profiles loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AuthorityAccountHandler) SearchAuthorityProfiles(c fiber.Ctx) error {
@@ -166,7 +167,7 @@ func (h *AuthorityAccountHandler) SearchAuthorityProfiles(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profiles searched", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AuthorityAccountHandler) CreateAuthorityProfile(c fiber.Ctx) error {
@@ -190,7 +191,7 @@ func (h *AuthorityAccountHandler) CreateAuthorityProfile(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.Created(c, "Authority profile created", httpx.SuccessOptions{Data: out})
+	return fiberx.Created(c, authmsg.AUTHORITY_PROFILE_CREATED, httpx.SuccessOptions{Data: out})
 }
 
 func (h *AuthorityAccountHandler) DeleteAuthorityProfile(c fiber.Ctx) error {
@@ -212,7 +213,7 @@ func (h *AuthorityAccountHandler) DeleteAuthorityProfile(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profile deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.AUTHORITY_PROFILE_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *AuthorityAccountHandler) UpdateAuthorityPreference(c fiber.Ctx) error {
@@ -231,7 +232,7 @@ func (h *AuthorityAccountHandler) UpdateAuthorityPreference(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Preference updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PREFERENCE_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AuthorityAccountHandler) ConfirmAuthorityProfileBackgrounds(c fiber.Ctx) error {
@@ -253,5 +254,5 @@ func (h *AuthorityAccountHandler) ConfirmAuthorityProfileBackgrounds(c fiber.Ctx
 	if _, err := h.account.ConfirmAuthorityProfileBackgrounds(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Authority profile backgrounds updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.AUTHORITY_PROFILE_BACKGROUNDS_UPDATED, httpx.SuccessOptions{})
 }

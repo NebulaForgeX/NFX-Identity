@@ -5,6 +5,7 @@ import (
 
 	authErr "nfxidentity/errors/src/auth"
 	sysErr "nfxidentity/errors/src/sys"
+	authmsg "nfxidentity/messages/src/auth"
 	login "nfxidentity/modules/auth/application/login"
 	"nfxidentity/modules/auth/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/errx"
@@ -56,7 +57,7 @@ func (h *LoginHandler) WithEmail(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Login successfully", httpx.SuccessOptions{Data: result})
+	return fiberx.OK(c, authmsg.LOGIN_SUCCESS, httpx.SuccessOptions{Data: result})
 }
 
 func (h *LoginHandler) WithPhone(c fiber.Ctx) error {
@@ -78,7 +79,7 @@ func (h *LoginHandler) WithPhone(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Login successfully", httpx.SuccessOptions{Data: result})
+	return fiberx.OK(c, authmsg.LOGIN_SUCCESS, httpx.SuccessOptions{Data: result})
 }
 
 func (h *LoginHandler) SelectProfile(c fiber.Ctx) error {
@@ -114,7 +115,7 @@ func (h *LoginHandler) SelectProfile(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Profile selected", httpx.SuccessOptions{Data: result})
+	return fiberx.OK(c, authmsg.PROFILE_SELECTED, httpx.SuccessOptions{Data: result})
 }
 
 func (h *LoginHandler) Refresh(c fiber.Ctx) error {
@@ -141,7 +142,7 @@ func (h *LoginHandler) Refresh(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Tokens refreshed successfully", httpx.SuccessOptions{Data: result})
+	return fiberx.OK(c, authmsg.TOKENS_REFRESHED, httpx.SuccessOptions{Data: result})
 }
 
 func (h *LoginHandler) Logout(c fiber.Ctx) error {
@@ -152,5 +153,5 @@ func (h *LoginHandler) Logout(c fiber.Ctx) error {
 	if err := h.login.Logout(c.Context(), strings.TrimSpace(req.RefreshToken)); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
+	return fiberx.OK(c, authmsg.LOGOUT_SUCCESS, httpx.SuccessOptions{Data: nil})
 }

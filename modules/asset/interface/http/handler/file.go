@@ -3,6 +3,7 @@ package handler
 import (
 	authconn "nfxidentity/connections/auth"
 	asseterrs "nfxidentity/errors/src/asset"
+	assetmsg "nfxidentity/messages/src/asset"
 	filesApp "nfxidentity/modules/asset/application/files"
 	"nfxidentity/modules/asset/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
@@ -52,7 +53,7 @@ func (h *FileHandler) PrepareFileUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URL created", httpx.SuccessOptions{Data: reqdto.PrepareFileUploadDataFrom(out)})
+	return fiberx.OK(c, assetmsg.UPLOAD_URL_CREATED, httpx.SuccessOptions{Data: reqdto.PrepareFileUploadDataFrom(out)})
 }
 
 func (h *FileHandler) PrepareFilesUpload(c fiber.Ctx) error {
@@ -74,7 +75,7 @@ func (h *FileHandler) PrepareFilesUpload(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Upload URLs created", httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareFileUploadsDataFrom(out)}})
+	return fiberx.OK(c, assetmsg.UPLOAD_URLS_CREATED, httpx.SuccessOptions{Data: map[string]any{"results": reqdto.PrepareFileUploadsDataFrom(out)}})
 }
 
 func (h *FileHandler) ConfirmFileUpload(c fiber.Ctx) error {
@@ -96,7 +97,7 @@ func (h *FileHandler) ConfirmFileUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUpload(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "File confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.FILE_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *FileHandler) ConfirmFilesUpload(c fiber.Ctx) error {
@@ -121,7 +122,7 @@ func (h *FileHandler) ConfirmFilesUpload(c fiber.Ctx) error {
 	if _, err := h.app.ConfirmUploads(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Files confirmed", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.FILES_CONFIRMED, httpx.SuccessOptions{})
 }
 
 func (h *FileHandler) DeleteFile(c fiber.Ctx) error {
@@ -142,7 +143,7 @@ func (h *FileHandler) DeleteFile(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "File deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, assetmsg.FILE_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *FileHandler) ServeFileFile(c fiber.Ctx) error {
