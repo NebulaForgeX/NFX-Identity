@@ -2,4 +2,3 @@
 -- atlas:import extensions/btree_gist.sql
 -- atlas:import schemas/auth/main.sql
 -- atlas:import schemas/asset/main.sql
--- atlas:import schemas/system/main.sql

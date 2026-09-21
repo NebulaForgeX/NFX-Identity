@@ -1,6 +1,5 @@
 export const DOMAIN_AUTH = "auth";
 export const DOMAIN_IMAGE = "image";
-export const DOMAIN_SYSTEM = "system";
 
 export const DOMAIN_AUTH_SESSION = "session";
 export const DOMAIN_AUTH_USER_CREDENTIAL = "userCredential";
@@ -17,5 +16,3 @@ export const DOMAIN_IMAGE_IMAGE = "image";
 export const DOMAIN_IMAGE_IMAGE_TYPE = "imageType";
 export const DOMAIN_IMAGE_IMAGE_VARIANT = "imageVariant";
 export const DOMAIN_IMAGE_IMAGE_TAG = "imageTag";
-
-export const DOMAIN_SYSTEM_STATE = "systemState";

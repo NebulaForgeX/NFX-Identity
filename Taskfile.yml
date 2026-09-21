@@ -104,7 +104,7 @@ tasks:
       - rm -rf bin/
 
   run:
-    desc: "Generate langs then start auth/asset/system + console (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
+    desc: "Generate langs then start auth/asset + console (ENV=dev|secure). Requires NFX-Edge network {{.EDGE_NETWORK}}."
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
       - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
@@ -119,7 +119,7 @@ tasks:
       - |
         ENV_ARGS=(--env-file "{{.ENV_FILE}}")
         echo "==> compose env: {{.ENV_FILE}}"
-        svcs=(auth-base asset-base system-base)
+        svcs=(auth-base asset-base)
         if [[ "{{.ENV}}" == "secure" ]]; then
           svcs+=(console)
         else
@@ -134,7 +134,7 @@ tasks:
         sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{else}}--watch{{end}}
 
   run:rebuild:
-    desc: "Force-rebuild (--no-cache) auth/asset/system + console (ENV=dev|secure)"
+    desc: "Force-rebuild (--no-cache) auth/asset + console (ENV=dev|secure)"
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
       - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
@@ -148,7 +148,7 @@ tasks:
         fi
       - |
         ENV_ARGS=(--env-file "{{.ENV_FILE}}")
-        svcs=(auth-base asset-base system-base)
+        svcs=(auth-base asset-base)
         if [[ "{{.ENV}}" == "secure" ]]; then
           svcs+=(console)
         else
@@ -274,7 +274,7 @@ tasks:
       - ENV={{.ENV}} go run ./scripts/testdb/ {{.CLI_ARGS}}
 
   scripts:clear-data:
-    desc: "Truncate all table data in auth/asset/system (dev only). Pass -- --yes to skip prompt."
+    desc: "Truncate all table data in auth/asset (dev only). Pass -- --yes to skip prompt."
     cmds:
       - go run ./scripts/cleardata/ {{.CLI_ARGS}}
 

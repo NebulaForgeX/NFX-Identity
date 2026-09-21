@@ -315,11 +315,6 @@
     # Directory service gRPC address
     
     # Image service gRPC address
-    
-    # System service gRPC address
-    system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
-    
-    # Tenants service gRPC address
 
 # ============================================================================
 # Service-Specific Configuration Notes
@@ -348,7 +343,6 @@
 #    Container GRPC_PORT_* = 50071+ ; host GRPC_EXT_* from 10200
 #    - auth:   GRPC_PORT_AUTH=50071  GRPC_EXT_PORT_AUTH=10200
 #    - asset:  GRPC_PORT_ASSET=50072 GRPC_EXT_PORT_ASSET=10201
-#    - system: GRPC_PORT_SYSTEM=50073 GRPC_EXT_PORT_SYSTEM=10202
 #    Console host: CONSOLE_EXTERNAL_PORT=10203
 #
 # 5. Multi-host deployment support:

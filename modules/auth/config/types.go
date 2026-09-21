@@ -25,8 +25,7 @@ type Config struct {
 }
 
 type GRPCClientConfig struct {
-	AssetAddr  string `koanf:"asset_addr"`
-	SystemAddr string `koanf:"system_addr"`
+	AssetAddr string `koanf:"asset_addr"`
 }
 
 type ServerConfig struct {

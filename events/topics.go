@@ -8,9 +8,6 @@ const (
 
 	TKAsset    eventbus.TopicKey = "asset"
 	TKAssetDLQ eventbus.TopicKey = "asset_poison"
-
-	TKSystem    eventbus.TopicKey = "system"
-	TKSystemDLQ eventbus.TopicKey = "system_poison"
 )
 
 type AuthTopic struct{}
@@ -20,7 +17,3 @@ func (AuthTopic) TopicKey() eventbus.TopicKey { return TKAuth }
 type AssetTopic struct{}
 
 func (AssetTopic) TopicKey() eventbus.TopicKey { return TKAsset }
-
-type SystemTopic struct{}
-
-func (SystemTopic) TopicKey() eventbus.TopicKey { return TKSystem }
