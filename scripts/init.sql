@@ -1,4 +1,4 @@
--- Active: 1781056435421@@192.168.1.64@10104@nfxidentity_dev
+-- Active: 1781056435421@@192.168.1.64@10104@nfxidentity
 -- scripts/init.sql
 -- Seed one login-capable account with BOTH profile kinds.
 --   email:    lyuchongkailyu@gmail.com (primary, verified)
