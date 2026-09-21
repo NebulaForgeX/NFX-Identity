@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon, PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
-import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
+import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
 import { FieldList, FieldRow, LedgerSection } from "./Ledger";
@@ -71,7 +71,7 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
     try {
       await confirmUpload.mutateAsync({ id: pendingImageId });
       await confirmAvatar.mutateAsync({ imageId: pendingImageId });
-      systemEventEmitter.showSuccess(t("avatar.success"));
+      systemEventEmitter.showSuccess(getCommandMessage("USER_PROFILE_AVATAR_UPDATED", t("avatar.success")));
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
       setPendingImageId(null);
