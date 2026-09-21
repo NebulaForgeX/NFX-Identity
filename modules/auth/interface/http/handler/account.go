@@ -5,6 +5,7 @@ import (
 
 	authErr "nfxidentity/errors/src/auth"
 	sysErr "nfxidentity/errors/src/sys"
+	authmsg "nfxidentity/messages/src/auth"
 	account "nfxidentity/modules/auth/application/account"
 	emailapp "nfxidentity/modules/auth/application/email"
 	phoneapp "nfxidentity/modules/auth/application/phone"
@@ -47,7 +48,7 @@ func (h *AccountHandler) GetFullAccountInformationWithCommunityProfile(c fiber.C
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Account information loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) UpdatePreference(c fiber.Ctx) error {
@@ -71,7 +72,7 @@ func (h *AccountHandler) UpdatePreference(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Preference updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PREFERENCE_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) PatchCommunityProfile(c fiber.Ctx) error {
@@ -99,7 +100,7 @@ func (h *AccountHandler) PatchCommunityProfile(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profile patched", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.USER_PROFILE_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) PatchCommunityProfileSettings(c fiber.Ctx) error {
@@ -127,7 +128,7 @@ func (h *AccountHandler) PatchCommunityProfileSettings(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profile settings patched", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.USER_PROFILE_SETTINGS_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ConfirmCommunityProfileAvatar(c fiber.Ctx) error {
@@ -150,7 +151,7 @@ func (h *AccountHandler) ConfirmCommunityProfileAvatar(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profile avatar updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.USER_PROFILE_AVATAR_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ClearCommunityProfileAvatar(c fiber.Ctx) error {
@@ -164,7 +165,7 @@ func (h *AccountHandler) ClearCommunityProfileAvatar(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profile avatar cleared", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.USER_PROFILE_AVATAR_CLEARED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ListCommunityProfiles(c fiber.Ctx) error {
@@ -176,7 +177,7 @@ func (h *AccountHandler) ListCommunityProfiles(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profiles loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) GetPublicProfileCard(c fiber.Ctx) error {
@@ -190,7 +191,7 @@ func (h *AccountHandler) GetPublicProfileCard(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Public profile card loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) SearchCommunityProfiles(c fiber.Ctx) error {
@@ -209,7 +210,7 @@ func (h *AccountHandler) SearchCommunityProfiles(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profiles searched", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) CreateCommunityProfile(c fiber.Ctx) error {
@@ -233,7 +234,7 @@ func (h *AccountHandler) CreateCommunityProfile(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.Created(c, "User profile created", httpx.SuccessOptions{Data: out})
+	return fiberx.Created(c, authmsg.USER_PROFILE_CREATED, httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) DeleteCommunityProfile(c fiber.Ctx) error {
@@ -255,7 +256,7 @@ func (h *AccountHandler) DeleteCommunityProfile(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profile deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.USER_PROFILE_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ConfirmCommunityProfileBackgrounds(c fiber.Ctx) error {
@@ -277,7 +278,7 @@ func (h *AccountHandler) ConfirmCommunityProfileBackgrounds(c fiber.Ctx) error {
 	if _, err := h.account.ConfirmCommunityProfileBackgrounds(c.Context(), in); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "User profile backgrounds updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.USER_PROFILE_BACKGROUNDS_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ListEmails(c fiber.Ctx) error {
@@ -289,7 +290,7 @@ func (h *AccountHandler) ListEmails(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Emails loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) CreateEmail(c fiber.Ctx) error {
@@ -313,7 +314,7 @@ func (h *AccountHandler) CreateEmail(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.Created(c, "Email added", httpx.SuccessOptions{Data: out})
+	return fiberx.Created(c, authmsg.EMAIL_ADDED, httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) SendEmailVerificationCode(c fiber.Ctx) error {
@@ -337,7 +338,7 @@ func (h *AccountHandler) SendEmailVerificationCode(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Verification code sent", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.VERIFICATION_CODE_SENT, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) VerifyEmail(c fiber.Ctx) error {
@@ -365,7 +366,7 @@ func (h *AccountHandler) VerifyEmail(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Email verified", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.EMAIL_VERIFIED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) UpdateEmail(c fiber.Ctx) error {
@@ -393,7 +394,7 @@ func (h *AccountHandler) UpdateEmail(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Email updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.EMAIL_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) SetPrimaryEmail(c fiber.Ctx) error {
@@ -412,7 +413,7 @@ func (h *AccountHandler) SetPrimaryEmail(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Primary email updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PRIMARY_EMAIL_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) DeleteEmail(c fiber.Ctx) error {
@@ -431,7 +432,7 @@ func (h *AccountHandler) DeleteEmail(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Email deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.EMAIL_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ListPhones(c fiber.Ctx) error {
@@ -443,7 +444,7 @@ func (h *AccountHandler) ListPhones(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Phones loaded", httpx.SuccessOptions{Data: out})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) CreatePhone(c fiber.Ctx) error {
@@ -467,7 +468,7 @@ func (h *AccountHandler) CreatePhone(c fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return fiberx.Created(c, "Phone added", httpx.SuccessOptions{Data: out})
+	return fiberx.Created(c, authmsg.PHONE_ADDED, httpx.SuccessOptions{Data: out})
 }
 
 func (h *AccountHandler) SendPhoneVerificationCode(c fiber.Ctx) error {
@@ -486,7 +487,7 @@ func (h *AccountHandler) SendPhoneVerificationCode(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Verification code sent", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.VERIFICATION_CODE_SENT, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) VerifyPhone(c fiber.Ctx) error {
@@ -514,7 +515,7 @@ func (h *AccountHandler) VerifyPhone(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Phone verified", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PHONE_VERIFIED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) UpdatePhone(c fiber.Ctx) error {
@@ -542,7 +543,7 @@ func (h *AccountHandler) UpdatePhone(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Phone updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PHONE_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) SetPrimaryPhone(c fiber.Ctx) error {
@@ -561,7 +562,7 @@ func (h *AccountHandler) SetPrimaryPhone(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Primary phone updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PRIMARY_PHONE_UPDATED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) DeletePhone(c fiber.Ctx) error {
@@ -580,7 +581,7 @@ func (h *AccountHandler) DeletePhone(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Phone deleted", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PHONE_DELETED, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) SendChangePasswordVerificationCode(c fiber.Ctx) error {
@@ -598,7 +599,7 @@ func (h *AccountHandler) SendChangePasswordVerificationCode(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Verification code sent", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.VERIFICATION_CODE_SENT, httpx.SuccessOptions{})
 }
 
 func (h *AccountHandler) ChangePassword(c fiber.Ctx) error {
@@ -622,5 +623,5 @@ func (h *AccountHandler) ChangePassword(c fiber.Ctx) error {
 	}); err != nil {
 		return err
 	}
-	return fiberx.OK(c, "Password updated", httpx.SuccessOptions{})
+	return fiberx.OK(c, authmsg.PASSWORD_UPDATED, httpx.SuccessOptions{})
 }

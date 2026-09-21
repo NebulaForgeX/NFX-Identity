@@ -1,10 +1,198 @@
 {
+  "AUDIOS_CONFIRMED": {
+    "title": "音频已确认",
+    "body": "音频上传已确认"
+  },
+  "AUDIO_CONFIRMED": {
+    "title": "音频已确认",
+    "body": "音频上传已确认"
+  },
+  "AUDIO_DELETED": {
+    "title": "音频已删除",
+    "body": "音频已删除"
+  },
+  "AUTHORITY_PROFILE_AVATAR_CLEARED": {
+    "title": "头像已清除",
+    "body": "管理资料头像已清除"
+  },
+  "AUTHORITY_PROFILE_AVATAR_UPDATED": {
+    "title": "头像已更新",
+    "body": "管理资料头像已更新"
+  },
+  "AUTHORITY_PROFILE_BACKGROUNDS_UPDATED": {
+    "title": "背景已更新",
+    "body": "管理资料背景已更新"
+  },
+  "AUTHORITY_PROFILE_CREATED": {
+    "title": "资料已创建",
+    "body": "管理资料已创建"
+  },
+  "AUTHORITY_PROFILE_DELETED": {
+    "title": "资料已删除",
+    "body": "管理资料已删除"
+  },
+  "AUTHORITY_PROFILE_SETTINGS_UPDATED": {
+    "title": "设置已更新",
+    "body": "管理资料设置已更新"
+  },
+  "AUTHORITY_PROFILE_UPDATED": {
+    "title": "资料已更新",
+    "body": "管理资料已更新"
+  },
+  "AUTHORITY_ROLES_UPDATED": {
+    "title": "角色已更新",
+    "body": "管理角色已更新"
+  },
+  "EMAIL_ADDED": {
+    "title": "邮箱已添加",
+    "body": "邮箱地址已添加"
+  },
+  "EMAIL_DELETED": {
+    "title": "邮箱已删除",
+    "body": "邮箱地址已删除"
+  },
+  "EMAIL_UPDATED": {
+    "title": "邮箱已更新",
+    "body": "邮箱地址已更新"
+  },
+  "EMAIL_VERIFIED": {
+    "title": "邮箱已验证",
+    "body": "邮箱地址已验证"
+  },
+  "FILES_CONFIRMED": {
+    "title": "文件已确认",
+    "body": "文件上传已确认"
+  },
+  "FILE_CONFIRMED": {
+    "title": "文件已确认",
+    "body": "文件上传已确认"
+  },
+  "FILE_DELETED": {
+    "title": "文件已删除",
+    "body": "文件已删除"
+  },
+  "IMAGES_CONFIRMED": {
+    "title": "图片已确认",
+    "body": "图片上传已确认"
+  },
+  "IMAGE_CONFIRMED": {
+    "title": "图片已确认",
+    "body": "图片上传已确认"
+  },
+  "IMAGE_DELETED": {
+    "title": "图片已删除",
+    "body": "图片已删除"
+  },
   "LOGIN_NOTICE": {
     "title": "你的 Identity 账号有新的登录",
     "body": "我们检测到一次新的登录。如果这是你本人操作，可以忽略此邮件。"
   },
+  "LOGIN_SUCCESS": {
+    "title": "登录成功",
+    "body": "你已成功登录"
+  },
+  "LOGOUT_SUCCESS": {
+    "title": "已退出",
+    "body": "你已退出登录"
+  },
+  "PASSWORD_UPDATED": {
+    "title": "密码已更新",
+    "body": "密码已更新"
+  },
+  "PHONE_ADDED": {
+    "title": "手机已添加",
+    "body": "手机号已添加"
+  },
+  "PHONE_DELETED": {
+    "title": "手机已删除",
+    "body": "手机号已删除"
+  },
+  "PHONE_UPDATED": {
+    "title": "手机已更新",
+    "body": "手机号已更新"
+  },
+  "PHONE_VERIFIED": {
+    "title": "手机已验证",
+    "body": "手机号已验证"
+  },
+  "PREFERENCE_UPDATED": {
+    "title": "偏好已更新",
+    "body": "偏好设置已更新"
+  },
+  "PRIMARY_EMAIL_UPDATED": {
+    "title": "主邮箱已更新",
+    "body": "主邮箱已更新"
+  },
+  "PRIMARY_PHONE_UPDATED": {
+    "title": "主手机已更新",
+    "body": "主手机号已更新"
+  },
+  "PROFILE_SELECTED": {
+    "title": "已选择资料",
+    "body": "已切换到该资料"
+  },
+  "SIGNUP_SUCCESS": {
+    "title": "注册成功",
+    "body": "账号已创建"
+  },
   "SIGNUP_WELCOME": {
     "title": "欢迎使用 NebulaForgeX Identity",
     "body": "你的登录中心账号已创建。接下来请选择或创建资料，即可进入控制台。"
+  },
+  "TOKENS_REFRESHED": {
+    "title": "令牌已刷新",
+    "body": "访问令牌已刷新"
+  },
+  "UPLOAD_URLS_CREATED": {
+    "title": "上传地址已创建",
+    "body": "已创建预签名上传地址"
+  },
+  "UPLOAD_URL_CREATED": {
+    "title": "上传地址已创建",
+    "body": "已创建预签名上传地址"
+  },
+  "USER_PROFILE_AVATAR_CLEARED": {
+    "title": "头像已清除",
+    "body": "用户资料头像已清除"
+  },
+  "USER_PROFILE_AVATAR_UPDATED": {
+    "title": "头像已更新",
+    "body": "用户资料头像已更新"
+  },
+  "USER_PROFILE_BACKGROUNDS_UPDATED": {
+    "title": "背景已更新",
+    "body": "用户资料背景已更新"
+  },
+  "USER_PROFILE_CREATED": {
+    "title": "资料已创建",
+    "body": "用户资料已创建"
+  },
+  "USER_PROFILE_DELETED": {
+    "title": "资料已删除",
+    "body": "用户资料已删除"
+  },
+  "USER_PROFILE_SETTINGS_UPDATED": {
+    "title": "设置已更新",
+    "body": "用户资料设置已更新"
+  },
+  "USER_PROFILE_UPDATED": {
+    "title": "资料已更新",
+    "body": "用户资料已更新"
+  },
+  "VERIFICATION_CODE_SENT": {
+    "title": "验证码已发送",
+    "body": "验证码已发送"
+  },
+  "VIDEOS_CONFIRMED": {
+    "title": "视频已确认",
+    "body": "视频上传已确认"
+  },
+  "VIDEO_CONFIRMED": {
+    "title": "视频已确认",
+    "body": "视频上传已确认"
+  },
+  "VIDEO_DELETED": {
+    "title": "视频已删除",
+    "body": "视频已删除"
   }
 }
