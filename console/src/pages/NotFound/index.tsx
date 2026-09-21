@@ -16,7 +16,7 @@ const NotFoundPage = memo(() => {
         description="The page might have been moved or deleted. Please check the URL or go back to the homepage."
         action={
           <Flex gap="3">
-            <Button variant="soft" onClick={() => routerEventEmitter.navigateBack()}>
+            <Button variant="outline" onClick={() => routerEventEmitter.navigateBack()}>
               Go Back
             </Button>
             <Button onClick={() => routerEventEmitter.navigate({ to: profileHome(AuthStore.getState().currentProfileKind) })}>Go to Homepage</Button>

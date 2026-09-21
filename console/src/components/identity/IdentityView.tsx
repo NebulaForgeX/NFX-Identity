@@ -55,7 +55,8 @@ function EmailsPanel() {
 
   return (
     <LedgerSection title={t("sections.emails.title")} description={t("sections.emails.description")}>
-      <Flex gap="2" wrap="wrap" mb="3">
+      <Box pb="3">
+      <Flex gap="2" wrap="wrap">
         <Box minWidth="220px" flexGrow="1">
           <TextField.Root size="2" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder={t("labels.emailPlaceholder")} />
         </Box>
@@ -63,6 +64,7 @@ function EmailsPanel() {
           {t("actions.addEmail")}
         </Button>
       </Flex>
+      </Box>
       {items.length ? (
         <Table.Root variant="surface">
           <Table.Header>
@@ -90,7 +92,7 @@ function EmailsPanel() {
                   <Table.Cell>
                     <Flex gap="1" wrap="wrap">
                       {item.isPrimary ? <Badge variant="outline">{t("labels.primary")}</Badge> : null}
-                      <Badge variant="soft" color={verified ? "green" : "gray"}>
+                      <Badge variant="outline" color={verified ? "green" : "gray"}>
                         {verified ? formatDateTime(item.verifiedAt as string) : t("labels.unverified")}
                       </Badge>
                     </Flex>
@@ -99,7 +101,7 @@ function EmailsPanel() {
                     <Flex gap="2" wrap="wrap">
                       {!verified ? (
                         <>
-                          <Button size="1" variant="soft" onClick={() => sendCode.mutate({ emailId: item.id })}>
+                          <Button size="1" variant="outline" onClick={() => sendCode.mutate({ emailId: item.id })}>
                             {t("actions.sendCode")}
                           </Button>
                           <TextField.Root
@@ -120,18 +122,18 @@ function EmailsPanel() {
                       ) : null}
                       <Button
                         size="1"
-                        variant="soft"
+                        variant="outline"
                         disabled={!edits[item.id] || edits[item.id] === item.email}
                         onClick={() => updateEmail.mutate({ emailId: item.id, email: (edits[item.id] ?? "").trim() })}
                       >
                         {t("actions.save")}
                       </Button>
                       {!item.isPrimary ? (
-                        <Button size="1" variant="soft" onClick={() => setPrimary.mutate(item.id)}>
+                        <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
                           {t("actions.setPrimary")}
                         </Button>
                       ) : null}
-                      <Button size="1" variant="soft" color="red" onClick={() => deleteEmail.mutate(item.id)}>
+                      <Button size="1" variant="outline" color="red" onClick={() => deleteEmail.mutate(item.id)}>
                         {t("actions.remove")}
                       </Button>
                     </Flex>
@@ -166,7 +168,8 @@ function PhonesPanel() {
 
   return (
     <LedgerSection title={t("sections.phones.title")} description={t("sections.phones.description")}>
-      <Flex gap="2" wrap="wrap" mb="3">
+      <Box pb="3">
+      <Flex gap="2" wrap="wrap">
         <Box minWidth="220px" flexGrow="1">
           <TextField.Root size="2" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder={t("labels.phonePlaceholder")} />
         </Box>
@@ -174,6 +177,7 @@ function PhonesPanel() {
           {t("actions.addPhone")}
         </Button>
       </Flex>
+      </Box>
       {items.length ? (
         <Table.Root variant="surface">
           <Table.Header>
@@ -201,7 +205,7 @@ function PhonesPanel() {
                   <Table.Cell>
                     <Flex gap="1" wrap="wrap">
                       {item.isPrimary ? <Badge variant="outline">{t("labels.primary")}</Badge> : null}
-                      <Badge variant="soft" color={verified ? "green" : "gray"}>
+                      <Badge variant="outline" color={verified ? "green" : "gray"}>
                         {verified ? formatDateTime(item.verifiedAt as string) : t("labels.unverified")}
                       </Badge>
                     </Flex>
@@ -210,7 +214,7 @@ function PhonesPanel() {
                     <Flex gap="2" wrap="wrap">
                       {!verified ? (
                         <>
-                          <Button size="1" variant="soft" onClick={() => sendCode.mutate(item.id)}>
+                          <Button size="1" variant="outline" onClick={() => sendCode.mutate(item.id)}>
                             {t("actions.sendCode")}
                           </Button>
                           <TextField.Root
@@ -231,18 +235,18 @@ function PhonesPanel() {
                       ) : null}
                       <Button
                         size="1"
-                        variant="soft"
+                        variant="outline"
                         disabled={!edits[item.id] || edits[item.id] === item.phone}
                         onClick={() => updatePhone.mutate({ phoneId: item.id, phone: (edits[item.id] ?? "").trim() })}
                       >
                         {t("actions.save")}
                       </Button>
                       {!item.isPrimary ? (
-                        <Button size="1" variant="soft" onClick={() => setPrimary.mutate(item.id)}>
+                        <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
                           {t("actions.setPrimary")}
                         </Button>
                       ) : null}
-                      <Button size="1" variant="soft" color="red" onClick={() => deletePhone.mutate(item.id)}>
+                      <Button size="1" variant="outline" color="red" onClick={() => deletePhone.mutate(item.id)}>
                         {t("actions.remove")}
                       </Button>
                     </Flex>
@@ -265,7 +269,7 @@ function ProfilesPanel() {
   const { t } = useTranslation("pages.Profile.Identity");
   const currentProfileId = useAuthStore((s) => s.currentProfileId);
   const currentProfileKind = useAuthStore((s) => s.currentProfileKind);
-  const forgerProfiles = useListProfiles(ProfileKindEnum.FORGER);
+  const communityProfiles = useListProfiles(ProfileKindEnum.COMMUNITY);
   const authorityProfiles = useListProfiles(ProfileKindEnum.AUTHORITY);
   const [query, setQuery] = useState("");
   const searchedForger = useSearchForgerProfiles(query);
@@ -280,13 +284,13 @@ function ProfilesPanel() {
   const [switchingId, setSwitchingId] = useState<Nullable<string>>(null);
 
   const searching = query.trim().length > 0;
-  const forger = searching ? safeArray(searchedForger.data?.items) : safeArray(forgerProfiles.data?.items);
+  const community = searching ? safeArray(searchedForger.data?.items) : safeArray(communityProfiles.data?.items);
   const authority = searching ? safeArray(searchedAuthority.data?.items) : safeArray(authorityProfiles.data?.items);
   const rows: Array<{ profileId: string; displayName: Nullable<string>; kind: ProfileKindEnum; avatarImageId: Nullable<string> }> = [
-    ...forger.map((item: Profile.Response.ForgerProfileItem) => ({
+    ...community.map((item: Profile.Response.ForgerProfileItem) => ({
       profileId: item.profileId,
       displayName: item.displayName,
-      kind: ProfileKindEnum.FORGER,
+      kind: ProfileKindEnum.COMMUNITY,
       avatarImageId: item.avatarImageId,
     })),
     ...authority.map((item: Profile.Response.AuthorityProfileItem) => ({
@@ -339,9 +343,9 @@ function ProfilesPanel() {
                   </Table.Cell>
                   <Table.Cell>
                     <Flex gap="2" wrap="wrap" align="center">
-                      <Badge variant="outline">{row.kind === ProfileKindEnum.FORGER ? t("labels.scopeForger") : t("labels.scopeAuthority")}</Badge>
+                      <Badge variant="outline">{row.kind === ProfileKindEnum.COMMUNITY ? t("labels.scopeCommunity") : t("labels.scopeAuthority")}</Badge>
                       {isCurrent ? (
-                        <Badge color="green" variant="soft">
+                        <Badge color="green" variant="outline">
                           {t("labels.current")}
                         </Badge>
                       ) : null}
@@ -350,13 +354,13 @@ function ProfilesPanel() {
                   <Table.Cell>
                     <Flex gap="2">
                       {isCurrent ? null : (
-                        <Button size="1" variant="soft" loading={switchingId === row.profileId} onClick={() => void handleSwitch(row.profileId, row.kind)}>
+                        <Button size="1" variant="outline" loading={switchingId === row.profileId} onClick={() => void handleSwitch(row.profileId, row.kind)}>
                           {t("actions.switch")}
                         </Button>
                       )}
                       <Button
                         size="1"
-                        variant="soft"
+                        variant="outline"
                         color="red"
                         disabled={isCurrent}
                         onClick={() => {
@@ -379,7 +383,8 @@ function ProfilesPanel() {
         </Text>
       )}
 
-      <Flex direction={{ initial: "column", md: "row" }} gap="4" mt="4">
+      <Box pt="4">
+      <Flex direction={{ initial: "column", md: "row" }} gap="4">
         <Flex direction="column" gap="2" flexGrow="1">
           <Text size="2" weight="bold">
             {t("labels.newForgerProfile")}
@@ -417,6 +422,7 @@ function ProfilesPanel() {
           </Button>
         </Flex>
       </Flex>
+      </Box>
     </LedgerSection>
   );
 }

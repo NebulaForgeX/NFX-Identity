@@ -50,8 +50,8 @@
     "cannotDeleteLast": "Au moins une identité doit rester.",
     "deleteConfirmBody": "Supprimer définitivement « {{name}} » et ses données ? Irréversible.",
     "profileLanguage": "Langue",
-    "scopeForger": "Forger",
-    "newForgerProfile": "Nouveau profil Forger"
+    "newForgerProfile": "Nouveau profil Community",
+    "scopeCommunity": "Community"
   },
   "sections": {
     "emails": {

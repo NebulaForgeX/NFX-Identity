@@ -14,7 +14,7 @@
     "addEmail": "Ajouter un e-mail",
     "addPhone": "Ajouter un téléphone",
     "save": "Enregistrer",
-    "createForger": "Créer Forger",
+    "createForger": "Créer Community",
     "createAuthority": "Créer Authority",
     "deleteProfile": "Supprimer",
     "switch": "Changer"
@@ -39,15 +39,24 @@
     "current": "En cours",
     "emptyName": "Identité sans nom",
     "scopeAuthority": "Authority",
-    "scopeForger": "Forger",
     "deleteConfirmBody": "Supprimer définitivement « {{name}} » ?",
     "displayName": "Nom affiché",
-    "newForgerProfile": "Nouveau profil Forger",
-    "newAuthorityProfile": "Nouveau profil Authority"
+    "newForgerProfile": "Nouveau profil Community",
+    "newAuthorityProfile": "Nouveau profil Authority",
+    "scopeCommunity": "Community"
   },
   "sections": {
-    "emails": { "title": "E-mails", "description": "Vérifiez et choisissez une adresse principale." },
-    "phones": { "title": "Téléphones", "description": "Vérifiez et choisissez un numéro principal." },
-    "profiles": { "title": "Profils", "description": "Changer ou créer des identités Forger et Authority." }
+    "emails": {
+      "title": "E-mails",
+      "description": "Vérifiez et choisissez une adresse principale."
+    },
+    "phones": {
+      "title": "Téléphones",
+      "description": "Vérifiez et choisissez un numéro principal."
+    },
+    "profiles": {
+      "title": "Profils",
+      "description": "Changer ou créer des identités Forger et Authority."
+    }
   }
 }

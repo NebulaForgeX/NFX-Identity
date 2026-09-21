@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon } from "@/components";
 
-import { LedgerSection } from "./Ledger";
+import { LedgerSection } from "../Ledger";
 
 export default function SystemSettings() {
   const { t } = useTranslation("pages.User.Setting", { keyPrefix: "systemSettings" });

@@ -40,11 +40,11 @@
     "back": "返回登录",
     "kind": {
       "authority": "Authority",
-      "forger": "Forger"
+      "community": "Community"
     },
     "kindHint": {
       "authority": "审核与角色",
-      "forger": "日常使用"
+      "community": "日常使用"
     },
     "roles": {
       "pulser": "脉搏者",

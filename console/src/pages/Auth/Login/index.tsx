@@ -1,16 +1,16 @@
-import { AnimatedIcon, ArrowNarrowRightIcon, EyeIcon, EyeOffIcon } from "nfx-ui/icons";
+import { AnimatedIcon, ArrowNarrowRightIcon } from "nfx-ui/icons";
 import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { Button, Checkbox, Flex, Heading, Link, Text, TextField } from "@radix-ui/themes";
-import clsx from "clsx";
+import { Box, Button, Flex, Heading, Link, Tabs, Text } from "@radix-ui/themes";
 import gsap from "gsap";
 import { APP_NAME } from "nfx-ui/config";
 import { useLoginWithEmail, useLoginWithPhone } from "nfx-ui/hooks";
 import { LoginFormData, LoginWithPhoneFormData, useInitLoginForm, useInitLoginWithPhoneForm } from "nfx-ui/schemas";
-import { Controller, FormProvider, SubmitHandler } from "react-hook-form";
+import { FormProvider, SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { routerEventEmitter } from "@/events/router";
+import { LoginEmailController, LoginPasswordController, LoginPhoneController, LoginRememberController } from "@/features/account";
 import { ROUTES } from "@/navigations";
 import AuthChrome from "@/pages/Auth/shared/AuthChrome";
 import { safeOr } from "@/utils";
@@ -25,7 +25,6 @@ export default function LoginPage() {
   const phoneForm = useInitLoginWithPhoneForm();
   const loginEmail = useLoginWithEmail();
   const loginPhone = useLoginWithPhone();
-  const [showPassword, setShowPassword] = useState(false);
   const [channel, setChannel] = useState<"email" | "phone">("email");
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -63,8 +62,9 @@ export default function LoginPage() {
 
   return (
     <AuthChrome>
-      <div ref={rootRef} className={styles.gate}>
-        <Flex direction="column" gap="3" mb="6">
+      <Box ref={rootRef} className={styles.gate}>
+        <Box pb="6">
+        <Flex direction="column" gap="3">
           <Text as="p" size="1" weight="bold" className={`${styles.index} js-gate-copy`}>
             01 — {t("form.welcomeBack")}
           </Text>
@@ -75,178 +75,97 @@ export default function LoginPage() {
             {t("form.subtitle")}
           </Text>
         </Flex>
+        </Box>
 
-        <div className={styles.slabs}>
-          <button type="button" className={clsx(styles.slab, "js-gate-slab", channel === "email" && styles.slabActive)} aria-pressed={channel === "email"} onClick={() => setChannel("email")}>
-            <span className={styles.slabIndex}>01</span>
-            <span className={styles.slabLabel}>{t("form.channelEmail")}</span>
-          </button>
-          <button type="button" className={clsx(styles.slab, "js-gate-slab", channel === "phone" && styles.slabActive)} aria-pressed={channel === "phone"} onClick={() => setChannel("phone")}>
-            <span className={styles.slabIndex}>02</span>
-            <span className={styles.slabLabel}>{t("form.channelPhone")}</span>
-          </button>
-        </div>
+        <Tabs.Root value={channel} onValueChange={(value) => setChannel(value as "email" | "phone")}>
+          <Tabs.List className={`${styles.slabs} js-gate-slab`}>
+            <Tabs.Trigger value="email" className={styles.slab}>
+              <Box className={styles.slabPx}>
+                <Box className={styles.slabPy}>
+                  <Box className={styles.slabStack}>
+              <Text as="span" size="1" className={styles.slabIndex}>
+                01
+              </Text>
+              <Text as="span" className={styles.slabLabel}>
+                {t("form.channelEmail")}
+              </Text>
+                  </Box>
+                </Box>
+              </Box>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="phone" className={styles.slab}>
+              <Box className={styles.slabPx}>
+                <Box className={styles.slabPy}>
+                  <Box className={styles.slabStack}>
+              <Text as="span" size="1" className={styles.slabIndex}>
+                02
+              </Text>
+              <Text as="span" className={styles.slabLabel}>
+                {t("form.channelPhone")}
+              </Text>
+                  </Box>
+                </Box>
+              </Box>
+            </Tabs.Trigger>
+          </Tabs.List>
 
-        <div className={`${styles.fields} js-gate-fields`}>
-          {channel === "email" ? (
-            <FormProvider {...emailForm}>
-              <Flex asChild direction="column" gap="4">
-                <form noValidate onSubmit={emailForm.handleSubmit(onEmail)}>
-                  <Controller
-                    name="email"
-                    control={emailForm.control}
-                    render={({ field, fieldState }) => (
-                      <Flex direction="column" gap="1">
-                        <Text as="label" size="2" weight="medium" htmlFor="login-email">
-                          {t("form.emailLabel")}
-                        </Text>
-                        <TextField.Root id="login-email" size="3" type="email" autoComplete="email" placeholder={t("form.emailPlaceholder")} {...field} />
-                        {fieldState.error ? (
-                          <Text size="1" color="red">
-                            {fieldState.error.message}
-                          </Text>
-                        ) : null}
-                      </Flex>
-                    )}
-                  />
-                  <Controller
-                    name="password"
-                    control={emailForm.control}
-                    render={({ field, fieldState }) => (
-                      <Flex direction="column" gap="1">
-                        <Text as="label" size="2" weight="medium" htmlFor="login-password">
-                          {t("form.passwordLabel")}
-                        </Text>
-                        <TextField.Root
-                          id="login-password"
-                          size="3"
-                          type={showPassword ? "text" : "password"}
-                          autoComplete="current-password"
-                          placeholder={t("form.passwordPlaceholder")}
-                          {...field}
-                        >
-                          <TextField.Slot side="right">
-                            <Button type="button" size="1" variant="soft" color="gray" onClick={() => setShowPassword((v) => !v)} aria-label={showPassword ? t("form.hidePassword") : t("form.showPassword")}>
-                              <AnimatedIcon icon={showPassword ? EyeOffIcon : EyeIcon} size={14} />
-                            </Button>
-                          </TextField.Slot>
-                        </TextField.Root>
-                        {fieldState.error ? (
-                          <Text size="1" color="red">
-                            {fieldState.error.message}
-                          </Text>
-                        ) : null}
-                      </Flex>
-                    )}
-                  />
-                  <Controller
-                    name="rememberMe"
-                    control={emailForm.control}
-                    render={({ field }) => (
-                      <Flex asChild align="center" gap="2">
-                        <Text as="label" size="2">
-                          <Checkbox checked={!!field.value} onCheckedChange={(v) => field.onChange(v === true)} />
-                          {t("form.rememberMe")}
-                        </Text>
-                      </Flex>
-                    )}
-                  />
-                  <Button type="submit" size="3" loading={loginEmail.isPending} style={{ width: "100%" }}>
-                    {t("form.submit")}
-                    <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
-                  </Button>
-                </form>
-              </Flex>
-            </FormProvider>
-          ) : (
-            <FormProvider {...phoneForm}>
-              <Flex asChild direction="column" gap="4">
-                <form noValidate onSubmit={phoneForm.handleSubmit(onPhone)}>
-                  <Controller
-                    name="phone"
-                    control={phoneForm.control}
-                    render={({ field, fieldState }) => (
-                      <Flex direction="column" gap="1">
-                        <Text as="label" size="2" weight="medium" htmlFor="login-phone">
-                          {t("form.phoneLabel")}
-                        </Text>
-                        <TextField.Root id="login-phone" size="3" type="tel" autoComplete="tel" placeholder={t("form.phonePlaceholder")} {...field} />
-                        {fieldState.error ? (
-                          <Text size="1" color="red">
-                            {fieldState.error.message}
-                          </Text>
-                        ) : null}
-                      </Flex>
-                    )}
-                  />
-                  <Controller
-                    name="password"
-                    control={phoneForm.control}
-                    render={({ field, fieldState }) => (
-                      <Flex direction="column" gap="1">
-                        <Text as="label" size="2" weight="medium" htmlFor="login-phone-password">
-                          {t("form.passwordLabel")}
-                        </Text>
-                        <TextField.Root
-                          id="login-phone-password"
-                          size="3"
-                          type={showPassword ? "text" : "password"}
-                          autoComplete="current-password"
-                          placeholder={t("form.passwordPlaceholder")}
-                          {...field}
-                        >
-                          <TextField.Slot side="right">
-                            <Button type="button" size="1" variant="soft" color="gray" onClick={() => setShowPassword((v) => !v)} aria-label={showPassword ? t("form.hidePassword") : t("form.showPassword")}>
-                              <AnimatedIcon icon={showPassword ? EyeOffIcon : EyeIcon} size={14} />
-                            </Button>
-                          </TextField.Slot>
-                        </TextField.Root>
-                        {fieldState.error ? (
-                          <Text size="1" color="red">
-                            {fieldState.error.message}
-                          </Text>
-                        ) : null}
-                      </Flex>
-                    )}
-                  />
-                  <Controller
-                    name="rememberMe"
-                    control={phoneForm.control}
-                    render={({ field }) => (
-                      <Flex asChild align="center" gap="2">
-                        <Text as="label" size="2">
-                          <Checkbox checked={!!field.value} onCheckedChange={(v) => field.onChange(v === true)} />
-                          {t("form.rememberMe")}
-                        </Text>
-                      </Flex>
-                    )}
-                  />
-                  <Button type="submit" size="3" loading={loginPhone.isPending} style={{ width: "100%" }}>
-                    {t("form.submit")}
-                    <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
-                  </Button>
-                </form>
-              </Flex>
-            </FormProvider>
-          )}
+          <Box className={styles.fieldsPt}>
+          <Box className={`${styles.fields} js-gate-fields`}>
+            <Tabs.Content value="email">
+              <FormProvider {...emailForm}>
+                <Flex asChild direction="column" gap="4">
+                  <form noValidate onSubmit={emailForm.handleSubmit(onEmail)}>
+                    <LoginEmailController />
+                    <LoginPasswordController />
+                    <LoginRememberController />
+                    <Button type="submit" size="3" loading={loginEmail.isPending} className={styles.fullWidth}>
+                      {t("form.submit")}
+                      <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
+                    </Button>
+                  </form>
+                </Flex>
+              </FormProvider>
+            </Tabs.Content>
 
-          <div className={styles.foot}>
-            <Text as="p" size="2" color="gray">
-              {t("promo.newTo", { name: APP_NAME })}
-            </Text>
-            <Link
-              href={ROUTES.SIGNUP}
-              size="2"
-              onClick={(e) => {
-                e.preventDefault();
-                routerEventEmitter.navigate({ to: ROUTES.SIGNUP });
-              }}
-            >
-              {t("promo.createAccount")}
-            </Link>
-          </div>
-        </div>
-      </div>
+            <Tabs.Content value="phone">
+              <FormProvider {...phoneForm}>
+                <Flex asChild direction="column" gap="4">
+                  <form noValidate onSubmit={phoneForm.handleSubmit(onPhone)}>
+                    <LoginPhoneController />
+                    <LoginPasswordController />
+                    <LoginRememberController />
+                    <Button type="submit" size="3" loading={loginPhone.isPending} className={styles.fullWidth}>
+                      {t("form.submit")}
+                      <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
+                    </Button>
+                  </form>
+                </Flex>
+              </FormProvider>
+            </Tabs.Content>
+
+            <Box className={styles.foot}>
+              <Box className={styles.footPt}>
+            <Flex justify="between" align="baseline" gap="4">
+              <Text as="p" size="2" color="gray">
+                {t("promo.newTo", { name: APP_NAME })}
+              </Text>
+              <Link
+                href={ROUTES.SIGNUP}
+                size="2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  routerEventEmitter.navigate({ to: ROUTES.SIGNUP });
+                }}
+              >
+                {t("promo.createAccount")}
+              </Link>
+            </Flex>
+              </Box>
+            </Box>
+          </Box>
+          </Box>
+        </Tabs.Root>
+      </Box>
     </AuthChrome>
   );
 }

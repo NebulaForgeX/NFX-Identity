@@ -14,7 +14,7 @@
     "addEmail": "添加邮箱",
     "addPhone": "添加手机",
     "save": "保存",
-    "createForger": "创建 Forger",
+    "createForger": "创建 Community",
     "createAuthority": "创建 Authority",
     "deleteProfile": "删除",
     "switch": "切换"
@@ -39,15 +39,24 @@
     "current": "使用中",
     "emptyName": "未命名身份",
     "scopeAuthority": "Authority",
-    "scopeForger": "Forger",
     "deleteConfirmBody": "永久删除「{{name}}」？",
     "displayName": "显示名",
     "newForgerProfile": "新 Forger 资料",
-    "newAuthorityProfile": "新 Authority 资料"
+    "newAuthorityProfile": "新 Authority 资料",
+    "scopeCommunity": "Community"
   },
   "sections": {
-    "emails": { "title": "邮箱", "description": "验证并选择主邮箱。" },
-    "phones": { "title": "手机", "description": "验证并选择主号码。" },
-    "profiles": { "title": "资料", "description": "切换或创建 Forger / Authority 身份。" }
+    "emails": {
+      "title": "邮箱",
+      "description": "验证并选择主邮箱。"
+    },
+    "phones": {
+      "title": "手机",
+      "description": "验证并选择主号码。"
+    },
+    "profiles": {
+      "title": "资料",
+      "description": "切换或创建 Forger / Authority 身份。"
+    }
   }
 }

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 export type EmptyStateProps = {
@@ -12,29 +12,33 @@ export type EmptyStateProps = {
 
 export default function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <Flex direction="column" align="center" justify="center" gap="3" py="9" px="4">
-      <Flex
-        align="center"
-        justify="center"
-        width="56px"
-        height="56px"
-        style={{
-          borderRadius: "var(--radius-5)",
-          background: "color-mix(in oklab, var(--gray-11) 8%, transparent)",
-          color: "var(--gray-10)",
-        }}
-      >
-        <AnimatedIcon icon={icon} size={24} />
-      </Flex>
-      <Heading as="h3" size="4" align="center">
-        {title}
-      </Heading>
-      {description ? (
-        <Text as="p" size="2" color="gray" align="center" style={{ maxWidth: "36ch" }}>
-          {description}
-        </Text>
-      ) : null}
-      {action}
-    </Flex>
+    <Box px="4">
+      <Box py="9">
+        <Flex direction="column" align="center" justify="center" gap="3">
+          <Flex
+            align="center"
+            justify="center"
+            width="56px"
+            height="56px"
+            style={{
+              borderRadius: "var(--radius-5)",
+              background: "color-mix(in oklab, var(--gray-11) 8%, transparent)",
+              color: "var(--gray-10)",
+            }}
+          >
+            <AnimatedIcon icon={icon} size={24} />
+          </Flex>
+          <Heading as="h3" size="4" align="center">
+            {title}
+          </Heading>
+          {description ? (
+            <Text as="p" size="2" color="gray" align="center" style={{ maxWidth: "36ch" }}>
+              {description}
+            </Text>
+          ) : null}
+          {action}
+        </Flex>
+      </Box>
+    </Box>
   );
 }

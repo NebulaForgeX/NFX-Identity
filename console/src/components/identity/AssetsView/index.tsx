@@ -1,6 +1,6 @@
 import { CameraIcon } from "nfx-ui/icons";
 import { useState } from "react";
-import { Button, Flex, Tabs, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Tabs, Text } from "@radix-ui/themes";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useAssetFileURL, useConfirmUpload, useDeleteAsset, useListAssets, usePrepareUpload } from "nfx-ui/hooks";
 import type { Asset } from "nfx-ui/types";
@@ -10,8 +10,8 @@ import { PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
 import { minioUploadMessage, putToPresignedUrl, safeArray } from "@/utils";
 
-import styles from "./assets.module.css";
-import { LedgerSection } from "./Ledger";
+import { LedgerSection } from "../Ledger";
+import styles from "./s.module.css";
 
 const KINDS: Asset.Kind[] = ["images", "files", "videos", "audios"];
 
@@ -79,7 +79,9 @@ export default function AssetsView() {
         <Flex direction="column" gap="2">
           {rows.length === 0 ? <Text size="2" color="gray">{t("noItems")}</Text> : null}
           {rows.map((row) => (
-            <Flex key={row.id} justify="between" align="center" gap="3" py="2" style={{ borderBottom: "1px solid var(--gray-a4)" }}>
+            <Box key={row.id} className={styles.hairline}>
+              <Box py="2">
+            <Flex justify="between" align="center" gap="3">
               <Flex align="center" gap="3" minWidth="0">
                 {kind === "images" ? <img src={fileURL("images", row.id)} alt="" width={48} height={48} style={{ objectFit: "cover" }} /> : null}
                 <Text size="2">
@@ -89,7 +91,7 @@ export default function AssetsView() {
                 </Text>
               </Flex>
               <Button
-                variant="soft"
+                variant="outline"
                 color="red"
                 onClick={() => {
                   void del.mutateAsync({ kind, id: row.id }).then(() => list.refetch());
@@ -98,6 +100,8 @@ export default function AssetsView() {
                 {t("delete")}
               </Button>
             </Flex>
+              </Box>
+            </Box>
           ))}
         </Flex>
       </LedgerSection>

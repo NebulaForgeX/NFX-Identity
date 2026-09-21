@@ -3,3 +3,7 @@
   margin-bottom: 0.25rem;
   box-shadow: inset 0 -1px 0 0 color-mix(in oklab, var(--accent-9) 18%, var(--gray-a5));
 }
+
+.hairline {
+  border-bottom: 1px solid var(--gray-a4);
+}

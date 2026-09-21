@@ -76,7 +76,7 @@ function Header() {
             {isAuthValid ? (
               <DropdownMenu.Root modal={false}>
                 <DropdownMenu.Trigger>
-                  <Button variant="soft" color="gray" highContrast>
+                  <Button variant="outline" color="gray" highContrast>
                     <Avatar size="1" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
                     <Text size="2" truncate style={{ maxWidth: 120 }}>
                       {displayName}
@@ -114,7 +114,7 @@ function Header() {
               </DropdownMenu.Root>
             ) : (
               <>
-                <Button variant="soft" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.LOGIN })}>
+                <Button variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.LOGIN })}>
                   {t("header.login")}
                 </Button>
                 <Button onClick={() => routerEventEmitter.navigate({ to: ROUTES.SIGNUP })}>{t("header.signup")}</Button>

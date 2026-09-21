@@ -3,21 +3,21 @@
     "access": "Accès {{name}}",
     "title": "Choisissez le Profile qui continue."
   },
-  "heroFooter": "Un Account. Forger ou Authority — choisissez la session.",
+  "heroFooter": "Un Account. Community ou Authority — choisissez la session.",
   "eyebrow": "Choisir l'identité",
   "title": "Quel Profile continuer ?",
   "subtitle": "Votre Account peut porter plusieurs Profile.",
   "kind": {
     "authority": "Authority",
-    "forger": "Forger"
+    "community": "Community"
   },
   "kindHint": {
     "authority": "Modération et rôles",
-    "forger": "Usage quotidien"
+    "community": "Usage quotidien"
   },
   "empty": {
     "authority": "Pas encore de Profile Authority. Créez-en un dans le dock.",
-    "forger": "Pas encore de Profile Forger. Créez-en un dans le dock."
+    "community": "Pas encore de Profile Community. Créez-en un dans le dock."
   },
   "roles": {
     "auditor": "Auditeur",

@@ -14,7 +14,7 @@
     "addEmail": "Add email",
     "addPhone": "Add phone",
     "save": "Save",
-    "createForger": "Create Forger",
+    "createForger": "Create Community",
     "createAuthority": "Create Authority",
     "deleteProfile": "Delete",
     "switch": "Switch"
@@ -39,15 +39,24 @@
     "current": "In use",
     "emptyName": "Untitled identity",
     "scopeAuthority": "Authority",
-    "scopeForger": "Forger",
     "deleteConfirmBody": "Permanently delete \"{{name}}\"?",
     "displayName": "Display name",
-    "newForgerProfile": "New Forger profile",
-    "newAuthorityProfile": "New Authority profile"
+    "newForgerProfile": "New Community profile",
+    "newAuthorityProfile": "New Authority profile",
+    "scopeCommunity": "Community"
   },
   "sections": {
-    "emails": { "title": "Emails", "description": "Verify and choose a primary address." },
-    "phones": { "title": "Phones", "description": "Verify and choose a primary number." },
-    "profiles": { "title": "Profiles", "description": "Switch or create Forger and Authority identities." }
+    "emails": {
+      "title": "Emails",
+      "description": "Verify and choose a primary address."
+    },
+    "phones": {
+      "title": "Phones",
+      "description": "Verify and choose a primary number."
+    },
+    "profiles": {
+      "title": "Profiles",
+      "description": "Switch or create Forger and Authority identities."
+    }
   }
 }

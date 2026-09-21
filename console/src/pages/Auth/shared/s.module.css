@@ -1,20 +1,23 @@
 .page {
-  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   background: var(--color-bg);
   color: var(--gray-12);
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 1.25rem;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg);
   position: sticky;
   top: 0;
   z-index: 4;
+}
+.headerPx {
+  padding-inline: 1.25rem;
+}
+.headerPy {
+  padding-block: 0.9rem;
 }
 
 .brandHome {
@@ -25,5 +28,6 @@
 
 .body {
   position: relative;
-  min-height: calc(100dvh - 4rem);
+  height: calc(100dvh - 4rem);
+  overflow: auto;
 }
