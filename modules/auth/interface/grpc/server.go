@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	"nfxidentity/modules/auth/application/platform"
+	"nfxidentity/modules/auth/application/account"
 	"nfxidentity/modules/auth/application/resource"
 	grpcHandler "nfxidentity/modules/auth/interface/grpc/handler"
 	"nfxidentity/pkgs/grpcx/interceptor"
@@ -21,7 +21,7 @@ import (
 )
 
 type Deps interface {
-	PlatformSvc() *platform.Service
+	AccountService() *account.Service
 	ResourceSvc() *resource.Service
 	ServerTokenVerifier() token.Verifier
 	Postgres() *postgresqlx.Connection
@@ -36,9 +36,9 @@ func NewServer(d Deps) *grpc.Server {
 		),
 	}
 	s := grpc.NewServer(opts...)
-	accountpb.RegisterAccountServiceServer(s, grpcHandler.NewAccountHandler(d.PlatformSvc()))
-	forgerprofilepb.RegisterForgerProfileServiceServer(s, grpcHandler.NewForgerHandler(d.PlatformSvc()))
-	authorityprofilepb.RegisterAuthorityProfileServiceServer(s, grpcHandler.NewAuthorityHandler(d.PlatformSvc()))
+	accountpb.RegisterAccountServiceServer(s, grpcHandler.NewAccountHandler(d.AccountService()))
+	forgerprofilepb.RegisterForgerProfileServiceServer(s, grpcHandler.NewForgerHandler(d.AccountService()))
+	authorityprofilepb.RegisterAuthorityProfileServiceServer(s, grpcHandler.NewAuthorityHandler(d.AccountService()))
 	healthpb.RegisterHealthServiceServer(s, grpcHandler.NewHealthHandler(d.ResourceSvc(), "auth"))
 	schemapb.RegisterSchemaServiceServer(s, grpcHandler.NewSchemaHandler(func(ctx context.Context) (int32, error) {
 		n, err := postgresqlx.ClearSchema(ctx, d.Postgres().DB(), "auth", nil)

@@ -5,15 +5,20 @@ import (
 	"fmt"
 	"time"
 
-	"nfxidentity/modules/auth/application/platform"
+	"nfxidentity/modules/auth/application/account"
+	"nfxidentity/modules/auth/application/email"
+	"nfxidentity/modules/auth/application/login"
+	"nfxidentity/modules/auth/application/phone"
 	"nfxidentity/modules/auth/application/resource"
+	"nfxidentity/modules/auth/application/signup"
 	"nfxidentity/modules/auth/config"
+	accountQuery "nfxidentity/modules/auth/infrastructure/query/account"
 	emailQuery "nfxidentity/modules/auth/infrastructure/query/email"
 	phoneQuery "nfxidentity/modules/auth/infrastructure/query/phone"
 	profileQuery "nfxidentity/modules/auth/infrastructure/query/profile"
 	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
 	"nfxidentity/pkgs/cachex"
-	"nfxidentity/pkgs/email"
+	pkgemail "nfxidentity/pkgs/email"
 	"nfxidentity/pkgs/health"
 	"nfxidentity/pkgs/kafkax"
 	"nfxidentity/pkgs/kafkax/eventbus"
@@ -33,9 +38,13 @@ type Dependencies struct {
 	userTokenVerifier   token.Verifier
 	serverTokenVerifier token.Verifier
 	tokenxInstance      *tokenx.Tokenx
-	platformSvc         *platform.Service
+	loginSvc            *login.Service
+	signupSvc           *signup.Service
+	accountSvc          *account.Service
+	emailSvc            *email.Service
+	phoneSvc            *phone.Service
 	resourceSvc         *resource.Service
-	mail                *email.EmailService
+	mail                *pkgemail.EmailService
 	repoFactory         *repofactory.TxRepoFactory
 }
 
@@ -68,7 +77,7 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		servertoken.WithAllowedSkew(5*time.Second),
 	)
 
-	mail := email.NewEmailService(email.SMTPConfig{
+	mail := pkgemail.NewEmailService(pkgemail.SMTPConfig{
 		Host:     cfg.Email.SMTPHost,
 		Port:     cfg.Email.SMTPPort,
 		Username: cfg.Email.SMTPUser,
@@ -77,17 +86,12 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 	})
 	db := postgres.DB()
 	factory := repofactory.NewTxRepoFactory(db)
-	platformSvc := platform.NewService(
-		transaction.NewGormTxManager(db),
-		factory,
-		emailQuery.NewQuery(db),
-		phoneQuery.NewQuery(db),
-		profileQuery.NewQuery(db),
-		tokenxInstance,
-		cacheConn.Client(),
-		mail,
-		busPublisher,
-	)
+	txManager := transaction.NewGormTxManager(db)
+	redisClient := cacheConn.Client()
+	accountQ := accountQuery.NewQuery(db)
+	emailQ := emailQuery.NewQuery(db)
+	phoneQ := phoneQuery.NewQuery(db)
+	profileQ := profileQuery.NewQuery(db)
 	resourceSvc := resource.NewService(postgres, cacheConn, &kafkaConfig)
 
 	return &Dependencies{
@@ -99,7 +103,11 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 		userTokenVerifier:   userTokenVerifier,
 		serverTokenVerifier: serverTokenVerifier,
 		tokenxInstance:      tokenxInstance,
-		platformSvc:         platformSvc,
+		loginSvc:            login.NewService(factory, txManager, busPublisher, tokenxInstance, profileQ),
+		signupSvc:           signup.NewService(txManager, factory, emailQ, phoneQ, profileQ, tokenxInstance, redisClient, mail, busPublisher),
+		accountSvc:          account.NewService(txManager, factory, accountQ, emailQ, phoneQ, profileQ, tokenxInstance, redisClient, mail, busPublisher),
+		emailSvc:            email.NewService(txManager, factory, emailQ, phoneQ, profileQ, tokenxInstance, redisClient, mail, busPublisher),
+		phoneSvc:            phone.NewService(txManager, factory, emailQ, phoneQ, profileQ, tokenxInstance, redisClient, mail, busPublisher),
 		resourceSvc:         resourceSvc,
 		mail:                mail,
 		repoFactory:         factory,
@@ -112,18 +120,24 @@ func (d *Dependencies) Cleanup() {
 	d.cache.Close()
 }
 
-func (d *Dependencies) HealthMgr() *health.Manager          { return d.healthMgr }
-func (d *Dependencies) Postgres() *postgresqlx.Connection   { return d.postgres }
-func (d *Dependencies) UserTokenVerifier() token.Verifier   { return d.userTokenVerifier }
-func (d *Dependencies) ServerTokenVerifier() token.Verifier { return d.serverTokenVerifier }
-func (d *Dependencies) KafkaConfig() *kafkax.Config         { return d.kafkaConfig }
+func (d *Dependencies) HealthMgr() *health.Manager        { return d.healthMgr }
+func (d *Dependencies) Postgres() *postgresqlx.Connection { return d.postgres }
+func (d *Dependencies) UserTokenVerifier() token.Verifier { return d.userTokenVerifier }
+func (d *Dependencies) ServerTokenVerifier() token.Verifier {
+	return d.serverTokenVerifier
+}
+func (d *Dependencies) KafkaConfig() *kafkax.Config { return d.kafkaConfig }
 func (d *Dependencies) BusPublisher() *eventbus.BusPublisher {
 	return d.busPublisher
 }
-func (d *Dependencies) PlatformSvc() *platform.Service { return d.platformSvc }
-func (d *Dependencies) ResourceSvc() *resource.Service { return d.resourceSvc }
-func (d *Dependencies) Cache() *cachex.Connection      { return d.cache }
-func (d *Dependencies) Mail() *email.EmailService      { return d.mail }
+func (d *Dependencies) LoginService() *login.Service     { return d.loginSvc }
+func (d *Dependencies) SignupService() *signup.Service   { return d.signupSvc }
+func (d *Dependencies) AccountService() *account.Service { return d.accountSvc }
+func (d *Dependencies) EmailService() *email.Service     { return d.emailSvc }
+func (d *Dependencies) PhoneService() *phone.Service     { return d.phoneSvc }
+func (d *Dependencies) ResourceSvc() *resource.Service   { return d.resourceSvc }
+func (d *Dependencies) Cache() *cachex.Connection        { return d.cache }
+func (d *Dependencies) Mail() *pkgemail.EmailService     { return d.mail }
 func (d *Dependencies) RepoFactory() *repofactory.TxRepoFactory {
 	return d.repoFactory
 }

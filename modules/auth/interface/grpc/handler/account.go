@@ -2,46 +2,50 @@ package handler
 
 import (
 	"context"
-	"time"
 
-	"nfxidentity/modules/auth/application/platform"
+	"nfxidentity/enums"
+	"nfxidentity/modules/auth/application/account"
+	"nfxidentity/modules/auth/interface/grpc/mapper"
+	profileQuery "nfxidentity/modules/auth/query/profile"
+	"nfxidentity/pkgs/query"
 	accountpb "nfxidentity/protos/gen/auth/account"
 
 	"github.com/google/uuid"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type AccountHandler struct {
 	accountpb.UnimplementedAccountServiceServer
-	svc *platform.Service
+	svc *account.Service
 }
 
-func NewAccountHandler(svc *platform.Service) *AccountHandler {
+func NewAccountHandler(svc *account.Service) *AccountHandler {
 	return &AccountHandler{svc: svc}
 }
 
 func (h *AccountHandler) GetFullAccountInformation(ctx context.Context, req *accountpb.GetFullAccountInformationRequest) (*accountpb.GetFullAccountInformationResponse, error) {
 	aid, err := uuid.Parse(req.GetAccountId())
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.InvalidArgument, "invalid account_id: %v", err)
 	}
-	full, err := h.svc.FullAccountWithProfile(ctx, aid, uuid.Nil, "forger")
+	full, err := h.svc.GetFullInformationWithCommunityProfile(ctx, account.GetFullInformationWithCommunityProfileInput{AccountID: aid, ProfileID: uuid.Nil})
 	if err != nil {
 		return nil, err
 	}
-	return &accountpb.GetFullAccountInformationResponse{Full: mapFull(full)}, nil
+	return &accountpb.GetFullAccountInformationResponse{Full: mapper.CommunityFullToProto(full)}, nil
 }
 
 func (h *AccountHandler) GetAccountByID(ctx context.Context, req *accountpb.GetAccountByIDRequest) (*accountpb.GetAccountByIDResponse, error) {
 	aid, err := uuid.Parse(req.GetId())
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.InvalidArgument, "invalid id: %v", err)
 	}
-	full, err := h.svc.FullAccountWithProfile(ctx, aid, uuid.Nil, "forger")
+	full, err := h.svc.GetFullInformationWithCommunityProfile(ctx, account.GetFullInformationWithCommunityProfileInput{AccountID: aid, ProfileID: uuid.Nil})
 	if err != nil {
 		return nil, err
 	}
-	return &accountpb.GetAccountByIDResponse{Items: []*accountpb.FullAccountInformation{mapFull(full)}}, nil
+	return &accountpb.GetAccountByIDResponse{Items: []*accountpb.FullAccountInformation{mapper.CommunityFullToProto(full)}}, nil
 }
 
 func (h *AccountHandler) GetAccountByEmail(ctx context.Context, req *accountpb.GetAccountByEmailRequest) (*accountpb.GetAccountByEmailResponse, error) {
@@ -49,11 +53,11 @@ func (h *AccountHandler) GetAccountByEmail(ctx context.Context, req *accountpb.G
 	if err != nil {
 		return nil, err
 	}
-	full, err := h.svc.FullAccountWithProfile(ctx, aid, uuid.Nil, "forger")
+	full, err := h.svc.GetFullInformationWithCommunityProfile(ctx, account.GetFullInformationWithCommunityProfileInput{AccountID: aid, ProfileID: uuid.Nil})
 	if err != nil {
 		return nil, err
 	}
-	return &accountpb.GetAccountByEmailResponse{Items: []*accountpb.FullAccountInformation{mapFull(full)}}, nil
+	return &accountpb.GetAccountByEmailResponse{Items: []*accountpb.FullAccountInformation{mapper.CommunityFullToProto(full)}}, nil
 }
 
 func (h *AccountHandler) GetAccountByPhone(ctx context.Context, req *accountpb.GetAccountByPhoneRequest) (*accountpb.GetAccountByPhoneResponse, error) {
@@ -61,32 +65,29 @@ func (h *AccountHandler) GetAccountByPhone(ctx context.Context, req *accountpb.G
 	if err != nil {
 		return nil, err
 	}
-	full, err := h.svc.FullAccountWithProfile(ctx, aid, uuid.Nil, "forger")
+	full, err := h.svc.GetFullInformationWithCommunityProfile(ctx, account.GetFullInformationWithCommunityProfileInput{AccountID: aid, ProfileID: uuid.Nil})
 	if err != nil {
 		return nil, err
 	}
-	return &accountpb.GetAccountByPhoneResponse{Items: []*accountpb.FullAccountInformation{mapFull(full)}}, nil
+	return &accountpb.GetAccountByPhoneResponse{Items: []*accountpb.FullAccountInformation{mapper.CommunityFullToProto(full)}}, nil
 }
 
 func (h *AccountHandler) GetPrimaryEmailByProfileID(ctx context.Context, req *accountpb.GetPrimaryEmailByProfileIDRequest) (*accountpb.GetPrimaryEmailByProfileIDResponse, error) {
 	pid, err := uuid.Parse(req.GetProfileId())
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.InvalidArgument, "invalid profile_id: %v", err)
 	}
-	card, err := h.svc.PublicProfileCard(ctx, pid)
+	vo, err := h.svc.GetPrimaryEmailByProfileID(ctx, pid)
 	if err != nil {
 		return nil, err
 	}
-	accountID, _ := uuid.Parse(asString(card["account_id"]))
-	email, _ := h.svc.PrimaryContactsExport(ctx, accountID)
-	lang := asString(card["profile_language"])
-	return &accountpb.GetPrimaryEmailByProfileIDResponse{Email: email, ProfileLanguage: lang}, nil
+	return &accountpb.GetPrimaryEmailByProfileIDResponse{Email: vo.Email, ProfileLanguage: vo.ProfileLanguage}, nil
 }
 
 func (h *AccountHandler) InvalidateFullInformationWithForgerProfile(ctx context.Context, req *accountpb.InvalidateFullInformationWithForgerProfileRequest) (*accountpb.InvalidateFullInformationWithForgerProfileResponse, error) {
 	aid, err := uuid.Parse(req.GetAccountId())
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.InvalidArgument, "invalid account_id: %v", err)
 	}
 	pid, _ := uuid.Parse(req.GetProfileId())
 	if err := h.svc.InvalidateFull(ctx, aid, pid); err != nil {
@@ -98,7 +99,7 @@ func (h *AccountHandler) InvalidateFullInformationWithForgerProfile(ctx context.
 func (h *AccountHandler) InvalidateFullInformationWithAuthorityProfile(ctx context.Context, req *accountpb.InvalidateFullInformationWithAuthorityProfileRequest) (*accountpb.InvalidateFullInformationWithAuthorityProfileResponse, error) {
 	aid, err := uuid.Parse(req.GetAccountId())
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.InvalidArgument, "invalid account_id: %v", err)
 	}
 	pid, _ := uuid.Parse(req.GetProfileId())
 	if err := h.svc.InvalidateFull(ctx, aid, pid); err != nil {
@@ -108,15 +109,23 @@ func (h *AccountHandler) InvalidateFullInformationWithAuthorityProfile(ctx conte
 }
 
 func (h *AccountHandler) EnsureOwnedProfile(ctx context.Context, req *accountpb.EnsureOwnedProfileRequest) (*accountpb.EnsureOwnedProfileResponse, error) {
-	err := h.svc.EnsureOwnedProfile(ctx, req.GetAccountId(), req.GetProfileId(), req.GetProfileScope())
+	aid, err := uuid.Parse(req.GetAccountId())
 	if err != nil {
-		return &accountpb.EnsureOwnedProfileResponse{Allowed: false}, nil
+		return nil, status.Errorf(codes.InvalidArgument, "invalid account_id: %v", err)
 	}
-	return &accountpb.EnsureOwnedProfileResponse{Allowed: true}, nil
+	pid, err := uuid.Parse(req.GetProfileId())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid profile_id: %v", err)
+	}
+	allowed, err := h.svc.EnsureOwnedProfile(ctx, aid, pid, enums.AuthProfileScope(req.GetProfileScope()))
+	if err != nil {
+		return nil, err
+	}
+	return &accountpb.EnsureOwnedProfileResponse{Allowed: allowed}, nil
 }
 
 func (h *AccountHandler) BootstrapOwner(ctx context.Context, req *accountpb.BootstrapOwnerRequest) (*accountpb.BootstrapOwnerResponse, error) {
-	out, err := h.svc.BootstrapOwner(ctx, platform.BootstrapOwnerInput{
+	out, err := h.svc.BootstrapOwner(ctx, account.BootstrapOwnerInput{
 		Username: req.GetUsername(),
 		Password: req.GetPassword(),
 		Email:    req.GetEmail(),
@@ -133,133 +142,39 @@ func (h *AccountHandler) BootstrapOwner(ctx context.Context, req *accountpb.Boot
 }
 
 func (h *AccountHandler) ListProfilesInTable(ctx context.Context, req *accountpb.ListProfilesInTableRequest) (*accountpb.ListProfilesInTableResponse, error) {
-	items, total, err := h.svc.SearchProfiles(ctx, req.GetTable(), req.GetQuery(), int(req.GetLimit()), int(req.GetOffset()))
+	q := profileQuery.ListQuery{DomainPagination: query.DomainPagination{Limit: int(req.GetLimit()), Offset: int(req.GetOffset())}}
+	if raw := req.GetQuery(); raw != "" {
+		q.Search = &raw
+	}
+	q.Normalize()
+
+	if enums.AuthProfileScope(req.GetTable()) == enums.AuthProfileScopeAuthority {
+		page, err := h.svc.SearchAuthorityProfiles(ctx, account.SearchAuthorityProfilesInput{Query: q})
+		if err != nil {
+			return nil, err
+		}
+		out := make([]*accountpb.FullAccountInformation, 0, len(page.Items))
+		for _, item := range page.Items {
+			full, err := h.svc.GetFullInformationWithAuthorityProfile(ctx, account.GetFullInformationWithAuthorityProfileInput{AccountID: item.AccountID, ProfileID: item.ProfileID})
+			if err != nil {
+				continue
+			}
+			out = append(out, mapper.AuthorityFullToProto(full))
+		}
+		return &accountpb.ListProfilesInTableResponse{Items: out, Total: page.Total}, nil
+	}
+
+	page, err := h.svc.SearchCommunityProfiles(ctx, account.SearchCommunityProfilesInput{Query: q})
 	if err != nil {
 		return nil, err
 	}
-	out := make([]*accountpb.FullAccountInformation, 0, len(items))
-	for _, item := range items {
-		aid, err := uuid.Parse(asString(item["account_id"]))
+	out := make([]*accountpb.FullAccountInformation, 0, len(page.Items))
+	for _, item := range page.Items {
+		full, err := h.svc.GetFullInformationWithCommunityProfile(ctx, account.GetFullInformationWithCommunityProfileInput{AccountID: item.AccountID, ProfileID: item.ProfileID})
 		if err != nil {
 			continue
 		}
-		full, err := h.svc.FullAccountWithProfile(ctx, aid, uuid.Nil, req.GetTable())
-		if err != nil {
-			continue
-		}
-		out = append(out, mapFull(full))
+		out = append(out, mapper.CommunityFullToProto(full))
 	}
-	return &accountpb.ListProfilesInTableResponse{Items: out, Total: total}, nil
-}
-
-func asString(v any) string {
-	if v == nil {
-		return ""
-	}
-	s, _ := v.(string)
-	return s
-}
-
-func mapFull(in map[string]any) *accountpb.FullAccountInformation {
-	full := &accountpb.FullAccountInformation{}
-	if acc, ok := in["account"].(map[string]any); ok {
-		full.Account = &accountpb.Account{
-			Id:             asString(acc["id"]),
-			SignupPlatform: asString(acc["signup_platform"]),
-			AccountStatus:  accountStatus(asString(acc["account_status"])),
-			CreatedAt:      ts(acc["created_at"]),
-			UpdatedAt:      ts(acc["updated_at"]),
-		}
-	}
-	if emails, ok := in["emails"].([]map[string]any); ok {
-		for _, e := range emails {
-			full.Emails = append(full.Emails, &accountpb.Email{
-				Id:        asString(e["id"]),
-				AccountId: asString(e["account_id"]),
-				Email:     asString(e["email"]),
-				IsPrimary: asBool(e["is_primary"]),
-			})
-		}
-	}
-	if phones, ok := in["phones"].([]map[string]any); ok {
-		for _, p := range phones {
-			full.Phones = append(full.Phones, &accountpb.Phone{
-				Id:        asString(p["id"]),
-				AccountId: asString(p["account_id"]),
-				Phone:     asString(p["phone"]),
-				IsPrimary: asBool(p["is_primary"]),
-			})
-		}
-	}
-	if fp, ok := in["forger_profile"].(map[string]any); ok && fp != nil {
-		full.ForgerProfile = &accountpb.ForgerProfile{
-			AccountId:       asString(fp["account_id"]),
-			ProfileId:       asString(fp["profile_id"]),
-			DisplayName:     strPtr(fp["display_name"]),
-			ProfileLanguage: profileLang(asString(fp["profile_language"])),
-		}
-	}
-	if ap, ok := in["authority_profile"].(map[string]any); ok && ap != nil {
-		full.AuthorityProfile = &accountpb.AuthorityProfile{
-			AccountId:       asString(ap["account_id"]),
-			ProfileId:       asString(ap["profile_id"]),
-			DisplayName:     strPtr(ap["display_name"]),
-			ProfileLanguage: profileLang(asString(ap["profile_language"])),
-		}
-	}
-	return full
-}
-
-func asBool(v any) bool {
-	b, _ := v.(bool)
-	return b
-}
-
-func strPtr(v any) *string {
-	if v == nil {
-		return nil
-	}
-	switch t := v.(type) {
-	case string:
-		return &t
-	case *string:
-		return t
-	default:
-		return nil
-	}
-}
-
-func ts(v any) *timestamppb.Timestamp {
-	switch t := v.(type) {
-	case time.Time:
-		return timestamppb.New(t)
-	default:
-		return nil
-	}
-}
-
-func accountStatus(s string) accountpb.AccountStatus {
-	switch s {
-	case "active":
-		return accountpb.AccountStatus_ACCOUNT_STATUS_ACTIVE
-	case "suspended":
-		return accountpb.AccountStatus_ACCOUNT_STATUS_SUSPENDED
-	case "deleted":
-		return accountpb.AccountStatus_ACCOUNT_STATUS_DELETED
-	default:
-		return accountpb.AccountStatus_ACCOUNT_STATUS_UNSPECIFIED
-	}
-}
-
-func profileLang(s string) accountpb.ProfileLanguage {
-	switch s {
-	case "en":
-		return accountpb.ProfileLanguage_PROFILE_LANGUAGE_EN
-	case "zh":
-		return accountpb.ProfileLanguage_PROFILE_LANGUAGE_ZH
-	case "fr":
-		return accountpb.ProfileLanguage_PROFILE_LANGUAGE_FR
-	default:
-		return accountpb.ProfileLanguage_PROFILE_LANGUAGE_UNSPECIFIED
-	}
+	return &accountpb.ListProfilesInTableResponse{Items: out, Total: page.Total}, nil
 }

@@ -3,7 +3,8 @@ package handler
 import (
 	"context"
 
-	"nfxidentity/modules/auth/application/platform"
+	"nfxidentity/modules/auth/application/account"
+	"nfxidentity/modules/auth/interface/grpc/mapper"
 	accountpb "nfxidentity/protos/gen/auth/account"
 	authorityprofilepb "nfxidentity/protos/gen/auth/authority_profile"
 
@@ -12,17 +13,25 @@ import (
 
 type AuthorityHandler struct {
 	authorityprofilepb.UnimplementedAuthorityProfileServiceServer
-	svc *platform.Service
+	svc *account.Service
 }
 
-func NewAuthorityHandler(svc *platform.Service) *AuthorityHandler {
+func NewAuthorityHandler(svc *account.Service) *AuthorityHandler {
 	return &AuthorityHandler{svc: svc}
 }
 
 func (h *AuthorityHandler) ConfirmAuthorityProfileAvatar(ctx context.Context, req *authorityprofilepb.ConfirmAuthorityProfileAvatarRequest) (*authorityprofilepb.ConfirmAuthorityProfileAvatarResponse, error) {
 	aid, _ := uuid.Parse(req.GetAccountId())
 	pid, _ := uuid.Parse(req.GetProfileId())
-	if err := h.svc.ConfirmAvatar(ctx, aid, pid, "authority", req.GetImageId()); err != nil {
+	imageID, err := uuid.Parse(req.GetImageId())
+	if err != nil {
+		return nil, err
+	}
+	if err := h.svc.ConfirmAuthorityProfileAvatar(ctx, account.ConfirmAuthorityProfileAvatarInput{
+		AccountID: aid,
+		ProfileID: pid,
+		ImageID:   imageID,
+	}); err != nil {
 		return nil, err
 	}
 	return &authorityprofilepb.ConfirmAuthorityProfileAvatarResponse{}, nil
@@ -31,29 +40,41 @@ func (h *AuthorityHandler) ConfirmAuthorityProfileAvatar(ctx context.Context, re
 func (h *AuthorityHandler) ConfirmAuthorityProfileBackgrounds(ctx context.Context, req *authorityprofilepb.ConfirmAuthorityProfileBackgroundsRequest) (*authorityprofilepb.ConfirmAuthorityProfileBackgroundsResponse, error) {
 	aid, _ := uuid.Parse(req.GetAccountId())
 	pid, _ := uuid.Parse(req.GetProfileId())
-	items := make([]struct {
-		ImageID   string
-		SortOrder int
-	}, 0, len(req.GetImages()))
+	images := make([]account.ConfirmAuthorityProfileBackgroundItemInput, 0, len(req.GetImages()))
 	for _, img := range req.GetImages() {
-		items = append(items, struct {
-			ImageID   string
-			SortOrder int
-		}{ImageID: img.GetImageId(), SortOrder: int(img.GetSortOrder())})
+		imageID, err := uuid.Parse(img.GetImageId())
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, account.ConfirmAuthorityProfileBackgroundItemInput{
+			ImageID:   imageID,
+			SortOrder: int(img.GetSortOrder()),
+		})
 	}
-	if err := h.svc.ConfirmBackgrounds(ctx, aid, pid, "authority", items); err != nil {
+	if _, err := h.svc.ConfirmAuthorityProfileBackgrounds(ctx, account.ConfirmAuthorityProfileBackgroundsInput{
+		AccountID: aid,
+		ProfileID: pid,
+		Images:    images,
+	}); err != nil {
 		return nil, err
 	}
 	return &authorityprofilepb.ConfirmAuthorityProfileBackgroundsResponse{}, nil
 }
 
 func (h *AuthorityHandler) BatchGetPublicProfileCards(ctx context.Context, req *authorityprofilepb.BatchGetPublicProfileCardsRequest) (*authorityprofilepb.BatchGetPublicProfileCardsResponse, error) {
-	cards := h.svc.BatchPublicCards(ctx, req.GetProfileIds())
-	out := make([]*authorityprofilepb.PublicProfileCard, 0, len(cards))
-	for _, c := range cards {
-		out = append(out, &authorityprofilepb.PublicProfileCard{ProfileId: asString(c["profile_id"])})
+	ids := make([]uuid.UUID, 0, len(req.GetProfileIds()))
+	for _, raw := range req.GetProfileIds() {
+		pid, err := uuid.Parse(raw)
+		if err != nil {
+			continue
+		}
+		ids = append(ids, pid)
 	}
-	return &authorityprofilepb.BatchGetPublicProfileCardsResponse{Profiles: out}, nil
+	out, err := h.svc.BatchGetAuthorityPublicProfileCards(ctx, account.BatchGetAuthorityPublicProfileCardsInput{ProfileIDs: ids})
+	if err != nil {
+		return nil, err
+	}
+	return &authorityprofilepb.BatchGetPublicProfileCardsResponse{Profiles: mapper.AuthorityProfileItemsToPublicProfileCardProto(out.Profiles)}, nil
 }
 
 func (h *AuthorityHandler) GetAuthorityRoles(ctx context.Context, req *authorityprofilepb.GetAuthorityRolesRequest) (*authorityprofilepb.GetAuthorityRolesResponse, error) {

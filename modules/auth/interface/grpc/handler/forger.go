@@ -3,7 +3,8 @@ package handler
 import (
 	"context"
 
-	"nfxidentity/modules/auth/application/platform"
+	"nfxidentity/modules/auth/application/account"
+	"nfxidentity/modules/auth/interface/grpc/mapper"
 	accountpb "nfxidentity/protos/gen/auth/account"
 	forgerprofilepb "nfxidentity/protos/gen/auth/forger_profile"
 
@@ -12,17 +13,25 @@ import (
 
 type ForgerHandler struct {
 	forgerprofilepb.UnimplementedForgerProfileServiceServer
-	svc *platform.Service
+	svc *account.Service
 }
 
-func NewForgerHandler(svc *platform.Service) *ForgerHandler {
+func NewForgerHandler(svc *account.Service) *ForgerHandler {
 	return &ForgerHandler{svc: svc}
 }
 
 func (h *ForgerHandler) ConfirmForgerProfileAvatar(ctx context.Context, req *forgerprofilepb.ConfirmForgerProfileAvatarRequest) (*forgerprofilepb.ConfirmForgerProfileAvatarResponse, error) {
 	aid, _ := uuid.Parse(req.GetAccountId())
 	pid, _ := uuid.Parse(req.GetProfileId())
-	if err := h.svc.ConfirmAvatar(ctx, aid, pid, "forger", req.GetImageId()); err != nil {
+	imageID, err := uuid.Parse(req.GetImageId())
+	if err != nil {
+		return nil, err
+	}
+	if err := h.svc.ConfirmCommunityProfileAvatar(ctx, account.ConfirmCommunityProfileAvatarInput{
+		AccountID: aid,
+		ProfileID: pid,
+		ImageID:   imageID,
+	}); err != nil {
 		return nil, err
 	}
 	return &forgerprofilepb.ConfirmForgerProfileAvatarResponse{}, nil
@@ -31,33 +40,41 @@ func (h *ForgerHandler) ConfirmForgerProfileAvatar(ctx context.Context, req *for
 func (h *ForgerHandler) ConfirmForgerProfileBackgrounds(ctx context.Context, req *forgerprofilepb.ConfirmForgerProfileBackgroundsRequest) (*forgerprofilepb.ConfirmForgerProfileBackgroundsResponse, error) {
 	aid, _ := uuid.Parse(req.GetAccountId())
 	pid, _ := uuid.Parse(req.GetProfileId())
-	items := make([]struct {
-		ImageID   string
-		SortOrder int
-	}, 0, len(req.GetImages()))
+	images := make([]account.ConfirmCommunityProfileBackgroundItemInput, 0, len(req.GetImages()))
 	for _, img := range req.GetImages() {
-		items = append(items, struct {
-			ImageID   string
-			SortOrder int
-		}{ImageID: img.GetImageId(), SortOrder: int(img.GetSortOrder())})
+		imageID, err := uuid.Parse(img.GetImageId())
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, account.ConfirmCommunityProfileBackgroundItemInput{
+			ImageID:   imageID,
+			SortOrder: int(img.GetSortOrder()),
+		})
 	}
-	if err := h.svc.ConfirmBackgrounds(ctx, aid, pid, "forger", items); err != nil {
+	if _, err := h.svc.ConfirmCommunityProfileBackgrounds(ctx, account.ConfirmCommunityProfileBackgroundsInput{
+		AccountID: aid,
+		ProfileID: pid,
+		Images:    images,
+	}); err != nil {
 		return nil, err
 	}
 	return &forgerprofilepb.ConfirmForgerProfileBackgroundsResponse{}, nil
 }
 
 func (h *ForgerHandler) BatchGetPublicProfileCards(ctx context.Context, req *forgerprofilepb.BatchGetPublicProfileCardsRequest) (*forgerprofilepb.BatchGetPublicProfileCardsResponse, error) {
-	cards := h.svc.BatchPublicCards(ctx, req.GetProfileIds())
-	out := make([]*forgerprofilepb.PublicProfileCard, 0, len(cards))
-	for _, c := range cards {
-		card := &forgerprofilepb.PublicProfileCard{ProfileId: asString(c["profile_id"])}
-		if v := asStringPtr(c["display_name"]); v != nil {
-			card.DisplayName = v
+	ids := make([]uuid.UUID, 0, len(req.GetProfileIds()))
+	for _, raw := range req.GetProfileIds() {
+		pid, err := uuid.Parse(raw)
+		if err != nil {
+			continue
 		}
-		out = append(out, card)
+		ids = append(ids, pid)
 	}
-	return &forgerprofilepb.BatchGetPublicProfileCardsResponse{Profiles: out}, nil
+	out, err := h.svc.BatchGetCommunityPublicProfileCards(ctx, account.BatchGetCommunityPublicProfileCardsInput{ProfileIDs: ids})
+	if err != nil {
+		return nil, err
+	}
+	return &forgerprofilepb.BatchGetPublicProfileCardsResponse{Profiles: mapper.ForgerProfileItemsToPublicProfileCardProto(out.Profiles)}, nil
 }
 
 func (h *ForgerHandler) GetForgerRoles(ctx context.Context, req *forgerprofilepb.GetForgerRolesRequest) (*forgerprofilepb.GetForgerRolesResponse, error) {
@@ -88,18 +105,4 @@ func (h *ForgerHandler) HasForgerRole(ctx context.Context, req *forgerprofilepb.
 
 func (h *ForgerHandler) IsForger(ctx context.Context, req *forgerprofilepb.HasForgerRoleRequest) (*forgerprofilepb.HasForgerRoleResponse, error) {
 	return h.HasForgerRole(ctx, req)
-}
-
-func asStringPtr(v any) *string {
-	if v == nil {
-		return nil
-	}
-	switch t := v.(type) {
-	case string:
-		return &t
-	case *string:
-		return t
-	default:
-		return nil
-	}
 }

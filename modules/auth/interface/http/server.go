@@ -4,7 +4,11 @@ import (
 	"encoding/json"
 	"time"
 
-	"nfxidentity/modules/auth/application/platform"
+	accountSvc "nfxidentity/modules/auth/application/account"
+	emailSvc "nfxidentity/modules/auth/application/email"
+	loginSvc "nfxidentity/modules/auth/application/login"
+	phoneSvc "nfxidentity/modules/auth/application/phone"
+	signupSvc "nfxidentity/modules/auth/application/signup"
 	"nfxidentity/modules/auth/interface/http/handler"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/fiberx/middleware"
@@ -16,17 +20,20 @@ import (
 )
 
 type Registry struct {
-	Login     *handler.LoginHandler
-	Signup    *handler.SignupHandler
-	Account   *handler.AccountHandler
-	Forger    *handler.ForgerHandler
-	Authority *handler.AuthorityHandler
-	Owner     *handler.OwnerHandler
-	Locales   *handler.LocalesHandler
+	Login            *handler.LoginHandler
+	Signup           *handler.SignupHandler
+	Account          *handler.AccountHandler
+	AuthorityAccount *handler.AuthorityAccountHandler
+	Owner            *handler.OwnerHandler
+	Locales          *handler.LocalesHandler
 }
 
 type httpDeps interface {
-	PlatformSvc() *platform.Service
+	LoginService() *loginSvc.Service
+	SignupService() *signupSvc.Service
+	AccountService() *accountSvc.Service
+	EmailService() *emailSvc.Service
+	PhoneService() *phoneSvc.Service
 	UserTokenVerifier() token.Verifier
 }
 
@@ -49,15 +56,13 @@ func NewHTTPServer(d httpDeps, accessLog httpx.AccessLogConfig) *fiber.App {
 	}))
 	app.Use(middleware.Logger(), middleware.AccessLog(accessLog), middleware.Recover())
 
-	svc := d.PlatformSvc()
 	reg := &Registry{
-		Login:     handler.NewLoginHandler(svc),
-		Signup:    handler.NewSignupHandler(svc),
-		Account:   handler.NewAccountHandler(svc),
-		Forger:    handler.NewForgerHandler(svc),
-		Authority: handler.NewAuthorityHandler(svc),
-		Owner:     handler.NewOwnerHandler(svc),
-		Locales:   handler.NewLocalesHandler(),
+		Login:            handler.NewLoginHandler(d.LoginService()),
+		Signup:           handler.NewSignupHandler(d.SignupService()),
+		Account:          handler.NewAccountHandler(d.AccountService(), d.EmailService(), d.PhoneService()),
+		AuthorityAccount: handler.NewAuthorityAccountHandler(d.AccountService()),
+		Owner:            handler.NewOwnerHandler(d.AccountService()),
+		Locales:          handler.NewLocalesHandler(),
 	}
 	NewRouter(app, reg, d.UserTokenVerifier()).RegisterRoutes()
 	return app
