@@ -1,7 +1,8 @@
 package handler
 
 import (
-	authconn "nfxidentity/connections/auth"
+	"nfxidentity/connections/auth"
+	"nfxidentity/enums"
 	asseterrs "nfxidentity/errors/src/asset"
 	authErr "nfxidentity/errors/src/auth"
 	sysErr "nfxidentity/errors/src/sys"
@@ -11,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func uploadContext(c fiber.Ctx) (accountID, profileID uuid.UUID, profileScope string, err error) {
+func uploadContext(c fiber.Ctx) (accountID, profileID uuid.UUID, profileScope enums.AuthProfileScope, err error) {
 	accountID, ok := fiberx.AccountIDFromContext(c.Context())
 	if !ok || accountID == uuid.Nil {
 		return uuid.Nil, uuid.Nil, "", sysErr.ErrInvalidToken
@@ -27,7 +28,7 @@ func uploadContext(c fiber.Ctx) (accountID, profileID uuid.UUID, profileScope st
 	return accountID, profileID, profileScope, nil
 }
 
-func ensureOwnedProfile(c fiber.Ctx, authClient *authconn.Client, accountID uuid.UUID) error {
+func ensureOwnedProfile(c fiber.Ctx, authClient *auth.Client, accountID uuid.UUID) error {
 	if authClient == nil || authClient.Account == nil {
 		return authErr.ErrProfileNotOwned
 	}
@@ -36,7 +37,7 @@ func ensureOwnedProfile(c fiber.Ctx, authClient *authconn.Client, accountID uuid
 		return authErr.ErrProfileNotOwned
 	}
 	scope, ok := fiberx.ProfileScopeFromContext(c.Context())
-	if !ok || scope == "" {
+	if !ok {
 		return authErr.ErrProfileNotOwned
 	}
 	allowed, err := authClient.Account.EnsureOwnedProfile(c.Context(), accountID, profileID, scope)

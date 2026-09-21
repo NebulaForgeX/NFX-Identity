@@ -6,18 +6,18 @@ import (
 )
 
 const (
-	MaxLoginAttempts               = 5
-	LockoutDurationMinutes         = 30
-	DefaultAccessTokenTTLSeconds   = 900
-	DefaultRefreshTokenTTLSeconds  = 7 * 24 * 3600
-	AuthProfileMaxBackgrounds      = 6
-	AuthAccountMaxProfiles         = 5
-	AuthAccountMinProfiles         = 1
-	AuthAccountMinVerifiedEmails   = 1
+	MaxLoginAttempts              = 5
+	LockoutDurationMinutes        = 30
+	DefaultAccessTokenTTLSeconds  = 900
+	DefaultRefreshTokenTTLSeconds = 7 * 24 * 3600
+	AuthProfileMaxBackgrounds     = 6
+	AuthAccountMaxProfiles        = 5
+	AuthAccountMinProfiles        = 1
+	AuthAccountMinVerifiedEmails  = 1
 )
 
 var AuthProfileScope = constantx.NewStringEnumSet(
-	enums.AuthProfileScopeForger,
+	enums.AuthProfileScopeCommunity,
 	enums.AuthProfileScopeAuthority,
 )
 
@@ -46,13 +46,6 @@ var AuthSignupPlatform = constantx.NewStringEnumSet(
 
 var AuthIdentityProvider = constantx.NewStringEnumSet(
 	enums.AuthIdentityProviderPassword,
-)
-
-type ProfileKind string
-
-const (
-	ProfileKindForger    ProfileKind = "forger"
-	ProfileKindAuthority ProfileKind = "authority"
 )
 
 var AuthLanguage = constantx.NewStringEnumSet(

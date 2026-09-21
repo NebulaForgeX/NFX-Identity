@@ -53,7 +53,7 @@
     password = "${POSTGRESQL_PASSWORD}"
     
     # Database name (from .env: POSTGRESQL_NAME_DEV or POSTGRESQL_NAME_PROD)
-    # Use POSTGRESQL_NAME_DEV for dev.toml, POSTGRESQL_NAME_PROD for prod.toml
+    # Use POSTGRESQL_NAME_DEV for dev.toml, POSTGRESQL_NAME_PROD for secure.toml
     dbname = "${POSTGRESQL_NAME_<ENV>}"
     
     # SSL mode: "disable" | "require" | "verify-ca" | "verify-full"
@@ -365,6 +365,6 @@
 #
 # 8. Development vs Production differences:
 #    - dev.toml: Use POSTGRESQL_NAME_DEV, sslmode="disable", logger_level="warn", compress=false
-#    - prod.toml: Use POSTGRESQL_NAME_PROD, sslmode="require", logger_level="error", compress=true
+#    - secure.toml: Use POSTGRESQL_NAME_PROD, sslmode="disable" (NFX-Stack has no TLS), logger_level="error", compress=true
 #
 # ============================================================================

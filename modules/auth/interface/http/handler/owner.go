@@ -3,9 +3,8 @@ package handler
 import (
 	"strconv"
 
-	"nfxidentity/errors/src/auth"
-	"nfxidentity/errors/src/sys"
-	"nfxidentity/modules/auth/application/platform"
+	sysErr "nfxidentity/errors/src/sys"
+	"nfxidentity/modules/auth/application/account"
 	"nfxidentity/modules/auth/interface/http/dto/reqdto"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/httpx"
@@ -15,56 +14,73 @@ import (
 )
 
 type OwnerHandler struct {
-	svc *platform.Service
+	svc *account.Service
 }
 
-func NewOwnerHandler(svc *platform.Service) *OwnerHandler {
+func NewOwnerHandler(svc *account.Service) *OwnerHandler {
 	return &OwnerHandler{svc: svc}
 }
 
 func (h *OwnerHandler) ListForgerProfiles(c fiber.Ctx) error {
-	aid, err := accountID(c)
-	if err != nil {
-		return wrap(c, err)
+	accountID, ok := fiberx.AccountIDFromContext(c.Context())
+	if !ok {
+		return sysErr.ErrInvalidToken
 	}
 	limit, _ := strconv.Atoi(c.Query("limit", "20"))
 	offset, _ := strconv.Atoi(c.Query("offset", "0"))
-	items, total, err := h.svc.ListOwnerForgerProfiles(c.Context(), aid, c.Query("query"), limit, offset)
+	out, err := h.svc.ListOwnerForgerProfiles(c.Context(), account.ListOwnerForgerProfilesInput{
+		AccountID: accountID,
+		Query:     c.Query("query"),
+		Limit:     limit,
+		Offset:    offset,
+	})
 	if err != nil {
-		return wrap(c, err)
+		return err
 	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]any{"items": items, "total": total}})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *OwnerHandler) ListAuthorityProfiles(c fiber.Ctx) error {
-	aid, err := accountID(c)
-	if err != nil {
-		return wrap(c, err)
+	accountID, ok := fiberx.AccountIDFromContext(c.Context())
+	if !ok {
+		return sysErr.ErrInvalidToken
 	}
 	limit, _ := strconv.Atoi(c.Query("limit", "20"))
 	offset, _ := strconv.Atoi(c.Query("offset", "0"))
-	items, total, err := h.svc.ListOwnerAuthorityProfiles(c.Context(), aid, c.Query("query"), limit, offset)
+	out, err := h.svc.ListOwnerAuthorityProfiles(c.Context(), account.ListOwnerAuthorityProfilesInput{
+		AccountID: accountID,
+		Query:     c.Query("query"),
+		Limit:     limit,
+		Offset:    offset,
+	})
 	if err != nil {
-		return wrap(c, err)
+		return err
 	}
-	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: map[string]any{"items": items, "total": total}})
+	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: out})
 }
 
 func (h *OwnerHandler) UpdateAuthorityRoles(c fiber.Ctx) error {
-	aid, err := accountID(c)
-	if err != nil {
-		return wrap(c, err)
+	accountID, ok := fiberx.AccountIDFromContext(c.Context())
+	if !ok {
+		return sysErr.ErrInvalidToken
 	}
-	pid, err := uuid.Parse(c.Params("profileId"))
-	if err != nil {
-		return fiberx.ErrorFromErrx(c, auth.ErrInvalidProfileID)
+	var uri reqdto.OwnerProfileURI
+	if err := c.Bind().URI(&uri); err != nil {
+		return err
+	}
+	if uri.ProfileID == uuid.Nil {
+		return sysErr.ErrInvalidToken
 	}
 	var req reqdto.UpdateAuthorityRoles
 	if err := c.Bind().Body(&req); err != nil {
-		return fiberx.ErrorFromErrx(c, sys.ErrInvalidBody)
+		return err
 	}
-	if err := h.svc.UpdateAuthorityRoles(c.Context(), aid, pid, req.AuthorityRoles); err != nil {
-		return wrap(c, err)
+	if err := h.svc.UpdateAuthorityRoles(c.Context(), account.UpdateAuthorityRolesInput{
+		ActorAccountID: accountID,
+		ProfileID:      uri.ProfileID,
+		Roles:          req.AuthorityRoles,
+	}); err != nil {
+		return err
 	}
 	return fiberx.OK(c, "ok", httpx.SuccessOptions{Data: nil})
 }

@@ -50,6 +50,6 @@ const (
 type AuthProfileScope string
 
 const (
-	AuthProfileScopeForger    AuthProfileScope = "forger"
+	AuthProfileScopeCommunity AuthProfileScope = "community"
 	AuthProfileScopeAuthority AuthProfileScope = "authority"
 )

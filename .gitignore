@@ -44,6 +44,7 @@ cache/
 .env.*.local
 *.env
 !.example.env
+!.example.secure.env
 !.env.example
 
 ## Logs
@@ -51,27 +52,16 @@ logs/
 *.log
 log/
 
-## Uploaded assets
-assets/**/*
-!assets/**/.gitkeep
-static/images/pictures/*
-!static/images/pictures/.gitkeep
-
 ## Runtime data (never push)
 stores/
 stores/mysql/
 stores/redis/
 stores/kafka/
-data/
-data/postgresql/
-data/redis/
-data/kafka/
 dump.rdb
 *.rdb
 *.sqlite
 *.db
 *.db-journal
-!data/**/.gitkeep
 
 ## Secrets & certificates
 *.key
@@ -82,8 +72,6 @@ dump.rdb
 *.pfx
 *.jks
 *.keystore
-static/keys/*
-!static/keys/.gitkeep
 certs/
 certificates/
 ssl/
@@ -167,6 +155,6 @@ databases/bin/
 /console/node_modules/
 /console/.turbo/
 !/console/.env.dev
-!/console/.env.prod
+!/console/.env.secure
 !/console/.env.example
 !/console/.example.env

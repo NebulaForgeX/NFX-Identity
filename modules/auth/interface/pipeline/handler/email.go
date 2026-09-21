@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"nfxidentity/enums"
 	"nfxidentity/events"
 	authmail "nfxidentity/modules/auth/infrastructure/email"
 	repofactory "nfxidentity/modules/auth/infrastructure/repository/factory"
@@ -37,13 +38,13 @@ func (h *EmailHandler) LoginSuccess(ctx context.Context, evt events.LoginSuccess
 	if h.mail == nil || h.repoFactory == nil {
 		return nil
 	}
-	kind := strings.TrimSpace(evt.ProfileKind)
+	kind := evt.ProfileKind
 	if kind == "" {
-		kind = "forger"
+		kind = enums.AuthProfileScopeCommunity
 	}
 	notify := false
 	switch kind {
-	case "authority":
+	case enums.AuthProfileScopeAuthority:
 		st, err := h.repoFactory.Profile(none()).Get.AuthoritySettingsByProfileID(ctx, evt.ProfileID)
 		if err != nil {
 			return nil
@@ -100,8 +101,8 @@ func (h *EmailHandler) primaryEmail(ctx context.Context, accountID uuid.UUID) st
 	return ""
 }
 
-func (h *EmailHandler) profileLang(ctx context.Context, kind string, profileID uuid.UUID) string {
-	if kind == "authority" {
+func (h *EmailHandler) profileLang(ctx context.Context, kind enums.AuthProfileScope, profileID uuid.UUID) string {
+	if kind == enums.AuthProfileScopeAuthority {
 		p, err := h.repoFactory.Profile(none()).Get.AuthorityByProfileID(ctx, profileID)
 		if err == nil {
 			return string(p.ProfileLanguage())

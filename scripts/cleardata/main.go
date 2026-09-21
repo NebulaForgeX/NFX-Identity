@@ -31,7 +31,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error: unexpected positional arguments; only the --yes flag is supported\n")
 		os.Exit(1)
 	}
-	if clearEnv.IsProd() {
+	if clearEnv.IsSecure() {
 		fmt.Fprintf(os.Stderr, "refusing to run: this script is dev only\n")
 		os.Exit(1)
 	}

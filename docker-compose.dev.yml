@@ -31,16 +31,13 @@ services:
       traefik.http.routers.identity-auth-base.priority: "20"
       traefik.http.routers.identity-auth-base.middlewares: nfx-identity-auth-gw
       traefik.http.routers.identity-auth-base.service: identity-auth-base
-      traefik.http.routers.identity-auth-base-secure.entrypoints: websecure
-      traefik.http.routers.identity-auth-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_AUTH}`)
-      traefik.http.routers.identity-auth-base-secure.priority: "20"
-      traefik.http.routers.identity-auth-base-secure.middlewares: nfx-identity-auth-gw
-      traefik.http.routers.identity-auth-base-secure.service: identity-auth-base
-      traefik.http.routers.identity-auth-base-secure.tls: "true"
+      traefik.http.routers.identity-auth-base-tls.entrypoints: websecure
+      traefik.http.routers.identity-auth-base-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_AUTH}`)
+      traefik.http.routers.identity-auth-base-tls.priority: "20"
+      traefik.http.routers.identity-auth-base-tls.middlewares: nfx-identity-auth-gw
+      traefik.http.routers.identity-auth-base-tls.service: identity-auth-base
+      traefik.http.routers.identity-auth-base-tls.tls: "true"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
     develop:
@@ -114,16 +111,13 @@ services:
       traefik.http.routers.identity-asset-base.priority: "20"
       traefik.http.routers.identity-asset-base.middlewares: nfx-identity-asset-gw
       traefik.http.routers.identity-asset-base.service: identity-asset-base
-      traefik.http.routers.identity-asset-base-secure.entrypoints: websecure
-      traefik.http.routers.identity-asset-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ASSET}`)
-      traefik.http.routers.identity-asset-base-secure.priority: "20"
-      traefik.http.routers.identity-asset-base-secure.middlewares: nfx-identity-asset-gw
-      traefik.http.routers.identity-asset-base-secure.service: identity-asset-base
-      traefik.http.routers.identity-asset-base-secure.tls: "true"
+      traefik.http.routers.identity-asset-base-tls.entrypoints: websecure
+      traefik.http.routers.identity-asset-base-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ASSET}`)
+      traefik.http.routers.identity-asset-base-tls.priority: "20"
+      traefik.http.routers.identity-asset-base-tls.middlewares: nfx-identity-asset-gw
+      traefik.http.routers.identity-asset-base-tls.service: identity-asset-base
+      traefik.http.routers.identity-asset-base-tls.tls: "true"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
     develop:
@@ -197,16 +191,13 @@ services:
       traefik.http.routers.identity-system-base.priority: "20"
       traefik.http.routers.identity-system-base.middlewares: nfx-identity-system-gw
       traefik.http.routers.identity-system-base.service: identity-system-base
-      traefik.http.routers.identity-system-base-secure.entrypoints: websecure
-      traefik.http.routers.identity-system-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SYSTEM}`)
-      traefik.http.routers.identity-system-base-secure.priority: "20"
-      traefik.http.routers.identity-system-base-secure.middlewares: nfx-identity-system-gw
-      traefik.http.routers.identity-system-base-secure.service: identity-system-base
-      traefik.http.routers.identity-system-base-secure.tls: "true"
+      traefik.http.routers.identity-system-base-tls.entrypoints: websecure
+      traefik.http.routers.identity-system-base-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SYSTEM}`)
+      traefik.http.routers.identity-system-base-tls.priority: "20"
+      traefik.http.routers.identity-system-base-tls.middlewares: nfx-identity-system-gw
+      traefik.http.routers.identity-system-base-tls.service: identity-system-base
+      traefik.http.routers.identity-system-base-tls.tls: "true"
     volumes:
-      - ./static:/app/static
-      - ./data:/app/data
-      - ./assets:/app/assets
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
     develop:
@@ -279,11 +270,11 @@ services:
       traefik.http.routers.identity-console.rule: PathPrefix(`/console/nfx-identity`)
       traefik.http.routers.identity-console.service: identity-console
       traefik.http.routers.identity-console.priority: "25"
-      traefik.http.routers.identity-console-secure.entrypoints: websecure
-      traefik.http.routers.identity-console-secure.rule: PathPrefix(`/console/nfx-identity`)
-      traefik.http.routers.identity-console-secure.service: identity-console
-      traefik.http.routers.identity-console-secure.tls: "true"
-      traefik.http.routers.identity-console-secure.priority: "25"
+      traefik.http.routers.identity-console-tls.entrypoints: websecure
+      traefik.http.routers.identity-console-tls.rule: PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-tls.service: identity-console
+      traefik.http.routers.identity-console-tls.tls: "true"
+      traefik.http.routers.identity-console-tls.priority: "25"
     init: true
     networks:
       - nfx-identity

@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 
+	"nfxidentity/enums"
 	accountpb "nfxidentity/protos/gen/auth/account"
 
 	"github.com/google/uuid"
@@ -36,11 +37,11 @@ func (c *AccountClient) GetAccountByID(ctx context.Context, id uuid.UUID) (*acco
 	return items[0], nil
 }
 
-func (c *AccountClient) EnsureOwnedProfile(ctx context.Context, accountID, profileID uuid.UUID, profileScope string) (bool, error) {
+func (c *AccountClient) EnsureOwnedProfile(ctx context.Context, accountID, profileID uuid.UUID, profileScope enums.AuthProfileScope) (bool, error) {
 	resp, err := c.client.EnsureOwnedProfile(ctx, &accountpb.EnsureOwnedProfileRequest{
 		AccountId:    accountID.String(),
 		ProfileId:    profileID.String(),
-		ProfileScope: profileScope,
+		ProfileScope: string(profileScope),
 	})
 	if err != nil {
 		return false, err

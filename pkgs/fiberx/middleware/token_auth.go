@@ -1,10 +1,13 @@
 package middleware
 
 import (
+	"strings"
+
+	"nfxidentity/constants"
+	"nfxidentity/enums"
 	"nfxidentity/errors/src/sys"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/security/token"
-	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
@@ -27,17 +30,29 @@ func TokenAuth(verifier token.Verifier) fiber.Handler {
 		}
 		ctx := fiberx.WithAccountID(c.Context(), userID)
 		if raw, ok := claims.Raw["account_id"].(string); ok {
-			if aid, err := uuid.Parse(raw); err == nil {
+			if aid, parseErr := uuid.Parse(raw); parseErr == nil {
 				ctx = fiberx.WithAccountID(ctx, aid)
 			}
 		}
 		if raw, ok := claims.Raw["profile_id"].(string); ok {
-			if pid, err := uuid.Parse(raw); err == nil {
+			if pid, parseErr := uuid.Parse(raw); parseErr == nil {
 				ctx = fiberx.WithProfileID(ctx, pid)
 			}
 		}
+		if raw, ok := claims.Raw["email"].(string); ok && strings.TrimSpace(raw) != "" {
+			ctx = fiberx.WithLoginEmail(ctx, raw)
+		}
+
+		rawScope := ""
 		if raw, ok := claims.Raw["profile_scope"].(string); ok {
-			ctx = fiberx.WithProfileScope(ctx, raw)
+			rawScope = strings.TrimSpace(raw)
+		}
+		if rawScope != "" {
+			profileScope := enums.AuthProfileScope(rawScope)
+			if !constants.AuthProfileScope.Valid(profileScope) {
+				return fiberx.ErrorFromErrx(c, sys.ErrTokenInvalidProfileScope.WithDetail("profileScope", rawScope))
+			}
+			ctx = fiberx.WithProfileScope(ctx, profileScope)
 		}
 		c.SetContext(ctx)
 		return c.Next()

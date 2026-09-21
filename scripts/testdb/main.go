@@ -60,10 +60,10 @@ func parseEnv(raw string) env.Env {
 	switch strings.ToLower(strings.TrimSpace(raw)) {
 	case "", "dev":
 		return env.Dev
-	case "secure", "prod":
-		return env.Prod
+	case "secure":
+		return env.Secure
 	default:
-		fmt.Fprintf(os.Stderr, "error: ENV must be dev|secure|prod, got %q\n", raw)
+		fmt.Fprintf(os.Stderr, "error: ENV must be dev|secure, got %q\n", raw)
 		os.Exit(1)
 		return ""
 	}
@@ -126,7 +126,7 @@ func testRedis(ctx context.Context, cfg cachex.ConnConfig, timeout time.Duration
 
 	fmt.Printf("host=%s\n", cfg.Host)
 	fmt.Printf("port=%d\n", cfg.Port)
-	fmt.Printf("tls=%s\n", cfg.TLS.Enabled)
+	fmt.Printf("tls=%t\n", cfg.TLS.Enabled)
 	fmt.Printf("password_set=%s\n", yn(cfg.Password != ""))
 
 	if ok, detail := tcpProbe(cfg.Host, cfg.Port, timeout); !ok {

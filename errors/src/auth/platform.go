@@ -3,17 +3,17 @@ package auth
 import "nfxidentity/pkgs/errx"
 
 var (
-	ErrProfileNotOwned      = errx.Forbidden("PROFILE_NOT_OWNED", "profile is not owned by account")
-	ErrInvalidProfileKind   = errx.InvalidArg("INVALID_PROFILE_KIND", "kind must be forger or authority")
-	ErrInvalidProfileID     = errx.InvalidArg("INVALID_PROFILE_ID", "invalid profile id")
-	ErrInvalidImageID       = errx.InvalidArg("INVALID_IMAGE_ID", "invalid image id")
-	ErrInvalidEmailID       = errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id")
-	ErrInvalidPhoneID       = errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id")
-	ErrInvalidEmail         = errx.InvalidArg("INVALID_EMAIL", "email required")
-	ErrInvalidPhone         = errx.InvalidArg("INVALID_PHONE", "phone required")
-	ErrHashFailed           = errx.Internal("HASH_FAILED", "failed to hash password")
-	ErrTokenFailed          = errx.Internal("TOKEN_FAILED", "token operation failed")
-	ErrPhoneNotDeletable    = errx.FailedPrecond("PHONE_NOT_DELETABLE", "cannot delete primary or missing phone")
+	ErrProfileNotOwned    = errx.Forbidden("PROFILE_NOT_OWNED", "profile is not owned by account")
+	ErrInvalidProfileKind = errx.InvalidArg("INVALID_PROFILE_KIND", "kind must be community or authority")
+	ErrInvalidProfileID   = errx.InvalidArg("INVALID_PROFILE_ID", "invalid profile id")
+	ErrInvalidImageID     = errx.InvalidArg("INVALID_IMAGE_ID", "invalid image id")
+	ErrInvalidEmailID     = errx.InvalidArg("INVALID_EMAIL_ID", "invalid email id")
+	ErrInvalidPhoneID     = errx.InvalidArg("INVALID_PHONE_ID", "invalid phone id")
+	ErrInvalidEmail       = errx.InvalidArg("INVALID_EMAIL", "email required")
+	ErrInvalidPhone       = errx.InvalidArg("INVALID_PHONE", "phone required")
+	ErrHashFailed         = errx.Internal("HASH_FAILED", "failed to hash password")
+	ErrTokenFailed        = errx.Internal("TOKEN_FAILED", "token operation failed")
+	ErrPhoneNotDeletable  = errx.FailedPrecond("PHONE_NOT_DELETABLE", "cannot delete primary or missing phone")
 	ErrOwnerRoleImmutable = errx.Forbidden("OWNER_ROLE_IMMUTABLE", "owner role cannot be assigned via API")
 )
 
@@ -24,9 +24,9 @@ var (
 *fr<Le profil n'appartient pas au compte>
 
 !INVALID_PROFILE_KIND
-*en<Kind must be forger or authority>
-*zh<资料类型必须是 forger 或 authority>
-*fr<Le type doit être forger ou authority>
+*en<Kind must be community or authority>
+*zh<资料类型必须是 community 或 authority>
+*fr<Le type doit être community ou authority>
 
 !INVALID_PROFILE_ID
 *en<Invalid profile id>
