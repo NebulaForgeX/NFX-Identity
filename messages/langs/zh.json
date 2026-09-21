@@ -6,9 +6,5 @@
   "SIGNUP_WELCOME": {
     "title": "欢迎使用 NebulaForgeX Identity",
     "body": "你的登录中心账号已创建。接下来请选择或创建资料，即可进入控制台。"
-  },
-  "SYSTEM_INITIALIZED": {
-    "title": "系统已初始化",
-    "body": "NFX Identity 已就绪"
   }
 }

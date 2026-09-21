@@ -80,7 +80,6 @@ export default defineConfig(({ mode, command }) => {
             proxy: {
               "/auth": { target: proxyTarget, changeOrigin: true },
               "/asset": { target: proxyTarget, changeOrigin: true },
-              "/system": { target: proxyTarget, changeOrigin: true },
             },
           }
         : {}),

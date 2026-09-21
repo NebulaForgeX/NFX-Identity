@@ -6,9 +6,5 @@
   "SIGNUP_WELCOME": {
     "title": "Bienvenue sur NebulaForgeX Identity",
     "body": "Votre compte du centre de connexion a été créé. Choisissez ou créez un profil pour ouvrir la console."
-  },
-  "SYSTEM_INITIALIZED": {
-    "title": "Système initialisé",
-    "body": "NFX Identity est prêt"
   }
 }

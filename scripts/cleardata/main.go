@@ -1,4 +1,4 @@
-// Truncate all table data in auth, asset, system — dev only.
+// Truncate all table data in auth, asset — dev only.
 //
 //	go run ./scripts/cleardata
 //	go run ./scripts/cleardata --yes
@@ -21,7 +21,7 @@ import (
 
 const clearEnv = env.Dev
 
-var schemas = []string{"auth", "asset", "system"}
+var schemas = []string{"auth", "asset"}
 
 func main() {
 	skipConfirm := flag.Bool("yes", false, "Skip the interactive confirmation prompt")

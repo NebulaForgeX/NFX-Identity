@@ -111,7 +111,6 @@
 
 [grpc_client]
     asset_addr = "${GRPC_HOST_ASSET}:${GRPC_PORT_ASSET}"
-    system_addr = "${GRPC_HOST_SYSTEM}:${GRPC_PORT_SYSTEM}"
 
 [otel]
     enabled = true

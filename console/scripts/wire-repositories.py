@@ -110,7 +110,6 @@ export * from "./audit";
 export * from "./clients";
 export * from "./directory";
 export * from "./image";
-export * from "./system";
 export * from "./tenants";
 """
     )
@@ -127,7 +126,6 @@ export * from "./tenants";
         "@/hooks/useAudit": "@/hooks/audit",
         "@/hooks/useClients": "@/hooks/clients",
         "@/hooks/useImage": "@/hooks/image",
-        "@/hooks/useSystem": "@/hooks/system",
         "@/hooks/useTenants": "@/hooks/tenants",
         "@/hooks/useResendTimer": "@/hooks/resendTimer",
         "@/hooks/useStyles": "@/hooks/styles",
