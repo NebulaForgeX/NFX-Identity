@@ -10,20 +10,28 @@ import (
 )
 
 type Store struct {
-	client    *minio.Client
-	presigner *minio.Client
-	bucket    string
+	client *minio.Client
+	lan    *minio.Client
+	public *minio.Client
+	bucket string
 }
 
 func New(client *minio.Client, bucket string) *Store {
-	return NewWithPresigner(client, nil, bucket)
+	return NewWithPresigners(client, nil, nil, bucket)
 }
 
 func NewWithPresigner(client, presigner *minio.Client, bucket string) *Store {
-	if presigner == nil {
-		presigner = client
+	return NewWithPresigners(client, presigner, presigner, bucket)
+}
+
+func NewWithPresigners(client, lan, public *minio.Client, bucket string) *Store {
+	if public == nil {
+		public = client
 	}
-	return &Store{client: client, presigner: presigner, bucket: bucket}
+	if lan == nil {
+		lan = public
+	}
+	return &Store{client: client, lan: lan, public: public, bucket: bucket}
 }
 
 func (s *Store) EnsureBucket(ctx context.Context) error {
@@ -46,11 +54,18 @@ func (s *Store) EnsureBucket(ctx context.Context) error {
 }
 
 func (s *Store) PresignPut(ctx context.Context, key string, expiry time.Duration) (*url.URL, error) {
-	return s.presigner.PresignedPutObject(ctx, s.bucket, key, expiry)
+	return s.pick(ctx).PresignedPutObject(ctx, s.bucket, key, expiry)
 }
 
 func (s *Store) PresignGet(ctx context.Context, key string, expiry time.Duration) (*url.URL, error) {
-	return s.presigner.PresignedGetObject(ctx, s.bucket, key, expiry, nil)
+	return s.pick(ctx).PresignedGetObject(ctx, s.bucket, key, expiry, nil)
+}
+
+func (s *Store) pick(ctx context.Context) *minio.Client {
+	if lanFromCtx(ctx) {
+		return s.lan
+	}
+	return s.public
 }
 
 func (s *Store) Stat(ctx context.Context, key string) (minio.ObjectInfo, error) {

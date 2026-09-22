@@ -86,6 +86,7 @@ services:
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
+      - ./inputs/asset/configuration/secure.toml:/app/config.toml:ro
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -113,15 +114,38 @@ services:
       traefik.project: "nfx-identity"
       traefik.docker.network: nfx-edge
       traefik.http.services.identity-console-secure.loadbalancer.server.port: "${CONSOLE_PORT}"
+      traefik.http.middlewares.identity-console-root-secure.redirectregex.regex: ^https?://[^/]+/?$$
+      traefik.http.middlewares.identity-console-root-secure.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-identity/
+      traefik.http.middlewares.identity-console-root-secure.redirectregex.permanent: "true"
       traefik.http.routers.identity-console-secure.entrypoints: web
-      traefik.http.routers.identity-console-secure.rule: PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-secure.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-identity`)"
       traefik.http.routers.identity-console-secure.service: identity-console-secure
       traefik.http.routers.identity-console-secure.priority: "25"
       traefik.http.routers.identity-console-secure-tls.entrypoints: websecure
-      traefik.http.routers.identity-console-secure-tls.rule: PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-secure-tls.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-identity`)"
       traefik.http.routers.identity-console-secure-tls.service: identity-console-secure
       traefik.http.routers.identity-console-secure-tls.tls: "true"
       traefik.http.routers.identity-console-secure-tls.priority: "25"
+      traefik.http.routers.identity-console-host-secure.entrypoints: web
+      traefik.http.routers.identity-console-host-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-host-secure.service: identity-console-secure
+      traefik.http.routers.identity-console-host-secure.priority: "200"
+      traefik.http.routers.identity-console-host-secure-tls.entrypoints: websecure
+      traefik.http.routers.identity-console-host-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-host-secure-tls.service: identity-console-secure
+      traefik.http.routers.identity-console-host-secure-tls.tls: "true"
+      traefik.http.routers.identity-console-host-secure-tls.priority: "200"
+      traefik.http.routers.identity-console-root-secure.entrypoints: web
+      traefik.http.routers.identity-console-root-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.identity-console-root-secure.middlewares: identity-console-root-secure
+      traefik.http.routers.identity-console-root-secure.service: identity-console-secure
+      traefik.http.routers.identity-console-root-secure.priority: "210"
+      traefik.http.routers.identity-console-root-secure-tls.entrypoints: websecure
+      traefik.http.routers.identity-console-root-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.identity-console-root-secure-tls.middlewares: identity-console-root-secure
+      traefik.http.routers.identity-console-root-secure-tls.service: identity-console-secure
+      traefik.http.routers.identity-console-root-secure-tls.tls: "true"
+      traefik.http.routers.identity-console-root-secure-tls.priority: "210"
     restart: always
     networks:
       - nfx-identity

@@ -106,9 +106,10 @@
 [minio]
     endpoint = "${MINIO_ENDPOINT}"
     public_url = "${MINIO_PUBLIC_URL}"
+    lan_url = "${MINIO_LAN_URL}"
     access_key = "${MINIO_ACCESS_KEY}"
     secret_key = "${MINIO_SECRET_KEY}"
-    bucket = "nfxidentity-images"
+    bucket = "nfx-identity-images"
     use_ssl = false
 	region = "us-east-1"
 

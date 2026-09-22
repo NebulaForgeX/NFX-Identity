@@ -120,6 +120,7 @@ services:
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
+      - ./inputs/asset/configuration/dev.toml:/app/inputs/asset/configuration/dev.toml:ro
     develop:
       watch:
         - action: sync
@@ -187,15 +188,38 @@ services:
       traefik.project: "nfx-identity"
       traefik.docker.network: nfx-edge
       traefik.http.services.identity-console.loadbalancer.server.port: "${VITE_PORT}"
+      traefik.http.middlewares.identity-console-root.redirectregex.regex: ^https?://[^/]+/?$$
+      traefik.http.middlewares.identity-console-root.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-identity/
+      traefik.http.middlewares.identity-console-root.redirectregex.permanent: "true"
       traefik.http.routers.identity-console.entrypoints: web
-      traefik.http.routers.identity-console.rule: PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-identity`)"
       traefik.http.routers.identity-console.service: identity-console
       traefik.http.routers.identity-console.priority: "25"
       traefik.http.routers.identity-console-tls.entrypoints: websecure
-      traefik.http.routers.identity-console-tls.rule: PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-tls.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-identity`)"
       traefik.http.routers.identity-console-tls.service: identity-console
       traefik.http.routers.identity-console-tls.tls: "true"
       traefik.http.routers.identity-console-tls.priority: "25"
+      traefik.http.routers.identity-console-host.entrypoints: web
+      traefik.http.routers.identity-console-host.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-host.service: identity-console
+      traefik.http.routers.identity-console-host.priority: "200"
+      traefik.http.routers.identity-console-host-tls.entrypoints: websecure
+      traefik.http.routers.identity-console-host-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-identity`)
+      traefik.http.routers.identity-console-host-tls.service: identity-console
+      traefik.http.routers.identity-console-host-tls.tls: "true"
+      traefik.http.routers.identity-console-host-tls.priority: "200"
+      traefik.http.routers.identity-console-root.entrypoints: web
+      traefik.http.routers.identity-console-root.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.identity-console-root.middlewares: identity-console-root
+      traefik.http.routers.identity-console-root.service: identity-console
+      traefik.http.routers.identity-console-root.priority: "210"
+      traefik.http.routers.identity-console-root-tls.entrypoints: websecure
+      traefik.http.routers.identity-console-root-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.identity-console-root-tls.middlewares: identity-console-root
+      traefik.http.routers.identity-console-root-tls.service: identity-console
+      traefik.http.routers.identity-console-root-tls.tls: "true"
+      traefik.http.routers.identity-console-root-tls.priority: "210"
     init: true
     networks:
       - nfx-identity
