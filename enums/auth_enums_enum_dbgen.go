@@ -36,7 +36,7 @@ const (
 	AuthSignupPlatformNfxidentity AuthSignupPlatform = "nfxidentity"
 	AuthSignupPlatformNfxnews     AuthSignupPlatform = "nfxnews"
 	AuthSignupPlatformNfxstorages AuthSignupPlatform = "nfxstorages"
-	AuthSignupPlatformNfxvault    AuthSignupPlatform = "nfxvault"
+	AuthSignupPlatformNfxedge     AuthSignupPlatform = "nfxedge"
 )
 
 type AuthProfileLanguage string

@@ -41,7 +41,7 @@ var AuthSignupPlatform = constantx.NewStringEnumSet(
 	enums.AuthSignupPlatformNfxidentity,
 	enums.AuthSignupPlatformNfxnews,
 	enums.AuthSignupPlatformNfxstorages,
-	enums.AuthSignupPlatformNfxvault,
+	enums.AuthSignupPlatformNfxedge,
 )
 
 var AuthIdentityProvider = constantx.NewStringEnumSet(
