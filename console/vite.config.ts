@@ -38,8 +38,9 @@ const ELEMENT_CHUNKS: Record<string, string> = {
 export default defineConfig(({ mode, command }) => {
   const env = loadNfxConsoleEnv(root, mode);
   const port = Number(env.VITE_PORT) || 5173;
-  const hasApiUrl = Boolean(env.VITE_API_URL);
-  const proxyTarget = env.VITE_DEV_API_PROXY_TARGET || env.VITE_API_URL || "http://192.168.1.64/nfx-identity";
+  const apiUrl = (env.VITE_API_URL || "").replace(/\/$/, "");
+  const apiIsPath = apiUrl.startsWith("/");
+  const edgeOrigin = (env.VITE_DEV_API_PROXY_TARGET || "http://192.168.1.64").replace(/\/$/, "");
 
   return {
     base: nfxConsoleBase(env),
@@ -75,11 +76,10 @@ export default defineConfig(({ mode, command }) => {
       watch: {
         ignored: ["**/templates/**"],
       },
-      ...(command === "serve" && !hasApiUrl
+      ...(command === "serve" && apiIsPath
         ? {
             proxy: {
-              "/auth": { target: proxyTarget, changeOrigin: true },
-              "/asset": { target: proxyTarget, changeOrigin: true },
+              [apiUrl]: { target: edgeOrigin, changeOrigin: true },
             },
           }
         : {}),
