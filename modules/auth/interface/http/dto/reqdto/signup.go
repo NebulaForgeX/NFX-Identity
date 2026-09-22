@@ -9,5 +9,5 @@ type SignupRequestDTO struct {
 	VerificationCode string                    `json:"verification_code" validate:"required,alphanum,len=6"`
 	Lang             enums.AuthProfileLanguage `json:"lang"              validate:"omitempty"`
 	DeviceID         string                    `json:"device_id"         validate:"required,min=1,max=128"`
-	SignupPlatform   enums.AuthSignupPlatform  `json:"signup_platform"   validate:"required,oneof=nfxidentity nfxnews nfxstorages nfxvault"`
+	SignupPlatform   enums.AuthSignupPlatform  `json:"signup_platform"   validate:"required,oneof=nfxidentity nfxnews nfxstorages nfxedge"`
 }
