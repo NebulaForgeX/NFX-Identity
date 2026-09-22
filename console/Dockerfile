@@ -3,8 +3,8 @@
 # This file is the secure image only (ENV=secure / docker-compose.yml).
 FROM node:22-alpine AS deps
 WORKDIR /app
-ARG VITE_API_URL=http://192.168.1.64/nfx-identity
-ARG VITE_WS_URL=ws://192.168.1.64/nfx-identity
+ARG VITE_API_URL=/nfx-identity
+ARG VITE_WS_URL=
 ARG VITE_BUILD_ENV=secure
 ARG VITE_APP_ID=nfx-console
 ARG VITE_BASE=/console/nfx-identity/
