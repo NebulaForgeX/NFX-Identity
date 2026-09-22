@@ -1,6 +1,7 @@
 package http
 
 import (
+	"nfxidentity/modules/asset/infrastructure/objectstore"
 	"nfxidentity/pkgs/fiberx"
 	"nfxidentity/pkgs/fiberx/middleware"
 	"nfxidentity/pkgs/httpx"
@@ -21,6 +22,7 @@ func NewRouter(app fiber.Router, handlers *Registry, verifier token.Verifier) *R
 
 func (r *Router) RegisterRoutes() {
 	asset := r.app.Group("/asset")
+	asset.Use(objectstore.AttachLANPresign())
 	r.RegisterLocalesGroup(asset)
 	r.RegisterImagesGroup(asset)
 	r.RegisterVideosGroup(asset)

@@ -39,6 +39,7 @@ type ServerConfig struct {
 type MinIOConfig struct {
 	Endpoint  string `koanf:"endpoint"`
 	PublicURL string `koanf:"public_url"`
+	LanURL    string `koanf:"lan_url"`
 	AccessKey string `koanf:"access_key"`
 	SecretKey string `koanf:"secret_key"`
 	Bucket    string `koanf:"bucket"`

@@ -96,8 +96,24 @@ func NewDeps(ctx context.Context, cfg *config.Config) (*Dependencies, error) {
 			return nil, fmt.Errorf("init MinIO public client: %w", err)
 		}
 	}
+	lanPresigner := presigner
+	if lan := publicMinIOURL(cfg.MinIO.LanURL); lan != "" {
+		u, err := url.Parse(lan)
+		if err != nil || u.Host == "" {
+			return nil, fmt.Errorf("invalid minio lan_url %q", lan)
+		}
+		lanPresigner, err = minio.New(u.Host, &minio.Options{
+			Creds:        credentials.NewStaticV4(cfg.MinIO.AccessKey, cfg.MinIO.SecretKey, ""),
+			Secure:       u.Scheme == "https" || cfg.MinIO.UseSSL,
+			Region:       cfg.MinIO.Region,
+			BucketLookup: minio.BucketLookupPath,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("init MinIO LAN client: %w", err)
+		}
+	}
 	db := postgres.DB()
-	store := objectstore.NewWithPresigner(mc, presigner, cfg.MinIO.Bucket)
+	store := objectstore.NewWithPresigners(mc, lanPresigner, presigner, cfg.MinIO.Bucket)
 	if err := store.EnsureBucket(ctx); err != nil {
 		return nil, fmt.Errorf("ensure MinIO bucket: %w", err)
 	}
