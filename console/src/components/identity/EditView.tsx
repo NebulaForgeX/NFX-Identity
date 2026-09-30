@@ -1,7 +1,8 @@
 import { PenIcon } from "nfx-ui/icons";
 import { Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Button, Flex, Select, Text, TextArea, TextField } from "@radix-ui/themes";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { Avatar, Button, Flex, IconButton, Select, Text, TextArea, TextField } from "@radix-ui/themes";
 import { LanguageEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import {
@@ -19,11 +20,77 @@ import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { LucideIcon, PageHeader } from "@/components";
+import { showDateTimePickerModal } from "@/stores/modal";
 import { PageFrame } from "@/layouts";
 import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
 import { FieldList, FieldRow, LedgerSection } from "./Ledger";
+
+function parseBirthday(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+}
+
+function BirthdayField({ value, onChange, onBlur }: { value: string; onChange: (value: string) => void; onBlur: () => void }) {
+  const { t } = useTranslation("pages.User.Profile.Edit");
+  const displayValue = parseBirthday(value) ? value.slice(0, 10) : "";
+
+  const openPicker = () => {
+    const maxDate = new Date();
+    maxDate.setHours(0, 0, 0, 0);
+    showDateTimePickerModal({
+      value: displayValue,
+      title: t("datePicker.title"),
+      minDate: new Date(maxDate.getFullYear() - 120, 0, 1),
+      maxDate,
+      allowClear: true,
+      onConfirm: (next) => {
+        onChange(next);
+        onBlur();
+      },
+      onCancel: onBlur,
+    });
+  };
+
+  return (
+    <TextField.Root
+      size="2"
+      readOnly
+      value={displayValue}
+      placeholder={t("datePicker.placeholder")}
+      style={{ width: "100%", cursor: "pointer" }}
+      onClick={openPicker}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openPicker();
+        }
+      }}
+    >
+      <TextField.Slot side="right">
+        <IconButton
+          type="button"
+          size="1"
+          variant="ghost"
+          aria-label={t("datePicker.open")}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            openPicker();
+          }}
+        >
+          <CalendarIcon width="14" height="14" />
+        </IconButton>
+      </TextField.Slot>
+    </TextField.Root>
+  );
+}
 
 function AvatarSection({ profile, accountId }: { profile: Profile.Response.ProfileBase; accountId: Nullable<string> }) {
   const { t } = useTranslation("pages.User.Profile.Edit");
@@ -164,7 +231,11 @@ function ProfileFields({ profile }: { profile: Profile.Response.ProfileBase }) {
           <Controller name="gender" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
         </FieldRow>
         <FieldRow label={t("labels.birthday")}>
-          <Controller name="birthday" control={form.control} render={({ field }) => <TextField.Root size="2" type="date" value={field.value} onChange={field.onChange} />} />
+          <Controller
+            name="birthday"
+            control={form.control}
+            render={({ field }) => <BirthdayField value={field.value} onChange={field.onChange} onBlur={field.onBlur} />}
+          />
         </FieldRow>
         <FieldRow label={t("labels.city")}>
           <Controller name="city" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />

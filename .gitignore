@@ -53,10 +53,10 @@ logs/
 log/
 
 ## Runtime data (never push)
-stores/
-stores/mysql/
-stores/redis/
-stores/kafka/
+/stores/
+/stores/mysql/
+/stores/redis/
+/stores/kafka/
 dump.rdb
 *.rdb
 *.sqlite

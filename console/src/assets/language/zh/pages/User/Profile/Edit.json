@@ -78,5 +78,18 @@
       "failed": "失败",
       "uploading": "上传中"
     }
+  },
+  "datePicker": {
+    "title": "生日",
+    "hint": "选择日历日期，不包含时间。",
+    "selected": "已选",
+    "empty": "未选择日期",
+    "today": "今天",
+    "note": "只会保存日期。",
+    "clear": "清除",
+    "cancel": "取消",
+    "confirm": "确认",
+    "open": "打开日历",
+    "placeholder": "YYYY-MM-DD"
   }
 }

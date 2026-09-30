@@ -23,7 +23,7 @@
 }
 
 .avatar {
-  border: 3px solid var(--color-bg);
+  border: 3px solid var(--color-background);
   background: var(--gray-3);
   width: 96px;
   height: 96px;

@@ -78,5 +78,18 @@
       "failed": "Failed",
       "uploading": "Uploading"
     }
+  },
+  "datePicker": {
+    "title": "Birthday",
+    "hint": "Choose a calendar date. Time is not included.",
+    "selected": "Selected",
+    "empty": "No date selected",
+    "today": "Today",
+    "note": "This saves the calendar date only.",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "open": "Open calendar",
+    "placeholder": "YYYY-MM-DD"
   }
 }

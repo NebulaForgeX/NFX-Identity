@@ -34,8 +34,8 @@
 .tableWrap {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border: 1px solid var(--gray-6);
+  background: var(--color-background);
 }
 
 .head {
@@ -44,7 +44,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gray-10) !important;
-  background: var(--color-bg-2);
+  background: var(--color-panel-solid);
   white-space: nowrap;
 }
 
@@ -54,11 +54,11 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .search :global(.rt-TextFieldRoot:focus-within) {
-  border-bottom-color: var(--color-primary);
+  border-bottom-color: var(--accent-9);
 }
 
 @media (max-width: 640px) {

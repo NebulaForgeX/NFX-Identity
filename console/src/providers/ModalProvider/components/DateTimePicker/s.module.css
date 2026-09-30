@@ -1,0 +1,162 @@
+.headerIcon,
+.summaryIcon {
+  flex-shrink: 0;
+  color: var(--accent-9);
+  background: color-mix(in oklab, var(--accent-9) 12%, var(--color-panel-solid));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent-9) 14%, transparent);
+}
+
+.headerIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-4);
+}
+
+.summaryIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-3);
+  background: var(--color-background);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-a5) 52%, transparent);
+}
+
+.headerIcon svg,
+.summaryIcon svg {
+  display: block;
+  max-width: none;
+}
+
+.panel {
+  border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
+  background: var(--color-panel-solid);
+}
+
+.notePanel {
+  border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
+  background: var(--color-background);
+}
+
+.calendarHeader {
+  margin: 0 34px var(--space-2);
+  min-height: 32px;
+}
+
+.headerSelectTrigger {
+  max-width: 132px;
+}
+
+.calendarPanel :global(.react-datepicker) {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--gray-12);
+  font-family: inherit;
+}
+
+.calendarPanel :global(.react-datepicker__month-container) {
+  float: none;
+  width: 100%;
+}
+
+.calendarPanel :global(.react-datepicker__header) {
+  border: none;
+  border-radius: calc(var(--radius-4) - 2px);
+  background: var(--color-background);
+  padding: var(--space-2) var(--space-2) var(--space-1);
+}
+
+.calendarPanel :global(.react-datepicker__current-month) {
+  display: none;
+}
+
+.calendarPanel :global(.react-datepicker__day-names),
+.calendarPanel :global(.react-datepicker__week) {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.calendarPanel :global(.react-datepicker__day-name),
+.calendarPanel :global(.react-datepicker__day) {
+  display: grid;
+  place-items: center;
+  width: auto;
+  height: 38px;
+  margin: 0;
+  border-radius: var(--radius-3);
+}
+
+.calendarPanel :global(.react-datepicker__day-name) {
+  height: 28px;
+  color: var(--gray-11);
+}
+
+.calendarPanel :global(.react-datepicker__day) {
+  color: var(--gray-12);
+}
+
+.calendarPanel :global(.react-datepicker__day:hover) {
+  background: color-mix(in oklab, var(--accent-9) 10%, var(--color-background));
+  color: var(--accent-10);
+}
+
+.calendarPanel :global(.react-datepicker__day--outside-month) {
+  color: var(--gray-10);
+}
+
+.calendarPanel :global(.react-datepicker__day--today) {
+  color: var(--accent-9);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent-9) 28%, transparent);
+}
+
+.calendarPanel :global(.react-datepicker__day--selected) {
+  background: var(--accent-9);
+  color: var(--accent-contrast);
+  box-shadow: 0 8px 18px color-mix(in oklab, var(--accent-9) 24%, transparent);
+}
+
+.calendarPanel :global(.react-datepicker__day--keyboard-selected) {
+  background: transparent;
+  color: inherit;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent-9) 34%, transparent);
+}
+
+.calendarPanel :global(.react-datepicker__day--selected.react-datepicker__day--keyboard-selected) {
+  background: var(--accent-9);
+  color: var(--accent-contrast);
+}
+
+.calendarPanel :global(.react-datepicker__day--disabled) {
+  color: var(--gray-10);
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.calendarPanel :global(.react-datepicker__navigation) {
+  top: 12px;
+}
+
+.calendarPanel :global(.react-datepicker__navigation--previous) {
+  left: 14px;
+}
+
+.calendarPanel :global(.react-datepicker__navigation--next) {
+  right: 14px;
+}
+
+.calendarPanel :global(.react-datepicker__navigation-icon::before) {
+  border-color: var(--gray-11);
+  border-width: 2px 2px 0 0;
+}
+
+@media (max-width: 440px) {
+  .headerIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .calendarPanel :global(.react-datepicker__day-name),
+  .calendarPanel :global(.react-datepicker__day) {
+    height: 34px;
+  }
+}

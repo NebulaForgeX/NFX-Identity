@@ -7,11 +7,11 @@
 .ticket {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .step {
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--gray-6);
 }
 .stepPx {
   padding-inline: 1.35rem;
@@ -33,7 +33,7 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
   font-size: 0.7rem;
 }
 
@@ -49,8 +49,8 @@
 }
 
 .copy {
-  border-right: 1px solid var(--color-border);
-  background: var(--color-bg-2);
+  border-right: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
 }
 .copyPx {
   padding-inline: 2.5rem;
@@ -62,7 +62,7 @@
 .kicker {
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .title {
@@ -98,7 +98,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding-top: 0.75rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--gray-6);
 }
 
 @media (max-width: 960px) {
@@ -110,12 +110,12 @@
 
   .step {
     border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--gray-6);
   }
 
   .copy {
     border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--gray-6);
   }
   .copyPx {
     padding-inline: 1.25rem;

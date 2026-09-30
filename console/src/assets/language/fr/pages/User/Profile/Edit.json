@@ -78,5 +78,18 @@
       "failed": "Échec",
       "uploading": "Téléversement"
     }
+  },
+  "datePicker": {
+    "title": "Naissance",
+    "hint": "Choisissez une date. L'heure n'est pas incluse.",
+    "selected": "Sélection",
+    "empty": "Aucune date",
+    "today": "Aujourd'hui",
+    "note": "Seule la date du calendrier est enregistrée.",
+    "clear": "Effacer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "open": "Ouvrir le calendrier",
+    "placeholder": "YYYY-MM-DD"
   }
 }

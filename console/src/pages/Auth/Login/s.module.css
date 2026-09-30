@@ -8,7 +8,7 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .title {
@@ -38,8 +38,8 @@
 .slab {
   height: auto;
   width: 100%;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-2);
+  border: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
   color: inherit;
   box-shadow: none;
   text-align: left;
@@ -58,12 +58,12 @@
 }
 
 .slab:hover {
-  border-color: var(--color-primary-hover);
+  border-color: var(--accent-10);
 }
 
 .slab[data-state="active"] {
-  border-color: var(--color-primary);
-  background: var(--color-primary-bg);
+  border-color: var(--accent-9);
+  background: var(--accent-3);
 }
 
 .slabIndex {
@@ -95,7 +95,7 @@
 }
 
 .foot {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--gray-6);
 }
 .footPt {
   padding-top: 0.5rem;

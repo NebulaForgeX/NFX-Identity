@@ -2,13 +2,13 @@
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--color-background);
   color: var(--gray-12);
 }
 
 .header {
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border-bottom: 1px solid var(--gray-6);
+  background: var(--color-background);
   position: sticky;
   top: 0;
   z-index: 4;
@@ -23,7 +23,7 @@
 .brandHome {
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .body {
