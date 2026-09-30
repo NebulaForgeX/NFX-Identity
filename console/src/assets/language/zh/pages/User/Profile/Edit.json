@@ -8,11 +8,16 @@
   "actions": {
     "saveChanges": "保存更改"
   },
+  "saveSuccess": "资料已更新",
   "labels": {
     "displayName": "显示名称",
     "firstName": "名",
     "lastName": "姓",
     "gender": "性别",
+    "genderUnspecified": "未填写",
+    "genderFemale": "女",
+    "genderMale": "男",
+    "genderNonbinary": "非二元",
     "birthday": "生日",
     "bio": "简介",
     "city": "城市",
@@ -28,6 +33,18 @@
     "basics": {
       "title": "基本信息",
       "description": "显示名称与公开详情。"
+    },
+    "identity": {
+      "title": "姓名",
+      "description": "这个资料如何被称呼。"
+    },
+    "place": {
+      "title": "地点",
+      "description": "城市、国家、时区与网站。"
+    },
+    "personal": {
+      "title": "个人",
+      "description": "性别、生日与简介。"
     }
   },
   "edit": {

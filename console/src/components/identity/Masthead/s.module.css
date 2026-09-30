@@ -2,12 +2,20 @@
   width: 100%;
 }
 
-.cover {
+.coverSize {
   width: 100%;
   height: 220px;
+}
+
+.coverClip {
   overflow: hidden;
-  background:
-    linear-gradient(180deg, var(--gray-3), var(--gray-2));
+}
+
+.coverFill {
+  background: linear-gradient(180deg, var(--gray-3), var(--gray-2));
+}
+
+.coverRule {
   border-bottom: 1px solid var(--gray-a6);
 }
 
@@ -22,11 +30,17 @@
   margin-top: -36px;
 }
 
-.avatar {
-  border: 3px solid var(--color-background);
-  background: var(--gray-3);
+.avatarSize {
   width: 96px;
   height: 96px;
+}
+
+.avatarEdge {
+  border: 3px solid var(--color-background);
+}
+
+.avatarFill {
+  background: var(--gray-3);
 }
 
 .kind {

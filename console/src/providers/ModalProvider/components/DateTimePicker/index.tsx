@@ -176,9 +176,13 @@ const DateTimePicker = () => {
             <Flex direction="column" gap="4">
               <Flex justify="between" align="start" gap="3">
                 <Flex align="center" gap="3" minWidth="0">
-                  <Flex align="center" justify="center" className={styles.headerIcon}>
-                    <LucideIcon icon={CalendarDays} size={22} />
-                  </Flex>
+                  <Box className={styles.headerSize}>
+                    <Box className={`${styles.headerRadius} ${styles.iconInk}`}>
+                      <Flex align="center" justify="center" className={`${styles.headerFill} ${styles.iconGlyph}`}>
+                        <LucideIcon icon={CalendarDays} size={22} />
+                      </Flex>
+                    </Box>
+                  </Box>
                   <Box>
                     <Dialog.Title size="2" weight="medium">
                       {title ?? t("datePicker.title")}
@@ -193,13 +197,18 @@ const DateTimePicker = () => {
                 </IconButton>
               </Flex>
 
-              <Box className={styles.panel}>
+              <Box className={styles.panelEdge}>
+                <Box className={styles.panelFill}>
                 <Box py="2">
                   <Box px="3">
                     <Flex align="center" gap="2">
-                      <Flex align="center" justify="center" className={styles.summaryIcon}>
-                        <LucideIcon icon={CalendarDays} size={18} />
-                      </Flex>
+                        <Box className={styles.summarySize}>
+                          <Box className={`${styles.summaryRadius} ${styles.iconInk}`}>
+                            <Flex align="center" justify="center" className={`${styles.summaryFill} ${styles.iconGlyph}`}>
+                              <LucideIcon icon={CalendarDays} size={18} />
+                            </Flex>
+                          </Box>
+                        </Box>
                       <Box>
                         <Text as="span" size="1" weight="medium" color="gray">
                           {t("datePicker.selected")}
@@ -211,10 +220,12 @@ const DateTimePicker = () => {
                     </Flex>
                   </Box>
                 </Box>
+                </Box>
               </Box>
 
               <Grid columns={{ initial: "1", sm: "minmax(0, 1fr) 220px" }} gap="3" align="stretch">
-                <Box className={`${styles.panel} ${styles.calendarPanel}`}>
+                <Box className={`${styles.panelEdge} ${styles.calendarPanel}`}>
+                  <Box className={styles.panelFill}>
                   <Box py="2">
                     <Box px="2">
                       <Flex align="center" justify="center" overflow="hidden">
@@ -244,6 +255,7 @@ const DateTimePicker = () => {
                       </Flex>
                     </Box>
                   </Box>
+                  </Box>
                 </Box>
 
                 <Flex direction="column" gap="3">
@@ -251,7 +263,8 @@ const DateTimePicker = () => {
                     <LucideIcon icon={CalendarDays} size={16} />
                     {t("datePicker.today")}
                   </Button>
-                  <Box className={styles.notePanel}>
+                  <Box className={styles.panelEdge}>
+                    <Box className={styles.noteFill}>
                     <Box py="3">
                       <Box px="3">
                         <Flex align="start" gap="2">
@@ -263,6 +276,7 @@ const DateTimePicker = () => {
                           </Text>
                         </Flex>
                       </Box>
+                    </Box>
                     </Box>
                   </Box>
                 </Flex>

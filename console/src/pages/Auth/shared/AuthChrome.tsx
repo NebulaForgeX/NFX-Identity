@@ -12,9 +12,11 @@ export default function AuthChrome({ children }: { children: ReactNode }) {
   const { t } = useTranslation("pages.Account.AuthShell");
 
   return (
-    <Flex direction="column" className={styles.page} asChild>
+    <Flex direction="column" className={`${styles.page} ${styles.pageFill} ${styles.pageInk}`} asChild>
       <Box>
+        <Box className={styles.headerStick}>
         <Box className={styles.header}>
+          <Box className={styles.headerFill}>
           <Box className={styles.headerPx}>
             <Box className={styles.headerPy}>
         <Flex asChild align="center" justify="between" gap="4">
@@ -35,6 +37,8 @@ export default function AuthChrome({ children }: { children: ReactNode }) {
         </Flex>
             </Box>
           </Box>
+        </Box>
+        </Box>
         </Box>
         <Box className={styles.body}>{children}</Box>
       </Box>

@@ -8,11 +8,16 @@
   "actions": {
     "saveChanges": "Enregistrer"
   },
+  "saveSuccess": "Profil mis à jour",
   "labels": {
     "displayName": "Nom d'affichage",
     "firstName": "Prénom",
     "lastName": "Nom",
     "gender": "Genre",
+    "genderUnspecified": "Non précisé",
+    "genderFemale": "Femme",
+    "genderMale": "Homme",
+    "genderNonbinary": "Non binaire",
     "birthday": "Naissance",
     "bio": "Bio",
     "city": "Ville",
@@ -28,6 +33,18 @@
     "basics": {
       "title": "Essentiel",
       "description": "Nom d'affichage et détails publics."
+    },
+    "identity": {
+      "title": "Nom",
+      "description": "Comment ce profil est nommé."
+    },
+    "place": {
+      "title": "Lieu",
+      "description": "Ville, pays, fuseau et site."
+    },
+    "personal": {
+      "title": "Personnel",
+      "description": "Genre, naissance et bio."
     }
   },
   "edit": {

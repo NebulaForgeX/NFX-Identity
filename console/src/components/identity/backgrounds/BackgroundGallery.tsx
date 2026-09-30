@@ -63,9 +63,9 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
             const busy = isUserProfileBackgroundDraftBusy(draft);
             const failed = draft.status === "failed";
             return (
-              <Box key={draft.imageId} position="relative" className={styles.tile}>
+              <Box key={draft.imageId} position="relative" className={`${styles.tileSize} ${styles.tileEdge} ${styles.tileRadius} ${styles.tileClip} ${styles.tileFill}`}>
                 <img src={draft.previewUrl} alt="" className={styles.tileImage} draggable={false} />
-                <Box className={styles.orderBadge}>
+                <Box className={`${styles.orderPlace} ${styles.orderFill} ${styles.orderInk} ${styles.orderRadius}`}>
                   <Text size="1" weight="bold">
                     {draft.sortOrder + 1}
                   </Text>

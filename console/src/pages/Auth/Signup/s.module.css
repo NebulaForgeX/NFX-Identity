@@ -7,6 +7,9 @@
 .ticket {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+}
+
+.ticketRule {
   border-bottom: 1px solid var(--gray-6);
 }
 
@@ -50,6 +53,9 @@
 
 .copy {
   border-right: 1px solid var(--gray-6);
+}
+
+.copyFill {
   background: var(--color-panel-solid);
 }
 .copyPx {
@@ -93,11 +99,7 @@
   gap: 1rem;
 }
 
-.foot {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-top: 0.75rem;
+.footRule {
   border-top: 1px solid var(--gray-6);
 }
 

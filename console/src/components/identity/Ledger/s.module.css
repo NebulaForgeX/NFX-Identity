@@ -34,7 +34,13 @@
 .tableWrap {
   width: 100%;
   overflow-x: auto;
+}
+
+.tableEdge {
   border: 1px solid var(--gray-6);
+}
+
+.tableFill {
   background: var(--color-background);
 }
 
@@ -44,8 +50,11 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gray-10) !important;
-  background: var(--color-panel-solid);
   white-space: nowrap;
+}
+
+.headFill {
+  background: var(--color-panel-solid);
 }
 
 .search :global(.rt-TextFieldRoot) {

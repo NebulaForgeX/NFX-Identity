@@ -1,7 +1,7 @@
 import { AnimatedIcon, ArrowNarrowRightIcon } from "nfx-ui/icons";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { Button, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import gsap from "gsap";
 import { APP_NAME } from "nfx-ui/config";
 import { AuthSignupPlatformEnum, LanguageEnum } from "nfx-ui/enums";
@@ -63,6 +63,7 @@ export default function SignupPage() {
   return (
     <AuthChrome>
       <div ref={rootRef} className={styles.issuance}>
+        <div className={styles.ticketRule}>
         <div className={styles.ticket} aria-hidden={false}>
           <div className={`${styles.step} js-step`}>
             <div className={styles.stepPx}>
@@ -95,9 +96,11 @@ export default function SignupPage() {
             </div>
           </div>
         </div>
+        </div>
 
         <div className={styles.split}>
           <aside className={`${styles.copy} js-copy`}>
+            <div className={styles.copyFill}>
             <div className={styles.copyPx}>
               <div className={styles.copyPy}>
             <Flex direction="column" gap="4">
@@ -115,6 +118,7 @@ export default function SignupPage() {
               </Text>
             </Flex>
               </div>
+            </div>
             </div>
           </aside>
 
@@ -169,7 +173,9 @@ export default function SignupPage() {
               </Flex>
             </FormProvider>
 
-            <div className={`${styles.foot} js-field`}>
+            <div className={`${styles.footRule} js-field`}>
+              <Box pt="3">
+              <Flex justify="between" gap="3">
               <Text as="p" size="2" color="gray">
                 {t("hasAccount")}
               </Text>
@@ -183,6 +189,8 @@ export default function SignupPage() {
               >
                 {t("signIn")}
               </Link>
+              </Flex>
+              </Box>
             </div>
               </div>
             </div>

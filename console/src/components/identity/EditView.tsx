@@ -1,8 +1,10 @@
 import { PenIcon } from "nfx-ui/icons";
 import { Upload } from "lucide-react";
+import type { ReactNode } from "react";
+
 import { useEffect, useRef, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Avatar, Button, Flex, IconButton, Select, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Avatar, Button, Flex, Grid, IconButton, Select, Text, TextArea, TextField } from "@radix-ui/themes";
 import { LanguageEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import {
@@ -25,7 +27,7 @@ import { PageFrame } from "@/layouts";
 import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
-import { FieldList, FieldRow, LedgerSection } from "./Ledger";
+import { LedgerSection } from "./Ledger";
 
 function parseBirthday(value: string): boolean {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
@@ -186,6 +188,32 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
   );
 }
 
+const GENDERS = ["female", "male", "nonbinary"] as const;
+const TIMEZONES = ["UTC", "America/Vancouver", "America/Los_Angeles", "America/New_York", "Europe/London", "Europe/Paris", "Asia/Shanghai", "Asia/Tokyo"] as const;
+
+function StackField({ label, children, error }: { label: string; children: ReactNode; error?: string }) {
+  return (
+    <Flex direction="column" gap="1">
+      <Text size="1" color="gray">
+        {label}
+      </Text>
+      {children}
+      {error ? (
+        <Text size="1" color="red">
+          {error}
+        </Text>
+      ) : null}
+    </Flex>
+  );
+}
+
+function genderLabel(t: (key: string) => string, value: string) {
+  if (value === "female") return t("labels.genderFemale");
+  if (value === "male") return t("labels.genderMale");
+  if (value === "nonbinary") return t("labels.genderNonbinary");
+  return value;
+}
+
 function ProfileFields({ profile }: { profile: Profile.Response.ProfileBase }) {
   const { t } = useTranslation("pages.User.Profile.Edit");
   const form = useInitUserProfileEditForm(profile);
@@ -195,81 +223,118 @@ function ProfileFields({ profile }: { profile: Profile.Response.ProfileBase }) {
     form.reset(buildUserProfileEditDefaults(profile));
   }, [form, profile]);
 
-  return (
-    <LedgerSection
-      title={t("sections.basics.title")}
-      description={t("sections.basics.description")}
-      actions={
-        <Button
-          size="2"
-          loading={patch.isPending}
-          onClick={form.handleSubmit((values) => {
-            const body = buildProfilePatch(profile, values);
-            if (isEmptyPatch(body)) return;
-            patch.mutate(body);
-          })}
-        >
-          {t("actions.saveChanges")}
-        </Button>
-      }
+  const save = (
+    <Button
+      size="2"
+      loading={patch.isPending}
+      onClick={form.handleSubmit((values) => {
+        const body = buildProfilePatch(profile, values);
+        if (isEmptyPatch(body)) return;
+        patch.mutate(body);
+      })}
     >
-      <FieldList>
-        <FieldRow label={t("labels.displayName")}>
-          <Controller
-            name="displayName"
-            control={form.control}
-            render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />}
-          />
-        </FieldRow>
-        <FieldRow label={t("labels.firstName")}>
-          <Controller name="firstName" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.lastName")}>
-          <Controller name="lastName" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.gender")}>
-          <Controller name="gender" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.birthday")}>
-          <Controller
-            name="birthday"
-            control={form.control}
-            render={({ field }) => <BirthdayField value={field.value} onChange={field.onChange} onBlur={field.onBlur} />}
-          />
-        </FieldRow>
-        <FieldRow label={t("labels.city")}>
-          <Controller name="city" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.country")}>
-          <Controller name="country" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.website")}>
-          <Controller name="website" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.timezone")}>
-          <Controller name="timezone" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-        <FieldRow label={t("labels.profileLanguage")}>
-          <Controller
-            name="profileLanguage"
-            control={form.control}
-            render={({ field }) => (
-              <Select.Root value={field.value} onValueChange={field.onChange}>
-                <Select.Trigger />
-                <Select.Content>
-                  <Select.Item value={LanguageEnum.EN}>{t("labels.langEn")}</Select.Item>
-                  <Select.Item value={LanguageEnum.ZH}>{t("labels.langZh")}</Select.Item>
-                  <Select.Item value={LanguageEnum.FR}>{t("labels.langFr")}</Select.Item>
-                </Select.Content>
-              </Select.Root>
-            )}
-          />
-        </FieldRow>
-        <FieldRow label={t("labels.bio")}>
-          <Controller name="bio" control={form.control} render={({ field }) => <TextArea size="2" rows={5} value={field.value} onChange={field.onChange} />} />
-        </FieldRow>
-      </FieldList>
-    </LedgerSection>
+      {t("actions.saveChanges")}
+    </Button>
+  );
+  const genderValue = form.watch("gender");
+  const timezoneValue = form.watch("timezone");
+  const genderOptions = genderValue && !GENDERS.includes(genderValue as (typeof GENDERS)[number]) ? [genderValue, ...GENDERS] : [...GENDERS];
+  const timezoneOptions = timezoneValue && !TIMEZONES.includes(timezoneValue as (typeof TIMEZONES)[number]) ? [timezoneValue, ...TIMEZONES] : [...TIMEZONES];
+
+  return (
+    <>
+      <LedgerSection title={t("sections.identity.title")} description={t("sections.identity.description")}>
+        <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+          <StackField label={t("labels.displayName")}>
+            <Controller name="displayName" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
+          </StackField>
+          <StackField label={t("labels.profileLanguage")}>
+            <Controller
+              name="profileLanguage"
+              control={form.control}
+              render={({ field }) => (
+                <Select.Root value={field.value} onValueChange={field.onChange}>
+                  <Select.Trigger />
+                  <Select.Content>
+                    <Select.Item value={LanguageEnum.EN}>{t("labels.langEn")}</Select.Item>
+                    <Select.Item value={LanguageEnum.ZH}>{t("labels.langZh")}</Select.Item>
+                    <Select.Item value={LanguageEnum.FR}>{t("labels.langFr")}</Select.Item>
+                  </Select.Content>
+                </Select.Root>
+              )}
+            />
+          </StackField>
+          <StackField label={t("labels.firstName")}>
+            <Controller name="firstName" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
+          </StackField>
+          <StackField label={t("labels.lastName")}>
+            <Controller name="lastName" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
+          </StackField>
+        </Grid>
+      </LedgerSection>
+      <LedgerSection title={t("sections.place.title")} description={t("sections.place.description")}>
+        <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+          <StackField label={t("labels.city")}>
+            <Controller name="city" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
+          </StackField>
+          <StackField label={t("labels.country")}>
+            <Controller name="country" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
+          </StackField>
+          <StackField label={t("labels.timezone")}>
+            <Controller
+              name="timezone"
+              control={form.control}
+              render={({ field }) => (
+                <Select.Root value={field.value || "UTC"} onValueChange={field.onChange}>
+                  <Select.Trigger />
+                  <Select.Content>
+                    {timezoneOptions.map((zone) => (
+                      <Select.Item key={zone} value={zone}>
+                        {zone}
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Root>
+              )}
+            />
+          </StackField>
+          <StackField label={t("labels.website")} error={form.formState.errors.website?.message}>
+            <Controller name="website" control={form.control} render={({ field }) => <TextField.Root size="2" value={field.value} onChange={field.onChange} />} />
+          </StackField>
+        </Grid>
+      </LedgerSection>
+      <LedgerSection title={t("sections.personal.title")} description={t("sections.personal.description")} actions={save}>
+        <Flex direction="column" gap="4">
+          <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+            <StackField label={t("labels.gender")}>
+              <Controller
+                name="gender"
+                control={form.control}
+                render={({ field }) => (
+                  <Select.Root value={field.value || "unspecified"} onValueChange={(value) => field.onChange(value === "unspecified" ? "" : value)}>
+                    <Select.Trigger />
+                    <Select.Content>
+                      <Select.Item value="unspecified">{t("labels.genderUnspecified")}</Select.Item>
+                      {genderOptions.map((value) => (
+                        <Select.Item key={value} value={value}>
+                          {genderLabel(t, value)}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                )}
+              />
+            </StackField>
+            <StackField label={t("labels.birthday")}>
+              <Controller name="birthday" control={form.control} render={({ field }) => <BirthdayField value={field.value} onChange={field.onChange} onBlur={field.onBlur} />} />
+            </StackField>
+          </Grid>
+          <StackField label={t("labels.bio")}>
+            <Controller name="bio" control={form.control} render={({ field }) => <TextArea size="2" rows={5} value={field.value} onChange={field.onChange} />} />
+          </StackField>
+        </Flex>
+      </LedgerSection>
+    </>
   );
 }
 

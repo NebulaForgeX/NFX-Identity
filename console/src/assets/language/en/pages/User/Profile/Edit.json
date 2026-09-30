@@ -8,11 +8,16 @@
   "actions": {
     "saveChanges": "Save changes"
   },
+  "saveSuccess": "Profile updated",
   "labels": {
     "displayName": "Display name",
     "firstName": "First name",
     "lastName": "Last name",
     "gender": "Gender",
+    "genderUnspecified": "Not specified",
+    "genderFemale": "Female",
+    "genderMale": "Male",
+    "genderNonbinary": "Non-binary",
     "birthday": "Birthday",
     "bio": "Bio",
     "city": "City",
@@ -28,6 +33,18 @@
     "basics": {
       "title": "Basics",
       "description": "Display name and public details."
+    },
+    "identity": {
+      "title": "Name",
+      "description": "How this profile is addressed."
+    },
+    "place": {
+      "title": "Place",
+      "description": "City, country, timezone, and website."
+    },
+    "personal": {
+      "title": "Personal",
+      "description": "Gender, birthday, and bio."
     }
   },
   "avatar": {

@@ -1,7 +1,6 @@
 .gate {
   width: min(28rem, calc(100% - 2.5rem));
   margin: 0 auto;
-  padding: 4.5rem 0 5rem;
 }
 
 .index {
@@ -36,13 +35,14 @@
 }
 
 .slab {
-  height: auto;
   width: 100%;
   border: 1px solid var(--gray-6);
+  text-align: left;
+}
+
+.slabFill {
   background: var(--color-panel-solid);
   color: inherit;
-  box-shadow: none;
-  text-align: left;
 }
 .slabPx {
   padding-inline: 1.05rem;
@@ -63,6 +63,9 @@
 
 .slab[data-state="active"] {
   border-color: var(--accent-9);
+}
+
+.slab[data-state="active"] .slabFill {
   background: var(--accent-3);
 }
 

@@ -1,44 +1,52 @@
-.headerIcon,
-.summaryIcon {
-  flex-shrink: 0;
-  color: var(--accent-9);
-  background: color-mix(in oklab, var(--accent-9) 12%, var(--color-panel-solid));
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent-9) 14%, transparent);
-}
-
-.headerIcon {
+.headerSize {
   width: 44px;
   height: 44px;
+}
+
+.summarySize {
+  width: 34px;
+  height: 34px;
+}
+
+.headerRadius {
   border-radius: var(--radius-4);
 }
 
-.summaryIcon {
-  width: 34px;
-  height: 34px;
+.summaryRadius {
   border-radius: var(--radius-3);
-  background: var(--color-background);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gray-a5) 52%, transparent);
 }
 
-.headerIcon svg,
-.summaryIcon svg {
+.iconInk {
+  color: var(--accent-9);
+}
+
+.headerFill {
+  background: color-mix(in oklab, var(--accent-9) 12%, var(--color-panel-solid));
+}
+
+.summaryFill {
+  background: var(--color-background);
+}
+
+.iconGlyph svg {
   display: block;
   max-width: none;
 }
 
-.panel {
+.panelEdge {
   border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
+}
+
+.panelFill {
   background: var(--color-panel-solid);
 }
 
-.notePanel {
-  border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
+.noteFill {
   background: var(--color-background);
 }
 
 .calendarHeader {
-  margin: 0 34px var(--space-2);
-  min-height: 32px;
+  margin-inline: 34px;
 }
 
 .headerSelectTrigger {

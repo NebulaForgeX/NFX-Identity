@@ -38,12 +38,20 @@ export default function Masthead({
 
   return (
     <Box className={styles.wrap}>
-      <Box className={styles.cover}>
-        {coverId ? <img src={buildImageUrl(coverId)} alt="" className={styles.coverImage} /> : null}
+      <Box className={styles.coverSize}>
+        <Box className={styles.coverClip}>
+          <Box className={styles.coverFill}>
+            <Box className={styles.coverRule}>
+              {coverId ? <img src={buildImageUrl(coverId)} alt="" className={styles.coverImage} /> : null}
+            </Box>
+          </Box>
+        </Box>
       </Box>
       <Flex align="end" justify="between" gap="4" wrap="wrap" className={styles.body}>
         <Flex align="end" gap="4" minWidth="0">
-          <Avatar size="6" radius="none" className={styles.avatar} src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+          <Box className={styles.avatarEdge}>
+            <Avatar size="6" radius="none" className={`${styles.avatarSize} ${styles.avatarFill}`} src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+          </Box>
           <Box pb="1">
           <Flex direction="column" gap="1" minWidth="0">
             <Text size="1" color="gray" className={styles.kind}>

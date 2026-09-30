@@ -1,11 +1,23 @@
-.tile {
+.tileSize {
   width: 160px;
   height: 120px;
-  border: 1px solid var(--gray-a5);
-  border-radius: var(--radius-3);
-  overflow: hidden;
-  background: var(--gray-3);
   flex: 0 0 auto;
+}
+
+.tileEdge {
+  border: 1px solid var(--gray-a5);
+}
+
+.tileRadius {
+  border-radius: var(--radius-3);
+}
+
+.tileClip {
+  overflow: hidden;
+}
+
+.tileFill {
+  background: var(--gray-3);
 }
 
 .tileImage {
@@ -15,15 +27,22 @@
   display: block;
 }
 
-.orderBadge {
+.orderPlace {
   position: absolute;
   top: 6px;
   left: 6px;
+}
+
+.orderFill {
   background: color-mix(in oklab, var(--gray-12) 70%, transparent);
+}
+
+.orderInk {
   color: var(--gray-1);
+}
+
+.orderRadius {
   border-radius: var(--radius-2);
-  padding: 0 6px;
-  line-height: 1.4;
 }
 
 .tileActions {

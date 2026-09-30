@@ -131,7 +131,7 @@ export default function ThemeSettings() {
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ accent: c })}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
+                    className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
                     {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
@@ -153,7 +153,7 @@ export default function ThemeSettings() {
                     aria-label={c}
                     aria-pressed={active}
                     onClick={() => setField({ gray: c })}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
+                    className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge} ${active ? styles.swatchActive : ""}`}
                     style={{ background: swatchVar(c) }}
                   >
                     {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}

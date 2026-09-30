@@ -49,14 +49,14 @@ export default function DirectoryView() {
             {t("forger.empty")}
           </Text>
         ) : (
-          <div className={styles.tableWrap}>
+          <div className={`${styles.tableWrap} ${styles.tableEdge} ${styles.tableFill}`}>
           <Table.Root variant="ghost" size="2">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.name")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.city")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.roles")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.created")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.name")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.city")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.roles")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.created")}</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -88,13 +88,13 @@ export default function DirectoryView() {
             {t("authority.empty")}
           </Text>
         ) : (
-          <div className={styles.tableWrap}>
+          <div className={`${styles.tableWrap} ${styles.tableEdge} ${styles.tableFill}`}>
           <Table.Root variant="ghost" size="2">
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.name")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.roles")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell className={styles.head}>{t("columns.assign")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.name")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.roles")}</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell className={`${styles.head} ${styles.headFill}`}>{t("columns.assign")}</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>

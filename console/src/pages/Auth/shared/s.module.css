@@ -2,13 +2,25 @@
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
+}
+
+.pageFill {
   background: var(--color-background);
+}
+
+.pageInk {
   color: var(--gray-12);
 }
 
 .header {
   border-bottom: 1px solid var(--gray-6);
+}
+
+.headerFill {
   background: var(--color-background);
+}
+
+.headerStick {
   position: sticky;
   top: 0;
   z-index: 4;

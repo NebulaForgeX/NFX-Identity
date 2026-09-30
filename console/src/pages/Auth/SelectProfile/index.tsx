@@ -56,7 +56,7 @@ export default function SelectProfilePage() {
   const renderColumn = (kind: ProfileKindEnum, items: Array<Profile.Response.ForgerProfileItem | Profile.Response.AuthorityProfileItem>) => {
     const isAuthority = kind === ProfileKindEnum.AUTHORITY;
     return (
-      <Box asChild className={`${styles.col} ${isAuthority ? styles.colAuthority : styles.colCommunity} ${isAuthority ? "js-col-authority" : "js-col-community"}`}>
+      <Box asChild className={`${styles.col} ${isAuthority ? styles.colAuthority : `${styles.colCommunity} ${styles.colCommunityFill}`} ${isAuthority ? "js-col-authority" : "js-col-community"}`}>
         <section>
           <Box className={styles.colPx}>
             <Box className={styles.colPy}>
@@ -139,9 +139,11 @@ export default function SelectProfilePage() {
           </Box>
         </Box>
 
+        <Box className={styles.columnsRule}>
         <Box className={styles.columns}>
           {renderColumn(ProfileKindEnum.COMMUNITY, community)}
           {renderColumn(ProfileKindEnum.AUTHORITY, authority)}
+        </Box>
         </Box>
 
         <Box className={`${styles.dock} js-dock`}>

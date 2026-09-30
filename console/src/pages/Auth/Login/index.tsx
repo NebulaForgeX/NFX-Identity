@@ -63,6 +63,7 @@ export default function LoginPage() {
   return (
     <AuthChrome>
       <Box ref={rootRef} className={styles.gate}>
+        <Box py="8">
         <Box pb="6">
         <Flex direction="column" gap="3">
           <Text as="p" size="1" weight="bold" className={`${styles.index} js-gate-copy`}>
@@ -80,6 +81,7 @@ export default function LoginPage() {
         <Tabs.Root value={channel} onValueChange={(value) => setChannel(value as "email" | "phone")}>
           <Tabs.List className={`${styles.slabs} js-gate-slab`}>
             <Tabs.Trigger value="email" className={styles.slab}>
+              <Box className={styles.slabFill}>
               <Box className={styles.slabPx}>
                 <Box className={styles.slabPy}>
                   <Box className={styles.slabStack}>
@@ -92,8 +94,10 @@ export default function LoginPage() {
                   </Box>
                 </Box>
               </Box>
+              </Box>
             </Tabs.Trigger>
             <Tabs.Trigger value="phone" className={styles.slab}>
+              <Box className={styles.slabFill}>
               <Box className={styles.slabPx}>
                 <Box className={styles.slabPy}>
                   <Box className={styles.slabStack}>
@@ -105,6 +109,7 @@ export default function LoginPage() {
               </Text>
                   </Box>
                 </Box>
+              </Box>
               </Box>
             </Tabs.Trigger>
           </Tabs.List>
@@ -165,6 +170,7 @@ export default function LoginPage() {
           </Box>
           </Box>
         </Tabs.Root>
+        </Box>
       </Box>
     </AuthChrome>
   );

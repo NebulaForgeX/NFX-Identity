@@ -31,12 +31,20 @@ function MenuLabel({ children, active = false }: { children: ReactNode; active?:
 
 function SectionTitle({ label, icon }: { label: string; icon: AnimatedIconComponent }) {
   return (
-    <Flex align="center" justify="between" gap="2" className={styles.sectionTitle}>
-      <Text as="span" size="2" weight="bold">
-        {label}
-      </Text>
-      <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
-    </Flex>
+    <Box mt="4">
+      <Box className={styles.sectionRule}>
+        <Box pt="5">
+          <Box px="2">
+            <Flex align="center" justify="between" gap="2" className={styles.sectionTitle}>
+              <Text as="span" size="2" weight="bold">
+                {label}
+              </Text>
+              <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
+            </Flex>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
@@ -285,13 +293,20 @@ function Sidebar() {
               </IconButton>
             </div>
 
-            <Box flexGrow="1" minHeight="0" py="2" className={`${styles.menuArea} ${collapsed ? styles.menuAreaCollapsed : ""}`}>
-              <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
-              <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
-              <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+            <Box flexGrow="1" minHeight="0" className={`${styles.menuArea} ${collapsed ? styles.menuAreaCollapsed : ""}`}>
+              <Box py="2">
+                <Box px="5">
+                  <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+                  <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+                  <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+                </Box>
+              </Box>
             </Box>
 
-            <div className={`${styles.footer} ${collapsed ? styles.footerCollapsed : ""}`}>
+            <Box className={`${styles.footer} ${collapsed ? styles.footerCollapsed : ""}`}>
+              <Box pt="3">
+                <Box px="5">
+                  <Box pb="5">
               <Button
                 variant="ghost"
                 className={`${styles.logout} ${collapsed ? styles.logoutCollapsed : ""}`}
@@ -302,7 +317,10 @@ function Sidebar() {
                 <AnimatedIcon icon={LogoutIcon} size={18} />
                 {!collapsed && t("sidebar.logout")}
               </Button>
-            </div>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
           </Flex>
         </ProSidebar>
       </SidebarMenuState>

@@ -11,12 +11,14 @@
 .swatch {
   width: 22px;
   height: 22px;
+}
+
+.swatchRadius {
   border-radius: var(--radius-chip);
+}
+
+.swatchEdge {
   border: 1px solid var(--gray-a6);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .swatchActive {
@@ -32,8 +34,17 @@
   position: relative;
   width: 56px;
   height: 40px;
+}
+
+.positionRadius {
   border-radius: var(--radius-chip);
+}
+
+.positionEdge {
   border: 1px solid var(--gray-a5);
+}
+
+.positionFill {
   background: var(--gray-3);
 }
 
