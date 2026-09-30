@@ -1,6 +1,6 @@
 import { Check, RefreshCw, Save } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Badge, Box, Button, Flex, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
+import { Badge, Box, Button, Flex, Grid, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { AccentColorEnum, AppearanceEnum, GrayColorEnum, LanguageEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
 import { useBaseLabel, useSyncPreference } from "nfx-ui/hooks";
@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import { LucideIcon } from "@/components";
 
-import { FieldList, FieldRow, LedgerSection } from "../Ledger";
+import { LedgerSection } from "../Ledger";
 import styles from "./s.module.css";
 
 const FONT_LABEL_KEY: Record<ThemeFontFamilyEnum, string> = {
@@ -106,143 +106,153 @@ export default function ThemeSettings() {
           </Flex>
         }
       >
-        <FieldList>
-          <FieldRow label={t("labels.appearance")}>
-            <Box className={styles.controlFit}>
-              <SegmentedControl.Root size="2" value={draft.appearance} onValueChange={(v) => setField({ appearance: v as AppearanceEnum })}>
-                {THEME_APPEARANCE_VALUES.map((v) => (
-                  <SegmentedControl.Item key={v} value={v}>
-                    {v}
-                  </SegmentedControl.Item>
-                ))}
-              </SegmentedControl.Root>
-            </Box>
-          </FieldRow>
-          <FieldRow label={t("labels.accent")}>
-            <Flex wrap="wrap" gap="2">
-              {RADIX_ACCENT_VALUES.map((c) => {
-                const active = draft.accent === c;
-                return (
-                  <Button
-                    key={c}
-                    type="button"
-                    variant="outline"
-                    color="gray"
-                    aria-label={c}
-                    aria-pressed={active}
-                    onClick={() => setField({ accent: c })}
-                    className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge} ${active ? styles.swatchActive : ""}`}
-                    style={{ background: swatchVar(c) }}
-                  >
-                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
-                  </Button>
-                );
-              })}
-            </Flex>
-          </FieldRow>
-          <FieldRow label={t("labels.gray")}>
-            <Flex wrap="wrap" gap="2">
-              {RADIX_GRAY_VALUES.map((c) => {
-                const active = draft.gray === c;
-                return (
-                  <Button
-                    key={c}
-                    type="button"
-                    variant="outline"
-                    color="gray"
-                    aria-label={c}
-                    aria-pressed={active}
-                    onClick={() => setField({ gray: c })}
-                    className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge} ${active ? styles.swatchActive : ""}`}
-                    style={{ background: swatchVar(c) }}
-                  >
-                    {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
-                  </Button>
-                );
-              })}
-            </Flex>
-          </FieldRow>
-          <FieldRow label={t("labels.radius")}>
-            <Box className={styles.controlFit}>
-              <SegmentedControl.Root size="2" value={draft.radius} onValueChange={(v) => setField({ radius: v as RadiusEnum })}>
-                {RADIX_RADIUS_VALUES.map((v) => (
-                  <SegmentedControl.Item key={v} value={v}>
-                    {getBaseDisplayName(RADIX_RADIUS_TO_BASE[v])}
-                  </SegmentedControl.Item>
-                ))}
-              </SegmentedControl.Root>
-            </Box>
-          </FieldRow>
-          <FieldRow label={t("labels.scaling")}>
-            <Box className={styles.controlFit}>
-              <SegmentedControl.Root size="2" value={draft.scaling} onValueChange={(v) => setField({ scaling: v as ScalingEnum })}>
-                {RADIX_SCALING_VALUES.map((v) => (
-                  <SegmentedControl.Item key={v} value={v}>
-                    {v}
-                  </SegmentedControl.Item>
-                ))}
-              </SegmentedControl.Root>
-            </Box>
-          </FieldRow>
-          <FieldRow label={t("labels.panelBackground")}>
-            <Box className={styles.controlFit}>
-              <SegmentedControl.Root size="2" value={draft.panelBackground} onValueChange={(v) => setField({ panelBackground: v as PanelBackgroundEnum })}>
-                {RADIX_PANEL_BACKGROUND_VALUES.map((v) => (
-                  <SegmentedControl.Item key={v} value={v}>
-                    {v}
-                  </SegmentedControl.Item>
-                ))}
-              </SegmentedControl.Root>
-            </Box>
-          </FieldRow>
-          <FieldRow label={t("labels.font")}>
-            <Box className={styles.controlFit}>
-              <SegmentedControl.Root size="2" value={draft.fontFamily} onValueChange={(v) => setField({ fontFamily: v as ThemeFontFamilyEnum })}>
-                {THEME_FONT_FAMILY_VALUES.map((v) => (
-                  <SegmentedControl.Item key={v} value={v}>
-                    {t(FONT_LABEL_KEY[v])}
-                  </SegmentedControl.Item>
-                ))}
-              </SegmentedControl.Root>
-            </Box>
-          </FieldRow>
-          <FieldRow label={t("labels.livePreview")}>
-            <Theme
-              appearance={previewAppearance}
-              accentColor={draft.accent}
-              grayColor={draft.gray}
-              radius={draft.radius}
-              scaling={draft.scaling}
-              panelBackground={draft.panelBackground}
-              hasBackground
-              className={styles.previewTheme}
-            >
-              <Box style={{ border: "1px solid var(--gray-a5)" }}>
-                <Box px="3">
-                  <Box py="3">
-              <Flex direction="column" gap="3">
-                <Flex align="center" justify="between">
-                  <Heading size="4">{APP_NAME}</Heading>
-                  <Badge size="1">{t("labels.previewBadge")}</Badge>
-                </Flex>
-                <Flex gap="2" wrap="wrap">
-                  <Button size="2">{t("labels.previewSolid")}</Button>
-                  <Button size="2" variant="outline">
-                    {t("labels.previewSoft")}
-                  </Button>
-                </Flex>
-                <TextField.Root size="2" placeholder={t("labels.sampleInput")} />
-                <Flex align="center" gap="2">
-                  <Switch size="2" defaultChecked />
-                  <Text size="2">{t("labels.notifications")}</Text>
-                </Flex>
+        <Flex direction="column" gap="6">
+          <Flex direction="column" gap="4">
+            <Heading as="h3" size="2">
+              {t("labels.appearance")}
+            </Heading>
+            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+              <Flex direction="column" gap="2">
+                <Text size="1" color="gray">{t("labels.appearance")}</Text>
+                <Box className={styles.controlFit}>
+                  <SegmentedControl.Root size="2" value={draft.appearance} onValueChange={(v) => setField({ appearance: v as AppearanceEnum })}>
+                    {THEME_APPEARANCE_VALUES.map((v) => (
+                      <SegmentedControl.Item key={v} value={v}>{v}</SegmentedControl.Item>
+                    ))}
+                  </SegmentedControl.Root>
+                </Box>
               </Flex>
+              <Flex direction="column" gap="2">
+                <Text size="1" color="gray">{t("labels.radius")}</Text>
+                <Box className={styles.controlFit}>
+                  <SegmentedControl.Root size="2" value={draft.radius} onValueChange={(v) => setField({ radius: v as RadiusEnum })}>
+                    {RADIX_RADIUS_VALUES.map((v) => (
+                      <SegmentedControl.Item key={v} value={v}>{getBaseDisplayName(RADIX_RADIUS_TO_BASE[v])}</SegmentedControl.Item>
+                    ))}
+                  </SegmentedControl.Root>
+                </Box>
+              </Flex>
+              <Flex direction="column" gap="2">
+                <Text size="1" color="gray">{t("labels.scaling")}</Text>
+                <Box className={styles.controlFit}>
+                  <SegmentedControl.Root size="2" value={draft.scaling} onValueChange={(v) => setField({ scaling: v as ScalingEnum })}>
+                    {RADIX_SCALING_VALUES.map((v) => (
+                      <SegmentedControl.Item key={v} value={v}>{v}</SegmentedControl.Item>
+                    ))}
+                  </SegmentedControl.Root>
+                </Box>
+              </Flex>
+              <Flex direction="column" gap="2">
+                <Text size="1" color="gray">{t("labels.panelBackground")}</Text>
+                <Box className={styles.controlFit}>
+                  <SegmentedControl.Root size="2" value={draft.panelBackground} onValueChange={(v) => setField({ panelBackground: v as PanelBackgroundEnum })}>
+                    {RADIX_PANEL_BACKGROUND_VALUES.map((v) => (
+                      <SegmentedControl.Item key={v} value={v}>{v}</SegmentedControl.Item>
+                    ))}
+                  </SegmentedControl.Root>
+                </Box>
+              </Flex>
+            </Grid>
+          </Flex>
+          <Flex direction="column" gap="4">
+            <Heading as="h3" size="2">
+              {t("labels.themeColor")}
+            </Heading>
+            <Flex direction="column" gap="3">
+              <Text size="1" color="gray">{t("labels.accent")}</Text>
+              <Flex wrap="wrap" gap="2">
+                {RADIX_ACCENT_VALUES.map((c) => {
+                  const active = draft.accent === c;
+                  return (
+                    <Button
+                      key={c}
+                      type="button"
+                      variant="outline"
+                      color="gray"
+                      aria-label={c}
+                      aria-pressed={active}
+                      onClick={() => setField({ accent: c })}
+                      className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge} ${active ? styles.swatchActive : ""}`}
+                      style={{ background: swatchVar(c) }}
+                    >
+                      {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
+                    </Button>
+                  );
+                })}
+              </Flex>
+              <Text size="1" color="gray">{t("labels.gray")}</Text>
+              <Flex wrap="wrap" gap="2">
+                {RADIX_GRAY_VALUES.map((c) => {
+                  const active = draft.gray === c;
+                  return (
+                    <Button
+                      key={c}
+                      type="button"
+                      variant="outline"
+                      color="gray"
+                      aria-label={c}
+                      aria-pressed={active}
+                      onClick={() => setField({ gray: c })}
+                      className={`${styles.swatch} ${styles.swatchRadius} ${styles.swatchEdge} ${active ? styles.swatchActive : ""}`}
+                      style={{ background: swatchVar(c) }}
+                    >
+                      {active ? <LucideIcon icon={Check} size={12} color="white" /> : null}
+                    </Button>
+                  );
+                })}
+              </Flex>
+            </Flex>
+          </Flex>
+          <Flex direction="column" gap="4">
+            <Heading as="h3" size="2">
+              {t("labels.font")}
+            </Heading>
+            <Flex direction="column" gap="2">
+              <Box className={styles.controlFit}>
+                <SegmentedControl.Root size="2" value={draft.fontFamily} onValueChange={(v) => setField({ fontFamily: v as ThemeFontFamilyEnum })}>
+                  {THEME_FONT_FAMILY_VALUES.map((v) => (
+                    <SegmentedControl.Item key={v} value={v}>{t(FONT_LABEL_KEY[v])}</SegmentedControl.Item>
+                  ))}
+                </SegmentedControl.Root>
+              </Box>
+            </Flex>
+            <Flex direction="column" gap="2">
+              <Text size="1" color="gray">{t("labels.livePreview")}</Text>
+              <Theme
+                appearance={previewAppearance}
+                accentColor={draft.accent}
+                grayColor={draft.gray}
+                radius={draft.radius}
+                scaling={draft.scaling}
+                panelBackground={draft.panelBackground}
+                hasBackground
+                className={styles.previewTheme}
+              >
+                <Box className={styles.swatchEdge}>
+                  <Box px="3">
+                    <Box py="3">
+                      <Flex direction="column" gap="3">
+                        <Flex align="center" justify="between">
+                          <Heading size="4">{APP_NAME}</Heading>
+                          <Badge size="1">{t("labels.previewBadge")}</Badge>
+                        </Flex>
+                        <Flex gap="2" wrap="wrap">
+                          <Button size="2">{t("labels.previewSolid")}</Button>
+                          <Button size="2" variant="outline">{t("labels.previewSoft")}</Button>
+                        </Flex>
+                        <TextField.Root size="2" placeholder={t("labels.sampleInput")} />
+                        <Flex align="center" gap="2">
+                          <Switch size="2" defaultChecked />
+                          <Text size="2">{t("labels.notifications")}</Text>
+                        </Flex>
+                      </Flex>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            </Theme>
-          </FieldRow>
-        </FieldList>
+              </Theme>
+            </Flex>
+          </Flex>
+        </Flex>
       </LedgerSection>
       <LedgerSection title={t("sections.language.title")} description={t("sections.language.description")}>
         <RadioCards.Root size="1" columns="3" gap="2" value={currentLanguage} onValueChange={(v) => syncPreference({ language: v as LanguageEnum })}>

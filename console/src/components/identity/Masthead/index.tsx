@@ -47,7 +47,8 @@ export default function Masthead({
           </Box>
         </Box>
       </Box>
-      <Flex align="end" justify="between" gap="4" wrap="wrap" className={styles.body}>
+      <Box pt="4">
+      <Flex align="end" justify="between" gap="4" wrap="wrap">
         <Flex align="end" gap="4" minWidth="0">
           <Box className={styles.avatarEdge}>
             <Avatar size="6" radius="none" className={`${styles.avatarSize} ${styles.avatarFill}`} src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
@@ -77,6 +78,7 @@ export default function Masthead({
         </Flex>
         {action ? <Box pb="1">{action}</Box> : null}
       </Flex>
+      </Box>
     </Box>
   );
 }

@@ -1,0 +1,29 @@
+.recordRule {
+  border-bottom: 1px solid var(--gray-a6);
+}
+
+.recordRule:last-child {
+  border-bottom: 0;
+}
+
+.thumbSize {
+  width: 48px;
+  height: 48px;
+}
+
+.coverThumbSize {
+  width: 128px;
+  height: 80px;
+}
+
+.thumbClip {
+  height: 100%;
+  overflow: hidden;
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

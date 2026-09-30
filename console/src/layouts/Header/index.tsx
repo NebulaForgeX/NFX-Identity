@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Button, DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
-import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
-import { AuthStore, clearAuth, setHeaderHeight, useAuthStore } from "nfx-ui/stores";
+import { setHeaderHeight, useAuthStore } from "nfx-ui/stores";
 import { useTranslation } from "react-i18next";
 
 import { Logo, PreferencesPopover } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { profileHome, ROUTES, scopePaths } from "@/navigations";
-import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
+import { buildImageUrl, logoutSession, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
 
 import styles from "./s.module.css";
 
@@ -102,10 +101,7 @@ function Header() {
                   <DropdownMenu.Item
                     color="red"
                     onSelect={() => {
-                      const aID = AuthStore.getState().currentAccountId;
-                      if (aID) authEventEmitter.emit(authEvents.LOGOUT, aID);
-                      clearAuth();
-                      routerEventEmitter.navigate({ to: ROUTES.LOGIN });
+                      void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
                     }}
                   >
                     {t("header.logout")}

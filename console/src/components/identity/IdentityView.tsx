@@ -27,7 +27,7 @@ import {
   useVerifyEmail,
   useVerifyPhone,
 } from "nfx-ui/hooks";
-import { useAuthStore } from "nfx-ui/stores";
+import { useAuthStore, usePreferenceStore } from "nfx-ui/stores";
 import { isVerificationCodeComplete, normalizeVerificationCode } from "nfx-ui/utils";
 import { useTranslation } from "react-i18next";
 
@@ -35,120 +35,231 @@ import { PageHeader, Suspense } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
 import { profileHome } from "@/navigations";
-import { buildAvatarImageSrc, formatDateTime, safeArray, safeStringable } from "@/utils";
+import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
 
 import { LedgerSection } from "./Ledger";
 
-function EmailsPanel() {
+function EmailRow({
+  item,
+}: {
+  item: {
+    id: string;
+    email: string;
+    isPrimary: boolean;
+    verifiedAt: Nullable<string>;
+  };
+}) {
   const { t } = useTranslation("pages.Profile.Identity");
-  const emails = useListEmails();
-  const createEmail = useCreateEmail();
+  const currentLanguage = usePreferenceStore((s) => s.language);
   const deleteEmail = useDeleteEmail();
   const setPrimary = useSetPrimaryEmail();
   const sendCode = useSendEmailVerificationCode();
   const verify = useVerifyEmail();
   const updateEmail = useUpdateEmail();
+  const [code, setCode] = useState("");
+  const [nextEmail, setNextEmail] = useState(item.email);
+  const [editing, setEditing] = useState(false);
+  const verified = Boolean(item.verifiedAt);
+  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
+
+  return (
+    <Flex direction="column" gap="3">
+      <Box>
+        <Text size="2" weight="bold">
+          {item.email}
+        </Text>
+        <Text size="1" color="gray" mt="1">
+          {hint}
+        </Text>
+      </Box>
+      <Flex gap="2" wrap="wrap" align="center">
+        {!verified ? (
+          <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate({ emailId: item.id, lang: currentLanguage ?? LanguageEnum.EN })}>
+            {t("actions.sendCode")}
+          </Button>
+        ) : null}
+        {!item.isPrimary ? (
+          <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
+            {t("actions.setPrimary")}
+          </Button>
+        ) : null}
+        <Button size="1" variant="outline" onClick={() => setEditing((value) => !value)}>
+          {editing ? t("actions.cancel") : t("actions.edit")}
+        </Button>
+        <Button size="1" variant="outline" color="red" onClick={() => deleteEmail.mutate(item.id)}>
+          {t("actions.remove")}
+        </Button>
+      </Flex>
+      {editing ? (
+        <Flex direction="column" gap="2">
+          <Text size="1" color="gray">
+            {t("labels.newEmail")}
+          </Text>
+          <Flex align="center" gap="3" wrap="wrap">
+            <Box minWidth="0" flexGrow="1">
+              <TextField.Root size="2" value={nextEmail} onChange={(e) => setNextEmail(e.target.value)} />
+            </Box>
+            <Button
+              size="1"
+              loading={updateEmail.isPending}
+              disabled={!nextEmail.trim() || nextEmail.trim() === item.email}
+              onClick={() => updateEmail.mutate({ emailId: item.id, email: nextEmail.trim() }, { onSuccess: () => setEditing(false) })}
+            >
+              {t("actions.save")}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+      {!verified ? (
+        <Flex direction="column" gap="2">
+          <Text size="1" color="gray">
+            {t("labels.code")}
+          </Text>
+          <Flex align="center" gap="3" wrap="wrap">
+            <Box minWidth="0" flexGrow="1">
+              <TextField.Root
+                size="2"
+                value={code}
+                onChange={(e) => setCode(normalizeVerificationCode(e.target.value))}
+                placeholder={t("labels.code")}
+              />
+            </Box>
+            <Button
+              size="1"
+              loading={verify.isPending}
+              disabled={!isVerificationCodeComplete(code)}
+              onClick={() => verify.mutate({ emailId: item.id, verificationCode: normalizeVerificationCode(code) }, { onSuccess: () => setCode("") })}
+            >
+              {t("actions.verify")}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+    </Flex>
+  );
+}
+
+function EmailsPanel() {
+  const { t } = useTranslation("pages.Profile.Identity");
+  const emails = useListEmails();
+  const createEmail = useCreateEmail();
   const [newEmail, setNewEmail] = useState("");
-  const [codes, setCodes] = useState<Record<string, string>>({});
-  const [edits, setEdits] = useState<Record<string, string>>({});
   const items = safeArray(emails.data?.items);
 
   return (
     <LedgerSection title={t("sections.emails.title")} description={t("sections.emails.description")}>
-      <Box pb="3">
-      <Flex gap="2" wrap="wrap">
-        <Box minWidth="220px" flexGrow="1">
-          <TextField.Root size="2" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder={t("labels.emailPlaceholder")} />
-        </Box>
-        <Button size="2" onClick={() => createEmail.mutate({ email: newEmail }, { onSuccess: () => setNewEmail("") })}>
-          {t("actions.addEmail")}
+      <Flex direction="column" gap="4">
+        <Flex align="center" gap="3" wrap="wrap">
+          <Box minWidth="220px" flexGrow="1">
+            <TextField.Root size="2" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder={t("labels.emailPlaceholder")} />
+          </Box>
+          <Button size="2" onClick={() => createEmail.mutate({ email: newEmail }, { onSuccess: () => setNewEmail("") })}>
+            {t("actions.addEmail")}
+          </Button>
+        </Flex>
+        {items.length ? (
+          items.map((item) => <EmailRow key={item.id} item={item} />)
+        ) : (
+          <Text size="2" color="gray">
+            {t("empty.emails")}
+          </Text>
+        )}
+      </Flex>
+    </LedgerSection>
+  );
+}
+
+function PhoneRow({
+  item,
+}: {
+  item: {
+    id: string;
+    phone: string;
+    isPrimary: boolean;
+    verifiedAt: Nullable<string>;
+  };
+}) {
+  const { t } = useTranslation("pages.Profile.Identity");
+  const deletePhone = useDeletePhone();
+  const setPrimary = useSetPrimaryPhone();
+  const sendCode = useSendPhoneVerificationCode();
+  const verify = useVerifyPhone();
+  const updatePhone = useUpdatePhone();
+  const [code, setCode] = useState("");
+  const [nextPhone, setNextPhone] = useState(item.phone);
+  const [editing, setEditing] = useState(false);
+  const verified = Boolean(item.verifiedAt);
+  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
+
+  return (
+    <Flex direction="column" gap="3">
+      <Box>
+        <Text size="2" weight="bold">
+          {item.phone}
+        </Text>
+        <Text size="1" color="gray" mt="1">
+          {hint}
+        </Text>
+      </Box>
+      <Flex gap="2" wrap="wrap" align="center">
+        {!verified ? (
+          <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate(item.id)}>
+            {t("actions.sendCode")}
+          </Button>
+        ) : null}
+        {!item.isPrimary ? (
+          <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
+            {t("actions.setPrimary")}
+          </Button>
+        ) : null}
+        <Button size="1" variant="outline" onClick={() => setEditing((value) => !value)}>
+          {editing ? t("actions.cancel") : t("actions.edit")}
+        </Button>
+        <Button size="1" variant="outline" color="red" onClick={() => deletePhone.mutate(item.id)}>
+          {t("actions.remove")}
         </Button>
       </Flex>
-      </Box>
-      {items.length ? (
-        <Table.Root variant="surface">
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>{t("labels.email")}</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>{t("labels.status")}</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>{t("labels.actions")}</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {items.map((item) => {
-              const verified = Boolean(item.verifiedAt);
-              return (
-                <Table.Row key={item.id}>
-                  <Table.Cell>
-                    <Flex direction="column" gap="1">
-                      <Text size="2">{item.email}</Text>
-                      <TextField.Root
-                        size="1"
-                        value={edits[item.id] ?? item.email}
-                        onChange={(e) => setEdits((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                      />
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Flex gap="1" wrap="wrap">
-                      {item.isPrimary ? <Badge variant="outline">{t("labels.primary")}</Badge> : null}
-                      <Badge variant="outline" color={verified ? "green" : "gray"}>
-                        {verified ? formatDateTime(item.verifiedAt as string) : t("labels.unverified")}
-                      </Badge>
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Flex gap="2" wrap="wrap">
-                      {!verified ? (
-                        <>
-                          <Button size="1" variant="outline" onClick={() => sendCode.mutate({ emailId: item.id })}>
-                            {t("actions.sendCode")}
-                          </Button>
-                          <TextField.Root
-                            size="1"
-                            style={{ width: 108 }}
-                            value={codes[item.id] ?? ""}
-                            onChange={(e) => setCodes((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                            placeholder={t("labels.code")}
-                          />
-                          <Button
-                            size="1"
-                            disabled={!isVerificationCodeComplete(codes[item.id] ?? "")}
-                            onClick={() => verify.mutate({ emailId: item.id, verificationCode: normalizeVerificationCode(codes[item.id] ?? "") })}
-                          >
-                            {t("actions.verify")}
-                          </Button>
-                        </>
-                      ) : null}
-                      <Button
-                        size="1"
-                        variant="outline"
-                        disabled={!edits[item.id] || edits[item.id] === item.email}
-                        onClick={() => updateEmail.mutate({ emailId: item.id, email: (edits[item.id] ?? "").trim() })}
-                      >
-                        {t("actions.save")}
-                      </Button>
-                      {!item.isPrimary ? (
-                        <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
-                          {t("actions.setPrimary")}
-                        </Button>
-                      ) : null}
-                      <Button size="1" variant="outline" color="red" onClick={() => deleteEmail.mutate(item.id)}>
-                        {t("actions.remove")}
-                      </Button>
-                    </Flex>
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table.Root>
-      ) : (
-        <Text size="2" color="gray">
-          {t("empty.emails")}
-        </Text>
-      )}
-    </LedgerSection>
+      {editing ? (
+        <Flex direction="column" gap="2">
+          <Text size="1" color="gray">
+            {t("labels.newPhone")}
+          </Text>
+          <Flex align="center" gap="3" wrap="wrap">
+            <Box minWidth="0" flexGrow="1">
+              <TextField.Root size="2" value={nextPhone} onChange={(e) => setNextPhone(e.target.value)} />
+            </Box>
+            <Button
+              size="1"
+              loading={updatePhone.isPending}
+              disabled={!nextPhone.trim() || nextPhone.trim() === item.phone}
+              onClick={() => updatePhone.mutate({ phoneId: item.id, phone: nextPhone.trim() }, { onSuccess: () => setEditing(false) })}
+            >
+              {t("actions.save")}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+      {!verified ? (
+        <Flex direction="column" gap="2">
+          <Text size="1" color="gray">
+            {t("labels.code")}
+          </Text>
+          <Flex align="center" gap="3" wrap="wrap">
+            <Box minWidth="0" flexGrow="1">
+              <TextField.Root size="2" value={code} onChange={(e) => setCode(normalizeVerificationCode(e.target.value))} placeholder={t("labels.code")} />
+            </Box>
+            <Button
+              size="1"
+              loading={verify.isPending}
+              disabled={!isVerificationCodeComplete(code)}
+              onClick={() => verify.mutate({ phoneId: item.id, verificationCode: normalizeVerificationCode(code) }, { onSuccess: () => setCode("") })}
+            >
+              {t("actions.verify")}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+    </Flex>
   );
 }
 
@@ -156,111 +267,28 @@ function PhonesPanel() {
   const { t } = useTranslation("pages.Profile.Identity");
   const phones = useListPhones();
   const createPhone = useCreatePhone();
-  const deletePhone = useDeletePhone();
-  const setPrimary = useSetPrimaryPhone();
-  const sendCode = useSendPhoneVerificationCode();
-  const verify = useVerifyPhone();
-  const updatePhone = useUpdatePhone();
   const [newPhone, setNewPhone] = useState("");
-  const [codes, setCodes] = useState<Record<string, string>>({});
-  const [edits, setEdits] = useState<Record<string, string>>({});
   const items = safeArray(phones.data?.items);
 
   return (
     <LedgerSection title={t("sections.phones.title")} description={t("sections.phones.description")}>
-      <Box pb="3">
-      <Flex gap="2" wrap="wrap">
-        <Box minWidth="220px" flexGrow="1">
-          <TextField.Root size="2" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder={t("labels.phonePlaceholder")} />
-        </Box>
-        <Button size="2" onClick={() => createPhone.mutate({ phone: newPhone }, { onSuccess: () => setNewPhone("") })}>
-          {t("actions.addPhone")}
-        </Button>
+      <Flex direction="column" gap="4">
+        <Flex align="center" gap="3" wrap="wrap">
+          <Box minWidth="220px" flexGrow="1">
+            <TextField.Root size="2" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder={t("labels.phonePlaceholder")} />
+          </Box>
+          <Button size="2" onClick={() => createPhone.mutate({ phone: newPhone }, { onSuccess: () => setNewPhone("") })}>
+            {t("actions.addPhone")}
+          </Button>
+        </Flex>
+        {items.length ? (
+          items.map((item) => <PhoneRow key={item.id} item={item} />)
+        ) : (
+          <Text size="2" color="gray">
+            {t("empty.phones")}
+          </Text>
+        )}
       </Flex>
-      </Box>
-      {items.length ? (
-        <Table.Root variant="surface">
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeaderCell>{t("labels.phone")}</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>{t("labels.status")}</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>{t("labels.actions")}</Table.ColumnHeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {items.map((item) => {
-              const verified = Boolean(item.verifiedAt);
-              return (
-                <Table.Row key={item.id}>
-                  <Table.Cell>
-                    <Flex direction="column" gap="1">
-                      <Text size="2">{item.phone}</Text>
-                      <TextField.Root
-                        size="1"
-                        value={edits[item.id] ?? item.phone}
-                        onChange={(e) => setEdits((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                      />
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Flex gap="1" wrap="wrap">
-                      {item.isPrimary ? <Badge variant="outline">{t("labels.primary")}</Badge> : null}
-                      <Badge variant="outline" color={verified ? "green" : "gray"}>
-                        {verified ? formatDateTime(item.verifiedAt as string) : t("labels.unverified")}
-                      </Badge>
-                    </Flex>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Flex gap="2" wrap="wrap">
-                      {!verified ? (
-                        <>
-                          <Button size="1" variant="outline" onClick={() => sendCode.mutate(item.id)}>
-                            {t("actions.sendCode")}
-                          </Button>
-                          <TextField.Root
-                            size="1"
-                            style={{ width: 108 }}
-                            value={codes[item.id] ?? ""}
-                            onChange={(e) => setCodes((prev) => ({ ...prev, [item.id]: e.target.value }))}
-                            placeholder={t("labels.code")}
-                          />
-                          <Button
-                            size="1"
-                            disabled={!isVerificationCodeComplete(codes[item.id] ?? "")}
-                            onClick={() => verify.mutate({ phoneId: item.id, verificationCode: normalizeVerificationCode(codes[item.id] ?? "") })}
-                          >
-                            {t("actions.verify")}
-                          </Button>
-                        </>
-                      ) : null}
-                      <Button
-                        size="1"
-                        variant="outline"
-                        disabled={!edits[item.id] || edits[item.id] === item.phone}
-                        onClick={() => updatePhone.mutate({ phoneId: item.id, phone: (edits[item.id] ?? "").trim() })}
-                      >
-                        {t("actions.save")}
-                      </Button>
-                      {!item.isPrimary ? (
-                        <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
-                          {t("actions.setPrimary")}
-                        </Button>
-                      ) : null}
-                      <Button size="1" variant="outline" color="red" onClick={() => deletePhone.mutate(item.id)}>
-                        {t("actions.remove")}
-                      </Button>
-                    </Flex>
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table.Root>
-      ) : (
-        <Text size="2" color="gray">
-          {t("empty.phones")}
-        </Text>
-      )}
     </LedgerSection>
   );
 }

@@ -5,17 +5,20 @@
 .coverSize {
   width: 100%;
   height: 220px;
-}
-
-.coverClip {
   overflow: hidden;
 }
 
+.coverClip {
+  height: 100%;
+}
+
 .coverFill {
+  height: 100%;
   background: linear-gradient(180deg, var(--gray-3), var(--gray-2));
 }
 
 .coverRule {
+  height: 100%;
   border-bottom: 1px solid var(--gray-a6);
 }
 
@@ -24,10 +27,6 @@
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.body {
-  margin-top: -36px;
 }
 
 .avatarSize {
