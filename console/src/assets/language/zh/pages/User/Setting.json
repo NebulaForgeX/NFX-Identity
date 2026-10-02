@@ -19,6 +19,15 @@
     "radius": "圆角",
     "scaling": "缩放",
     "panelBackground": "面板背景",
+    "appearanceMode": {
+      "light": "浅色",
+      "dark": "深色",
+      "system": "跟随系统"
+    },
+    "panelBackgroundMode": {
+      "solid": "实心",
+      "translucent": "半透明"
+    },
     "font": "字体",
     "livePreview": "实时预览",
     "previewBadge": "预览",

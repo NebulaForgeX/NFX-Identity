@@ -28,6 +28,8 @@
   "create": {
     "title": "再创建一个 Profile",
     "displayName": "显示名",
+    "kind": "类型",
+    "language": "语言",
     "submit": "创建并进入"
   }
 }

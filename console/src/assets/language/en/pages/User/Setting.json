@@ -19,6 +19,15 @@
     "radius": "Radius",
     "scaling": "Scaling",
     "panelBackground": "Panel background",
+    "appearanceMode": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "panelBackgroundMode": {
+      "solid": "Solid",
+      "translucent": "Translucent"
+    },
     "font": "Font",
     "livePreview": "Live preview",
     "previewBadge": "Preview",

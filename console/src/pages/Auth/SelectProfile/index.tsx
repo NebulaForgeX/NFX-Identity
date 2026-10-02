@@ -20,8 +20,6 @@ gsap.registerPlugin(useGSAP);
 
 export default function SelectProfilePage() {
   const { t } = useTranslation("pages.Account.SelectProfile");
-  const { t: tIdentity } = useTranslation("pages.Profile.Identity");
-  const { t: tHeader } = useTranslation("language");
   const selectProfile = useSelectProfile();
   const createForger = useCreateForgerProfile();
   const createAuthority = useCreateAuthorityProfile();
@@ -173,7 +171,7 @@ export default function SelectProfilePage() {
                   </Flex>
                   <Flex direction="column" gap="1">
                     <Text as="label" size="1" color="gray">
-                      {tIdentity("labels.kind")}
+                      {t("create.kind")}
                     </Text>
                     <Select.Root value={createKind} onValueChange={(v) => setCreateKind(v as ProfileKindEnum)}>
                       <Select.Trigger />
@@ -185,7 +183,7 @@ export default function SelectProfilePage() {
                   </Flex>
                   <Flex direction="column" gap="1">
                     <Text as="label" size="1" color="gray">
-                      {tHeader("header.language")}
+                      {t("create.language")}
                     </Text>
                     <Select.Root value={profileLanguage} onValueChange={(v) => setProfileLanguage(v as LanguageEnum)}>
                       <Select.Trigger />

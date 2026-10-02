@@ -292,7 +292,6 @@ function PhonesPanel() {
 
 function ProfilesPanel() {
   const { t } = useTranslation("pages.Profile.Identity");
-  const { t: tHeader } = useTranslation("language");
   const currentProfileId = useAuthStore((s) => s.currentProfileId);
   const currentProfileKind = useAuthStore((s) => s.currentProfileKind);
   const communityProfiles = useListProfiles(ProfileKindEnum.COMMUNITY);
@@ -404,7 +403,7 @@ function ProfilesPanel() {
             <Flex direction="column" gap="4">
               <Flex direction="column" gap="1">
                 <Text as="label" size="1" color="gray">
-                  {tHeader("header.language")}
+                  {t("labels.language")}
                 </Text>
                 <Select.Root value={profileLanguage} onValueChange={(v) => setProfileLanguage(v as LanguageEnum)}>
                   <Select.Trigger />

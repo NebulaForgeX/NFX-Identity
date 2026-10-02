@@ -59,7 +59,6 @@ function toDraft(pref: ResolvedThemePreference): ResolvedThemePreference {
 
 export default function ThemeSettings() {
   const { t } = useTranslation("pages.User.Setting");
-  const { t: tHeader } = useTranslation("language");
   const themePreference = usePreferenceStore((s) => s.theme);
   const currentLanguage = usePreferenceStore((s) => s.language);
   const { syncPreference } = useSyncPreference();
@@ -125,7 +124,7 @@ export default function ThemeSettings() {
                   <Box className={styles.controlFit}>
                     <SegmentedControl.Root size="2" value={draft.appearance} onValueChange={(v) => setField({ appearance: v as AppearanceEnum })}>
                       {THEME_APPEARANCE_VALUES.map((v) => (
-                        <SegmentedControl.Item key={v} value={v}>{tHeader(`header.appearanceMode.${v}`)}</SegmentedControl.Item>
+                        <SegmentedControl.Item key={v} value={v}>{t(`labels.appearanceMode.${v}`)}</SegmentedControl.Item>
                       ))}
                     </SegmentedControl.Root>
                   </Box>
@@ -155,7 +154,7 @@ export default function ThemeSettings() {
                   <Box className={styles.controlFit}>
                     <SegmentedControl.Root size="2" value={draft.panelBackground} onValueChange={(v) => setField({ panelBackground: v as PanelBackgroundEnum })}>
                       {RADIX_PANEL_BACKGROUND_VALUES.map((v) => (
-                        <SegmentedControl.Item key={v} value={v}>{tHeader(`header.panelBackgroundMode.${v}`)}</SegmentedControl.Item>
+                        <SegmentedControl.Item key={v} value={v}>{t(`labels.panelBackgroundMode.${v}`)}</SegmentedControl.Item>
                       ))}
                     </SegmentedControl.Root>
                   </Box>

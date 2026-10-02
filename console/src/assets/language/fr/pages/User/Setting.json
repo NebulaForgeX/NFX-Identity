@@ -19,6 +19,15 @@
     "radius": "Rayon",
     "scaling": "Échelle",
     "panelBackground": "Fond du panneau",
+    "appearanceMode": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    },
+    "panelBackgroundMode": {
+      "solid": "Plein",
+      "translucent": "Translucide"
+    },
     "font": "Police",
     "livePreview": "Aperçu en direct",
     "previewBadge": "Aperçu",

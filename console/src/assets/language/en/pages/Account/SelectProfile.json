@@ -28,6 +28,8 @@
   "create": {
     "title": "Create another Profile",
     "displayName": "Display name",
+    "kind": "Kind",
+    "language": "Language",
     "submit": "Create and enter"
   }
 }
