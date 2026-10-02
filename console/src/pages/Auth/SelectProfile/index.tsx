@@ -74,7 +74,15 @@ export default function SelectProfilePage() {
           </Container>
         </Section>
         {items.length === 0 ? (
-          <EmptyState icon={isAuthority ? ShieldCheck : UsersIcon} title={t(`empty.${kind}`)} />
+          <EmptyState
+            icon={isAuthority ? ShieldCheck : UsersIcon}
+            title={t(`empty.${kind}`)}
+            action={
+              <Button size="2" onClick={() => rootRef.current?.querySelector<HTMLInputElement>(".js-dock input")?.focus()}>
+                {t("create.submit")}
+              </Button>
+            }
+          />
         ) : (
           items.map((profile) => {
             const name = resolveAccountDisplayName(profile.displayName, profile.profileId);

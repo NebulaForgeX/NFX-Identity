@@ -35,7 +35,7 @@ export default function DirectoryView() {
         <TextField.Root className={styles.search} variant="classic" placeholder={t("search")} value={query} onChange={(e) => setQuery(e.target.value)} />
       </Section>
       {ownerError ? (
-        <Text size="2" color="red">
+        <Text size="2">
           {(ownerError as Error).message || t("ownerRequired")}
         </Text>
       ) : null}
@@ -171,7 +171,7 @@ export default function DirectoryView() {
               <Container size="2" px="4">
                 <LedgerSection title={t("card.title")} description={t("card.description")}>
                   {card.isError ? (
-                    <Text size="2" color="red">
+                    <Text size="2">
                       {(card.error as Error).message}
                     </Text>
                   ) : card.data ? (

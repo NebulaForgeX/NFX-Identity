@@ -21,7 +21,7 @@ const LoginEmailController = () => {
           </Text>
           <TextField.Root id="login-email" size="3" type="email" placeholder={t("form.emailPlaceholder")} autoComplete="email" {...field} />
           {fieldState.error?.message ? (
-            <Text size="1" color="red">
+            <Text size="1">
               {fieldState.error.message}
             </Text>
           ) : null}

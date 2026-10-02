@@ -73,7 +73,7 @@ export default function AssetsView() {
             </Section>
           </Tabs.Root>
           {list.isError ? (
-            <Text size="2" color="red">
+            <Text size="2">
               {(list.error as Error).message}
             </Text>
           ) : null}
@@ -95,7 +95,6 @@ export default function AssetsView() {
                         <Button
                           size="1"
                           variant="outline"
-                          color="red"
                           onClick={() => {
                             void del.mutateAsync({ kind, id: row.id }).then(() => list.refetch());
                           }}
@@ -120,7 +119,6 @@ export default function AssetsView() {
                     </Text>
                     <Button
                       variant="outline"
-                      color="red"
                       onClick={() => {
                         void del.mutateAsync({ kind, id: row.id }).then(() => list.refetch());
                       }}

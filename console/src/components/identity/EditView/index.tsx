@@ -170,7 +170,7 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
           <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
             {confirmUpload.isPending ? t("avatar.confirming") : t("avatar.confirm")}
           </Button>
-          <Button size="2" variant="outline" color="red" disabled={!currentAvatarId || busy} onClick={() => clearAvatar.mutate()}>
+          <Button size="2" variant="outline" disabled={!currentAvatarId || busy} onClick={() => clearAvatar.mutate()}>
             {t("avatar.clear")}
           </Button>
         </Flex>
@@ -201,7 +201,7 @@ function StackField({ label, children, error }: { label: string; children: React
       </Text>
       {children}
       {error ? (
-        <Text size="1" color="red">
+        <Text size="1">
           {error}
         </Text>
       ) : null}

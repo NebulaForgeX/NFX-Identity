@@ -107,7 +107,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                   >
                     <LucideIcon icon={ChevronRight} size={12} />
                   </Button>
-                  <Button type="button" size="1" variant="outline" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
+                  <Button type="button" size="1" variant="outline" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
                     <LucideIcon icon={Trash2} size={12} />
                   </Button>
                 </Flex>
@@ -130,7 +130,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
       ) : null}
       {imageError ? (
           <Section size="1" py="0" mt="1">
-          <Text size="1" color="red">
+          <Text size="1">
             {imageError}
           </Text>
         </Section>

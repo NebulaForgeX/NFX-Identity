@@ -89,7 +89,7 @@ function EmailRow({
             <Button size="1" variant="outline" onClick={() => setEditing((value) => !value)}>
               {editing ? t("actions.cancel") : t("actions.edit")}
             </Button>
-            <Button size="1" variant="outline" color="red" onClick={() => deleteEmail.mutate(item.id)}>
+            <Button size="1" variant="outline" onClick={() => deleteEmail.mutate(item.id)}>
               {t("actions.remove")}
             </Button>
           </Flex>
@@ -216,7 +216,7 @@ function PhoneRow({
             <Button size="1" variant="outline" onClick={() => setEditing((value) => !value)}>
               {editing ? t("actions.cancel") : t("actions.edit")}
             </Button>
-            <Button size="1" variant="outline" color="red" onClick={() => deletePhone.mutate(item.id)}>
+            <Button size="1" variant="outline" onClick={() => deletePhone.mutate(item.id)}>
               {t("actions.remove")}
             </Button>
           </Flex>
@@ -363,7 +363,7 @@ function ProfilesPanel() {
                         <Flex gap="2" wrap="wrap" align="center">
                           <Badge variant="outline">{row.kind === ProfileKindEnum.COMMUNITY ? t("labels.scopeCommunity") : t("labels.scopeAuthority")}</Badge>
                           {isCurrent ? (
-                            <Badge color="green" variant="outline">
+                            <Badge variant="outline">
                               {t("labels.current")}
                             </Badge>
                           ) : null}
@@ -379,7 +379,6 @@ function ProfilesPanel() {
                       <Button
                         size="1"
                         variant="outline"
-                        color="red"
                         disabled={isCurrent}
                         onClick={() => {
                           if (!window.confirm(t("labels.deleteConfirmBody", { name }))) return;

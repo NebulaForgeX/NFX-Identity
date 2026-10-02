@@ -30,7 +30,7 @@ const SignupPasswordController = () => {
             </TextField.Slot>
           </TextField.Root>
           {fieldState.error?.message ? (
-            <Text size="1" color="red">
+            <Text size="1">
               {fieldState.error.message}
             </Text>
           ) : null}
@@ -69,7 +69,7 @@ const SignupConfirmPasswordController = ({ label, placeholder }: SignupConfirmPa
             </TextField.Slot>
           </TextField.Root>
           {fieldState.error?.message ? (
-            <Text size="1" color="red">
+            <Text size="1">
               {fieldState.error.message}
             </Text>
           ) : null}

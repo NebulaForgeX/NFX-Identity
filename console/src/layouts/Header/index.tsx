@@ -97,7 +97,6 @@ function Header() {
                               </DropdownMenu.Item>
                               <DropdownMenu.Separator />
                               <DropdownMenu.Item
-                                color="red"
                                 onSelect={() => {
                                   void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
                                 }}

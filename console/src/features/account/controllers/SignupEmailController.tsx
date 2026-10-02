@@ -34,7 +34,7 @@ const SignupEmailController = ({ helperText, trailingSlot }: SignupEmailControll
             <TextField.Root id="signup-email" size="3" type="email" placeholder={t("emailPlaceholder")} autoComplete="email" {...field} />
           )}
           {fieldState.error?.message ? (
-            <Text size="1" color="red">
+            <Text size="1">
               {fieldState.error.message}
             </Text>
           ) : null}

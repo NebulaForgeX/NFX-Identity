@@ -21,7 +21,7 @@ const LoginPhoneController = () => {
           </Text>
           <TextField.Root id="login-phone" size="3" type="tel" placeholder={t("form.phonePlaceholder")} autoComplete="tel" {...field} />
           {fieldState.error?.message ? (
-            <Text size="1" color="red">
+            <Text size="1">
               {fieldState.error.message}
             </Text>
           ) : null}

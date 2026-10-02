@@ -39,7 +39,7 @@ const SignupVerificationCodeController = () => {
             />
 
             {showError && error ? (
-              <Text id={errorId} size="1" color="red">
+              <Text id={errorId} size="1">
                 {error}
               </Text>
             ) : null}

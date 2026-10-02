@@ -4,10 +4,10 @@ import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
 import { LucideIcon } from "@/components";
 import { hideModal, useModalStore } from "@/stores/modal";
 
-const TYPE_CONFIG: Record<string, { icon: LucideGlyph; color: "green" | "red" | "blue" }> = {
-  success: { icon: Check, color: "green" },
-  error: { icon: X, color: "red" },
-  info: { icon: Info, color: "blue" },
+const TYPE_CONFIG: Record<string, { icon: LucideGlyph; color: "gray" }> = {
+  success: { icon: Check, color: "gray" },
+  error: { icon: X, color: "gray" },
+  info: { icon: Info, color: "gray" },
 };
 
 const Base = () => {

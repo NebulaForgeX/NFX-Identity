@@ -316,7 +316,6 @@ function Sidebar() {
                     <Button
                       type="button"
                       variant="ghost"
-                      color="red"
                       className={styles.logout}
                       onClick={handleLogout}
                       aria-label={t("sidebar.logout")}
