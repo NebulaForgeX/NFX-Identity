@@ -1,62 +1,24 @@
-.ledger {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100dvh - 4rem);
-}
-
-.head {
-}
-.headPx {
-  padding-inline: 1.5rem;
-}
-.headPy {
-  padding-block: 2rem 1.25rem;
-}
-
 .kicker {
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent-9);
 }
 
 .title {
   font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.04em;
 }
 
 .lede {
-  color: var(--gray-11);
   max-width: 48ch;
-}
-
-.columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  flex: 1;
+  color: var(--gray-11);
 }
 
 .columnsRule {
   border-top: 1px solid var(--gray-6);
 }
 
-.col {
-  display: flex;
-  flex-direction: column;
-  min-height: 22rem;
-}
-.colPx {
-  padding-inline: 1.35rem;
-}
-.colPy {
-  padding-block: 1.25rem 6.5rem;
-}
-
 .colCommunity {
-  border-right: 1px solid var(--gray-6);
-}
-
-.colCommunityFill {
   background: var(--color-background);
+  border-right: 1px solid var(--gray-6);
 }
 
 .colAuthority {
@@ -64,93 +26,62 @@
 }
 
 .colHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.colHeadHairline {
   border-bottom: 1px solid var(--gray-6);
-}
-.colHeadPy {
-  padding-bottom: 0.85rem;
-  margin-bottom: 0.85rem;
 }
 
 .colName {
   font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.03em;
 }
 
 .colHint {
   color: var(--gray-11);
 }
 
-.empty {
-  color: var(--gray-11);
-  padding: 1.5rem 0;
-}
-
 .row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.85rem;
-  height: auto;
-  width: 100%;
-  padding: 0.75rem 0.15rem;
-  border: none;
   border-bottom: 1px solid var(--gray-6);
-  border-radius: 0;
   background: transparent;
-  color: inherit;
-  text-align: left;
 }
 
-.row:hover:not(:disabled) {
+.row:hover {
   background: var(--accent-3);
 }
 
-.row:disabled {
+.rowControl {
+  width: 100%;
+  height: auto;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+}
+
+.rowControl:hover,
+.row:hover .rowControl {
+  background: transparent;
+}
+
+.rowControl:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
-.rowMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
-  flex: 1;
-}
-
 .dock {
-  position: sticky;
-  bottom: 0;
   z-index: 3;
-  display: grid;
-  grid-template-columns: auto minmax(10rem, 1fr) auto auto auto;
-  gap: 0.75rem;
-  align-items: center;
   border-top: 1px solid var(--gray-6);
   background: var(--color-background);
 }
-.dockPx {
-  padding-inline: 1.35rem;
-}
-.dockPy {
-  padding-block: 0.85rem;
+
+.dockGrid {
+  grid-template-columns: minmax(10rem, 1.4fr) minmax(8rem, 0.8fr) minmax(8rem, 0.8fr) auto;
+  align-items: end;
 }
 
 .dockLabel {
-  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-9);
-  font-size: 0.7rem;
 }
 
 @media (max-width: 960px) {
-  .columns {
+  .columns.columns {
     grid-template-columns: 1fr;
   }
 
@@ -159,13 +90,7 @@
     border-bottom: 1px solid var(--gray-6);
   }
 
-  .col {
-    min-height: 0;
-    padding-bottom: 1.5rem;
-  }
-
-  .dock {
-    grid-template-columns: 1fr 1fr;
-    position: sticky;
+  .dockGrid.dockGrid {
+    grid-template-columns: 1fr;
   }
 }

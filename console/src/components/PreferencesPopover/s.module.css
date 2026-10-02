@@ -1,14 +1,13 @@
-/* Swatch / radius preview chrome — Themes props cannot express color chips */
-
 .swatch {
   width: 22px;
-  height: 22px;
+  height: 22px !important;
   min-width: 22px;
   min-height: 22px;
-  padding: 0;
-  border-radius: 999px;
-  border: 1px solid var(--gray-a6);
   flex: 0 0 auto;
+  padding: 0 !important;
+  border: 1px solid var(--gray-a6);
+  border-radius: 999px !important;
+  box-shadow: none !important;
 }
 
 .swatchActive {
@@ -19,10 +18,10 @@
 .radiusCorner {
   width: 16px;
   height: 16px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--accent-9) 22%, transparent);
   border-left: 2px solid var(--accent-9);
   border-top: 2px solid var(--accent-9);
-  background: color-mix(in oklab, var(--accent-9) 22%, transparent);
-  flex: 0 0 auto;
 }
 
 .radiusNone {

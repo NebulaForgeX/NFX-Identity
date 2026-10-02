@@ -53,7 +53,7 @@ export default function SecurityView() {
               {primaryEmail ? t("labels.passwordSendCodeHint", { email: primaryEmail }) : t("labels.passwordSendCodeHintNoEmail")}
             </Text>
             <Flex gap="2" wrap="wrap" align="center">
-              <Box minWidth="160px" flexGrow="1">
+              <Box minWidth="160px" >
                 <TextField.Root
                   size="2"
                   autoComplete="one-time-code"

@@ -2,14 +2,14 @@ import { ArrowLeft, Camera, ChevronRight, Save, Trash2 } from "lucide-react";
 import type { Profile } from "nfx-ui/types";
 
 import { useRef } from "react";
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import { LucideIcon } from "@/components";
 
-import { isUserProfileBackgroundDraftBusy } from "./drafts";
+import { isUserProfileBackgroundDraftBusy } from "../drafts";
 import styles from "./s.module.css";
-import { useUserProfileBackgroundUpload } from "./useUserProfileBackgroundUpload";
+import { useUserProfileBackgroundUpload } from "../useUserProfileBackgroundUpload";
 
 const MAX_PROFILE_BACKGROUNDS = 6;
 
@@ -63,22 +63,22 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
             const busy = isUserProfileBackgroundDraftBusy(draft);
             const failed = draft.status === "failed";
             return (
-              <Box key={draft.imageId} position="relative" className={`${styles.tileSize} ${styles.tileEdge} ${styles.tileRadius} ${styles.tileClip} ${styles.tileFill}`}>
+              <Flex key={draft.imageId} flexGrow="0" flexShrink="0" className={styles.tile}>
                 <img src={draft.previewUrl} alt="" className={styles.tileImage} draggable={false} />
-                <Box className={`${styles.orderPlace} ${styles.orderFill} ${styles.orderInk} ${styles.orderRadius}`}>
+                <Box className={styles.order}>
                   <Text size="1" weight="bold">
                     {draft.sortOrder + 1}
                   </Text>
                 </Box>
                 {busy ? (
-                  <Flex position="absolute" inset="0" align="center" justify="center" className={styles.busyOverlay}>
+                  <Flex position="absolute" inset="0" align="center" justify="center" className={styles.busy}>
                     <Text size="1" weight="bold">
                       {Math.round(draft.progress ?? 0)}%
                     </Text>
                   </Flex>
                 ) : null}
                 {failed ? (
-                  <Flex position="absolute" inset="0" align="center" justify="center" className={styles.failedOverlay}>
+                  <Flex position="absolute" inset="0" align="center" justify="center" className={styles.failed}>
                     <Text size="1" weight="bold">
                       {t("backgroundUpload.status.failed")}
                     </Text>
@@ -111,7 +111,7 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     <LucideIcon icon={Trash2} size={12} />
                   </Button>
                 </Flex>
-              </Box>
+              </Flex>
             );
           })}
         </Flex>
@@ -122,14 +122,18 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
       )}
 
       {drafts.length > 1 ? (
-        <Text size="1" color="gray" mt="2">
-          {t("backgroundUpload.reorderHint")}
-        </Text>
+        <Section size="1" py="0" mt="2">
+          <Text size="1" color="gray">
+            {t("backgroundUpload.reorderHint")}
+          </Text>
+        </Section>
       ) : null}
       {imageError ? (
-        <Text size="1" color="red" mt="1">
-          {imageError}
-        </Text>
+          <Section size="1" py="0" mt="1">
+          <Text size="1" color="red">
+            {imageError}
+          </Text>
+        </Section>
       ) : null}
     </Flex>
   );

@@ -1,31 +1,9 @@
-.issuance {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100dvh - 4rem);
-}
-
-.ticket {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.ticketRule {
+.legend {
   border-bottom: 1px solid var(--gray-6);
 }
 
 .step {
   border-right: 1px solid var(--gray-6);
-}
-.stepPx {
-  padding-inline: 1.35rem;
-}
-.stepPy {
-  padding-block: 1.15rem;
-}
-.stepStack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
 }
 
 .step:last-child {
@@ -34,79 +12,61 @@
 
 .stepIndex {
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent-9);
-  font-size: 0.7rem;
 }
 
 .stepLabel {
   font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.03em;
 }
 
 .split {
-  display: grid;
-  grid-template-columns: minmax(16rem, 0.9fr) minmax(20rem, 1.1fr);
-  flex: 1;
+  min-height: 0;
 }
 
 .copy {
+  background: var(--color-panel-solid);
   border-right: 1px solid var(--gray-6);
 }
 
-.copyFill {
-  background: var(--color-panel-solid);
-}
-.copyPx {
-  padding-inline: 2.5rem;
-}
-.copyPy {
-  padding-block: 3.5rem 4rem;
-}
-
 .kicker {
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent-9);
 }
 
 .title {
+  max-width: 16ch;
   font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.045em;
   line-height: 1.05;
-  max-width: 12ch;
 }
 
 .lede {
-  color: var(--gray-11);
   max-width: 36ch;
+  color: var(--gray-11);
 }
 
-.form {
+.formPane {
   min-width: 0;
-}
-.formPx {
-  padding-inline: 2.5rem;
-}
-.formPy {
-  padding-block: 3.5rem 4rem;
+  min-height: 0;
+  overflow: auto;
 }
 
-.passRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.footRule {
+.foot {
   border-top: 1px solid var(--gray-6);
 }
 
+.submit {
+  width: 100%;
+}
+
 @media (max-width: 960px) {
-  .ticket,
-  .split,
-  .passRow {
+  .legend.legend {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .split.split,
+  .passRow.passRow {
     grid-template-columns: 1fr;
   }
 
@@ -119,25 +79,4 @@
     border-right: none;
     border-bottom: 1px solid var(--gray-6);
   }
-  .copyPx {
-    padding-inline: 1.25rem;
-  }
-  .copyPy {
-    padding-block: 2rem;
-  }
-
-  .formPx {
-    padding-inline: 1.25rem;
-  }
-  .formPy {
-    padding-block: 2rem 3.5rem;
-  }
-}
-
-.fullWidth {
-  width: 100%;
-}
-
-.codeField {
-  flex: 1;
 }

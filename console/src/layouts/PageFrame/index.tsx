@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Container, Flex } from "@radix-ui/themes";
+import { Box, Container, Flex, Section } from "@radix-ui/themes";
 
 import { safeStringable } from "@/utils";
 
@@ -18,25 +18,30 @@ type PageFrameProps = {
 
 function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDTH_PX, fullHeight }: PageFrameProps) {
   const resolvedMaxWidth = typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth;
-  const frameClass = [fullHeight ? styles.fullHeightFrame : "", safeStringable(className)].filter(Boolean).join(" ");
+  const callerClass = safeStringable(className);
+  const shellClass = [fullHeight ? styles.fullHeightFrame : "", callerClass].filter(Boolean).join(" ");
 
-  return (
-    <Container size="4" align="center" width="100%" maxWidth={resolvedMaxWidth} className={frameClass || undefined}>
-      <Box px="6">
-        {fullHeight ? (
-          <Flex direction="column" flexGrow="1" minHeight="0" width="100%" height="100%" className={styles.fullHeightBody}>
+  const frame = (
+    <Container size="4" width="100%" maxWidth={resolvedMaxWidth} px="6">
+      {fullHeight ? (
+        <Flex direction="column" className={styles.fullHeightBody} width="100%" height="100%" minHeight="0">
+          {children}
+        </Flex>
+      ) : (
+        <Section size="1" py="6">
+          <Flex direction="column" gap="6" width="100%" minWidth="0">
             {children}
           </Flex>
-        ) : (
-          <Box py="7">
-            <Flex direction="column" gap="7" width="100%" className={styles.stack}>
-              {children}
-            </Flex>
-          </Box>
-        )}
-      </Box>
+        </Section>
+      )}
     </Container>
   );
+
+  if (!shellClass) return frame;
+
+  if (fullHeight) return <Flex direction="column" width="100%" className={shellClass}>{frame}</Flex>;
+
+  return <Box className={shellClass}>{frame}</Box>;
 }
 
 export default PageFrame;

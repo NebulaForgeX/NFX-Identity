@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 
 import styles from "./s.module.css";
 
@@ -41,22 +41,20 @@ export function LedgerSection({
 
 export function FieldRow({ label, value, children }: { label: string; value?: ReactNode; children?: ReactNode }) {
   return (
-    <Box className={styles.hairline}>
-      <Box py="4">
-        <div className={styles.row}>
-          <Text as="p" size="1" color="gray" className={styles.label}>
-            {label}
-          </Text>
-          <div className={styles.value}>
-            {children ?? (
-              <Text as="p" size="2">
-                {value}
-              </Text>
-            )}
-          </div>
-        </div>
-      </Box>
-    </Box>
+    <Section size="1" py="4" className={styles.hairline}>
+      <Grid className={styles.row}>
+        <Text as="p" size="1" color="gray" className={styles.label}>
+          {label}
+        </Text>
+        <Box className={styles.value}>
+          {children ?? (
+            <Text as="p" size="2">
+              {value}
+            </Text>
+          )}
+        </Box>
+      </Grid>
+    </Section>
   );
 }
 

@@ -1,4 +1,6 @@
-import { Avatar, Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
+import type { ReactNode } from "react";
+
+import { Avatar, Badge, Box, Container, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { ProfileKindEnum } from "nfx-ui/enums";
 import type { Profile } from "nfx-ui/types";
 
@@ -14,16 +16,23 @@ export function profileRoles(kind: ProfileKindEnum, data: Maybe<Profile.Response
   return safeArray((data as Profile.Response.FullAccountInformationWithCommunityProfile).communityProfile?.forgerRoles);
 }
 
+export type MastheadStat = {
+  label: string;
+  value: number;
+};
+
 export default function Masthead({
   kind,
   data,
   profile,
   action,
+  stats,
 }: {
   kind: ProfileKindEnum;
   data: Maybe<Profile.Response.FullAccountInformationWithCommunityProfile | Profile.Response.FullAccountInformationWithAuthorityProfile>;
   profile: Nullable<Profile.Response.ProfileBase>;
-  action?: React.ReactNode;
+  action?: ReactNode;
+  stats: MastheadStat[];
 }) {
   const accountId = safeNullable(data?.account.id);
   const name = resolveAccountDisplayName(profile?.displayName, accountId);
@@ -37,28 +46,22 @@ export default function Masthead({
   const place = [safeStringable(profile?.city), safeStringable(profile?.country)].filter(Boolean).join(" · ");
 
   return (
-    <Box className={styles.wrap}>
-      <Box className={styles.coverSize}>
-        <Box className={styles.coverClip}>
-          <Box className={styles.coverFill}>
-            <Box className={styles.coverRule}>
-              {coverId ? <img src={buildImageUrl(coverId)} alt="" className={styles.coverImage} /> : null}
-            </Box>
-          </Box>
+    <Flex direction="column" width="100%" gap="5">
+      {coverId ? (
+        <Box className={styles.cover}>
+          <img src={buildImageUrl(coverId)} alt="" className={styles.coverImage} />
         </Box>
-      </Box>
-      <Box pt="4">
+      ) : null}
       <Flex align="end" justify="between" gap="4" wrap="wrap">
         <Flex align="end" gap="4" minWidth="0">
-          <Box className={styles.avatarEdge}>
-            <Avatar size="6" radius="none" className={`${styles.avatarSize} ${styles.avatarFill}`} src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-          </Box>
-          <Box pb="1">
+          <Flex flexShrink="0" className={styles.avatar}>
+            <Avatar size="6" radius="none" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+          </Flex>
           <Flex direction="column" gap="1" minWidth="0">
             <Text size="1" color="gray" className={styles.kind}>
               {kind}
             </Text>
-            <Heading as="h1" size="7" className={styles.name}>
+            <Heading as="h2" size="7" className={styles.name}>
               {name}
             </Heading>
             <Flex gap="2" wrap="wrap" align="center">
@@ -74,11 +77,25 @@ export default function Masthead({
               ) : null}
             </Flex>
           </Flex>
-          </Box>
         </Flex>
-        {action ? <Box pb="1">{action}</Box> : null}
+        {action}
       </Flex>
-      </Box>
-    </Box>
+      <Grid columns={{ initial: "1", sm: "3" }} gap="3" width="100%">
+        {stats.map((stat) => (
+          <Section key={stat.label} size="1" py="4" className={styles.stat}>
+            <Container size="2" px="4">
+              <Flex direction="column" gap="1">
+                <Text size="1" color="gray">
+                  {stat.label}
+                </Text>
+                <Text size="6" weight="bold">
+                  {stat.value}
+                </Text>
+              </Flex>
+            </Container>
+          </Section>
+        ))}
+      </Grid>
+    </Flex>
   );
 }

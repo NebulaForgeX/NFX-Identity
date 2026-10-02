@@ -1,0 +1,39 @@
+.controlFit {
+  width: max-content;
+  max-width: 100%;
+}
+
+.controlFit :global(.rt-SegmentedControlRoot) {
+  width: max-content;
+  max-width: 100%;
+}
+
+.swatch {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-chip);
+  box-shadow: none;
+}
+
+.swatchGray {
+  background: var(--gray-9);
+  color: var(--gray-contrast);
+}
+
+.swatchActive {
+  outline: 2px solid var(--gray-12);
+  outline-offset: 2px;
+}
+
+.previewTheme {
+  width: 100%;
+}
+
+.previewFrame {
+  border: 1px solid var(--gray-a6);
+}

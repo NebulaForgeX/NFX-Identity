@@ -5,7 +5,6 @@ import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { VerificationCodeOtp } from "../../components/VerificationCodeOtp";
-import styles from "./s.module.css";
 
 export type SignupVerificationCodeControllerProps = Record<string, never>;
 
@@ -24,7 +23,7 @@ const SignupVerificationCodeController = () => {
         const showError = Boolean(error && (fieldState.isTouched || formState.isSubmitted));
 
         return (
-          <Flex direction="column" gap="1" width="100%" className={styles.fieldRoot}>
+          <Flex direction="column" gap="1" width="100%" minWidth="0">
             <Text as="label" size="2" weight="medium" id={labelId}>
               {t("codeLabel")}
             </Text>

@@ -1,0 +1,11 @@
+.mark {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-4);
+  background: var(--gray-3);
+  color: var(--gray-11);
+}
+
+.copy {
+  max-width: 36ch;
+}

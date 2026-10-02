@@ -26,8 +26,10 @@ import { showDateTimePickerModal } from "@/stores/modal";
 import { PageFrame } from "@/layouts";
 import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
 
-import BackgroundGallery from "./backgrounds/BackgroundGallery";
-import { LedgerSection } from "./Ledger";
+import BackgroundGallery from "../backgrounds/BackgroundGallery";
+import { LedgerSection } from "../Ledger";
+
+import styles from "./s.module.css";
 
 function parseBirthday(value: string): boolean {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
@@ -66,7 +68,7 @@ function BirthdayField({ value, onChange, onBlur }: { value: string; onChange: (
       readOnly
       value={displayValue}
       placeholder={t("datePicker.placeholder")}
-      style={{ width: "100%", cursor: "pointer" }}
+      className={styles.dateField}
       onClick={openPicker}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {

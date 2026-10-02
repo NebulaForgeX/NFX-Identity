@@ -58,7 +58,7 @@ export function VerificationCodeOtp({
       <Flex
         gap="2"
         width="100%"
-        className={styles.otpRow}
+        minWidth="0"
         role="group"
         aria-labelledby={labelId}
         aria-invalid={showError ? true : undefined}
@@ -70,14 +70,15 @@ export function VerificationCodeOtp({
         }}
       >
         {Array.from({ length: slotCount }, (_, index) => (
-          <OneTimePasswordField.Input
-            key={index}
-            index={index}
-            autoCapitalize="characters"
-            autoCorrect="off"
-            spellCheck={false}
-            className={[styles.otpSlot, showError ? styles.otpSlotError : ""].filter(Boolean).join(" ")}
-          />
+          <Flex key={index} className={showError ? `${styles.slot} ${styles.slotError}` : styles.slot}>
+            <OneTimePasswordField.Input
+              index={index}
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              className={styles.slotInput}
+            />
+          </Flex>
         ))}
       </Flex>
       {hiddenInputRef ? <OneTimePasswordField.HiddenInput ref={hiddenInputRef} /> : null}

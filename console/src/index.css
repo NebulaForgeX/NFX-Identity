@@ -33,7 +33,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(160deg, var(--color-panel-solid), var(--color-background));
+  background: var(--color-background);
   color: var(--gray-12);
   transition:
     background-color 0.3s ease,

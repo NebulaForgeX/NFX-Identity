@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Button, Flex, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { useResolvedAppearance } from "nfx-ui/hooks";
 
@@ -22,66 +22,39 @@ export interface LogoProps {
 
 function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, variant = "plain", size = "medium", className = "", onClick }: LogoProps) {
   const appearance = useResolvedAppearance();
-  const sizeClass =
-    size === "small"
-      ? styles.sizeSmall
-      : size === "large" && variant === "plain"
-        ? styles.sizeLargePlain
-        : size === "large" && variant === "glassSquare"
-          ? styles.sizeLargeGlassSquare
-          : size === "large" && variant === "glassCircle"
-            ? styles.sizeLargeGlassCircle
-            : variant === "glassSquare"
-              ? styles.sizeGlassSquare
-              : variant === "glassCircle"
-                ? styles.sizeGlassCircle
-                : styles.sizePlain;
-  const logoClasses = [styles.logo, className].filter(Boolean).join(" ");
+  const markClass = [styles.mark, styles[variant], size === "small" ? styles.small : size === "large" ? styles.large : ""].filter(Boolean).join(" ");
 
   return (
-    <Flex asChild align="center" gap="3" width="fit-content">
-      <Button
-        type="button"
-        variant="ghost"
-        className={logoClasses}
-        aria-label={typeof title === "string" ? title : APP_NAME}
-        onClick={() => {
-          routerEventEmitter.navigate({ to });
-          onClick?.();
-        }}
-      >
-        <Box className={sizeClass}>
-          <Box className={variant === "glassCircle" ? styles.radiusFull : variant === "glassSquare" ? styles.radiusIcon : styles.radiusChip}>
-            <Box className={variant === "glassCircle" ? styles.edgeCircle : variant === "glassSquare" ? styles.edgeSquare : undefined}>
-              <Box className={variant === "glassCircle" ? styles.fillCircle : variant === "glassSquare" ? styles.fillSquare : undefined}>
-                <Box className={variant === "plain" ? styles.shadowPlain : variant === "glassSquare" ? styles.shadowSquare : styles.shadowCircle}>
-                  <Box asChild className={styles.mark}>
-                    <span>
-                      <img src={getLogoSrc(appearance)} alt={alt} />
-                    </span>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-
-        {(title || subtitle) && (
-          <Flex direction="column" gap="1" minWidth="0" overflow="hidden">
-            {title && (
+    <Button
+      type="button"
+      variant="ghost"
+      className={[styles.logo, className].filter(Boolean).join(" ")}
+      aria-label={typeof title === "string" ? title : APP_NAME}
+      onClick={() => {
+        routerEventEmitter.navigate({ to });
+        onClick?.();
+      }}
+    >
+      <Flex align="center" gap="3" width="fit-content">
+        <Flex flexShrink="0" className={markClass}>
+          <img src={getLogoSrc(appearance)} alt={alt} />
+        </Flex>
+        {title || subtitle ? (
+          <Flex direction="column" gap="1" minWidth="0">
+            {title ? (
               <Text as="span" size="3" weight="bold" truncate color="gray" highContrast>
                 {title}
               </Text>
-            )}
-            {subtitle && (
+            ) : null}
+            {subtitle ? (
               <Text as="span" size="1" weight="medium" truncate color="gray">
                 {subtitle}
               </Text>
-            )}
+            ) : null}
           </Flex>
-        )}
-      </Button>
-    </Flex>
+        ) : null}
+      </Flex>
+    </Button>
   );
 }
 

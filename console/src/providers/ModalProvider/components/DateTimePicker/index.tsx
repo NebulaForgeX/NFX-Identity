@@ -2,7 +2,7 @@ import type { ReactDatePickerCustomHeaderProps } from "react-datepicker";
 
 import { useEffect, useMemo, useState } from "react";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { Box, Button, Dialog, Flex, Grid, IconButton, Select, Text } from "@radix-ui/themes";
+import { Button, Container, Dialog, Flex, Grid, IconButton, Section, Select, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { enUS, fr, zhCN } from "date-fns/locale";
 import { CalendarDays } from "lucide-react";
@@ -124,7 +124,7 @@ const DateTimePicker = () => {
   };
 
   const renderCustomHeader = ({ date, changeYear, changeMonth }: ReactDatePickerCustomHeaderProps) => (
-    <Box className={styles.calendarHeader}>
+    <Container size="4" width="100%" mx="34px">
       <Flex align="center" justify="center" gap="1" wrap="wrap">
         <Select.Root
           size="2"
@@ -163,130 +163,114 @@ const DateTimePicker = () => {
           </Select.Content>
         </Select.Root>
       </Flex>
-    </Box>
+    </Container>
   );
 
   const summary = selected ? format(selected, "PPP", { locale: dateFnsLocale }) : t("datePicker.empty");
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={handleOpenChange}>
-      <Dialog.Content aria-describedby={undefined} maxWidth="min(720px, calc(100vw - var(--space-4) * 2))" style={{ padding: 0 }}>
-        <Box py="4">
-          <Box px="4">
+      <Dialog.Content aria-describedby={undefined} className={styles.dialog}>
+        <Section size="1" py="4">
+          <Container size="4" width="100%" px="4">
             <Flex direction="column" gap="4">
               <Flex justify="between" align="start" gap="3">
                 <Flex align="center" gap="3" minWidth="0">
-                  <Box className={styles.headerSize}>
-                    <Box className={`${styles.headerRadius} ${styles.iconInk}`}>
-                      <Flex align="center" justify="center" className={`${styles.headerFill} ${styles.iconGlyph}`}>
-                        <LucideIcon icon={CalendarDays} size={22} />
-                      </Flex>
-                    </Box>
-                  </Box>
-                  <Box>
+                  <Flex align="center" justify="center" className={styles.headerMark}>
+                    <LucideIcon icon={CalendarDays} size={22} />
+                  </Flex>
+                  <Flex direction="column" minWidth="0">
                     <Dialog.Title size="2" weight="medium">
                       {title ?? t("datePicker.title")}
                     </Dialog.Title>
-                    <Text as="p" size="2" color="gray" mt="1">
-                      {t("datePicker.hint")}
-                    </Text>
-                  </Box>
+                    <Section size="1" py="0" mt="1">
+                      <Text as="p" size="2" color="gray">
+                        {t("datePicker.hint")}
+                      </Text>
+                    </Section>
+                  </Flex>
                 </Flex>
                 <IconButton type="button" variant="ghost" size="2" aria-label={t("datePicker.cancel")} onClick={handleCancel}>
                   <Cross2Icon width="15" height="15" />
                 </IconButton>
               </Flex>
 
-              <Box className={styles.panelEdge}>
-                <Box className={styles.panelFill}>
-                <Box py="2">
-                  <Box px="3">
-                    <Flex align="center" gap="2">
-                        <Box className={styles.summarySize}>
-                          <Box className={`${styles.summaryRadius} ${styles.iconInk}`}>
-                            <Flex align="center" justify="center" className={`${styles.summaryFill} ${styles.iconGlyph}`}>
-                              <LucideIcon icon={CalendarDays} size={18} />
-                            </Flex>
-                          </Box>
-                        </Box>
-                      <Box>
-                        <Text as="span" size="1" weight="medium" color="gray">
-                          {t("datePicker.selected")}
-                        </Text>
-                        <Text as="p" size="2" weight="medium">
-                          {summary}
-                        </Text>
-                      </Box>
+              <Section size="1" py="2" className={styles.panel}>
+                <Container size="4" width="100%" px="3">
+                  <Flex align="center" gap="2">
+                    <Flex align="center" justify="center" className={styles.summaryMark}>
+                      <LucideIcon icon={CalendarDays} size={18} />
                     </Flex>
-                  </Box>
-                </Box>
-                </Box>
-              </Box>
+                    <Flex direction="column" minWidth="0">
+                      <Text as="span" size="1" weight="medium" color="gray">
+                        {t("datePicker.selected")}
+                      </Text>
+                      <Text as="p" size="2" weight="medium">
+                        {summary}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Container>
+              </Section>
 
-              <Grid columns={{ initial: "1", sm: "minmax(0, 1fr) 220px" }} gap="3" align="stretch">
-                <Box className={`${styles.panelEdge} ${styles.calendarPanel}`}>
-                  <Box className={styles.panelFill}>
-                  <Box py="2">
-                    <Box px="2">
-                      <Flex align="center" justify="center" overflow="hidden">
-                        <DatePicker
-                          key={pickerEpoch}
-                          selected={selected}
-                          onChange={(date: Nullable<Date>) => {
-                            if (!date) {
-                              setSelected(null);
-                              return;
-                            }
-                            const next = clampDate(date, minDate, maxDate);
-                            setSelected(next);
-                            setCalendarMonth(next);
-                          }}
-                          inline
-                          locale={locale}
-                          minDate={minDate}
-                          maxDate={maxDate}
-                          openToDate={calendarMonth}
-                          onMonthChange={setCalendarMonth}
-                          onYearChange={setCalendarMonth}
-                          renderCustomHeader={renderCustomHeader}
-                          dateFormat="yyyy-MM-dd"
-                          calendarStartDay={1}
-                        />
-                      </Flex>
-                    </Box>
-                  </Box>
-                  </Box>
-                </Box>
+              <Grid columns={{ initial: "1", sm: "minmax(0, 1fr) 220px" }} gap="3">
+                <Section size="1" py="2" className={styles.calendarPanel}>
+                  <Container size="4" width="100%" px="2">
+                    <Flex align="center" justify="center">
+                      <DatePicker
+                        key={pickerEpoch}
+                        selected={selected}
+                        onChange={(date: Nullable<Date>) => {
+                          if (!date) {
+                            setSelected(null);
+                            return;
+                          }
+                          const next = clampDate(date, minDate, maxDate);
+                          setSelected(next);
+                          setCalendarMonth(next);
+                        }}
+                        inline
+                        locale={locale}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        openToDate={calendarMonth}
+                        onMonthChange={setCalendarMonth}
+                        onYearChange={setCalendarMonth}
+                        renderCustomHeader={renderCustomHeader}
+                        dateFormat="yyyy-MM-dd"
+                        calendarStartDay={1}
+                      />
+                    </Flex>
+                  </Container>
+                </Section>
 
                 <Flex direction="column" gap="3">
                   <Button type="button" variant="outline" size="2" onClick={handleToday}>
                     <LucideIcon icon={CalendarDays} size={16} />
                     {t("datePicker.today")}
                   </Button>
-                  <Box className={styles.panelEdge}>
-                    <Box className={styles.noteFill}>
-                    <Box py="3">
-                      <Box px="3">
-                        <Flex align="start" gap="2">
-                          <Text color="gray">
-                            <LucideIcon icon={CalendarDays} size={18} />
-                          </Text>
-                          <Text as="p" size="2" color="gray">
-                            {t("datePicker.note")}
-                          </Text>
-                        </Flex>
-                      </Box>
-                    </Box>
-                    </Box>
-                  </Box>
+                  <Section size="1" py="3" className={styles.note}>
+                    <Container size="4" width="100%" px="3">
+                      <Flex align="start" gap="2">
+                        <Text color="gray">
+                          <LucideIcon icon={CalendarDays} size={18} />
+                        </Text>
+                        <Text as="p" size="2" color="gray">
+                          {t("datePicker.note")}
+                        </Text>
+                      </Flex>
+                    </Container>
+                  </Section>
                 </Flex>
               </Grid>
 
               <Flex gap="2" justify="end" align="center" wrap="wrap">
                 {allowClear ? (
-                  <Button type="button" variant="outline" color="gray" onClick={handleClear} mr="auto">
-                    {t("datePicker.clear")}
-                  </Button>
+                  <Container mr="auto">
+                    <Button type="button" variant="outline" color="gray" onClick={handleClear}>
+                      {t("datePicker.clear")}
+                    </Button>
+                  </Container>
                 ) : null}
                 <Button type="button" variant="outline" onClick={handleCancel}>
                   {t("datePicker.cancel")}
@@ -297,8 +281,8 @@ const DateTimePicker = () => {
                 </Button>
               </Flex>
             </Flex>
-          </Box>
-        </Box>
+          </Container>
+        </Section>
       </Dialog.Content>
     </Dialog.Root>
   );

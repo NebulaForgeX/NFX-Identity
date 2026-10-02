@@ -1,0 +1,69 @@
+.menuDot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--red-9);
+}
+
+.trigger {
+  width: 100%;
+  height: 40px;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--gray-11);
+}
+
+.trigger:hover,
+.trigger[data-open="true"] {
+  background: var(--gray-a3);
+  color: var(--gray-12);
+}
+
+.trigger[data-current="true"],
+.trigger[data-current="true"]:hover {
+  background: var(--accent-a3);
+  color: var(--accent-11);
+}
+
+.trigger:focus-within {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 2px;
+}
+
+.triggerControl {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  border-radius: inherit;
+}
+
+.flyoutReset {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.flyout {
+  width: max-content;
+  min-width: 156px;
+  max-width: min(260px, calc(100vw - 24px));
+  max-height: var(--radix-popover-content-available-height);
+  overflow-y: auto;
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-4);
+  background: var(--color-panel-solid);
+  box-shadow: var(--shadow-5);
+}
+
+.flyout :global(.ps-menu-label .rt-Text) {
+  font: inherit;
+}
+
+.flyout :global(.ps-menu-button.ps-active .ps-menu-label) {
+  font-weight: 500;
+}

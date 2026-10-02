@@ -1,7 +1,7 @@
 import { AnimatedIcon, ArrowNarrowRightIcon } from "nfx-ui/icons";
 import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { Box, Button, Flex, Heading, Link, Tabs, Text } from "@radix-ui/themes";
+import { Button, Container, Flex, Heading, Link, Section, Tabs, Text } from "@radix-ui/themes";
 import gsap from "gsap";
 import { APP_NAME } from "nfx-ui/config";
 import { useLoginWithEmail, useLoginWithPhone } from "nfx-ui/hooks";
@@ -31,11 +31,9 @@ export default function LoginPage() {
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      gsap.set(".js-gate-copy", { autoAlpha: 0, y: 16 });
-      gsap.set(".js-gate-slab", { autoAlpha: 0, y: 28 });
-      gsap.set(".js-gate-fields", { autoAlpha: 0, y: 18 });
+      gsap.set(".js-gate", { autoAlpha: 0, y: 16 });
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.to(".js-gate-copy", { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.06 }).to(".js-gate-slab", { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08 }, "-=0.25").to(".js-gate-fields", { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.2");
+      tl.to(".js-gate", { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08 });
     },
     { scope: rootRef },
   );
@@ -62,116 +60,84 @@ export default function LoginPage() {
 
   return (
     <AuthChrome>
-      <Box ref={rootRef} className={styles.gate}>
-        <Box py="8">
-        <Box pb="6">
-        <Flex direction="column" gap="3">
-          <Text as="p" size="1" weight="bold" className={`${styles.index} js-gate-copy`}>
-            01 — {t("form.welcomeBack")}
-          </Text>
-          <Heading as="h1" size="8" className={`${styles.title} js-gate-copy`}>
-            {t("form.title", { name: APP_NAME })}
-          </Heading>
-          <Text as="p" size="2" className={`${styles.lede} js-gate-copy`}>
-            {t("form.subtitle")}
-          </Text>
+      <Flex ref={rootRef} direction="column" height="100%" minHeight="0" overflow="hidden" width="100%">
+        <Flex direction="column" flexGrow="1" minHeight="0" overflow="auto">
+          <Container size="2" mx="auto" px="6" width="100%" maxWidth="32rem">
+            <Section size="1" py="8">
+              <Flex direction="column" gap="6">
+                <Flex direction="column" gap="3" className="js-gate">
+                  <Text as="p" size="1" weight="bold" className={styles.index}>
+                    01 — {t("form.welcomeBack")}
+                  </Text>
+                  <Heading as="h1" size="8" className={styles.title}>
+                    {t("form.title", { name: APP_NAME })}
+                  </Heading>
+                  <Text as="p" size="2" className={styles.lede}>
+                    {t("form.subtitle")}
+                  </Text>
+                </Flex>
+
+                <Tabs.Root value={channel} onValueChange={(value) => setChannel(value as "email" | "phone")} className="js-gate">
+                  <Tabs.List>
+                    <Tabs.Trigger value="email">{t("form.channelEmail")}</Tabs.Trigger>
+                    <Tabs.Trigger value="phone">{t("form.channelPhone")}</Tabs.Trigger>
+                  </Tabs.List>
+
+                  <Tabs.Content value="email">
+                    <FormProvider {...emailForm}>
+                      <Flex asChild direction="column" gap="4">
+                        <form noValidate onSubmit={emailForm.handleSubmit(onEmail)}>
+                          <LoginEmailController />
+                          <LoginPasswordController />
+                          <LoginRememberController />
+                          <Button type="submit" size="3" loading={loginEmail.isPending} className={styles.submit}>
+                            {t("form.submit")}
+                            <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
+                          </Button>
+                        </form>
+                      </Flex>
+                    </FormProvider>
+                  </Tabs.Content>
+
+                  <Tabs.Content value="phone">
+                    <FormProvider {...phoneForm}>
+                      <Flex asChild direction="column" gap="4">
+                        <form noValidate onSubmit={phoneForm.handleSubmit(onPhone)}>
+                          <LoginPhoneController />
+                          <LoginPasswordController />
+                          <LoginRememberController />
+                          <Button type="submit" size="3" loading={loginPhone.isPending} className={styles.submit}>
+                            {t("form.submit")}
+                            <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
+                          </Button>
+                        </form>
+                      </Flex>
+                    </FormProvider>
+                  </Tabs.Content>
+                </Tabs.Root>
+
+                <Section size="1" py="4" className={`${styles.foot} js-gate`}>
+                  <Flex justify="between" align="center" gap="4">
+                    <Text as="p" size="2" color="gray">
+                      {t("promo.newTo", { name: APP_NAME })}
+                    </Text>
+                    <Link
+                      href={ROUTES.SIGNUP}
+                      size="2"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        routerEventEmitter.navigate({ to: ROUTES.SIGNUP });
+                      }}
+                    >
+                      {t("promo.createAccount")}
+                    </Link>
+                  </Flex>
+                </Section>
+              </Flex>
+            </Section>
+          </Container>
         </Flex>
-        </Box>
-
-        <Tabs.Root value={channel} onValueChange={(value) => setChannel(value as "email" | "phone")}>
-          <Tabs.List className={`${styles.slabs} js-gate-slab`}>
-            <Tabs.Trigger value="email" className={styles.slab}>
-              <Box className={styles.slabFill}>
-              <Box className={styles.slabPx}>
-                <Box className={styles.slabPy}>
-                  <Box className={styles.slabStack}>
-              <Text as="span" size="1" className={styles.slabIndex}>
-                01
-              </Text>
-              <Text as="span" className={styles.slabLabel}>
-                {t("form.channelEmail")}
-              </Text>
-                  </Box>
-                </Box>
-              </Box>
-              </Box>
-            </Tabs.Trigger>
-            <Tabs.Trigger value="phone" className={styles.slab}>
-              <Box className={styles.slabFill}>
-              <Box className={styles.slabPx}>
-                <Box className={styles.slabPy}>
-                  <Box className={styles.slabStack}>
-              <Text as="span" size="1" className={styles.slabIndex}>
-                02
-              </Text>
-              <Text as="span" className={styles.slabLabel}>
-                {t("form.channelPhone")}
-              </Text>
-                  </Box>
-                </Box>
-              </Box>
-              </Box>
-            </Tabs.Trigger>
-          </Tabs.List>
-
-          <Box className={styles.fieldsPt}>
-          <Box className={`${styles.fields} js-gate-fields`}>
-            <Tabs.Content value="email">
-              <FormProvider {...emailForm}>
-                <Flex asChild direction="column" gap="4">
-                  <form noValidate onSubmit={emailForm.handleSubmit(onEmail)}>
-                    <LoginEmailController />
-                    <LoginPasswordController />
-                    <LoginRememberController />
-                    <Button type="submit" size="3" loading={loginEmail.isPending} className={styles.fullWidth}>
-                      {t("form.submit")}
-                      <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
-                    </Button>
-                  </form>
-                </Flex>
-              </FormProvider>
-            </Tabs.Content>
-
-            <Tabs.Content value="phone">
-              <FormProvider {...phoneForm}>
-                <Flex asChild direction="column" gap="4">
-                  <form noValidate onSubmit={phoneForm.handleSubmit(onPhone)}>
-                    <LoginPhoneController />
-                    <LoginPasswordController />
-                    <LoginRememberController />
-                    <Button type="submit" size="3" loading={loginPhone.isPending} className={styles.fullWidth}>
-                      {t("form.submit")}
-                      <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
-                    </Button>
-                  </form>
-                </Flex>
-              </FormProvider>
-            </Tabs.Content>
-
-            <Box className={styles.foot}>
-              <Box className={styles.footPt}>
-            <Flex justify="between" align="baseline" gap="4">
-              <Text as="p" size="2" color="gray">
-                {t("promo.newTo", { name: APP_NAME })}
-              </Text>
-              <Link
-                href={ROUTES.SIGNUP}
-                size="2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  routerEventEmitter.navigate({ to: ROUTES.SIGNUP });
-                }}
-              >
-                {t("promo.createAccount")}
-              </Link>
-            </Flex>
-              </Box>
-            </Box>
-          </Box>
-          </Box>
-        </Tabs.Root>
-        </Box>
-      </Box>
+      </Flex>
     </AuthChrome>
   );
 }

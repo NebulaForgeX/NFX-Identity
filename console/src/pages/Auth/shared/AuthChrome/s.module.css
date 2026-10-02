@@ -2,44 +2,21 @@
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
-}
-
-.pageFill {
   background: var(--color-background);
-}
-
-.pageInk {
   color: var(--gray-12);
 }
 
 .header {
+  z-index: 4;
   border-bottom: 1px solid var(--gray-6);
-}
-
-.headerFill {
   background: var(--color-background);
 }
 
-.headerStick {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-}
-.headerPx {
-  padding-inline: 1.25rem;
-}
-.headerPy {
-  padding-block: 0.9rem;
-}
-
 .brandHome {
-  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent-9);
 }
 
 .body {
-  position: relative;
   height: calc(100dvh - 4rem);
-  overflow: auto;
 }

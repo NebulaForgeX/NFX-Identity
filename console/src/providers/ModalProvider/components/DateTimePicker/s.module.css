@@ -1,52 +1,47 @@
-.headerSize {
+.dialog {
+  padding: 0;
+  width: 100%;
+  max-width: min(720px, calc(100vw - var(--space-4) * 2));
+}
+
+.headerMark {
   width: 44px;
   height: 44px;
-}
-
-.summarySize {
-  width: 34px;
-  height: 34px;
-}
-
-.headerRadius {
+  flex-shrink: 0;
   border-radius: var(--radius-4);
-}
-
-.summaryRadius {
-  border-radius: var(--radius-3);
-}
-
-.iconInk {
+  background: color-mix(in oklab, var(--accent-9) 12%, var(--color-panel-solid));
   color: var(--accent-9);
 }
 
-.headerFill {
-  background: color-mix(in oklab, var(--accent-9) 12%, var(--color-panel-solid));
-}
-
-.summaryFill {
+.summaryMark {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: var(--radius-3);
   background: var(--color-background);
+  color: var(--accent-9);
 }
 
-.iconGlyph svg {
+.headerMark svg,
+.summaryMark svg {
   display: block;
   max-width: none;
 }
 
-.panelEdge {
+.panel {
   border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
-}
-
-.panelFill {
   background: var(--color-panel-solid);
 }
 
-.noteFill {
+.note {
+  border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
   background: var(--color-background);
 }
 
-.calendarHeader {
-  margin-inline: 34px;
+.calendarPanel {
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--gray-a5) 72%, transparent);
+  background: var(--color-panel-solid);
 }
 
 .headerSelectTrigger {
@@ -158,11 +153,6 @@
 }
 
 @media (max-width: 440px) {
-  .headerIcon {
-    width: 38px;
-    height: 38px;
-  }
-
   .calendarPanel :global(.react-datepicker__day-name),
   .calendarPanel :global(.react-datepicker__day) {
     height: 34px;

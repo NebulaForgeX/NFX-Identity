@@ -1,0 +1,44 @@
+.table {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--gray-6);
+  background: var(--color-background);
+}
+
+.head {
+  background: var(--color-panel-solid);
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  color: var(--gray-10);
+  white-space: nowrap;
+}
+
+.search {
+  width: 100%;
+}
+
+.rowHit {
+  cursor: pointer;
+}
+
+.rowSelected,
+.rowSelected :global(.rt-TableCell) {
+  background: var(--accent-3);
+  cursor: pointer;
+}
+
+.detail {
+  border: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
+}
+
+.board {
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .board.board {
+    grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 0.7fr);
+  }
+}

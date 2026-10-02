@@ -1,9 +1,36 @@
-.tabList {
+.tabListGap {
   gap: var(--space-3);
+}
+
+.tabBar {
   margin-bottom: 0.25rem;
   box-shadow: inset 0 -1px 0 0 color-mix(in oklab, var(--accent-9) 18%, var(--gray-a5));
 }
 
 .hairline {
   border-bottom: 1px solid var(--gray-a4);
+}
+
+.tile {
+  background: var(--color-panel-solid);
+  border: 1px solid var(--gray-6);
+  border-radius: var(--radius-3);
+}
+
+.tileImage {
+  width: 100%;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: var(--radius-2);
+  background: var(--gray-3);
+}
+
+.side {
+  background: var(--color-panel-solid);
+  border: 1px solid var(--gray-6);
+  border-radius: var(--radius-3);
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
 }

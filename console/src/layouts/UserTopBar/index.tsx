@@ -1,54 +1,19 @@
-import { Settings, User } from "lucide-react";
-import { Avatar, Box, Button, Flex, Text } from "@radix-ui/themes";
-import { useCurrentProfile } from "nfx-ui/hooks";
-import { useTranslation } from "react-i18next";
+import { Box, Container, Flex, Section } from "@radix-ui/themes";
 
-import { LucideIcon } from "@/components";
-import { routerEventEmitter } from "@/events/router";
-import { scopePaths } from "@/navigations";
-import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
+import { PreferencesPopover } from "@/components";
 
 import styles from "./s.module.css";
 
 export default function UserTopBar() {
-  const { t } = useTranslation("language");
-  const { data, profile, kind } = useCurrentProfile();
-  const paths = scopePaths(kind);
-  const accountId = safeNullable(data?.account.id);
-  const displayName = resolveAccountDisplayName(profile?.displayName, accountId);
-  const initial = resolveAccountInitial(profile?.displayName, accountId);
-  const avatarImageId = safeNullable(profile?.avatars?.[0]?.imageId);
-
   return (
     <Box position="sticky" top="0" className={styles.bar}>
-      <Box px="6">
-        <Box py="4">
-          <Flex align="center" justify="between" gap="4" wrap="wrap">
-      <Flex align="center" gap="3" minWidth="0">
-        <Avatar size="2" radius="none" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-        <Flex direction="column" minWidth="0">
-          <Text size="2" weight="bold" truncate>
-            {displayName}
-          </Text>
-          <Text size="1" color="gray" truncate>
-            {kind} · Identity
-          </Text>
-        </Flex>
-      </Flex>
-
-      <Flex align="center" gap="2" wrap="wrap">
-        <Button size="2" variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: paths.overview })}>
-          <LucideIcon icon={User} size={14} />
-          {t("header.profile")}
-        </Button>
-        <Button size="2" variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: paths.settings })}>
-          <LucideIcon icon={Settings} size={14} />
-          {t("sidebar.settingsItem")}
-        </Button>
-      </Flex>
+      <Container size="4" px="6" width="100%">
+        <Section size="1" py="3">
+          <Flex align="center" justify="end">
+            <PreferencesPopover />
           </Flex>
-        </Box>
-      </Box>
+        </Section>
+      </Container>
     </Box>
   );
 }

@@ -1,19 +1,19 @@
 import type { ReactNode } from "react";
 
-import { UserIcon } from "nfx-ui/icons";
-import { Badge, Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { CameraIcon, LinkIcon, MailFilledIcon, TelephoneIcon, UserIcon } from "nfx-ui/icons";
+import { Badge, Button, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
 
-import { PageHeader } from "@/components";
+import { EmptyState, PageHeader } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
 import type { ScopePaths } from "@/navigations";
 import { buildImageUrl, formatDateTime, safeArray, safeStringable } from "@/utils";
 
-import { LedgerSection } from "./Ledger";
-import Masthead, { profileRoles } from "./Masthead";
-import styles from "./Overview/s.module.css";
+import { FieldList, FieldRow, LedgerSection } from "../Ledger";
+import Masthead, { profileRoles } from "../Masthead";
+import styles from "./s.module.css";
 
 function blank(value: Nilable<string>, fallback: string) {
   const next = safeStringable(value);
@@ -39,16 +39,14 @@ function RecordList({
   return (
     <Flex direction="column">
       {rows.map((row) => (
-        <Box key={row.key} className={styles.recordRule}>
-          <Box py="3">
-            <Flex align="center" justify="between" gap="3" wrap="wrap">
-              <Text size="2">{row.title}</Text>
-              <Text size="1" color="gray">
-                {row.meta}
-              </Text>
-            </Flex>
-          </Box>
-        </Box>
+        <Section key={row.key} size="1" py="3" className={styles.recordRule}>
+          <Flex align="center" justify="between" gap="3" wrap="wrap">
+            <Text size="2">{row.title}</Text>
+            <Text size="1" color="gray">
+              {row.meta}
+            </Text>
+          </Flex>
+        </Section>
       ))}
     </Flex>
   );
@@ -79,10 +77,19 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
           </Button>
         }
       />
-      <Masthead kind={kind} data={data} profile={profile} />
+      <Masthead
+        kind={kind}
+        data={data}
+        profile={profile}
+        stats={[
+          { label: t("sections.emails"), value: emails.length },
+          { label: t("sections.phones"), value: phones.length },
+          { label: t("sections.identities"), value: identities.length },
+        ]}
+      />
 
       <LedgerSection title={t("sections.profile")} description={t("sections.profileHint")}>
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="4">
           <Grid columns={{ initial: "1", sm: "2" }} gap="4">
             <Fact label={t("labels.displayName")} value={blank(profile?.displayName, empty)} />
             <Fact label={t("labels.language")} value={blank(profile?.profileLanguage, empty)} />
@@ -90,8 +97,6 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
             <Fact label={t("labels.lastName")} value={blank(profile?.lastName, empty)} />
             <Fact label={t("labels.gender")} value={blank(profile?.gender, empty)} />
             <Fact label={t("labels.birthday")} value={blank(profile?.birthday, empty)} />
-          </Grid>
-          <Grid columns={{ initial: "1", sm: "2" }} gap="4">
             <Fact label={t("labels.city")} value={blank(profile?.city, empty)} />
             <Fact label={t("labels.country")} value={blank(profile?.country, empty)} />
             <Fact label={t("labels.timezone")} value={blank(profile?.timezone, empty)} />
@@ -111,19 +116,19 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
             <Fact label={t("labels.loginNotification")} value={profile?.settings?.loginNotification ? t("labels.on") : t("labels.off")} />
             <Fact label={t("labels.created")} value={profile?.createdAt ? formatDateTime(profile.createdAt) : empty} />
             <Fact label={t("labels.updated")} value={profile?.updatedAt ? formatDateTime(profile.updatedAt) : empty} />
-            <Fact label={t("labels.profileId")} value={blank(profile?.profileId, empty)} />
           </Grid>
         </Flex>
       </LedgerSection>
 
       <LedgerSection title={t("sections.account")} description={t("sections.accountHint")}>
-        <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-          <Fact label={t("labels.accountId")} value={blank(data?.account.id, empty)} />
-          <Fact label={t("labels.accountStatus")} value={blank(data?.account.accountStatus, empty)} />
-          <Fact label={t("labels.signupPlatform")} value={blank(data?.account.signupPlatform, empty)} />
-          <Fact label={t("labels.accountCreated")} value={data?.account.createdAt ? formatDateTime(data.account.createdAt) : empty} />
-          <Fact label={t("labels.accountUpdated")} value={data?.account.updatedAt ? formatDateTime(data.account.updatedAt) : empty} />
-        </Grid>
+        <FieldList>
+          <FieldRow label={t("labels.accountId")} value={blank(data?.account.id, empty)} />
+          <FieldRow label={t("labels.profileId")} value={blank(profile?.profileId, empty)} />
+          <FieldRow label={t("labels.accountStatus")} value={blank(data?.account.accountStatus, empty)} />
+          <FieldRow label={t("labels.signupPlatform")} value={blank(data?.account.signupPlatform, empty)} />
+          <FieldRow label={t("labels.accountCreated")} value={data?.account.createdAt ? formatDateTime(data.account.createdAt) : empty} />
+          <FieldRow label={t("labels.accountUpdated")} value={data?.account.updatedAt ? formatDateTime(data.account.updatedAt) : empty} />
+        </FieldList>
       </LedgerSection>
 
       <LedgerSection title={t("sections.emails")}>
@@ -136,7 +141,15 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
             }))}
           />
         ) : (
-          <Text size="2" color="gray">{t("empty.emails")}</Text>
+          <EmptyState
+            icon={MailFilledIcon}
+            title={t("empty.emails")}
+            action={
+              <Button size="2" onClick={() => routerEventEmitter.navigate({ to: paths.edit })}>
+                {t("actions.edit")}
+              </Button>
+            }
+          />
         )}
       </LedgerSection>
 
@@ -150,7 +163,15 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
             }))}
           />
         ) : (
-          <Text size="2" color="gray">{t("empty.phones")}</Text>
+          <EmptyState
+            icon={TelephoneIcon}
+            title={t("empty.phones")}
+            action={
+              <Button size="2" onClick={() => routerEventEmitter.navigate({ to: paths.edit })}>
+                {t("actions.edit")}
+              </Button>
+            }
+          />
         )}
       </LedgerSection>
 
@@ -164,44 +185,52 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
             }))}
           />
         ) : (
-          <Text size="2" color="gray">{t("empty.identities")}</Text>
+          <EmptyState
+            icon={LinkIcon}
+            title={t("empty.identities")}
+            action={
+              <Button size="2" onClick={() => routerEventEmitter.navigate({ to: paths.edit })}>
+                {t("actions.edit")}
+              </Button>
+            }
+          />
         )}
       </LedgerSection>
 
       <LedgerSection title={t("sections.media")}>
         <Flex direction="column" gap="4">
-          <Fact
-            label={t("labels.avatars")}
-            value={
-              avatars.length ? (
+          {avatars.length ? (
+            <Fact
+              label={t("labels.avatars")}
+              value={
                 <Flex gap="2" wrap="wrap">
                   {avatars.map((item) => (
-                    <Box key={item.id} className={styles.thumbSize}>
-                      <Box className={styles.thumbClip}>
-                        <img src={buildImageUrl(item.imageId)} alt="" className={styles.thumbImage} />
-                      </Box>
-                    </Box>
+                    <Flex key={item.id} flexShrink="0" className={styles.thumb}>
+                      <img src={buildImageUrl(item.imageId)} alt="" className={styles.thumbImage} />
+                    </Flex>
                   ))}
                 </Flex>
-              ) : empty
-            }
-          />
-          <Fact
-            label={t("labels.backgrounds")}
-            value={
-              backgrounds.length ? (
+              }
+            />
+          ) : (
+            <EmptyState icon={CameraIcon} title={t("labels.avatars")} description={empty} />
+          )}
+          {backgrounds.length ? (
+            <Fact
+              label={t("labels.backgrounds")}
+              value={
                 <Flex gap="2" wrap="wrap">
                   {backgrounds.map((item) => (
-                    <Box key={item.id} className={styles.coverThumbSize}>
-                      <Box className={styles.thumbClip}>
-                        <img src={buildImageUrl(item.imageId)} alt="" className={styles.thumbImage} />
-                      </Box>
-                    </Box>
+                    <Flex key={item.id} flexShrink="0" className={styles.coverThumb}>
+                      <img src={buildImageUrl(item.imageId)} alt="" className={styles.thumbImage} />
+                    </Flex>
                   ))}
                 </Flex>
-              ) : empty
-            }
-          />
+              }
+            />
+          ) : (
+            <EmptyState icon={CameraIcon} title={t("labels.backgrounds")} description={empty} />
+          )}
         </Flex>
       </LedgerSection>
     </PageFrame>

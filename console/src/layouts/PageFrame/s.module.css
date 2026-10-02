@@ -1,4 +1,4 @@
-/* Sidebar full-height pages: grow vertically without breaking Container centering. */
+/* Size only: grow with the sidebar column. box-sizing belongs with that size. */
 .fullHeightFrame {
   flex: 1 1 auto;
   align-self: stretch;
@@ -9,9 +9,8 @@
 
 .fullHeightBody {
   flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
-}
-
-.stack {
-  min-width: 0;
 }

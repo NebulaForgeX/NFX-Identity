@@ -1,4 +1,5 @@
 import { GearIcon } from "nfx-ui/icons";
+import { Grid } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader, Suspense } from "@/components";
@@ -12,10 +13,12 @@ export default function SettingsView() {
   return (
     <PageFrame>
       <PageHeader icon={GearIcon} title={t("title")} description={t("description")} />
-      <ThemeSettings />
-      <Suspense>
-        <SystemSettings />
-      </Suspense>
+      <Grid columns={{ initial: "1", lg: "minmax(0, 1.4fr) minmax(16rem, 0.6fr)" }} gap="6" width="100%" align="start">
+        <ThemeSettings />
+        <Suspense>
+          <SystemSettings />
+        </Suspense>
+      </Grid>
     </PageFrame>
   );
 }

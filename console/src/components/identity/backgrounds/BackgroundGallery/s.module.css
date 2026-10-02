@@ -1,22 +1,10 @@
-.tileSize {
+.tile {
+  position: relative;
   width: 160px;
   height: 120px;
-  flex: 0 0 auto;
-}
-
-.tileEdge {
   border: 1px solid var(--gray-a5);
-}
-
-.tileRadius {
   border-radius: var(--radius-3);
-}
-
-.tileClip {
   overflow: hidden;
-}
-
-.tileFill {
   background: var(--gray-3);
 }
 
@@ -27,36 +15,27 @@
   display: block;
 }
 
-.orderPlace {
+.order {
   position: absolute;
   top: 6px;
   left: 6px;
-}
-
-.orderFill {
-  background: color-mix(in oklab, var(--gray-12) 70%, transparent);
-}
-
-.orderInk {
-  color: var(--gray-1);
-}
-
-.orderRadius {
   border-radius: var(--radius-2);
+  background: color-mix(in oklab, var(--gray-12) 70%, transparent);
+  color: var(--gray-1);
 }
 
 .tileActions {
   z-index: 1;
 }
 
-.busyOverlay {
+.busy {
   background: color-mix(in oklab, var(--gray-1) 45%, transparent);
   color: var(--gray-12);
 }
 
-.failedOverlay {
+.failed {
   background: color-mix(in oklab, var(--red-9) 35%, transparent);
-  color: white;
+  color: var(--gray-1);
 }
 
 .hiddenInput {
