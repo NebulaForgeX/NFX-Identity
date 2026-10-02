@@ -5,40 +5,36 @@
   background: var(--accent-9);
 }
 
-.trigger {
-  width: 100%;
+.triggerHit:global(.rt-IconButton) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
   height: 40px;
-  border-radius: var(--radius-chip);
-  background: transparent;
+  margin: 4px auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-3);
   color: var(--gray-11);
+  background: transparent;
+  cursor: pointer;
 }
 
-.trigger:hover,
-.trigger[data-open="true"] {
+.triggerHit:global(.rt-IconButton):hover,
+.triggerHit:global(.rt-IconButton)[data-state="active"] {
   background: var(--gray-a3);
   color: var(--gray-12);
 }
 
-.trigger[data-current="true"],
-.trigger[data-current="true"]:hover {
+.triggerHit:global(.rt-IconButton)[data-state="current"],
+.triggerHit:global(.rt-IconButton)[data-state="current"]:hover {
   background: var(--accent-a3);
   color: var(--accent-11);
 }
 
-.trigger:focus-within {
+.triggerHit:global(.rt-IconButton):focus-visible {
   outline: 2px solid var(--accent-8);
   outline-offset: 2px;
-}
-
-.triggerControl {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  border-radius: inherit;
 }
 
 .flyoutReset {

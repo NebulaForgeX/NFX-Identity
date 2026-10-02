@@ -54,17 +54,22 @@
   border-bottom: 1px solid var(--gray-a4);
 }
 
-.toggle {
-  flex-shrink: 0;
-  border: 1px solid var(--gray-a5);
-  border-radius: var(--radius-2);
-  background: var(--color-panel-solid);
-  color: var(--gray-11);
+.toggle:global(.rt-IconButton) {
+  position: absolute !important;
+  right: -34px !important;
+  top: 30px !important;
+  width: 26px !important;
+  height: 26px !important;
+  border: 1px solid var(--gray-a5) !important;
+  border-radius: var(--radius-2) !important;
+  background: var(--color-panel-solid) !important;
+  color: var(--gray-11) !important;
+  z-index: 2;
 }
 
-.toggle:hover {
-  background: var(--gray-3);
-  color: var(--gray-12);
+.toggle:global(.rt-IconButton):hover {
+  background: var(--gray-3) !important;
+  color: var(--gray-12) !important;
 }
 
 .accountReset {
@@ -147,9 +152,17 @@
   visibility: hidden;
 }
 
-.menuCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
-  justify-content: center;
+.menuCollapsed :global(.ps-menu-root > ul) {
   padding: 0;
+}
+
+.menuCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
+  width: 40px;
+  height: 40px;
+  margin: 4px auto;
+  padding: 0;
+  justify-content: center;
+  border-radius: var(--radius-3);
 }
 
 .menuCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
@@ -167,10 +180,6 @@
 
 .menuCollapsed :global(.ps-submenu-content .ps-menu-label) {
   display: block;
-}
-
-.menuCollapsed .sectionTitle {
-  text-align: center;
 }
 
 .sectionRule {
@@ -236,8 +245,18 @@
 
 .logout {
   width: 100%;
-  height: auto;
+  height: 40px;
+  padding: 0;
   color: var(--gray-12);
+  border-radius: var(--radius-chip);
+}
+
+.logout[data-collapsed="true"] {
+  width: 40px;
+  height: 40px;
+  margin-inline: auto;
+  padding: 0;
+  border-radius: var(--radius-3);
 }
 
 .mobileStick {

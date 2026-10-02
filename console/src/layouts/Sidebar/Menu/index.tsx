@@ -56,44 +56,36 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
     closeTimer.current = setTimeout(() => setOpen(false), 180);
   };
   useEffect(() => () => clearTimeout(closeTimer.current), []);
+  const state = active ? "current" : open ? "active" : "idle";
   return (
     <li className="ps-menuitem-root">
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger>
-            <Section
-            size="1"
-            my="2"
-            pt="0"
-            pb="0"
-            className={styles.trigger}
-            data-current={active ? "true" : "false"}
-            data-open={open ? "true" : "false"}
+          <IconButton
+            ref={trigger}
+            type="button"
+            variant="ghost"
+            className={styles.triggerHit}
+            data-state={state}
+            aria-label={labelText(label)}
+            aria-expanded={open}
+            onPointerEnter={() => {
+              cancelClose();
+              pointerOpened.current = true;
+              setOpen(true);
+            }}
+            onPointerLeave={scheduleClose}
+            onClick={(event) => {
+              // Hover may already have opened the panel. A click should keep it open.
+              event.preventDefault();
+              cancelClose();
+              pointerOpened.current = false;
+              setOpen(true);
+              content.current?.querySelector<HTMLAnchorElement>("a[href]")?.focus();
+            }}
           >
-            <IconButton
-              ref={trigger}
-              type="button"
-              variant="ghost"
-              className={styles.triggerControl}
-              aria-label={labelText(label)}
-              aria-expanded={open}
-              onPointerEnter={() => {
-                cancelClose();
-                pointerOpened.current = true;
-                setOpen(true);
-              }}
-              onPointerLeave={scheduleClose}
-              onClick={(event) => {
-                // Hover may already have opened the panel. A click should keep it open.
-                event.preventDefault();
-                cancelClose();
-                pointerOpened.current = false;
-                setOpen(true);
-                content.current?.querySelector<HTMLAnchorElement>("a[href]")?.focus();
-              }}
-            >
-              {icon}
-            </IconButton>
-          </Section>
+            {icon}
+          </IconButton>
         </Popover.Trigger>
         <Popover.Content
           ref={content}

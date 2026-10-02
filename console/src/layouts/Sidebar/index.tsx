@@ -17,7 +17,7 @@ import { MenuItem, SidebarMenuState, SubMenu } from "./Menu";
 import styles from "./s.module.css";
 
 const SIDEBAR_WIDTH = "234px";
-const SIDEBAR_COLLAPSED_WIDTH = "84px";
+const SIDEBAR_COLLAPSED_WIDTH = "88px";
 
 function MenuLabel({ children, active = false }: { children: ReactNode; active?: boolean }) {
   return (
@@ -33,9 +33,12 @@ function MenuTrunk({ collapsed, children }: { collapsed: boolean; children: Reac
 }
 
 function SectionTitle({ label, collapsed }: { label: string; collapsed: boolean }) {
+  if (collapsed) {
+    return <Section size="1" mt="3" pt="3" pb="0" className={styles.sectionRule} />;
+  }
   return (
     <Section size="1" py="3" className={styles.sectionRule}>
-      <Flex align="center" justify={collapsed ? "center" : "start"} gap="2">
+      <Flex align="center" justify="start" gap="2">
         <Text as="span" size="1" weight="bold" className={styles.sectionTitle}>
           {label}
         </Text>
@@ -46,28 +49,48 @@ function SectionTitle({ label, collapsed }: { label: string; collapsed: boolean 
 
 function createMenuItemStyles(collapsed: boolean) {
   return {
-    button: ({ active, level = 0 }: { active: boolean; level?: number }) => ({
-      height: level > 0 ? "34px" : "40px",
-      margin: level > 0 ? (collapsed ? "var(--space-1) var(--space-2)" : "var(--space-1) 0 var(--space-1) var(--space-6)") : "var(--space-2) 0",
-      borderRadius: "var(--radius-chip)",
-      paddingLeft: "var(--space-3)",
-      paddingRight: "var(--space-3)",
-      fontSize: level > 0 ? "14px" : "15px",
-      fontWeight: 400,
-      color: active ? "var(--accent-11)" : "var(--gray-11)",
-      backgroundColor: active ? "var(--accent-a3)" : "transparent",
-      transition: "background-color 150ms ease, color 150ms ease",
-      "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
-      "&:focus-visible": {
-        outline: "2px solid var(--accent-8)",
-        outlineOffset: "2px",
-      },
-    }),
+    button: ({ active, level = 0 }: { active: boolean; level?: number }) =>
+      collapsed && level === 0
+        ? {
+            width: "40px",
+            height: "40px",
+            margin: "4px auto",
+            padding: "0",
+            borderRadius: "var(--radius-3)",
+            justifyContent: "center",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: active ? "var(--accent-11)" : "var(--gray-11)",
+            backgroundColor: active ? "var(--accent-a3)" : "transparent",
+            transition: "background-color 150ms ease, color 150ms ease",
+            "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
+            "&:focus-visible": {
+              outline: "2px solid var(--accent-8)",
+              outlineOffset: "2px",
+            },
+          }
+        : {
+            height: level > 0 ? "34px" : "40px",
+            margin: level > 0 ? "var(--space-1) 0 var(--space-1) var(--space-6)" : "var(--space-2) 0",
+            borderRadius: "var(--radius-chip)",
+            paddingLeft: "var(--space-3)",
+            paddingRight: "var(--space-3)",
+            fontSize: level > 0 ? "14px" : "15px",
+            fontWeight: 400,
+            color: active ? "var(--accent-11)" : "var(--gray-11)",
+            backgroundColor: active ? "var(--accent-a3)" : "transparent",
+            transition: "background-color 150ms ease, color 150ms ease",
+            "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
+            "&:focus-visible": {
+              outline: "2px solid var(--accent-8)",
+              outlineOffset: "2px",
+            },
+          },
     icon: ({ level = 0 }: { level?: number }) => ({
       width: "var(--space-5)",
       minWidth: "var(--space-5)",
       height: "var(--space-5)",
-      marginRight: "var(--space-2)",
+      marginRight: collapsed || level > 0 ? "0" : "var(--space-2)",
       color: "inherit",
       ...(level > 0 ? { display: "none" } : {}),
     }),
@@ -260,33 +283,35 @@ function Sidebar() {
           >
             <Box className={styles.panel}>
               <Flex direction="column" height="100%" minHeight="0">
-                <Section size="1" py="4" className={styles.accountBand}>
-                  <Container size="4" px="4" width="100%" maxWidth="100%">
-                    <Flex align="center" justify="between" direction={collapsed ? "column" : "row"} gap="3">
-                      <Button type="button" variant="ghost" className={styles.accountReset} aria-label={displayName}>
-                        <Flex align="center" width="100%" gap="3">
-                          <Avatar
-                            size="3"
-                            className={styles.avatar}
-                            src={avatarImageId ? buildImageUrl(avatarImageId) : undefined}
-                            fallback={<UserIcon size={20} />}
-                            alt=""
-                            aria-hidden="true"
-                          />
-                          {!collapsed && (
-                            <Flex direction="column" flexGrow="1" minWidth="0" gap="1">
-                              <Text as="span" size="1" className={styles.accountRole}>
-                                {t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}
-                              </Text>
-                              <Text as="span" size="2" className={styles.accountName}>
-                                {displayName}
-                              </Text>
-                            </Flex>
-                          )}
-                        </Flex>
-                      </Button>
+                <Box>
+                  <Container size="4" width="100%" maxWidth="100%" px={collapsed ? "5" : "4"}>
+                    <Box position="relative">
+                      <Section size="1" pt="21px" pb="22px" className={styles.accountBand}>
+                        <Button type="button" variant="ghost" className={styles.accountReset} aria-label={displayName}>
+                          <Flex align="center" width="100%" gap="3">
+                            <Avatar
+                              size="3"
+                              className={styles.avatar}
+                              src={avatarImageId ? buildImageUrl(avatarImageId) : undefined}
+                              fallback={<UserIcon size={20} />}
+                              alt=""
+                              aria-hidden="true"
+                            />
+                            {!collapsed && (
+                              <Flex direction="column" flexGrow="1" minWidth="0" gap="1">
+                                <Text as="span" size="1" className={styles.accountRole}>
+                                  {t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}
+                                </Text>
+                                <Text as="span" size="2" className={styles.accountName}>
+                                  {displayName}
+                                </Text>
+                              </Flex>
+                            )}
+                          </Flex>
+                        </Button>
+                      </Section>
                       <IconButton
-                        variant="ghost"
+                        variant="outline"
                         size="1"
                         className={styles.toggle}
                         aria-label={collapsed ? t("sidebar.expand") : t("sidebar.collapse")}
@@ -295,13 +320,13 @@ function Sidebar() {
                       >
                         <AnimatedIcon icon={collapsed ? RightChevron : ArrowNarrowLeftIcon} size={14} />
                       </IconButton>
-                    </Flex>
+                    </Box>
                   </Container>
-                </Section>
+                </Box>
 
                 <Flex direction="column" flexGrow="1" minHeight="0" overflowX="hidden" overflowY="auto" className={`${styles.menu} ${collapsed ? styles.menuCollapsed : styles.menuOpen}`}>
                   <Section size="1" py="3">
-                    <Container size="4" px="3" width="100%" maxWidth="100%">
+                    <Container size="4" px={collapsed ? "5" : "3"} width="100%" maxWidth="100%">
                       <MenuTrunk collapsed={collapsed}>
                         <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
                         <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
@@ -312,11 +337,12 @@ function Sidebar() {
                 </Flex>
 
                 <Section size="1" py="3" mt="auto">
-                  <Container size="4" px="3" width="100%" maxWidth="100%">
+                  <Container size="4" px={collapsed ? "5" : "3"} width="100%" maxWidth="100%">
                     <Button
                       type="button"
                       variant="ghost"
                       className={styles.logout}
+                      data-collapsed={collapsed ? "true" : "false"}
                       onClick={handleLogout}
                       aria-label={t("sidebar.logout")}
                       title={collapsed ? t("sidebar.logout") : undefined}
