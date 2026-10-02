@@ -1,10 +1,9 @@
 name: nfx-identity-secure
-
-# HTTP 入口只有 NFX-Edge（先启动 Edge：共享网络 nfx-edge + Traefik）。
-# 本栈不跑 reverse-proxy。traefik.project 由 Edge LabelRegex 发现。
-# Must start NFX-Edge first (creates nfx-edge). This stack has no reverse-proxy.
+# Publish HTTP, gRPC, and console on ${NAS_IP}:host port.
+# NFX-Edge routes to those ports. This file has no Traefik labels and no shared network.
 
 services:
+
   auth-base:
     image: nfx-identity-auth-base:secure
     container_name: NFX-Identity-Auth-Base-Secure
@@ -20,36 +19,15 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_AUTH}"  # gRPC 端口
     ports:
-      - "${GRPC_EXT_PORT_AUTH}:${GRPC_PORT_AUTH}"  # 映射 gRPC 端口到主机
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-identity"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.identity-auth-base-secure.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.identity-auth-base-secure.entrypoints: web
-      traefik.http.middlewares.nfx-identity-auth-gw-secure.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.identity-auth-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_AUTH}`)
-      traefik.http.routers.identity-auth-base-secure.priority: "20"
-      traefik.http.routers.identity-auth-base-secure.middlewares: nfx-identity-auth-gw-secure
-      traefik.http.routers.identity-auth-base-secure.service: identity-auth-base-secure
-      traefik.http.routers.identity-auth-base-secure-tls.entrypoints: websecure
-      traefik.http.routers.identity-auth-base-secure-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_AUTH}`)
-      traefik.http.routers.identity-auth-base-secure-tls.priority: "20"
-      traefik.http.routers.identity-auth-base-secure-tls.middlewares: nfx-identity-auth-gw-secure
-      traefik.http.routers.identity-auth-base-secure-tls.service: identity-auth-base-secure
-      traefik.http.routers.identity-auth-base-secure-tls.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_AUTH}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_AUTH}:${GRPC_PORT_AUTH}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-identity
-      - nfx-edge
-      - nfx-stack
 
   #! Image Base Service (all services in goroutines)
+
   asset-base:
     image: nfx-identity-asset-base:secure
     container_name: NFX-Identity-Asset-Base-Secure
@@ -65,36 +43,13 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_ASSET}"  # gRPC 端口
     ports:
-      - "${GRPC_EXT_PORT_ASSET}:${GRPC_PORT_ASSET}"  # 映射 gRPC 端口到主机
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-identity"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.identity-asset-base-secure.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.identity-asset-base-secure.entrypoints: web
-      traefik.http.middlewares.nfx-identity-asset-gw-secure.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.identity-asset-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ASSET}`)
-      traefik.http.routers.identity-asset-base-secure.priority: "20"
-      traefik.http.routers.identity-asset-base-secure.middlewares: nfx-identity-asset-gw-secure
-      traefik.http.routers.identity-asset-base-secure.service: identity-asset-base-secure
-      traefik.http.routers.identity-asset-base-secure-tls.entrypoints: websecure
-      traefik.http.routers.identity-asset-base-secure-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_ASSET}`)
-      traefik.http.routers.identity-asset-base-secure-tls.priority: "20"
-      traefik.http.routers.identity-asset-base-secure-tls.middlewares: nfx-identity-asset-gw-secure
-      traefik.http.routers.identity-asset-base-secure-tls.service: identity-asset-base-secure
-      traefik.http.routers.identity-asset-base-secure-tls.tls: "true"
+      - "${NAS_IP}:${HTTP_EXT_PORT_ASSET}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_ASSET}:${GRPC_PORT_ASSET}"
     volumes:
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
       - ./inputs/asset/configuration/secure.toml:/app/config.toml:ro
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-identity
-      - nfx-edge
-      - nfx-stack
-
 
   console:
     image: nfx-identity-console:secure
@@ -105,59 +60,9 @@ services:
       target: secure
       args:
         VITE_API_URL: ${VITE_API_URL}
-        VITE_WS_URL: ${VITE_WS_URL}
         VITE_BUILD_ENV: ${VITE_BUILD_ENV:-secure}
         VITE_APP_ID: ${VITE_APP_ID:-nfx-console-secure}
         VITE_BASE: ${VITE_BASE}
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-identity"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.identity-console-secure.loadbalancer.server.port: "${CONSOLE_PORT}"
-      traefik.http.middlewares.identity-console-root-secure.redirectregex.regex: ^https?://[^/]+/?$$
-      traefik.http.middlewares.identity-console-root-secure.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-identity/
-      traefik.http.middlewares.identity-console-root-secure.redirectregex.permanent: "true"
-      traefik.http.routers.identity-console-secure.entrypoints: web
-      traefik.http.routers.identity-console-secure.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-identity`)"
-      traefik.http.routers.identity-console-secure.service: identity-console-secure
-      traefik.http.routers.identity-console-secure.priority: "25"
-      traefik.http.routers.identity-console-secure-tls.entrypoints: websecure
-      traefik.http.routers.identity-console-secure-tls.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-identity`)"
-      traefik.http.routers.identity-console-secure-tls.service: identity-console-secure
-      traefik.http.routers.identity-console-secure-tls.tls: "true"
-      traefik.http.routers.identity-console-secure-tls.priority: "25"
-      traefik.http.routers.identity-console-host-secure.entrypoints: web
-      traefik.http.routers.identity-console-host-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-identity`)
-      traefik.http.routers.identity-console-host-secure.service: identity-console-secure
-      traefik.http.routers.identity-console-host-secure.priority: "200"
-      traefik.http.routers.identity-console-host-secure-tls.entrypoints: websecure
-      traefik.http.routers.identity-console-host-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-identity`)
-      traefik.http.routers.identity-console-host-secure-tls.service: identity-console-secure
-      traefik.http.routers.identity-console-host-secure-tls.tls: "true"
-      traefik.http.routers.identity-console-host-secure-tls.priority: "200"
-      traefik.http.routers.identity-console-root-secure.entrypoints: web
-      traefik.http.routers.identity-console-root-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
-      traefik.http.routers.identity-console-root-secure.middlewares: identity-console-root-secure
-      traefik.http.routers.identity-console-root-secure.service: identity-console-secure
-      traefik.http.routers.identity-console-root-secure.priority: "210"
-      traefik.http.routers.identity-console-root-secure-tls.entrypoints: websecure
-      traefik.http.routers.identity-console-root-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
-      traefik.http.routers.identity-console-root-secure-tls.middlewares: identity-console-root-secure
-      traefik.http.routers.identity-console-root-secure-tls.service: identity-console-secure
-      traefik.http.routers.identity-console-root-secure-tls.tls: "true"
-      traefik.http.routers.identity-console-root-secure-tls.priority: "210"
+    ports:
+      - "${NAS_IP}:${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
     restart: always
-    networks:
-      - nfx-identity
-      - nfx-edge
-
-networks:
-  nfx-identity:
-    name: nfx-identity-secure
-    driver: bridge
-  nfx-edge:
-    external: true
-    name: nfx-edge
-  nfx-stack:
-    external: true
-    name: nfx-stack

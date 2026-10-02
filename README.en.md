@@ -4,7 +4,7 @@
 
 NebulaForgeX login and profile hub. Go modules: **auth / asset**. Other products have no local account table.
 
-Deploy, full HTTP tables, schemas: [NFX-Documentation chapter 6](https://github.com/NebulaForgeX/NFX-Documentation/blob/main/books/en/chapter-06-nfx-identity-deployment.md). Stack and Edge first. Host gRPC **10200–10201**, console **10203**. Pin **nfx-ui 0.33.0**.
+Deploy, full HTTP tables, schemas: [NFX-Documentation chapter 6](https://github.com/NebulaForgeX/NFX-Documentation/blob/main/books/en/chapter-06-nfx-identity-deployment.md). Stack and Edge first. Dev: auth HTTP/gRPC **10030/10031**, console **10034**. Secure starts at **10035**. Pin **nfx-ui 0.33.0**.
 
 ```bash
 cp .example.env .env

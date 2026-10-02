@@ -4,7 +4,7 @@
 
 NebulaForgeX 登录与资料中心。Go 模块：**auth / asset**。其它产品没有本地账号表。
 
-部署、HTTP 全表、schema：[NFX-Documentation 第六章](https://github.com/NebulaForgeX/NFX-Documentation/blob/main/books/zh/chapter-06-nfx-identity-deployment.md)。先 Stack 与 Edge。主机 gRPC **10200–10201**，console **10203**。`nfx-ui` **0.33.0**。
+部署、HTTP 全表、schema：[NFX-Documentation 第六章](https://github.com/NebulaForgeX/NFX-Documentation/blob/main/books/zh/chapter-06-nfx-identity-deployment.md)。先 Stack 与 Edge。dev：auth HTTP/gRPC **10030/10031**，console **10034**。secure 从 **10035** 起。`nfx-ui` **0.33.0**。
 
 ```bash
 cp .example.env .env

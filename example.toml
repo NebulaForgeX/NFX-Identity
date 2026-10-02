@@ -211,7 +211,7 @@
 # ============================================================================
 [kafka]
     # Kafka broker addresses (from .env: KAFKA_BROKERS)
-    # Format: "host:port" (e.g., "192.168.1.64:10108")
+    # Format: "host:port" (e.g., "192.168.1.64:10008")
     brokers = ["${KAFKA_BROKERS}"]
     
     # Client ID for Kafka connections
@@ -306,7 +306,7 @@
     # Access service gRPC address
     
     # Auth service gRPC address
-    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
+    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_EXT_PORT_AUTH}"
     
     # Audit service gRPC address
     
@@ -340,10 +340,10 @@
 #    - See .example.env for all available environment variables
 #
 # 4. Service ports (align PulsoLink-API):
-#    Container GRPC_PORT_* = 50071+ ; host GRPC_EXT_* from 10200
-#    - auth:   GRPC_PORT_AUTH=50071  GRPC_EXT_PORT_AUTH=10200
-#    - asset:  GRPC_PORT_ASSET=50072 GRPC_EXT_PORT_ASSET=10201
-#    Console host: CONSOLE_EXTERNAL_PORT=10203
+#    Container GRPC_PORT_* = 50071+ ; host GRPC_EXT_* is the LAN port
+#    - auth dev:  HTTP 10030  GRPC_PORT_AUTH=50071  GRPC_EXT_PORT_AUTH=10031
+#    - asset dev: HTTP 10032  GRPC_PORT_ASSET=50072 GRPC_EXT_PORT_ASSET=10033
+#    Console host dev: CONSOLE_EXTERNAL_PORT=10034
 #
 # 5. Multi-host deployment support:
 #    - Each service can be configured with a different host IP using GRPC_HOST_<MODULE>

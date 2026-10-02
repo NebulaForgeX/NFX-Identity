@@ -111,7 +111,7 @@
     smtp_from = "${EMAIL_SMTP_FROM}"
 
 [grpc_client]
-    asset_addr = "${GRPC_HOST_ASSET}:${GRPC_PORT_ASSET}"
+    asset_addr = "${GRPC_HOST_ASSET}:${GRPC_EXT_PORT_ASSET}"
 
 [otel]
     enabled = true
