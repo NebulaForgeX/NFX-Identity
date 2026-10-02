@@ -5,6 +5,41 @@
 
 .content {
   background: var(--color-background);
+  min-width: 0;
+}
+
+.menu :global(.ps-menu-button) {
+  height: 40px;
+  margin: 6px 0;
+  border-radius: var(--radius-chip);
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--gray-11);
+  background-color: transparent;
+}
+
+.menu :global(.ps-submenu-content .ps-menu-button) {
+  height: 34px;
+  margin: 3px 0 3px 32px;
+  padding-left: 11px;
+  font-size: 14px;
+}
+
+.menu :global(.ps-menu-button.ps-active) {
+  color: var(--accent-11);
+  background-color: var(--accent-a3);
+}
+
+.menu :global(.ps-menu-button:hover) {
+  background-color: var(--gray-a3) !important;
+  color: var(--gray-12) !important;
+}
+
+.menu :global(.ps-menu-button.ps-active:hover) {
+  background-color: var(--accent-a3) !important;
+  color: var(--accent-11) !important;
 }
 
 .panel {
@@ -150,9 +185,9 @@
 .trunk :global(.ps-submenu-content > ul > .ps-menuitem-root)::before {
   content: "";
   position: absolute;
-  left: var(--space-5);
-  top: calc(var(--space-1) * -1);
-  bottom: calc(var(--space-1) * -1);
+  left: 21px;
+  top: -3px;
+  bottom: -3px;
   width: 1px;
   background: var(--gray-5);
   pointer-events: none;
@@ -161,13 +196,13 @@
 .trunk :global(.ps-submenu-content > ul > .ps-menuitem-root)::after {
   content: "";
   position: absolute;
-  left: var(--space-5);
-  top: calc(50% - var(--space-2));
-  width: var(--space-3);
-  height: var(--space-2);
+  left: 21px;
+  top: calc(50% - 8px);
+  width: 11px;
+  height: 8px;
   border-left: 1px solid var(--gray-5);
   border-bottom: 1px solid var(--gray-5);
-  border-bottom-left-radius: var(--radius-2);
+  border-bottom-left-radius: 8px;
   pointer-events: none;
 }
 

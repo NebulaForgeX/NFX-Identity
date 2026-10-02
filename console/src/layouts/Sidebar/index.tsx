@@ -333,7 +333,7 @@ function Sidebar() {
           </ProSidebar>
         </SidebarMenuState>
 
-        <Box minWidth="0" minHeight="0" height="100%" overflowX="hidden" position="relative" className={styles.content} >
+        <Flex direction="column" flexGrow="1" minWidth="0" minHeight="0" height="100%" overflowX="hidden" position="relative" className={styles.content}>
           <Flex direction="column" width="100%" height="100%" minHeight="0" inert={broken && toggled ? true : undefined}>
             {broken ? (
               <Section size="1" my="3" pt="0" pb="0" position="sticky" top="3" className={styles.mobileStick}>
@@ -353,7 +353,7 @@ function Sidebar() {
               </Flex>
             </Box>
           </Flex>
-        </Box>
+        </Flex>
       </Flex>
     </Box>
   );

@@ -6,8 +6,8 @@ import { safeStringable } from "@/utils";
 
 import styles from "./s.module.css";
 
-/** Wider than Radix Container size="4" (1136px) — fits sidebar layouts without huge side gutters. */
-const PAGE_FRAME_DEFAULT_MAX_WIDTH_PX = 1440;
+/** Fill the column beside the sidebar. */
+const PAGE_FRAME_DEFAULT_MAX_WIDTH = "100%";
 
 type PageFrameProps = {
   children: ReactNode;
@@ -16,7 +16,7 @@ type PageFrameProps = {
   fullHeight?: boolean;
 };
 
-function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDTH_PX, fullHeight }: PageFrameProps) {
+function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDTH, fullHeight }: PageFrameProps) {
   const resolvedMaxWidth = typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth;
   const callerClass = safeStringable(className);
   const shellClass = [fullHeight ? styles.fullHeightFrame : "", callerClass].filter(Boolean).join(" ");
