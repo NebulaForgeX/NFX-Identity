@@ -3,6 +3,10 @@
   "description": "List every Forger and Authority profile. Owner can assign auditor or administrator.",
   "search": "Search profiles",
   "ownerRequired": "Owner role required to list all profiles.",
+  "actions": {
+    "createForger": "Create Community",
+    "createAuthority": "Create Authority"
+  },
   "columns": {
     "name": "Name",
     "city": "City",

@@ -213,7 +213,16 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
               }
             />
           ) : (
-            <EmptyState icon={CameraIcon} title={t("labels.avatars")} description={empty} />
+            <EmptyState
+              icon={CameraIcon}
+              title={t("labels.avatars")}
+              description={empty}
+              action={
+                <Button size="2" onClick={() => routerEventEmitter.navigate({ to: paths.edit })}>
+                  {t("actions.edit")}
+                </Button>
+              }
+            />
           )}
           {backgrounds.length ? (
             <Fact
@@ -229,7 +238,16 @@ export default function OverviewView({ paths }: { paths: ScopePaths }) {
               }
             />
           ) : (
-            <EmptyState icon={CameraIcon} title={t("labels.backgrounds")} description={empty} />
+            <EmptyState
+              icon={CameraIcon}
+              title={t("labels.backgrounds")}
+              description={empty}
+              action={
+                <Button size="2" onClick={() => routerEventEmitter.navigate({ to: paths.edit })}>
+                  {t("actions.edit")}
+                </Button>
+              }
+            />
           )}
         </Flex>
       </LedgerSection>

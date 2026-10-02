@@ -12,6 +12,7 @@ const NotFoundPage = memo(() => {
     <PageFrame>
       <EmptyState
         icon={QuestionMark}
+        titleAs="h1"
         title="Page Not Found"
         description="The page might have been moved or deleted. Please check the URL or go back to the homepage."
         action={

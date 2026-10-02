@@ -10,9 +10,10 @@ export type EmptyStateProps = {
   title: string;
   description?: string;
   action?: ReactNode;
+  titleAs?: "h1" | "h2" | "h3";
 };
 
-export default function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+export default function EmptyState({ icon, title, description, action, titleAs = "h3" }: EmptyStateProps) {
   return (
     <Container size="1" px="4">
       <Section size="1" py="9">
@@ -20,7 +21,7 @@ export default function EmptyState({ icon, title, description, action }: EmptySt
           <Flex align="center" justify="center" className={styles.mark}>
             <AnimatedIcon icon={icon} size={24} />
           </Flex>
-          <Heading as="h3" size="4" align="center">
+          <Heading as={titleAs} size="4" align="center">
             {title}
           </Heading>
           {description ? (

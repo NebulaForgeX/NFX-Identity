@@ -202,7 +202,7 @@
 .logout {
   width: 100%;
   height: auto;
-  color: var(--red-11);
+  color: var(--gray-12);
 }
 
 .mobileStick {

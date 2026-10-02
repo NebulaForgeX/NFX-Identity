@@ -3,6 +3,10 @@
   "description": "列出全部 Forger 与 Authority 资料。Owner 可分配 auditor / administrator。",
   "search": "搜索资料",
   "ownerRequired": "需要 Owner 角色才能列出全部资料。",
+  "actions": {
+    "createForger": "创建 Community",
+    "createAuthority": "创建 Authority"
+  },
   "columns": {
     "name": "名称",
     "city": "城市",

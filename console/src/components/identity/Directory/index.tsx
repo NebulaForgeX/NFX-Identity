@@ -1,13 +1,15 @@
 import { ShieldCheck, UsersIcon } from "nfx-ui/icons";
 import { useState } from "react";
-import { Badge, Box, Container, Flex, Grid, Section, Select, Table, Text, TextField } from "@radix-ui/themes";
+import { Badge, Box, Button, Container, Flex, Grid, Section, Select, Table, Text, TextField } from "@radix-ui/themes";
 import { AuthAuthorityRoleEnum, UI_ASSIGNABLE_AUTH_AUTHORITY_ROLES } from "nfx-ui/enums";
-import { useGetPublicProfileCard, useListOwnerAuthorityProfiles, useListOwnerForgerProfiles, useUpdateAuthorityProfileRoles } from "nfx-ui/hooks";
+import { useCurrentProfile, useGetPublicProfileCard, useListOwnerAuthorityProfiles, useListOwnerForgerProfiles, useUpdateAuthorityProfileRoles } from "nfx-ui/hooks";
 import type { Profile } from "nfx-ui/types";
 import { useTranslation } from "react-i18next";
 
 import { EmptyState, PageHeader } from "@/components";
+import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
+import { scopePaths } from "@/navigations";
 import { formatDateTime, safeArray, safeStringable } from "@/utils";
 
 import { FieldList, FieldRow, LedgerSection } from "../Ledger";
@@ -15,6 +17,7 @@ import styles from "./s.module.css";
 
 export default function DirectoryView() {
   const { t } = useTranslation("pages.Directory");
+  const { kind } = useCurrentProfile();
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const forgers = useListOwnerForgerProfiles(query);
@@ -41,7 +44,18 @@ export default function DirectoryView() {
         <Flex direction="column" gap="6" minWidth="0">
           <LedgerSection title={t("forger.title")} description={t("forger.description")}>
             {forgerItems.length === 0 ? (
-              <EmptyState icon={UsersIcon} title={t("forger.empty")} />
+              <EmptyState
+                icon={UsersIcon}
+                title={t("forger.empty")}
+                action={
+                  <Button
+                    size="2"
+                    onClick={() => (query ? setQuery("") : routerEventEmitter.navigate({ to: scopePaths(kind).identity }))}
+                  >
+                    {query ? t("search") : t("actions.createForger")}
+                  </Button>
+                }
+              />
             ) : (
               <Box className={styles.table}>
                 <Table.Root variant="ghost" size="2">
@@ -82,7 +96,18 @@ export default function DirectoryView() {
 
           <LedgerSection title={t("authority.title")} description={t("authority.description")}>
             {authorityItems.length === 0 ? (
-              <EmptyState icon={ShieldCheck} title={t("authority.empty")} />
+              <EmptyState
+                icon={ShieldCheck}
+                title={t("authority.empty")}
+                action={
+                  <Button
+                    size="2"
+                    onClick={() => (query ? setQuery("") : routerEventEmitter.navigate({ to: scopePaths(kind).identity }))}
+                  >
+                    {query ? t("search") : t("actions.createAuthority")}
+                  </Button>
+                }
+              />
             ) : (
               <Box className={styles.table}>
                 <Table.Root variant="ghost" size="2">

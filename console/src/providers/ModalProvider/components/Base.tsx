@@ -36,7 +36,7 @@ const Base = () => {
           <Text color={config.color}>
             <LucideIcon icon={config.icon} size={28} strokeWidth={1.8} />
           </Text>
-          {title ? <Dialog.Title>{title}</Dialog.Title> : null}
+          {title ? <Dialog.Title as="h2">{title}</Dialog.Title> : null}
           <Text as="p" align="center" color="gray" size="2">
             {message || "No message"}
           </Text>

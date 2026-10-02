@@ -180,7 +180,7 @@ const DateTimePicker = () => {
                     <LucideIcon icon={CalendarDays} size={22} />
                   </Flex>
                   <Flex direction="column" minWidth="0">
-                    <Dialog.Title size="2" weight="medium">
+                    <Dialog.Title as="h2" size="2" weight="medium">
                       {title ?? t("datePicker.title")}
                     </Dialog.Title>
                     <Section size="1" py="0" mt="1">
