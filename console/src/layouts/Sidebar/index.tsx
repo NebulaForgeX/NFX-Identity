@@ -253,7 +253,7 @@ function Sidebar() {
                 </Container>
               </Box>
 
-              <Box minHeight="0" className={styles.menuArea} data-collapsed={collapsed ? "true" : "false"}>
+              <Flex direction="column" flexGrow="1" minHeight="0" className={styles.menuArea} data-collapsed={collapsed ? "true" : "false"}>
                 <Section size="1" py="2">
                   <Container size="4" width="100%" maxWidth="100%" px="5">
                     <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
@@ -261,7 +261,7 @@ function Sidebar() {
                     <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
                   </Container>
                 </Section>
-              </Box>
+              </Flex>
 
               <Section size="1" pt="3" pb="5" className={styles.footer} data-collapsed={collapsed ? "true" : "false"}>
                 <Container size="4" width="100%" maxWidth="100%" px="5">
