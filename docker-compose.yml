@@ -63,6 +63,9 @@ services:
         VITE_BUILD_ENV: ${VITE_BUILD_ENV:-secure}
         VITE_APP_ID: ${VITE_APP_ID:-nfx-console-secure}
         VITE_BASE: ${VITE_BASE}
+    environment:
+      NAS_IP: ${NAS_IP}
+      NGINX_ENVSUBST_FILTER: NAS_IP
     ports:
       - "${NAS_IP}:${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
     restart: always
