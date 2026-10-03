@@ -35,5 +35,8 @@
   },
   "labels": {
     "owner": "所有者"
+  },
+  "toasts": {
+    "updateRolesSuccess": "角色已更新。"
   }
 }

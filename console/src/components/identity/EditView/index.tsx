@@ -101,7 +101,7 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
   const prepareUpload = usePrepareImageUpload();
   const confirmUpload = useConfirmImageUpload();
   const confirmAvatar = useConfirmProfileAvatar();
-  const clearAvatar = useClearProfileAvatar();
+  const clearAvatar = useClearProfileAvatar({ successMsg: t("toasts.clearAvatarSuccess") });
   const deleteImage = useDeleteImage({ ifShowError: false });
   const fileRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<Nullable<string>>(null);
@@ -220,8 +220,8 @@ function genderLabel(t: (key: string) => string, value: string) {
 
 function ProfileFields({ profile }: { profile: Profile.Response.ProfileBase }) {
   const { t } = useTranslation("pages.User.Profile.Edit");
-  const form = useInitUserProfileEditForm(profile);
-  const patch = usePatchProfile();
+  const form = useInitUserProfileEditForm(t, profile);
+  const patch = usePatchProfile({ successMsg: t("saveSuccess") });
 
   useEffect(() => {
     form.reset(buildUserProfileEditDefaults(profile));

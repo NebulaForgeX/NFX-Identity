@@ -1,6 +1,6 @@
 import { makeStore } from "@/utils";
 
-type ModalType = "success" | "error" | "info" | "dateTimePicker";
+type ModalType = "success" | "error" | "info" | "dateTimePicker" | "loading";
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -22,10 +22,17 @@ export interface DateTimePickerModalProps {
   onCancel?: () => void;
 }
 
+interface LoadingModalProps {
+  isOpen: boolean;
+  message?: string;
+  title?: string;
+}
+
 interface ModalState {
   modalType: ModalType | undefined;
   baseModal: BaseModalProps;
   dateTimePickerModal: DateTimePickerModalProps;
+  loadingModal: LoadingModalProps;
 }
 
 interface ModalActions {
@@ -40,6 +47,8 @@ const defaultBaseModalProps: BaseModalProps = {
   confirmText: "Confirm",
   onClick: undefined,
 };
+
+const defaultLoadingModalProps: LoadingModalProps = { isOpen: false };
 
 const defaultDateTimePickerModalProps: DateTimePickerModalProps = {
   isOpen: false,
@@ -63,6 +72,7 @@ const { store: ModalStore, useStore: useModalStore } = makeStore<ModalState, Mod
     modalType: undefined,
     baseModal: defaultBaseModalProps,
     dateTimePickerModal: defaultDateTimePickerModalProps,
+    loadingModal: defaultLoadingModalProps,
   },
   (set) => ({
     showModal: (modalType, props) => {
@@ -99,6 +109,7 @@ const { store: ModalStore, useStore: useModalStore } = makeStore<ModalState, Mod
           modalType: undefined,
           baseModal: defaultBaseModalProps,
           dateTimePickerModal: defaultDateTimePickerModalProps,
+          loadingModal: defaultLoadingModalProps,
         });
         return;
       }
@@ -185,6 +196,16 @@ export const showDateTimePickerModal = (props: ShowDateTimePickerModalProps) => 
     onConfirm: props.onConfirm,
     onCancel: props.onCancel,
   });
+};
+
+export const showLoading = (props?: { message?: string; title?: string }) => {
+  ModalStore.setState({
+    loadingModal: { isOpen: true, message: props?.message, title: props?.title },
+  });
+};
+
+export const hideLoading = () => {
+  ModalStore.setState({ loadingModal: defaultLoadingModalProps });
 };
 
 export const showConfirm = (props: ShowConfirmProps) => {

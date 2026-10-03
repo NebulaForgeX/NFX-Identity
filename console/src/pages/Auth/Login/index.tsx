@@ -21,8 +21,8 @@ gsap.registerPlugin(useGSAP);
 
 export default function LoginPage() {
   const { t } = useTranslation("pages.Account.Login");
-  const emailForm = useInitLoginForm();
-  const phoneForm = useInitLoginWithPhoneForm();
+  const emailForm = useInitLoginForm(t);
+  const phoneForm = useInitLoginWithPhoneForm(t);
   const loginEmail = useLoginWithEmail();
   const loginPhone = useLoginWithPhone();
   const [channel, setChannel] = useState<"email" | "phone">("email");

@@ -32,8 +32,8 @@ function Step({ done, label }: { done: boolean; label: string }) {
 export default function SecurityView() {
   const { t } = useTranslation("pages.Profile.Security");
   const currentLanguage = usePreferenceStore((s) => s.language);
-  const changePassword = useChangePassword();
-  const sendCode = useSendChangePasswordVerificationCode();
+  const changePassword = useChangePassword({ successMsg: t("toasts.changePasswordSuccess") });
+  const sendCode = useSendChangePasswordVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
   const emails = useListEmails();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");

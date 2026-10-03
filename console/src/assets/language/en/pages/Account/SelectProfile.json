@@ -7,6 +7,7 @@
   "eyebrow": "Choose identity",
   "title": "Which Profile continues?",
   "subtitle": "Your Account can hold more than one Profile.",
+  "switching": "Switching profile…",
   "kind": {
     "authority": "Authority",
     "community": "Community"

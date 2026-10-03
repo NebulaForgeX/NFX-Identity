@@ -26,5 +26,9 @@
       "length": "Nouveau mot de passe de 8 caractères ou plus",
       "code": "Code à 6 chiffres saisi"
     }
+  },
+  "toasts": {
+    "changePasswordSuccess": "Mot de passe mis à jour.",
+    "sendVerificationCodeSuccess": "Si cette adresse peut recevoir des e-mails, un code de vérification a été envoyé."
   }
 }

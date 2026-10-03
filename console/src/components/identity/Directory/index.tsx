@@ -22,7 +22,7 @@ export default function DirectoryView() {
   const [selectedId, setSelectedId] = useState("");
   const forgers = useListOwnerForgerProfiles(query);
   const authorities = useListOwnerAuthorityProfiles(query);
-  const updateRoles = useUpdateAuthorityProfileRoles();
+  const updateRoles = useUpdateAuthorityProfileRoles({ successMsg: t("toasts.updateRolesSuccess") });
   const card = useGetPublicProfileCard(selectedId);
   const forgerItems = safeArray(forgers.data?.items);
   const authorityItems = safeArray(authorities.data?.items);

@@ -26,5 +26,9 @@
       "length": "New password has 8+ characters",
       "code": "6-digit code entered"
     }
+  },
+  "toasts": {
+    "changePasswordSuccess": "Password updated.",
+    "sendVerificationCodeSuccess": "If this address can receive email, a verification code has been sent."
   }
 }

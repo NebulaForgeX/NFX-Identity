@@ -1,6 +1,7 @@
 {
   "title": "Identities",
   "description": "Emails, phones, and every Profile on this Account.",
+  "profileSwitching": "Switching profile…",
   "empty": {
     "emails": "No emails yet.",
     "phones": "No phones yet.",
@@ -64,5 +65,18 @@
       "title": "Profiles",
       "description": "Switch or create Forger and Authority identities."
     }
+  },
+  "toasts": {
+    "createEmailSuccess": "Email added.",
+    "verifyEmailSuccess": "Email verified.",
+    "updateEmailSuccess": "Email updated.",
+    "setPrimaryEmailSuccess": "Primary email updated.",
+    "deleteEmailSuccess": "Email removed.",
+    "sendVerificationCodeSuccess": "If this address can receive email, a verification code has been sent.",
+    "createPhoneSuccess": "Phone added.",
+    "verifyPhoneSuccess": "Phone verified.",
+    "updatePhoneSuccess": "Phone updated.",
+    "setPrimaryPhoneSuccess": "Primary phone updated.",
+    "deletePhoneSuccess": "Phone removed."
   }
 }

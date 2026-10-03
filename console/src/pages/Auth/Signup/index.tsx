@@ -45,9 +45,9 @@ function Step({ index, label }: { index: string; label: string }) {
 
 export default function SignupPage() {
   const { t } = useTranslation("pages.Account.Signup");
-  const form = useInitSignupForm();
+  const form = useInitSignupForm(t);
   const signup = useSignupWithEmail();
-  const sendCode = useSendVerificationCode();
+  const sendCode = useSendVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
   const language = usePreferenceStore((s) => s.language);
   const rootRef = useRef<HTMLDivElement>(null);
 

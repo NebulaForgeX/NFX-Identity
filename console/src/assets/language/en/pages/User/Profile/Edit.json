@@ -113,5 +113,8 @@
     "confirm": "Confirm",
     "open": "Open calendar",
     "placeholder": "YYYY-MM-DD"
+  },
+  "toasts": {
+    "clearAvatarSuccess": "Avatar removed."
   }
 }

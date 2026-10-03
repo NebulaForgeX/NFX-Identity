@@ -34,7 +34,7 @@ import { useTranslation } from "react-i18next";
 import { EmptyState, PageHeader, Surface, Suspense } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
-import { profileHome } from "@/navigations";
+import { ROUTES } from "@/navigations";
 import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
 
 import { LedgerSection } from "../Ledger";
@@ -52,11 +52,11 @@ function EmailRow({
 }) {
   const { t } = useTranslation("pages.Profile.Identity");
   const currentLanguage = usePreferenceStore((s) => s.language);
-  const deleteEmail = useDeleteEmail();
-  const setPrimary = useSetPrimaryEmail();
-  const sendCode = useSendEmailVerificationCode();
-  const verify = useVerifyEmail();
-  const updateEmail = useUpdateEmail();
+  const deleteEmail = useDeleteEmail({ successMsg: t("toasts.deleteEmailSuccess") });
+  const setPrimary = useSetPrimaryEmail({ successMsg: t("toasts.setPrimaryEmailSuccess") });
+  const sendCode = useSendEmailVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
+  const verify = useVerifyEmail({ successMsg: t("toasts.verifyEmailSuccess") });
+  const updateEmail = useUpdateEmail({ successMsg: t("toasts.updateEmailSuccess") });
   const [code, setCode] = useState("");
   const [nextEmail, setNextEmail] = useState(item.email);
   const [editing, setEditing] = useState(false);
@@ -149,7 +149,7 @@ function EmailRow({
 function EmailsPanel() {
   const { t } = useTranslation("pages.Profile.Identity");
   const emails = useListEmails();
-  const createEmail = useCreateEmail();
+  const createEmail = useCreateEmail({ successMsg: t("toasts.createEmailSuccess") });
   const [newEmail, setNewEmail] = useState("");
   const items = safeArray(emails.data?.items);
 
@@ -189,11 +189,11 @@ function PhoneRow({
   };
 }) {
   const { t } = useTranslation("pages.Profile.Identity");
-  const deletePhone = useDeletePhone();
-  const setPrimary = useSetPrimaryPhone();
-  const sendCode = useSendPhoneVerificationCode();
-  const verify = useVerifyPhone();
-  const updatePhone = useUpdatePhone();
+  const deletePhone = useDeletePhone({ successMsg: t("toasts.deletePhoneSuccess") });
+  const setPrimary = useSetPrimaryPhone({ successMsg: t("toasts.setPrimaryPhoneSuccess") });
+  const sendCode = useSendPhoneVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
+  const verify = useVerifyPhone({ successMsg: t("toasts.verifyPhoneSuccess") });
+  const updatePhone = useUpdatePhone({ successMsg: t("toasts.updatePhoneSuccess") });
   const [code, setCode] = useState("");
   const [nextPhone, setNextPhone] = useState(item.phone);
   const [editing, setEditing] = useState(false);
@@ -281,7 +281,7 @@ function PhoneRow({
 function PhonesPanel() {
   const { t } = useTranslation("pages.Profile.Identity");
   const phones = useListPhones();
-  const createPhone = useCreatePhone();
+  const createPhone = useCreatePhone({ successMsg: t("toasts.createPhoneSuccess") });
   const [newPhone, setNewPhone] = useState("");
   const items = safeArray(phones.data?.items);
 
@@ -322,7 +322,12 @@ function ProfilesPanel() {
   const createForger = useCreateForgerProfile();
   const createAuthority = useCreateAuthorityProfile();
   const deleteProfile = useDeleteProfile();
-  const selectProfile = useSelectProfile();
+  const selectProfile = useSelectProfile({
+    switchingMsg: t("profileSwitching"),
+    onCommit: () => {
+      routerEventEmitter.navigate({ to: ROUTES.HOME, replace: true });
+    },
+  });
   const [forgerName, setForgerName] = useState("");
   const [authorityName, setAuthorityName] = useState("");
   const [profileLanguage, setProfileLanguage] = useState<LanguageEnum>(LanguageEnum.EN);
@@ -351,7 +356,6 @@ function ProfilesPanel() {
     setSwitchingId(profileId);
     try {
       await selectProfile.mutateAsync({ profileId, kind });
-      routerEventEmitter.navigate({ to: profileHome(kind), replace: true });
     } finally {
       setSwitchingId(null);
     }

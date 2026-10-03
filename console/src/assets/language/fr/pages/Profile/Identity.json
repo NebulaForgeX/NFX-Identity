@@ -1,6 +1,7 @@
 {
   "title": "Identités",
   "description": "E-mails, téléphones et tous les Profile de ce Account.",
+  "profileSwitching": "Changement de profil…",
   "empty": {
     "emails": "Aucun e-mail.",
     "phones": "Aucun téléphone.",
@@ -64,5 +65,18 @@
       "title": "Profils",
       "description": "Changer ou créer des identités Forger et Authority."
     }
+  },
+  "toasts": {
+    "createEmailSuccess": "E-mail ajouté.",
+    "verifyEmailSuccess": "E-mail vérifié.",
+    "updateEmailSuccess": "E-mail mis à jour.",
+    "setPrimaryEmailSuccess": "E-mail principal mis à jour.",
+    "deleteEmailSuccess": "E-mail supprimé.",
+    "sendVerificationCodeSuccess": "Si cette adresse peut recevoir des e-mails, un code de vérification a été envoyé.",
+    "createPhoneSuccess": "Téléphone ajouté.",
+    "verifyPhoneSuccess": "Téléphone vérifié.",
+    "updatePhoneSuccess": "Téléphone mis à jour.",
+    "setPrimaryPhoneSuccess": "Téléphone principal mis à jour.",
+    "deletePhoneSuccess": "Téléphone supprimé."
   }
 }

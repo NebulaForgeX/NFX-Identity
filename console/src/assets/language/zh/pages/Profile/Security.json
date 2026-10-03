@@ -26,5 +26,9 @@
       "length": "新密码不少于 8 位",
       "code": "已填写 6 位验证码"
     }
+  },
+  "toasts": {
+    "changePasswordSuccess": "密码已更新。",
+    "sendVerificationCodeSuccess": "若邮箱可用，验证码已发送，请查收邮件。"
   }
 }

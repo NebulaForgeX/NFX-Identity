@@ -1,6 +1,8 @@
 import type { CreateI18nResourcesResult, NameSpacesMap, Resources } from "nfx-ui/languages";
 
-import enHooks from "./en/hooks.json";
+import enLayout from "./en/layout.json";
+import enPreference from "./en/preference.json";
+import enTheme from "./en/theme.json";
 import enLanguage from "./en/language.json";
 import enAuthShell from "./en/pages/Account/AuthShell.json";
 import enLogin from "./en/pages/Account/Login.json";
@@ -14,7 +16,9 @@ import enProfileOverview from "./en/pages/Profile/Overview.json";
 import enProfileSecurity from "./en/pages/Profile/Security.json";
 import enUserProfileEdit from "./en/pages/User/Profile/Edit.json";
 import enUserSetting from "./en/pages/User/Setting.json";
-import frHooks from "./fr/hooks.json";
+import frLayout from "./fr/layout.json";
+import frPreference from "./fr/preference.json";
+import frTheme from "./fr/theme.json";
 import frLanguage from "./fr/language.json";
 import frAuthShell from "./fr/pages/Account/AuthShell.json";
 import frLogin from "./fr/pages/Account/Login.json";
@@ -28,7 +32,9 @@ import frProfileOverview from "./fr/pages/Profile/Overview.json";
 import frProfileSecurity from "./fr/pages/Profile/Security.json";
 import frUserProfileEdit from "./fr/pages/User/Profile/Edit.json";
 import frUserSetting from "./fr/pages/User/Setting.json";
-import zhHooks from "./zh/hooks.json";
+import zhLayout from "./zh/layout.json";
+import zhPreference from "./zh/preference.json";
+import zhTheme from "./zh/theme.json";
 import zhLanguage from "./zh/language.json";
 import zhAuthShell from "./zh/pages/Account/AuthShell.json";
 import zhLogin from "./zh/pages/Account/Login.json";
@@ -60,7 +66,9 @@ const PAGE = {
 
 const BUILTIN_I18N_NAMESPACES_MAP: NameSpacesMap = {
   language: "language",
-  hooks: "hooks",
+  theme: "theme",
+  layout: "layout",
+  preference: "preference",
   ...PAGE,
 };
 
@@ -69,7 +77,9 @@ const BUILTIN_I18N_NAMESPACES = Object.values(BUILTIN_I18N_NAMESPACES_MAP);
 const BUILTIN_I18N_RESOURCES: Resources = {
   en: {
     language: enLanguage,
-    hooks: enHooks,
+    theme: enTheme,
+      layout: enLayout,
+      preference: enPreference,
     [PAGE.AuthShell]: enAuthShell,
     [PAGE.Login]: enLogin,
     [PAGE.Signup]: enSignup,
@@ -85,7 +95,9 @@ const BUILTIN_I18N_RESOURCES: Resources = {
   },
   zh: {
     language: zhLanguage,
-    hooks: zhHooks,
+    theme: zhTheme,
+      layout: zhLayout,
+      preference: zhPreference,
     [PAGE.AuthShell]: zhAuthShell,
     [PAGE.Login]: zhLogin,
     [PAGE.Signup]: zhSignup,
@@ -101,7 +113,9 @@ const BUILTIN_I18N_RESOURCES: Resources = {
   },
   fr: {
     language: frLanguage,
-    hooks: frHooks,
+    theme: frTheme,
+      layout: frLayout,
+      preference: frPreference,
     [PAGE.AuthShell]: frAuthShell,
     [PAGE.Login]: frLogin,
     [PAGE.Signup]: frSignup,

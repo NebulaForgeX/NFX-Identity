@@ -113,5 +113,8 @@
     "confirm": "确认",
     "open": "打开日历",
     "placeholder": "YYYY-MM-DD"
+  },
+  "toasts": {
+    "clearAvatarSuccess": "头像已移除。"
   }
 }

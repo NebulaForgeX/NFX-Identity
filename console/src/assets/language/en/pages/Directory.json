@@ -35,5 +35,8 @@
   },
   "labels": {
     "owner": "Owner"
+  },
+  "toasts": {
+    "updateRolesSuccess": "Roles updated."
   }
 }

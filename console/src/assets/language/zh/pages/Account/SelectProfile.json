@@ -7,6 +7,7 @@
   "eyebrow": "选择身份",
   "title": "用哪个 Profile 继续？",
   "subtitle": "一个 Account 可以持有多个 Profile。",
+  "switching": "正在切换档案…",
   "kind": {
     "authority": "Authority",
     "community": "Community"

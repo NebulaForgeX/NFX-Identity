@@ -10,7 +10,7 @@ import type { Profile } from "nfx-ui/types";
 
 import { EmptyState } from "@/components";
 import { routerEventEmitter } from "@/events/router";
-import { profileHome } from "@/navigations";
+import { ROUTES } from "@/navigations";
 import AuthChrome from "@/pages/Auth/shared/AuthChrome";
 import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeArray } from "@/utils";
 
@@ -20,7 +20,12 @@ gsap.registerPlugin(useGSAP);
 
 export default function SelectProfilePage() {
   const { t } = useTranslation("pages.Account.SelectProfile");
-  const selectProfile = useSelectProfile();
+  const selectProfile = useSelectProfile({
+    switchingMsg: t("switching"),
+    onCommit: () => {
+      routerEventEmitter.navigate({ to: ROUTES.HOME, replace: true });
+    },
+  });
   const createForger = useCreateForgerProfile();
   const createAuthority = useCreateAuthorityProfile();
   const communityProfiles = useListProfiles(ProfileKindEnum.COMMUNITY);
@@ -51,7 +56,6 @@ export default function SelectProfilePage() {
 
   const enter = async (profileId: string, kind: ProfileKindEnum) => {
     await selectProfile.mutateAsync({ profileId, kind });
-    routerEventEmitter.navigate({ to: profileHome(kind), replace: true });
   };
 
   const renderColumn = (kind: ProfileKindEnum, items: Array<Profile.Response.ForgerProfileItem | Profile.Response.AuthorityProfileItem>) => {

@@ -113,5 +113,8 @@
     "confirm": "Confirmer",
     "open": "Ouvrir le calendrier",
     "placeholder": "YYYY-MM-DD"
+  },
+  "toasts": {
+    "clearAvatarSuccess": "Avatar retiré."
   }
 }

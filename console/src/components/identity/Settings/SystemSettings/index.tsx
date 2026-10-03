@@ -12,7 +12,7 @@ import styles from "./s.module.css";
 export default function SystemSettings() {
   const { t } = useTranslation("pages.User.Setting", { keyPrefix: "systemSettings" });
   const { profile } = useCurrentProfile();
-  const update = useUpdateProfileSettings();
+  const update = useUpdateProfileSettings({ successMsg: t("saveSuccess") });
   const baseline = profile?.settings?.loginNotification ?? true;
   const [edited, setEdited] = useState<Nullable<boolean>>(null);
   const loginNotification = edited ?? baseline;

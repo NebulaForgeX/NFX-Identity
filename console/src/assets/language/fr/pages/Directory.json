@@ -35,5 +35,8 @@
   },
   "labels": {
     "owner": "Propriétaire"
+  },
+  "toasts": {
+    "updateRolesSuccess": "Rôles mis à jour."
   }
 }

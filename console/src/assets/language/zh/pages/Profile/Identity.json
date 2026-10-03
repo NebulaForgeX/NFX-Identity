@@ -1,6 +1,7 @@
 {
   "title": "身份",
   "description": "此账号下的邮箱、手机与全部 Profile。",
+  "profileSwitching": "正在切换档案…",
   "empty": {
     "emails": "尚无邮箱。",
     "phones": "尚无手机。",
@@ -64,5 +65,18 @@
       "title": "资料",
       "description": "切换或创建 Forger / Authority 身份。"
     }
+  },
+  "toasts": {
+    "createEmailSuccess": "邮箱已添加。",
+    "verifyEmailSuccess": "邮箱已验证。",
+    "updateEmailSuccess": "邮箱已更新。",
+    "setPrimaryEmailSuccess": "主邮箱已更新。",
+    "deleteEmailSuccess": "邮箱已删除。",
+    "sendVerificationCodeSuccess": "若邮箱可用，验证码已发送，请查收邮件。",
+    "createPhoneSuccess": "手机已添加。",
+    "verifyPhoneSuccess": "手机已验证。",
+    "updatePhoneSuccess": "手机已更新。",
+    "setPrimaryPhoneSuccess": "主手机已更新。",
+    "deletePhoneSuccess": "手机已删除。"
   }
 }
