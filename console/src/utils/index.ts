@@ -3,3 +3,4 @@ export { makeStore } from "nfx-ui/stores";
 export { putToPresignedUrl, minioUploadMessage } from "./minioPut";
 export { getCommandMessage } from "./commandMessage";
 export { logoutSession } from "./logoutSession";
+export { profileRoles } from "./profileRoles";

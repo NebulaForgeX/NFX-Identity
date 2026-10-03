@@ -6,7 +6,12 @@
     "description": "请先加载资料后再编辑公开信息。"
   },
   "actions": {
-    "saveChanges": "保存更改"
+    "saveChanges": "保存更改",
+    "discard": "放弃更改"
+  },
+  "status": {
+    "dirty": "有未保存的更改",
+    "clean": "已全部保存"
   },
   "saveSuccess": "资料已更新",
   "labels": {

@@ -17,6 +17,14 @@
     "password": {
       "title": "Mot de passe",
       "description": "Le mot de passe actuel et un code envoyé à l'e-mail principal sont requis."
+    },
+    "checklist": {
+      "title": "Avant la mise à jour",
+      "description": "Chaque étape s'allume quand le formulaire est prêt.",
+      "email": "E-mail principal défini",
+      "current": "Mot de passe actuel saisi",
+      "length": "Nouveau mot de passe de 8 caractères ou plus",
+      "code": "Code à 6 chiffres saisi"
     }
   }
 }

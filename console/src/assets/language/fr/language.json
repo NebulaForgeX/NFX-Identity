@@ -41,7 +41,8 @@
     "scaling": "Échelle",
     "language": "Langue",
     "products": "Produits",
-    "panel": "Control panel"
+    "panel": "Control panel",
+    "breadcrumb": "Fil d'Ariane"
   },
   "sidebar": {
     "mainMenu": "Menu principal",

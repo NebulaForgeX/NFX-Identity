@@ -1,8 +1,8 @@
 import { Check, RefreshCw, Save } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Badge, Box, Button, Container, Flex, Grid, Heading, RadioCards, Section, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
+import { useState } from "react";
+import { Avatar, Badge, Box, Button, Container, Flex, Grid, Heading, Section, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
-import { AccentColorEnum, AppearanceEnum, GrayColorEnum, LanguageEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
+import { AccentColorEnum, AppearanceEnum, GrayColorEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
 import { useBaseLabel, useSyncPreference } from "nfx-ui/hooks";
 import { usePreferenceStore } from "nfx-ui/stores";
 import {
@@ -19,7 +19,7 @@ import {
 } from "nfx-ui/themes";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon } from "@/components";
+import { LucideIcon, Surface } from "@/components";
 
 import { LedgerSection } from "../../Ledger";
 import styles from "./s.module.css";
@@ -29,18 +29,6 @@ const FONT_LABEL_KEY: Record<ThemeFontFamilyEnum, string> = {
   [ThemeFontFamilyEnum.IBM_PLEX]: "labels.fontIbmPlex",
   [ThemeFontFamilyEnum.NOTO]: "labels.fontNoto",
   [ThemeFontFamilyEnum.SOURCE_SANS]: "labels.fontSourceSans",
-};
-
-const LANG_CODE: Record<LanguageEnum, string> = {
-  [LanguageEnum.EN]: "EN",
-  [LanguageEnum.ZH]: "ZH",
-  [LanguageEnum.FR]: "FR",
-};
-
-const LANG_NAME_KEY: Record<LanguageEnum, string> = {
-  [LanguageEnum.EN]: "labels.langEn",
-  [LanguageEnum.ZH]: "labels.langZh",
-  [LanguageEnum.FR]: "labels.langFr",
 };
 
 function swatchBackground(color: AccentColorEnum | GrayColorEnum): string {
@@ -53,22 +41,14 @@ function swatchInk(color: AccentColorEnum | GrayColorEnum): string {
   return `var(--${color}-contrast)`;
 }
 
-function toDraft(pref: ResolvedThemePreference): ResolvedThemePreference {
-  return { ...pref };
-}
-
 export default function ThemeSettings() {
   const { t } = useTranslation("pages.User.Setting");
   const themePreference = usePreferenceStore((s) => s.theme);
-  const currentLanguage = usePreferenceStore((s) => s.language);
   const { syncPreference } = useSyncPreference();
   const { getBaseDisplayName } = useBaseLabel();
-  const [draft, setDraft] = useState(() => toDraft(themePreference));
+  const [edits, setEdits] = useState<Partial<ResolvedThemePreference>>({});
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    setDraft(toDraft(themePreference));
-  }, [themePreference]);
+  const draft: ResolvedThemePreference = { ...themePreference, ...edits };
 
   const dirty =
     draft.accent !== themePreference.accent ||
@@ -79,17 +59,16 @@ export default function ThemeSettings() {
     draft.panelBackground !== themePreference.panelBackground ||
     draft.fontFamily !== themePreference.fontFamily;
 
-  const setField = (patch: Partial<ResolvedThemePreference>) => setDraft((prev) => ({ ...prev, ...patch }));
+  const setField = (patch: Partial<ResolvedThemePreference>) => setEdits((prev) => ({ ...prev, ...patch }));
   const previewAppearance = resolveRadixAppearance(draft.appearance);
 
   return (
-    <>
-      <LedgerSection
+    <LedgerSection
         title={t("sections.theme.title")}
         description={t("sections.theme.description")}
         actions={
           <Flex gap="2">
-            <Button type="button" variant="outline" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
+            <Button type="button" variant="outline" color="gray" size="2" onClick={() => setEdits({})} disabled={!dirty || saving}>
               <LucideIcon icon={RefreshCw} size={14} />
               {t("actions.reset")}
             </Button>
@@ -101,6 +80,7 @@ export default function ThemeSettings() {
                 setSaving(true);
                 try {
                   syncPreference({ theme: { ...draft } });
+                  setEdits({});
                 } finally {
                   setSaving(false);
                 }
@@ -112,7 +92,7 @@ export default function ThemeSettings() {
           </Flex>
         }
       >
-        <Grid columns={{ initial: "1", md: "2" }} gap="6" width="100%">
+        <Grid columns={{ initial: "1", lg: "minmax(0, 1.2fr) minmax(0, 1fr)" }} gap="6" width="100%">
           <Flex direction="column" gap="6">
             <Flex direction="column" gap="4">
               <Heading as="h3" size="2">
@@ -222,57 +202,64 @@ export default function ThemeSettings() {
               </Box>
             </Flex>
           </Flex>
-          <Flex direction="column" gap="2">
-            <Text size="1" color="gray">{t("labels.livePreview")}</Text>
-            <Theme
-              appearance={previewAppearance}
-              accentColor={draft.accent}
-              grayColor={draft.gray}
-              radius={draft.radius}
-              scaling={draft.scaling}
-              panelBackground={draft.panelBackground}
-              hasBackground
-              className={styles.previewTheme}
-            >
-              <Section size="1" py="3" className={styles.previewFrame}>
-                <Container size="4" width="100%" px="3">
-                  <Flex direction="column" gap="3">
-                    <Flex align="center" justify="between">
-                      <Heading as="h3" size="4">{APP_NAME}</Heading>
-                      <Badge size="1">{t("labels.previewBadge")}</Badge>
-                    </Flex>
-                    <Flex gap="2" wrap="wrap">
-                      <Button size="2">{t("labels.previewSolid")}</Button>
-                      <Button size="2" variant="outline">{t("labels.previewSoft")}</Button>
-                    </Flex>
-                    <TextField.Root size="2" placeholder={t("labels.sampleInput")} />
-                    <Flex align="center" gap="2">
-                      <Switch size="2" defaultChecked />
-                      <Text size="2">{t("labels.notifications")}</Text>
-                    </Flex>
-                  </Flex>
-                </Container>
-              </Section>
-            </Theme>
-          </Flex>
+          <Box className={styles.previewColumn}>
+            <Flex direction="column" gap="2">
+              <Text size="1" color="gray" weight="medium" className={styles.previewLabel}>
+                {t("labels.livePreview")}
+              </Text>
+              <Theme
+                appearance={previewAppearance}
+                accentColor={draft.accent}
+                grayColor={draft.gray}
+                radius={draft.radius}
+                scaling={draft.scaling}
+                panelBackground={draft.panelBackground}
+                hasBackground
+                className={styles.previewTheme}
+              >
+                <Section size="1" py="5" className={styles.previewStage}>
+                  <Container size="4" width="100%" maxWidth="100%" px="4">
+                    <Surface tone="hero" py="4" px="4">
+                      <Flex direction="column" gap="4">
+                        <Flex align="center" justify="between" gap="3">
+                          <Flex align="center" gap="3" minWidth="0">
+                            <Avatar size="3" fallback={APP_NAME.slice(0, 1)} />
+                            <Flex direction="column" minWidth="0">
+                              <Heading as="h3" size="3" truncate>
+                                {APP_NAME}
+                              </Heading>
+                              <Text size="1" color="gray">
+                                {t("labels.previewBadge")}
+                              </Text>
+                            </Flex>
+                          </Flex>
+                          <Badge size="1" variant="surface">
+                            {t("labels.previewBadge")}
+                          </Badge>
+                        </Flex>
+                        <Surface tone="inset" py="3" px="3">
+                          <TextField.Root size="2" placeholder={t("labels.sampleInput")} />
+                        </Surface>
+                        <Flex align="center" justify="between" gap="3">
+                          <Flex align="center" gap="2">
+                            <Switch size="2" defaultChecked />
+                            <Text size="2">{t("labels.notifications")}</Text>
+                          </Flex>
+                          <Flex gap="2">
+                            <Button size="2" variant="outline">
+                              {t("labels.previewSoft")}
+                            </Button>
+                            <Button size="2">{t("labels.previewSolid")}</Button>
+                          </Flex>
+                        </Flex>
+                      </Flex>
+                    </Surface>
+                  </Container>
+                </Section>
+              </Theme>
+            </Flex>
+          </Box>
         </Grid>
       </LedgerSection>
-      <LedgerSection title={t("sections.language.title")} description={t("sections.language.description")}>
-        <RadioCards.Root size="1" columns="3" gap="2" value={currentLanguage} onValueChange={(v) => syncPreference({ language: v as LanguageEnum })}>
-          {(Object.values(LanguageEnum) as LanguageEnum[]).map((lang) => (
-            <RadioCards.Item key={lang} value={lang}>
-              <Flex direction="column" align="center" gap="1" width="100%">
-                <Text size="3" weight="bold">
-                  {LANG_CODE[lang]}
-                </Text>
-                <Text size="1" color="gray">
-                  {t(LANG_NAME_KEY[lang])}
-                </Text>
-              </Flex>
-            </RadioCards.Item>
-          ))}
-        </RadioCards.Root>
-      </LedgerSection>
-    </>
   );
 }

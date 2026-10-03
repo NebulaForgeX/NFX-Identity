@@ -2,7 +2,7 @@ import { MailFilledIcon, TelephoneIcon, UsersIcon } from "nfx-ui/icons";
 import type { Profile } from "nfx-ui/types";
 
 import { useState } from "react";
-import { Avatar, Badge, Button, Container, Flex, Grid, Section, Select, Text, TextField } from "@radix-ui/themes";
+import { Avatar, Badge, Button, Flex, Grid, Select, Text, TextField } from "@radix-ui/themes";
 import { LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
 import {
   useCreateAuthorityProfile,
@@ -31,7 +31,7 @@ import { useAuthStore, usePreferenceStore } from "nfx-ui/stores";
 import { isVerificationCodeComplete, normalizeVerificationCode } from "nfx-ui/utils";
 import { useTranslation } from "react-i18next";
 
-import { EmptyState, PageHeader, Suspense } from "@/components";
+import { EmptyState, PageHeader, Surface, Suspense } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
 import { profileHome } from "@/navigations";
@@ -61,19 +61,25 @@ function EmailRow({
   const [nextEmail, setNextEmail] = useState(item.email);
   const [editing, setEditing] = useState(false);
   const verified = Boolean(item.verifiedAt);
-  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
 
   return (
-    <Section size="1" py="4" className={styles.contact}>
+    <Surface tone="inset" py="4" px="4">
       <Flex direction="column" gap="3">
         <Flex align="start" justify="between" gap="4" wrap="wrap">
-          <Flex direction="column" gap="1" minWidth="0">
-            <Text size="2" weight="bold">
+          <Flex direction="column" gap="2" minWidth="0">
+            <Text size="2" weight="bold" className={styles.value}>
               {item.email}
             </Text>
-            <Text size="1" color="gray">
-              {hint}
-            </Text>
+            <Flex gap="2" wrap="wrap">
+              {item.isPrimary ? (
+                <Badge size="1" variant="surface">
+                  {t("labels.primary")}
+                </Badge>
+              ) : null}
+              <Badge size="1" variant="surface" color={verified ? "green" : "amber"}>
+                {verified ? t("labels.verified") : t("labels.unverified")}
+              </Badge>
+            </Flex>
           </Flex>
           <Flex gap="2" wrap="wrap" align="center">
             {!verified ? (
@@ -89,7 +95,7 @@ function EmailRow({
             <Button size="1" variant="outline" onClick={() => setEditing((value) => !value)}>
               {editing ? t("actions.cancel") : t("actions.edit")}
             </Button>
-            <Button size="1" variant="outline" onClick={() => deleteEmail.mutate(item.id)}>
+            <Button size="1" variant="ghost" color="red" onClick={() => deleteEmail.mutate(item.id)}>
               {t("actions.remove")}
             </Button>
           </Flex>
@@ -136,7 +142,7 @@ function EmailRow({
           </Flex>
         ) : null}
       </Flex>
-    </Section>
+    </Surface>
   );
 }
 
@@ -159,7 +165,11 @@ function EmailsPanel() {
           </Button>
         </Flex>
         {items.length ? (
-          items.map((item) => <EmailRow key={item.id} item={item} />)
+          <Flex direction="column" gap="3">
+            {items.map((item) => (
+              <EmailRow key={item.id} item={item} />
+            ))}
+          </Flex>
         ) : (
           <EmptyState icon={MailFilledIcon} title={t("empty.emails")} />
         )}
@@ -188,19 +198,25 @@ function PhoneRow({
   const [nextPhone, setNextPhone] = useState(item.phone);
   const [editing, setEditing] = useState(false);
   const verified = Boolean(item.verifiedAt);
-  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
 
   return (
-    <Section size="1" py="4" className={styles.contact}>
+    <Surface tone="inset" py="4" px="4">
       <Flex direction="column" gap="3">
         <Flex align="start" justify="between" gap="4" wrap="wrap">
-          <Flex direction="column" gap="1" minWidth="0">
-            <Text size="2" weight="bold">
+          <Flex direction="column" gap="2" minWidth="0">
+            <Text size="2" weight="bold" className={styles.value}>
               {item.phone}
             </Text>
-            <Text size="1" color="gray">
-              {hint}
-            </Text>
+            <Flex gap="2" wrap="wrap">
+              {item.isPrimary ? (
+                <Badge size="1" variant="surface">
+                  {t("labels.primary")}
+                </Badge>
+              ) : null}
+              <Badge size="1" variant="surface" color={verified ? "green" : "amber"}>
+                {verified ? t("labels.verified") : t("labels.unverified")}
+              </Badge>
+            </Flex>
           </Flex>
           <Flex gap="2" wrap="wrap" align="center">
             {!verified ? (
@@ -216,7 +232,7 @@ function PhoneRow({
             <Button size="1" variant="outline" onClick={() => setEditing((value) => !value)}>
               {editing ? t("actions.cancel") : t("actions.edit")}
             </Button>
-            <Button size="1" variant="outline" onClick={() => deletePhone.mutate(item.id)}>
+            <Button size="1" variant="ghost" color="red" onClick={() => deletePhone.mutate(item.id)}>
               {t("actions.remove")}
             </Button>
           </Flex>
@@ -258,7 +274,7 @@ function PhoneRow({
           </Flex>
         ) : null}
       </Flex>
-    </Section>
+    </Surface>
   );
 }
 
@@ -281,7 +297,11 @@ function PhonesPanel() {
           </Button>
         </Flex>
         {items.length ? (
-          items.map((item) => <PhoneRow key={item.id} item={item} />)
+          <Flex direction="column" gap="3">
+            {items.map((item) => (
+              <PhoneRow key={item.id} item={item} />
+            ))}
+          </Flex>
         ) : (
           <EmptyState icon={TelephoneIcon} title={t("empty.phones")} />
         )}
@@ -339,31 +359,30 @@ function ProfilesPanel() {
 
   return (
     <LedgerSection title={t("sections.profiles.title")} description={t("sections.profiles.description")}>
-      <Flex direction="column" gap="4">
-        <Section size="1" py="3">
-          <TextField.Root size="2" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("labels.searchProfiles")} className={styles.search} />
-        </Section>
+      <Flex direction="column" gap="3">
+        <TextField.Root size="2" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("labels.searchProfiles")} className={styles.search} />
         {rows.length ? (
           rows.map((row) => {
             const isCurrent = row.profileId === currentProfileId && row.kind === currentProfileKind;
             const name = safeStringable(row.displayName) || t("labels.emptyName");
             return (
-              <Section key={`${row.kind}:${row.profileId}`} size="1" py="3" className={styles.row}>
-                <Container size="2" px="4">
+              <Surface key={`${row.kind}:${row.profileId}`} tone="inset" selected={isCurrent} py="3" px="4">
                   <Flex align="center" justify="between" gap="3" wrap="wrap">
                     <Flex align="center" gap="3" minWidth="0">
-                      <Avatar size="2" src={row.avatarImageId ? buildAvatarImageSrc(row.avatarImageId) : undefined} fallback={name.slice(0, 1)} />
+                      <Avatar size="3" src={row.avatarImageId ? buildAvatarImageSrc(row.avatarImageId) : undefined} fallback={name.slice(0, 1)} />
                       <Flex direction="column" gap="1" minWidth="0">
                         <Text size="2" weight="bold">
                           {name}
                         </Text>
-                        <Text size="1" color="gray">
+                        <Text size="1" color="gray" className={styles.mono} truncate>
                           {row.profileId}
                         </Text>
                         <Flex gap="2" wrap="wrap" align="center">
-                          <Badge variant="outline">{row.kind === ProfileKindEnum.COMMUNITY ? t("labels.scopeCommunity") : t("labels.scopeAuthority")}</Badge>
+                          <Badge size="1" variant="outline" color="gray">
+                            {row.kind === ProfileKindEnum.COMMUNITY ? t("labels.scopeCommunity") : t("labels.scopeAuthority")}
+                          </Badge>
                           {isCurrent ? (
-                            <Badge variant="outline">
+                            <Badge size="1" variant="solid">
                               {t("labels.current")}
                             </Badge>
                           ) : null}
@@ -378,7 +397,8 @@ function ProfilesPanel() {
                       )}
                       <Button
                         size="1"
-                        variant="outline"
+                        variant="ghost"
+                        color="red"
                         disabled={isCurrent}
                         onClick={() => {
                           if (!window.confirm(t("labels.deleteConfirmBody", { name }))) return;
@@ -389,16 +409,14 @@ function ProfilesPanel() {
                       </Button>
                     </Flex>
                   </Flex>
-                </Container>
-              </Section>
+              </Surface>
             );
           })
         ) : (
           <EmptyState icon={UsersIcon} title={t("empty.profiles")} />
         )}
 
-        <Section size="1" py="4" className={styles.dock}>
-          <Container size="2" px="4">
+        <Surface tone="inset" py="4" px="4">
             <Flex direction="column" gap="4">
               <Flex direction="column" gap="1">
                 <Text as="label" size="1" color="gray">
@@ -444,8 +462,7 @@ function ProfilesPanel() {
                 </Flex>
               </Grid>
             </Flex>
-          </Container>
-        </Section>
+        </Surface>
       </Flex>
     </LedgerSection>
   );
@@ -457,9 +474,9 @@ export default function IdentityView() {
     <PageFrame>
       <PageHeader icon={UsersIcon} title={t("title")} description={t("description")} />
       <Suspense loadingText={t("labels.loading")}>
-        <Grid columns={{ initial: "1", lg: "minmax(0, 1.15fr) minmax(18rem, 0.85fr)" }} gap="6" align="start">
+        <Grid columns={{ initial: "1", lg: "minmax(0, 1.15fr) minmax(0, 0.85fr)" }} gap="5" align="start">
           <ProfilesPanel />
-          <Flex direction="column" gap="6" minWidth="0">
+          <Flex direction="column" gap="5" minWidth="0">
             <EmailsPanel />
             <PhonesPanel />
           </Flex>

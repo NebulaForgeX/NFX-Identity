@@ -1,21 +1,11 @@
-.row {
-  border-bottom: 1px solid var(--gray-6);
-  background: transparent;
-}
-
-.row:hover {
-  background: var(--accent-3);
-}
-
-.contact {
-  border-bottom: 1px solid var(--gray-6);
-}
-
-.dock {
-  border-top: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
-}
-
 .search {
   width: 100%;
+}
+
+.value {
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: var(--code-font-family);
 }

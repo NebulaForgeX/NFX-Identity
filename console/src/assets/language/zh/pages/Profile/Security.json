@@ -17,6 +17,14 @@
     "password": {
       "title": "密码",
       "description": "需要当前密码以及发到主邮箱的验证码。"
+    },
+    "checklist": {
+      "title": "更新前检查",
+      "description": "表单每准备好一步，这里就会点亮一项。",
+      "email": "已设置主邮箱",
+      "current": "已填写当前密码",
+      "length": "新密码不少于 8 位",
+      "code": "已填写 6 位验证码"
     }
   }
 }

@@ -2,3 +2,16 @@
   width: 100%;
   cursor: pointer;
 }
+
+.avatar {
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 var(--space-1) var(--color-background),
+    var(--shadow-3);
+}
+
+.avatar[data-pending="true"] {
+  box-shadow:
+    0 0 0 var(--space-1) var(--accent-a6),
+    var(--shadow-3);
+}

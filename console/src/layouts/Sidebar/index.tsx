@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, Container, Flex, IconButton, Section, Text } from "@radix-ui/themes";
-import { AnimatedIcon, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, CameraIcon, DownChevron, GearIcon, LayoutDashboardIcon, LogoutIcon, PassportIcon, PenIcon, RightChevron, ShieldCheck, UnorderedListIcon, UserIcon } from "nfx-ui/icons";
+import { AnimatedIcon, type AnimatedIconComponent, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, CameraIcon, DownChevron, GearIcon, LayersIcon, LayoutDashboardIcon, LogoutIcon, PassportIcon, PenIcon, RightChevron, ShieldCheck, UnorderedListIcon, UserIcon } from "nfx-ui/icons";
 import { ProfileKindEnum } from "nfx-ui/enums";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
@@ -27,106 +27,36 @@ function MenuLabel({ children, active = false }: { children: ReactNode; active?:
   );
 }
 
-function MenuTrunk({ collapsed, children }: { collapsed: boolean; children: ReactNode }) {
-  if (collapsed) return children;
-  return <Box className={styles.trunk}>{children}</Box>;
-}
-
-function SectionTitle({ label, collapsed }: { label: string; collapsed: boolean }) {
+function SectionTitle({ label, icon, collapsed }: { label: string; icon: AnimatedIconComponent; collapsed: boolean }) {
   if (collapsed) {
     return <Section size="1" mt="3" pt="3" pb="0" className={styles.sectionRule} />;
   }
   return (
-    <Section size="1" py="3" className={styles.sectionRule}>
-      <Flex align="center" justify="start" gap="2">
-        <Text as="span" size="1" weight="bold" className={styles.sectionTitle}>
+    <Section size="1" mt="4" pt="5" pb="0" className={styles.sectionRule}>
+      <Flex align="center" justify="between" gap="2">
+        <Text as="span" size="2" weight="bold" className={styles.sectionLabel}>
           {label}
         </Text>
+        <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
       </Flex>
     </Section>
   );
-}
-
-function createMenuItemStyles(collapsed: boolean) {
-  return {
-    button: ({ active, level = 0 }: { active: boolean; level?: number }) =>
-      collapsed && level === 0
-        ? {
-            width: "40px",
-            height: "40px",
-            margin: "4px auto",
-            padding: "0",
-            borderRadius: "var(--radius-3)",
-            justifyContent: "center",
-            fontSize: "15px",
-            fontWeight: 400,
-            color: active ? "var(--accent-11)" : "var(--gray-11)",
-            backgroundColor: active ? "var(--accent-a3)" : "transparent",
-            transition: "background-color 150ms ease, color 150ms ease",
-            "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
-            "&:focus-visible": {
-              outline: "2px solid var(--accent-8)",
-              outlineOffset: "2px",
-            },
-          }
-        : {
-            height: level > 0 ? "34px" : "40px",
-            margin: level > 0 ? "var(--space-1) 0 var(--space-1) var(--space-6)" : "var(--space-2) 0",
-            borderRadius: "var(--radius-chip)",
-            paddingLeft: "var(--space-3)",
-            paddingRight: "var(--space-3)",
-            fontSize: level > 0 ? "14px" : "15px",
-            fontWeight: 400,
-            color: active ? "var(--accent-11)" : "var(--gray-11)",
-            backgroundColor: active ? "var(--accent-a3)" : "transparent",
-            transition: "background-color 150ms ease, color 150ms ease",
-            "&:hover": { backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)", color: active ? "var(--accent-11)" : "var(--gray-12)" },
-            "&:focus-visible": {
-              outline: "2px solid var(--accent-8)",
-              outlineOffset: "2px",
-            },
-          },
-    icon: ({ level = 0 }: { level?: number }) => ({
-      width: "var(--space-5)",
-      minWidth: "var(--space-5)",
-      height: "var(--space-5)",
-      marginRight: collapsed || level > 0 ? "0" : "var(--space-2)",
-      color: "inherit",
-      ...(level > 0 ? { display: "none" } : {}),
-    }),
-    subMenuContent: {
-      backgroundColor: collapsed ? "var(--color-panel-solid)" : "transparent",
-      padding: collapsed ? "var(--space-1) 0" : "0",
-      ...(collapsed
-        ? {
-            zIndex: 1000,
-            minWidth: "156px",
-            width: "max-content",
-            maxWidth: "260px",
-            maxHeight: "calc(100dvh - 32px)",
-            overflowY: "auto" as const,
-            borderRadius: "var(--radius-4)",
-            border: "1px solid var(--gray-a5)",
-            boxShadow: "var(--shadow-5)",
-          }
-        : {}),
-    },
-  };
 }
 
 interface SectionProps {
   collapsed: boolean;
   broken: boolean;
   onMobileClose: () => void;
+  paths: ReturnType<typeof scopePaths>;
 }
 
-function OverviewSection({ collapsed, broken, onMobileClose, paths }: SectionProps & { paths: ReturnType<typeof scopePaths> }) {
+function OverviewSection({ broken, onMobileClose, paths }: SectionProps) {
   const { t } = useTranslation("language");
   const location = useLocation();
   const active = location.pathname === paths.desk || location.pathname.startsWith(`${paths.desk}/`);
 
   return (
-    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
+    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} closeOnClick>
       <MenuItem component={<Link to={paths.desk} />} icon={<AnimatedIcon icon={LayoutDashboardIcon} size={18} />} active={active} onClick={() => broken && onMobileClose()}>
         <MenuLabel active={active}>{t("sidebar.desk")}</MenuLabel>
       </MenuItem>
@@ -134,7 +64,7 @@ function OverviewSection({ collapsed, broken, onMobileClose, paths }: SectionPro
   );
 }
 
-function MainMenuSection({ collapsed, broken, onMobileClose, paths }: SectionProps & { paths: ReturnType<typeof scopePaths> }) {
+function MainMenuSection({ collapsed, broken, onMobileClose, paths }: SectionProps) {
   const { t } = useTranslation("language");
   const location = useLocation();
   const [profileOpen, setProfileOpen] = useState(() => location.pathname.startsWith(paths.profile));
@@ -142,17 +72,37 @@ function MainMenuSection({ collapsed, broken, onMobileClose, paths }: SectionPro
   const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   const profileSubItems = [
-    { key: "profileOverview", to: paths.overview, icon: <AnimatedIcon icon={UserIcon} size={16} />, label: t("sidebar.profileOverview") },
-    { key: "profileEdit", to: paths.edit, icon: <AnimatedIcon icon={PenIcon} size={16} />, label: t("sidebar.profileEdit") },
-    { key: "profileIdentities", to: paths.identity, icon: <AnimatedIcon icon={PassportIcon} size={16} />, label: t("sidebar.profileIdentities") },
-    { key: "profileSecurity", to: paths.security, icon: <AnimatedIcon icon={ShieldCheck} size={16} />, label: t("sidebar.profileSecurity") },
+    {
+      key: "profileOverview",
+      to: paths.overview,
+      icon: <AnimatedIcon icon={UserIcon} size={16} />,
+      label: t("sidebar.profileOverview"),
+    },
+    {
+      key: "profileEdit",
+      to: paths.edit,
+      icon: <AnimatedIcon icon={PenIcon} size={16} />,
+      label: t("sidebar.profileEdit"),
+    },
+    {
+      key: "profileIdentities",
+      to: paths.identity,
+      icon: <AnimatedIcon icon={PassportIcon} size={16} />,
+      label: t("sidebar.profileIdentities"),
+    },
+    {
+      key: "profileSecurity",
+      to: paths.security,
+      icon: <AnimatedIcon icon={ShieldCheck} size={16} />,
+      label: t("sidebar.profileSecurity"),
+    },
   ];
 
   const isProfileChildActive = profileSubItems.some((item) => isActive(item.to));
 
   return (
-    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
-      <SectionTitle label={t("sidebar.mainMenu")} collapsed={collapsed} />
+    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} closeOnClick>
+      <SectionTitle label={t("sidebar.mainMenu")} icon={LayersIcon} collapsed={collapsed} />
       <SubMenu label={t("sidebar.profile")} icon={<AnimatedIcon icon={UserIcon} size={18} />} open={profileOpen} onOpenChange={setProfileOpen} active={isProfileChildActive}>
         {profileSubItems.map((item) => (
           <MenuItem key={item.key} component={<Link to={item.to} />} icon={item.icon} active={isActive(item.to)} onClick={() => broken && onMobileClose()}>
@@ -172,14 +122,14 @@ function MainMenuSection({ collapsed, broken, onMobileClose, paths }: SectionPro
   );
 }
 
-function SettingsSection({ collapsed, broken, onMobileClose, paths }: SectionProps & { paths: ReturnType<typeof scopePaths> }) {
+function SettingsSection({ collapsed, broken, onMobileClose, paths }: SectionProps) {
   const { t } = useTranslation("language");
   const location = useLocation();
   const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   return (
-    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} menuItemStyles={createMenuItemStyles(collapsed)} closeOnClick>
-      <SectionTitle label={t("sidebar.settings")} collapsed={collapsed} />
+    <Menu renderExpandIcon={({ open }) => <AnimatedIcon icon={open ? ArrowNarrowUpIcon : DownChevron} size={14} />} closeOnClick>
+      <SectionTitle label={t("sidebar.settings")} icon={GearIcon} collapsed={collapsed} />
       <MenuItem
         component={<Link to={paths.settings} />}
         icon={<AnimatedIcon icon={GearIcon} size={18} />}
@@ -249,9 +199,9 @@ function Sidebar() {
   };
 
   return (
-    <Box className={styles.shell}>
-      <Flex minHeight="100dvh" width="100%">
-        <SidebarMenuState collapsed={collapsed}>
+    <Flex className={styles.shell} minHeight="100dvh" width="100%">
+      <SidebarMenuState collapsed={collapsed}>
+        <Box className={styles.proSidebar}>
           <ProSidebar
             ref={drawerRef}
             inert={broken && !toggled ? true : undefined}
@@ -263,125 +213,90 @@ function Sidebar() {
             breakPoint="md"
             width={SIDEBAR_WIDTH}
             collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
-            rootStyles={{
-              border: 0,
-              height: "100dvh",
-              flexShrink: 0,
-              position: "sticky",
-              top: 0,
-              margin: 0,
-              zIndex: 200,
-              overflow: "visible",
-              "&.ps-broken.ps-toggled": { left: 0 },
-              "&.ps-broken": { height: "100dvh", position: "fixed", margin: 0, top: 0, bottom: 0 },
-              "& .ps-sidebar-container": {
-                background: "transparent",
-                height: "100%",
-                overflow: "visible",
-              },
-            }}
           >
-            <Box className={styles.panel}>
-              <Flex direction="column" height="100%" minHeight="0">
-                <Box>
-                  <Container size="4" width="100%" maxWidth="100%" px={collapsed ? "5" : "4"}>
-                    <Box position="relative">
-                      <Section size="1" pt="21px" pb="22px" className={styles.accountBand}>
-                        <Button type="button" variant="ghost" className={styles.accountReset} aria-label={displayName}>
-                          <Flex align="center" width="100%" gap="3">
+            <Flex direction="column" className={styles.sidebar} height="100%" minHeight="0">
+              <Box>
+                <Container size="4" width="100%" maxWidth="100%" px="5">
+                  <Box position="relative">
+                    <Section size="1" pt="21px" pb="22px" className={styles.headerRule}>
+                      <Button type="button" variant="ghost" className={styles.accountCard} aria-label={displayName}>
+                        <Flex align="center" width="100%" gap="3">
+                          <Box>
                             <Avatar
                               size="3"
-                              className={styles.avatar}
                               src={avatarImageId ? buildImageUrl(avatarImageId) : undefined}
                               fallback={<UserIcon size={20} />}
                               alt=""
                               aria-hidden="true"
                             />
-                            {!collapsed && (
-                              <Flex direction="column" flexGrow="1" minWidth="0" gap="1">
-                                <Text as="span" size="1" className={styles.accountRole}>
-                                  {t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}
-                                </Text>
-                                <Text as="span" size="2" className={styles.accountName}>
-                                  {displayName}
-                                </Text>
-                              </Flex>
-                            )}
-                          </Flex>
-                        </Button>
-                      </Section>
-                      <IconButton
-                        variant="outline"
-                        size="1"
-                        className={styles.toggle}
-                        aria-label={collapsed ? t("sidebar.expand") : t("sidebar.collapse")}
-                        aria-expanded={!collapsed}
-                        onClick={() => (broken ? setToggled(false) : setCollapsed((value) => !value))}
-                      >
-                        <AnimatedIcon icon={collapsed ? RightChevron : ArrowNarrowLeftIcon} size={14} />
-                      </IconButton>
-                    </Box>
-                  </Container>
-                </Box>
-
-                <Flex direction="column" flexGrow="1" minHeight="0" overflowX="hidden" overflowY="auto" className={`${styles.menu} ${collapsed ? styles.menuCollapsed : styles.menuOpen}`}>
-                  <Section size="1" py="3">
-                    <Container size="4" px={collapsed ? "5" : "3"} width="100%" maxWidth="100%">
-                      <MenuTrunk collapsed={collapsed}>
-                        <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
-                        <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
-                        <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
-                      </MenuTrunk>
-                    </Container>
-                  </Section>
-                </Flex>
-
-                <Section size="1" py="3" mt="auto">
-                  <Container size="4" px={collapsed ? "5" : "3"} width="100%" maxWidth="100%">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className={styles.logout}
-                      data-collapsed={collapsed ? "true" : "false"}
-                      onClick={handleLogout}
-                      aria-label={t("sidebar.logout")}
-                      title={collapsed ? t("sidebar.logout") : undefined}
+                          </Box>
+                          {!collapsed && (
+                            <Flex direction="column" flexGrow="1" minWidth="0" gap="1">
+                              <span className={styles.accountRole}>{t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}</span>
+                              <span className={styles.accountName}>{displayName}</span>
+                            </Flex>
+                          )}
+                        </Flex>
+                      </Button>
+                    </Section>
+                    <IconButton
+                      variant="outline"
+                      size="1"
+                      className={styles.toggle}
+                      aria-label={collapsed ? t("sidebar.expand") : t("sidebar.collapse")}
+                      aria-expanded={!collapsed}
+                      onClick={() => (broken ? setToggled(false) : setCollapsed((value) => !value))}
                     >
-                      <Flex align="center" justify={collapsed ? "center" : "start"} gap="3" width="100%">
-                        <AnimatedIcon icon={LogoutIcon} size={18} />
-                        {!collapsed ? t("sidebar.logout") : null}
-                      </Flex>
-                    </Button>
-                  </Container>
-                </Section>
-              </Flex>
-            </Box>
-          </ProSidebar>
-        </SidebarMenuState>
-
-        <Flex direction="column" flexGrow="1" minWidth="0" minHeight="0" height="100%" overflowX="hidden" position="relative" className={styles.content}>
-          <Flex direction="column" width="100%" height="100%" minHeight="0" inert={broken && toggled ? true : undefined}>
-            {broken ? (
-              <Section size="1" my="3" pt="0" pb="0" position="sticky" top="3" className={styles.mobileStick}>
-                <Container size="4" mx="3" px="0" width="100%" maxWidth="100%">
-                  <Box className={styles.mobile}>
-                    <IconButton variant="ghost" color="gray" size="3" className={styles.mobileControl} onClick={() => setToggled(true)} aria-label={t("sidebar.openMenu")}>
-                      <AnimatedIcon icon={UnorderedListIcon} size={18} />
+                      <AnimatedIcon icon={collapsed ? RightChevron : ArrowNarrowLeftIcon} size={14} />
                     </IconButton>
                   </Box>
                 </Container>
+              </Box>
+
+              <Box minHeight="0" className={styles.menuArea} data-collapsed={collapsed ? "true" : "false"}>
+                <Section size="1" py="2">
+                  <Container size="4" width="100%" maxWidth="100%" px="5">
+                    <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+                    <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+                    <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} paths={paths} />
+                  </Container>
+                </Section>
+              </Box>
+
+              <Section size="1" pt="3" pb="5" className={styles.footer} data-collapsed={collapsed ? "true" : "false"}>
+                <Container size="4" width="100%" maxWidth="100%" px="5">
+                  <Button
+                    variant="ghost"
+                    className={styles.logout}
+                    data-collapsed={collapsed ? "true" : "false"}
+                    onClick={handleLogout}
+                    aria-label={t("sidebar.logout")}
+                    title={collapsed ? t("sidebar.logout") : undefined}
+                  >
+                    <Flex align="center" justify={collapsed ? "center" : "start"} gap="3" width="100%">
+                      <AnimatedIcon icon={LogoutIcon} size={18} />
+                      {!collapsed && t("sidebar.logout")}
+                    </Flex>
+                  </Button>
+                </Container>
               </Section>
-            ) : null}
-            <UserTopBar />
-            <Box minWidth="0" minHeight="0" height="100%" position="relative" width="100%" >
-              <Flex direction="column" width="100%" height="100%">
-                <Outlet />
-              </Flex>
-            </Box>
-          </Flex>
-        </Flex>
+            </Flex>
+          </ProSidebar>
+        </Box>
+      </SidebarMenuState>
+
+      <Flex className={styles.content} direction="column" flexGrow="1" minWidth="0" minHeight="0" height="100%" position="relative" inert={broken && toggled ? true : undefined}>
+        {broken ? (
+          <IconButton variant="surface" color="gray" size="3" className={styles.mobileToggle} onClick={() => setToggled(true)} aria-label={t("sidebar.openMenu")}>
+            <AnimatedIcon icon={UnorderedListIcon} size={18} />
+          </IconButton>
+        ) : null}
+        <UserTopBar />
+        <Box minWidth="0" minHeight="0" position="relative" width="100%" height="100%">
+          <Outlet />
+        </Box>
       </Flex>
-    </Box>
+    </Flex>
   );
 }
 

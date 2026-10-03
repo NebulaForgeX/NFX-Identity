@@ -1,0 +1,27 @@
+.step {
+  flex-shrink: 0;
+  width: var(--space-5);
+  height: var(--space-5);
+  border-radius: var(--radius-full);
+  color: var(--accent-contrast);
+  background: var(--gray-a3);
+  box-shadow: inset 0 0 0 1px var(--gray-a6);
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.step[data-done="true"] {
+  background: var(--accent-9);
+  box-shadow: 0 0 0 var(--space-1) var(--accent-a3);
+}
+
+.codeField {
+  min-width: calc(var(--space-9) * 2.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step {
+    transition: none;
+  }
+}

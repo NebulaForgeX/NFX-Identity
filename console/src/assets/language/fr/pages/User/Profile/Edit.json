@@ -6,7 +6,12 @@
     "description": "Chargez votre profil pour modifier les détails publics."
   },
   "actions": {
-    "saveChanges": "Enregistrer"
+    "saveChanges": "Enregistrer",
+    "discard": "Annuler"
+  },
+  "status": {
+    "dirty": "Modifications non enregistrées",
+    "clean": "Tout est enregistré"
   },
   "saveSuccess": "Profil mis à jour",
   "labels": {

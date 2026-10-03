@@ -17,6 +17,14 @@
     "password": {
       "title": "Password",
       "description": "Requires the current password and a code sent to the primary email."
+    },
+    "checklist": {
+      "title": "Before you update",
+      "description": "Each step turns on as the form is ready.",
+      "email": "Primary email is set",
+      "current": "Current password entered",
+      "length": "New password has 8+ characters",
+      "code": "6-digit code entered"
     }
   }
 }

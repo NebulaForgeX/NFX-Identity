@@ -41,7 +41,8 @@
     "scaling": "Scaling",
     "language": "Language",
     "products": "Products",
-    "panel": "Control panel"
+    "panel": "Control panel",
+    "breadcrumb": "Breadcrumb"
   },
   "sidebar": {
     "mainMenu": "Main Menu",

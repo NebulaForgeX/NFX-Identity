@@ -19,5 +19,26 @@
     "links": "身份链接",
     "loginNotification": "登录通知",
     "created": "创建时间"
+  },
+  "actions": {
+    "copy": "复制",
+    "copied": "已复制"
+  },
+  "access": {
+    "title": "权限",
+    "description": "资料类型及其被授予的角色。"
+  },
+  "security": {
+    "title": "安全",
+    "description": "登录提醒与密码。",
+    "password": "修改密码",
+    "manage": "管理设置"
+  },
+  "quick": {
+    "title": "快捷入口",
+    "edit": { "title": "编辑资料", "hint": "名称、简介、头像与封面" },
+    "identity": { "title": "身份", "hint": "邮箱、手机与资料" },
+    "assets": { "title": "资产", "hint": "图片、文件与媒体" },
+    "settings": { "title": "设置", "hint": "主题、语言与提醒" }
   }
 }

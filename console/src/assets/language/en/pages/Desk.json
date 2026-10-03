@@ -19,5 +19,26 @@
     "links": "Identity links",
     "loginNotification": "Login notification",
     "created": "Created"
+  },
+  "actions": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "access": {
+    "title": "Access",
+    "description": "Profile kind and the roles granted to it."
+  },
+  "security": {
+    "title": "Security",
+    "description": "Sign-in alerts and password.",
+    "password": "Change password",
+    "manage": "Manage settings"
+  },
+  "quick": {
+    "title": "Quick actions",
+    "edit": { "title": "Edit profile", "hint": "Name, bio, avatar and cover" },
+    "identity": { "title": "Identity", "hint": "Emails, phones and profiles" },
+    "assets": { "title": "Assets", "hint": "Images, files and media" },
+    "settings": { "title": "Settings", "hint": "Theme, language and alerts" }
   }
 }

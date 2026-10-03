@@ -1,8 +1,58 @@
-.card {
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+.mono {
+  font-family: var(--code-font-family);
+  font-variant-numeric: tabular-nums;
 }
 
-.value {
-  font-variant-numeric: tabular-nums;
+.tileMark {
+  flex-shrink: 0;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-3);
+  color: var(--accent-11);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
+}
+
+.tileLink {
+  color: var(--gray-12);
+  text-decoration: none;
+}
+
+.tileLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-5);
+}
+
+.tileLink:focus-visible {
+  outline: none;
+}
+
+.tileLink:focus-visible::after {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 2px;
+}
+
+.tileArrow {
+  flex-shrink: 0;
+  color: var(--gray-a9);
+  transition: transform 160ms ease, color 160ms ease;
+}
+
+.tile:hover .tileArrow,
+.tile:focus-within .tileArrow {
+  color: var(--accent-11);
+  transform: translateX(2px);
+}
+
+.securityIcon {
+  flex-shrink: 0;
+  color: var(--accent-11);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tileArrow {
+    transition: none;
+  }
 }

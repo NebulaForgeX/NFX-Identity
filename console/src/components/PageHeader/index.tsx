@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
@@ -10,41 +10,33 @@ export type PageHeaderProps = {
   title: string;
   description?: string;
   actions?: ReactNode;
-  index?: string;
-  density?: "default" | "panel";
 };
 
-export default function PageHeader({ icon, title, description, actions, index, density = "panel" }: PageHeaderProps) {
-  const compact = density === "panel";
+export default function PageHeader({ icon, title, description, actions }: PageHeaderProps) {
   return (
-    <Section size="1" pb="5" width="100%" className={styles.hairline}>
-      <Flex direction="column" gap="4">
-        <Flex align="start" gap="4" minWidth="0">
-          <Flex align="center" justify="center" className={styles.stamp}>
-            <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
+    <Flex direction={{ initial: "column", md: "row" }} align={{ initial: "start", md: "end" }} justify="between" gap="4" width="100%" data-reveal="">
+      <Flex align="center" gap="4" minWidth="0">
+        <Box className={styles.stamp}>
+          <Flex align="center" justify="center" width="100%" height="100%">
+            <AnimatedIcon icon={icon} size={22} />
           </Flex>
-          <Flex direction="column" gap="2" minWidth="0">
-            {index ? (
-              <Text as="span" size="1" className={styles.index}>
-                {index}
-              </Text>
-            ) : null}
-            <Heading as="h1" size="7" className={styles.title}>
-              {title}
-            </Heading>
-            {description ? (
-              <Text as="p" size="2" color="gray" className={styles.lede}>
-                {description}
-              </Text>
-            ) : null}
-          </Flex>
+        </Box>
+        <Flex direction="column" gap="1" minWidth="0">
+          <Heading as="h1" size="7" weight="bold" className={styles.title}>
+            {title}
+          </Heading>
+          {description ? (
+            <Text as="p" size="2" color="gray" className={styles.lede}>
+              {description}
+            </Text>
+          ) : null}
         </Flex>
-        {actions ? (
-          <Flex gap="2" wrap="wrap" align="center">
-            {actions}
-          </Flex>
-        ) : null}
       </Flex>
-    </Section>
+      {actions ? (
+        <Flex gap="2" wrap="wrap" align="center" flexShrink="0">
+          {actions}
+        </Flex>
+      ) : null}
+    </Flex>
   );
 }

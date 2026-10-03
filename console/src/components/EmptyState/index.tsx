@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Container, Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Box, Container, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
@@ -15,13 +15,15 @@ export type EmptyStateProps = {
 
 export default function EmptyState({ icon, title, description, action, titleAs = "h3" }: EmptyStateProps) {
   return (
-    <Container size="1" px="4">
-      <Section size="1" py="9">
+    <Section size="1" py="7" className={styles.frame}>
+      <Container size="1" px="4">
         <Flex direction="column" align="center" justify="center" gap="3">
-          <Flex align="center" justify="center" className={styles.mark}>
-            <AnimatedIcon icon={icon} size={24} />
-          </Flex>
-          <Heading as={titleAs} size="4" align="center">
+          <Box className={styles.mark}>
+            <Flex align="center" justify="center" width="100%" height="100%">
+              <AnimatedIcon icon={icon} size={22} />
+            </Flex>
+          </Box>
+          <Heading as={titleAs} size="3" align="center">
             {title}
           </Heading>
           {description ? (
@@ -31,7 +33,7 @@ export default function EmptyState({ icon, title, description, action, titleAs =
           ) : null}
           {action}
         </Flex>
-      </Section>
-    </Container>
+      </Container>
+    </Section>
   );
 }

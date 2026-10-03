@@ -11,7 +11,7 @@ type ActionBarProps = {
 
 export default function ActionBar({ status, children }: ActionBarProps) {
   return (
-    <Box className={styles.bar}>
+    <Box className={styles.bar} data-reveal="">
       <Container size="4" width="100%" maxWidth="100%" px="4">
         <Section size="1" py="3">
           <Flex align="center" justify="between" gap="3" wrap="wrap">

@@ -7,6 +7,8 @@ export type { SuspenseProps } from "./Suspense";
 export { default as ActionBar } from "./ActionBar";
 export { default as PageHeader } from "./PageHeader";
 export type { PageHeaderProps } from "./PageHeader";
+export { default as Surface } from "./Surface";
+export type { SurfaceProps } from "./Surface";
 export { default as EmptyState } from "./EmptyState";
 export type { EmptyStateProps } from "./EmptyState";
 export { default as PreferencesPopover } from "./PreferencesPopover";

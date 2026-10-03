@@ -13,7 +13,9 @@
     "country": "国家",
     "roles": "角色",
     "created": "创建",
-    "assign": "分配"
+    "assign": "分配",
+    "website": "网站",
+    "timezone": "时区"
   },
   "forger": {
     "title": "Forger",
@@ -28,6 +30,10 @@
   "card": {
     "title": "公开卡片",
     "description": "来自 /auth/me/profiles/:id/public-card。",
-    "loading": "正在加载…"
+    "loading": "正在加载…",
+    "pick": "选择一条资料，查看它的公开卡片。"
+  },
+  "labels": {
+    "owner": "所有者"
   }
 }

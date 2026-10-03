@@ -1,42 +1,42 @@
 .cover {
+  position: relative;
   width: 100%;
-  height: 220px;
+  height: clamp(calc(var(--space-9) * 2), 16vw, calc(var(--space-9) * 3.5));
   overflow: hidden;
-  background: var(--gray-3);
-  border-bottom: 1px solid var(--gray-6);
+  border-bottom: 1px solid var(--gray-a4);
+  background: var(--gray-a3);
+}
+
+.cover[data-empty="true"] {
+  background:
+    radial-gradient(60% 120% at 15% 0%, var(--accent-a6) 0%, transparent 70%),
+    radial-gradient(50% 100% at 85% 100%, var(--accent-a4) 0%, transparent 70%),
+    linear-gradient(120deg, var(--accent-a3), var(--gray-a2));
 }
 
 .coverImage {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .avatar {
-  width: 96px;
-  height: 96px;
-  overflow: hidden;
-  border: 3px solid var(--color-background);
-  background: var(--gray-3);
-}
-
-.avatar :global(.rt-AvatarRoot) {
-  width: 100%;
-  height: 100%;
-  background: var(--gray-3);
-}
-
-.kind {
-  text-transform: uppercase;
-  font-weight: 700;
+  box-shadow:
+    0 0 0 var(--space-1) var(--color-background),
+    var(--shadow-4);
 }
 
 .name {
-  line-height: 1.05;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
 }
 
-.stat {
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+.statLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statValue {
+  font-variant-numeric: tabular-nums;
 }

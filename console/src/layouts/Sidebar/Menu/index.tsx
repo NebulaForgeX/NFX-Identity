@@ -21,6 +21,10 @@ function labelText(node: ReactNode): string {
   return "";
 }
 
+function MenuDot() {
+  return <Box className={styles.menuDot} />;
+}
+
 export function MenuItem(props: MenuItemProps) {
   const collapsed = useContext(CollapsedContext);
   const nested = useContext(NestedContext);
@@ -29,7 +33,7 @@ export function MenuItem(props: MenuItemProps) {
   const item = (
     <ProMenuItem
       {...props}
-      suffix={props.suffix ?? (hasUnread ? <Box className={styles.menuDot} /> : undefined)}
+      suffix={props.suffix ?? (hasUnread ? <MenuDot /> : undefined)}
       aria-label={props["aria-label"] ?? label}
       aria-current={props.active ? "page" : undefined}
     />
@@ -105,29 +109,9 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
           }}
         >
           <Box className={styles.flyout}>
-            <Section size="1" py="2">
+            <Section size="1" py="5px">
               <NestedContext.Provider value={true}>
                 <Menu
-                  menuItemStyles={{
-                    button: ({ active }) => ({
-                      height: "34px",
-                      margin: "var(--space-1) var(--space-2)",
-                      padding: "0 var(--space-3)",
-                      borderRadius: "var(--radius-chip)",
-                      font: "14px Arial, sans-serif",
-                      color: active ? "var(--accent-11)" : "var(--gray-11)",
-                      backgroundColor: active ? "var(--accent-a3)" : "transparent",
-                      "&:hover": {
-                        backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)",
-                        color: active ? "var(--accent-11)" : "var(--gray-12)",
-                      },
-                      "&:focus-visible": {
-                        outline: "2px solid var(--accent-8)",
-                        outlineOffset: "-2px",
-                      },
-                    }),
-                    icon: { display: "none" },
-                  }}
                   onClick={(event) => {
                     if ((event.target as HTMLElement).closest("a[href]")) setOpen(false);
                   }}

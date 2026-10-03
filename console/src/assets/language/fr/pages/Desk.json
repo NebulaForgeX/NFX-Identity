@@ -19,5 +19,26 @@
     "links": "Liens d'identité",
     "loginNotification": "Notification de connexion",
     "created": "Créé"
+  },
+  "actions": {
+    "copy": "Copier",
+    "copied": "Copié"
+  },
+  "access": {
+    "title": "Accès",
+    "description": "Type de profil et rôles accordés."
+  },
+  "security": {
+    "title": "Sécurité",
+    "description": "Alertes de connexion et mot de passe.",
+    "password": "Changer le mot de passe",
+    "manage": "Gérer les paramètres"
+  },
+  "quick": {
+    "title": "Accès rapides",
+    "edit": { "title": "Modifier le profil", "hint": "Nom, bio, avatar et couverture" },
+    "identity": { "title": "Identité", "hint": "E-mails, téléphones et profils" },
+    "assets": { "title": "Ressources", "hint": "Images, fichiers et médias" },
+    "settings": { "title": "Paramètres", "hint": "Thème, langue et alertes" }
   }
 }

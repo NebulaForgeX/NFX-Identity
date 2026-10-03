@@ -41,7 +41,8 @@
     "scaling": "缩放",
     "language": "语言",
     "products": "产品",
-    "panel": "Control panel"
+    "panel": "Control panel",
+    "breadcrumb": "面包屑导航"
   },
   "sidebar": {
     "mainMenu": "主菜单",

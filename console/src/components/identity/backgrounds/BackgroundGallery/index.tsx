@@ -2,10 +2,11 @@ import { ArrowLeft, Camera, ChevronRight, Save, Trash2 } from "lucide-react";
 import type { Profile } from "nfx-ui/types";
 
 import { useRef } from "react";
-import { Box, Button, Flex, Section, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Flex, Grid, IconButton, Text } from "@radix-ui/themes";
+import { CameraIcon } from "nfx-ui/icons";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon } from "@/components";
+import { EmptyState, LucideIcon } from "@/components";
 
 import { isUserProfileBackgroundDraftBusy } from "../drafts";
 import styles from "./s.module.css";
@@ -58,21 +59,19 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
       />
 
       {drafts.length ? (
-        <Flex wrap="wrap" gap="3" width="100%">
+        <Grid columns={{ initial: "2", sm: "3", lg: "2" }} gap="3" width="100%">
           {drafts.map((draft, index) => {
             const busy = isUserProfileBackgroundDraftBusy(draft);
             const failed = draft.status === "failed";
             return (
-              <Flex key={draft.imageId} flexGrow="0" flexShrink="0" className={styles.tile}>
+              <Box key={draft.imageId} className={styles.tile} data-failed={failed ? "true" : undefined}>
                 <img src={draft.previewUrl} alt="" className={styles.tileImage} draggable={false} />
-                <Box className={styles.order}>
-                  <Text size="1" weight="bold">
-                    {draft.sortOrder + 1}
-                  </Text>
-                </Box>
+                <Badge size="1" variant="solid" color="gray" highContrast className={styles.order}>
+                  {draft.sortOrder + 1}
+                </Badge>
                 {busy ? (
                   <Flex position="absolute" inset="0" align="center" justify="center" className={styles.busy}>
-                    <Text size="1" weight="bold">
+                    <Text size="2" weight="bold">
                       {Math.round(draft.progress ?? 0)}%
                     </Text>
                   </Flex>
@@ -84,56 +83,50 @@ export default function BackgroundGallery({ profile }: { profile: Profile.Respon
                     </Text>
                   </Flex>
                 ) : null}
-                <Flex position="absolute" right="1" bottom="1" gap="1" className={styles.tileActions}>
-                  <Button
+                <Flex position="absolute" right="2" bottom="2" gap="1" className={styles.tileActions}>
+                  <IconButton
                     type="button"
                     size="1"
-                    variant="outline"
+                    variant="surface"
                     color="gray"
                     disabled={busy || failed || index === 0}
                     onClick={() => moveDraft(draft.imageId, -1)}
                     aria-label={t("backgroundUpload.moveLeft")}
                   >
                     <LucideIcon icon={ArrowLeft} size={12} />
-                  </Button>
-                  <Button
+                  </IconButton>
+                  <IconButton
                     type="button"
                     size="1"
-                    variant="outline"
+                    variant="surface"
                     color="gray"
                     disabled={busy || failed || index === drafts.length - 1}
                     onClick={() => moveDraft(draft.imageId, 1)}
                     aria-label={t("backgroundUpload.moveRight")}
                   >
                     <LucideIcon icon={ChevronRight} size={12} />
-                  </Button>
-                  <Button type="button" size="1" variant="outline" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
+                  </IconButton>
+                  <IconButton type="button" size="1" variant="solid" color="red" disabled={busy} onClick={() => removeDraft(draft.imageId)} aria-label={t("backgroundUpload.remove")}>
                     <LucideIcon icon={Trash2} size={12} />
-                  </Button>
+                  </IconButton>
                 </Flex>
-              </Flex>
+              </Box>
             );
           })}
-        </Flex>
+        </Grid>
       ) : (
-        <Text size="2" color="gray">
-          {t("backgroundUpload.dropTitle")}
-        </Text>
+        <EmptyState icon={CameraIcon} title={t("backgroundUpload.dropTitle")} description={t("backgroundUpload.hint")} />
       )}
 
       {drafts.length > 1 ? (
-        <Section size="1" py="0" mt="2">
-          <Text size="1" color="gray">
-            {t("backgroundUpload.reorderHint")}
-          </Text>
-        </Section>
+        <Text size="1" color="gray">
+          {t("backgroundUpload.reorderHint")}
+        </Text>
       ) : null}
       {imageError ? (
-          <Section size="1" py="0" mt="1">
-          <Text size="1">
-            {imageError}
-          </Text>
-        </Section>
+        <Text size="1" color="red">
+          {imageError}
+        </Text>
       ) : null}
     </Flex>
   );

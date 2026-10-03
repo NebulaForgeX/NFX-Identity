@@ -1,4 +1,11 @@
 .bar {
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+  position: sticky;
+  bottom: var(--space-4);
+  z-index: 5;
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-5);
+  background: var(--color-panel);
+  backdrop-filter: var(--backdrop-filter-panel);
+  -webkit-backdrop-filter: var(--backdrop-filter-panel);
+  box-shadow: var(--shadow-4);
 }

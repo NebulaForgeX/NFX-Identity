@@ -24,12 +24,8 @@ func main() {
 	srcPath := filepath.Join(baseDir, srcDir)
 	outPath := filepath.Join(baseDir, langsDir)
 
-	if err := os.RemoveAll(outPath); err != nil {
+	if err := resetLangDir(outPath); err != nil {
 		fmt.Fprintf(os.Stderr, "clean %s: %v\n", outPath, err)
-		os.Exit(1)
-	}
-	if err := os.MkdirAll(outPath, 0755); err != nil {
-		fmt.Fprintf(os.Stderr, "mkdir %s: %v\n", outPath, err)
 		os.Exit(1)
 	}
 
@@ -43,4 +39,22 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}
+}
+
+// resetLangDir clears files inside the directory and keeps the directory itself.
+// Removing the directory replaces its inode, and a running container bind-mount stays on the old empty inode.
+func resetLangDir(outPath string) error {
+	if err := os.MkdirAll(outPath, 0755); err != nil {
+		return err
+	}
+	entries, err := os.ReadDir(outPath)
+	if err != nil {
+		return err
+	}
+	for _, entry := range entries {
+		if err := os.RemoveAll(filepath.Join(outPath, entry.Name())); err != nil {
+			return err
+		}
+	}
+	return nil
 }

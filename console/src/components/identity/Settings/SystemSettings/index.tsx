@@ -1,60 +1,54 @@
 import { Bell, Save } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Button, Checkbox, Container, Flex, Section, Text } from "@radix-ui/themes";
+import { useState } from "react";
+import { Box, Button, Flex, Switch, Text } from "@radix-ui/themes";
 import { useCurrentProfile, useUpdateProfileSettings } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon } from "@/components";
+import { LucideIcon, Surface } from "@/components";
 
+import { LedgerSection } from "../../Ledger";
 import styles from "./s.module.css";
 
 export default function SystemSettings() {
   const { t } = useTranslation("pages.User.Setting", { keyPrefix: "systemSettings" });
   const { profile } = useCurrentProfile();
   const update = useUpdateProfileSettings();
-  const [loginNotification, setLoginNotification] = useState(true);
-
-  useEffect(() => {
-    if (profile?.settings) {
-      setLoginNotification(profile.settings.loginNotification);
-      return;
-    }
-    setLoginNotification(true);
-  }, [profile]);
-
   const baseline = profile?.settings?.loginNotification ?? true;
+  const [edited, setEdited] = useState<Nullable<boolean>>(null);
+  const loginNotification = edited ?? baseline;
   const dirty = loginNotification !== baseline;
 
   return (
-    <Section size="1" py="4" className={styles.notice}>
-      <Container size="2" px="4">
-        <Flex direction="column" gap="3">
-          <Flex align="start" justify="between" gap="3">
+    <LedgerSection
+      title={t("cardTitle")}
+      description={t("cardDesc")}
+      actions={
+        <Button size="2" disabled={!dirty || update.isPending} loading={update.isPending} onClick={() => update.mutate({ loginNotification }, { onSuccess: () => setEdited(null) })}>
+          <LucideIcon icon={Save} size={14} />
+          {t("save")}
+        </Button>
+      }
+    >
+      <Surface tone="inset" py="4" px="4">
+        <Flex align="center" justify="between" gap="4">
+          <Flex align="center" gap="3" minWidth="0">
+            <Box className={styles.mark}>
+              <Flex align="center" justify="center" width="100%" height="100%">
+                <LucideIcon icon={Bell} size={16} />
+              </Flex>
+            </Box>
             <Flex direction="column" gap="1" minWidth="0">
-              <Text size="2" weight="bold">
-                {t("cardTitle")}
+              <Text as="label" htmlFor="login-notification" size="2" weight="medium">
+                {t("loginEmailNotification")}
               </Text>
-              <Text size="1" color="gray">
-                {t("cardDesc")}
+              <Text as="p" size="1" color="gray">
+                {t("loginEmailNotificationDesc")}
               </Text>
             </Flex>
-            <Button size="2" disabled={!dirty || update.isPending} loading={update.isPending} onClick={() => update.mutate({ loginNotification })}>
-              <LucideIcon icon={Save} size={14} />
-              {t("save")}
-            </Button>
           </Flex>
-          <Text as="label" size="2">
-            <Flex align="center" gap="2">
-              <Checkbox checked={loginNotification} onCheckedChange={(c) => setLoginNotification(c === true)} />
-              <LucideIcon icon={Bell} size={14} />
-              {t("loginEmailNotification")}
-            </Flex>
-          </Text>
-          <Text as="p" size="1" color="gray">
-            {t("loginEmailNotificationDesc")}
-          </Text>
+          <Switch id="login-notification" size="2" checked={loginNotification} onCheckedChange={setEdited} />
         </Flex>
-      </Container>
-    </Section>
+      </Surface>
+    </LedgerSection>
   );
 }

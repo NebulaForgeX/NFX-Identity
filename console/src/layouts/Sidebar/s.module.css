@@ -1,57 +1,115 @@
+
 .shell {
   background: var(--color-background);
   color: var(--gray-12);
 }
 
-.content {
-  background: var(--color-background);
-  min-width: 0;
+.proSidebar :global(.ps-sidebar-root) {
+  border: 0;
+  height: 100dvh;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  margin: 0;
+  z-index: 200;
+  overflow: visible;
 }
 
-.menu :global(.ps-menu-button) {
-  height: 40px;
-  margin: 6px 0;
-  border-radius: var(--radius-chip);
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--gray-11);
-  background-color: transparent;
+.proSidebar :global(.ps-sidebar-root.ps-broken) {
+  height: 100dvh;
+  position: fixed;
+  margin: 0;
+  top: 0;
+  bottom: 0;
 }
 
-.menu :global(.ps-submenu-content .ps-menu-button) {
-  height: 34px;
-  margin: 3px 0 3px 32px;
-  padding-left: 11px;
-  font-size: 14px;
+.proSidebar :global(.ps-sidebar-root.ps-broken.ps-toggled) {
+  left: 0;
 }
 
-.menu :global(.ps-menu-button.ps-active) {
-  color: var(--accent-11);
-  background-color: var(--accent-a3);
+.proSidebar :global(.ps-sidebar-container) {
+  background: transparent;
+  height: 100%;
+  overflow: visible;
 }
 
-.menu :global(.ps-menu-button:hover) {
-  background-color: var(--gray-a3) !important;
-  color: var(--gray-12) !important;
-}
-
-.menu :global(.ps-menu-button.ps-active:hover) {
-  background-color: var(--accent-a3) !important;
-  color: var(--accent-11) !important;
-}
-
-.panel {
-  width: 100%;
+.sidebar {
   height: 100%;
   min-height: 0;
+  font-family: Arial, "Noto Sans SC", sans-serif;
   background: var(--color-panel-solid);
   border-right: 1px solid var(--gray-a4);
 }
 
-.accountBand {
+.headerRule {
   border-bottom: 1px solid var(--gray-a4);
+}
+
+.accountCard:global(.rt-BaseButton) {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border-radius: var(--radius-3);
+  box-shadow: none;
+}
+
+.accountCard:global(.rt-BaseButton):focus-visible {
+  outline: 2px solid var(--accent-8);
+  outline-offset: 5px;
+}
+
+.accountCard:global(.rt-BaseButton):hover .accountName {
+  color: var(--accent-11);
+}
+
+.accountRole {
+  color: var(--gray-11);
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accountName {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuArea {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-a5) transparent;
+}
+
+.sectionRule {
+  border-top: 1px solid var(--gray-a4);
+}
+
+.sectionLabel {
+  color: var(--gray-11);
+  text-transform: uppercase;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+}
+
+.sectionTitleIcon {
+  display: none;
 }
 
 .toggle:global(.rt-IconButton) {
@@ -72,126 +130,129 @@
   color: var(--gray-12) !important;
 }
 
-.accountReset {
-  flex: 1 1 auto;
-  min-width: 0;
-  height: auto;
-  padding: 0;
-  color: inherit;
-  background: transparent;
-  box-shadow: none;
+.logout:global(.rt-BaseButton) {
+  width: 100%;
+  height: 40px !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  background: transparent !important;
+  color: var(--gray-12) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  border-radius: var(--radius-chip) !important;
+  box-shadow: none !important;
 }
 
-.accountReset:focus-visible {
+.logout:global(.rt-BaseButton)[data-collapsed="true"] {
+  width: 40px;
+  height: 40px !important;
+  margin-inline: auto;
+  padding: 0 !important;
+  justify-content: center !important;
+  border-radius: var(--radius-3) !important;
+}
+
+.logout:global(.rt-BaseButton):hover:not(:disabled) {
+  background: var(--gray-a3) !important;
+}
+
+.mobileToggle:global(.rt-IconButton) {
+  position: sticky;
+  top: var(--space-3);
+  z-index: 10;
+  margin: var(--space-3);
+  box-shadow: var(--shadow-3);
+  background: var(--color-panel-solid) !important;
+  color: var(--gray-12) !important;
+}
+
+.content {
+  background: var(--color-background);
+  overflow-x: hidden;
+}
+
+.menuArea :global(.ps-menu-button) {
+  height: 40px;
+  margin: 6px 0;
+  border-radius: var(--radius-chip);
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--gray-11);
+  background-color: transparent;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.menuArea :global(.ps-submenu-content .ps-menu-button) {
+  height: 34px;
+  margin: 3px 0 3px 32px;
+  padding-left: 11px;
+  font-size: 14px;
+}
+
+.menuArea :global(.ps-menu-button.ps-active) {
+  color: var(--accent-11);
+  background-color: var(--accent-a3);
+}
+
+.menuArea :global(.ps-menu-button:hover) {
+  background-color: var(--gray-a3) !important;
+  color: var(--gray-12) !important;
+}
+
+.menuArea :global(.ps-menu-button.ps-active:hover) {
+  background-color: var(--accent-a3) !important;
+  color: var(--accent-11) !important;
+}
+
+.menuArea :global(.ps-menu-button:focus-visible) {
   outline: 2px solid var(--accent-8);
   outline-offset: 2px;
 }
 
-.accountRole,
-.accountName {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
+.menuArea :global(.ps-menu-icon) {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  color: inherit;
 }
 
-.accountRole {
-  color: var(--gray-11);
-  text-transform: uppercase;
-}
-
-.accountReset:hover .accountName {
-  color: var(--accent-11);
-}
-
-.accountName {
-  font-weight: 500;
-}
-
-.avatar {
-  flex-shrink: 0;
-}
-
-.menu {
-  scrollbar-width: thin;
-  scrollbar-color: var(--gray-a5) transparent;
-}
-
-.menu :global(.ps-menu-label .rt-Text) {
-  font: inherit;
-}
-
-.menu :global(.ps-menu-button.ps-active .ps-menu-label) {
-  font-weight: 500;
-}
-
-.menu :global(.ps-submenu-root.ps-open > .ps-menu-button) {
-  background: var(--gray-a3);
-  color: var(--gray-12);
-}
-
-.menu :global(.ps-submenu-root > .ps-menu-button.ps-active) {
-  background: var(--accent-a3);
-  color: var(--accent-11);
-}
-
-.menu :global(.ps-submenu-content .ps-menu-button) {
-  position: relative;
-}
-
-.menuOpen :global(.ps-submenu-content) {
-  border: 0;
-}
-
-.menuOpen :global(.ps-submenu-content > ul) {
-  padding-block: var(--space-1) var(--space-2);
-}
-
-.menuOpen :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
-  visibility: hidden;
-}
-
-.menuCollapsed :global(.ps-menu-root > ul) {
-  padding: 0;
-}
-
-.menuCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
-  width: 40px;
-  height: 40px;
-  margin: 4px auto;
-  padding: 0;
-  justify-content: center;
-  border-radius: var(--radius-3);
-}
-
-.menuCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
-  margin: 0;
-}
-
-.menuCollapsed :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-label),
-.menuCollapsed :global(.ps-submenu-expand-icon) {
+.menuArea :global(.ps-submenu-content .ps-menu-icon) {
   display: none;
 }
 
-.menuCollapsed :global(.ps-submenu-content) {
-  border: 1px solid var(--gray-a5);
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content) {
+  background-color: transparent;
+  padding: 0;
 }
 
-.menuCollapsed :global(.ps-submenu-content .ps-menu-label) {
-  display: block;
+@media (prefers-reduced-motion: reduce) {
+  .proSidebar :global(*) {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
 }
 
-.sectionRule {
-  border-top: 1px solid var(--gray-a4);
-}
 
-.sectionTitle {
-  color: var(--gray-11);
-  text-transform: uppercase;
+.menuArea :global(.ps-menu-label .rt-Text),
+.footer :global(.ps-menu-label .rt-Text) {
+  font: inherit;
 }
-
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root)::before {
+.menuArea :global(.ps-menu-button.ps-active .ps-menu-label) {
+  font-weight: 500;
+}
+.menuArea :global(.ps-submenu-root.ps-open > .ps-menu-button) {
+  background: var(--gray-a3);
+  color: var(--gray-12);
+}
+.menuArea :global(.ps-submenu-content) {
+  border: 0;
+}
+/* One continuous trunk. Only the final branch terminates the trunk before its bend.
+   Opaque tokens prevent overlapping segments from becoming a darker double stroke. */
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root)::before {
   content: "";
   position: absolute;
   left: 21px;
@@ -201,8 +262,7 @@
   background: var(--gray-5);
   pointer-events: none;
 }
-
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root)::after {
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root)::after {
   content: "";
   position: absolute;
   left: 21px;
@@ -214,70 +274,79 @@
   border-bottom-left-radius: 8px;
   pointer-events: none;
 }
-
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root:last-child)::before {
-  bottom: calc(50% + var(--space-2));
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:last-child)::before {
+  bottom: calc(50% + 8px);
+}
+.menuArea :global(.ps-submenu-content .ps-menu-button) {
+  position: relative;
+}
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul) {
+  padding: 0;
+}
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
+  width: 40px;
+  height: 40px;
+  margin: 4px auto;
+  padding: 0;
+  justify-content: center;
+  border-radius: var(--radius-3);
+}
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
+  margin: 0;
+}
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-label),
+.menuArea[data-collapsed="true"] :global(.ps-submenu-expand-icon) {
+  display: none;
+}
+.menuArea[data-collapsed="true"] :global(.ps-submenu-content) {
+  border: 1px solid var(--gray-a5);
+}
+.menuArea[data-collapsed="true"] :global(.ps-submenu-content .ps-menu-label) {
+  display: block;
 }
 
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root:has(~ .ps-menuitem-root > .ps-menu-button.ps-active))::before,
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::before {
+.footer[data-collapsed="true"] :global(.ps-menu-button) {
+  justify-content: center;
+  padding: 0;
+}
+.footer[data-collapsed="true"] :global(.ps-menu-icon) {
+  margin: 0;
+}
+.footer[data-collapsed="true"] :global(.ps-menu-label) {
+  display: none;
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul) {
+  padding: 1px 0 7px;
+}
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
+  visibility: hidden;
+}
+
+.menuArea :global(.ps-submenu-root > .ps-menu-button.ps-active) {
+  background: var(--accent-a3);
+  color: var(--accent-11);
+}
+
+/* Highlight only the route from the parent down to the current child. */
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(~ .ps-menuitem-root > .ps-menu-button.ps-active))::before {
   background: var(--accent-9);
 }
-
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::before {
-  bottom: calc(50% + var(--space-2));
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::before {
+  background: var(--accent-9);
+  bottom: calc(50% + 8px);
 }
-
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::after {
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::after {
   border-color: var(--accent-9);
 }
-
-.trunk :global(.ps-submenu-content > ul > .ps-menuitem-root:not(:last-child) > .ps-menu-button.ps-active)::before {
+/* Continue the neutral trunk below an active child when more siblings follow. */
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:not(:last-child) > .ps-menu-button.ps-active)::before {
   content: "";
   position: absolute;
-  left: calc(var(--space-3) * -1);
+  left: -11px;
   top: 50%;
-  bottom: calc(var(--space-1) * -1);
+  bottom: -3px;
   width: 1px;
   background: var(--gray-5);
   pointer-events: none;
-}
-
-.logout {
-  width: 100%;
-  height: 40px;
-  padding: 0;
-  color: var(--gray-12);
-  border-radius: var(--radius-chip);
-}
-
-.logout[data-collapsed="true"] {
-  width: 40px;
-  height: 40px;
-  margin-inline: auto;
-  padding: 0;
-  border-radius: var(--radius-3);
-}
-
-.mobileStick {
-  z-index: 10;
-}
-
-.mobile {
-  background: var(--color-panel-solid);
-  color: var(--gray-12);
-  box-shadow: var(--shadow-3);
-}
-
-.mobileControl {
-  background: transparent;
-  color: inherit;
-  box-shadow: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .panel :global(*) {
-    transition-duration: 0ms;
-    animation-duration: 0ms;
-  }
 }

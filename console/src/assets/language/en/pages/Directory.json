@@ -13,7 +13,9 @@
     "country": "Country",
     "roles": "Roles",
     "created": "Created",
-    "assign": "Assign"
+    "assign": "Assign",
+    "website": "Website",
+    "timezone": "Timezone"
   },
   "forger": {
     "title": "Forger",
@@ -28,6 +30,10 @@
   "card": {
     "title": "Public card",
     "description": "Lookup from /auth/me/profiles/:id/public-card.",
-    "loading": "Loading card…"
+    "loading": "Loading card…",
+    "pick": "Select a profile to see its public card."
+  },
+  "labels": {
+    "owner": "Owner"
   }
 }

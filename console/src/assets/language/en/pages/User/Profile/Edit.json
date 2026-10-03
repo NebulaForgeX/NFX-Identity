@@ -6,7 +6,12 @@
     "description": "Load your profile to edit public details."
   },
   "actions": {
-    "saveChanges": "Save changes"
+    "saveChanges": "Save changes",
+    "discard": "Discard"
+  },
+  "status": {
+    "dirty": "Unsaved changes",
+    "clean": "All changes saved"
   },
   "saveSuccess": "Profile updated",
   "labels": {

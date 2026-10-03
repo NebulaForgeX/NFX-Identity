@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { useEffect, useRef, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Avatar, Button, Flex, Grid, IconButton, Select, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Avatar, Badge, Button, Flex, Grid, IconButton, Select, Text, TextArea, TextField } from "@radix-ui/themes";
 import { LanguageEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import {
@@ -21,7 +21,7 @@ import type { Profile } from "nfx-ui/types";
 import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon, PageHeader } from "@/components";
+import { ActionBar, EmptyState, LucideIcon, PageHeader, Surface } from "@/components";
 import { showDateTimePickerModal } from "@/stores/modal";
 import { PageFrame } from "@/layouts";
 import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, minioUploadMessage, putToPresignedUrl, resolveAccountInitial, safeNullable } from "@/utils";
@@ -155,14 +155,16 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
 
   return (
     <LedgerSection title={t("avatar.title")} description={t("avatar.hint")}>
-      <Flex align="center" justify="between" gap="5" wrap="wrap">
-        <Flex align="center" gap="4" minWidth="0">
-          <Avatar size="5" radius="none" src={src} fallback={initial} />
-          <Text size="2" color="gray">
-            {t("avatar.pickHint")}
-          </Text>
-        </Flex>
-        <Flex gap="3" wrap="wrap">
+      <Flex direction="column" gap="4">
+        <Surface tone="inset" py="4" px="4">
+          <Flex align="center" gap="4" minWidth="0">
+            <Avatar size="6" className={styles.avatar} data-pending={pendingImageId ? "true" : undefined} src={src} fallback={initial} />
+            <Text size="2" color="gray">
+              {t("avatar.pickHint")}
+            </Text>
+          </Flex>
+        </Surface>
+        <Flex gap="2" wrap="wrap">
           <Button size="2" variant="outline" disabled={busy} onClick={() => fileRef.current?.click()}>
             <LucideIcon icon={Upload} size={14} />
             {busy ? t("avatar.uploading") : t("avatar.choose")}
@@ -170,7 +172,7 @@ function AvatarSection({ profile, accountId }: { profile: Profile.Response.Profi
           <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
             {confirmUpload.isPending ? t("avatar.confirming") : t("avatar.confirm")}
           </Button>
-          <Button size="2" variant="outline" disabled={!currentAvatarId || busy} onClick={() => clearAvatar.mutate()}>
+          <Button size="2" variant="ghost" color="red" disabled={!currentAvatarId || busy} onClick={() => clearAvatar.mutate()}>
             {t("avatar.clear")}
           </Button>
         </Flex>
@@ -195,13 +197,13 @@ const TIMEZONES = ["UTC", "America/Vancouver", "America/Los_Angeles", "America/N
 
 function StackField({ label, children, error }: { label: string; children: ReactNode; error?: string }) {
   return (
-    <Flex direction="column" gap="1">
-      <Text size="1" color="gray">
+    <Flex direction="column" gap="2">
+      <Text as="label" size="2" weight="medium">
         {label}
       </Text>
       {children}
       {error ? (
-        <Text size="1">
+        <Text size="1" color="red">
           {error}
         </Text>
       ) : null}
@@ -305,7 +307,7 @@ function ProfileFields({ profile }: { profile: Profile.Response.ProfileBase }) {
           </StackField>
         </Grid>
       </LedgerSection>
-      <LedgerSection title={t("sections.personal.title")} description={t("sections.personal.description")} actions={save}>
+      <LedgerSection title={t("sections.personal.title")} description={t("sections.personal.description")}>
         <Flex direction="column" gap="4">
           <Grid columns={{ initial: "1", sm: "2" }} gap="4">
             <StackField label={t("labels.gender")}>
@@ -336,6 +338,18 @@ function ProfileFields({ profile }: { profile: Profile.Response.ProfileBase }) {
           </StackField>
         </Flex>
       </LedgerSection>
+      <ActionBar
+        status={
+          <Badge size="2" variant="surface" color={form.formState.isDirty ? "amber" : "gray"}>
+            {form.formState.isDirty ? t("status.dirty") : t("status.clean")}
+          </Badge>
+        }
+      >
+        <Button size="2" variant="ghost" color="gray" disabled={!form.formState.isDirty || patch.isPending} onClick={() => form.reset(buildUserProfileEditDefaults(profile))}>
+          {t("actions.discard")}
+        </Button>
+        {save}
+      </ActionBar>
     </>
   );
 }
@@ -349,17 +363,19 @@ export default function EditView() {
     <PageFrame>
       <PageHeader icon={PenIcon} title={t("title")} description={t("description")} />
       {profile ? (
-        <>
-          <AvatarSection profile={profile} accountId={accountId} />
-          <LedgerSection title={t("backgroundUpload.label")} description={t("backgroundUpload.hint")}>
-            <BackgroundGallery profile={profile} />
-          </LedgerSection>
-          <ProfileFields profile={profile} />
-        </>
+        <Grid columns={{ initial: "1", lg: "minmax(0, 1.5fr) minmax(0, 1fr)" }} gap="5" align="start">
+          <Flex direction="column" gap="5" minWidth="0">
+            <ProfileFields profile={profile} />
+          </Flex>
+          <Flex direction="column" gap="5" minWidth="0">
+            <AvatarSection profile={profile} accountId={accountId} />
+            <LedgerSection title={t("backgroundUpload.label")} description={t("backgroundUpload.hint")}>
+              <BackgroundGallery profile={profile} />
+            </LedgerSection>
+          </Flex>
+        </Grid>
       ) : (
-        <Text size="2" color="gray">
-          {t("empty.description")}
-        </Text>
+        <EmptyState icon={PenIcon} title={t("empty.title")} description={t("empty.description")} />
       )}
     </PageFrame>
   );

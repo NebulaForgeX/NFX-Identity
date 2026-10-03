@@ -1,47 +1,28 @@
 import type { ReactNode } from "react";
 
+import { useRef } from "react";
 import { Box, Container, Flex, Section } from "@radix-ui/themes";
 
-import { safeStringable } from "@/utils";
+import { usePanelReveal } from "@/hooks";
 
-import styles from "./s.module.css";
+const PAGE_FRAME_MAX_WIDTH = "1440px";
 
-/** Fill the column beside the sidebar. */
-const PAGE_FRAME_DEFAULT_MAX_WIDTH = "100%";
+/** Panel page column. Children marked `data-reveal` stagger in on mount. */
+function PageFrame({ children }: { children: ReactNode }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  usePanelReveal(rootRef);
 
-type PageFrameProps = {
-  children: ReactNode;
-  className?: string;
-  maxWidth?: number | string;
-  fullHeight?: boolean;
-};
-
-function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDTH, fullHeight }: PageFrameProps) {
-  const resolvedMaxWidth = typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth;
-  const callerClass = safeStringable(className);
-  const shellClass = [fullHeight ? styles.fullHeightFrame : "", callerClass].filter(Boolean).join(" ");
-
-  const frame = (
-    <Container size="4" width="100%" maxWidth={resolvedMaxWidth} px="6">
-      {fullHeight ? (
-        <Flex direction="column" className={styles.fullHeightBody} width="100%" height="100%" minHeight="0">
-          {children}
-        </Flex>
-      ) : (
+  return (
+    <Box ref={rootRef} width="100%">
+      <Container size="4" width="100%" maxWidth={PAGE_FRAME_MAX_WIDTH} px={{ initial: "4", md: "6" }}>
         <Section size="1" py="6">
-          <Flex direction="column" gap="6" width="100%" minWidth="0">
+          <Flex direction="column" gap="5" width="100%" minWidth="0">
             {children}
           </Flex>
         </Section>
-      )}
-    </Container>
+      </Container>
+    </Box>
   );
-
-  if (!shellClass) return frame;
-
-  if (fullHeight) return <Flex direction="column" width="100%" className={shellClass}>{frame}</Flex>;
-
-  return <Box className={shellClass}>{frame}</Box>;
 }
 
 export default PageFrame;

@@ -1,5 +1,9 @@
-.notice {
-  max-width: 28rem;
-  background: var(--color-panel-solid);
-  border: 1px solid var(--gray-6);
+.mark {
+  flex-shrink: 0;
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-3);
+  color: var(--accent-11);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
 }

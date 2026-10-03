@@ -1,27 +1,28 @@
 .tile {
   position: relative;
-  width: 160px;
-  height: 120px;
-  border: 1px solid var(--gray-a5);
-  border-radius: var(--radius-3);
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: var(--gray-3);
+  border-radius: var(--radius-4);
+  background: var(--gray-a3);
+  box-shadow: inset 0 0 0 1px var(--gray-a5);
+}
+
+.tile[data-failed="true"] {
+  box-shadow: inset 0 0 0 1px var(--red-a7);
 }
 
 .tileImage {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .order {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  border-radius: var(--radius-2);
-  background: color-mix(in oklab, var(--gray-12) 70%, transparent);
-  color: var(--gray-1);
+  top: var(--space-2);
+  left: var(--space-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .tileActions {
@@ -29,13 +30,13 @@
 }
 
 .busy {
-  background: color-mix(in oklab, var(--gray-1) 45%, transparent);
-  color: var(--gray-12);
+  background: var(--black-a7);
+  color: var(--white-a12);
 }
 
 .failed {
-  background: color-mix(in oklab, var(--accent-9) 35%, transparent);
-  color: var(--gray-1);
+  background: var(--red-a9);
+  color: var(--white-a12);
 }
 
 .hiddenInput {

@@ -13,7 +13,9 @@
     "country": "Pays",
     "roles": "Rôles",
     "created": "Créé",
-    "assign": "Attribuer"
+    "assign": "Attribuer",
+    "website": "Site web",
+    "timezone": "Fuseau horaire"
   },
   "forger": {
     "title": "Forger",
@@ -28,6 +30,10 @@
   "card": {
     "title": "Carte publique",
     "description": "Depuis /auth/me/profiles/:id/public-card.",
-    "loading": "Chargement…"
+    "loading": "Chargement…",
+    "pick": "Sélectionnez un profil pour voir sa carte publique."
+  },
+  "labels": {
+    "owner": "Propriétaire"
   }
 }

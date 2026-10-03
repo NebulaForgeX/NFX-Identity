@@ -1,6 +1,6 @@
-import { ShieldCheck, UsersIcon } from "nfx-ui/icons";
+import { AnimatedIcon, MagnifierIcon, ShieldCheck, UsersIcon } from "nfx-ui/icons";
 import { useState } from "react";
-import { Badge, Box, Button, Container, Flex, Grid, Section, Select, Table, Text, TextField } from "@radix-ui/themes";
+import { Badge, Box, Button, Callout, Flex, Grid, Select, Table, Text, TextField } from "@radix-ui/themes";
 import { AuthAuthorityRoleEnum, UI_ASSIGNABLE_AUTH_AUTHORITY_ROLES } from "nfx-ui/enums";
 import { useCurrentProfile, useGetPublicProfileCard, useListOwnerAuthorityProfiles, useListOwnerForgerProfiles, useUpdateAuthorityProfileRoles } from "nfx-ui/hooks";
 import type { Profile } from "nfx-ui/types";
@@ -31,17 +31,21 @@ export default function DirectoryView() {
   return (
     <PageFrame>
       <PageHeader icon={ShieldCheck} title={t("title")} description={t("description")} />
-      <Section size="1" py="4">
-        <TextField.Root className={styles.search} variant="classic" placeholder={t("search")} value={query} onChange={(e) => setQuery(e.target.value)} />
-      </Section>
+      <Box className={styles.search} data-reveal="">
+        <TextField.Root size="3" placeholder={t("search")} value={query} onChange={(e) => setQuery(e.target.value)}>
+          <TextField.Slot>
+            <AnimatedIcon icon={MagnifierIcon} size={16} />
+          </TextField.Slot>
+        </TextField.Root>
+      </Box>
       {ownerError ? (
-        <Text size="2">
-          {(ownerError as Error).message || t("ownerRequired")}
-        </Text>
+        <Callout.Root color="red" variant="surface" data-reveal="">
+          <Callout.Text>{(ownerError as Error).message || t("ownerRequired")}</Callout.Text>
+        </Callout.Root>
       ) : null}
 
-      <Grid columns="1" gap="6" className={styles.board}>
-        <Flex direction="column" gap="6" minWidth="0">
+      <Grid columns={{ initial: "1", lg: "minmax(0, 1.6fr) minmax(0, 0.8fr)" }} gap="5" align="start">
+        <Flex direction="column" gap="5" minWidth="0">
           <LedgerSection title={t("forger.title")} description={t("forger.description")}>
             {forgerItems.length === 0 ? (
               <EmptyState
@@ -57,29 +61,31 @@ export default function DirectoryView() {
                 }
               />
             ) : (
-              <Box className={styles.table}>
-                <Table.Root variant="ghost" size="2">
+              <Table.Root variant="surface" size="2">
                   <Table.Header>
                     <Table.Row>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.name")}</Table.ColumnHeaderCell>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.city")}</Table.ColumnHeaderCell>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.roles")}</Table.ColumnHeaderCell>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.created")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.name")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.city")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.roles")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.created")}</Table.ColumnHeaderCell>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
                     {forgerItems.map((item: Profile.Response.ForgerProfileItem) => (
                       <Table.Row
                         key={item.profileId}
-                        className={selectedId === item.profileId ? styles.rowSelected : styles.rowHit}
+                        className={styles.row}
+                        data-selected={selectedId === item.profileId ? "true" : undefined}
                         onClick={() => setSelectedId(item.profileId)}
                       >
-                        <Table.Cell>{safeStringable(item.displayName) || item.profileId}</Table.Cell>
+                        <Table.RowHeaderCell>
+                          <Text weight="medium">{safeStringable(item.displayName) || item.profileId}</Text>
+                        </Table.RowHeaderCell>
                         <Table.Cell>{safeStringable(item.city) || "—"}</Table.Cell>
                         <Table.Cell>
                           <Flex gap="1" wrap="wrap">
                             {safeArray(item.forgerRoles).map((role) => (
-                              <Badge key={role} variant="outline" size="1">
+                              <Badge key={role} variant="outline" color="gray" size="1">
                                 {role}
                               </Badge>
                             ))}
@@ -90,7 +96,6 @@ export default function DirectoryView() {
                     ))}
                   </Table.Body>
                 </Table.Root>
-              </Box>
             )}
           </LedgerSection>
 
@@ -109,13 +114,12 @@ export default function DirectoryView() {
                 }
               />
             ) : (
-              <Box className={styles.table}>
-                <Table.Root variant="ghost" size="2">
+              <Table.Root variant="surface" size="2">
                   <Table.Header>
                     <Table.Row>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.name")}</Table.ColumnHeaderCell>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.roles")}</Table.ColumnHeaderCell>
-                      <Table.ColumnHeaderCell className={styles.head}>{t("columns.assign")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.name")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.roles")}</Table.ColumnHeaderCell>
+                      <Table.ColumnHeaderCell>{t("columns.assign")}</Table.ColumnHeaderCell>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -126,14 +130,27 @@ export default function DirectoryView() {
                       return (
                         <Table.Row
                           key={item.profileId}
-                          className={selectedId === item.profileId ? styles.rowSelected : styles.rowHit}
+                          className={styles.row}
+                          data-selected={selectedId === item.profileId ? "true" : undefined}
                           onClick={() => setSelectedId(item.profileId)}
                         >
-                          <Table.Cell>{safeStringable(item.displayName) || item.profileId}</Table.Cell>
-                          <Table.Cell>{roles.join(", ")}</Table.Cell>
+                          <Table.RowHeaderCell>
+                            <Text weight="medium">{safeStringable(item.displayName) || item.profileId}</Text>
+                          </Table.RowHeaderCell>
                           <Table.Cell>
+                            <Flex gap="1" wrap="wrap">
+                              {roles.map((role) => (
+                                <Badge key={role} variant="outline" color="gray" size="1">
+                                  {role}
+                                </Badge>
+                              ))}
+                            </Flex>
+                          </Table.Cell>
+                          <Table.Cell onClick={(event) => event.stopPropagation()}>
                             {isOwner ? (
-                              <Text size="2">owner</Text>
+                              <Badge size="1" variant="surface">
+                                {t("labels.owner")}
+                              </Badge>
                             ) : (
                               <Select.Root
                                 value={current}
@@ -144,7 +161,7 @@ export default function DirectoryView() {
                                   });
                                 }}
                               >
-                                <Select.Trigger />
+                                <Select.Trigger variant="ghost" />
                                 <Select.Content>
                                   {UI_ASSIGNABLE_AUTH_AUTHORITY_ROLES.map((role) => (
                                     <Select.Item key={role} value={role}>
@@ -160,41 +177,32 @@ export default function DirectoryView() {
                     })}
                   </Table.Body>
                 </Table.Root>
-              </Box>
             )}
           </LedgerSection>
         </Flex>
 
-        <Box position="sticky" top="4" className={styles.detail}>
-          {selectedId ? (
-            <Section size="1" py="4">
-              <Container size="2" px="4">
-                <LedgerSection title={t("card.title")} description={t("card.description")}>
-                  {card.isError ? (
-                    <Text size="2">
-                      {(card.error as Error).message}
-                    </Text>
-                  ) : card.data ? (
-                    <FieldList>
-                      <FieldRow label={t("columns.name")} value={safeStringable(card.data.displayName) || selectedId} />
-                      <FieldRow label={t("columns.city")} value={safeStringable(card.data.city) || "—"} />
-                      <FieldRow label={t("columns.country")} value={safeStringable(card.data.country) || "—"} />
-                      <FieldRow label="website" value={safeStringable(card.data.website) || "—"} />
-                      <FieldRow label="timezone" value={safeStringable(card.data.timezone) || "—"} />
-                      <FieldRow label={t("columns.created")} value={card.data.createdAt ? formatDateTime(card.data.createdAt) : "—"} />
-                    </FieldList>
-                  ) : (
-                    <Text size="2" color="gray">
-                      {t("card.loading")}
-                    </Text>
-                  )}
-                </LedgerSection>
-              </Container>
-            </Section>
+        <LedgerSection sticky title={t("card.title")} description={t("card.description")}>
+          {!selectedId ? (
+            <EmptyState icon={UsersIcon} title={t("card.pick")} />
+          ) : card.isError ? (
+            <Text size="2" color="red">
+              {(card.error as Error).message}
+            </Text>
+          ) : card.data ? (
+            <FieldList>
+              <FieldRow label={t("columns.name")} value={safeStringable(card.data.displayName) || selectedId} />
+              <FieldRow label={t("columns.city")} value={safeStringable(card.data.city) || "—"} />
+              <FieldRow label={t("columns.country")} value={safeStringable(card.data.country) || "—"} />
+              <FieldRow label={t("columns.website")} value={safeStringable(card.data.website) || "—"} />
+              <FieldRow label={t("columns.timezone")} value={safeStringable(card.data.timezone) || "—"} />
+              <FieldRow label={t("columns.created")} value={card.data.createdAt ? formatDateTime(card.data.createdAt) : "—"} />
+            </FieldList>
           ) : (
-            <EmptyState icon={ShieldCheck} title={t("card.title")} description={t("card.description")} />
+            <Text size="2" color="gray">
+              {t("card.loading")}
+            </Text>
           )}
-        </Box>
+        </LedgerSection>
       </Grid>
     </PageFrame>
   );

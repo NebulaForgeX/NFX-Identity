@@ -37,13 +37,6 @@
   outline-offset: 2px;
 }
 
-.flyoutReset {
-  padding: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
 .flyout {
   width: max-content;
   min-width: 156px;
@@ -56,10 +49,52 @@
   box-shadow: var(--shadow-5);
 }
 
+.flyoutReset:global(.rt-PopoverContent) {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
 .flyout :global(.ps-menu-label .rt-Text) {
   font: inherit;
 }
 
 .flyout :global(.ps-menu-button.ps-active .ps-menu-label) {
   font-weight: 500;
+}
+
+.flyout :global(.ps-menu-button) {
+  height: 34px;
+  margin: 3px 7px;
+  padding: 0 11px;
+  border-radius: var(--radius-chip);
+  font: 14px Arial, sans-serif;
+  color: var(--gray-11);
+  background-color: transparent;
+}
+
+.flyout :global(.ps-menu-button.ps-active) {
+  color: var(--accent-11);
+  background-color: var(--accent-a3);
+}
+
+.flyout :global(.ps-menu-button:hover) {
+  background-color: var(--gray-a3) !important;
+  color: var(--gray-12) !important;
+}
+
+.flyout :global(.ps-menu-button.ps-active:hover) {
+  background-color: var(--accent-a3) !important;
+  color: var(--accent-11) !important;
+}
+
+.flyout :global(.ps-menu-button:focus-visible) {
+  outline: 2px solid var(--accent-8);
+  outline-offset: -2px;
+}
+
+.flyout :global(.ps-menu-icon) {
+  display: none;
 }
